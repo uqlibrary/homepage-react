@@ -6,8 +6,6 @@ import { Grid, useTheme } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard, styles as StandardCardStyles } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { green, red } from '@material-ui/core/colors';
-import Radio from '@material-ui/core/Radio';
 
 import { DatePicker } from '@material-ui/pickers';
 import Chip from '@material-ui/core/Chip';
@@ -34,6 +32,7 @@ import Box from '@material-ui/core/Box';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { throttle } from 'throttle-debounce';
 
 // import Checkbox from '@material-ui/core/Checkbox';
 
@@ -62,257 +61,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const filter = createFilterOptions();
-
-const GreenRadio = withStyles({
-    root: {
-        color: green[400],
-        '&$checked': {
-            color: green[600],
-        },
-    },
-    checked: {},
-})(props => <Radio color="default" tabIndex={0} {...props} />);
-const RedRadio = withStyles({
-    root: {
-        color: red[400],
-        '&$checked': {
-            color: red[600],
-        },
-    },
-    checked: {},
-})(props => <Radio color="default" tabIndex={0} {...props} />);
-
-const location = {
-    site: [{ id: 1, label: 'St Lucia', value: 1 }],
-    building: [
-        { id: 1, siteid: 1, label: 'Biological Sciences Library', value: '0094' },
-        { id: 2, siteid: 1, label: 'Duhig Link', value: '0012A' },
-    ],
-    floor: [
-        { id: 1, siteid: 1, buildingid: 1, label: '1', value: '1' },
-        { id: 2, siteid: 1, buildingid: 1, label: '2', value: '2' },
-        { id: 3, siteid: 1, buildingid: 1, label: '3', value: '3' },
-        { id: 4, siteid: 1, buildingid: 2, label: '1', value: '1' },
-        { id: 5, siteid: 1, buildingid: 2, label: '2', value: '2' },
-        { id: 6, siteid: 1, buildingid: 2, label: '3', value: '3' },
-        { id: 7, siteid: 1, buildingid: 2, label: '4', value: '4' },
-    ],
-    room: [
-        { id: 1, siteid: 1, buildingid: 1, floorid: 1, label: 'Circulation Space', value: '101' },
-        { id: 2, siteid: 1, buildingid: 1, floorid: 1, label: 'Reading Room/Study Space', value: '102' },
-        { id: 3, siteid: 1, buildingid: 1, floorid: 2, label: 'Informal Learning', value: '103' },
-        { id: 4, siteid: 1, buildingid: 1, floorid: 2, label: 'Group Study Room', value: '104' },
-        { id: 5, siteid: 1, buildingid: 1, floorid: 3, label: 'Office Storage', value: '105' },
-        {
-            id: 6,
-            siteid: 1,
-            buildingid: 1,
-            floorid: 3,
-            label: 'Seminar/Tutorial/Class Room (30 or fewer seats)',
-            value: '106',
-        },
-        { id: 7, siteid: 1, buildingid: 2, floorid: 4, label: 'Open Access computers', value: '201' },
-        { id: 8, siteid: 1, buildingid: 2, floorid: 4, label: 'Computing Lab-Open Access', value: '202' },
-        { id: 9, siteid: 1, buildingid: 2, floorid: 5, label: 'Library consultation room', value: '203' },
-        { id: 10, siteid: 1, buildingid: 2, floorid: 5, label: 'Open Group Study', value: '204' },
-        { id: 11, siteid: 1, buildingid: 2, floorid: 6, label: 'Reading Room/Study Space', value: '205' },
-        { id: 12, siteid: 1, buildingid: 2, floorid: 6, label: 'Group Study Room', value: '206' },
-        { id: 13, siteid: 1, buildingid: 2, floorid: 7, label: 'Library Services', value: '207' },
-        { id: 14, siteid: 1, buildingid: 2, floorid: 7, label: 'Office-Professional/General Staff', value: '208' },
-    ],
-};
-
-const assetType = [
-    { id: 1, label: 'power board 3 outlet', value: 'pb3' },
-    { id: 2, label: 'power board 5 outlet', value: 'pb5' },
-    { id: 3, label: 'kettle', value: 'k1' },
-    { id: 4, label: 'microwave', value: 'mw1' },
-    { id: 5, label: '1 metre kettle lead', value: 'kl1' },
-    { id: 6, label: '3 metre kettle lead', value: 'kl3' },
-];
-
 const status = {
     PASS: { label: 'PASS', value: 'pass' },
     FAIL: { label: 'FAIL', value: 'fail' },
     NONE: { label: 'NONE', value: 'none' },
 };
-const action = {
-    OUTFORREPAIR: { label: 'OUT FOR REPAIR' },
-    DISCARDED: { label: 'DISCARDED' },
-};
 
-const assets = [
-    {
-        id: 1001,
-        assetTypeId: 1,
-        location: {
-            site: location.site[0].label,
-            building: location.building[0].label,
-            floor: location.floor[0].label,
-            room: location.room[0].label,
-        },
-        lastTest: {
-            date: '12/10/2022',
-            status: status.PASS,
-            testNotes: 'Everything working great :)',
-            action: action.DISCARDED,
-            actionNotes: 'Handed over to another department',
-        },
-    },
-    {
-        id: 1002,
-        assetTypeId: 2,
-        location: {
-            site: location.site[0].label,
-            building: location.building[0].label,
-            floor: location.floor[0].label,
-            room: location.room[1].label,
-        },
-        lastTest: {
-            date: '12/09/2022',
-            status: status.PASS,
-            testNotes: null,
-        },
-    },
-    {
-        id: 1003,
-        assetTypeId: 3,
-        location: {
-            site: location.site[0].label,
-            building: location.building[0].label,
-            floor: location.floor[1].label,
-            room: location.room[2].label,
-        },
-        lastTest: {
-            date: '12/08/2022',
-            status: status.FAIL,
-            failReason: 'Not powering up',
-            action: action.OUTFORREPAIR,
-            actionNotes: 'My Repairs PTY LTD, Some place, Some Town, QUEENSLAND. Tel: 0405123456',
-            testNotes: null,
-        },
-    },
-    {
-        id: 1004,
-        assetTypeId: 4,
-        location: {
-            site: location.site[0].label,
-            building: location.building[0].label,
-            floor: location.floor[1].label,
-            room: location.room[3].label,
-        },
-        lastTest: {
-            date: '12/09/2022',
-            status: status.FAIL,
-            failReason: 'Not powering up',
-            action: action.DISCARDED,
-            actionNotes: 'Binned for recycling in bin REC12',
-            testNotes: 'Tried several attempts to pass test, all failed',
-        },
-    },
-    {
-        id: 1005,
-        assetTypeId: 5,
-        location: {
-            site: location.site[0].label,
-            building: location.building[0].label,
-            floor: location.floor[2].label,
-            room: location.room[4].label,
-        },
-        lastTest: {
-            date: '12/10/2022',
-            status: status.PASS,
-            testNotes: null,
-        },
-    },
-    {
-        id: 1006,
-        assetTypeId: 6,
-        location: {
-            site: location.site[0].label,
-            building: location.building[0].label,
-            floor: location.floor[2].label,
-            room: location.room[5].label,
-        },
-        lastTest: {
-            date: '12/09/2022',
-            status: status.PASS,
-            testNotes: null,
-        },
-    },
-    {
-        id: 1007,
-        assetTypeId: 1,
-        location: {
-            site: location.site[0].label,
-            building: location.building[1].label,
-            floor: location.floor[3].label,
-            room: location.room[6].label,
-        },
-        lastTest: {
-            date: '12/08/2022',
-            status: status.FAIL,
-            failReason: 'Arcing when powered up',
-            action: action.OUTFORREPAIR,
-            actionNotes: 'My Repairs PTY LTD, Some place, Some Town, QUEENSLAND. Tel: 0405123456',
-            testNotes: 'Dangerous device to even test',
-        },
-    },
-    {
-        id: 1008,
-        assetTypeId: 2,
-        location: {
-            site: location.site[0].label,
-            building: location.building[1].label,
-            floor: location.floor[3].label,
-            room: location.room[7].label,
-        },
-        lastTest: {
-            date: '12/09/2022',
-            status: status.PASS,
-            testNotes: null,
-        },
-    },
-    {
-        id: 1009,
-        assetTypeId: 3,
-        location: {
-            site: location.site[0].label,
-            building: location.building[1].label,
-            floor: location.floor[4].label,
-            room: location.room[8].label,
-        },
-        lastTest: {
-            date: '12/10/2022',
-            status: status.FAIL,
-            failReason: 'Power output not at required level',
-            action: action.DISCARDED,
-            actionNotes: 'Binned in general waste',
-            testNotes: 'Insulation eroded rendering item unsafe',
-        },
-    },
-    {
-        id: 1010,
-        assetTypeId: 4,
-        location: {
-            site: location.site[0].label,
-            building: location.building[1].label,
-            floor: location.floor[4].label,
-            room: location.room[9].label,
-        },
-        lastTest: {
-            date: '12/09/2022',
-            status: status.PASS,
-            testNotes: null,
-        },
-    },
-    {
-        id: 1011,
-    },
-    {
-        id: 1012,
-    },
-];
+const MINIMUM_ASSET_ID_PATTERN_LENGTH = 8;
 
 const getLastLocation = asset => {
     return asset && typeof asset === 'object' && !!asset.location
@@ -356,6 +111,9 @@ function a11yProps(index) {
 export const TestTag = ({
     actions,
     currentRetestList,
+    assetsList,
+    assetsListLoading,
+    assetsListError,
     assetTypes,
     assetTypesLoading,
     assetTypesError,
@@ -393,7 +151,7 @@ export const TestTag = ({
             ? testDevices[0].device_id
             : -1,
     );
-    const [currentAsset, setCurrentAsset] = React.useState({});
+    const [assetid, setAssetId] = React.useState(-1);
     const [assetTypeid, setAssetTypeId] = useState(-1);
     const [testStatus, setTestStatus] = React.useState(status.NONE);
     const [nextTestValue, setNextTestValue] = React.useState(12);
@@ -448,7 +206,7 @@ export const TestTag = ({
 
     useEffect(() => {
         if (siteid !== -1 && buildingid !== -1) {
-            actions.loadFloors(siteid, buildingid);
+            actions.loadFloors(buildingid);
             setFloorId(-1);
             setRoomId(-1);
         }
@@ -457,7 +215,7 @@ export const TestTag = ({
 
     useEffect(() => {
         if (siteid !== -1 && buildingid !== -1 && floorid !== -1) {
-            actions.loadRooms(siteid, buildingid, floorid);
+            actions.loadRooms(floorid);
             setRoomId(-1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -473,7 +231,7 @@ export const TestTag = ({
     // }, [floorid]);
 
     // useEffect(() => {
-    //     setCurrentAssetType(
+    //     setAssetIdType(
     //         (Object.keys(currentAsset).length > 0 &&
     //             !!currentAsset.assetTypeId &&
     //             assetType.find(item => item.id === currentAsset.assetTypeId)) ??
@@ -483,6 +241,13 @@ export const TestTag = ({
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, JSON.stringify(currentAsset));
 
+    const throttledAssetsSearch = React.useRef(
+        throttle(
+            250,
+            pattern => !!pattern && pattern.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH && actions.loadAssets(pattern),
+        ),
+    );
+    console.log('assetsList', assetsList);
     return (
         <StandardPage title={locale.pageTitle}>
             <Typography component={'h2'} variant={'h5'}>
@@ -557,12 +322,7 @@ export const TestTag = ({
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
                                     fullWidth
-                                    options={
-                                        (!!!siteListLoading &&
-                                            !!!siteListError &&
-                                            siteList?.find(site => site.site_id === siteid)?.buildings) ??
-                                        []
-                                    }
+                                    options={siteList?.find(site => site.site_id === siteid)?.buildings ?? []}
                                     value={
                                         siteList
                                             ?.find(site => site.site_id === siteid)
@@ -603,10 +363,7 @@ export const TestTag = ({
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
                                     fullWidth
-                                    options={
-                                        (!!!floorListLoading && !!!floorListError && !!floorList && floorList.floors) ??
-                                        []
-                                    }
+                                    options={floorList?.floors ?? []}
                                     value={floorList?.floors?.find(floor => floor.floor_id === floorid) ?? ''}
                                     onChange={(event, newValue) => {
                                         setFloorId(newValue.floor_id);
@@ -643,9 +400,7 @@ export const TestTag = ({
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
                                     fullWidth
-                                    options={
-                                        (!!!roomListLoading && !!!roomListError && !!roomList && roomList.rooms) ?? []
-                                    }
+                                    options={roomList?.rooms ?? []}
                                     value={roomList?.rooms?.find(room => room.room_id === roomid) ?? ''}
                                     onChange={(event, newValue) => {
                                         setRoomId(newValue.room_id);
@@ -688,17 +443,14 @@ export const TestTag = ({
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
                                 fullWidth
-                                value={(currentAsset.length > 0 && currentAsset) ?? ''}
                                 onChange={(event, newValue) => {
                                     if (typeof newValue === 'string') {
-                                        setCurrentAsset({ id: newValue });
+                                        setAssetId(newValue);
                                     } else if (newValue && newValue.inputValue) {
                                         // Create a new value from the user input
-                                        setCurrentAsset({
-                                            id: newValue.inputValue,
-                                        });
+                                        setAssetId(newValue.inputValue);
                                     } else {
-                                        setCurrentAsset(newValue ?? {});
+                                        setAssetId(newValue);
                                     }
                                 }}
                                 filterOptions={(options, params) => {
@@ -716,7 +468,7 @@ export const TestTag = ({
                                 }}
                                 selectOnFocus
                                 handleHomeEndKeys
-                                options={assets}
+                                options={assetsList ?? []}
                                 getOptionLabel={option => {
                                     // Value selected with enter, right from the input
                                     if (typeof option === 'string') {
@@ -727,9 +479,9 @@ export const TestTag = ({
                                         return option.inputValue;
                                     }
                                     // Regular option
-                                    return `${option.id ?? ''}`;
+                                    return `${option.asset_id_displayed ?? ''}`;
                                 }}
-                                renderOption={option => `${option.id}`}
+                                renderOption={option => option.asset_id_displayed}
                                 freeSolo
                                 renderInput={params => (
                                     <TextField
@@ -739,8 +491,22 @@ export const TestTag = ({
                                         variant="standard"
                                         InputLabelProps={{ shrink: true }}
                                         helperText={'Enter a new ID to add'}
+                                        placeholder="UQL-"
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {!!assetsListLoading ? (
+                                                        <CircularProgress color="inherit" size={20} />
+                                                    ) : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                        onChange={e => throttledAssetsSearch.current(e.target.value)}
                                     />
                                 )}
+                                loading={!!assetsListLoading}
                             />
                         </FormControl>
                     </Grid>
@@ -791,7 +557,7 @@ export const TestTag = ({
                             </Select>
                         </FormControl>
                     </Grid>
-                    {!!currentAsset && Object.keys(currentAsset).length > 0 && (
+                    {/* {!!currentAsset && Object.keys(currentAsset).length > 0 && (
                         <>
                             <Grid item sm={12}>
                                 <Typography component={'p'}>Last location: {getLastLocation(currentAsset)}</Typography>
@@ -824,7 +590,7 @@ export const TestTag = ({
                                     </Grid>
                                 )}
                         </>
-                    )}
+                    )} */}
                 </Grid>
                 <StandardCard
                     variant="outlined"
@@ -1127,6 +893,9 @@ export const TestTag = ({
 TestTag.propTypes = {
     actions: PropTypes.object,
     currentRetestList: PropTypes.array,
+    assetsList: PropTypes.any,
+    assetsListLoading: PropTypes.bool,
+    assetsListError: PropTypes.any,
     siteList: PropTypes.any,
     siteListLoading: PropTypes.bool,
     siteListError: PropTypes.any,

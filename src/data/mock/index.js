@@ -39,12 +39,13 @@ import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
 import testTag_assetTypes from './data/records/test_tag_asset_types';
 import testTag_testDevices from './data/records/test_tag_test_devices';
+import testTag_assets from './data/records/test_tag_assets';
 
 const moment = require('moment');
 
 const queryString = require('query-string');
-const mock = new MockAdapter(api, { delayResponse: 100 });
-const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 100 });
+const mock = new MockAdapter(api, { delayResponse: 1000 });
+const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
 const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 // set session cookie in mock mode
 
@@ -703,38 +704,46 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, testTag_siteList];
     })
     // T&T FLOORS
-    .onGet('test_and_tag/site/1/building/1/current')
+    .onGet('test_and_tag/building/1/current')
     .reply(()=>{
-        return [200, testTag_floorList.find(floor=>floor.site_id === 1 && floor.building_id === 1)];
+        return [200, testTag_floorList.find(floor=>floor.building_id === 1)];
     })
-    .onGet('test_and_tag/site/1/building/2/current')
+    .onGet('test_and_tag/building/2/current')
     .reply(()=>{
-        return [200, testTag_floorList.find(floor=>floor.site_id === 1 && floor.building_id === 2)];
+        return [200, testTag_floorList.find(floor=>floor.building_id === 2)];
     })
     // T&T ROOMS
-    .onGet('test_and_tag/site/1/building/1/floor/1/current')
+    .onGet('test_and_tag/floor/1/current')
     .reply(()=>{
-        return [200, testTag_roomList.find(room=>room.site_id === 1 && room.building_id === 1 && room.floor_id === 1)];
+        return [200, testTag_roomList.find(room=>room.floor_id === 1)];
     })
-    .onGet('test_and_tag/site/1/building/1/floor/2/current')
+    .onGet('test_and_tag/floor/2/current')
     .reply(()=>{
-        return [200, testTag_roomList.find(room=>room.site_id === 1 && room.building_id === 1 && room.floor_id === 2)];
+        return [200, testTag_roomList.find(room=>room.floor_id === 2)];
     })
-    .onGet('test_and_tag/site/1/building/2/floor/3/current')
+    .onGet('test_and_tag/floor/3/current')
     .reply(()=>{
-        return [200, testTag_roomList.find(room=>room.site_id === 1 && room.building_id === 2 && room.floor_id === 3)];
+        return [200, testTag_roomList.find(room=>room.floor_id === 3)];
     })
-    .onGet('test_and_tag/site/1/building/2/floor/4/current')
+    .onGet('test_and_tag/floor/4/current')
     .reply(()=>{
-        return [200, testTag_roomList.find(room=>room.site_id === 1 && room.building_id === 2 && room.floor_id === 4)];
+        return [200, testTag_roomList.find(room=>room.floor_id === 4)];
     })
+
+    // ASSETS (with pattern matching)
+    .onGet(/test_and_tag\/asset\/search\/current\/*/)
+    .reply(config=>{
+        const pattern = config.url.split('/').pop();
+        return [200, [...testTag_assets.find(asset=>asset.asset_id_displayed.toUpperCase().indexOf(pattern.toUpperCase()) > -1) ?? testTag_assets]];//.find(asset=>room.site_id === 1 && room.building_id === 2 && room.floor_id === 4)];
+    })
+
 
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
     })
     .onAny()
-    .reply(config => {
+    .reply(function(config) {
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });

@@ -6,6 +6,7 @@ import {
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSET_TYPES_API,
     TEST_TAG_TEST_DEVICES_API,
+    TEST_TAG_ASSETS_API,
 } from 'repositories/routes';
 // import { throwFetchErrors } from 'helpers/general';
 
@@ -36,10 +37,10 @@ export function clearSites() {
     };
 }
 
-export function loadFloors(siteId, buildingId) {
+export function loadFloors(buildingId) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_FLOOR_LIST_LOADING });
-        return get(TEST_TAG_FLOOR_API(siteId, buildingId))
+        return get(TEST_TAG_FLOOR_API(buildingId))
             .then(data => {
                 dispatch({
                     type: actions.TESTTAG_FLOOR_LIST_LOADED,
@@ -61,10 +62,10 @@ export function clearFloors() {
     };
 }
 
-export function loadRooms(siteId, buildingId, floorId) {
+export function loadRooms(floorId) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ROOM_LIST_LOADING });
-        return get(TEST_TAG_ROOM_API(siteId, buildingId, floorId))
+        return get(TEST_TAG_ROOM_API(floorId))
             .then(data => {
                 dispatch({
                     type: actions.TESTTAG_ROOM_LIST_LOADED,
@@ -139,5 +140,34 @@ export function loadTestDevices() {
 export function clearTestDevices() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_TEST_DEVICES_CLEAR });
+    };
+}
+
+/** * ASSETS  ***/
+export function loadAssets(pattern) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_LOADING });
+        console.log('loadAssets', pattern);
+        return get(TEST_TAG_ASSETS_API(pattern))
+            .then(data => {
+                console.log('loadAssets', data);
+                dispatch({
+                    type: actions.TESTTAG_ASSETS_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                console.log('loadAssets error', error);
+                dispatch({
+                    type: actions.TESTTAG_ASSETS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function clearAssets() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_CLEAR });
     };
 }
