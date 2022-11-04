@@ -23,6 +23,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 import { formatDate } from '../Spotlights/spotlighthelpers';
+import PromoPanelGroupDateSelector from './Form/PromoPanelGroupDateSelector';
 
 const moment = require('moment');
 
@@ -108,7 +109,10 @@ export const PromoPanelForm = ({
     const [displayList, setDisplayList] = useState(scheduledList);
     const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
     const [scheduledGroups, setScheduledGroups] = useState(scheduledGroupNames);
-    const [groupNames, setGroupNames] = React.useState(scheduledGroupNames);
+    const [selectorGroupNames, setSelectorGroupNames] = React.useState(scheduledGroupNames);
+    const [scheduleChangeIndex, setScheduleChangeIndex] = useState(null);
+    const [isEditingDate, setIsEditingDate] = useState(false);
+    const [editDate, setEditDate] = useState({ start: null, end: null });
 
     const [values, setValues] = useState({
         ...defaults,
@@ -137,16 +141,16 @@ export const PromoPanelForm = ({
                 ...values,
                 scheduledGroups: scheduledGroupNames,
             });
-            setGroupNames(scheduledGroupNames);
+            setSelectorGroupNames(scheduledGroupNames);
             const unscheduledGroup = knownGroups.filter(item => scheduledGroupNames.indexOf(item) < 0);
 
             setUnscheduledGroups(unscheduledGroup);
-            setGroupNames([]);
+            setSelectorGroupNames([]);
         } else {
             const unscheduledGroup = knownGroups.filter(item => scheduledGroupNames.indexOf(item) < 0);
 
             setUnscheduledGroups(unscheduledGroup);
-            setGroupNames([]);
+            setSelectorGroupNames([]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scheduledGroupNames, scheduledList]);
@@ -177,7 +181,7 @@ export const PromoPanelForm = ({
             id: defaults.type === 'edit' ? values.id : null,
             panel_title: values.title,
             panel_content: values.content,
-            panel_groups: groupNames, // possibly use a function here for group validation
+            panel_groups: selectorGroupNames, // possibly use a function here for group validation
             panel_start: formatDate(values.start),
             panel_end: formatDate(values.end),
             panel_adminNotes: values.admin_notes,
@@ -205,27 +209,27 @@ export const PromoPanelForm = ({
 
         const selections = typeof value === 'string' ? value.split(',') : value;
 
-        setGroupNames(selections);
+        setSelectorGroupNames(selections);
     };
 
     const handleAddSchedule = groups => {
         const newGroups = [...scheduledGroups];
-        groupNames.map(item => {
+        selectorGroupNames.map(item => {
             !newGroups.includes(item) && newGroups.push(item);
         });
 
         setScheduledGroups(newGroups);
 
         const unscheduledGroup = knownGroups
-            .filter(item => groupNames.indexOf(item) < 0)
+            .filter(item => selectorGroupNames.indexOf(item) < 0)
             .filter(item => newGroups.indexOf(item) < 0);
 
         setUnscheduledGroups(unscheduledGroup);
-        setGroupNames([]);
+        setSelectorGroupNames([]);
 
         const allocatedList = [...displayList];
         allocatedList.push({
-            groupNames: groupNames,
+            groupNames: selectorGroupNames,
             startDate: values.start,
             endDate: values.end,
         });
@@ -293,9 +297,34 @@ export const PromoPanelForm = ({
         setDisplayList([...newSchedules]);
     };
 
+    const editPanelGroupSchedule = idx => {
+        console.log('index', idx);
+        console.log('editing ', displayList[idx]);
+        setScheduleChangeIndex(idx);
+        setEditDate({ start: displayList[idx].startDate, end: displayList[idx].endDate });
+        setIsEditingDate(true);
+    };
+
+    const handleCloseGroupDate = () => {
+        console.log('handleCloseGroupDate');
+        setIsEditingDate(false);
+    };
+    const handleSaveGroupDate = (idx, dateRange) => {
+        console.log('handleSaveGroupDate', idx, dateRange);
+        console.log('displayList', displayList);
+        const newDisplayList = [...displayList];
+        newDisplayList[idx].startDate = dateRange.start;
+        newDisplayList[idx].endDate = dateRange.end;
+        setDisplayList(newDisplayList);
+        setIsEditingDate(false);
+    };
+
+    console.log('DISPLAY LIST', displayList);
     console.log('KNOWN GROUPS', knownGroups);
-    console.log('SCHEDULED LIST', scheduledList);
+    console.log('SCHEDULED LIST', displayList);
+
     console.log('SCHEDULED GROUP NAMES', scheduledGroupNames);
+
     return (
         <Fragment>
             <form className={classes.spotlightForm}>
@@ -377,14 +406,14 @@ export const PromoPanelForm = ({
                                 labelId="demo-multiple-checkbox-label"
                                 id="demo-multiple-checkbox"
                                 multiple
-                                value={groupNames}
+                                value={selectorGroupNames}
                                 onChange={handleGroupChange}
                                 renderValue={selected => selected.join(', ')}
                                 MenuProps={MenuProps}
                             >
-                                {unscheduledGroups.map(name => (
+                                {knownGroups.map(name => (
                                     <MenuItem key={name} value={name}>
-                                        <Checkbox checked={groupNames.indexOf(name) > -1} />
+                                        <Checkbox checked={selectorGroupNames.indexOf(name) > -1} />
                                         <ListItemText primary={name} />
                                     </MenuItem>
                                 ))}
@@ -464,14 +493,14 @@ export const PromoPanelForm = ({
                                         data-testid="admin-promopanel-form-button-addSchedule"
                                         onClick={() => handleAddSchedule(values.scheduledGroups)}
                                         variant="contained"
-                                        disabled={groupNames.length < 1}
+                                        disabled={selectorGroupNames.length < 1}
                                     />
                                 </Grid>
                                 <Grid container style={{ border: '1px solid black', padding: '10px' }}>
                                     <Grid item xs={12}>
                                         Current assignments
                                         <Grid container>
-                                            <Grid item xs={4}>
+                                            <Grid item xs={2}>
                                                 <Typography style={{ fontWeight: 'bold' }}>Group name</Typography>
                                             </Grid>
                                             <Grid item xs={3}>
@@ -480,7 +509,7 @@ export const PromoPanelForm = ({
                                             <Grid item xs={3}>
                                                 Scheduled End
                                             </Grid>
-                                            <Grid item xs={2}>
+                                            <Grid item xs={4}>
                                                 Action
                                             </Grid>
                                         </Grid>
@@ -488,7 +517,7 @@ export const PromoPanelForm = ({
                                             displayList.map((item, index) => {
                                                 return (
                                                     <Grid container key={index}>
-                                                        <Grid item xs={4}>
+                                                        <Grid item xs={2}>
                                                             {item.groupNames.join(', ')}
                                                         </Grid>
                                                         <Grid item xs={3}>
@@ -502,11 +531,18 @@ export const PromoPanelForm = ({
                                                             {item.endDate &&
                                                                 moment(item.endDate).format('dddd DD/MM/YYYY HH:mm a')}
                                                         </Grid>
-                                                        <Grid item xs={2}>
+                                                        <Grid item xs={4}>
+                                                            <Button
+                                                                color="primary"
+                                                                children="Change Schedule"
+                                                                data-testid="admin-promopanel-form-button-editSchedule"
+                                                                onClick={() => editPanelGroupSchedule(index)}
+                                                                variant="contained"
+                                                            />
                                                             <Button
                                                                 color="primary"
                                                                 children="Remove group"
-                                                                data-testid="admin-promopanel-form-button-cancel"
+                                                                data-testid="admin-promopanel-form-button-editSchedule"
                                                                 onClick={() => removePanelGroupSchedule(index)}
                                                                 variant="contained"
                                                             />
@@ -567,10 +603,19 @@ export const PromoPanelForm = ({
                 handlePreviewClose={handlePreviewClose}
                 previewTitle={values.title}
                 previewContent={values.content}
-                previewGroup={groupNames}
+                previewGroup={selectorGroupNames}
                 previewScheduled={values.scheduled === 1 ? true : false}
                 previewStart={values.start}
                 previewEnd={values.end}
+            />
+            <PromoPanelGroupDateSelector
+                isEditingDate={isEditingDate}
+                index={scheduleChangeIndex}
+                defaultStartDate={editDate.start}
+                defaultEndDate={editDate.end}
+                scheduleChangeIndex={scheduleChangeIndex}
+                handleCloseGroupDate={handleCloseGroupDate}
+                handleSaveGroupDate={handleSaveGroupDate}
             />
         </Fragment>
     );
