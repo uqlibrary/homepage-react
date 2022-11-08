@@ -34,7 +34,7 @@ export const PromoPanelEdit = ({
     const [isDefault, setIsDefault] = React.useState(false);
 
     const defaults = {
-        id: '',
+        id: promopanelid,
         startDateDefault: getTimeMondayMidnightNext(),
         endDateDefault: getTimeSundayNextFormatted(),
         title: '',
@@ -85,13 +85,13 @@ export const PromoPanelEdit = ({
                             schedule.push({
                                 startDate: element.panel_schedule_start_time,
                                 endDate: element.panel_schedule_end_time,
-                                groupNames: [element.user_group],
+                                groupNames: element.user_group,
                             });
                         } else {
                             schedule.push({
                                 startDate: element.panel_schedule_start_time,
                                 endDate: element.panel_schedule_end_time,
-                                groupNames: [element.user_group],
+                                groupNames: element.user_group,
                             });
                             // schedule.map((scheduleItem, index) => {
                             //     if (
@@ -142,6 +142,7 @@ export const PromoPanelEdit = ({
                             defaults={defaults}
                             actions={actions}
                             history={history}
+                            isEdit
                             isDefaultPanel={isDefault}
                         />
                     )}

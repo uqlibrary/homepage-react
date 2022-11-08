@@ -5,6 +5,23 @@ import React, { Fragment } from 'react';
 
 export default {
     form: {
+        defaultGroups: {
+           alert: (groupNames) => (
+            <>
+                <div>The chosen panel will become the DEFAULT panel for the following groups:</div>
+                <div style={{ width: '100%' }}>
+                    <ul>
+                    {groupNames.map(item => 
+                        <li>{item}</li>
+                    )}
+                    </ul>
+                </div>
+                <div>
+                Are you sure you want to continue?
+                </div>
+            </>
+           ), 
+        },
         labels: {
             titleField: 'Title of the Promo Panel',
             defaultPanelCheckbox: 'Default panel for selected groups',
