@@ -734,7 +734,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet(/test_and_tag\/asset\/search\/current\/*/)
     .reply(config=>{
         const pattern = config.url.split('/').pop();
-        return [200, [...testTag_assets.find(asset=>asset.asset_id_displayed.toUpperCase().indexOf(pattern.toUpperCase()) > -1) ?? testTag_assets]];//.find(asset=>room.site_id === 1 && room.building_id === 2 && room.floor_id === 4)];
+        // filter array to matching asset id's
+        return [200, testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()))];
     })
 
 

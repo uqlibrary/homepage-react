@@ -1,7 +1,7 @@
 export default [
     {
         "asset_id": 100000,
-        "asset_id_displayed": "UQL-100000",
+        "asset_id_displayed": "UQL100000",
         "asset_next_test_due_date": "2027-10-01 00: 00: 00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
@@ -46,7 +46,7 @@ export default [
     },
     {
         "asset_id": 100100,
-        "asset_id_displayed": "UQL-100100",
+        "asset_id_displayed": "UQL100100",
         "asset_next_test_due_date": "2027-10-01 00: 00: 00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
@@ -91,7 +91,7 @@ export default [
     },
     {
         "asset_id": 200000,
-        "asset_id_displayed": "UQL-200000",
+        "asset_id_displayed": "UQL200000",
         "asset_next_test_due_date": "2027-10-01 00: 00: 00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "OUTFORREPAIR",
@@ -136,8 +136,8 @@ export default [
     },
     {
         "asset_id": 300000,
-        "asset_id_displayed": "UQL-300000",
-        "asset_next_test_due_date": "2027-10-01 00: 00: 00",
+        "asset_id_displayed": "UQL300000",
+        "asset_next_test_due_date": "",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "DISCARDED",
         "location": {
@@ -157,7 +157,7 @@ export default [
             "asset_type_power_rating": "10",
         },
         "test_last": {
-            "test_last_status": "PASS",
+            "test_last_status": "CURRENT",
             "test_last_device_id": 2,
             "test_last_device_model_name": "TESTER 665-2",
             "test_last_device_serial_number": "W309876",
@@ -181,7 +181,7 @@ export default [
     },
     {
         "asset_id": 310000,
-        "asset_id_displayed": "UQL-310000",
+        "asset_id_displayed": "UQL310000",
         "asset_next_test_due_date": "2027-10-01 00: 00: 00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
@@ -226,7 +226,7 @@ export default [
     },
     {
         "asset_id": 310040,
-        "asset_id_displayed": "UQL-310040",
+        "asset_id_displayed": "UQL310040",
         "asset_next_test_due_date": "2027-10-01 00: 00: 00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
@@ -271,7 +271,7 @@ export default [
     },
     {
         "asset_id": 310050,
-        "asset_id_displayed": "UQL-310050",
+        "asset_id_displayed": "UQL310050",
         "asset_next_test_due_date": "2027-10-01 00: 00: 00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "FAILED",
@@ -292,17 +292,6 @@ export default [
             "asset_type_power_rating": "10",
         },
         "test_last": {
-            "test_last_status": "FAILED",
-            "test_last_device_id": 1,
-            "test_last_device_model_name": "TESTER 620-1",
-            "test_last_device_serial_number": "W309876",
-            "test_last_device_department": "UQL_WSS",
-            "test_last_device_calibrated_date_last": "2022-01-02 00: 00: 00",
-            "test_last_device_calibrated_by_last": 1,
-            "test_last_device_calibration_due_date": "2022-10-01 00: 00: 00",
-            "test_last_date": "2022-10-01 00: 00: 00",
-            "test_last_fail_reason": "Smoke emitting from board",
-            "test_notes": "Will decide what to do later",
         },
         "repair_latest": {
             "Repair_latest_repairer_details": "",

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
-import { Grid, useTheme } from '@material-ui/core';
+import { FormLabel, Grid, useTheme } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard, styles as StandardCardStyles } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -61,19 +61,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const filter = createFilterOptions();
-const status = {
-    PASS: { label: 'PASS', value: 'pass' },
-    FAIL: { label: 'FAIL', value: 'fail' },
+
+const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
+
+const testStatusEnum = {
+    CURRENT: { label: 'PASS', value: 'CURRENT' },
+    FAILED: { label: 'FAIL', value: 'FAILED' },
     NONE: { label: 'NONE', value: 'none' },
 };
 
-const MINIMUM_ASSET_ID_PATTERN_LENGTH = 8;
-
-const getLastLocation = asset => {
-    return asset && typeof asset === 'object' && !!asset.location
-        ? `Site: ${asset.location.site}, Building: ${asset.location.building}, Floor: ${asset.location.floor}, Room: ${asset.location.room}`
-        : 'Unknown';
-};
+// const getLastLocation = asset => {
+//     return asset && typeof asset === 'object' && !!asset.location
+//         ? `Site: ${asset.location.site}, Building: ${asset.location.building},
+// Floor: ${asset.location.floor}, Room: ${asset.location.room}`
+//         : 'Unknown';
+// };
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -108,9 +110,207 @@ function a11yProps(index) {
     };
 }
 
+const useTestPanelStyles = makeStyles(theme => ({
+    card: props => ({
+        borderColor: !props.pass ? theme.palette.error.main : theme.palette.success.main,
+        [theme.breakpoints.down('xs')]: {
+            borderTopWidth: 10,
+        },
+        [theme.breakpoints.up('sm')]: {
+            borderLeftWidth: 10,
+        },
+    }),
+    chip: props => ({
+        backgroundColor: !props.pass ? theme.palette.error.main : theme.palette.success.main,
+        color: theme.palette.primary.contrastText,
+    }),
+    chipIcon: {
+        color: theme.palette.primary.contrastText,
+    },
+    pastTestLabel: {
+        fontWeight: 'bold',
+    },
+}));
+
+const LastTestPanel = ({ asset, currentLocation, disabled }) => {
+    LastTestPanel.propTypes = { asset: PropTypes.object, currentLocation: PropTypes.object, disabled: PropTypes.bool };
+
+    const {
+        asset_status: assetStatus,
+        location: lastLocation,
+        test_last: lastTest,
+        asset_next_test_due_date: nextTestDate,
+    } = asset;
+
+    const didPass = lastTest?.test_last_status === testStatusEnum.CURRENT.value;
+
+    const theme = useTheme();
+    const globalClasses = useStyles();
+    const testPanelClasses = useTestPanelStyles({ pass: didPass });
+    const [previousTestExpanded, setPreviousTestExpanded] = useState(!disabled);
+    const [mismatchingLocation, setMismatchingLocation] = useState(false);
+
+    useEffect(() => {
+        if (!!asset?.asset_id) {
+            setMismatchingLocation(
+                currentLocation.siteid !== lastLocation?.last_site ||
+                    currentLocation.buildingid !== lastLocation?.last_building ||
+                    currentLocation.floorid !== lastLocation?.last_floor ||
+                    currentLocation.roomid !== lastLocation?.last_room,
+            );
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+        asset?.asset_id,
+        currentLocation.siteid,
+        currentLocation.buildingid,
+        currentLocation.floorid,
+        currentLocation.roomid,
+    ]);
+
+    useEffect(() => {
+        if (disabled) {
+            setPreviousTestExpanded(false);
+        }
+    }, [disabled]);
+
+    // if (!!!lastTest) return <></>;
+
+    return (
+        <StandardCard
+            variant="outlined"
+            noPadding={!previousTestExpanded}
+            title={
+                <>
+                    <Typography component={'span'} variant={'h6'} color={disabled ? 'textSecondary' : 'textPrimary'}>
+                        Previous Test {disabled ? 'Unavailable' : ''}
+                    </Typography>
+                    {!!!disabled && (
+                        <>
+                            <Chip
+                                icon={
+                                    didPass ? (
+                                        <DoneIcon classes={{ root: testPanelClasses.chipIcon }} />
+                                    ) : (
+                                        <ClearIcon classes={{ root: testPanelClasses.chipIcon }} />
+                                    )
+                                }
+                                classes={{ root: testPanelClasses.chip }}
+                                label={didPass ? testStatusEnum.CURRENT.label : testStatusEnum.FAILED.label}
+                                component={'span'}
+                            />
+                            {!!mismatchingLocation && (
+                                <ReportProblemOutlinedIcon style={{ color: theme.palette.warning.main }} />
+                            )}
+                        </>
+                    )}
+                </>
+            }
+            headerAction={
+                <IconButton
+                    className={clsx(globalClasses.expand, {
+                        [globalClasses.expandOpen]: previousTestExpanded,
+                    })}
+                    aria-expanded={previousTestExpanded}
+                    aria-label="show more"
+                    onClick={() => setPreviousTestExpanded(!previousTestExpanded)}
+                    disabled={disabled}
+                >
+                    <ExpandMoreIcon />
+                </IconButton>
+            }
+            classes={!disabled ? testPanelClasses : {}}
+        >
+            <Collapse in={previousTestExpanded} timeout="auto">
+                <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                        <Typography component={'span'} className={testPanelClasses.pastTestLabel}>
+                            Status:{' '}
+                        </Typography>
+                        <Typography component={'span'}>{assetStatus?.toUpperCase() ?? 'UNKNOWN'}</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography component={'span'} className={testPanelClasses.pastTestLabel}>
+                            Test Date:{' '}
+                        </Typography>
+                        <Typography component={'span'}>{lastTest?.test_last_date}</Typography>
+                    </Grid>
+                    <Grid container item xs={12}>
+                        <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
+                            <Typography component={'span'} className={testPanelClasses.pastTestLabel}>
+                                Site:{' '}
+                            </Typography>
+                            <Typography component={'span'}>{lastLocation?.last_site_display}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6} lg={3}>
+                            <Typography component={'span'} className={testPanelClasses.pastTestLabel}>
+                                Building:{' '}
+                            </Typography>
+                            <Typography component={'span'}>{lastLocation?.last_building_display}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
+                            <Typography component={'span'} className={testPanelClasses.pastTestLabel}>
+                                Floor:{' '}
+                            </Typography>
+                            <Typography component={'span'}>{lastLocation?.last_floor_display}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
+                            <Typography component={'span'} className={testPanelClasses.pastTestLabel}>
+                                Room:{' '}
+                            </Typography>
+                            <Typography component={'span'}>{lastLocation?.last_room_display}</Typography>
+                        </Grid>
+                        {!!mismatchingLocation && (
+                            <Grid item xs={12} lg={3}>
+                                <ReportProblemOutlinedIcon
+                                    style={{
+                                        color: theme.palette.warning.main,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                    fontSize="small"
+                                />
+                                <Typography
+                                    component={'span'}
+                                    className={testPanelClasses.pastTestLabel}
+                                    style={{ color: theme.palette.warning.main }}
+                                >
+                                    Locations do not match
+                                </Typography>
+                            </Grid>
+                        )}
+                    </Grid>
+                    {!didPass && (
+                        <Grid item xs={12}>
+                            <Typography component={'p'} className={testPanelClasses.pastTestLabel}>
+                                Fail Reason:
+                            </Typography>
+                            <Typography component={'p'}>{lastTest?.test_last_fail_reason ?? 'None'}</Typography>
+                        </Grid>
+                    )}
+                    <Grid item xs={12}>
+                        <Typography component={'p'} className={testPanelClasses.pastTestLabel}>
+                            Test Notes:
+                        </Typography>
+                        <Typography component={'p'}>{lastTest?.test_notes ?? 'None'}</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography component={'span'} className={testPanelClasses.pastTestLabel}>
+                            Next Test Date:{' '}
+                        </Typography>
+                        <Typography component={'span'}>{nextTestDate}</Typography>
+                    </Grid>
+                </Grid>
+            </Collapse>
+        </StandardCard>
+    );
+};
+
 export const TestTag = ({
     actions,
     currentRetestList,
+    currentAssetOwnersList,
     assetsList,
     assetsListLoading,
     assetsListError,
@@ -151,15 +351,83 @@ export const TestTag = ({
             ? testDevices[0].device_id
             : -1,
     );
-    const [assetid, setAssetId] = React.useState(-1);
-    const [assetTypeid, setAssetTypeId] = useState(-1);
-    const [testStatus, setTestStatus] = React.useState(status.NONE);
+    // const [currentAssetid, setCurrentAssetId] = React.useState(-1);
+    // const [assetType, setAssetType] = useState(-1);
+    const [selectedAsset, setSelectedAsset] = useState({});
+    const [formAssetType, setFormAssetType] = useState({});
+    const [currentAssetList, setCurrentAssetList] = useState(assetsList ?? []);
+    const [formTestStatus, setFormTestStatus] = React.useState(testStatusEnum.NONE);
     const [nextTestValue, setNextTestValue] = React.useState(12);
     const [discardingId, setDiscardingId] = React.useState(1);
     const [repairId, setRepairId] = React.useState(1);
     const [selectedTabValue, setSelectedTabValue] = React.useState(0);
     const [eventExpanded, setEventExpanded] = useState(true);
-    const [previousTestExpanded, setPreviousTestExpanded] = useState(false);
+    const [open, setOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        if (!open) {
+            setCurrentAssetList([]);
+        }
+    }, [open]);
+    React.useEffect(() => {
+        console.log('assetlist effect', assetsList);
+        !!assetsList && setCurrentAssetList(...[assetsList]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assetsList]);
+    // const currentAsset = useMemo(
+    //     assetid => {
+    //         console.log(
+    //             'currentasset usememo',
+    //             assetid,
+    //             assetid !== -1
+    //                 ? (assetsList && assetsList?.find(asset => asset.asset_id === assetid)) ?? { asset_id: assetid }
+    //                 : {},
+    //         );
+    //         assetid !== -1
+    //             ? (assetsList && assetsList?.find(asset => asset.asset_id === assetid)) ?? { asset_id: assetid }
+    //             : {};
+    //     },
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //     [assetid, assetsList],
+    // );
+
+    // useEffect(
+    //     () => {
+    //         console.log(
+    //             'currentasset effect',
+    //             assetid,
+    //             !!assetid && assetid !== -1
+    //                 ? (currentAssetList && currentAssetList?.find(asset => asset.asset_id === assetid)) ?? {
+    //                       asset_id: assetid,
+    //                   }
+    //                 : {},
+    //         );
+    //         if (!!assetid && assetid !== -1) {
+    //             setAssetId(assetid);
+
+    //             setCurrentAsset(
+    //                 (currentAssetList && currentAssetList?.find(asset => asset.asset_id === assetid)) ?? {
+    //                     asset_id: assetid,
+    //                 },
+    //             );
+    //         }
+    //     },
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //     [assetid],
+    // );
+
+    const assignCurrentAsset = asset => {
+        console.log('assignCurrentAsset', asset);
+        setSelectedAsset(asset ?? {});
+    };
+
+    // useEffect(()=>{
+    //     if(!!currentAssetid && currentAssetid > -1){
+    //         setCurrentAssetType
+    //     }else{
+    //         setCurrentAssetId(-1);
+    //     }
+    // }, [currentAssetid]);
 
     const handleChange = (event, li, source) => {
         const value =
@@ -178,7 +446,8 @@ export const TestTag = ({
                 setDeviceId(value);
                 break;
             case 'testStatusRadio':
-                setTestStatus(status[value.toUpperCase()]);
+                console.log('testStatusRadio', value, testStatusEnum[value.toUpperCase()]);
+                setFormTestStatus(testStatusEnum[value.toUpperCase()]);
                 break;
             case 'nextTest':
                 setNextTestValue(value);
@@ -222,11 +491,6 @@ export const TestTag = ({
     }, [floorid]);
 
     // useEffect(() => {
-    //     setFloorId('');
-    //     setRoomId({});
-    // }, [buildingid]);
-
-    // useEffect(() => {
     //     setRoomId({});
     // }, [floorid]);
 
@@ -237,7 +501,7 @@ export const TestTag = ({
     //             assetType.find(item => item.id === currentAsset.assetTypeId)) ??
     //             {},
     //     );
-    //     setTestStatus(status.NONE);
+    //     setTestStatus(testStatusEnum.NONE);
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, JSON.stringify(currentAsset));
 
@@ -247,7 +511,7 @@ export const TestTag = ({
             pattern => !!pattern && pattern.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH && actions.loadAssets(pattern),
         ),
     );
-    console.log('assetsList', assetsList);
+
     return (
         <StandardPage title={locale.pageTitle}>
             <Typography component={'h2'} variant={'h5'}>
@@ -443,24 +707,31 @@ export const TestTag = ({
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
                                 fullWidth
+                                open={open}
+                                onOpen={() => {
+                                    setOpen(true);
+                                }}
+                                onClose={() => {
+                                    setOpen(false);
+                                }}
                                 onChange={(event, newValue) => {
+                                    console.log('onchange', event, newValue);
                                     if (typeof newValue === 'string') {
-                                        setAssetId(newValue);
+                                        assignCurrentAsset({ asset_id: newValue, isNew: true });
                                     } else if (newValue && newValue.inputValue) {
                                         // Create a new value from the user input
-                                        setAssetId(newValue.inputValue);
+                                        assignCurrentAsset({ asset_id: newValue.inputValue, isNew: true });
                                     } else {
-                                        setAssetId(newValue);
+                                        assignCurrentAsset(newValue);
                                     }
                                 }}
                                 filterOptions={(options, params) => {
                                     const filtered = filter(options, params);
-
                                     // Suggest the creation of a new value
                                     if (params.inputValue !== '') {
                                         filtered.push({
                                             inputValue: params.inputValue,
-                                            id: `Add "${params.inputValue}"`,
+                                            asset_id_displayed: `Add "${params.inputValue}"`,
                                         });
                                     }
 
@@ -468,7 +739,7 @@ export const TestTag = ({
                                 }}
                                 selectOnFocus
                                 handleHomeEndKeys
-                                options={assetsList ?? []}
+                                options={currentAssetList}
                                 getOptionLabel={option => {
                                     // Value selected with enter, right from the input
                                     if (typeof option === 'string') {
@@ -491,7 +762,7 @@ export const TestTag = ({
                                         variant="standard"
                                         InputLabelProps={{ shrink: true }}
                                         helperText={'Enter a new ID to add'}
-                                        placeholder="UQL-"
+                                        placeholder="UQL000000"
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
@@ -517,9 +788,15 @@ export const TestTag = ({
                                 options={
                                     (!!!assetTypesLoading && !!!assetTypesError && !!assetTypes && assetTypes) ?? []
                                 }
-                                value={assetTypes?.find(assetType => assetType.asset_type_id === assetTypeid) ?? ''}
+                                value={
+                                    assetTypes?.find(
+                                        assetType =>
+                                            assetType.asset_type_id ===
+                                            (formAssetType?.asset_type ?? selectedAsset?.asset_type?.asset_type),
+                                    ) ?? ''
+                                }
                                 onChange={(event, newValue) => {
-                                    setAssetTypeId(newValue.asset_type_id);
+                                    setFormAssetType(newValue.asset_type);
                                 }}
                                 getOptionLabel={option => option.asset_type_name ?? option}
                                 renderInput={params => (
@@ -552,116 +829,33 @@ export const TestTag = ({
                     <Grid item sm={3}>
                         <FormControl className={classes.formControl} fullWidth>
                             <InputLabel shrink>Asset owner</InputLabel>
-                            <Select className={classes.formSelect} value={'UQ LIBRARY'}>
-                                <MenuItem value="UQ LIBRARY">UQ LIBRARY</MenuItem>
+                            <Select className={classes.formSelect} value={currentAssetOwnersList[0].value}>
+                                {currentAssetOwnersList.map(owner => (
+                                    <MenuItem value={owner.value}>{owner.label}</MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
-                    {/* {!!currentAsset && Object.keys(currentAsset).length > 0 && (
-                        <>
-                            <Grid item sm={12}>
-                                <Typography component={'p'}>Last location: {getLastLocation(currentAsset)}</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography component={'p'}>
-                                    Last test date: {currentAsset.lastTest?.date ?? 'Unknown'}
-                                </Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography component={'p'}>
-                                    Last test status: {currentAsset.lastTest?.status?.label ?? 'Unknown'}
-                                </Typography>
-                            </Grid>
-                            <Grid item sm={12}>
-                                <Typography component={'p'}>
-                                    Last test notes: {currentAsset.lastTest?.testNotes ?? 'None'}
-                                </Typography>
-                            </Grid>
-                            {!!currentAsset.lastTest &&
-                                !!currentAsset.lastTest?.action &&
-                                (currentAsset.lastTest?.status === status.FAIL ||
-                                    (currentAsset.lastTest?.status === status.PASS &&
-                                        currentAsset.lastTest?.action === action.DISCARDED)) && (
-                                    <Grid item sm={12}>
-                                        <Typography component={'p'}>
-                                            {currentAsset.lastTest?.action.label} Notes:{' '}
-                                            {currentAsset.lastTest?.actionNotes ?? 'None'}
-                                        </Typography>
-                                    </Grid>
-                                )}
-                        </>
-                    )} */}
                 </Grid>
-                <StandardCard
-                    variant="outlined"
-                    title={
-                        <>
-                            <Typography component={'span'} variant={'h6'}>
-                                Previous Test
-                            </Typography>
-                            <Chip
-                                style={{
-                                    backgroundColor: theme.palette.success.main,
-                                    color: theme.palette.primary.contrastText,
-                                }}
-                                avatar={<DoneIcon style={{ color: theme.palette.primary.contrastText }} />}
-                                label="PASS"
-                                component={'span'}
-                            />
-                            <ReportProblemOutlinedIcon style={{ color: theme.palette.warning.main }} />
-                        </>
-                    }
-                    headerAction={
-                        <IconButton
-                            className={clsx(classes.expand, {
-                                [classes.expandOpen]: previousTestExpanded,
-                            })}
-                            aria-expanded={previousTestExpanded}
-                            aria-label="show more"
-                            onClick={() => setPreviousTestExpanded(!previousTestExpanded)}
-                        >
-                            <ExpandMoreIcon />
-                        </IconButton>
-                    }
-                    style={{ borderLeft: `10px solid ${theme.palette.success.main}` }}
-                >
-                    <Collapse in={previousTestExpanded} timeout="auto">
-                        <Grid item xs={12}>
-                            <Typography component={'p'}>Next Test Date: October 21, 2022</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={10}>
-                            <Typography component={'span'}>Date: April 22, 2022</Typography>
-                            <Typography component={'span'}>Site: St Lucia</Typography>
-                            <Typography component={'span'}>Building: Biological Sciences Library</Typography>
-                            <Typography component={'span'}>Floor: 1</Typography>
-                            <Typography component={'span'}>Room: L104B</Typography>
-                            <Typography component={'span'}>Date: April 22, 2022</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
-                            <Typography component={'span'} style={{ color: theme.palette.warning.main }}>
-                                <ReportProblemOutlinedIcon style={{ color: theme.palette.warning.main }} /> Locations do
-                                not match
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component={'p'}>Test Notes:</Typography>
-                            <Typography component={'p'}>
-                                The test went well, need to watch out for potential to arc at the next test as
-                                connection is looking slightly wobbly. Defo keep an eye on that for the next test
-                            </Typography>
-                        </Grid>
-                    </Collapse>
-                </StandardCard>
-                <StandardCard title="Test" style={{ marginTop: 30, marginBottom: 30 }} smallTitle>
+                <LastTestPanel
+                    asset={selectedAsset ?? {}}
+                    currentLocation={{ siteid, buildingid, floorid, roomid }}
+                    disabled={!!!selectedAsset?.test_last?.test_last_status ?? true}
+                />
+                <StandardCard title="Test" style={{ marginTop: 30, marginBottom: 30 }} smallTitle variant="outlined">
                     <Grid container spacing={3}>
-                        <Grid item sm={6}>
+                        <Grid item xs={12}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel shrink>Testing device</InputLabel>
+                                <InputLabel required htmlFor="testResultTestingDevice">
+                                    Testing device
+                                </InputLabel>
                                 <Select
                                     fullWidth
                                     className={classes.formSelect}
+                                    id="testResultTestingDevice"
                                     value={deviceid ?? ''}
                                     onChange={e => setDeviceId(e.target.value)}
+                                    required
                                 >
                                     {!!testDevicesLoading && (
                                         <MenuItem value={-1} disabled key={'devicetypes-loading'}>
@@ -680,60 +874,67 @@ export const TestTag = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item sm={6} style={{ textAlign: 'end' }}>
-                            <Typography component={'span'}>Test Result</Typography>
-                            <ToggleButtonGroup
-                                value={testStatus.value}
-                                exclusive
-                                aria-label="test result"
-                                size="small"
-                                defaultChecked={false}
-                                onChange={(e, child) => handleChange(e, child, 'testStatusRadio')}
-                            >
-                                <ToggleButton
-                                    value={status.PASS.value}
-                                    aria-label="pass"
-                                    style={{
-                                        backgroundColor:
-                                            testStatus.value === status.PASS.value
-                                                ? theme.palette.success.main
-                                                : theme.palette.grey[300],
-                                        color:
-                                            testStatus.value === status.PASS.value
-                                                ? theme.palette.primary.contrastText
-                                                : theme.palette.text.main,
-                                    }}
+                        <Grid item xs={12}>
+                            <Box margin={1}>
+                                <InputLabel shrink required htmlFor="testResultToggleButtons">
+                                    Test Result
+                                </InputLabel>
+                                <ToggleButtonGroup
+                                    value={(!!formTestStatus && formTestStatus.value) ?? testStatusEnum.NONE.value}
+                                    exclusive
+                                    id="testResultToggleButtons"
+                                    size="small"
+                                    defaultChecked={false}
+                                    onChange={(e, child) => setFormTestStatus(testStatusEnum[child.toUpperCase()])}
                                 >
-                                    <DoneIcon /> PASS
-                                </ToggleButton>
-                                <ToggleButton
-                                    value={status.FAIL.value}
-                                    aria-label="fail"
-                                    style={{
-                                        backgroundColor:
-                                            testStatus.value === status.FAIL.value
-                                                ? theme.palette.error.main
-                                                : theme.palette.grey[300],
-                                        color:
-                                            testStatus.value === status.FAIL.value
-                                                ? theme.palette.primary.contrastText
-                                                : theme.palette.text.main,
-                                    }}
-                                >
-                                    <ClearIcon /> FAIL
-                                </ToggleButton>
-                            </ToggleButtonGroup>
+                                    <ToggleButton
+                                        value={testStatusEnum.CURRENT.value}
+                                        aria-label="pass"
+                                        style={{
+                                            backgroundColor:
+                                                formTestStatus?.value === testStatusEnum.CURRENT.value
+                                                    ? theme.palette.success.main
+                                                    : theme.palette.grey[300],
+                                            color:
+                                                formTestStatus?.value === testStatusEnum.CURRENT.value
+                                                    ? theme.palette.primary.contrastText
+                                                    : theme.palette.text.main,
+                                        }}
+                                    >
+                                        <DoneIcon /> PASS
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        value={testStatusEnum.FAILED.value}
+                                        aria-label="fail"
+                                        style={{
+                                            backgroundColor:
+                                                formTestStatus?.value === testStatusEnum.FAILED.value
+                                                    ? theme.palette.error.main
+                                                    : theme.palette.grey[300],
+                                            color:
+                                                formTestStatus?.value === testStatusEnum.FAILED.value
+                                                    ? theme.palette.primary.contrastText
+                                                    : theme.palette.text.main,
+                                        }}
+                                    >
+                                        <ClearIcon /> FAIL
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Box>
                         </Grid>
 
-                        {!!testStatus && testStatus.value === status.PASS.value && (
+                        {formTestStatus?.value === testStatusEnum.CURRENT.value && (
                             <Grid item sm={12}>
                                 <FormControl className={classes.formControl}>
-                                    <InputLabel shrink>Next test due</InputLabel>
+                                    <InputLabel shrink required>
+                                        Next test due
+                                    </InputLabel>
                                     <Select
                                         fullWidth
                                         className={classes.formSelect}
                                         value={nextTestValue}
                                         onChange={(e, child) => handleChange(e, child, 'nextTest')}
+                                        required
                                     >
                                         {currentRetestList.map(retestPeriod => (
                                             <MenuItem
@@ -754,7 +955,7 @@ export const TestTag = ({
                                 </FormControl>
                             </Grid>
                         )}
-                        {!!testStatus && testStatus.value === status.FAIL.value && (
+                        {formTestStatus?.value === testStatusEnum.FAILED.value && (
                             <Grid item sm={12}>
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
@@ -764,6 +965,7 @@ export const TestTag = ({
                                         defaultValue=""
                                         variant="standard"
                                         InputProps={{ fullWidth: true }}
+                                        required
                                     />
                                 </FormControl>
                             </Grid>
@@ -893,6 +1095,7 @@ export const TestTag = ({
 TestTag.propTypes = {
     actions: PropTypes.object,
     currentRetestList: PropTypes.array,
+    currentAssetOwnersList: PropTypes.array,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,

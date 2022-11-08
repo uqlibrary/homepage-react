@@ -11,6 +11,8 @@ const currentRetestList = [
     { value: '60', label: '5 years' },
 ];
 
+const currentAssetOwnersList = [{ value: 'UQL-WSS', label: 'UQL-WSS' }];
+
 export const mapStateToProps = state => {
     return {
         ...state.get('testTagLocationReducer'),
@@ -23,6 +25,7 @@ const mapDispatchToProps = dispatch => {
     return {
         actions: bindActionCreators(actions, dispatch),
         currentRetestList,
+        currentAssetOwnersList,
     };
 };
 
