@@ -75,8 +75,8 @@ export const currentPanels = [
                 user_group: 'PUBLIC',
                 user_group_name: 'Public (Not logged in}',
                 is_panel_default_for_this_user: 'N',
-                panel_schedule_start_time: '2022-01-12 10:00:00',
-                panel_schedule_end_time: '2022-01-12 10:00:00',
+                panel_schedule_start_time: '2022-12-01 00:00:00',
+                panel_schedule_end_time: '2022-12-25 00:00:00',
             },
         ],
     },
@@ -94,8 +94,8 @@ export const userListPanels = [
                 panel_content:
                     "<p>Currently studying for exams?</p><ul><li>Private study rooms available</li><li>Extended library hours</li><li>Extended facility operating hours</li></ul><p>Please note: Ensure that you have <strong>All the information you need</strong> before commencing your studies</p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page for resources and advice.</p>",
 
-                panel_schedule_start_time: '2022-01-12 10:00:00',
-                panel_schedule_end_time: '2022-01-12 10:00:00',
+                panel_schedule_start_time: '2022-12-01 00:00:00',
+                panel_schedule_end_time: '2022-12-25 00:00:00',
                 panel_created_at: '2022-11-06T23:59',
             },
         ],

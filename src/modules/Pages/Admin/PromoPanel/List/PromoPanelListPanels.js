@@ -265,8 +265,13 @@ export const PromoPanelListPanels = ({
         }
     };
 
-    const navigateToEditForm = alertid => {
-        history.push(`/admin/promopanel/edit/${alertid}`);
+    const navigateToEditForm = panelId => {
+        history.push(`/admin/promopanel/edit/${panelId}`);
+        scrollToTopOfPage();
+    };
+
+    const navigateToCloneForm = panelId => {
+        history.push(`/admin/promopanel/clone/${panelId}`);
         scrollToTopOfPage();
     };
     return (
@@ -410,7 +415,7 @@ export const PromoPanelListPanels = ({
                                                     row={item}
                                                     deletePanelById={row => deletePanelById(row)}
                                                     mainButtonLabel={'Edit'}
-                                                    // navigateToCloneForm={navigateToCloneForm}
+                                                    navigateToCloneForm={navigateToCloneForm}
                                                     navigateToEditForm={row => navigateToEditForm(row)}
                                                     // navigateToView={navigateToView}
                                                     confirmDeleteLocale={confirmDeleteLocale}

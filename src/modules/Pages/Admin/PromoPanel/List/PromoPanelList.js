@@ -167,11 +167,11 @@ export const PromoPanelList = ({
 
     return (
         <StandardPage title="Promo panel management">
-            <PromoPanelListActive
+            {/* <PromoPanelListActive
                 isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
                 title="Currently shown panels"
-            />
+            /> */}
             <PromoPanelUtilityArea
                 actions={actions}
                 helpContent={locale.listPage.help}
@@ -179,7 +179,7 @@ export const PromoPanelList = ({
                 showAddButton
             />
 
-            <PromoPanelListSchedules
+            {/* <PromoPanelListSchedules
                 actions={actions}
                 isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
@@ -190,7 +190,7 @@ export const PromoPanelList = ({
                 canClone
                 canDelete
                 panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
-            />
+            /> */}
 
             <PromoPanelListPanels
                 actions={actions}

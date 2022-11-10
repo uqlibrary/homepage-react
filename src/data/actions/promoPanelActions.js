@@ -192,8 +192,6 @@ export const deletePanel = panelID => {
 };
 
 export const unschedulePanel = (panelID, userType) => {
-    console.log('Firing action Unschedule panel', panelID, userType);
-    console.log('URL', PROMOPANEL_UNSCHEDULE_API({ id: panelID, userType: userType }));
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_UNSCHEDULING });
 

@@ -198,9 +198,7 @@ export const PromoPanelListSchedules = ({
         return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
     }
 
-    const handleGroupDefaultChange = (userGroup, panel) => {
-        console.log(userGroup, panel);
-    };
+    const handleGroupDefaultChange = (userGroup, panel) => {};
 
     const handleCheckboxChange = e => {
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
@@ -262,7 +260,6 @@ export const PromoPanelListSchedules = ({
             });
     }
     function unschedulePanelById(id, row) {
-        console.log('ID:', id, 'row', row);
         actions
             .unschedulePanel(id, row.user_group)
             .then(() => {
@@ -384,7 +381,6 @@ export const PromoPanelListSchedules = ({
                                     </TableCell>
                                 </TableRow>
                             )}
-
                             {!isLoading &&
                                 panelList.map((item, id) => {
                                     rowMarker = 0;
@@ -475,7 +471,6 @@ export const PromoPanelListSchedules = ({
 
                                             {item.scheduled_panels.length > 0 &&
                                                 item.scheduled_panels.map((row, id) => {
-                                                    console.log('ROW CHECK', row);
                                                     if (
                                                         row.panel_schedule_end_time &&
                                                         moment(row.panel_schedule_end_time).toDate() > new moment()
@@ -563,7 +558,7 @@ export const PromoPanelListSchedules = ({
                                                             </TableRow>
                                                         );
                                                     } else {
-                                                        return '';
+                                                        return null;
                                                     }
                                                 })}
                                         </React.Fragment>

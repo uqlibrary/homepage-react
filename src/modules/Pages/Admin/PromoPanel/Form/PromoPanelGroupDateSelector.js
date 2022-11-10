@@ -60,7 +60,6 @@ export const PromoPanelGroupDateSelector = ({
     scheduleChangeIndex,
 }) => {
     const classes = useStyles();
-    console.log('IS EDITING DATE', isEditingDate);
 
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(defaultEndDate);
@@ -71,24 +70,19 @@ export const PromoPanelGroupDateSelector = ({
     }, [defaultStartDate, defaultEndDate]);
 
     const handleChange = event => value => {
-        console.log('event', event, value);
-        console.log('prop', value.format('YYYY/MM/DD hh:mm a'));
         event === 'start'
             ? setStartDate(value.format('YYYY-MM-DD HH:mm'))
             : setEndDate(value.format('YYYY-MM-DD HH:mm'));
     };
 
     const handleGroupDateClose = () => {
-        console.log('Group Date Close');
         handleCloseGroupDate();
     };
 
     const handleGroupDateSave = () => {
-        console.log('Group Date Save');
         handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
     };
 
-    console.log('ScheduleChangeIndex', scheduleChangeIndex);
     return (
         <React.Fragment>
             <Dialog

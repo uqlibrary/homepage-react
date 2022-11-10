@@ -51,7 +51,13 @@ const useStyles = makeStyles(theme => ({
         cursor: 'pointer',
     },
 }));
-export const PromoPanelFormConfirmation = ({ isConfirmOpen, confirmAction, cancelAction, confirmationMessage }) => {
+export const PromoPanelFormConfirmation = ({
+    confirmationMode,
+    isConfirmOpen,
+    confirmSave,
+    cancelAction,
+    confirmationMessage,
+}) => {
     const classes = useStyles();
 
     return (
@@ -63,34 +69,58 @@ export const PromoPanelFormConfirmation = ({ isConfirmOpen, confirmAction, cance
             >
                 <DialogTitle
                     id="lightboxTitle"
-                    data-testid="panel-edit-date-title"
+                    data-testid="panel-save-or-schedule-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
-                    children={<p style={{ lineHeight: 1, margin: 0 }}>{'Please Confirm'}</p>}
+                    children={
+                        <p style={{ lineHeight: 1, margin: 0 }}>
+                            {confirmationMode === 'save' ? 'Please Confirm' : 'Schedule Conflict'}
+                        </p>
+                    }
                 />
-                <DialogContent>
-                    <Grid container spacing={1}>
-                        {confirmationMessage}
-                    </Grid>
+                {confirmationMode === 'save' && (
+                    <DialogContent>
+                        <Grid container spacing={1}>
+                            {confirmationMessage}
+                        </Grid>
 
-                    <Grid item xs={12} align="right">
-                        <Button
-                            style={{ marginTop: 10 }}
-                            color="secondary"
-                            children="Cancel"
-                            data-testid="admin-promopanel-group-button-cancel"
-                            variant="contained"
-                            onClick={cancelAction}
-                        />
-                        <Button
-                            style={{ marginTop: 10 }}
-                            color="primary"
-                            children="Confirm"
-                            data-testid="admin-promopanel-group-button-save"
-                            variant="contained"
-                            onClick={confirmAction}
-                        />
-                    </Grid>
-                </DialogContent>
+                        <Grid item xs={12} align="right">
+                            <Button
+                                style={{ marginTop: 10 }}
+                                color="secondary"
+                                children="Cancel"
+                                data-testid="admin-promopanel-group-button-cancel"
+                                variant="contained"
+                                onClick={cancelAction}
+                            />
+                            <Button
+                                style={{ marginTop: 10 }}
+                                color="primary"
+                                children="Confirm"
+                                data-testid="admin-promopanel-group-button-save"
+                                variant="contained"
+                                onClick={confirmSave}
+                            />
+                        </Grid>
+                    </DialogContent>
+                )}
+                {confirmationMode === 'schedule' && (
+                    <DialogContent>
+                        <Grid container spacing={1}>
+                            {confirmationMessage}
+                        </Grid>
+
+                        <Grid item xs={12} align="right">
+                            <Button
+                                style={{ marginTop: 10 }}
+                                color="secondary"
+                                children="Cancel"
+                                data-testid="admin-promopanel-group-button-cancel"
+                                variant="contained"
+                                onClick={cancelAction}
+                            />
+                        </Grid>
+                    </DialogContent>
+                )}
             </Dialog>
         </React.Fragment>
     );
@@ -98,7 +128,8 @@ export const PromoPanelFormConfirmation = ({ isConfirmOpen, confirmAction, cance
 
 PromoPanelFormConfirmation.propTypes = {
     isConfirmOpen: PropTypes.bool,
-    confirmAction: PropTypes.func,
+    confirmationMode: PropTypes.string,
+    confirmSave: PropTypes.func,
     cancelAction: PropTypes.func,
     confirmationMessage: PropTypes.any,
 };

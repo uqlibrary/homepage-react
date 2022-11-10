@@ -74,7 +74,6 @@ export const PromoPanelEdit = ({
             promoPanelList.map(item => {
                 if (`${item.panel_id}` === `${promopanelid}`) {
                     item.user_groups.map(element => {
-                        console.log('ELEMENT', element, element.is_panel_default_for_this_user);
                         if (element.is_panel_default_for_this_user === 'Y' && !isDefault) {
                             setIsDefault(true);
                         }

@@ -115,6 +115,8 @@ export const PromoPanelForm = ({
     const [editDate, setEditDate] = useState({ start: null, end: null });
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [confirmationMessage, setConfirmationMessage] = useState(null);
+    const [confirmationMode, setConfirmationMode] = useState('');
+    const [mode, setMode] = useState({ validate: true });
 
     const [values, setValues] = useState({
         ...defaults,
@@ -179,14 +181,14 @@ export const PromoPanelForm = ({
             isPreviewOpen: true,
         });
     };
-    const cancelSavePromo = () => {
+    const cancelConfirmation = () => {
         setIsConfirmOpen(false);
     };
     const confirmSavePromo = () => {
+        setConfirmationMode('save');
         if (values.is_default_panel) {
             // show the confirmation box that it will overwrite the groups default with THIS panel.
             const formGroups = [];
-            console.log('Display List', displayList);
             displayList.map(item => {
                 formGroups.push(item.groupNames);
             });
@@ -196,10 +198,8 @@ export const PromoPanelForm = ({
     };
 
     const savePromoPanel = () => {
-        console.log('savePromoPanel');
         let defaultOrScheduledGroups = {};
         // validate if a default's already been set for any of these groups
-        console.log('VALUES AGAIN', values);
         if (values.is_default_panel) {
             defaultOrScheduledGroups = {
                 panel_default_groups: values.defaultList.map(item => item.groupNames),
@@ -220,22 +220,16 @@ export const PromoPanelForm = ({
             }
         }
 
-        // console.log('VALUES', defaultOrScheduledGroups);
-
         const newValues = {
             panel_id: isEdit ? values.id : null,
             panel_title: values.title,
             panel_content: values.content,
             panel_admin_notes: values.admin_notes,
             ...defaultOrScheduledGroups,
-            // panel_groups: selectorGroupNames, // possibly use a function here for group validation
-            // panel_start: formatDate(values.start),
-            // panel_end: formatDate(values.end),
         };
 
-        console.log('New Values to fire to createPromoPanel:', newValues);
-
-        actions.createPromoPanel(newValues);
+        setIsConfirmOpen(false);
+        actions.createPromoPanel(newValues).then(navigateToListPage());
     };
     const handleContentChange = data => {
         setValues({
@@ -261,44 +255,69 @@ export const PromoPanelForm = ({
         setSelectorGroupNames(selections);
     };
 
-    const handleAddSchedule = groups => {
-        // const newGroups = [...scheduledGroups];
-        // selectorGroupNames.map(item => {
-        //     !newGroups.includes(item) && newGroups.push(item);
-        // });
-
-        // setScheduledGroups(newGroups);
-
-        // const unscheduledGroup = knownGroups
-        //     .filter(item => selectorGroupNames.indexOf(item) < 0)
-        //     .filter(item => newGroups.indexOf(item) < 0);
-
-        // setUnscheduledGroups(unscheduledGroup);
+    const handleAddSchedule = () => {
+        setConfirmationMode('schedule');
+        let isValid = true;
 
         const allocatedList = [...displayList];
         selectorGroupNames.map(item => {
-            allocatedList.push({
-                startDate: moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
-                endDate: moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
-                groupNames: item,
+            if (!!!values.is_default_panel && !!mode.validate) {
+                fullPromoPanelUserTypeList.map(schedules => {
+                    if (
+                        schedules.user_group === item &&
+                        schedules.scheduled_panels &&
+                        schedules.scheduled_panels.length > 0
+                    ) {
+                        schedules.scheduled_panels.map(schedule => {
+                            if (
+                                (moment(values.start).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
+                                    moment(values.start).isSameOrBefore(moment(schedule.panel_schedule_end_time))) ||
+                                (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(values.start)) &&
+                                    moment(schedule.panel_schedule_start_time).isSameOrBefore(moment(values.end)))
+                            ) {
+                                setConfirmationMessage(
+                                    locale.form.scheduleConflict.alert(
+                                        item,
+                                        schedule.panel_title,
+                                        schedule.panel_schedule_start_time,
+                                        schedule.panel_schedule_end_time,
+                                    ),
+                                );
+                                isValid = false;
+                            }
+                        });
+                    }
+                });
+            }
+            if (isValid) {
+                allocatedList.push({
+                    startDate: moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
+                    endDate: moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
+                    groupNames: item,
+                });
+            }
+        });
+
+        if (isValid) {
+            setSelectorGroupNames([]);
+
+            // allocatedList.push({
+            //     groupNames: selectorGroupNames,
+            //     startDate: values.start,
+            //     endDate: values.end,
+            // });
+
+            setValues({
+                ...values,
+                // scheduledGroups: newGroups,
+                scheduledList: values.is_default_panel ? values.scheduledList : allocatedList,
+                defaultList: values.is_default_panel ? allocatedList : values.defaultList,
             });
-        });
-
-        setSelectorGroupNames([]);
-
-        // allocatedList.push({
-        //     groupNames: selectorGroupNames,
-        //     startDate: values.start,
-        //     endDate: values.end,
-        // });
-
-        setValues({
-            ...values,
-            // scheduledGroups: newGroups,
-            scheduledList: values.is_default_panel ? values.scheduledList : allocatedList,
-            defaultList: values.is_default_panel ? allocatedList : values.defaultList,
-        });
-        setDisplayList(allocatedList);
+            setDisplayList(allocatedList);
+        } else {
+            setIsConfirmOpen(true);
+        }
+        setMode({ validate: true });
     };
 
     const handleChange = prop => event => {
@@ -550,7 +569,7 @@ export const PromoPanelForm = ({
                                     color="primary"
                                     children={values.is_default_panel ? 'Add default' : 'Add schedule'}
                                     data-testid="admin-promopanel-form-button-addSchedule"
-                                    onClick={() => handleAddSchedule(values.scheduledGroups)}
+                                    onClick={() => handleAddSchedule()}
                                     variant="contained"
                                     disabled={selectorGroupNames.length < 1}
                                 />
@@ -573,7 +592,9 @@ export const PromoPanelForm = ({
                                             <Typography style={{ fontWeight: 'bold' }}>Scheduled End</Typography>
                                         </Grid>
                                         <Grid item xs={4}>
-                                            <Typography style={{ fontWeight: 'bold' }}>Actions</Typography>
+                                            <Typography style={{ fontWeight: 'bold', textAlign: 'right' }}>
+                                                Actions
+                                            </Typography>
                                         </Grid>
                                     </Grid>
                                     {displayList.length > 0 &&
@@ -592,30 +613,25 @@ export const PromoPanelForm = ({
                                                         {!values.is_default_panel &&
                                                             moment(item.endDate).format('dddd DD/MM/YYYY HH:mm a')}
                                                     </Grid>
-                                                    <Grid item xs={4}>
-                                                        <Grid container>
-                                                            {!!!values.is_default_panel && (
-                                                                <Grid item xs={6}>
-                                                                    <Button
-                                                                        color="primary"
-                                                                        children="Change Schedule"
-                                                                        data-testid="admin-promopanel-form-button-editSchedule"
-                                                                        onClick={() => editPanelGroupSchedule(index)}
-                                                                        variant="contained"
-                                                                    />
-                                                                </Grid>
-                                                            )}
+                                                    <Grid item xs={4} style={{ textAlign: 'right' }}>
+                                                        {!!!values.is_default_panel && (
+                                                            <Button
+                                                                color="primary"
+                                                                children="Change Schedule"
+                                                                data-testid="admin-promopanel-form-button-editSchedule"
+                                                                onClick={() => editPanelGroupSchedule(index)}
+                                                                variant="contained"
+                                                            />
+                                                        )}
 
-                                                            <Grid item xs={6}>
-                                                                <Button
-                                                                    color="primary"
-                                                                    children="Remove group"
-                                                                    data-testid="admin-promopanel-form-button-editSchedule"
-                                                                    onClick={() => removePanelGroupSchedule(index)}
-                                                                    variant="contained"
-                                                                />
-                                                            </Grid>
-                                                        </Grid>
+                                                        <Button
+                                                            style={{ marginLeft: 10 }}
+                                                            color="primary"
+                                                            children="Remove group"
+                                                            data-testid="admin-promopanel-form-button-editSchedule"
+                                                            onClick={() => removePanelGroupSchedule(index)}
+                                                            variant="contained"
+                                                        />
                                                     </Grid>
                                                 </Grid>
                                             );
@@ -635,7 +651,6 @@ export const PromoPanelForm = ({
                                 variant="contained"
                             />
                         </Grid>
-                        {console.log('values to check for validation', values)}
                         <Grid item xs={9} align="right">
                             <Button
                                 color="primary"
@@ -695,10 +710,12 @@ export const PromoPanelForm = ({
                 handleSaveGroupDate={handleSaveGroupDate}
             />
             <PromoPanelFormConfirmation
+                confirmationMode={confirmationMode}
                 isConfirmOpen={isConfirmOpen}
                 confirmationMessage={confirmationMessage}
-                confirmAction={savePromoPanel}
-                cancelAction={cancelSavePromo}
+                confirmSave={savePromoPanel}
+                confirmAddSchedule={handleAddSchedule}
+                cancelAction={cancelConfirmation}
             />
         </Fragment>
     );

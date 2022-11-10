@@ -148,20 +148,14 @@ export const PromoPanelListActive = ({ panelList, title, isLoading, panelError }
     const handlePreviewClose = () => setPreviewOpen(false);
 
     const calculateCurrentPanel = list => {
-        console.log('List passed to calculate', list);
         let currentPanel = null;
         let panelType = null;
         let panelEnd = null;
         if (list.scheduled_panels && list.scheduled_panels.length > 0) {
             list.scheduled_panels.map(item => {
                 const currentTime = new moment();
-                console.log('the item is', item);
-                console.log('the panel schedule start time', moment(item.panel_schedule_start_time).toDate());
-                console.log('the current time is', moment(currentTime).toDate());
                 const startTime = moment(item.panel_schedule_start_time).toDate();
                 const endTime = moment(item.panel_schedule_end_time).toDate();
-                console.log('AFTER START TIME', startTime < currentTime);
-                console.log('BEFORE END TIME', endTime > currentTime);
                 if (startTime < currentTime && endTime > currentTime) {
                     currentPanel = item.panel_title;
                     panelType = 'Scheduled';
@@ -218,12 +212,11 @@ export const PromoPanelListActive = ({ panelList, title, isLoading, panelError }
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {console.log('Panel List', panelList, isLoading)}
                             {!isLoading &&
                                 panelList.map((item, id) => {
                                     const [panelName, panelType, panelEnd] = calculateCurrentPanel(item);
                                     return (
-                                        <>
+                                        <React.Fragment key={id}>
                                             <TableRow>
                                                 <TableCell>{item.user_group_name}</TableCell>
 
@@ -235,7 +228,7 @@ export const PromoPanelListActive = ({ panelList, title, isLoading, panelError }
                                                 </TableCell>
                                                 <TableCell>...</TableCell>
                                             </TableRow>
-                                        </>
+                                        </React.Fragment>
                                     );
                                 })}
                         </TableBody>

@@ -1,99 +1,164 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { useParams } from 'react-router';
-
-// import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-// import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-
+import { useParams } from 'react-router';
 // import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 // import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
-// import { getTimeMondayMidnightNext, getTimeSundayNextFormatted }
-// from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+// import {
+//     getStartOfDayFormatted,
+//     getTimeMondayMidnightNext,
+//     getTimeSundayNextFormatted,
+// } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+
+import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/PromoPanelForm';
+
 // import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
-export const PromoPanelClone = (
-    {
-        // actions,
-        // spotlight,
-        // spotlightError,
-        // spotlightStatus,
-        // history,
-        // publicFileUploading,
-        // publicFileUploadError,
-        // publicFileUploadResult,
-        // spotlights,
-        // spotlightsLoading,
-    },
-) => {
-    // const { spotlightid } = useParams();
+export const PromoPanelClone = ({
+    actions,
+    promoPanelList,
+    promoPanelListLoading,
+    promoPanelUserTypesLoading,
+    promoPanelUserTypeList,
+    history,
+}) => {
+    const { promopanelid } = useParams();
 
-    // const [defaults, setDefaults] = React.useState({});
+    const [scheduleList, setScheduleList] = React.useState([]);
+    const [userList, setUserList] = React.useState([]);
+    const [knownGroups, setKnownGroups] = React.useState([]);
+    const [currentPanel, setCurrentPanel] = React.useState(null);
+    const [isDefault, setIsDefault] = React.useState(false);
 
-    // React.useEffect(() => {
-    //     /* istanbul ignore else */
-    //     if (!!spotlightid) {
-    //         actions.loadASpotlight(spotlightid);
-    //         actions.loadAllSpotlights();
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [spotlightid]);
+    const defaults = {
+        id: null,
+        startDateDefault: getTimeMondayMidnightNext(),
+        endDateDefault: getTimeSundayNextFormatted(),
+        title: '',
+        name: '',
+        content: '',
+        group: 'Public',
+        admin_notes: '',
+        isPreviewOpen: false,
+        is_default_panel: isDefault,
+        scheduledGroups: userList,
+    };
 
-    // React.useEffect(() => {
-    //     if (!!spotlightid && spotlight?.id === spotlightid) {
-    //         setDefaults({
-    //             id: spotlight?.id || /* istanbul ignore next */ '',
-    //             startDateDefault: getTimeMondayMidnightNext(),
-    //             endDateDefault: getTimeSundayNextFormatted(),
-    //             title: spotlight?.title || /* istanbul ignore next */ '',
-    //             url: spotlight?.url || /* istanbul ignore next */ '',
-    //             // eslint-disable-next-line camelcase
-    //             img_url: spotlight?.img_url || /* istanbul ignore next */ '',
-    //             // eslint-disable-next-line camelcase
-    //             img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
-    //             weight: spotlight?.weight || 1000,
-    //             active: spotlight?.active || 0,
-    //             // minimumDate: getStartOfDayFormatted(),
-    //             type: 'clone',
-    //             // eslint-disable-next-line camelcase
-    //             admin_notes: spotlight?.admin_notes || /* istanbul ignore next */ '',
-    //         });
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [spotlight]);
+    React.useEffect(() => {
+        /* istanbul ignore else */
+        if (
+            !!!promoPanelListLoading &&
+            !!!promoPanelUserTypesLoading &&
+            (promoPanelList.length < 1 || promoPanelUserTypeList.length < 1)
+        ) {
+            actions.loadPromoPanelList();
+            actions.loadPromoPanelUserList();
+        }
 
-    // if (
-    //     spotlightStatus === 'loading' ||
-    //     spotlightStatus === null ||
-    //     !!publicFileUploading ||
-    //     !defaults ||
-    //     !defaults.id
-    // ) {
-    //     return (
-    //         <div style={{ minHeight: 600 }}>
-    //             <InlineLoader message="Loading" />
-    //         </div>
-    //     );
-    // }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
+    React.useEffect(() => {
+        if (promoPanelUserTypeList.length > 0) {
+            const known = [];
+            promoPanelUserTypeList.map(item => !known.includes(item.user_group) && known.push(item.user_group));
+            setKnownGroups(known);
+        }
+        if (promoPanelList.length > 0) {
+            const userlist = [];
+            const schedule = [];
+            setCurrentPanel(...promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`));
+            promoPanelList.map(item => {
+                if (`${item.panel_id}` === `${promopanelid}`) {
+                    item.user_groups.map(element => {
+                        if (element.is_panel_default_for_this_user === 'Y' && !isDefault) {
+                            setIsDefault(true);
+                        }
+
+                        !userlist.includes(element.user_group) && userlist.push(element.user_group);
+
+                        if (schedule.length < 1) {
+                            schedule.push({
+                                startDate: element.panel_schedule_start_time,
+                                endDate: element.panel_schedule_end_time,
+                                groupNames: element.user_group,
+                            });
+                        } else {
+                            schedule.push({
+                                startDate: element.panel_schedule_start_time,
+                                endDate: element.panel_schedule_end_time,
+                                groupNames: element.user_group,
+                            });
+                            // schedule.map((scheduleItem, index) => {
+                            //     if (
+                            //         scheduleItem.startDate === element.panel_schedule_start_time &&
+                            //         scheduleItem.endDate === element.panel_schedule_end_time
+                            //     ) {
+                            //         schedule[index].groupNames.push(element.user_group);
+                            //     } else {
+                            //         schedule.push({
+                            //             startDate: element.panel_schedule_start_time,
+                            //             endDate: element.panel_schedule_end_time,
+                            //             groupNames: [element.user_group],
+                            //         });
+                            //     }
+                            // });
+                        }
+                    });
+                }
+                setUserList(userlist);
+                setScheduleList(schedule);
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [promoPanelList, promoPanelUserTypeList]);
+
+    React.useEffect(() => {
+        /* istanbul ignore else */
+        if (!!promoPanelList && promoPanelList.length > 0) {
+            const activePanel = promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`);
+            defaults.id = activePanel.id;
+            // defaults.startDateDefault = activePanel.
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [promoPanelList]);
     return (
-        <StandardPage title="Spotlights Management">
-            <h1>Promo Panel Clone</h1>
+        <StandardPage title="Promo Panel Management">
+            <section aria-live="assertive">
+                <StandardCard title="Clone a promo panel">
+                    {!!currentPanel && (
+                        <PromoPanelForm
+                            scheduledList={[]}
+                            scheduledGroupNames={[]}
+                            fullPromoPanelList={promoPanelList}
+                            fullPromoPanelUserTypeList={promoPanelUserTypeList}
+                            currentPanel={currentPanel}
+                            knownGroups={knownGroups}
+                            defaults={defaults}
+                            actions={actions}
+                            history={history}
+                            isEdit={false}
+                            isDefaultPanel={false}
+                        />
+                    )}
+                </StandardCard>
+            </section>
         </StandardPage>
     );
 };
 
 PromoPanelClone.propTypes = {
     actions: PropTypes.any,
-    spotlight: PropTypes.any,
-    spotlightError: PropTypes.any,
-    spotlightStatus: PropTypes.any,
+    promoPanelListLoading: PropTypes.bool,
+    promoPanelUserTypesLoading: PropTypes.bool,
+    promoPanelList: PropTypes.array,
+    promoPanelUserTypeList: PropTypes.array,
+
     history: PropTypes.object,
-    publicFileUploading: PropTypes.any,
-    publicFileUploadError: PropTypes.any,
-    publicFileUploadResult: PropTypes.any,
-    spotlights: PropTypes.any,
-    spotlightsLoading: PropTypes.any,
 };
 
 export default PromoPanelClone;

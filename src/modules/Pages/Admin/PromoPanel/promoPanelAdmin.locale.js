@@ -3,6 +3,9 @@
 /* eslint-disable no-trailing-spaces */
 import React, { Fragment } from 'react';
 
+
+const moment = require('moment');
+
 export default {
     form: {
         defaultGroups: {
@@ -22,6 +25,17 @@ export default {
             </>
            ), 
         },
+        scheduleConflict: {
+            alert: (group, panelTitle, panelStart, panelEnd) => (
+             <div style={{ width: '100%' }}>
+                 <p>{`${group}`} has a conflict with the following panel</p>
+                 <p><strong>{`${panelTitle}`}</strong><br /> scheduled to run between <br />{`${moment(panelStart).format('dddd DD/MM/YYYY HH:mm a')}`}<br /> and<br /> {`${moment(panelEnd).format('dddd DD/MM/YYYY HH:mm a')}`}</p>
+                 <p>
+                 Please resolve this conflict.
+                 </p>
+             </div>
+            ), 
+         },
         labels: {
             titleField: 'Title of the Promo Panel',
             defaultPanelCheckbox: 'Default panel for selected groups',
