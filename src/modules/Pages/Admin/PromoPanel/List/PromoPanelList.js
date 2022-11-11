@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // import { makeStyles } from '@material-ui/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { PromoPanelListSchedules } from './PromoPanelListSchedules';
+import { PromoPanelListGroupPanels } from './PromoPanelListGroupPanels';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
 import { PromoPanelListActive } from './PromoPanelListActive';
 // import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/SpotlightsListAsTable';
@@ -56,6 +56,23 @@ export const PromoPanelList = ({
 
     // actions, spotlights, spotlightsLoading, spotlightsError, history
 }) => {
+    const [knownGroups, setKnownGroups] = React.useState([]);
+
+    React.useEffect(() => {
+        // do something with the promo Panel List and the user type here.
+        if (promoPanelUserTypeList.length > 0) {
+            const known = [];
+            console.log('PANELUSERTYPELIST', promoPanelUserTypeList);
+            promoPanelUserTypeList.map(
+                item =>
+                    !known.includes(item.user_group) &&
+                    known.push({ group: item.user_group, name: item.user_group_name }),
+            );
+            setKnownGroups(known);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [promoPanelUserTypeList]);
+
     // const classes = useStyles();
 
     // const [currentSpotlights, setCurrentSpotlights] = useState([]);
@@ -179,7 +196,7 @@ export const PromoPanelList = ({
                 showAddButton
             />
 
-            {/* <PromoPanelListSchedules
+            <PromoPanelListGroupPanels
                 actions={actions}
                 isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
@@ -190,7 +207,7 @@ export const PromoPanelList = ({
                 canClone
                 canDelete
                 panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
-            /> */}
+            />
 
             <PromoPanelListPanels
                 actions={actions}
@@ -202,6 +219,7 @@ export const PromoPanelList = ({
                 canEdit
                 canClone
                 canDelete
+                knownGroups={knownGroups}
                 panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
             />
             <h1> Past Panels Coming soon</h1>

@@ -91,9 +91,9 @@ export function loadPromoPanelUserList() {
 }
 
 export const createPromoPanel = request => {
-    if ('id' in request) {
+    if ('panel_id' in request) {
         // as we are creating a new promo panel there should not be an id field
-        delete request.id;
+        delete request.panel_id;
     }
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_CREATING });

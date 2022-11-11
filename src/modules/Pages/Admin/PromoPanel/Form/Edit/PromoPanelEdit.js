@@ -85,12 +85,14 @@ export const PromoPanelEdit = ({
                                 startDate: element.panel_schedule_start_time,
                                 endDate: element.panel_schedule_end_time,
                                 groupNames: element.user_group,
+                                existing: true,
                             });
                         } else {
                             schedule.push({
                                 startDate: element.panel_schedule_start_time,
                                 endDate: element.panel_schedule_end_time,
                                 groupNames: element.user_group,
+                                existing: true,
                             });
                             // schedule.map((scheduleItem, index) => {
                             //     if (

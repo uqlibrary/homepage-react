@@ -136,7 +136,7 @@ const useStyles2 = makeStyles(
     }),
     { withTheme: true },
 );
-export const PromoPanelListSchedules = ({
+export const PromoPanelListGroupPanels = ({
     actions,
     isLoading,
     panelList,
@@ -583,7 +583,7 @@ export const PromoPanelListSchedules = ({
     );
 };
 
-PromoPanelListSchedules.propTypes = {
+PromoPanelListGroupPanels.propTypes = {
     panelList: PropTypes.array,
     title: PropTypes.string,
     canEdit: PropTypes.bool,
@@ -601,10 +601,10 @@ PromoPanelListSchedules.propTypes = {
     panelError: PropTypes.string,
 };
 
-PromoPanelListSchedules.defaultProps = {
+PromoPanelListGroupPanels.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
     alertOrder: false, // what order should we sort the alerts in? false means unspecified
     panelError: '',
 };
 
-export default PromoPanelListSchedules;
+export default PromoPanelListGroupPanels;

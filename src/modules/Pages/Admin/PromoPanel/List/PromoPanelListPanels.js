@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import Table from '@material-ui/core/Table';
@@ -35,6 +40,7 @@ import ReactSeventeenAdapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { getClassNumberFromPieces } from 'data/actions';
 // import AlertSplitButton from './AlertSplitButton';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { filterPanelList } from '../promoPanelHelpers';
 
 const moment = require('moment');
 
@@ -98,6 +104,10 @@ const useStyles2 = makeStyles(
             backgroundColor: theme.palette.primary.main,
             color: '#fff',
         },
+        headerRowHidden: {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
         iconHighlighted: {
             color: '#fff',
         },
@@ -141,6 +151,7 @@ export const PromoPanelListPanels = ({
     actions,
     isLoading,
     panelList,
+    knownGroups,
     deletePanel,
     title,
     canEdit,
@@ -156,10 +167,18 @@ export const PromoPanelListPanels = ({
         showDeleteFailureConfirmation,
         hideDeleteFailureConfirmation,
     ] = useConfirmationState();
+
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
     const [deleteActive, setDeleteActive] = useState(false);
     const [panelNotice, setPanelNotice] = useState('');
+    const [selectorGroupNames, setSelectorGroupNames] = React.useState([]);
+    const [filteredPanels, setFilteredPanels] = React.useState(panelList);
+
+    React.useEffect(() => {
+        setFilteredPanels(panelList);
+    }, [panelList]);
+
     const classes = useStyles2();
     const rowMarker = 0;
     const regex = /(<([^>]+)>)/gi;
@@ -170,6 +189,7 @@ export const PromoPanelListPanels = ({
                 ii.click();
             }
         });
+        setDeleteActive(false);
     };
     const reEnableAllCheckboxes = () => {
         const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
@@ -180,7 +200,6 @@ export const PromoPanelListPanels = ({
     };
 
     const isDefaultPanel = value => value === 'Y' || value === 1 || value === true;
-
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
             ...locale.listPage.confirmDelete,
@@ -274,6 +293,21 @@ export const PromoPanelListPanels = ({
         history.push(`/admin/promopanel/clone/${panelId}`);
         scrollToTopOfPage();
     };
+    const handleGroupFilterChange = event => {
+        const {
+            target: { value },
+        } = event;
+
+        const selections = typeof value === 'string' ? value.split(',') : value;
+
+        setSelectorGroupNames(selections);
+        clearAllCheckboxes();
+
+        console.log('RESULTING FILTER LIST', filterPanelList(panelList, selections));
+
+        setFilteredPanels(filterPanelList(filterPanelList(panelList, selections)));
+        // Filter the selection, and store in filteredPanels.
+    };
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -299,24 +333,57 @@ export const PromoPanelListPanels = ({
                 additionalInformation={panelError}
             />
             <StandardCard title={title} customBackgroundColor="#F7F7F7">
-                <div
-                    data-testid={'headerRow-panelList'}
-                    className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
-                >
-                    <div>
-                        <h3 style={{ marginBottom: 6 }}>
-                            {headertag}
-                            <span
-                                style={{ fontSize: '0.9em', fontWeight: 300 }}
-                                data-testid={'headerRow-count-panelList'}
+                <Grid container alignItems={'flex-end'} style={{ marginBottom: 10 }}>
+                    <Grid item xs={1} style={{ paddingBottom: 5 }}>
+                        Filter By:
+                    </Grid>
+                    <Grid item xs={4}>
+                        {/* filter start */}
+                        <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
+                            <InputLabel id="group-selector">Filter by group</InputLabel>
+                            <Select
+                                labelId="group-selector"
+                                id="demo-multiple-checkbox"
+                                label="Filter by group"
+                                // InputLabel="testing"
+                                multiple
+                                value={selectorGroupNames}
+                                onChange={handleGroupFilterChange}
+                                renderValue={selected => {
+                                    console.log('selected', selected);
+                                    return selected.join(', ');
+                                }}
                             >
-                                {getNumberCheckboxesSelected() > 0
-                                    ? headerCountIndicator(getNumberCheckboxesSelected())
-                                    : null}
-                            </span>
-                        </h3>
-                    </div>
-                    {!!deleteActive && (
+                                {knownGroups.map(group => (
+                                    <MenuItem key={group.group} value={group.group}>
+                                        <Checkbox checked={selectorGroupNames.indexOf(group.group) > -1} />
+                                        <ListItemText primary={`${group.name}`} />
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {/* filter end */}
+                    </Grid>
+                </Grid>
+                {!!deleteActive && (
+                    <div
+                        data-testid={'headerRow-panelList'}
+                        className={`${classes.headerRow} ${classes.headerRowHighlighted}`}
+                    >
+                        <div>
+                            <h3 style={{ marginBottom: 6 }}>
+                                {headertag}
+                                <span
+                                    style={{ fontSize: '0.9em', fontWeight: 300 }}
+                                    data-testid={'headerRow-count-panelList'}
+                                >
+                                    {getNumberCheckboxesSelected() > 0
+                                        ? headerCountIndicator(getNumberCheckboxesSelected())
+                                        : null}
+                                </span>
+                            </h3>
+                        </div>
+
                         <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
                             <IconButton
                                 onClick={showDeleteConfirmation}
@@ -340,8 +407,9 @@ export const PromoPanelListPanels = ({
                                 <CloseIcon />
                             </IconButton>
                         </span>
-                    )}
-                </div>
+                    </div>
+                )}
+
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table" id="admin-promoPanel-list">
                         <TableHead>
@@ -362,7 +430,7 @@ export const PromoPanelListPanels = ({
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {(!!isLoading || panelList.length < 1) && (
+                            {!!isLoading && (
                                 <TableRow>
                                     <TableCell colSpan={5} align="center">
                                         <CircularProgress
@@ -375,20 +443,32 @@ export const PromoPanelListPanels = ({
                                     </TableCell>
                                 </TableRow>
                             )}
-                            {panelList.map(item => {
+                            {filteredPanels.length < 1 && (
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center">
+                                        There are no panels matching the selected filter
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            {filteredPanels.map(item => {
+                                console.log(item);
                                 return (
                                     <React.Fragment key={item.panel_id}>
                                         <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
                                             <TableCell component="td" scope="row" className={classes.checkboxCell}>
-                                                <Checkbox
-                                                    id={`panel-table-item-checkbox-${item.panel_id}`}
-                                                    inputProps={{
-                                                        'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
-                                                        'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
-                                                    }}
-                                                    onChange={handleCheckboxChange}
-                                                    value={`${checkBoxIdPrefix}${item.panel_id}`}
-                                                />
+                                                {!isDefaultPanel(
+                                                    item.user_groups[0].is_panel_default_for_this_user,
+                                                ) && (
+                                                    <Checkbox
+                                                        id={`panel-table-item-checkbox-${item.panel_id}`}
+                                                        inputProps={{
+                                                            'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
+                                                            'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
+                                                        }}
+                                                        onChange={handleCheckboxChange}
+                                                        value={`${checkBoxIdPrefix}${item.panel_id}`}
+                                                    />
+                                                )}
                                             </TableCell>
                                             <TableCell component="td" scope="row" className={classes.cellGroupName}>
                                                 <Typography variant="body1">{item.panel_title}</Typography>
@@ -410,7 +490,11 @@ export const PromoPanelListPanels = ({
                                                     alertId={alert.id}
                                                     canEdit={canEdit}
                                                     canClone={canClone}
-                                                    canDelete={canDelete}
+                                                    canDelete={
+                                                        !isDefaultPanel(
+                                                            item.user_groups[0].is_panel_default_for_this_user,
+                                                        )
+                                                    }
                                                     onPreview={item => onPreviewOpen(item)}
                                                     row={item}
                                                     deletePanelById={row => deletePanelById(row)}
@@ -474,6 +558,7 @@ PromoPanelListPanels.propTypes = {
     canEdit: PropTypes.bool,
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
+    knownGroups: PropTypes.array,
     rows: PropTypes.array,
     isLoading: PropTypes.bool,
     headertag: PropTypes.string,

@@ -48,8 +48,8 @@ export const currentPanels = [
                 user_group: 'LOCUG',
                 user_group_name: 'Local Undergraduate',
                 is_panel_default_for_this_user: 'N',
-                panel_schedule_start_time: '2022-01-12 10:00:00',
-                panel_schedule_end_time: '2092-01-12 10:00:00',
+                panel_schedule_start_time: '2022-12-25 10:00:00',
+                panel_schedule_end_time: '2022-12-30 10:00:00',
             },
         ],
     },
@@ -94,8 +94,8 @@ export const userListPanels = [
                 panel_content:
                     "<p>Currently studying for exams?</p><ul><li>Private study rooms available</li><li>Extended library hours</li><li>Extended facility operating hours</li></ul><p>Please note: Ensure that you have <strong>All the information you need</strong> before commencing your studies</p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page for resources and advice.</p>",
 
-                panel_schedule_start_time: '2022-12-01 00:00:00',
-                panel_schedule_end_time: '2022-12-25 00:00:00',
+                panel_schedule_start_time: '2022-12-25 00:00:00',
+                panel_schedule_end_time: '2022-12-30 00:00:00',
                 panel_created_at: '2022-11-06T23:59',
             },
         ],
@@ -142,8 +142,8 @@ export const userListPanels = [
                 panel_content:
                     "<p>Please note the following services will be unavailable during the christmas break:</p><ul><li>Enrolment Services.</li><li>Councelling services</li><li>Additional professional services such as vaccinations</li></ul><p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page to make informed decisions.</p>",
         
-                panel_schedule_start_time: '2021-11-01 10:00:00',
-                panel_schedule_end_time: '2092-01-12 10:00:00',
+                panel_schedule_start_time: '2021-12-01 10:00:00',
+                panel_schedule_end_time: '2022-12-25 00:00:00',
                 panel_created_at: '2022-11-06T23:59',
             }
         ],

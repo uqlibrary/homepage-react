@@ -306,7 +306,7 @@ export const PromoPanelForm = ({
             //     startDate: values.start,
             //     endDate: values.end,
             // });
-
+            console.log('SCHEDULES / DEFAULTS', allocatedList);
             setValues({
                 ...values,
                 // scheduledGroups: newGroups,
@@ -488,6 +488,7 @@ export const PromoPanelForm = ({
                                         data-testid="admin-spotlights-form-checkbox-published"
                                         onChange={handleChange('is_default_panel')}
                                         className={classes.checkbox}
+                                        disabled={isEdit}
                                     />
                                     {locale.form.labels.defaultPanelCheckbox}
                                 </InputLabel>
@@ -631,6 +632,7 @@ export const PromoPanelForm = ({
                                                             data-testid="admin-promopanel-form-button-editSchedule"
                                                             onClick={() => removePanelGroupSchedule(index)}
                                                             variant="contained"
+                                                            disabled={!!item.existing}
                                                         />
                                                     </Grid>
                                                 </Grid>
