@@ -13,6 +13,8 @@ const currentRetestList = [
 
 const currentAssetOwnersList = [{ value: 'UQL-WSS', label: 'UQL-WSS' }];
 
+const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
+
 export const mapStateToProps = state => {
     return {
         ...state.get('testTagLocationReducer'),
@@ -26,6 +28,7 @@ const mapDispatchToProps = dispatch => {
         actions: bindActionCreators(actions, dispatch),
         currentRetestList,
         currentAssetOwnersList,
+        defaultNextTestDateValue: DEFAULT_NEXT_TEST_DATE_VALUE,
     };
 };
 
