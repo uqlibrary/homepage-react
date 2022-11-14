@@ -164,13 +164,14 @@ export const SPOTLIGHT_SAVE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
 export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });
 
 /** TEST AND TAG **/
-export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
+export const TEST_TAG_CONFIG_API = () => ({ apiUrl: 'test_and_tag/onload' });
+// export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
 export const TEST_TAG_FLOOR_API = buildingId => ({
     apiUrl: `test_and_tag/building/${buildingId}/current`,
 });
 export const TEST_TAG_ROOM_API = floorId => ({
     apiUrl: `test_and_tag/floor/${floorId}/current`,
 });
-export const TEST_TAG_ASSET_TYPES_API = () => ({ apiUrl: 'test_and_tag/asset/type' });
-export const TEST_TAG_TEST_DEVICES_API = () => ({ apiUrl: 'test_and_tag/devices/current' });
+// export const TEST_TAG_ASSET_TYPES_API = () => ({ apiUrl: 'test_and_tag/asset/type' });
+// export const TEST_TAG_TEST_DEVICES_API = () => ({ apiUrl: 'test_and_tag/devices/current' });
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });

@@ -12,6 +12,6 @@ export { default as spotlightReducer } from './spotlightReducer';
 export { default as spotlightsReducer } from './spotlightsReducer';
 export { default as examSearchReducer } from './examSearchReducer';
 export { default as examSuggestionReducer } from './examSuggestionReducer';
-export { default as testTagSetupReducer } from './testTagSetupReducer';
+export { default as testTagOnLoadReducer } from './testTagOnLoadReducer';
 export { default as testTagLocationReducer } from './testTagLocationReducer';
 export { default as testTagAssetsReducer } from './testTagAssetsReducer';
