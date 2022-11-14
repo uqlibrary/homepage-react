@@ -69,6 +69,8 @@ const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
 const testStatusEnum = {
     CURRENT: { label: 'PASS', value: 'CURRENT' },
     FAILED: { label: 'FAIL', value: 'FAILED' },
+    OUTFORREPAIR: { label: 'REPAIR', value: 'OUTFORREPAIR' },
+    DISCARDED: { label: 'DISCARD', value: 'DISCARDED' },
     NONE: { label: 'NONE', value: 'NONE' },
 };
 
@@ -96,18 +98,118 @@ const DEFAULT_FORM_VALUES = {
     },
 };
 
-// const getLastLocation = asset => {
-//     return asset && typeof asset === 'object' && !!asset.location
-//         ? `Site: ${asset.location.site}, Building: ${asset.location.building},
-// Floor: ${asset.location.floor}, Room: ${asset.location.room}`
-//         : 'Unknown';
-// };
-function a11yProps(index) {
-    return {
-        id: `scrollable-auto-tab-${index}`,
-        'aria-controls': `scrollable-auto-tabpanel-${index}`,
-    };
-}
+const a11yProps = index => ({
+    id: `scrollable-auto-tab-${index}`,
+    'aria-controls': `scrollable-auto-tabpanel-${index}`,
+});
+
+export const isEmpty = value => {
+    return !!!value || value === '' || (!!value.length && value.length === 0);
+};
+export const isValidEventDate = (date, format) => {
+    if (isEmpty(date)) return false;
+    const today = new moment();
+    const formattedToday = today.startOf('day');
+
+    const formattedEventDate = new moment(date, format).startOf('day');
+    const result = !!moment(formattedEventDate).isValid() && moment(formattedEventDate).isSameOrBefore(formattedToday);
+
+    console.log('isValidEventDate', result, formattedToday, formattedEventDate);
+    return result;
+};
+export const isValidNextTestDate = (date, format) => {
+    if (isEmpty(date)) return false;
+    const today = new moment();
+    const formattedToday = today.startOf('day');
+
+    const formattedNextTestDate = new moment(date, format).startOf('day');
+    const result = !!moment(formattedNextTestDate).isValid() && moment(formattedNextTestDate).isAfter(formattedToday);
+
+    console.log('isValidNextTestDate', result, formattedToday, formattedNextTestDate);
+    return result;
+    // console.log('isValidNextTestDate', date, new moment().isAfter(date));
+    // if (isEmpty(date)) return false;
+    // return new moment().isAfter(date);
+};
+export const isValidAssetId = assetId => !isEmpty(assetId);
+export const isValidOwner = owner => !isEmpty(owner);
+export const isValidRoomId = roomId => !!roomId && Number.isFinite(roomId) && roomId > 0;
+export const isValidAssetTypeId = assetTypeId => !!assetTypeId && Number.isFinite(assetTypeId) && assetTypeId > 0;
+export const isValidTestingDeviceId = testingDeviceId =>
+    !!testingDeviceId && Number.isFinite(testingDeviceId) && testingDeviceId > 0;
+export const isValidFailReason = reason => !isEmpty(reason);
+export const isValidInspection = inspection => {
+    // console.log(
+    //     'isValidInspection',
+    //     inspection,
+    //     isValidTestingDeviceId(inspection.inspection_device_id),
+    //     inspection.inspection_status === undefined,
+    //     inspection.inspection_status === testStatusEnum.CURRENT.value,
+    //     isValidNextTestDate(inspection.inspection_date_next),
+    //     inspection.inspection_status === testStatusEnum.FAILED.value,
+    //     isValidFailReason(inspection.inspection_fail_reason),
+    // );
+
+    return (
+        inspection.inspection_status === undefined ||
+        (isValidTestingDeviceId(inspection.inspection_device_id) &&
+            ((inspection.inspection_status === testStatusEnum.CURRENT.value &&
+                isValidNextTestDate(inspection.inspection_date_next)) ||
+                (inspection.inspection_status === testStatusEnum.FAILED.value &&
+                    isValidFailReason(inspection.inspection_fail_reason))))
+    );
+};
+
+export const isValidRepairDetails = repairDetails => !isEmpty(repairDetails);
+export const isValidRepair = repair => !!repair.isRepair && isValidRepairDetails(repair.repairer_details);
+export const isValidDiscardedDetails = discardedDetails => !isEmpty(discardedDetails);
+export const isValidDiscard = discard => !!discard.isDiscarded && isValidDiscardedDetails(discard.discard_reason);
+export const isAssetDiscarded = lastTest => lastTest.test_status === testStatusEnum.DISCARDED.value;
+export const isAssetOutForRepair = lastTest => lastTest.test_status === testStatusEnum.OUTFORREPAIR.value;
+export const validateValues = (currentValues, loaders) => {
+    const isValid =
+        !loaders.assetListLoading &&
+        !loaders.initConfigLoading &&
+        !loaders.initConfigLoading &&
+        !loaders.initConfigLoading &&
+        !loaders.floorListLoading &&
+        !loaders.roomListLoading &&
+        currentValues.user_id > 0 &&
+        isValidEventDate(currentValues.action_date) &&
+        isValidAssetId(currentValues.asset_id_displayed) &&
+        isValidOwner(currentValues.asset_department_owned_by) &&
+        isValidRoomId(currentValues.room_id) &&
+        isValidAssetTypeId(currentValues.asset_type_id) &&
+        isValidInspection(currentValues.with_inspection) &&
+        ((!!!currentValues.with_repair.isRepair && !!!currentValues.with_discarded.isDiscarded) ||
+            (!!currentValues.with_repair.isRepair !== !!currentValues.with_discarded.isDiscarded &&
+                ((!!currentValues.with_repair.isRepair && isValidRepair(currentValues.with_repair)) ||
+                    (!!currentValues.with_discarded.isDiscarded && isValidDiscard(currentValues.with_discarded)))));
+    // console.log(
+    //     'validateValues',
+    //     currentValues,
+    //     !loaders.assetListLoading,
+    //     !loaders.initConfigLoading,
+    //     !loaders.initConfigLoading,
+    //     !loaders.initConfigLoading,
+    //     !loaders.floorListLoading,
+    //     !loaders.roomListLoading,
+    //     currentValues.user_id > 0,
+    //     isValidEventDate(currentValues.action_date),
+    //     isValidAssetId(currentValues.asset_id_displayed),
+    //     isValidOwner(currentValues.asset_department_owned_by),
+    //     isValidRoomId(currentValues.room_id),
+    //     isValidAssetTypeId(currentValues.asset_type_id),
+    //     isValidInspection(currentValues.with_inspection),
+    //     !!!currentValues.with_repair.isRepair && !!!currentValues.with_discarded.isDiscarded,
+    //     !!currentValues.with_repair.isRepair !== !!currentValues.with_discarded.isDiscarded,
+    //     !!currentValues.with_repair.isRepair && isValidRepair(currentValues.with_repair),
+    //     !!currentValues.with_discarded.isDiscarded && isValidDiscard(currentValues.with_discarded),
+    // );
+
+    // console.log('isValid', isValid);
+    return isValid;
+};
 
 const TestTag = ({
     actions,
@@ -117,15 +219,9 @@ const TestTag = ({
     assetsList,
     assetsListLoading,
     assetsListError,
-    assetTypes,
-    assetTypesLoading,
-    assetTypesError,
-    testDevices,
-    testDevicesLoading,
-    testDevicesError,
-    siteList,
-    siteListLoading,
-    siteListError,
+    initConfig,
+    initConfigLoading,
+    initConfigError,
     floorList,
     floorListLoading,
     floorListError,
@@ -152,8 +248,8 @@ const TestTag = ({
     const [formFloorId, setFormFloorId] = useState(-1);
     // const [formRoomId, setFormRoomId] = useState(-1);
     // const [formDeviceId, setFormDeviceId] = useState(
-    //     !!!testDevicesLoading && !!!testDevicesError && !!testDevices && !!testDevices.length > 0
-    //         ? testDevices[0].device_id
+    //     !!!initConfigLoading && !!!initConfigError && !!initConfig && !!initConfig.length > 0
+    //         ? initConfig[0].device_id
     //         : -1,
     // );
     // const [formAssetType, setFormAssetType] = useState({});
@@ -166,6 +262,8 @@ const TestTag = ({
     const [selectedTabValue, setSelectedTabValue] = useState(0);
     const [eventExpanded, setEventExpanded] = useState(true);
     const [open, setOpen] = useState(false);
+
+    const [isFormValid, setFormValidity] = useState(false);
 
     const assignAssetDefaults = (asset = {}, formValues = {}) => {
         return {
@@ -181,7 +279,7 @@ const TestTag = ({
                 inspection_device_id:
                     formValues?.with_inspection?.inspection_device_id !== -1
                         ? formValues?.with_inspection?.inspection_device_id
-                        : testDevices?.[0].device_id ?? undefined,
+                        : initConfig.inspection_devices?.[0].device_id ?? undefined,
             },
         };
     };
@@ -198,91 +296,10 @@ const TestTag = ({
         setSelectedAsset(asset);
     };
 
-    /*
-    HERE - implement validateValues function as per example below and attach to submit button
-
-    const validateValues = currentValues => {
-        const isValid =
-            spotlightStatus !== 'loading' &&
-            !isInvalidStartDate(currentValues.start) &&
-            !isInvalidEndDate(currentValues.end, currentValues.start) &&
-            !!isValidLinkAria(currentValues.title) &&
-            !!isValidImgAlt(currentValues.img_alt) &&
-            (defaults.type === 'edit' ||
-                defaults.type === 'clone' ||
-                (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0)) &&
-            !!currentValues.url &&
-            currentValues.url.length > 0 &&
-            isValidImageUrl(currentValues.url) &&
-            !!currentValues.hasImage;
-
-        return isValid;
-    };
-*/
-    // const [formValues, setFormValues] = useState({ ...assignAssetDefaults() });
-
-    // useEffect(() => {
-    // formValuesRef.current = {
-    //     asset_id_displayed: selectedAsset?.asset_id_displayed,
-    //     user_id: 1, // TODO
-    //     test_date: formEventDate,
-    //     location: {
-    //         site_id: formSiteId,
-    //         building_id: formBuildingId,
-    //         floor_id: formFloorId,
-    //         room_id: formRoomId,
-    //     },
-    //     ['a.b.c']: 'test',
-    // };
-
-    // console.log('FORM VALUES', formValuesRef.current);
-    // }, [selectedAsset, formEventDate, formSiteId, formBuildingId, formFloorId, formRoomId]);
-
-    // const handleChange = useCallback(
-    //     prop => event => {
-    //         console.log('handleChange args', prop, event);
-    //         let propValue = event?.target?.value ?? event;
-    //         console.log('propValue', propValue);
-    //         // if (!!!propValue) return;
-    //         if (prop.indexOf('date') > -1) {
-    //             propValue = moment(event)
-    //                 .format(dateFormat)
-    //                 .toString();
-    //         }
-
-    //         const propArray = prop.split('.');
-    //         const newFormValues = {
-    //             ...formValues,
-    //             // adapted from https://stackoverflow.com/a/52077261
-    //             // only works for 1 level deep objects i.e. {a:{b:'ok',c:{d:'wont work'}}}
-    //             ...propArray.reduceRight((res, key, idx) => {
-    //                 let retval;
-    //                 if (idx === propArray.length - 1) {
-    //                     // console.log('propValue', propValue);
-    //                     retval = { [key]: propValue };
-    //                 } else if (idx === 0) {
-    //                     // console.log('currrentkey', formValues[key]);
-    //                     retval = { [key]: { ...(formValues[key] ?? {}), ...res } };
-    //                 } else retval = { [key]: res };
-    //                 // console.log('res', res);
-    //                 // console.log('key', key);
-    //                 // console.log('idx', idx);
-    //                 // console.log('retval', retval);
-    //                 return retval;
-    //             }, {}),
-    //         };
-    //         setFormValues({ ...newFormValues });
-    //         console.log('handleChange', newFormValues);
-    //         // setSelectedAsset({
-    //         //     ...selectedAsset,
-    //         //     ...propArray.reduceRight(
-    //         //         (res, key, idx) => (idx === propArray.length - 1 ? { [key]: propValue } : { [key]: res }),
-    //         //         {},
-    //         //     ),
-    //         // });
-    //     },
-    //     [formValues],
-    // );
+    useEffect(() => {
+        actions.loadConfig();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     React.useEffect(() => {
         if (!open) {
@@ -294,105 +311,21 @@ const TestTag = ({
         !!assetsList && setFormAssetList(...[assetsList]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
-    // const currentAsset = useMemo(
-    //     assetid => {
-    //         console.log(
-    //             'currentasset usememo',
-    //             assetid,
-    //             assetid !== -1
-    //                 ? (assetsList && assetsList?.find(asset => asset.asset_id === assetid)) ?? { asset_id: assetid }
-    //                 : {},
-    //         );
-    //         assetid !== -1
-    //             ? (assetsList && assetsList?.find(asset => asset.asset_id === assetid)) ?? { asset_id: assetid }
-    //             : {};
-    //     },
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //     [assetid, assetsList],
-    // );
-
-    // useEffect(
-    //     () => {
-    //         console.log(
-    //             'currentasset effect',
-    //             assetid,
-    //             !!assetid && assetid !== -1
-    //                 ? (formAssetList && formAssetList?.find(asset => asset.asset_id === assetid)) ?? {
-    //                       asset_id: assetid,
-    //                   }
-    //                 : {},
-    //         );
-    //         if (!!assetid && assetid !== -1) {
-    //             setAssetId(assetid);
-
-    //             setCurrentAsset(
-    //                 (formAssetList && formAssetList?.find(asset => asset.asset_id === assetid)) ?? {
-    //                     asset_id: assetid,
-    //                 },
-    //             );
-    //         }
-    //     },
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //     [assetid],
-    // );
-
-    // useEffect(()=>{
-    //     if(!!currentAssetid && currentAssetid > -1){
-    //         setCurrentAssetType
-    //     }else{
-    //         setCurrentAssetId(-1);
-    //     }
-    // }, [currentAssetid]);
-
-    // const handleChange = (event, li, source) => {
-    //     const value =
-    //         !!li && !!li.hasOwnProperty('props') ?
-    // parseInt(li?.props['data-id'] ?? li?.props.value, 10) : li ?? null;
-
-    //     switch (source) {
-    //         case 'formEventDate':
-    //             setFormEventDate(event.format(dateFormat));
-    //             break;
-    //         case 'site':
-    //             setFormSiteId(value);
-    //             setFormBuildingId(-1);
-    //             setFormFloorId(-1);
-    //             break;
-    //         case 'device':
-    //             setFormDeviceId(value);
-    //             break;
-    //         case 'testStatusRadio':
-    //             console.log('testStatusRadio', value, testStatusEnum[value.toUpperCase()]);
-    //             setFormTestStatus(testStatusEnum[value.toUpperCase()]);
-    //             break;
-    //         case 'nextTest':
-    //             setFormNextTestDate(value);
-    //             break;
-    //         case 'discard':
-    //             setFormDiscardingId(value);
-    //             break;
-    //         case 'repair':
-    //             setFormRepairId(value);
-    //             break;
-    //         case 'tabs':
-    //             setSelectedTabValue(value);
-    //             break;
-    //         default:
-    //             return;
-    //     }
-    // };
 
     useEffect(() => {
-        actions.loadAssetTypes();
-        actions.loadTestDevices();
-        actions.loadSites();
+        setFormValidity(
+            validateValues(formValues, {
+                initConfigLoading,
+                floorListLoading,
+                roomListLoading,
+            }),
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
+    }, [formValues]);
     useEffect(() => {
-        if (!siteListLoading && !!siteList && siteList.length > 0) setFormSiteId(siteList[0].site_id);
+        if (!initConfigLoading && !!initConfig && initConfig.length > 0) setFormSiteId(initConfig[0].site_id);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [siteListLoading]);
+    }, [initConfigLoading]);
 
     useEffect(() => {
         setFormBuildingId(-1);
@@ -508,16 +441,17 @@ const TestTag = ({
                                         setFormSiteId(e.target.value);
                                     }}
                                 >
-                                    {!!siteListLoading && (
+                                    {!!initConfigLoading && (
                                         <MenuItem value={-1} disabled key={'site-loading'}>
                                             Loading...
                                         </MenuItem>
                                     )}
-                                    {!!!siteListLoading &&
-                                        !!!siteListError &&
-                                        !!siteList &&
-                                        siteList?.length > 0 &&
-                                        siteList.map(site => (
+                                    {!!!initConfigLoading &&
+                                        !!!initConfigError &&
+                                        !!initConfig &&
+                                        initConfig?.length > 0 &&
+                                        initConfig?.sites?.length > 0 &&
+                                        initConfig.sites.map(site => (
                                             <MenuItem value={site.site_id} key={site.site_id}>
                                                 {site.site_name}
                                             </MenuItem>
@@ -525,13 +459,18 @@ const TestTag = ({
                                 </Select>
                             </FormControl>
                         </Grid>
+                        {/* HERE fix the sites not loading then check device types and asset types all work from the new config route.
+                        Then retest the validation thing, maybe add some validation error handling using the functions made
+                        then work on a mock test of sending data to the back end plus the required UI elements */}
                         <Grid item sm={6} md={4}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
                                     fullWidth
-                                    options={siteList?.find(site => site.site_id === formSiteId)?.buildings ?? []}
+                                    options={
+                                        initConfig?.sites?.find(site => site.site_id === formSiteId)?.buildings ?? []
+                                    }
                                     value={
-                                        siteList
+                                        initConfig?.sites
                                             ?.find(site => site.site_id === formSiteId)
                                             ?.buildings?.find(building => building.building_id === formBuildingId) ?? ''
                                     }
@@ -550,7 +489,7 @@ const TestTag = ({
                                                 ...params.InputProps,
                                                 endAdornment: (
                                                     <React.Fragment>
-                                                        {siteListLoading ? (
+                                                        {initConfigLoading ? (
                                                             <CircularProgress color="inherit" size={20} />
                                                         ) : null}
                                                         {params.InputProps.endAdornment}
@@ -559,10 +498,10 @@ const TestTag = ({
                                             }}
                                         />
                                     )}
-                                    disabled={formSiteId === -1 || siteListLoading}
+                                    disabled={formSiteId === -1 || initConfigLoading}
                                     disableClearable
                                     autoSelect
-                                    loading={!!siteListLoading}
+                                    loading={!!initConfigLoading}
                                 />
                             </FormControl>
                         </Grid>
@@ -729,10 +668,14 @@ const TestTag = ({
                             <Autocomplete
                                 fullWidth
                                 options={
-                                    (!!!assetTypesLoading && !!!assetTypesError && !!assetTypes && assetTypes) ?? []
+                                    (!!!initConfigLoading &&
+                                        !!!initConfigError &&
+                                        !!initConfig &&
+                                        initConfig.inspection_devices) ??
+                                    []
                                 }
                                 value={
-                                    assetTypes?.find(
+                                    initConfig?.asset_types?.find(
                                         assetType => assetType.asset_type_id === formValues.asset_type_id,
                                     ) ?? ''
                                 }
@@ -753,7 +696,7 @@ const TestTag = ({
                                             ...params.InputProps,
                                             endAdornment: (
                                                 <React.Fragment>
-                                                    {assetTypesLoading ? (
+                                                    {initConfigLoading ? (
                                                         <CircularProgress color="inherit" size={20} />
                                                     ) : null}
                                                     {params.InputProps.endAdornment}
@@ -762,10 +705,10 @@ const TestTag = ({
                                         }}
                                     />
                                 )}
-                                disabled={assetTypesLoading}
+                                disabled={initConfigLoading}
                                 disableClearable
                                 autoSelect
-                                loading={!!assetTypesLoading}
+                                loading={!!initConfigLoading}
                             />
                         </FormControl>
                     </Grid>
@@ -804,16 +747,17 @@ const TestTag = ({
                                     onChange={e => handleChange('with_inspection.inspection_device_id')(e.target.value)}
                                     required
                                 >
-                                    {!!testDevicesLoading && (
+                                    {!!initConfigLoading && (
                                         <MenuItem value={-1} disabled key={'devicetypes-loading'}>
                                             Loading...
                                         </MenuItem>
                                     )}
-                                    {!!!testDevicesLoading &&
-                                        !!!testDevicesError &&
-                                        !!testDevices &&
-                                        testDevices?.length > 0 &&
-                                        testDevices.map(device => (
+                                    {!!!initConfigLoading &&
+                                        !!!initConfigError &&
+                                        !!initConfig &&
+                                        initConfig?.length > 0 &&
+                                        !!initConfig?.inspection_devices &&
+                                        initConfig.inspection_devices.map(device => (
                                             <MenuItem value={device.device_id} key={device.device_id}>
                                                 {device.device_model_name}
                                             </MenuItem>
@@ -975,8 +919,10 @@ const TestTag = ({
                                     className={classes.formControl}
                                     fullWidth
                                     disabled={formDiscardingId === 2}
+                                    required
                                 >
                                     <TextField
+                                        required
                                         label="Repairer Details"
                                         multiline
                                         rows={4}
@@ -1016,8 +962,14 @@ const TestTag = ({
                                 </FormControl>
                             </Grid>
                             <Grid item sm={12}>
-                                <FormControl className={classes.formControl} fullWidth disabled={formRepairId === 2}>
+                                <FormControl
+                                    className={classes.formControl}
+                                    fullWidth
+                                    disabled={formRepairId === 2}
+                                    required
+                                >
                                     <TextField
+                                        required
                                         label="Discarding Reason"
                                         multiline
                                         rows={4}
@@ -1038,7 +990,7 @@ const TestTag = ({
                         <Button variant="outlined">CANCEL</Button>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" color="primary">
+                        <Button variant="contained" color="primary" disabled={!isFormValid}>
                             SAVE
                         </Button>
                     </Grid>
@@ -1056,21 +1008,15 @@ TestTag.propTypes = {
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,
-    siteList: PropTypes.any,
-    siteListLoading: PropTypes.bool,
-    siteListError: PropTypes.any,
+    initConfig: PropTypes.any,
+    initConfigLoading: PropTypes.bool,
+    initConfigError: PropTypes.any,
     floorList: PropTypes.any,
     floorListLoading: PropTypes.bool,
     floorListError: PropTypes.any,
     roomList: PropTypes.any,
     roomListLoading: PropTypes.bool,
     roomListError: PropTypes.any,
-    testDevices: PropTypes.any,
-    testDevicesLoading: PropTypes.bool,
-    testDevicesError: PropTypes.any,
-    assetTypes: PropTypes.any,
-    assetTypesLoading: PropTypes.bool,
-    assetTypesError: PropTypes.any,
 };
 
 export default React.memo(TestTag);

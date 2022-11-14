@@ -17,8 +17,8 @@ const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
 
 export const mapStateToProps = state => {
     return {
+        ...state.get('testTagOnLoadReducer'),
         ...state.get('testTagLocationReducer'),
-        ...state.get('testTagSetupReducer'),
         ...state.get('testTagAssetsReducer'),
     };
 };
