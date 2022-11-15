@@ -323,7 +323,9 @@ const TestTag = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formValues]);
     useEffect(() => {
-        if (!initConfigLoading && !!initConfig && initConfig.length > 0) setFormSiteId(initConfig[0].site_id);
+        if (!initConfigLoading && !!initConfig && initConfig?.sites.length > 0) {
+            setFormSiteId(initConfig.sites[0].site_id);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initConfigLoading]);
 
@@ -449,7 +451,6 @@ const TestTag = ({
                                     {!!!initConfigLoading &&
                                         !!!initConfigError &&
                                         !!initConfig &&
-                                        initConfig?.length > 0 &&
                                         initConfig?.sites?.length > 0 &&
                                         initConfig.sites.map(site => (
                                             <MenuItem value={site.site_id} key={site.site_id}>
@@ -459,8 +460,9 @@ const TestTag = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {/* HERE fix the sites not loading then check device types and asset types all work from the new config route.
-                        Then retest the validation thing, maybe add some validation error handling using the functions made
+                        {/* HERE
+                        Then retest the validation object with the new sites etc, maybe add some
+                        validation error handling using the functions made
                         then work on a mock test of sending data to the back end plus the required UI elements */}
                         <Grid item sm={6} md={4}>
                             <FormControl className={classes.formControl} fullWidth>
@@ -667,13 +669,7 @@ const TestTag = ({
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
                                 fullWidth
-                                options={
-                                    (!!!initConfigLoading &&
-                                        !!!initConfigError &&
-                                        !!initConfig &&
-                                        initConfig.inspection_devices) ??
-                                    []
-                                }
+                                options={initConfig?.asset_types ?? []}
                                 value={
                                     initConfig?.asset_types?.find(
                                         assetType => assetType.asset_type_id === formValues.asset_type_id,
@@ -755,8 +751,8 @@ const TestTag = ({
                                     {!!!initConfigLoading &&
                                         !!!initConfigError &&
                                         !!initConfig &&
-                                        initConfig?.length > 0 &&
                                         !!initConfig?.inspection_devices &&
+                                        initConfig?.inspection_devices?.length > 0 &&
                                         initConfig.inspection_devices.map(device => (
                                             <MenuItem value={device.device_id} key={device.device_id}>
                                                 {device.device_model_name}

@@ -37,7 +37,7 @@ import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_onLoad from './data/records/test_tag_onLoad';
 //import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
-//import testTag_roomList from './data/records/test_tag_rooms';
+import testTag_roomList from './data/records/test_tag_rooms';
 //import testTag_assetTypes from './data/records/test_tag_asset_types';
 import testTag_testDevices from './data/records/test_tag_test_devices';
 import testTag_assets from './data/records/test_tag_assets';
@@ -712,31 +712,21 @@ mock.onGet('exams/course/FREN1010/summary')
     })
 
     // T&T FLOORS
-    .onGet('test_and_tag/building/1/current')
-    .reply(()=>{
-        return [200, testTag_floorList.find(floor=>floor.building_id === 1)];
+    .onGet(/test_and_tag\/building\/\d+\/current/)
+    .reply(config=>{
+        const r = /\d+/;
+        const id = parseInt(config.url.match(r)?.[0],10 ?? 0);
+        return [200, testTag_floorList.find(floor=>floor.building_id === id)];
     })
-    .onGet('test_and_tag/building/2/current')
-    .reply(()=>{
-        return [200, testTag_floorList.find(floor=>floor.building_id === 2)];
-    })
+    
     // T&T ROOMS
-    .onGet('test_and_tag/floor/1/current')
-    .reply(()=>{
-        return [200, testTag_roomList.find(room=>room.floor_id === 1)];
+    .onGet(/test_and_tag\/floor\/\d+\/current/)
+    .reply(config=>{
+        const r = /\d+/;
+        const id = parseInt(config.url.match(r)?.[0],10 ?? 0);
+        return [200, testTag_roomList.find(room=>room.floor_id === id)];
     })
-    .onGet('test_and_tag/floor/2/current')
-    .reply(()=>{
-        return [200, testTag_roomList.find(room=>room.floor_id === 2)];
-    })
-    .onGet('test_and_tag/floor/3/current')
-    .reply(()=>{
-        return [200, testTag_roomList.find(room=>room.floor_id === 3)];
-    })
-    .onGet('test_and_tag/floor/4/current')
-    .reply(()=>{
-        return [200, testTag_roomList.find(room=>room.floor_id === 4)];
-    })
+    
 
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)
