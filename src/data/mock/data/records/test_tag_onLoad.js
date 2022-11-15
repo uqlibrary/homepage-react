@@ -47,7 +47,14 @@ export default {
         "device_current_flag": 1
       }
     ],
-    "user": [],
+    "user": {
+        "user_id": 1,
+        "user_uid": "uqjsmit",
+        "user_license_number": "123456",
+        "user_name": "John Smith",
+        "user_department": "UQL",
+        "user_current_flag": 1,
+    },
     "sites": [
       {
         "site_id": 1,
@@ -64,31 +71,6 @@ export default {
             "building_name": "Duhig Tower",
             "building_id_displayed": "0002"
           },
-          {
-            "building_id": 3,
-            "building_name": "Duhig North",
-            "building_id_displayed": "0012"
-          },
-          {
-            "building_id": 4,
-            "building_name": "Hawken Engineering Building",
-            "building_id_displayed": "0050"
-          },
-          {
-            "building_id": 5,
-            "building_name": "Zelman Cowen Building",
-            "building_id_displayed": "0051"
-          },
-          {
-            "building_id": 6,
-            "building_name": "Biological Sciences Library",
-            "building_id_displayed": "0094"
-          },
-          {
-            "building_id": 7,
-            "building_name": "Duhig Link",
-            "building_id_displayed": "0012A"
-          }
         ]
       },
       {
@@ -108,29 +90,5 @@ export default {
           }
         ]
       },
-      {
-        "site_id": 3,
-        "site_id_displayed": "45",
-        "site_name": "PACE",
-        "buildings": [
-          {
-            "building_id": 10,
-            "building_name": "Pharmacy Australia Centre of Excellence",
-            "building_id_displayed": "0870"
-          }
-        ]
-      },
-      {
-        "site_id": 4,
-        "site_id_displayed": "71",
-        "site_name": "Herston (RBWH)",
-        "buildings": [
-          {
-            "building_id": 11,
-            "building_name": "Block 6",
-            "building_id_displayed": "0910"
-          }
-        ]
-      }
     ]
   };
