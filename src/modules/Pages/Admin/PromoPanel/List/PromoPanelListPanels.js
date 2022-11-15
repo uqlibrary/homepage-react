@@ -140,6 +140,7 @@ const useStyles2 = makeStyles(
             '& input[type="checkbox"]:checked + svg': {
                 fill: '#222',
             },
+            borderBottom: 'none',
         },
         removedChip: {
             textDecoration: 'line-through',
@@ -308,6 +309,7 @@ export const PromoPanelListPanels = ({
         setFilteredPanels(filterPanelList(filterPanelList(panelList, selections)));
         // Filter the selection, and store in filteredPanels.
     };
+    console.log('The Panel List', panelList);
     return (
         <React.Fragment>
             <ConfirmationBox

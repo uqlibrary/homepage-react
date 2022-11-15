@@ -7,10 +7,15 @@ import Chip from '@material-ui/core/Chip';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
+import ListItemText from '@material-ui/core/ListItemText';
 import TableFooter from '@material-ui/core/TableFooter';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -34,7 +39,7 @@ import { getClassNumberFromPieces } from 'data/actions';
 // import AlertSplitButton from './AlertSplitButton';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import PromoPanelScheduleHeaders from './PromoPanelScheduleHeaders';
-
+import { filterPanelList } from '../promoPanelHelpers';
 const moment = require('moment');
 
 // original based on https://codesandbox.io/s/hier2
@@ -148,6 +153,7 @@ export const PromoPanelListGroupPanels = ({
     canDelete,
     headertag,
     panelError,
+    knownGroups,
 }) => {
     const [isUnscheduleConfirmOpen, showUnscheduleConfirmation, hideUnscheduleConfirmation] = useConfirmationState();
     const [
@@ -155,6 +161,13 @@ export const PromoPanelListGroupPanels = ({
         showUnscheduleFailureConfirmation,
         hideUnscheduleFailureConfirmation,
     ] = useConfirmationState();
+    const [selectorGroupNames, setSelectorGroupNames] = React.useState([]);
+    const [filteredPanels, setFilteredPanels] = React.useState(panelList);
+    React.useEffect(() => {
+        setFilteredPanels(panelList);
+    }, [panelList]);
+
+    console.log('PanelListGroupPanels', filteredPanels);
 
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
@@ -179,59 +192,28 @@ export const PromoPanelListGroupPanels = ({
 
     const checkBoxIdPrefix = 'table-checkbox-';
 
-    // const headerCountIndicator = '[N] alert[s]'.replace('[N]', rows.length)
-    // .replace('[s]', rows.length > 1 ? 's' : '');
-
-    const headerCountIndicator = rowCount => {
-        return '[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : '');
-    };
-
-    const reEnableAllCheckboxes = () => {
-        const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
-        checkBoxList.forEach(ii => {
-            ii.disabled = false;
-            ii.parentElement.parentElement.classList.remove('Mui-disabled');
-        });
-    };
-
     function getNumberCheckboxesSelected() {
         return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
     }
 
     const handleGroupDefaultChange = (userGroup, panel) => {};
 
-    const handleCheckboxChange = e => {
-        const numberCheckboxesSelected = getNumberCheckboxesSelected();
+    const handleGroupFilterChange = event => {
+        const {
+            target: { value },
+        } = event;
 
-        const thisType = e.target.closest('table').parentElement.id;
-        /* istanbul ignore else */
-        if (!!e.target && !!e.target.checked) {
-            // handle a checkbox being turned on
-            if (numberCheckboxesSelected === 1) {
-                setUnscheduleActive(true);
-            }
-            // disable any checkboxes in a different alert list
-            const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
-            checkBoxList.forEach(ii => {
-                const thetype = ii.closest('table').parentElement.id;
-                if (thetype !== thisType) {
-                    ii.disabled = true;
-                    ii.parentElement.parentElement.classList.add('Mui-disabled');
-                }
-            });
-        } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
-            // handle a checkbox being turned off
-            if (numberCheckboxesSelected === 0) {
-                setUnscheduleActive(false);
-                reEnableAllCheckboxes();
-            }
-        }
-        setPanelNotice(
-            '[n] panel[s] selected'
-                .replace('[n]', numberCheckboxesSelected)
-                .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
-        );
+        const selections = typeof value === 'string' ? value.split(',') : value;
+
+        setSelectorGroupNames(selections);
+        clearAllCheckboxes();
+
+        console.log('RESULTING FILTER LIST', panelList, filterPanelList(panelList, selections, true));
+
+        setFilteredPanels(filterPanelList(filterPanelList(panelList, selections, true)));
+        // Filter the selection, and store in filteredPanels.
     };
+
     const onPreviewOpen = (row, item) => {
         const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
         setPreviewPanel({
@@ -311,64 +293,46 @@ export const PromoPanelListGroupPanels = ({
                 showAdditionalInformation
                 additionalInformation={panelError}
             />
-            {/* <ConfirmationBox
-                actionButtonColor="secondary"
-                actionButtonVariant="contained"
-                confirmationBoxId="panel-default-confirm"
-                onAction={deleteSelectedPanels}
-                onClose={hideDeleteConfirmation}
-                onCancelAction={hideDeleteConfirmation}
-                isOpen={isDeleteConfirmOpen}
-                locale={confirmUnscheduleLocale(getNumberCheckboxesSelected())}
-            /> */}
 
             <StandardCard title={title} customBackgroundColor="#F7F7F7">
-                {/* <div
-                    data-testid={'headerRow-table'}
-                    className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
-                >
-                    <div>
-                        <h3 style={{ marginBottom: 6 }}>
-                            {headertag}
-                            <span style={{ fontSize: '0.9em', fontWeight: 300 }} data-testid={'headerRow-count-table'}>
-                                {getNumberCheckboxesSelected() > 0
-                                    ? headerCountIndicator(getNumberCheckboxesSelected())
-                                    : null}
-                            </span>
-                        </h3>
-                    </div>
-                    {!!deleteActive && (
-                        <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
-                            <IconButton
-                                onClick={showDeleteConfirmation}
-                                aria-label="Delete alert(s)"
-                                data-testid={'panel-list-table-delete-button'}
-                                title="Delete panel(s)"
+                <Grid container alignItems={'flex-end'} style={{ marginBottom: 10 }}>
+                    <Grid item xs={1} style={{ paddingBottom: 5 }}>
+                        Filter By:
+                    </Grid>
+                    <Grid item xs={4}>
+                        {/* filter start */}
+                        <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
+                            <InputLabel id="group-selector">Filter by group</InputLabel>
+                            <Select
+                                labelId="group-selector"
+                                id="demo-multiple-checkbox"
+                                label="Filter by group"
+                                // InputLabel="testing"
+                                multiple
+                                value={selectorGroupNames}
+                                onChange={handleGroupFilterChange}
+                                renderValue={selected => {
+                                    console.log('selected', selected);
+                                    return selected.join(', ');
+                                }}
                             >
-                                <DeleteIcon
-                                    className={`${
-                                        !!deleteActive ? classes.iconHighlighted :
-                                    }`}
-                                />
-                            </IconButton>
-                            <IconButton
-                                onClick={clearAllCheckboxes}
-                                aria-label="Deselect all"
-                                data-testid={'panel-list-table-deselect-button'}
-                                className={classes.iconHighlighted}
-                                title="Deselect all"
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </span>
-                    )}
-                </div> */}
+                                {knownGroups.map(group => (
+                                    <MenuItem key={group.group} value={group.group}>
+                                        <Checkbox checked={selectorGroupNames.indexOf(group.group) > -1} />
+                                        <ListItemText primary={`${group.name}`} />
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {/* filter end */}
+                    </Grid>
+                </Grid>
                 <TableContainer component={Paper}>
                     <Table size="small" aria-label="a dense table" id={'admin-promoPanel-table'}>
                         <PromoPanelScheduleHeaders />
                         <TableBody>
                             {/* Start of a Group and it's Panels */}
-                            {(!!isLoading || panelList.length < 1) && (
+                            {!!isLoading && (
                                 <TableRow>
                                     <TableCell colSpan={7} align="center">
                                         <CircularProgress
@@ -382,7 +346,7 @@ export const PromoPanelListGroupPanels = ({
                                 </TableRow>
                             )}
                             {!isLoading &&
-                                panelList.map((item, id) => {
+                                filteredPanels.map((item, id) => {
                                     rowMarker = 0;
                                     return (
                                         <React.Fragment key={id}>
@@ -410,17 +374,6 @@ export const PromoPanelListGroupPanels = ({
                                                         key={id}
                                                     >
                                                         <TableCell className={classes.cellEmpty} />
-                                                        {/* <TableCell className={classes.checkboxCell}>
-                                <Checkbox
-                                    id={`panel-table-item-checkbox-${item.default_panel.panel_id}`}
-                                    inputProps={{
-                                        'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
-                                        'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
-                                    }}
-                                    onChange={handleCheckboxChange}
-                                    value={`${checkBoxIdPrefix}${item.default_panel.panel_id}`}
-                                />
-                            </TableCell> */}
 
                                                         <TableCell className={classes.cellGroupDetails}>
                                                             <Typography variant="body1">
@@ -438,6 +391,7 @@ export const PromoPanelListGroupPanels = ({
                                                                 }}
                                                                 // onChange={() => handleGroupDefaultChange(null, item)}
                                                                 checked
+                                                                disabled
                                                             />
                                                         </TableCell>
                                                         <TableCell className={classes.cellGroupDetails}>
@@ -459,9 +413,7 @@ export const PromoPanelListGroupPanels = ({
                                                                     unschedulePanelById(item.default_panel);
                                                                 }}
                                                                 mainButtonLabel={'Edit'}
-                                                                // navigateToCloneForm={navigateToCloneForm}
                                                                 navigateToEditForm={row => navigateToEditForm(row)}
-                                                                // navigateToView={navigateToView}
                                                                 confirmDeleteLocale={confirmUnscheduleLocale}
                                                             />
                                                         </TableCell>
@@ -486,17 +438,7 @@ export const PromoPanelListGroupPanels = ({
                                                                 key={id}
                                                             >
                                                                 <TableCell className={classes.cellEmpty} />
-                                                                {/* <TableCell className={classes.checkboxCell}>
-                            <Checkbox
-                                id={`panel-table-item-checkbox-${row.panel_id}`}
-                                inputProps={{
-                                    'aria-labelledby': `panel-table-item-title-${row.panel_id}`,
-                                    'data-testid': `panel-list-table-checkbox-${row.panel_id}`,
-                                }}
-                                onChange={handleCheckboxChange}
-                                value={`${checkBoxIdPrefix}${row.panel_id}`}
-                            />
-                        </TableCell> */}
+
                                                                 <TableCell className={classes.cellGroupDetails}>
                                                                     <Typography variant="body1">
                                                                         <strong>{row.panel_title}</strong>
@@ -504,22 +446,7 @@ export const PromoPanelListGroupPanels = ({
                                                                         {row.panel_admin_notes}
                                                                     </Typography>
                                                                 </TableCell>
-                                                                <TableCell className={classes.checkboxCell}>
-                                                                    <Checkbox
-                                                                        id={`panel-table-item-checkbox-${item.default_panel.panel_id}`}
-                                                                        inputProps={{
-                                                                            'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
-                                                                            'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
-                                                                        }}
-                                                                        onChange={() =>
-                                                                            handleGroupDefaultChange(
-                                                                                item.user_group,
-                                                                                row,
-                                                                            )
-                                                                        }
-                                                                        value={`${checkBoxIdPrefix}${item.default_panel.panel_id}`}
-                                                                    />
-                                                                </TableCell>
+                                                                <TableCell className={classes.checkboxCell} />
                                                                 <TableCell className={classes.cellGroupDetails}>
                                                                     <Typography variant="body1">
                                                                         {moment(row.panel_schedule_start_time).format(
@@ -547,11 +474,9 @@ export const PromoPanelListGroupPanels = ({
                                                                             unschedulePanelById(row, item);
                                                                         }}
                                                                         mainButtonLabel={'Edit'}
-                                                                        // navigateToCloneForm={navigateToCloneForm}
                                                                         navigateToEditForm={row =>
                                                                             navigateToEditForm(row)
                                                                         }
-                                                                        // navigateToView={navigateToView}
                                                                         confirmDeleteLocale={confirmUnscheduleLocale}
                                                                     />
                                                                 </TableCell>
@@ -599,6 +524,7 @@ PromoPanelListGroupPanels.propTypes = {
     footerDisplayMinLength: PropTypes.number,
     alertOrder: PropTypes.any,
     panelError: PropTypes.string,
+    knownGroups: PropTypes.array,
 };
 
 PromoPanelListGroupPanels.defaultProps = {

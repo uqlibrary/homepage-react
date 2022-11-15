@@ -73,18 +73,6 @@ export const PromoPanelList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelUserTypeList]);
 
-    // const classes = useStyles();
-
-    // const [currentSpotlights, setCurrentSpotlights] = useState([]);
-    // const [scheduledSpotlights, setScheduledSpotlights] = useState([]);
-    // const [pastSpotlights, setPastSpotlights] = useState([]);
-
-    // const [isViewByHistoryLightboxOpen, setViewByHistoryLightboxOpen] = useState(false);
-    // const handleViewByHistoryLightboxOpen = () => setViewByHistoryLightboxOpen(true);
-    // const handleViewByHistoryLightboxClose = () => setViewByHistoryLightboxOpen(false);
-    // const [viewByHistoryLightBoxFocus, setViewByHistoryLightBoxFocus] = React.useState('');
-    // const [viewByHistoryLightBoxRows, setViewByHistoryLightBoxEntries] = React.useState([]);
-
     useEffect(() => {
         /* istanbul ignore else */
         if (!promoPanelList || promoPanelList.length < 1) {
@@ -96,99 +84,13 @@ export const PromoPanelList = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    // useEffect(() => {
-    //     // detect if the supplied date has time component "on the hour"
-    //     // (when the time would give eg 7:00am we collapse it down to 7am)
-    //     const isTimeOnTheHour = inputDate => moment(inputDate).format('m') === '0';
-
-    //     const pastDateDuringHourFormat = 'ddd D MMM YYYY [\n]h.mma';
-    //     const pastDateOnTheHourFormat = pastDateDuringHourFormat.replace('h.mma', 'ha');
-    //     const currentDateOnTheHourFormat = pastDateOnTheHourFormat.replace(' YYYY', '');
-    //     const currentDateDuringTheHourFormat = pastDateDuringHourFormat.replace(' YYYY', '');
-    //     const currentDateFormat = inputDate =>
-    //         isTimeOnTheHour(inputDate) ? currentDateOnTheHourFormat : currentDateDuringTheHourFormat;
-    //     const pastDateFormat = inputDate =>
-    //         isTimeOnTheHour(inputDate) ? pastDateOnTheHourFormat : pastDateDuringHourFormat;
-
-    //     if (!!spotlights && spotlights.length > 0) {
-    //         setPastSpotlights([]);
-    //         setCurrentSpotlights([]);
-    //         setScheduledSpotlights([]);
-    //         spotlights.forEach(s => {
-    //             // past spotlights have their dates displayed in a different format to current & scheduled spotlights
-    //             s.startDateDisplay = moment(s.start).format(
-    //                 isPastSpotlight(s) ? pastDateFormat(s.start) : currentDateFormat(s.start),
-    //             );
-    //             s.endDateDisplay = moment(s.end).format(
-    //                 isPastSpotlight(s) ? pastDateFormat(s.end) : currentDateFormat(s.end),
-    //             );
-
-    //             const fullDateFormat = 'dddd D MMMM YYYY h.mma';
-    //             s.startDateMouseover = moment(s.start).format(fullDateFormat);
-    //             s.endDateMouseover = moment(s.end).format(fullDateFormat);
-    //             if (isPastSpotlight(s)) {
-    //                 setPastSpotlights(pastState => [...pastState, s]);
-    //             } else if (isScheduledSpotlight(s)) {
-    //                 setScheduledSpotlights(pastState => [...pastState, s]);
-    //             } else {
-    //                 setCurrentSpotlights(pastState => [...pastState, s]);
-    //             }
-    //         });
-    //     }
-    // }, [spotlights]);
-
-    // const deleteSpotlightBulk = slist => {
-    //     return actions.deleteSpotlightBatch(slist);
-    // };
-
-    // const saveSpotlightChange = spotlight => {
-    //     return actions.updateSpotlightWithExistingImage(spotlight);
-    // };
-
-    // const showViewByHistoryLightbox = thisSpotlight => {
-    //     const filteredRows =
-    //         !!thisSpotlight && !!spotlights && [...spotlights].filter(r => r.img_url === thisSpotlight.img_url);
-    //     /* istanbul ignore else */
-    //     if (filteredRows.length > 0) {
-    //         // because its fired by clicking on a spotlight, it should never be 0
-    //         setViewByHistoryLightBoxFocus(thisSpotlight);
-    //         setViewByHistoryLightBoxEntries(filteredRows);
-    //         handleViewByHistoryLightboxOpen();
-    //     }
-    // };
-
-    // /* istanbul ignore next */
-    // if (!!spotlightsError && (!spotlightsError.errorType || spotlightsError.errorType !== 'deletion')) {
-    //     return (
-    //         <StandardPage title="Spotlights Management">
-    //             <section aria-live="assertive">
-    //                 <StandardCard title="System temporarily unavailable" noPadding>
-    //                     <Grid container>
-    //                         <Grid item xs={12} data-testid="admin-spotlights-list-error"
-    // className={classes.pageLayout}>
-    //                             <p>
-    //                                 We're working on the issue and will have service restored as soon as possible.
-    //                                 Please try again later.
-    //                             </p>
-    //                         </Grid>
-    //                     </Grid>
-    //                 </StandardCard>
-    //             </section>
-    //         </StandardPage>
-    //     );
-    // }
-    // const deletePanel = alertID => {
-    //     return actions.deletePanel(alertID);
-    // };
-
     return (
         <StandardPage title="Promo panel management">
-            {/* <PromoPanelListActive
+            <PromoPanelListActive
                 isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
                 title="Currently shown panels"
-            /> */}
+            />
             <PromoPanelUtilityArea
                 actions={actions}
                 helpContent={locale.listPage.help}
@@ -206,6 +108,7 @@ export const PromoPanelList = ({
                 canEdit
                 canClone
                 canDelete
+                knownGroups={knownGroups}
                 panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
             />
 
