@@ -153,6 +153,7 @@ export const PromoPanelListPanels = ({
     isLoading,
     panelList,
     knownGroups,
+    showBulkDelete,
     deletePanel,
     title,
     canEdit,
@@ -367,7 +368,7 @@ export const PromoPanelListPanels = ({
                         {/* filter end */}
                     </Grid>
                 </Grid>
-                {!!deleteActive && (
+                {!!deleteActive && showBulkDelete && (
                     <div
                         data-testid={'headerRow-panelList'}
                         className={`${classes.headerRow} ${classes.headerRowHighlighted}`}
@@ -416,7 +417,8 @@ export const PromoPanelListPanels = ({
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table" id="admin-promoPanel-list">
                         <TableHead>
                             <TableRow>
-                                <TableCell component="th" scope="row" />
+                                {showBulkDelete && <TableCell component="th" scope="row" />}
+
                                 <TableCell component="th" scope="row">
                                     Name
                                 </TableCell>
@@ -457,21 +459,23 @@ export const PromoPanelListPanels = ({
                                 return (
                                     <React.Fragment key={item.panel_id}>
                                         <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
-                                            <TableCell component="td" scope="row" className={classes.checkboxCell}>
-                                                {!isDefaultPanel(
-                                                    item.user_groups[0].is_panel_default_for_this_user,
-                                                ) && (
-                                                    <Checkbox
-                                                        id={`panel-table-item-checkbox-${item.panel_id}`}
-                                                        inputProps={{
-                                                            'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
-                                                            'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
-                                                        }}
-                                                        onChange={handleCheckboxChange}
-                                                        value={`${checkBoxIdPrefix}${item.panel_id}`}
-                                                    />
-                                                )}
-                                            </TableCell>
+                                            {showBulkDelete && (
+                                                <TableCell component="td" scope="row" className={classes.checkboxCell}>
+                                                    {!isDefaultPanel(
+                                                        item.user_groups[0].is_panel_default_for_this_user,
+                                                    ) && (
+                                                        <Checkbox
+                                                            id={`panel-table-item-checkbox-${item.panel_id}`}
+                                                            inputProps={{
+                                                                'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
+                                                                'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
+                                                            }}
+                                                            onChange={handleCheckboxChange}
+                                                            value={`${checkBoxIdPrefix}${item.panel_id}`}
+                                                        />
+                                                    )}
+                                                </TableCell>
+                                            )}
                                             <TableCell component="td" scope="row" className={classes.cellGroupName}>
                                                 <Typography variant="body1">{item.panel_title}</Typography>
                                             </TableCell>
@@ -557,6 +561,7 @@ export const PromoPanelListPanels = ({
 PromoPanelListPanels.propTypes = {
     panelList: PropTypes.array,
     title: PropTypes.string,
+    showBulkDelete: PropTypes.bool,
     canEdit: PropTypes.bool,
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
