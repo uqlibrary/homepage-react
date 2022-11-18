@@ -48,13 +48,21 @@ const useTestPanelStyles = makeStyles(theme => ({
     },
 }));
 
-const LastTestPanel = ({ asset, currentLocation, dateFormatPattern, testStatusEnums, disabled = false } = {}) => {
+const LastTestPanel = ({
+    asset,
+    currentLocation,
+    dateFormatPattern,
+    testStatusEnums,
+    disabled = false,
+    forceOpen = false,
+} = {}) => {
     LastTestPanel.propTypes = {
         asset: PropTypes.object.isRequired,
         currentLocation: PropTypes.object.isRequired,
         dateFormatPattern: PropTypes.string.isRequired,
         testStatusEnums: PropTypes.object.isRequired,
         disabled: PropTypes.bool,
+        forceOpen: PropTypes.bool,
     };
 
     const {
@@ -67,7 +75,7 @@ const LastTestPanel = ({ asset, currentLocation, dateFormatPattern, testStatusEn
 
     const theme = useTheme();
     const classes = useTestPanelStyles({ pass: didPass });
-    const [previousTestExpanded, setPreviousTestExpanded] = useState(!disabled);
+    const [testPanelExpanded, setTestPanelExpanded] = useState(!disabled);
     const [mismatchingLocation, setMismatchingLocation] = useState(false);
 
     useEffect(() => {
@@ -90,16 +98,22 @@ const LastTestPanel = ({ asset, currentLocation, dateFormatPattern, testStatusEn
 
     useEffect(() => {
         if (disabled) {
-            setPreviousTestExpanded(false);
+            setTestPanelExpanded(false);
         }
     }, [disabled]);
+
+    // useEffect(() => {
+    //     if (forceOpen) {
+    //         setTestPanelExpanded(forceOpen ?? testPanelExpanded);
+    //     }
+    // }, [forceOpen]);
 
     // if (!!!lastTest) return <></>;
 
     return (
         <StandardCard
             variant="outlined"
-            noPadding={!previousTestExpanded}
+            noPadding={!(forceOpen || testPanelExpanded)}
             title={
                 <>
                     <Typography component={'span'} variant={'h6'} color={disabled ? 'textSecondary' : 'textPrimary'}>
@@ -129,11 +143,11 @@ const LastTestPanel = ({ asset, currentLocation, dateFormatPattern, testStatusEn
             headerAction={
                 <IconButton
                     className={clsx(classes.expand, {
-                        [classes.expandOpen]: previousTestExpanded,
+                        [classes.expandOpen]: forceOpen || testPanelExpanded,
                     })}
-                    aria-expanded={previousTestExpanded}
+                    aria-expanded={forceOpen || testPanelExpanded}
                     aria-label="show more"
-                    onClick={() => setPreviousTestExpanded(!previousTestExpanded)}
+                    onClick={() => !forceOpen && setTestPanelExpanded(!testPanelExpanded)}
                     disabled={disabled}
                 >
                     <ExpandMoreIcon />
@@ -141,7 +155,7 @@ const LastTestPanel = ({ asset, currentLocation, dateFormatPattern, testStatusEn
             }
             classes={!disabled ? classes : {}}
         >
-            <Collapse in={previousTestExpanded} timeout="auto">
+            <Collapse in={forceOpen || testPanelExpanded} timeout="auto">
                 <Grid container spacing={1}>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>

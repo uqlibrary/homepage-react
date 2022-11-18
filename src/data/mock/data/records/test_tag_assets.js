@@ -20,9 +20,9 @@ export default [
         },
         "asset_type": {
             "asset_type": 1,
-            "asset_type_name": "PEW 60-3",
-            "asset_type_class": "Cable",
-            "asset_type_power_rating": "10",
+            "asset_type_name": "Power Cord - C13",
+            "asset_type_class": "",
+            "asset_type_power_rating": "",
         },
         "last_test": {
             "test_status": "CURRENT",
@@ -68,9 +68,9 @@ export default [
         },
         "asset_type": {
             "asset_type": 2,
-            "asset_type_name": "KEW 620-1",
-            "asset_type_class": "Cable",
-            "asset_type_power_rating": "10",
+            "asset_type_name": "Power Cord - C5",
+            "asset_type_class": "",
+            "asset_type_power_rating": "",
         },
         "last_test": {
             "test_status": "CURRENT",
@@ -116,9 +116,9 @@ export default [
         },
         "asset_type": {
             "asset_type": 2,
-            "asset_type_name": "HEW 20-2",
-            "asset_type_class": "Cable",
-            "asset_type_power_rating": "10",
+            "asset_type_name": "Power Cord - C5",
+            "asset_type_class": "",
+            "asset_type_power_rating": "",
         },
         "last_test": {
             "test_status": "FAIL",
@@ -164,9 +164,9 @@ export default [
         },
         "asset_type": {
             "asset_type": 2,
-            "asset_type_name": "HEW 20-2",
-            "asset_type_class": "Cable",
-            "asset_type_power_rating": "10",
+            "asset_type_name": "Power Cord - C5",
+            "asset_type_class": "",
+            "asset_type_power_rating": "",
         },
         "last_test": {
             "test_status": "CURRENT",
@@ -211,10 +211,10 @@ export default [
             "site_id_name": "St Lucia",
         },
         "asset_type": {
-            "asset_type": 4,
-            "asset_type_name": "FEW 120-4",
-            "asset_type_class": "Cable",
-            "asset_type_power_rating": "10",
+            "asset_type": 1,
+            "asset_type_name": "Power Cord - C13",
+            "asset_type_class": "",
+            "asset_type_power_rating": "",
         },
         "last_test": {
             "test_status": "CURRENT",
@@ -259,10 +259,10 @@ export default [
             "site_id_name": "St Lucia",
         },
         "asset_type": {
-            "asset_type": 5,
-            "asset_type_name": "LEW 2-5",
-            "asset_type_class": "Cable",
-            "asset_type_power_rating": "10",
+            "asset_type": 3,
+            "asset_type_name": "PowerBoard",
+            "asset_type_class": "",
+            "asset_type_power_rating": "",
         },
         "last_test": {
             "test_status": "CURRENT",
@@ -307,10 +307,10 @@ export default [
             "site_id_name": "St Lucia",
         },
         "asset_type": {
-            "asset_type": 5,
-            "asset_type_name": "LEW 2-5",
-            "asset_type_class": "Cable",
-            "asset_type_power_rating": "10",
+            "asset_type": 3,
+            "asset_type_name": "PowerBoard",
+            "asset_type_class": "",
+            "asset_type_power_rating": "",
         },
         "last_test": {
         },
