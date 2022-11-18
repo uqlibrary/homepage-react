@@ -250,50 +250,40 @@ const TestTag = ({
         .startOf('year')
         .format(dateFormat);
 
+    const [userId, setUserId] = useState(-1);
     const [selectedAsset, setSelectedAsset] = useState({});
-
     const [formSiteId, setFormSiteId] = useState(-1);
-    // const [formEventDate, setFormEventDate] = useState(today);
     const [formBuildingId, setFormBuildingId] = useState(-1);
     const [formFloorId, setFormFloorId] = useState(-1);
-    // const [formRoomId, setFormRoomId] = useState(-1);
-    // const [formDeviceId, setFormDeviceId] = useState(
-    //     !!!initConfigLoading && !!!initConfigError && !!initConfig && !!initConfig.length > 0
-    //         ? initConfig[0].device_id
-    //         : -1,
-    // );
-    // const [formAssetType, setFormAssetType] = useState({});
     const [formAssetList, setFormAssetList] = useState(assetsList ?? []);
-    // const [formTestStatus, setFormTestStatus] = useState(testStatusEnum.NONE);
     const [formNextTestDate, setFormNextTestDate] = useState(defaultNextTestDateValue);
-    // const [formDiscardingId, setFormDiscardingId] = useState(1);
-    // const [formRepairId, setFormRepairId] = useState(1);
-    const [formOwnerId] = useState(currentAssetOwnersList[0].value); // TODO if more owners added
+    const [formOwnerId] = useState(currentAssetOwnersList[0].value);
     const [selectedTabValue, setSelectedTabValue] = useState(0);
     const [eventExpanded, setEventExpanded] = useState(true);
-    // const [testExpanded, setTestExpanded] = useState(true);
-    // const [assetListOpen, setAssetListOpen] = useState(false);
 
     const [isFormValid, setFormValidity] = useState(false);
 
-    const assignAssetDefaults = (asset = {}, formValues = {}) => {
-        return {
-            ...DEFAULT_FORM_VALUES,
-            asset_id_displayed: asset?.asset_id_displayed ?? undefined,
-            asset_department_owned_by: formOwnerId ?? undefined,
-            asset_type_id: asset?.asset_type?.asset_type ?? undefined,
-            user_id: 1, // TODO
-            room_id: formValues?.room_id ?? undefined,
-            action_date: formValues?.action_date ?? today,
-            with_inspection: {
-                ...DEFAULT_FORM_VALUES.with_inspection,
-                inspection_device_id:
-                    formValues?.with_inspection?.inspection_device_id !== -1
-                        ? formValues?.with_inspection?.inspection_device_id
-                        : initConfig.inspection_devices?.[0].device_id ?? undefined,
-            },
-        };
-    };
+    const assignAssetDefaults = React.useCallback(
+        (asset = {}, formValues = {}) => {
+            return {
+                ...DEFAULT_FORM_VALUES,
+                asset_id_displayed: asset?.asset_id_displayed ?? undefined,
+                asset_department_owned_by: formOwnerId ?? undefined,
+                asset_type_id: asset?.asset_type?.asset_type ?? undefined,
+                user_id: userId,
+                room_id: formValues?.room_id ?? undefined,
+                action_date: formValues?.action_date ?? today,
+                with_inspection: {
+                    ...DEFAULT_FORM_VALUES.with_inspection,
+                    inspection_device_id:
+                        formValues?.with_inspection?.inspection_device_id !== -1
+                            ? formValues?.with_inspection?.inspection_device_id
+                            : initConfig.inspection_devices?.[0].device_id ?? undefined,
+                },
+            };
+        },
+        [formOwnerId, today, initConfig, userId],
+    );
 
     const [formValues, resetFormValues, handleChange] = useForm({
         defaultValues: { ...assignAssetDefaults() },
@@ -302,7 +292,6 @@ const TestTag = ({
 
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues);
-        console.log('assignCurrentAsset', newFormValues);
         resetFormValues(newFormValues);
         setSelectedAsset(asset);
     };
@@ -312,11 +301,6 @@ const TestTag = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // React.useEffect(() => {
-    //     if (!assetListOpen) {
-    //         setFormAssetList([]);
-    //     }
-    // }, [assetListOpen]);
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -344,6 +328,7 @@ const TestTag = ({
     useEffect(() => {
         if (!initConfigLoading && !!initConfig && initConfig?.sites.length > 0) {
             setFormSiteId(initConfig.sites[0].site_id);
+            setUserId(initConfig.user.user_id);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initConfigLoading]);
@@ -377,33 +362,13 @@ const TestTag = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formValues?.with_inspection?.inspection_status, formNextTestDate]);
 
-    // useEffect(() => {
-    //     handleChange('with_repair.isRepair')(formRepairId === 2);
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [formRepairId]);
-    // useEffect(() => {
-    //     handleChange('with_discarded.isDiscarded')(formDiscardingId === 2);
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [formDiscardingId]);
-
-    // useEffect(() => {
-    //     setAssetIdType(
-    //         (Object.keys(currentAsset).length > 0 &&
-    //             !!currentAsset.assetTypeId &&
-    //             assetType.find(item => item.id === currentAsset.assetTypeId)) ??
-    //             {},
-    //     );
-    //     setTestStatus(testStatusEnum.NONE);
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, JSON.stringify(currentAsset));
-
     const debounceAssetsSearch = React.useRef(
         debounce(
             500,
             pattern => !!pattern && pattern.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH && actions.loadAssets(pattern),
         ),
         { noLeading: true, noTrailing: true },
-    ).PASSED;
+    ).current;
 
     const saveForm = () => {
         if (isFormValid) {
