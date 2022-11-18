@@ -167,8 +167,6 @@ export const PromoPanelListGroupPanels = ({
         setFilteredPanels(panelList);
     }, [panelList]);
 
-    console.log('PanelListGroupPanels', filteredPanels);
-
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
     const [unscheduleActive, setUnscheduleActive] = useState(false);
@@ -207,8 +205,6 @@ export const PromoPanelListGroupPanels = ({
 
         setSelectorGroupNames(selections);
         clearAllCheckboxes();
-
-        console.log('RESULTING FILTER LIST', panelList, filterPanelList(panelList, selections, true));
 
         setFilteredPanels(filterPanelList(filterPanelList(panelList, selections, true)));
         // Filter the selection, and store in filteredPanels.
@@ -269,6 +265,7 @@ export const PromoPanelListGroupPanels = ({
         scrollToTopOfPage();
     };
     // const needsPaginator = userows.length > footerDisplayMinLength;
+
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -312,7 +309,6 @@ export const PromoPanelListGroupPanels = ({
                                 value={selectorGroupNames}
                                 onChange={handleGroupFilterChange}
                                 renderValue={selected => {
-                                    console.log('selected', selected);
                                     return selected.join(', ');
                                 }}
                             >

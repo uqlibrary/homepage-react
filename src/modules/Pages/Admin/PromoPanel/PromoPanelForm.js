@@ -127,7 +127,7 @@ export const PromoPanelForm = ({
         defaultList: isDefaultPanel ? scheduledList : [],
         scheduledGroups: scheduledGroupNames,
         test: 'test',
-        admin_notes: (currentPanel && currentPanel.admin_notes) || '',
+        admin_notes: (currentPanel && currentPanel.panel_admin_notes) || '',
         title: (currentPanel && currentPanel.panel_title) || '',
         content: (currentPanel && currentPanel.panel_content) || '',
     });
@@ -148,12 +148,12 @@ export const PromoPanelForm = ({
                 scheduledGroups: scheduledGroupNames,
             });
             setSelectorGroupNames(scheduledGroupNames);
-            const unscheduledGroup = knownGroups.filter(item => scheduledGroupNames.indexOf(item) < 0);
+            const unscheduledGroup = knownGroups.filter(item => scheduledGroupNames.indexOf(item.group) < 0);
 
             setUnscheduledGroups(unscheduledGroup);
             setSelectorGroupNames([]);
         } else {
-            const unscheduledGroup = knownGroups.filter(item => scheduledGroupNames.indexOf(item) < 0);
+            const unscheduledGroup = knownGroups.filter(item => scheduledGroupNames.indexOf(item.group) < 0);
 
             setUnscheduledGroups(unscheduledGroup);
             setSelectorGroupNames([]);
@@ -397,6 +397,8 @@ export const PromoPanelForm = ({
         setIsEditingDate(false);
     };
 
+    console.log('GROUPS', selectorGroupNames);
+
     return (
         <Fragment>
             <form className={classes.spotlightForm}>
@@ -512,10 +514,10 @@ export const PromoPanelForm = ({
                                     renderValue={selected => selected.join(', ')}
                                     MenuProps={MenuProps}
                                 >
-                                    {knownGroups.map(name => (
-                                        <MenuItem key={name} value={name}>
-                                            <Checkbox checked={selectorGroupNames.indexOf(name) > -1} />
-                                            <ListItemText primary={name} />
+                                    {knownGroups.map(item => (
+                                        <MenuItem key={item.group} value={item.group}>
+                                            <Checkbox checked={selectorGroupNames.indexOf(item.group) > -1} />
+                                            <ListItemText primary={item.name} />
                                         </MenuItem>
                                     ))}
                                 </Select>

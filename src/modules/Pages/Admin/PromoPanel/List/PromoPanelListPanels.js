@@ -41,6 +41,7 @@ import { getClassNumberFromPieces } from 'data/actions';
 // import AlertSplitButton from './AlertSplitButton';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { filterPanelList } from '../promoPanelHelpers';
+import { CollectionsBookmarkOutlined } from '@material-ui/icons';
 
 const moment = require('moment');
 
@@ -201,7 +202,7 @@ export const PromoPanelListPanels = ({
         });
     };
 
-    const isDefaultPanel = value => value === 'Y' || value === 1 || value === true;
+    const isDefaultPanel = value => value && value.length > 0;
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
             ...locale.listPage.confirmDelete,
@@ -305,12 +306,9 @@ export const PromoPanelListPanels = ({
         setSelectorGroupNames(selections);
         clearAllCheckboxes();
 
-        console.log('RESULTING FILTER LIST', filterPanelList(panelList, selections));
-
         setFilteredPanels(filterPanelList(filterPanelList(panelList, selections)));
         // Filter the selection, and store in filteredPanels.
     };
-    console.log('The Panel List', panelList);
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -353,7 +351,6 @@ export const PromoPanelListPanels = ({
                                 value={selectorGroupNames}
                                 onChange={handleGroupFilterChange}
                                 renderValue={selected => {
-                                    console.log('selected', selected);
                                     return selected.join(', ');
                                 }}
                             >
@@ -455,15 +452,16 @@ export const PromoPanelListPanels = ({
                                 </TableRow>
                             )}
                             {filteredPanels.map(item => {
-                                console.log(item);
+                                console.log('ITEM', item);
+                                const isDefaultPanel = item.default_panels_for.length > 0;
+                                const typeList =
+                                    item.default_panels_for.length > 0 ? item.default_panels_for : item.panel_schedule;
                                 return (
                                     <React.Fragment key={item.panel_id}>
                                         <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
                                             {showBulkDelete && (
                                                 <TableCell component="td" scope="row" className={classes.checkboxCell}>
-                                                    {!isDefaultPanel(
-                                                        item.user_groups[0].is_panel_default_for_this_user,
-                                                    ) && (
+                                                    {!isDefaultPanel && (
                                                         <Checkbox
                                                             id={`panel-table-item-checkbox-${item.panel_id}`}
                                                             inputProps={{
@@ -496,11 +494,7 @@ export const PromoPanelListPanels = ({
                                                     alertId={alert.id}
                                                     canEdit={canEdit}
                                                     canClone={canClone}
-                                                    canDelete={
-                                                        !isDefaultPanel(
-                                                            item.user_groups[0].is_panel_default_for_this_user,
-                                                        )
-                                                    }
+                                                    canDelete={!isDefaultPanel}
                                                     onPreview={item => onPreviewOpen(item)}
                                                     row={item}
                                                     deletePanelById={row => deletePanelById(row)}
@@ -515,25 +509,20 @@ export const PromoPanelListPanels = ({
                                         <TableRow>
                                             <TableCell />
                                             <TableCell colSpan={4}>
-                                                {item.user_groups.map(type => {
-                                                    return (
-                                                        <Chip
-                                                            key={type.user_group}
-                                                            data-testid={'alert-list-urgent-chip-'}
-                                                            label={`${
-                                                                isDefaultPanel(type.is_panel_default_for_this_user)
-                                                                    ? 'Default: '
-                                                                    : ''
-                                                            } ${type.user_group_name}`}
-                                                            title={type.user_group_name}
-                                                            className={
-                                                                isDefaultPanel(type.is_panel_default_for_this_user)
-                                                                    ? classes.defaultChip
-                                                                    : ''
-                                                            }
-                                                        />
-                                                    );
-                                                })}
+                                                {typeList &&
+                                                    typeList.map(type => {
+                                                        return (
+                                                            <Chip
+                                                                key={type.usergroup_group}
+                                                                data-testid={'alert-list-urgent-chip-'}
+                                                                label={`${isDefaultPanel ? 'Default: ' : ''} ${
+                                                                    type.usergroup_group_name
+                                                                }`}
+                                                                title={type.usergroup_group_name}
+                                                                className={isDefaultPanel ? classes.defaultChip : ''}
+                                                            />
+                                                        );
+                                                    })}
                                             </TableCell>
                                         </TableRow>
                                     </React.Fragment>

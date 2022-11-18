@@ -62,11 +62,8 @@ export const PromoPanelList = ({
         // do something with the promo Panel List and the user type here.
         if (promoPanelUserTypeList.length > 0) {
             const known = [];
-            console.log('PANELUSERTYPELIST', promoPanelUserTypeList);
-            promoPanelUserTypeList.map(
-                item =>
-                    !known.includes(item.user_group) &&
-                    known.push({ group: item.user_group, name: item.user_group_name }),
+            promoPanelUserTypeList.map(item =>
+                known.push({ group: item.usergroup_group, name: item.usergroup_group_name }),
             );
             setKnownGroups(known);
         }
@@ -86,11 +83,11 @@ export const PromoPanelList = ({
     }, []);
     return (
         <StandardPage title="Promo panel management">
-            <PromoPanelListActive
+            {/* <PromoPanelListActive
                 isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
                 title="Currently shown panels"
-            />
+            /> */}
             <PromoPanelUtilityArea
                 actions={actions}
                 helpContent={locale.listPage.help}
@@ -98,7 +95,7 @@ export const PromoPanelList = ({
                 showAddButton
             />
 
-            <PromoPanelListGroupPanels
+            {/* <PromoPanelListGroupPanels
                 actions={actions}
                 isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
@@ -110,7 +107,7 @@ export const PromoPanelList = ({
                 canDelete
                 knownGroups={knownGroups}
                 panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
-            />
+            /> */}
 
             <PromoPanelListPanels
                 actions={actions}

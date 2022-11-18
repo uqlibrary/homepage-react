@@ -64,52 +64,86 @@ export const PromoPanelEdit = ({
     React.useEffect(() => {
         if (promoPanelUserTypeList.length > 0) {
             const known = [];
-            promoPanelUserTypeList.map(item => !known.includes(item.user_group) && known.push(item.user_group));
+            promoPanelUserTypeList.map(item => {
+                !known.some(e => e.group === item.usergroup_group) &&
+                    known.push({ group: item.usergroup_group, name: item.usergroup_group_name });
+            });
             setKnownGroups(known);
         }
         if (promoPanelList.length > 0) {
             const userlist = [];
             const schedule = [];
             setCurrentPanel(...promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`));
+            console.log(promoPanelList);
             promoPanelList.map(item => {
                 if (`${item.panel_id}` === `${promopanelid}`) {
-                    item.user_groups.map(element => {
-                        if (element.is_panel_default_for_this_user === 'Y' && !isDefault) {
-                            setIsDefault(true);
-                        }
-
-                        !userlist.includes(element.user_group) && userlist.push(element.user_group);
-
-                        if (schedule.length < 1) {
+                    if (item.default_panels_for.length > 0) {
+                        setIsDefault(true);
+                        item.default_panels_for.map(element => {
+                            !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
                             schedule.push({
                                 startDate: element.panel_schedule_start_time,
                                 endDate: element.panel_schedule_end_time,
-                                groupNames: element.user_group,
+                                groupNames: element.usergroup_group,
                                 existing: true,
                             });
-                        } else {
-                            schedule.push({
-                                startDate: element.panel_schedule_start_time,
-                                endDate: element.panel_schedule_end_time,
-                                groupNames: element.user_group,
-                                existing: true,
+                        });
+                    } else {
+                        setIsDefault(false);
+                        item.panel_schedule.map(element => {
+                            !userlist.includes(element.usergroup_group_name) &&
+                                userlist.push(element.usergroup_group_name);
+                            element.user_group_schedule.map(panelSchedule => {
+                                schedule.push({
+                                    startDate: panelSchedule.panel_schedule_start_time,
+                                    endDate: panelSchedule.panel_schedule_end_time,
+                                    groupNames: element.usergroup_group,
+                                    existing: true,
+                                });
                             });
-                            // schedule.map((scheduleItem, index) => {
-                            //     if (
-                            //         scheduleItem.startDate === element.panel_schedule_start_time &&
-                            //         scheduleItem.endDate === element.panel_schedule_end_time
-                            //     ) {
-                            //         schedule[index].groupNames.push(element.user_group);
-                            //     } else {
-                            //         schedule.push({
-                            //             startDate: element.panel_schedule_start_time,
-                            //             endDate: element.panel_schedule_end_time,
-                            //             groupNames: [element.user_group],
-                            //         });
-                            //     }
-                            // });
-                        }
-                    });
+                        });
+                    }
+                    // item.user_groups.map(element => {
+                    //     // if (element.is_panel_default_for_this_user === 'Y' && !isDefault) {
+                    //     //     setIsDefault(true);
+                    //     // }
+
+                    //     if (item.default_panels_for.length > 0) setIsDefault(true);
+
+                    //     console.log('UserList', userlist);
+
+                    //     !userlist.includes(element.user_group) && userlist.push(element.user_group);
+
+                    //     if (schedule.length < 1) {
+                    //         schedule.push({
+                    //             startDate: element.panel_schedule_start_time,
+                    //             endDate: element.panel_schedule_end_time,
+                    //             groupNames: element.user_group,
+                    //             existing: true,
+                    //         });
+                    //     } else {
+                    //         schedule.push({
+                    //             startDate: element.panel_schedule_start_time,
+                    //             endDate: element.panel_schedule_end_time,
+                    //             groupNames: element.user_group,
+                    //             existing: true,
+                    //         });
+                    //         // schedule.map((scheduleItem, index) => {
+                    //         //     if (
+                    //         //         scheduleItem.startDate === element.panel_schedule_start_time &&
+                    //         //         scheduleItem.endDate === element.panel_schedule_end_time
+                    //         //     ) {
+                    //         //         schedule[index].groupNames.push(element.user_group);
+                    //         //     } else {
+                    //         //         schedule.push({
+                    //         //             startDate: element.panel_schedule_start_time,
+                    //         //             endDate: element.panel_schedule_end_time,
+                    //         //             groupNames: [element.user_group],
+                    //         //         });
+                    //         //     }
+                    //         // });
+                    //     }
+                    // });
                 }
                 setUserList(userlist);
                 setScheduleList(schedule);
