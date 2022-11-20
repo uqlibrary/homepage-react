@@ -7,30 +7,28 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Exams',
+        title: 'Summer Semester',
         content: (
             <div>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support. Help is available on exam days between 5 and 18 November.</p>
+                <p>Congratulations to everyone who has completed their Semester 2 courses and exams.</p>
+                <p>For Summer Semester students, we are open on-campus and online:</p>
                 <ul>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/prepare-online-exam-success">Prepare for online exam success</a></li>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">Find past exam papers</a></li>
-                    <li><a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and on-campus.</li>
+                    <li>Study in a range of comfortable spaces. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</li>
+                    <li><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</li>
                 </ul>
-                <p>Good luck with your exams!</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Exams',
+        title: 'Summer Semester',
         content: (
             <div>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support. Help is available on exam days between 5 and 18 November.</p>
+                <p>Congratulations to everyone who has completed their Semester 2 courses and exams.</p>
+                <p>For Summer Semester students, we are open on-campus and online:</p>
                 <ul>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/prepare-online-exam-success">Prepare for online exam success</a></li>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">Find past exam papers</a></li>
-                    <li><a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and on-campus.</li>
+                    <li>Study in a range of comfortable spaces. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</li>
+                    <li><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</li>
                 </ul>
-                <p>Good luck with your exams!</p>
             </div>
         ),
     },
