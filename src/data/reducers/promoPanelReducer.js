@@ -11,6 +11,7 @@ export const initialState = {
     promoPanelListError: null,
     promoPanelUserTypesError: null,
     promoPanelActionError: null,
+    updated: false,
 };
 
 const handlers = {
@@ -30,10 +31,12 @@ const handlers = {
         ...state,
         promoPanelLoading: true,
         promoPanelActionError: null,
+        updated: false,
     }),
     [actions.PROMOPANEL_LOAD_SUCCESS]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelLoading: false,
         promoPanelActionError: null,
         currentPromoPanel: action.payload,
@@ -41,6 +44,7 @@ const handlers = {
     [actions.PROMOPANEL_LOAD_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelLoading: false,
         promoPanelActionError: action.payload,
         currentPromoPanel: null,
@@ -49,6 +53,7 @@ const handlers = {
     [actions.PROMOPANEL_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelList: [],
         promoPanelListLoading: true,
         promoPanelListError: null,
@@ -56,6 +61,7 @@ const handlers = {
     [actions.PROMOPANEL_LIST_LOAD_SUCCESS]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelListLoading: false,
         promoPanelListError: null,
         promoPanelList: action.payload,
@@ -63,6 +69,7 @@ const handlers = {
     [actions.PROMOPANEL_LIST_LOAD_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelListLoading: false,
         promoPanelListError: action.payload,
         promoPanelList: [],
@@ -71,6 +78,7 @@ const handlers = {
     [actions.PROMOPANEL_USERLIST_LOADING]: state => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelUserTypeList: [],
         promoPanelUserTypesError: null,
         promoPanelUserTypesLoading: true,
@@ -78,6 +86,7 @@ const handlers = {
     [actions.PROMOPANEL_USERLIST_LOAD_SUCCESS]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelUserTypesError: null,
         promoPanelUserTypesLoading: false,
         promoPanelUserTypeList: action.payload,
@@ -85,6 +94,7 @@ const handlers = {
     [actions.PROMOPANEL_USERLIST_LOAD_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelUserTypesError: action.payload,
         promoPanelUserTypesLoading: false,
         promoPanelUserTypeList: [],
@@ -93,12 +103,14 @@ const handlers = {
     [actions.PROMOPANEL_CREATING]: state => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelLoading: true,
         promoPanelActionError: null,
     }),
     [actions.PROMOPANEL_CREATE_SUCCESS]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: true,
         currentPromoPanel: action.payload,
         promoPanelLoading: false,
         promoPanelActionError: null,
@@ -106,6 +118,7 @@ const handlers = {
     [actions.PROMOPANEL_CREATE_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelLoading: false,
         promoPanelActionError: action.payload,
     }),
@@ -113,12 +126,14 @@ const handlers = {
     [actions.PROMOPANEL_SAVING]: state => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelLoading: true,
         promoPanelActionError: null,
     }),
     [actions.PROMOPANEL_SAVE_SUCCESS]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: true,
         currentPromoPanel: action.payload,
         promoPanelLoading: false,
         promoPanelActionError: null,
@@ -133,12 +148,14 @@ const handlers = {
     [actions.PROMOPANEL_DELETING]: state => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelLoading: true,
         promoPanelActionError: null,
     }),
     [actions.PROMOPANEL_DELETE_SUCCESS]: state => ({
         ...initialState,
         ...state,
+        updated: true,
         currentPromoPanel: null,
         promoPanelLoading: false,
         promoPanelActionError: null,
@@ -146,6 +163,7 @@ const handlers = {
     [actions.PROMOPANEL_DELETE_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
+        updated: false,
         promoPanelLoading: false,
         promoPanelActionError: action.payload,
     }),

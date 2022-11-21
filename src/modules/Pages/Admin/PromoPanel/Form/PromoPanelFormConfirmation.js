@@ -121,6 +121,37 @@ export const PromoPanelFormConfirmation = ({
                         </Grid>
                     </DialogContent>
                 )}
+
+                {confirmationMode === 'confirm' && (
+                    <DialogContent>
+                        <Grid container spacing={1}>
+                            Are you sure?
+                        </Grid>
+
+                        <Grid item xs={12} align="right">
+                            <Button
+                                style={{ marginTop: 10 }}
+                                color="secondary"
+                                children="Confirm"
+                                data-testid="admin-promopanel-group-button-cancel"
+                                variant="contained"
+                                onClick={() => {
+                                    return true;
+                                }}
+                            />
+                            <Button
+                                style={{ marginTop: 10 }}
+                                color="secondary"
+                                children="Cancel"
+                                data-testid="admin-promopanel-group-button-cancel"
+                                variant="contained"
+                                onClick={() => {
+                                    return false;
+                                }}
+                            />
+                        </Grid>
+                    </DialogContent>
+                )}
             </Dialog>
         </React.Fragment>
     );

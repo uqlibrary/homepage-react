@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { get, post, destroy } from 'repositories/generic';
+import { get, post, put, destroy } from 'repositories/generic';
 import {
     PROMOPANEL_CREATE_API,
     PROMOPANEL_UPDATE_API,
@@ -53,7 +53,7 @@ export function getPromoPanelByID(request) {
 }
 
 export function loadPromoPanelList() {
-    return dispatch => {
+    return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_LIST_LOADING });
         return get(PROMOPANEL_LIST_API())
             .then(response => {
@@ -72,7 +72,7 @@ export function loadPromoPanelList() {
 }
 
 export function loadPromoPanelUserList() {
-    return dispatch => {
+    return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_USERLIST_LOADING });
         return get(PROMOPANEL_LIST_USERTYPES_API())
             .then(response => {
@@ -116,8 +116,9 @@ export const createPromoPanel = request => {
 export const savePromoPanel = request => {
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_SAVING });
-        return post(PROMOPANEL_UPDATE_API({ id: request.id }), request)
+        return post(PROMOPANEL_UPDATE_API({ id: request.panel_id }), request)
             .then(data => {
+                console.log('Save Successful');
                 dispatch({
                     type: actions.PROMOPANEL_SAVE_SUCCESS,
                     payload: data,
@@ -152,7 +153,7 @@ export const saveUserTypePanel = request => {
 export const saveDefaultUserTypePanel = request => {
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_SAVING });
-        return post(PROMOPANEL_UPDATE_USERTYPE_DEFAULT({ id: request.id, usergroup: request.usergroup }), request)
+        return put(PROMOPANEL_UPDATE_USERTYPE_DEFAULT({ id: request.id, usergroup: request.usergroup }), request)
             .then(data => {
                 dispatch({
                     type: actions.PROMOPANEL_SAVE_SUCCESS,

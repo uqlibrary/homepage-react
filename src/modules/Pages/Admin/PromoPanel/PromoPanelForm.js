@@ -198,38 +198,42 @@ export const PromoPanelForm = ({
     };
 
     const savePromoPanel = () => {
-        let defaultOrScheduledGroups = {};
-        // validate if a default's already been set for any of these groups
-        if (values.is_default_panel) {
-            defaultOrScheduledGroups = {
-                panel_default_groups: values.defaultList.map(item => item.groupNames),
-            };
-        } else {
-            if (values.scheduledList && values.scheduledList.length > 0) {
-                defaultOrScheduledGroups = {
-                    panel_schedule: values.scheduledList.map(item => {
-                        return {
-                            user_groups: [item.groupNames],
-                            panel_schedule_start_time: item.startDate,
-                            panel_schedule_end_time: item.endDate,
-                        };
-                    }),
-                };
-            } else {
-                defaultOrScheduledGroups = {};
-            }
-        }
+        // let defaultOrScheduledGroups = {};
+        // // validate if a default's already been set for any of these groups
+        // if (values.is_default_panel) {
+        //     defaultOrScheduledGroups = {
+        //         panel_default_groups: values.defaultList.map(item => item.groupNames),
+        //     };
+        // } else {
+        //     if (values.scheduledList && values.scheduledList.length > 0) {
+        //         defaultOrScheduledGroups = {
+        //             panel_schedule: values.scheduledList.map(item => {
+        //                 return {
+        //                     user_groups: [item.groupNames],
+        //                     panel_schedule_start_time: item.startDate,
+        //                     panel_schedule_end_time: item.endDate,
+        //                 };
+        //             }),
+        //         };
+        //     } else {
+        //         defaultOrScheduledGroups = {};
+        //     }
+        // }
 
         const newValues = {
-            panel_id: isEdit ? values.id : null,
+            panel_id: values.id,
             panel_title: values.title,
             panel_content: values.content,
             panel_admin_notes: values.admin_notes,
-            ...defaultOrScheduledGroups,
+            // ...defaultOrScheduledGroups,
         };
 
         setIsConfirmOpen(false);
-        actions.createPromoPanel(newValues).then(navigateToListPage());
+        if (isEdit) {
+            actions.savePromoPanel(newValues).then(navigateToListPage());
+        } else {
+            actions.createPromoPanel(newValues).then(navigateToListPage());
+        }
     };
     const handleContentChange = data => {
         setValues({
@@ -256,45 +260,78 @@ export const PromoPanelForm = ({
     };
 
     const handleAddSchedule = () => {
+        console.log('Handle Add Schedule');
         setConfirmationMode('schedule');
         let isValid = true;
 
         const allocatedList = [...displayList];
         selectorGroupNames.map(item => {
             if (!!!values.is_default_panel && !!mode.validate) {
+                console.log('Full Promo Panel User Type List', fullPromoPanelUserTypeList);
                 fullPromoPanelUserTypeList.map(schedules => {
-                    if (
-                        schedules.user_group === item &&
+                    if (schedules.usergroup_group === item) {
                         schedules.scheduled_panels &&
-                        schedules.scheduled_panels.length > 0
-                    ) {
-                        schedules.scheduled_panels.map(schedule => {
-                            if (
-                                (moment(values.start).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-                                    moment(values.start).isSameOrBefore(moment(schedule.panel_schedule_end_time))) ||
-                                (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(values.start)) &&
-                                    moment(schedule.panel_schedule_start_time).isSameOrBefore(moment(values.end)))
-                            ) {
-                                setConfirmationMessage(
-                                    locale.form.scheduleConflict.alert(
-                                        item,
-                                        schedule.panel_title,
-                                        schedule.panel_schedule_start_time,
-                                        schedule.panel_schedule_end_time,
-                                    ),
-                                );
-                                isValid = false;
-                            }
-                        });
+                            schedules.scheduled_panels.map(schedule => {
+                                if (
+                                    (moment(values.start).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
+                                        moment(values.start).isSameOrBefore(
+                                            moment(schedule.panel_schedule_end_time),
+                                        )) ||
+                                    (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(values.start)) &&
+                                        moment(schedule.panel_schedule_start_time).isSameOrBefore(moment(values.end)))
+                                ) {
+                                    setConfirmationMessage(
+                                        locale.form.scheduleConflict.alert(
+                                            item,
+                                            schedule.panel_title,
+                                            schedule.panel_schedule_start_time,
+                                            schedule.panel_schedule_end_time,
+                                        ),
+                                    );
+                                    isValid = false;
+                                }
+                            });
                     }
                 });
             }
             if (isValid) {
-                allocatedList.push({
-                    startDate: moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
-                    endDate: moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
-                    groupNames: item,
-                });
+                let push = true;
+                if (values.is_default_panel && allocatedList.length > 0) {
+                    allocatedList.map(alloc => {
+                        if (alloc.groupNames === item) {
+                            push = false;
+                        }
+                    });
+                }
+                console.log('Allocated List', allocatedList);
+                if (!values.is_default_panel && allocatedList.length > 0) {
+                    allocatedList.map(alloc => {
+                        if (
+                            alloc.groupNames === item &&
+                            moment(values.start).isSame(moment(alloc.startDate)) &&
+                            moment(values.end).isSame(moment(alloc.endDate))
+                        ) {
+                            push = false;
+                        } else {
+                            console.log('They dont match', values.start, alloc.startDate);
+                        }
+                    });
+                }
+                if (push) {
+                    allocatedList.push({
+                        startDate: values.is_default_panel ? null : moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
+                        endDate: values.is_default_panel ? null : moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
+                        groupNames: item,
+                    });
+
+                    // This is where we'll add the new functionality of update per row.
+                    if (values.is_default_panel) {
+                        actions.saveDefaultUserTypePanel({ id: values.id, usergroup: item });
+                        // sent to API to add default
+                    } else {
+                        // sent to API to add schedule.
+                    }
+                }
             }
         });
 
@@ -307,6 +344,7 @@ export const PromoPanelForm = ({
             //     endDate: values.end,
             // });
             console.log('SCHEDULES / DEFAULTS', allocatedList);
+
             setValues({
                 ...values,
                 // scheduledGroups: newGroups,
@@ -490,7 +528,7 @@ export const PromoPanelForm = ({
                                         data-testid="admin-spotlights-form-checkbox-published"
                                         onChange={handleChange('is_default_panel')}
                                         className={classes.checkbox}
-                                        disabled={isEdit}
+                                        disabled={isEdit && scheduledList.length > 0}
                                     />
                                     {locale.form.labels.defaultPanelCheckbox}
                                 </InputLabel>

@@ -56,7 +56,10 @@ export const PromoPanelAdd = ({
         // do something with the promo Panel List and the user type here.
         if (promoPanelUserTypeList.length > 0) {
             const known = [];
-            promoPanelUserTypeList.map(item => !known.includes(item.user_group) && known.push(item.user_group));
+            promoPanelUserTypeList.map(item => {
+                !known.some(e => e.group === item.usergroup_group) &&
+                    known.push({ group: item.usergroup_group, name: item.usergroup_group_name });
+            });
             setKnownGroups(known);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

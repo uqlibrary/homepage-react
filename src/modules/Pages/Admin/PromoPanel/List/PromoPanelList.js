@@ -50,9 +50,9 @@ export const PromoPanelList = ({
     promoPanelList,
     promoPanelUserTypeList,
     promoPanelListLoading,
-    promoPanelUserTypesLoading,
     promoPanelActionError,
     history,
+    updated,
 
     // actions, spotlights, spotlightsLoading, spotlightsError, history
 }) => {
@@ -81,6 +81,28 @@ export const PromoPanelList = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        // do something with the promo Panel List and the user type here.
+        if (updated) {
+            actions.loadPromoPanelList().then(actions.loadPromoPanelUserList());
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [updated]);
+
+    // useEffect(() => {
+    //     /* istanbul ignore else */
+    //     if (!promoPanelList || promoPanelList.length < 1) {
+    //         actions.loadPromoPanelList();
+    //     }
+    //     /* istanbul ignore else */
+    //     if (!promoPanelUserTypeList || promoPanelUserTypeList.length < 1) {
+    //         actions.loadPromoPanelUserList();
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [promoPanelList, promoPanelUserTypeList]);
+
+    console.log('PROMO PANEL LIST', promoPanelList);
     return (
         <StandardPage title="Promo panel management">
             {/* <PromoPanelListActive
@@ -129,6 +151,7 @@ export const PromoPanelList = ({
 
 PromoPanelList.propTypes = {
     actions: PropTypes.any,
+    updated: PropTypes.bool,
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
     promoPanelStatus: PropTypes.string,
