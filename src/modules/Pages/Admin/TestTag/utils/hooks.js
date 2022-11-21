@@ -52,7 +52,9 @@ export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH
     );
 
     const resetFormValues = newFormValues => {
-        setFormValues({ ...formValues, ...newFormValues });
+        const newValues = { ...formValues, ...newFormValues };
+        console.log('resetFormValues', { ...newValues });
+        setFormValues(newValues);
     };
 
     return [formValues, resetFormValues, handleChange];

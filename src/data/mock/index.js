@@ -736,6 +736,11 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()))];
     })
 
+    .onPost(routes.TEST_TAG_SAVE_INSPECTION().api)
+    .reply(()=>{
+        return [200, {message: 'hmm something went wrong'}];
+    })
+
 
     .onGet('exams/search/fail')
     .reply(() => {
