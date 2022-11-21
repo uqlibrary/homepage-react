@@ -31,6 +31,8 @@ import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { debounce } from 'throttle-debounce';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { useConfirmationState } from 'hooks';
 
 import TabPanel from './TabPanel';
 import LastTestPanel from './LastTestPanel';
@@ -238,6 +240,9 @@ const TestTag = ({
     roomList,
     roomListLoading,
     roomListError,
+    saveInspectionSaving,
+    saveInspectionSuccess,
+    saveInspectionError,
 }) => {
     const classes = useStyles();
     const theme = useTheme();
@@ -260,9 +265,9 @@ const TestTag = ({
     const [formOwnerId] = useState(currentAssetOwnersList[0].value);
     const [selectedTabValue, setSelectedTabValue] = useState(0);
     const [eventExpanded, setEventExpanded] = useState(true);
-
     const [isFormValid, setFormValidity] = useState(false);
-
+    const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
+    const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
     const assignAssetDefaults = React.useCallback(
         (asset = {}, formValues = {}) => {
             return {
@@ -284,11 +289,19 @@ const TestTag = ({
         },
         [formOwnerId, today, initConfig, userId],
     );
-
     const [formValues, resetFormValues, handleChange] = useForm({
         defaultValues: { ...assignAssetDefaults() },
         defaultDateFormat: dateFormat,
     });
+
+    useEffect(() => {
+        if (!!saveInspectionError) {
+            showSaveError();
+        }
+        if (saveInspectionSuccess) {
+            showSaveSuccessConfirmation();
+        }
+    }, [saveInspectionError, showSaveError, saveInspectionSuccess, showSaveSuccessConfirmation]);
 
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues);
@@ -296,6 +309,16 @@ const TestTag = ({
         setSelectedAsset(asset);
     };
 
+    const assetIdElementRef = React.useRef();
+
+    const hideSuccessMessage = () => {
+        resetFormValues({ ...assignAssetDefaults(undefined, formValues) });
+        hideSaveSuccessConfirmation();
+        actions.clearSaveInspection();
+        if (assetIdElementRef.current) {
+            assetIdElementRef.current.focus();
+        }
+    };
     useEffect(() => {
         actions.loadConfig();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -371,15 +394,47 @@ const TestTag = ({
     ).current;
 
     const saveForm = () => {
-        if (isFormValid) {
-            scrollToTopOfPage();
+        if (isFormValid && !saveInspectionSaving) {
+            // scrollToTopOfPage();
             const transformedData = transformer(formValues, transformerRules);
-            console.log(transformedData);
+            actions.saveInspection(transformedData);
         }
+    };
+
+    const clearSaveError = () => {
+        actions.clearSaveInspection();
+        return hideSaveError();
+    };
+
+    const saveErrorLocale = {
+        ...locale.saveError,
+        confirmationTitle: !!saveInspectionError
+            ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(saveInspectionError)}`
+            : 'An unknown error occurred',
     };
 
     return (
         <StandardPage title={locale.pageTitle}>
+            <ConfirmationBox
+                actionButtonColor="secondary"
+                actionButtonVariant="contained"
+                confirmationBoxId="tag-test-save-succeeded"
+                hideCancelButton
+                onAction={hideSuccessMessage}
+                onClose={hideSuccessMessage}
+                isOpen={isSaveSuccessOpen}
+                locale={locale.saveSuccessConfirmation}
+            />
+            <ConfirmationBox
+                actionButtonColor="primary"
+                actionButtonVariant="contained"
+                confirmationBoxId="testTag-save-failed"
+                onClose={clearSaveError}
+                onAction={/* istanbul ignore next */ () => /* istanbul ignore next */ clearSaveError()}
+                isOpen={isSaveErrorOpen}
+                locale={saveErrorLocale}
+                hideCancelButton
+            />
             <Typography component={'h2'} variant={'h5'}>
                 Managing Assets{' '}
                 {!initConfigLoading && !!!initConfigError && !!initConfig && `for ${initConfig?.user?.user_department}`}
@@ -418,6 +473,7 @@ const TestTag = ({
                                 value={formValues.action_date}
                                 onChange={handleChange('action_date')}
                                 required
+                                autoFocus
                             />
                         </Grid>
                         <Grid item xs={12} sm={12}>
@@ -453,10 +509,7 @@ const TestTag = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {/* HERE
-                        Then retest the validation object with the new sites etc, maybe add some
-                        validation error handling using the functions made
-                        then work on a mock test of sending data to the back end plus the required UI elements */}
+
                         <Grid item sm={6} md={4}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
@@ -592,20 +645,16 @@ const TestTag = ({
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
                                 fullWidth
-                                // assetListOpen={assetListOpen}
-                                // onOpen={() => {
-                                //     setAssetListOpen(true);
-                                // }}
-                                // onClose={() => {
-                                //     setAssetListOpen(false);
-                                // }}
                                 onChange={(event, newValue) => {
                                     console.log('onchange', event, newValue);
                                     if (typeof newValue === 'string') {
                                         assignCurrentAsset({ asset_id_displayed: newValue, isNew: true });
                                     } else if (newValue && newValue.inputValue) {
                                         // Create a new value from the user input
-                                        assignCurrentAsset({ asset_id_displayed: newValue.inputValue, isNew: true });
+                                        assignCurrentAsset({
+                                            asset_id_displayed: newValue.inputValue,
+                                            isNew: true,
+                                        });
                                     } else {
                                         assignCurrentAsset(newValue);
                                     }
@@ -642,6 +691,7 @@ const TestTag = ({
                                 renderInput={params => (
                                     <TextField
                                         {...params}
+                                        ref={assetIdElementRef}
                                         required
                                         error={!isValidAssetId(formValues.asset_id_displayed)}
                                         label="Asset ID"
@@ -1006,8 +1056,13 @@ const TestTag = ({
                         <Button variant="outlined">CANCEL</Button>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" color="primary" disabled={!isFormValid} onClick={saveForm}>
-                            SAVE
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={!isFormValid || saveInspectionSaving}
+                            onClick={saveForm}
+                        >
+                            {saveInspectionSaving ? <CircularProgress color="inherit" size={20} /> : 'SAVE'}
                         </Button>
                     </Grid>
                 </Grid>
@@ -1033,6 +1088,9 @@ TestTag.propTypes = {
     roomList: PropTypes.any,
     roomListLoading: PropTypes.bool,
     roomListError: PropTypes.any,
+    saveInspectionSaving: PropTypes.bool,
+    saveInspectionSuccess: PropTypes.any,
+    saveInspectionError: PropTypes.any,
 };
 
 export default React.memo(TestTag);

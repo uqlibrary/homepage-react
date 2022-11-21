@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { get } from 'repositories/generic';
+import { get, post } from 'repositories/generic';
 import {
     TEST_TAG_CONFIG_API,
     // TEST_TAG_SITE_API,
@@ -8,6 +8,7 @@ import {
     // TEST_TAG_ASSET_TYPES_API,
     // TEST_TAG_TEST_DEVICES_API,
     TEST_TAG_ASSETS_API,
+    TEST_TAG_SAVE_INSPECTION,
 } from 'repositories/routes';
 // import { throwFetchErrors } from 'helpers/general';
 
@@ -37,32 +38,6 @@ export function clearConfig() {
         dispatch({ type: actions.TESTTAG_CONFIG_CLEAR });
     };
 }
-// export function loadSites() {
-//     return dispatch => {
-//         dispatch({ type: actions.TESTTAG_SITE_LIST_LOADING });
-//         return get(TEST_TAG_SITE_API())
-//             .then(data => {
-//                 console.log('loadSites', data);
-//                 dispatch({
-//                     type: actions.TESTTAG_SITE_LIST_LOADED,
-//                     payload: data,
-//                 });
-//             })
-//             .catch(error => {
-//                 console.log('loadSites error', error);
-//                 dispatch({
-//                     type: actions.TESTTAG_SITE_LIST_FAILED,
-//                     payload: error.message,
-//                 });
-//             });
-//     };
-// }
-
-// export function clearSites() {
-//     return dispatch => {
-//         dispatch({ type: actions.TESTTAG_SITE_LIST_CLEAR });
-//     };
-// }
 
 export function loadFloors(buildingId) {
     return dispatch => {
@@ -114,62 +89,6 @@ export function clearRooms() {
     };
 }
 
-/** * ASSET TYPES  ***/
-// export function loadAssetTypes() {
-//     return dispatch => {
-//         dispatch({ type: actions.TESTTAG_ASSET_TYPES_LOADING });
-//         return get(TEST_TAG_ASSET_TYPES_API())
-//             .then(data => {
-//                 console.log('loadAssetTypes', data);
-//                 dispatch({
-//                     type: actions.TESTTAG_ASSET_TYPES_LOADED,
-//                     payload: data,
-//                 });
-//             })
-//             .catch(error => {
-//                 console.log('loadAssetTypes error', error);
-//                 dispatch({
-//                     type: actions.TESTTAG_ASSET_TYPES_FAILED,
-//                     payload: error.message,
-//                 });
-//             });
-//     };
-// }
-
-// export function clearAssetTypes() {
-//     return dispatch => {
-//         dispatch({ type: actions.TESTTAG_ASSET_TYPES_CLEAR });
-//     };
-// }
-
-/** * TEST DEVICES TYPES  ***/
-// export function loadTestDevices() {
-//     return dispatch => {
-//         dispatch({ type: actions.TESTTAG_TEST_DEVICES_LOADING });
-//         return get(TEST_TAG_TEST_DEVICES_API())
-//             .then(data => {
-//                 console.log('loadTestDevices', data);
-//                 dispatch({
-//                     type: actions.TESTTAG_TEST_DEVICES_LOADED,
-//                     payload: data,
-//                 });
-//             })
-//             .catch(error => {
-//                 console.log('loadTestDevices error', error);
-//                 dispatch({
-//                     type: actions.TESTTAG_TEST_DEVICES_FAILED,
-//                     payload: error.message,
-//                 });
-//             });
-//     };
-// }
-
-// export function clearTestDevices() {
-//     return dispatch => {
-//         dispatch({ type: actions.TESTTAG_TEST_DEVICES_CLEAR });
-//     };
-// }
-
 /** * ASSETS  ***/
 export function loadAssets(pattern) {
     return dispatch => {
@@ -196,5 +115,31 @@ export function loadAssets(pattern) {
 export function clearAssets() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_CLEAR });
+    };
+}
+
+export function saveInspection(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_SAVING });
+        return post(TEST_TAG_SAVE_INSPECTION(), request)
+            .then(data => {
+                console.log('saveInspection', data);
+                dispatch({
+                    type: actions.TESTTAG_SAVE_INSPECTION_SUCCESS,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                console.log('saveInspection error', error);
+                dispatch({
+                    type: actions.TESTTAG_SAVE_INSPECTION_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+export function clearSaveInspection() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
     };
 }
