@@ -135,9 +135,6 @@ export const isValidNextTestDate = (inspection, format) => {
 
     console.log('isValidNextTestDate', result, formattedToday, formattedNextTestDate);
     return result;
-    // console.log('isValidNextTestDate', date, new moment().isAfter(date));
-    // if (isEmpty(date)) return false;
-    // return new moment().isAfter(date);
 };
 export const isValidAssetId = assetId => !isEmpty(assetId);
 export const isValidOwner = owner => !isEmpty(owner);
@@ -267,6 +264,7 @@ const TestTag = ({
     const [eventExpanded, setEventExpanded] = useState(true);
     const [isFormValid, setFormValidity] = useState(false);
     const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
+    const [isNetworkErrorOpen, showNetworkError, hideNetworkError] = useConfirmationState();
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
     const assignAssetDefaults = React.useCallback(
         (asset = {}, formValues = {}) => {
@@ -301,7 +299,20 @@ const TestTag = ({
         if (saveInspectionSuccess) {
             showSaveSuccessConfirmation();
         }
-    }, [saveInspectionError, showSaveError, saveInspectionSuccess, showSaveSuccessConfirmation]);
+        if (!!initConfigError || !!floorListError || !!roomListError || !!assetsListError) {
+            showNetworkError();
+        }
+    }, [
+        saveInspectionError,
+        showSaveError,
+        saveInspectionSuccess,
+        showSaveSuccessConfirmation,
+        showNetworkError,
+        initConfigError,
+        floorListError,
+        roomListError,
+        assetsListError,
+    ]);
 
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues);
@@ -312,13 +323,19 @@ const TestTag = ({
     const assetIdElementRef = React.useRef();
 
     const hideSuccessMessage = () => {
-        resetFormValues({ ...assignAssetDefaults(undefined, formValues) });
+        // resetFormValues({ ...assignAssetDefaults(undefined, formValues) });/
+        assignCurrentAsset({});
         hideSaveSuccessConfirmation();
         actions.clearSaveInspection();
-        if (assetIdElementRef.current) {
+    };
+    useEffect(() => {
+        if (!isSaveSuccessOpen && assetIdElementRef.current && !!formValues?.room_id) {
+            scrollToTopOfPage();
             assetIdElementRef.current.focus();
         }
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSaveSuccessOpen]);
+
     useEffect(() => {
         actions.loadConfig();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -395,7 +412,6 @@ const TestTag = ({
 
     const saveForm = () => {
         if (isFormValid && !saveInspectionSaving) {
-            // scrollToTopOfPage();
             const transformedData = transformer(formValues, transformerRules);
             actions.saveInspection(transformedData);
         }
@@ -407,14 +423,24 @@ const TestTag = ({
     };
 
     const saveErrorLocale = {
-        ...locale.saveError,
+        ...locale.form.saveError,
         confirmationTitle: !!saveInspectionError
             ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(saveInspectionError)}`
             : 'An unknown error occurred',
     };
 
     return (
-        <StandardPage title={locale.pageTitle}>
+        <StandardPage title={locale.form.pageTitle}>
+            <ConfirmationBox
+                actionButtonColor="secondary"
+                actionButtonVariant="contained"
+                confirmationBoxId="tag-test-network-error"
+                hideCancelButton
+                onAction={hideNetworkError}
+                onClose={hideNetworkError}
+                isOpen={isNetworkErrorOpen}
+                locale={locale.form.networkError}
+            />
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
@@ -423,7 +449,7 @@ const TestTag = ({
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
-                locale={locale.saveSuccessConfirmation}
+                locale={locale.form.saveSuccessConfirmation}
             />
             <ConfirmationBox
                 actionButtonColor="primary"
@@ -1062,7 +1088,7 @@ const TestTag = ({
                             disabled={!isFormValid || saveInspectionSaving}
                             onClick={saveForm}
                         >
-                            {saveInspectionSaving ? <CircularProgress color="inherit" size={20} /> : 'SAVE'}
+                            {saveInspectionSaving ? <CircularProgress color="inherit" size={26} /> : 'SAVE'}
                         </Button>
                     </Grid>
                 </Grid>
