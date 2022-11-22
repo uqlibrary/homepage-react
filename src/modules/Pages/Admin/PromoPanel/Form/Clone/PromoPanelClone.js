@@ -1,13 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
-// import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-// import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
-// import {
-//     getStartOfDayFormatted,
-//     getTimeMondayMidnightNext,
-//     getTimeSundayNextFormatted,
-// } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -27,7 +20,7 @@ export const PromoPanelClone = ({
 }) => {
     const { promopanelid } = useParams();
 
-    const [scheduleList, setScheduleList] = React.useState([]);
+    // const [scheduleList, setScheduleList] = React.useState([]);
     const [userList, setUserList] = React.useState([]);
     const [knownGroups, setKnownGroups] = React.useState([]);
     const [currentPanel, setCurrentPanel] = React.useState(null);
@@ -146,7 +139,7 @@ export const PromoPanelClone = ({
                     // });
                 }
                 setUserList(userlist);
-                setScheduleList(schedule);
+                // setScheduleList(schedule);
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -7,6 +7,23 @@ import React, { Fragment } from 'react';
 const moment = require('moment');
 
 export default {
+    editor: {
+        config: {
+            removePlugins: [
+                'Image',
+                'ImageCaption',
+                'ImageStyle',
+                'ImageToolbar',
+                'ImageUpload',
+                'EasyImage',
+                'CKFinder',
+                'BlockQuote',
+                'Table',
+                'MediaEmbed',
+                'Heading',
+            ],
+        },
+    },
     form: {
         defaultGroups: {
            alert: (groupNames) => (

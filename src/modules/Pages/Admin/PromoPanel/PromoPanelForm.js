@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
-import React, { String, Fragment, useEffect, useState } from 'react';
-import PropTypes, { array } from 'prop-types';
+import React, { Fragment, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
@@ -22,10 +21,10 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
-import { formatDate } from '../Spotlights/spotlighthelpers';
+// import { formatDate } from '../Spotlights/spotlighthelpers';
 import PromoPanelGroupDateSelector from './Form/PromoPanelGroupDateSelector';
 import PromoPanelFormConfirmation from './Form/PromoPanelFormConfirmation';
-import { addSchedule } from './promoPanelHelpers';
+import { addSchedule, initLists, saveGroupDate } from './promoPanelHelpers';
 
 const moment = require('moment');
 
@@ -108,7 +107,7 @@ export const PromoPanelForm = ({
     // const scheduledGroups = [];
     const classes = useStyles();
 
-    const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
+    // const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
     // const [scheduledGroups, setScheduledGroups] = useState(scheduledGroupNames);
     const [selectorGroupNames, setSelectorGroupNames] = React.useState(scheduledGroupNames);
     const [scheduleChangeIndex, setScheduleChangeIndex] = useState(null);
@@ -135,30 +134,16 @@ export const PromoPanelForm = ({
     const [displayList, setDisplayList] = useState([]);
 
     React.useEffect(() => {
-        if (scheduledList.length > 0) {
-            setValues({
-                ...values,
-                scheduledList: isDefaultPanel ? [] : scheduledList,
-                defaultList: isDefaultPanel ? scheduledList : [],
-            });
-            setDisplayList(scheduledList);
-        }
-        if (scheduledGroupNames.length > 0) {
-            setValues({
-                ...values,
-                scheduledGroups: scheduledGroupNames,
-            });
-            setSelectorGroupNames(scheduledGroupNames);
-            const unscheduledGroup = knownGroups.filter(item => scheduledGroupNames.indexOf(item.group) < 0);
-
-            setUnscheduledGroups(unscheduledGroup);
-            setSelectorGroupNames([]);
-        } else {
-            const unscheduledGroup = knownGroups.filter(item => scheduledGroupNames.indexOf(item.group) < 0);
-
-            setUnscheduledGroups(unscheduledGroup);
-            setSelectorGroupNames([]);
-        }
+        initLists(
+            scheduledList,
+            scheduledGroupNames,
+            knownGroups,
+            values,
+            isDefaultPanel,
+            setValues,
+            setDisplayList,
+            setSelectorGroupNames,
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scheduledGroupNames, scheduledList]);
 
@@ -199,34 +184,11 @@ export const PromoPanelForm = ({
     };
 
     const savePromoPanel = () => {
-        // let defaultOrScheduledGroups = {};
-        // // validate if a default's already been set for any of these groups
-        // if (values.is_default_panel) {
-        //     defaultOrScheduledGroups = {
-        //         panel_default_groups: values.defaultList.map(item => item.groupNames),
-        //     };
-        // } else {
-        //     if (values.scheduledList && values.scheduledList.length > 0) {
-        //         defaultOrScheduledGroups = {
-        //             panel_schedule: values.scheduledList.map(item => {
-        //                 return {
-        //                     user_groups: [item.groupNames],
-        //                     panel_schedule_start_time: item.startDate,
-        //                     panel_schedule_end_time: item.endDate,
-        //                 };
-        //             }),
-        //         };
-        //     } else {
-        //         defaultOrScheduledGroups = {};
-        //     }
-        // }
-
         const newValues = {
             panel_id: values.id,
             panel_title: values.title,
             panel_content: values.content,
             panel_admin_notes: values.admin_notes,
-            // ...defaultOrScheduledGroups,
         };
 
         setIsConfirmOpen(false);
@@ -261,8 +223,6 @@ export const PromoPanelForm = ({
     };
 
     const handleAddSchedule = () => {
-        // console.log('Handle Add Schedule');
-
         const [isValid, allocatedList] = addSchedule(
             displayList,
             fullPromoPanelUserTypeList,
@@ -275,94 +235,11 @@ export const PromoPanelForm = ({
         );
         setConfirmationMode('schedule');
 
-        // let isValid = true;
-
-        // const allocatedList = [...displayList];
-        // selectorGroupNames.map(item => {
-        //     if (!!!values.is_default_panel && !!mode.validate) {
-        //         console.log('Full Promo Panel User Type List', fullPromoPanelUserTypeList);
-        //         fullPromoPanelUserTypeList.map(schedules => {
-        //             if (schedules.usergroup_group === item) {
-        //                 schedules.scheduled_panels &&
-        //                     schedules.scheduled_panels.map(schedule => {
-        //                         if (
-        //                         (moment(values.start).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-        //                                 moment(values.start).isSameOrBefore(
-        //                                     moment(schedule.panel_schedule_end_time),
-        //                                 )) ||
-        //                         (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(values.start)) &&
-        //                           moment(schedule.panel_schedule_start_time).isSameOrBefore(moment(values.end)))
-        //                         ) {
-        //                             setConfirmationMessage(
-        //                                 locale.form.scheduleConflict.alert(
-        //                                     item,
-        //                                     schedule.panel_title,
-        //                                     schedule.panel_schedule_start_time,
-        //                                     schedule.panel_schedule_end_time,
-        //                                 ),
-        //                             );
-        //                             isValid = false;
-        //                         }
-        //                     });
-        //             }
-        //         });
-        //     }
-        //     if (isValid) {
-        //         let push = true;
-        //         if (values.is_default_panel && allocatedList.length > 0) {
-        //             allocatedList.map(alloc => {
-        //                 if (alloc.groupNames === item) {
-        //                     push = false;
-        //                 }
-        //             });
-        //         }
-        //         console.log('Allocated List', allocatedList);
-        //         if (!values.is_default_panel && allocatedList.length > 0) {
-        //             allocatedList.map(alloc => {
-        //                 if (
-        //                     alloc.groupNames === item &&
-        //                     moment(values.start).isSame(moment(alloc.startDate)) &&
-        //                     moment(values.end).isSame(moment(alloc.endDate))
-        //                 ) {
-        //                     push = false;
-        //                 } else {
-        //                     console.log('They dont match', values.start, alloc.startDate);
-        //                 }
-        //             });
-        //         }
-        //         if (push) {
-        //             allocatedList.push({
-        //              startDate: values.is_default_panel ? null : moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
-        //                 endDate: values.is_default_panel ? null : moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
-        //                 groupNames: item,
-        //             });
-
-        //             // This is where we'll add the new functionality of update per row.
-        //             if (values.is_default_panel) {
-        //                 if (window.confirm('are you sure?')) {
-        //                     actions.saveDefaultUserTypePanel({ id: values.id, usergroup: item });
-        //                 }
-        //                 // sent to API to add default
-        //             } else {
-        //                 // sent to API to add schedule.
-        //             }
-        //         }
-        //     }
-        // });
-
         if (isValid) {
             setSelectorGroupNames([]);
 
-            // allocatedList.push({
-            //     groupNames: selectorGroupNames,
-            //     startDate: values.start,
-            //     endDate: values.end,
-            // });
-            console.log('SCHEDULES / DEFAULTS', allocatedList);
-
             setValues({
                 ...values,
-                // scheduledGroups: newGroups,
                 scheduledList: values.is_default_panel ? values.scheduledList : allocatedList,
                 defaultList: values.is_default_panel ? allocatedList : values.defaultList,
             });
@@ -408,27 +285,11 @@ export const PromoPanelForm = ({
 
     const removePanelGroupSchedule = idx => {
         const newSchedules = [...displayList];
-        // const removeGroups = displayList[idx].groupNames;
-
         newSchedules.splice(idx, 1);
-
-        // const newGroups = [...unscheduledGroups];
-        // removeGroups.map(item => !newGroups.includes(item) && newGroups.push(item));
-
-        // const unscheduled = knownGroups.filter(item => {
-        //     return newGroups.indexOf(item) > -1;
-        // });
-        // const allocGroups = knownGroups.filter(item => unscheduled.indexOf(item) < 0);
-
-        // setUnscheduledGroups(unscheduled);
-        // setScheduledGroups(allocGroups);
-
         setValues({
             ...values,
             scheduledList: values.is_default_panel ? [...values.scheduledList] : [...newSchedules],
             defaultList: values.is_default_panel ? [...newSchedules] : [...values.defaultList],
-
-            // scheduledGroups: [...allocGroups],
         });
         setDisplayList([...newSchedules]);
     };
@@ -443,14 +304,8 @@ export const PromoPanelForm = ({
         setIsEditingDate(false);
     };
     const handleSaveGroupDate = (idx, dateRange) => {
-        const newDisplayList = [...displayList];
-        newDisplayList[idx].startDate = dateRange.start;
-        newDisplayList[idx].endDate = dateRange.end;
-        setDisplayList(newDisplayList);
-        setIsEditingDate(false);
+        saveGroupDate(idx, dateRange, displayList, setDisplayList, setIsEditingDate);
     };
-
-    console.log('GROUPS', selectorGroupNames);
 
     return (
         <Fragment>
@@ -496,21 +351,7 @@ export const PromoPanelForm = ({
                             id="promoPanelContent"
                             style={{ width: '100%' }}
                             editor={ClassicEditor}
-                            config={{
-                                removePlugins: [
-                                    'Image',
-                                    'ImageCaption',
-                                    'ImageStyle',
-                                    'ImageToolbar',
-                                    'ImageUpload',
-                                    'EasyImage',
-                                    'CKFinder',
-                                    'BlockQuote',
-                                    'Table',
-                                    'MediaEmbed',
-                                    'Heading',
-                                ],
-                            }}
+                            config={{ ...locale.editor.config }}
                             data={values.content}
                             onChange={(event, editor) => {
                                 const data = editor.getData();

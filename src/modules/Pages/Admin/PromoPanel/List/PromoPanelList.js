@@ -10,42 +10,10 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelListGroupPanels } from './PromoPanelListGroupPanels';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
 import { PromoPanelListActive } from './PromoPanelListActive';
-// import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/SpotlightsListAsTable';
+
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 
-// import moment from 'moment';
-// import {
-//     isPastSpotlight,
-//     isScheduledSpotlight,
-//     scrollToTopOfPage,
-// } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-// import SpotlightViewHistory from './SpotlightViewHistory';
-
-// const useStyles = makeStyles(
-//     theme => ({
-//         pageLayout: {
-//             marginBottom: 24,
-//             paddingLeft: 24,
-//             paddingRight: 24,
-//             minHeight: '10em',
-//             minWidth: '80%',
-//         },
-//         mobileOnly: {
-//             [theme.breakpoints.up('sm')]: {
-//                 display: 'none',
-//             },
-//             '& p': {
-//                 backgroundColor: theme.palette.warning.light,
-//                 color: '#000',
-//                 fontWeight: 'bold',
-//                 padding: 6,
-//                 textAlign: 'center',
-//             },
-//         },
-//     }),
-//     { withTheme: true },
-// );
 export const PromoPanelList = ({
     actions,
     promoPanelList,

@@ -1,5 +1,37 @@
 const moment = require('moment');
 
+export const initLists = (
+    scheduledList,
+    scheduledGroupNames,
+    knownGroups,
+    values,
+    isDefaultPanel,
+    setValues,
+    setDisplayList,
+    setSelectorGroupNames,
+) => {
+    console.log('I AM IN INIT LISTS');
+    if (scheduledList.length > 0) {
+        setValues({
+            ...values,
+            scheduledList: isDefaultPanel ? [] : scheduledList,
+            defaultList: isDefaultPanel ? scheduledList : [],
+        });
+        setDisplayList(scheduledList);
+    }
+    if (scheduledGroupNames.length > 0) {
+        setValues({
+            ...values,
+            scheduledGroups: scheduledGroupNames,
+        });
+        setSelectorGroupNames(scheduledGroupNames);
+
+        setSelectorGroupNames([]);
+    } else {
+        setSelectorGroupNames([]);
+    }
+};
+
 export const filterPanelList = (panels, groups = [], filterByGroup = false) => {
     const filtered = [];
     console.log('filterByGroup', filterByGroup);
@@ -124,4 +156,12 @@ export const addSchedule = (
         }
     });
     return [isValid, allocatedList];
+};
+
+export const saveGroupDate = (idx, dateRange, displayList, setDisplayList, setIsEditingDate) => {
+    const newDisplayList = [...displayList];
+    newDisplayList[idx].startDate = dateRange.start;
+    newDisplayList[idx].endDate = dateRange.end;
+    setDisplayList(newDisplayList);
+    setIsEditingDate(false);
 };

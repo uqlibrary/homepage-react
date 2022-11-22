@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
 import { useCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
@@ -351,7 +352,7 @@ export const PromoPanelListGroupPanels = ({
                                             <>
                                                 <TableRow className={classes.tableRowGroup}>
                                                     <TableCell
-                                                        colSpan={7}
+                                                        colSpan={5}
                                                         component="td"
                                                         scope="row"
                                                         className={classes.cellGroupName}
@@ -359,6 +360,14 @@ export const PromoPanelListGroupPanels = ({
                                                         <Typography variant="body1" style={{ paddingBottom: 5 }}>
                                                             {item.usergroup_group_name}
                                                         </Typography>
+                                                    </TableCell>
+                                                    <TableCell
+                                                        colspan={1}
+                                                        component="td"
+                                                        scope="row"
+                                                        style={{ textAlign: 'right' }}
+                                                    >
+                                                        <Button variant="contained">Add / Schedule</Button>
                                                     </TableCell>
                                                 </TableRow>
 
