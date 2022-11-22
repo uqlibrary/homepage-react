@@ -71,12 +71,12 @@ const filter = createFilterOptions();
 const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
 
 const testStatusEnum = {
-    CURRENT: { label: 'CURRENT', value: 'CURRENT' },
-    PASSED: { label: 'PASS', value: 'PASSED' },
-    FAILED: { label: 'FAIL', value: 'FAILED' },
-    OUTFORREPAIR: { label: 'REPAIR', value: 'OUTFORREPAIR' },
-    DISCARDED: { label: 'DISCARD', value: 'DISCARDED' },
-    NONE: { label: 'NONE', value: 'NONE' },
+    CURRENT: { label: locale.config.currentLabel, value: 'CURRENT' },
+    PASSED: { label: locale.config.passLabel, value: 'PASSED' },
+    FAILED: { label: locale.config.failedLabel, value: 'FAILED' },
+    OUTFORREPAIR: { label: locale.config.repairLabel, value: 'OUTFORREPAIR' },
+    DISCARDED: { label: locale.config.discardedLabel, value: 'DISCARDED' },
+    NONE: { label: locale.config.noneLabel, value: 'NONE' },
 };
 
 const DEFAULT_FORM_VALUES = {
@@ -243,14 +243,10 @@ const TestTag = ({
 }) => {
     const classes = useStyles();
     const theme = useTheme();
-    // const standardCardClasses = useStyles(StandardCardStyles);
-    const dateFormat = 'YYYY-MM-DD HH:MM';
-    const dateFormatNoTime = 'YYYY-MM-DD';
-    const dateFormatDisplay = 'Do MMMM, YYYY';
-    const today = moment().format(dateFormat);
+    const today = moment().format(locale.config.dateFormat);
     const startDate = moment()
         .startOf('year')
-        .format(dateFormat);
+        .format(locale.config.dateFormat);
 
     const [userId, setUserId] = useState(-1);
     const [selectedAsset, setSelectedAsset] = useState({});
@@ -289,7 +285,7 @@ const TestTag = ({
     );
     const [formValues, resetFormValues, handleChange] = useForm({
         defaultValues: { ...assignAssetDefaults() },
-        defaultDateFormat: dateFormat,
+        defaultDateFormat: locale.config.dateFormat,
     });
 
     useEffect(() => {
@@ -462,21 +458,20 @@ const TestTag = ({
                 hideCancelButton
             />
             <Typography component={'h2'} variant={'h5'}>
-                Managing Assets{' '}
-                {!initConfigLoading && !!!initConfigError && !!initConfig && `for ${initConfig?.user?.user_department}`}
+                {locale.form.pageSubtitle(initConfig?.user?.user_department ?? '')}
             </Typography>
             <Typography variant={'body1'} component={'p'}>
-                All fields are required unless otherwise stated.
+                {locale.form.requiredText}
             </Typography>
             <StandardCard
-                title="Event"
+                title={locale.form.event.title}
                 headerAction={
                     <IconButton
                         className={clsx(classes.expand, {
                             [classes.expandOpen]: eventExpanded,
                         })}
                         aria-expanded={eventExpanded}
-                        aria-label="show more"
+                        aria-label={locale.form.event.aria.collapseButtonLabel}
                         onClick={() => setEventExpanded(!eventExpanded)}
                     >
                         <ExpandMoreIcon />
@@ -487,11 +482,11 @@ const TestTag = ({
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={12}>
                             <KeyboardDatePicker
+                                {...locale.form.event.date}
                                 id="testntag-form-action-date"
                                 data-testid="testntag-form-action-date"
                                 InputLabelProps={{ shrink: true }}
-                                label="Event date"
-                                format={dateFormatNoTime}
+                                format={locale.config.dateFormatNoTime}
                                 minDate={startDate}
                                 autoOk
                                 disableFuture
@@ -504,12 +499,12 @@ const TestTag = ({
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <Typography component={'h4'} variant={'h6'}>
-                                Location
+                                {locale.form.event.location.title}
                             </Typography>
                         </Grid>
                         <Grid item sm={6} md={3}>
                             <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel shrink>Site</InputLabel>
+                                <InputLabel shrink>{locale.form.event.location.siteLabel}</InputLabel>
                                 <Select
                                     className={classes.formSelect}
                                     value={formSiteId === -1 ? '' : formSiteId}
@@ -520,7 +515,7 @@ const TestTag = ({
                                 >
                                     {!!initConfigLoading && (
                                         <MenuItem value={-1} disabled key={'site-loading'}>
-                                            Loading...
+                                            {locale.form.loading}
                                         </MenuItem>
                                     )}
                                     {!!!initConfigLoading &&
@@ -555,9 +550,9 @@ const TestTag = ({
                                     renderInput={params => (
                                         <TextField
                                             {...params}
+                                            {...locale.form.event.location.building}
                                             required
                                             error={formSiteId !== -1 && formBuildingId === -1}
-                                            label="Building"
                                             variant="standard"
                                             InputLabelProps={{ shrink: true }}
                                             InputProps={{
@@ -593,9 +588,9 @@ const TestTag = ({
                                     renderInput={params => (
                                         <TextField
                                             {...params}
+                                            {...locale.form.event.location.floor}
                                             error={formSiteId !== -1 && formBuildingId !== -1 && formFloorId === -1}
                                             required
-                                            label="Floor"
                                             variant="standard"
                                             InputLabelProps={{ shrink: true }}
                                             InputProps={{
@@ -631,6 +626,7 @@ const TestTag = ({
                                     renderInput={params => (
                                         <TextField
                                             {...params}
+                                            {...locale.form.event.location.room}
                                             required
                                             error={
                                                 formSiteId !== -1 &&
@@ -638,7 +634,6 @@ const TestTag = ({
                                                 formFloorId !== -1 &&
                                                 !isValidRoomId(formValues.room_id)
                                             }
-                                            label="Room"
                                             variant="standard"
                                             InputLabelProps={{ shrink: true }}
                                             InputProps={{
@@ -665,14 +660,13 @@ const TestTag = ({
                 </Collapse>
             </StandardCard>
 
-            <StandardCard title="Asset" style={{ marginTop: '30px' }}>
+            <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
                 <Grid container spacing={3}>
                     <Grid item sm={3}>
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
                                 fullWidth
                                 onChange={(event, newValue) => {
-                                    console.log('onchange', event, newValue);
                                     if (typeof newValue === 'string') {
                                         assignCurrentAsset({ asset_id_displayed: newValue, isNew: true });
                                     } else if (newValue && newValue.inputValue) {
@@ -691,7 +685,7 @@ const TestTag = ({
                                     if (params.inputValue !== '') {
                                         filtered.push({
                                             inputValue: params.inputValue,
-                                            asset_id_displayed: `Add "${params.inputValue}"`,
+                                            asset_id_displayed: locale.form.asset.addText(params.inputValue),
                                         });
                                     }
 
@@ -717,14 +711,12 @@ const TestTag = ({
                                 renderInput={params => (
                                     <TextField
                                         {...params}
+                                        {...locale.form.asset.assetId}
                                         ref={assetIdElementRef}
                                         required
                                         error={!isValidAssetId(formValues.asset_id_displayed)}
-                                        label="Asset ID"
                                         variant="standard"
                                         InputLabelProps={{ shrink: true }}
-                                        helperText={'Enter a new ID to add'}
-                                        placeholder="Enter at least 7 characters"
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
@@ -762,12 +754,12 @@ const TestTag = ({
                                 renderInput={params => (
                                     <TextField
                                         {...params}
+                                        {...locale.form.asset.assetType}
                                         required
                                         error={
                                             isValidAssetId(formValues.asset_id_displayed) &&
                                             !isValidAssetTypeId(formValues.asset_type_id)
                                         }
-                                        label="Asset type"
                                         variant="standard"
                                         InputLabelProps={{ shrink: true }}
                                         InputProps={{
@@ -792,7 +784,7 @@ const TestTag = ({
                     </Grid>
                     <Grid item sm={3}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <InputLabel shrink>Asset owner</InputLabel>
+                            <InputLabel shrink>{locale.form.asset.ownerLabel}</InputLabel>
                             <Select className={classes.formSelect} value={formOwnerId}>
                                 {currentAssetOwnersList.map(owner => (
                                     <MenuItem value={owner.value} key={owner.value}>
@@ -806,13 +798,14 @@ const TestTag = ({
                 <LastTestPanel
                     asset={selectedAsset ?? {}}
                     currentLocation={{ formSiteId, formBuildingId, formFloorId, formRoomId: formValues.room_id }}
-                    dateFormatPattern={dateFormatDisplay}
+                    dateFormatPattern={locale.config.dateFormatDisplay}
                     disabled={!!!selectedAsset?.last_test?.test_status ?? true}
                     forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
                     testStatusEnums={testStatusEnum}
+                    locale={locale.form.lastTestPanel}
                 />
                 <StandardCard
-                    title="Test"
+                    title={locale.form.inspection.title}
                     style={{ marginTop: 30, marginBottom: 30 }}
                     smallTitle
                     variant="outlined"
@@ -823,7 +816,7 @@ const TestTag = ({
                             <Grid item xs={12}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel required htmlFor="testResultTestingDevice">
-                                        Testing device
+                                        {locale.form.inspection.deviceLabel}
                                     </InputLabel>
                                     <Select
                                         fullWidth
@@ -838,7 +831,7 @@ const TestTag = ({
                                     >
                                         {!!initConfigLoading && (
                                             <MenuItem value={-1} disabled key={'devicetypes-loading'}>
-                                                Loading...
+                                                {locale.form.loading}
                                             </MenuItem>
                                         )}
                                         {!!!initConfigLoading &&
@@ -857,7 +850,7 @@ const TestTag = ({
                             <Grid item xs={12}>
                                 <Box margin={1}>
                                     <InputLabel shrink required htmlFor="testResultToggleButtons">
-                                        Test Result
+                                        {locale.form.inspection.testResultLabel}
                                     </InputLabel>
                                     <ToggleButtonGroup
                                         value={
@@ -873,7 +866,7 @@ const TestTag = ({
                                     >
                                         <ToggleButton
                                             value={testStatusEnum.PASSED.value}
-                                            aria-label="pass"
+                                            aria-label={testStatusEnum.PASSED.label}
                                             style={{
                                                 backgroundColor:
                                                     formValues?.with_inspection?.inspection_status ===
@@ -887,11 +880,11 @@ const TestTag = ({
                                                         : theme.palette.text.main,
                                             }}
                                         >
-                                            <DoneIcon /> PASS
+                                            <DoneIcon /> {testStatusEnum.PASSED.label}
                                         </ToggleButton>
                                         <ToggleButton
                                             value={testStatusEnum.FAILED.value}
-                                            aria-label="fail"
+                                            aria-label={testStatusEnum.FAILED.label}
                                             style={{
                                                 backgroundColor:
                                                     formValues?.with_inspection?.inspection_status ===
@@ -905,7 +898,7 @@ const TestTag = ({
                                                         : theme.palette.text.main,
                                             }}
                                         >
-                                            <ClearIcon /> FAIL
+                                            <ClearIcon /> {testStatusEnum.FAILED.label}
                                         </ToggleButton>
                                     </ToggleButtonGroup>
                                 </Box>
@@ -914,7 +907,7 @@ const TestTag = ({
                                 <Grid item sm={12}>
                                     <FormControl className={classes.formControl}>
                                         <InputLabel shrink required>
-                                            Next test due
+                                            {locale.form.inspection.nextTestDateLabel}
                                         </InputLabel>
                                         <Select
                                             fullWidth
@@ -930,10 +923,11 @@ const TestTag = ({
                                             ))}
                                         </Select>
                                         <Typography component={'span'}>
-                                            Next test due:{' '}
-                                            {moment()
-                                                .add(formNextTestDate, 'months')
-                                                .format(dateFormatDisplay)}
+                                            {locale.form.inspection.nextTestDateFormatted(
+                                                moment()
+                                                    .add(formNextTestDate, 'months')
+                                                    .format(locale.config.dateFormatDisplay),
+                                            )}
                                         </Typography>
                                     </FormControl>
                                 </Grid>
@@ -942,10 +936,9 @@ const TestTag = ({
                                 <Grid item sm={12}>
                                     <FormControl className={classes.formControl} fullWidth>
                                         <TextField
-                                            label="Fail Reason"
+                                            {...locale.form.inspection.failReason}
                                             multiline
                                             rows={4}
-                                            defaultValue=""
                                             variant="standard"
                                             InputProps={{ fullWidth: true }}
                                             required
@@ -960,10 +953,9 @@ const TestTag = ({
                             <Grid item sm={12}>
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
-                                        label="Test Notes"
+                                        {...locale.form.inspection.inspectionNotes}
                                         multiline
                                         rows={4}
-                                        defaultValue=""
                                         variant="standard"
                                         InputProps={{ fullWidth: true }}
                                         value={formValues?.with_inspection?.inspection_notes ?? undefined}
@@ -975,7 +967,7 @@ const TestTag = ({
                         <Grid container spacing={3}>
                             <Grid item sm={12}>
                                 <Typography component={'h4'} variant={'h6'}>
-                                    Action
+                                    {locale.form.action.title}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -985,14 +977,23 @@ const TestTag = ({
                             textColor="primary"
                             onChange={(e, value) => setSelectedTabValue(value)}
                         >
-                            <Tab label="Repair" {...a11yProps(0)} disabled={!!formValues.with_discarded.isDiscarded} />
-                            <Tab label="Discard" {...a11yProps(1)} disabled={!!formValues.with_repair.isRepair} />
+                            {locale.form.action.tabs.map((tab, index) => (
+                                <Tab
+                                    label={tab.label}
+                                    {...a11yProps(index)}
+                                    key={tab.value}
+                                    disabled={
+                                        (tab.value === 1 && !!formValues.with_discarded.isDiscarded) ||
+                                        (tab.value === 2 && !!formValues.with_repair.isRepair)
+                                    }
+                                />
+                            ))}
                         </Tabs>
                         <TabPanel value={selectedTabValue} index={0}>
                             <Grid container spacing={3}>
                                 <Grid item sm={12}>
                                     <FormControl className={classes.formControl}>
-                                        <InputLabel shrink>Send for Repair</InputLabel>
+                                        <InputLabel shrink>{locale.form.action.repair.label}</InputLabel>
                                         <Select
                                             fullWidth
                                             className={classes.formSelect}
@@ -1000,23 +1001,25 @@ const TestTag = ({
                                             onChange={e => handleChange('with_repair.isRepair')(e.target.value === 2)}
                                             style={{ minWidth: 200 }}
                                         >
-                                            <MenuItem value={1}>NO</MenuItem>
-                                            <MenuItem value={2}>YES</MenuItem>
+                                            {locale.form.action.repair.options.map(option => (
+                                                <MenuItem value={option.value} key={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
                                         </Select>
                                     </FormControl>
                                 </Grid>
                                 <Grid item sm={12}>
                                     <FormControl className={classes.formControl} fullWidth required>
                                         <TextField
+                                            {...locale.form.action.repair.repairerDetails}
                                             required
                                             error={
                                                 !!formValues.with_repair.isRepair &&
                                                 !isValidRepair(formValues.with_repair)
                                             }
-                                            label="Repairer Details"
                                             multiline
                                             rows={4}
-                                            defaultValue=""
                                             variant="standard"
                                             InputProps={{ fullWidth: true }}
                                             disabled={!formValues.with_repair.isRepair}
@@ -1030,15 +1033,13 @@ const TestTag = ({
                         <TabPanel value={selectedTabValue} index={1}>
                             <Grid container spacing={3}>
                                 <Grid item sm={12}>
-                                    <Alert severity="warning">
-                                        IMPORTANT: Only complete this section if you are actually discarding the asset.
-                                    </Alert>
+                                    <Alert severity="warning">{locale.form.action.discard.alertMessage}</Alert>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={3}>
                                 <Grid item sm={12}>
                                     <FormControl className={classes.formControl}>
-                                        <InputLabel shrink>DISCARD THIS ASSET</InputLabel>
+                                        <InputLabel shrink>{locale.form.action.discard.label}</InputLabel>
                                         <Select
                                             fullWidth
                                             className={classes.formSelect}
@@ -1048,23 +1049,25 @@ const TestTag = ({
                                             }
                                             style={{ minWidth: 200 }}
                                         >
-                                            <MenuItem value={1}>NO</MenuItem>
-                                            <MenuItem value={2}>YES</MenuItem>
+                                            {locale.form.action.discard.options.map(option => (
+                                                <MenuItem value={option.value} key={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
                                         </Select>
                                     </FormControl>
                                 </Grid>
                                 <Grid item sm={12}>
                                     <FormControl className={classes.formControl} fullWidth required>
                                         <TextField
+                                            {...locale.form.action.discard.discardReason}
                                             required
                                             error={
                                                 !!formValues.with_discarded.isDiscarded &&
                                                 !isValidDiscard(formValues.with_discarded)
                                             }
-                                            label="Discarding Reason"
                                             multiline
                                             rows={4}
-                                            defaultValue=""
                                             variant="standard"
                                             InputProps={{ fullWidth: true }}
                                             disabled={!formValues.with_discarded.isDiscarded}
@@ -1079,7 +1082,7 @@ const TestTag = ({
                 </StandardCard>
                 <Grid container spacing={3} justify="flex-end">
                     <Grid item>
-                        <Button variant="outlined">CANCEL</Button>
+                        <Button variant="outlined">{locale.form.buttons.cancel}</Button>
                     </Grid>
                     <Grid item>
                         <Button
@@ -1088,7 +1091,11 @@ const TestTag = ({
                             disabled={!isFormValid || saveInspectionSaving}
                             onClick={saveForm}
                         >
-                            {saveInspectionSaving ? <CircularProgress color="inherit" size={26} /> : 'SAVE'}
+                            {saveInspectionSaving ? (
+                                <CircularProgress color="inherit" size={25} />
+                            ) : (
+                                locale.form.buttons.save
+                            )}
                         </Button>
                     </Grid>
                 </Grid>

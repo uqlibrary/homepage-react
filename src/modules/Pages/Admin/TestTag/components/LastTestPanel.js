@@ -53,6 +53,7 @@ const LastTestPanel = ({
     currentLocation,
     dateFormatPattern,
     testStatusEnums,
+    locale,
     disabled = false,
     forceOpen = false,
 } = {}) => {
@@ -61,6 +62,7 @@ const LastTestPanel = ({
         currentLocation: PropTypes.object.isRequired,
         dateFormatPattern: PropTypes.string.isRequired,
         testStatusEnums: PropTypes.object.isRequired,
+        locale: PropTypes.object.isRequired,
         disabled: PropTypes.bool,
         forceOpen: PropTypes.bool,
     };
@@ -102,14 +104,6 @@ const LastTestPanel = ({
         }
     }, [disabled]);
 
-    // useEffect(() => {
-    //     if (forceOpen) {
-    //         setTestPanelExpanded(forceOpen ?? testPanelExpanded);
-    //     }
-    // }, [forceOpen]);
-
-    // if (!!!lastTest) return <></>;
-
     return (
         <StandardCard
             variant="outlined"
@@ -117,7 +111,7 @@ const LastTestPanel = ({
             title={
                 <>
                     <Typography component={'span'} variant={'h6'} color={disabled ? 'textSecondary' : 'textPrimary'}>
-                        Previous Test {disabled ? 'Unavailable' : ''}
+                        {locale.title(disabled ? locale.statusUnavailableLabel : '')}
                     </Typography>
                     {!!!disabled && (
                         <>
@@ -146,7 +140,7 @@ const LastTestPanel = ({
                         [classes.expandOpen]: forceOpen || testPanelExpanded,
                     })}
                     aria-expanded={forceOpen || testPanelExpanded}
-                    aria-label="show more"
+                    aria-label={locale.aria.collapseButtonLabel}
                     onClick={() => !forceOpen && setTestPanelExpanded(!testPanelExpanded)}
                     disabled={disabled}
                 >
@@ -159,13 +153,15 @@ const LastTestPanel = ({
                 <Grid container spacing={1}>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>
-                            Status:{' '}
+                            {locale.statusLabel}
                         </Typography>
-                        <Typography component={'span'}>{assetStatus?.toUpperCase() ?? 'UNKNOWN'}</Typography>
+                        <Typography component={'span'}>
+                            {assetStatus?.toUpperCase() ?? locale.statusUnknownLabel}
+                        </Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>
-                            Test Date:{' '}
+                            {locale.testDateLabel}
                         </Typography>
                         <Typography component={'span'}>
                             {!!lastTest?.test_date && moment(lastTest.test_date).format(dateFormatPattern)}
@@ -174,25 +170,25 @@ const LastTestPanel = ({
                     <Grid container item xs={12}>
                         <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
-                                Site:{' '}
+                                {locale.siteLabel}
                             </Typography>
                             <Typography component={'span'}>{lastLocation?.site_id_displayed}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} lg={3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
-                                Building:{' '}
+                                {locale.buildingLabel}
                             </Typography>
                             <Typography component={'span'}>{lastLocation?.building_id_displayed}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
-                                Floor:{' '}
+                                {locale.floorLabel}
                             </Typography>
                             <Typography component={'span'}>{lastLocation?.floor_id_displayed}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
-                                Room:{' '}
+                                {locale.roomLabel}
                             </Typography>
                             <Typography component={'span'}>{lastLocation?.room_id_displayed}</Typography>
                         </Grid>
@@ -212,7 +208,7 @@ const LastTestPanel = ({
                                     className={classes.pastTestLabel}
                                     style={{ color: theme.palette.warning.main }}
                                 >
-                                    Locations do not match
+                                    {locale.alertLocationMismatch}
                                 </Typography>
                             </Grid>
                         )}
@@ -220,20 +216,20 @@ const LastTestPanel = ({
                     {!didPass && (
                         <Grid item xs={12}>
                             <Typography component={'p'} className={classes.pastTestLabel}>
-                                Fail Reason:
+                                {locale.failReasonLabel}
                             </Typography>
-                            <Typography component={'p'}>{lastTest?.test_fail_reason ?? 'None'}</Typography>
+                            <Typography component={'p'}>{lastTest?.test_fail_reason ?? locale.labelNone}</Typography>
                         </Grid>
                     )}
                     <Grid item xs={12}>
                         <Typography component={'p'} className={classes.pastTestLabel}>
-                            Test Notes:
+                            {locale.testNotesLabel}
                         </Typography>
-                        <Typography component={'p'}>{lastTest?.test_notes ?? 'None'}</Typography>
+                        <Typography component={'p'}>{lastTest?.test_notes ?? locale.labelNone}</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>
-                            Next Test Date:{' '}
+                            {locale.nextTestDateLabel}
                         </Typography>
                         <Typography component={'span'}>
                             {!!nextTestDate && moment(nextTestDate).format(dateFormatPattern)}
