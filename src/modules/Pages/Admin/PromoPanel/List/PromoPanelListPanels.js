@@ -306,7 +306,7 @@ export const PromoPanelListPanels = ({
         setSelectorGroupNames(selections);
         clearAllCheckboxes();
 
-        setFilteredPanels(filterPanelList(filterPanelList(panelList, selections)));
+        setFilteredPanels(filterPanelList(panelList, selections));
         // Filter the selection, and store in filteredPanels.
     };
     return (

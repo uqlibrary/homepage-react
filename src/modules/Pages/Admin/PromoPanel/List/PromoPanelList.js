@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 // import { makeStyles } from '@material-ui/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelListGroupPanels } from './PromoPanelListGroupPanels';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
 import { PromoPanelListActive } from './PromoPanelListActive';
@@ -50,6 +51,7 @@ export const PromoPanelList = ({
     promoPanelList,
     promoPanelUserTypeList,
     promoPanelListLoading,
+    promoPanelUserTypesLoading,
     promoPanelActionError,
     history,
     updated,
@@ -116,20 +118,21 @@ export const PromoPanelList = ({
                 history={history}
                 showAddButton
             />
-
-            {/* <PromoPanelListGroupPanels
-                actions={actions}
-                isLoading={promoPanelUserTypesLoading}
-                panelList={promoPanelUserTypeList}
-                history={history}
-                // deletePanel={deletePanel}
-                title="Current and scheduled panels"
-                canEdit
-                canClone
-                canDelete
-                knownGroups={knownGroups}
-                panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
-            /> */}
+            <StandardCard title={'Current and scheduled panels'} customBackgroundColor="#F7F7F7">
+                <PromoPanelListGroupPanels
+                    actions={actions}
+                    isLoading={promoPanelUserTypesLoading}
+                    panelList={promoPanelUserTypeList}
+                    history={history}
+                    // deletePanel={deletePanel}
+                    // title="Current and scheduled panels"
+                    canEdit
+                    canClone
+                    canDelete
+                    knownGroups={knownGroups}
+                    panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
+                />
+            </StandardCard>
 
             <PromoPanelListPanels
                 actions={actions}

@@ -58,6 +58,7 @@ export const PromoPanelUtilityArea = ({ actions, helpButtonLabel, helpContent, h
                     />
                 </div>
             )}
+
             <PromoPanelHelpDrawer
                 helpContent={helpContent}
                 closeHelpLightbox={closeHelpLightbox}

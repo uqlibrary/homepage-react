@@ -133,6 +133,7 @@ export const savePromoPanel = request => {
     };
 };
 export const saveUserTypePanel = request => {
+    console.log('SAVING USER TYPE PANEL');
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_SAVING });
         return post(PROMOPANEL_UPDATE_USERTYPE({ id: request.id, usergroup: request.usergroup }), request)
@@ -192,12 +193,13 @@ export const deletePanel = panelID => {
     };
 };
 
-export const unschedulePanel = (panelID, userType) => {
+export const unschedulePanel = scheduleID => {
+    console.log('REMOVE SCHEDULE', scheduleID);
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_UNSCHEDULING });
 
         try {
-            const response = await destroy(PROMOPANEL_UNSCHEDULE_API({ id: panelID, userType: userType }));
+            const response = await destroy(PROMOPANEL_UNSCHEDULE_API({ id: scheduleID }));
             dispatch({
                 type: actions.PROMOPANEL_DELETE_SUCCESS,
                 payload: [],
