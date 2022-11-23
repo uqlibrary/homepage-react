@@ -33,6 +33,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { debounce } from 'throttle-debounce';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import TabPanel from './TabPanel';
 import LastTestPanel from './LastTestPanel';
@@ -63,6 +64,9 @@ const useStyles = makeStyles(theme => ({
     },
     expandOpen: {
         transform: 'rotate(180deg)',
+    },
+    toggleButtonMobile: {
+        flex: 1,
     },
 }));
 
@@ -243,6 +247,7 @@ const TestTag = ({
 }) => {
     const classes = useStyles();
     const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
     const today = moment().format(locale.config.dateFormat);
     const startDate = moment()
         .startOf('year')
@@ -495,6 +500,7 @@ const TestTag = ({
                                 onChange={handleChange('action_date')}
                                 required
                                 autoFocus
+                                fullWidth={isMobileView}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12}>
@@ -502,7 +508,7 @@ const TestTag = ({
                                 {locale.form.event.location.title}
                             </Typography>
                         </Grid>
-                        <Grid item sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={3}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <InputLabel shrink>{locale.form.event.location.siteLabel}</InputLabel>
                                 <Select
@@ -531,7 +537,7 @@ const TestTag = ({
                             </FormControl>
                         </Grid>
 
-                        <Grid item sm={6} md={4}>
+                        <Grid item xs={12} sm={6} md={4}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
                                     fullWidth
@@ -575,7 +581,7 @@ const TestTag = ({
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item sm={6} md={2}>
+                        <Grid item xs={12} sm={6} md={2}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
                                     fullWidth
@@ -613,7 +619,7 @@ const TestTag = ({
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={3}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
                                     fullWidth
@@ -662,7 +668,7 @@ const TestTag = ({
 
             <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
                 <Grid container spacing={3}>
-                    <Grid item sm={3}>
+                    <Grid xs={12} item md={3}>
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
                                 fullWidth
@@ -735,7 +741,7 @@ const TestTag = ({
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item sm={6}>
+                    <Grid xs={12} item sm={6}>
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
                                 fullWidth
@@ -782,7 +788,7 @@ const TestTag = ({
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item sm={3}>
+                    <Grid xs={12} item sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
                             <InputLabel shrink>{locale.form.asset.ownerLabel}</InputLabel>
                             <Select className={classes.formSelect} value={formOwnerId}>
@@ -813,8 +819,8 @@ const TestTag = ({
                 >
                     <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
                         <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
+                            <Grid item xs={12} sm={6} md={3}>
+                                <FormControl className={classes.formControl} fullWidth>
                                     <InputLabel required htmlFor="testResultTestingDevice">
                                         {locale.form.inspection.deviceLabel}
                                     </InputLabel>
@@ -858,11 +864,12 @@ const TestTag = ({
                                         }
                                         exclusive
                                         id="testResultToggleButtons"
-                                        size="small"
+                                        size={isMobileView ? 'large' : 'small'}
                                         defaultChecked={false}
                                         onChange={(_, child) => {
                                             handleChange('with_inspection.inspection_status')(child);
                                         }}
+                                        style={{ display: 'flex' }}
                                     >
                                         <ToggleButton
                                             value={testStatusEnum.PASSED.value}
@@ -879,6 +886,7 @@ const TestTag = ({
                                                         ? theme.palette.primary.contrastText
                                                         : theme.palette.text.main,
                                             }}
+                                            classes={{ sizeLarge: classes.toggleButtonMobile }}
                                         >
                                             <DoneIcon /> {testStatusEnum.PASSED.label}
                                         </ToggleButton>
@@ -897,6 +905,7 @@ const TestTag = ({
                                                         ? theme.palette.primary.contrastText
                                                         : theme.palette.text.main,
                                             }}
+                                            classes={{ sizeLarge: classes.toggleButtonMobile }}
                                         >
                                             <ClearIcon /> {testStatusEnum.FAILED.label}
                                         </ToggleButton>
@@ -904,8 +913,8 @@ const TestTag = ({
                                 </Box>
                             </Grid>
                             {formValues?.with_inspection?.inspection_status === testStatusEnum.PASSED.value && (
-                                <Grid item sm={12}>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl} fullWidth={isMobileView}>
                                         <InputLabel shrink required>
                                             {locale.form.inspection.nextTestDateLabel}
                                         </InputLabel>
@@ -933,7 +942,7 @@ const TestTag = ({
                                 </Grid>
                             )}
                             {formValues?.with_inspection?.inspection_status === testStatusEnum.FAILED.value && (
-                                <Grid item sm={12}>
+                                <Grid item xs={12} sm={12}>
                                     <FormControl className={classes.formControl} fullWidth>
                                         <TextField
                                             {...locale.form.inspection.failReason}
@@ -950,7 +959,7 @@ const TestTag = ({
                                 </Grid>
                             )}
 
-                            <Grid item sm={12}>
+                            <Grid item xs={12} sm={12}>
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
                                         {...locale.form.inspection.inspectionNotes}
@@ -976,6 +985,7 @@ const TestTag = ({
                             indicatorColor="primary"
                             textColor="primary"
                             onChange={(e, value) => setSelectedTabValue(value)}
+                            variant={isMobileView ? 'fullWidth' : 'standard'}
                         >
                             {locale.form.action.tabs.map((tab, index) => (
                                 <Tab
@@ -985,14 +995,14 @@ const TestTag = ({
                                     disabled={
                                         (tab.value === 1 && !!formValues.with_discarded.isDiscarded) ||
                                         (tab.value === 2 && !!formValues.with_repair.isRepair)
-                                    }
+                                    } // here make page mobile friendly test responses etc
                                 />
                             ))}
                         </Tabs>
                         <TabPanel value={selectedTabValue} index={0}>
                             <Grid container spacing={3}>
-                                <Grid item sm={12}>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl} fullWidth={isMobileView}>
                                         <InputLabel shrink>{locale.form.action.repair.label}</InputLabel>
                                         <Select
                                             fullWidth
@@ -1009,7 +1019,7 @@ const TestTag = ({
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item sm={12}>
+                                <Grid item xs={12}>
                                     <FormControl className={classes.formControl} fullWidth required>
                                         <TextField
                                             {...locale.form.action.repair.repairerDetails}
@@ -1032,13 +1042,13 @@ const TestTag = ({
                         </TabPanel>
                         <TabPanel value={selectedTabValue} index={1}>
                             <Grid container spacing={3}>
-                                <Grid item sm={12}>
+                                <Grid item xs={12}>
                                     <Alert severity="warning">{locale.form.action.discard.alertMessage}</Alert>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={3}>
-                                <Grid item sm={12}>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl} fullWidth={isMobileView}>
                                         <InputLabel shrink>{locale.form.action.discard.label}</InputLabel>
                                         <Select
                                             fullWidth
@@ -1057,7 +1067,7 @@ const TestTag = ({
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item sm={12}>
+                                <Grid item xs={12}>
                                     <FormControl className={classes.formControl} fullWidth required>
                                         <TextField
                                             {...locale.form.action.discard.discardReason}
@@ -1081,15 +1091,18 @@ const TestTag = ({
                     </Collapse>
                 </StandardCard>
                 <Grid container spacing={3} justify="flex-end">
-                    <Grid item>
-                        <Button variant="outlined">{locale.form.buttons.cancel}</Button>
+                    <Grid xs={12} sm="auto" item>
+                        <Button variant="outlined" fullWidth>
+                            {locale.form.buttons.cancel}
+                        </Button>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={12} sm="auto">
                         <Button
                             variant="contained"
                             color="primary"
                             disabled={!isFormValid || saveInspectionSaving}
                             onClick={saveForm}
+                            fullWidth
                         >
                             {saveInspectionSaving ? (
                                 <CircularProgress color="inherit" size={25} />
