@@ -41,6 +41,7 @@ import { getClassNumberFromPieces } from 'data/actions';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import PromoPanelScheduleHeaders from './PromoPanelScheduleHeaders';
 import { filterPanelList } from '../promoPanelHelpers';
+import PromoPanelAddSchedule from './PromoPanelAddSchedule';
 const moment = require('moment');
 
 // original based on https://codesandbox.io/s/hier2
@@ -145,7 +146,8 @@ const useStyles2 = makeStyles(
 export const PromoPanelListGroupPanels = ({
     actions,
     isLoading,
-    panelList,
+    userPanelList,
+    promoPanelList,
     deletePanel,
     history,
     title,
@@ -162,11 +164,13 @@ export const PromoPanelListGroupPanels = ({
         showUnscheduleFailureConfirmation,
         hideUnscheduleFailureConfirmation,
     ] = useConfirmationState();
+    const [isAddingSchedule, setIsAddingSchedule] = React.useState(false);
+    const [groupName, setGroupName] = React.useState('');
     const [selectorGroupNames, setSelectorGroupNames] = React.useState([]);
-    const [filteredPanels, setFilteredPanels] = React.useState(panelList);
+    const [filteredPanels, setFilteredPanels] = React.useState(userPanelList);
     React.useEffect(() => {
-        setFilteredPanels(panelList);
-    }, [panelList]);
+        setFilteredPanels(userPanelList);
+    }, [userPanelList]);
 
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
@@ -195,6 +199,11 @@ export const PromoPanelListGroupPanels = ({
         return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
     }
 
+    const onAddSchedule = groupName => {
+        setGroupName(groupName);
+        setIsAddingSchedule(true);
+    };
+
     const handleGroupDefaultChange = (userGroup, panel) => {};
 
     const handleGroupFilterChange = event => {
@@ -207,7 +216,7 @@ export const PromoPanelListGroupPanels = ({
         setSelectorGroupNames(selections);
         clearAllCheckboxes();
 
-        setFilteredPanels(filterPanelList(panelList, selections, true));
+        setFilteredPanels(filterPanelList(userPanelList, selections, true));
         // Filter the selection, and store in filteredPanels.
     };
 
@@ -265,6 +274,24 @@ export const PromoPanelListGroupPanels = ({
     const navigateToEditForm = alertid => {
         history.push(`/admin/promopanel/edit/${alertid}`);
         scrollToTopOfPage();
+    };
+
+    const schedulePanel = (panel, group, start, end) => {
+        console.log('Schedule Panel!', panel, group, start, end);
+        actions
+            .saveUserTypePanelSchedule({
+                id: panel,
+                usergroup: group,
+                payload: {
+                    panel_schedule_start_time: start,
+                    panel_schedule_end_time: end,
+                },
+            })
+            .then(setIsAddingSchedule(false));
+    };
+    const handleCloseGroupSchedule = () => {
+        setGroupName('');
+        setIsAddingSchedule(false);
     };
     // const needsPaginator = userows.length > footerDisplayMinLength;
 
@@ -344,7 +371,6 @@ export const PromoPanelListGroupPanels = ({
                         )}
                         {!isLoading &&
                             filteredPanels.map((item, id) => {
-                                console.log('ITEM', item);
                                 rowMarker = 0;
                                 return (
                                     <React.Fragment key={id}>
@@ -352,7 +378,7 @@ export const PromoPanelListGroupPanels = ({
                                             <>
                                                 <TableRow className={classes.tableRowGroup}>
                                                     <TableCell
-                                                        colSpan={5}
+                                                        colSpan={4}
                                                         component="td"
                                                         scope="row"
                                                         className={classes.cellGroupName}
@@ -362,12 +388,17 @@ export const PromoPanelListGroupPanels = ({
                                                         </Typography>
                                                     </TableCell>
                                                     <TableCell
-                                                        colspan={1}
+                                                        colSpan={2}
                                                         component="td"
                                                         scope="row"
                                                         style={{ textAlign: 'right' }}
                                                     >
-                                                        <Button variant="contained">Add / Schedule</Button>
+                                                        <Button
+                                                            variant="contained"
+                                                            onClick={() => onAddSchedule(item.usergroup_group)}
+                                                        >
+                                                            Add / Schedule
+                                                        </Button>
                                                     </TableCell>
                                                 </TableRow>
 
@@ -505,12 +536,21 @@ export const PromoPanelListGroupPanels = ({
                 previewStart={previewPanel.start}
                 previewEnd={previewPanel.end}
             />
+            <PromoPanelAddSchedule
+                isAddingSchedule={isAddingSchedule}
+                groupName={groupName}
+                promoPanelList={promoPanelList}
+                userPanelList={userPanelList}
+                handleAddGroupSchedule={schedulePanel}
+                handleCloseGroupSchedule={handleCloseGroupSchedule}
+            />
         </React.Fragment>
     );
 };
 
 PromoPanelListGroupPanels.propTypes = {
-    panelList: PropTypes.array,
+    userPanelList: PropTypes.array,
+    promoPanelList: PropTypes.array,
     title: PropTypes.string,
     canEdit: PropTypes.bool,
     canClone: PropTypes.bool,

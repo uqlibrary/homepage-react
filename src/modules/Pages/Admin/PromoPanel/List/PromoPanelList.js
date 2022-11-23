@@ -9,7 +9,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelListGroupPanels } from './PromoPanelListGroupPanels';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
-import { PromoPanelListActive } from './PromoPanelListActive';
+// mport { PromoPanelListActive } from './PromoPanelListActive';
 
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
@@ -72,7 +72,6 @@ export const PromoPanelList = ({
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [promoPanelList, promoPanelUserTypeList]);
 
-    console.log('PROMO PANEL LIST', promoPanelList);
     return (
         <StandardPage title="Promo panel management">
             {/* <PromoPanelListActive
@@ -90,7 +89,8 @@ export const PromoPanelList = ({
                 <PromoPanelListGroupPanels
                     actions={actions}
                     isLoading={promoPanelUserTypesLoading}
-                    panelList={promoPanelUserTypeList}
+                    userPanelList={promoPanelUserTypeList}
+                    promoPanelList={promoPanelList}
                     history={history}
                     // deletePanel={deletePanel}
                     // title="Current and scheduled panels"

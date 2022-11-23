@@ -452,7 +452,6 @@ export const PromoPanelListPanels = ({
                                 </TableRow>
                             )}
                             {filteredPanels.map(item => {
-                                console.log('ITEM', item);
                                 const isDefaultPanel = item.default_panels_for.length > 0;
                                 const typeList =
                                     item.default_panels_for.length > 0 ? item.default_panels_for : item.panel_schedule;

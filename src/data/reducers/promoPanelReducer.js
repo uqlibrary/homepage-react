@@ -144,6 +144,28 @@ const handlers = {
         promoPanelLoading: false,
         promoPanelActionError: action.payload,
     }),
+    // Schedule Panel Reducer
+    [actions.PROMOPANEL_SCHEDULING]: state => ({
+        ...initialState,
+        ...state,
+        updated: false,
+        promoPanelLoading: true,
+        promoPanelActionError: null,
+    }),
+    [actions.PROMOPANEL_SCHEDULE_SUCCESS]: state => ({
+        ...initialState,
+        ...state,
+        updated: true,
+        promoPanelLoading: false,
+        promoPanelActionError: null,
+    }),
+    [actions.PROMOPANEL_SCHEDULE_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        updated: false,
+        promoPanelLoading: false,
+        promoPanelActionError: action.payload,
+    }),
     // Delete Panel Reducer
     [actions.PROMOPANEL_DELETING]: state => ({
         ...initialState,

@@ -10,6 +10,7 @@ import {
     PROMOPANEL_UPDATE_USERTYPE_DEFAULT,
     PROMOPANEL_UPDATE_USERTYPE,
     PROMOPANEL_DELETE_API,
+    PROMOPANEL_ADD_SCHEDULE_API,
     PROMOPANEL_UNSCHEDULE_API,
 } from 'repositories/routes';
 
@@ -164,6 +165,25 @@ export const saveDefaultUserTypePanel = request => {
             .catch(error => {
                 dispatch({
                     type: actions.PROMOPANEL_SAVE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+};
+
+export const saveUserTypePanelSchedule = request => {
+    return async dispatch => {
+        dispatch({ type: actions.PROMOPANEL_SCHEDULING });
+        return post(PROMOPANEL_ADD_SCHEDULE_API({ id: request.id, usergroup: request.usergroup }), request.payload)
+            .then(data => {
+                dispatch({
+                    type: actions.PROMOPANEL_SCHEDULE_SUCCESS,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.PROMOPANEL_SCHEDULE_FAILED,
                     payload: error.message,
                 });
             });
