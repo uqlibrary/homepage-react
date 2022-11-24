@@ -12,7 +12,7 @@ import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/PromoPanelForm';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-// import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopaneladmin.locale';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopaneladmin.locale';
 
 export const PromoPanelAdd = ({
     actions,
@@ -21,6 +21,7 @@ export const PromoPanelAdd = ({
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
     history,
+    updated,
 }) => {
     const defaults = {
         id: '',
@@ -76,24 +77,24 @@ export const PromoPanelAdd = ({
     return (
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">
-                <StandardCard title="Create a new Promo Panel">
-                    <PromoPanelForm
-                        scheduledList={[]}
-                        scheduledGroupNames={[]}
-                        fullPromoPanelList={promoPanelList}
-                        fullPromoPanelUserTypeList={promoPanelUserTypeList}
-                        defaults={defaults}
-                        actions={actions}
-                        history={history}
-                        knownGroups={knownGroups}
-                    />
-                </StandardCard>
+                <PromoPanelForm
+                    scheduledList={[]}
+                    scheduledGroupNames={[]}
+                    fullPromoPanelList={promoPanelList}
+                    fullPromoPanelUserTypeList={promoPanelUserTypeList}
+                    defaults={defaults}
+                    actions={actions}
+                    history={history}
+                    knownGroups={knownGroups}
+                    updated={updated}
+                />
             </section>
         </StandardPage>
     );
 };
 
 PromoPanelAdd.propTypes = {
+    updated: PropTypes.bool,
     actions: PropTypes.any,
     promoPanelList: PropTypes.array,
     promoPanelListLoading: PropTypes.bool,
@@ -104,8 +105,6 @@ PromoPanelAdd.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    spotlights: PropTypes.any,
-    spotlightsLoading: PropTypes.any,
 };
 
 export default PromoPanelAdd;

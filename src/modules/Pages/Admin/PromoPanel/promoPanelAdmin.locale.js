@@ -7,6 +7,18 @@ import React, { Fragment } from 'react';
 const moment = require('moment');
 
 export default {
+    editPage: {
+        Title: (isEdit, isClone) => {
+            if (isEdit) {
+                return 'Edit a promo';
+            } else if (isClone) {
+                return 'Clone a promo';
+            } else {
+                return 'Create a promo';
+            }
+        },
+       
+    },
     editor: {
         config: {
             removePlugins: [
@@ -55,9 +67,15 @@ export default {
          },
         labels: {
             titleField: 'Title of the Promo Panel',
-            defaultPanelCheckbox: 'Default panel for selected groups',
+            titleLabel: 'Title',
+            defaultPanelLabel: 'Schedule or set a default panel',
+            defaultPanelHelp: 'Schedule this promo or set the default panel for one or more user groups.',
+            defaultPanelCheckbox: 'Set the default for selected user groups',
+            groupSelectorLabel: 'Select user groups',
             nameField: 'Name of the Panel (not displayed)',
             adminNotesField: 'Admin notes - anything non-public the admin needs to record about this promo panel',
+            adminNotesLabel: 'Admin notes',
+            contentLabel: 'Message',
             linkDescAriaField: 'Link title *',
             imgAltField: 'Image alt text *',
             linkField: 'Spotlight link *',

@@ -24,6 +24,7 @@ export const PromoPanelEdit = ({
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
     history,
+    updated,
 }) => {
     const { promopanelid } = useParams();
 
@@ -165,23 +166,22 @@ export const PromoPanelEdit = ({
     return (
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">
-                <StandardCard title="Edit a promo panel">
-                    {!!currentPanel && (
-                        <PromoPanelForm
-                            scheduledList={scheduleList}
-                            scheduledGroupNames={userList}
-                            fullPromoPanelList={promoPanelList}
-                            fullPromoPanelUserTypeList={promoPanelUserTypeList}
-                            currentPanel={currentPanel}
-                            knownGroups={knownGroups}
-                            defaults={defaults}
-                            actions={actions}
-                            history={history}
-                            isEdit
-                            isDefaultPanel={isDefault}
-                        />
-                    )}
-                </StandardCard>
+                {!!currentPanel && (
+                    <PromoPanelForm
+                        scheduledList={scheduleList}
+                        scheduledGroupNames={userList}
+                        fullPromoPanelList={promoPanelList}
+                        fullPromoPanelUserTypeList={promoPanelUserTypeList}
+                        currentPanel={currentPanel}
+                        knownGroups={knownGroups}
+                        defaults={defaults}
+                        actions={actions}
+                        history={history}
+                        isEdit
+                        isDefaultPanel={isDefault}
+                        updated={updated}
+                    />
+                )}
             </section>
         </StandardPage>
     );

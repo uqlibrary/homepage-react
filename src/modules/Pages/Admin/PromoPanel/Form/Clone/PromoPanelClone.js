@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/PromoPanelForm';
@@ -96,47 +95,6 @@ export const PromoPanelClone = ({
                             });
                         });
                     }
-                    // item.user_groups.map(element => {
-                    //     // if (element.is_panel_default_for_this_user === 'Y' && !isDefault) {
-                    //     //     setIsDefault(true);
-                    //     // }
-
-                    //     if (item.default_panels_for.length > 0) setIsDefault(true);
-
-                    //     console.log('UserList', userlist);
-
-                    //     !userlist.includes(element.user_group) && userlist.push(element.user_group);
-
-                    //     if (schedule.length < 1) {
-                    //         schedule.push({
-                    //             startDate: element.panel_schedule_start_time,
-                    //             endDate: element.panel_schedule_end_time,
-                    //             groupNames: element.user_group,
-                    //             existing: true,
-                    //         });
-                    //     } else {
-                    //         schedule.push({
-                    //             startDate: element.panel_schedule_start_time,
-                    //             endDate: element.panel_schedule_end_time,
-                    //             groupNames: element.user_group,
-                    //             existing: true,
-                    //         });
-                    //         // schedule.map((scheduleItem, index) => {
-                    //         //     if (
-                    //         //         scheduleItem.startDate === element.panel_schedule_start_time &&
-                    //         //         scheduleItem.endDate === element.panel_schedule_end_time
-                    //         //     ) {
-                    //         //         schedule[index].groupNames.push(element.user_group);
-                    //         //     } else {
-                    //         //         schedule.push({
-                    //         //             startDate: element.panel_schedule_start_time,
-                    //         //             endDate: element.panel_schedule_end_time,
-                    //         //             groupNames: [element.user_group],
-                    //         //         });
-                    //         //     }
-                    //         // });
-                    //     }
-                    // });
                 }
                 setUserList(userlist);
                 // setScheduleList(schedule);
@@ -158,23 +116,22 @@ export const PromoPanelClone = ({
     return (
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">
-                <StandardCard title="Clone a promo panel">
-                    {!!currentPanel && (
-                        <PromoPanelForm
-                            scheduledList={[]}
-                            scheduledGroupNames={[]}
-                            fullPromoPanelList={promoPanelList}
-                            fullPromoPanelUserTypeList={promoPanelUserTypeList}
-                            currentPanel={currentPanel}
-                            knownGroups={knownGroups}
-                            defaults={defaults}
-                            actions={actions}
-                            history={history}
-                            isEdit={false}
-                            isDefaultPanel={false}
-                        />
-                    )}
-                </StandardCard>
+                {!!currentPanel && (
+                    <PromoPanelForm
+                        scheduledList={[]}
+                        scheduledGroupNames={[]}
+                        fullPromoPanelList={promoPanelList}
+                        fullPromoPanelUserTypeList={promoPanelUserTypeList}
+                        currentPanel={currentPanel}
+                        knownGroups={knownGroups}
+                        defaults={defaults}
+                        actions={actions}
+                        history={history}
+                        isEdit={false}
+                        isClone
+                        isDefaultPanel={false}
+                    />
+                )}
             </section>
         </StandardPage>
     );

@@ -397,7 +397,7 @@ export const PromoPanelListGroupPanels = ({
                                                             variant="contained"
                                                             onClick={() => onAddSchedule(item.usergroup_group)}
                                                         >
-                                                            Add / Schedule
+                                                            Schedule new panel
                                                         </Button>
                                                     </TableCell>
                                                 </TableRow>

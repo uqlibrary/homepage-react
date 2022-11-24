@@ -11,6 +11,7 @@ export const initialState = {
     promoPanelListError: null,
     promoPanelUserTypesError: null,
     promoPanelActionError: null,
+    promoPanelSaving: false,
     updated: false,
 };
 
@@ -24,6 +25,7 @@ const handlers = {
         ...state,
         currentPromoPanel: null,
         promoPanelActionError: null,
+        promoPanelSaving: false,
     }),
     // Single Panel Reducer
     [actions.PROMOPANEL_LOADING]: state => ({
@@ -106,6 +108,7 @@ const handlers = {
         updated: false,
         promoPanelLoading: true,
         promoPanelActionError: null,
+        promoPanelSaving: true,
     }),
     [actions.PROMOPANEL_CREATE_SUCCESS]: (state, action) => ({
         ...initialState,
@@ -114,6 +117,7 @@ const handlers = {
         currentPromoPanel: action.payload,
         promoPanelLoading: false,
         promoPanelActionError: null,
+        promoPanelSaving: false,
     }),
     [actions.PROMOPANEL_CREATE_FAILED]: (state, action) => ({
         ...initialState,
@@ -121,6 +125,7 @@ const handlers = {
         updated: false,
         promoPanelLoading: false,
         promoPanelActionError: action.payload,
+        promoPanelSaving: false,
     }),
     // Edit Panel Reducer
     [actions.PROMOPANEL_SAVING]: state => ({
@@ -129,6 +134,7 @@ const handlers = {
         updated: false,
         promoPanelLoading: true,
         promoPanelActionError: null,
+        promoPanelSaving: true,
     }),
     [actions.PROMOPANEL_SAVE_SUCCESS]: (state, action) => ({
         ...initialState,
@@ -137,12 +143,14 @@ const handlers = {
         currentPromoPanel: action.payload,
         promoPanelLoading: false,
         promoPanelActionError: null,
+        promoPanelSaving: false,
     }),
     [actions.PROMOPANEL_SAVE_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         promoPanelLoading: false,
         promoPanelActionError: action.payload,
+        promoPanelSaving: false,
     }),
     // Schedule Panel Reducer
     [actions.PROMOPANEL_SCHEDULING]: state => ({
@@ -151,6 +159,7 @@ const handlers = {
         updated: false,
         promoPanelLoading: true,
         promoPanelActionError: null,
+        promoPanelSaving: true,
     }),
     [actions.PROMOPANEL_SCHEDULE_SUCCESS]: state => ({
         ...initialState,
@@ -158,6 +167,7 @@ const handlers = {
         updated: true,
         promoPanelLoading: false,
         promoPanelActionError: null,
+        promoPanelSaving: false,
     }),
     [actions.PROMOPANEL_SCHEDULE_FAILED]: (state, action) => ({
         ...initialState,
@@ -165,6 +175,7 @@ const handlers = {
         updated: false,
         promoPanelLoading: false,
         promoPanelActionError: action.payload,
+        promoPanelSaving: false,
     }),
     // Delete Panel Reducer
     [actions.PROMOPANEL_DELETING]: state => ({
@@ -173,6 +184,7 @@ const handlers = {
         updated: false,
         promoPanelLoading: true,
         promoPanelActionError: null,
+        promoPanelSaving: true,
     }),
     [actions.PROMOPANEL_DELETE_SUCCESS]: state => ({
         ...initialState,
@@ -181,6 +193,7 @@ const handlers = {
         currentPromoPanel: null,
         promoPanelLoading: false,
         promoPanelActionError: null,
+        promoPanelSaving: false,
     }),
     [actions.PROMOPANEL_DELETE_FAILED]: (state, action) => ({
         ...initialState,
@@ -188,6 +201,7 @@ const handlers = {
         updated: false,
         promoPanelLoading: false,
         promoPanelActionError: action.payload,
+        promoPanelSaving: false,
     }),
 };
 
