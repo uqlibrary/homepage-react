@@ -169,7 +169,7 @@ const TestTag = ({
         assignCurrentAsset({});
         hideSaveSuccessConfirmation();
         actions.clearSaveInspection();
-        if (!!assetIdElementRef.current && !!location?.room_id) {
+        if (!!assetIdElementRef.current) {
             scrollToTopOfPage();
             assetIdElementRef.current.focus();
         }
