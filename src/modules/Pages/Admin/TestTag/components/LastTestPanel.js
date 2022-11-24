@@ -81,6 +81,14 @@ const LastTestPanel = ({
     const [mismatchingLocation, setMismatchingLocation] = useState(false);
 
     useEffect(() => {
+        console.log(
+            'lasttestpanel',
+            asset?.asset_id,
+            currentLocation.formSiteId,
+            currentLocation.formBuildingId,
+            currentLocation.formFloorId,
+            currentLocation.formRoomId,
+        );
         if (!!asset?.asset_id) {
             setMismatchingLocation(
                 currentLocation.formSiteId !== lastLocation?.site_id ||

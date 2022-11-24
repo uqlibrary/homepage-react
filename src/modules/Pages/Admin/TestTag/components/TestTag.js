@@ -2,47 +2,19 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Grid, useTheme } from '@material-ui/core';
-import Collapse from '@material-ui/core/Collapse';
+import { useTheme } from '@material-ui/core';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-import { KeyboardDatePicker } from '@material-ui/pickers';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
-
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import IconButton from '@material-ui/core/IconButton';
-import clsx from 'clsx';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Box from '@material-ui/core/Box';
-
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Alert from '@material-ui/lab/Alert';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { debounce } from 'throttle-debounce';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import TabPanel from './TabPanel';
-import LastTestPanel from './LastTestPanel';
-import { scrollToTopOfPage } from '../utils/helpers';
-import { transformer } from '../utils/transformers';
-import { useForm } from '../utils/hooks';
-
-// import Checkbox from '@material-ui/core/Checkbox';
-
+import TestTagHeader from './TestTagHeader';
+import EventPanel from './EventPanel';
+import AssetPanel from './AssetPanel';
+import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
+import { useForm, useValidation, useLocation } from '../utils/hooks';
 import locale from '../testTag.locale';
 
 const moment = require('moment');
@@ -70,157 +42,32 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const filter = createFilterOptions();
-
 const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
 
-const testStatusEnum = {
-    CURRENT: { label: locale.config.currentLabel, value: 'CURRENT' },
-    PASSED: { label: locale.config.passLabel, value: 'PASSED' },
-    FAILED: { label: locale.config.failedLabel, value: 'FAILED' },
-    OUTFORREPAIR: { label: locale.config.repairLabel, value: 'OUTFORREPAIR' },
-    DISCARDED: { label: locale.config.discardedLabel, value: 'DISCARDED' },
-    NONE: { label: locale.config.noneLabel, value: 'NONE' },
-};
+const testStatusEnum = statusEnum(locale);
 
 const DEFAULT_FORM_VALUES = {
-    asset_id_displayed: undefined,
-    user_id: undefined, // TODO
-    asset_department_owned_by: undefined,
-    room_id: undefined,
-    asset_type_id: undefined,
-    action_date: undefined,
+    asset_barcode: null, // TODO, what name are we using here - this or asset_id_displayed?
+    user_id: null,
+    asset_department_owned_by: null,
+    room_id: null,
+    asset_type_id: null,
+    action_date: null,
     with_inspection: {
-        inspection_status: undefined,
-        inspection_device_id: undefined,
-        inspection_fail_reason: undefined,
-        inspection_notes: undefined,
-        inspection_date_next: undefined,
+        inspection_status: null,
+        inspection_device_id: null,
+        inspection_fail_reason: null,
+        inspection_notes: null,
+        inspection_date_next: null,
     },
     with_repair: {
         isRepair: false,
-        repairer_details: undefined,
+        repairer_name: null, // TODO, not needed for MVP
+        repairer_contact_details: null, // TODO, check name for API
     },
     with_discarded: {
         isDiscarded: false,
-        discard_reason: undefined,
-    },
-};
-
-const a11yProps = index => ({
-    id: `scrollable-auto-tab-${index}`,
-    'aria-controls': `scrollable-auto-tabpanel-${index}`,
-});
-
-export const isEmpty = value => {
-    return !!!value || value === '' || (!!value.length && value.length === 0);
-};
-export const isValidEventDate = (date, format) => {
-    if (isEmpty(date)) return false;
-    const today = new moment();
-    const formattedToday = today.startOf('day');
-
-    const formattedEventDate = new moment(date, format).startOf('day');
-    const result = !!moment(formattedEventDate).isValid() && moment(formattedEventDate).isSameOrBefore(formattedToday);
-
-    console.log('isValidEventDate', result, formattedToday, formattedEventDate);
-    return result;
-};
-export const isValidNextTestDate = (inspection, format) => {
-    const date = inspection?.inspection_date_next ?? undefined;
-    if (!!!date || isEmpty(date)) return false;
-    if (inspection.inspection_status !== testStatusEnum.PASSED.value) return true;
-
-    const today = new moment();
-    const formattedToday = today.startOf('day');
-
-    const formattedNextTestDate = new moment(date, format).startOf('day');
-    const result = !!moment(formattedNextTestDate).isValid() && moment(formattedNextTestDate).isAfter(formattedToday);
-
-    console.log('isValidNextTestDate', result, formattedToday, formattedNextTestDate);
-    return result;
-};
-export const isValidAssetId = assetId => !isEmpty(assetId);
-export const isValidOwner = owner => !isEmpty(owner);
-export const isValidRoomId = roomId => !!roomId && Number.isFinite(roomId) && roomId > 0;
-export const isValidAssetTypeId = assetTypeId => !!assetTypeId && Number.isFinite(assetTypeId) && assetTypeId > 0;
-export const isValidTestingDeviceId = testingDeviceId =>
-    !!testingDeviceId && Number.isFinite(testingDeviceId) && testingDeviceId > 0;
-export const isValidFailReason = inspection =>
-    inspection.inspection_status !== testStatusEnum.FAILED.value || !isEmpty(inspection.inspection_fail_reason);
-export const isValidInspection = inspection => {
-    console.log('isValidInspection', inspection.inspection_status);
-
-    return (
-        inspection.inspection_status === undefined ||
-        (isValidTestingDeviceId(inspection.inspection_device_id) &&
-            (isValidNextTestDate(inspection.inspection_date_next) || isValidFailReason(inspection)))
-    );
-};
-export const hasTestOrAction = currentValues =>
-    currentValues.with_inspection.inspection_status !== undefined ||
-    !!currentValues.with_repair.isRepair ||
-    !!currentValues.with_discarded.isDiscarded;
-export const isValidRepairDetails = repairDetails => !isEmpty(repairDetails);
-export const isValidRepair = repair => !!repair.isRepair && isValidRepairDetails(repair.repairer_details);
-export const isValidDiscardedDetails = discardedDetails => !isEmpty(discardedDetails);
-export const isValidDiscard = discard => !!discard.isDiscarded && isValidDiscardedDetails(discard.discard_reason);
-export const isAssetDiscarded = lastTest => lastTest.test_status === testStatusEnum.DISCARDED.value;
-export const isAssetOutForRepair = lastTest => lastTest.test_status === testStatusEnum.OUTFORREPAIR.value;
-export const validateValues = (currentValues, loaders, errors) => {
-    const isValid =
-        !loaders.assetListLoading &&
-        !loaders.initConfigLoading &&
-        !loaders.initConfigLoading &&
-        !loaders.initConfigLoading &&
-        !loaders.floorListLoading &&
-        !loaders.roomListLoading &&
-        (!!!errors.initConfigError || errors.initConfigError.length === 0) &&
-        (!!!errors.floorListError || errors.floorListError.length === 0) &&
-        (!!!errors.roomListError || errors.roomListError.length === 0) &&
-        (!!!errors.assetsListError || errors.assetsListError.length === 0) &&
-        currentValues.user_id > 0 &&
-        isValidEventDate(currentValues.action_date) &&
-        isValidAssetId(currentValues.asset_id_displayed) &&
-        isValidOwner(currentValues.asset_department_owned_by) &&
-        isValidRoomId(currentValues.room_id) &&
-        isValidAssetTypeId(currentValues.asset_type_id) &&
-        isValidInspection(currentValues.with_inspection) &&
-        ((!!!currentValues.with_repair.isRepair && !!!currentValues.with_discarded.isDiscarded) ||
-            (!!currentValues.with_repair.isRepair !== !!currentValues.with_discarded.isDiscarded &&
-                (isValidRepair(currentValues.with_repair) || isValidDiscard(currentValues.with_discarded)))) &&
-        hasTestOrAction(currentValues);
-
-    return isValid;
-};
-export const transformerRules = {
-    with_inspection: data => {
-        if (data.with_inspection.inspection_status === testStatusEnum.PASSED.value) {
-            data.with_inspection.inspection_fail_reason = undefined;
-        }
-
-        if (data.with_inspection.inspection_status === testStatusEnum.FAILED.value) {
-            data.with_inspection.inspection_date_next = undefined;
-        }
-        return { with_inspection: data.with_inspection };
-    },
-    with_repair: data => {
-        if (data.with_repair.isRepair) {
-            data.with_discarded.discard_reason = undefined;
-        } else {
-            data.with_repair.repairer_details = undefined;
-        }
-        delete data.with_repair.isRepair;
-        return { with_repair: data.with_repair, with_discarded: data.with_discarded };
-    },
-    with_discarded: data => {
-        if (data.with_discarded.isDiscarded) {
-            data.with_repair.repairer_details = undefined;
-        } else {
-            data.with_discarded.discard_reason = undefined;
-        }
-        delete data.with_discarded.isDiscarded;
-        return { with_repair: data.with_repair, with_discarded: data.with_discarded };
+        discard_reason: null,
     },
 };
 
@@ -229,17 +76,11 @@ const TestTag = ({
     currentRetestList,
     currentAssetOwnersList,
     defaultNextTestDateValue,
-    assetsList,
-    assetsListLoading,
     assetsListError,
     initConfig,
     initConfigLoading,
     initConfigError,
-    floorList,
-    floorListLoading,
     floorListError,
-    roomList,
-    roomListLoading,
     roomListError,
     saveInspectionSaving,
     saveInspectionSuccess,
@@ -249,49 +90,51 @@ const TestTag = ({
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
     const today = moment().format(locale.config.dateFormat);
-    const startDate = moment()
-        .startOf('year')
-        .format(locale.config.dateFormat);
 
-    const [userId, setUserId] = useState(-1);
     const [selectedAsset, setSelectedAsset] = useState({});
-    const [formSiteId, setFormSiteId] = useState(-1);
-    const [formBuildingId, setFormBuildingId] = useState(-1);
-    const [formFloorId, setFormFloorId] = useState(-1);
-    const [formAssetList, setFormAssetList] = useState(assetsList ?? []);
-    const [formNextTestDate, setFormNextTestDate] = useState(defaultNextTestDateValue);
     const [formOwnerId] = useState(currentAssetOwnersList[0].value);
-    const [selectedTabValue, setSelectedTabValue] = useState(0);
-    const [eventExpanded, setEventExpanded] = useState(true);
-    const [isFormValid, setFormValidity] = useState(false);
     const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
     const [isNetworkErrorOpen, showNetworkError, hideNetworkError] = useConfirmationState();
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
+    const [isValid, validateValues] = useValidation({ testStatusEnum });
     const assignAssetDefaults = React.useCallback(
-        (asset = {}, formValues = {}) => {
+        (asset = {}, formValues = {}, location = {}) => {
             return {
                 ...DEFAULT_FORM_VALUES,
-                asset_id_displayed: asset?.asset_id_displayed ?? undefined,
-                asset_department_owned_by: formOwnerId ?? undefined,
-                asset_type_id: asset?.asset_type?.asset_type ?? undefined,
-                user_id: userId,
-                room_id: formValues?.room_id ?? undefined,
+                asset_barcode: asset?.asset_barcode ?? null,
+                asset_department_owned_by: formOwnerId ?? null,
+                asset_type_id: asset?.asset_type?.asset_type ?? null,
+                user_id: formValues?.user_id ?? null,
+                room_id: location?.formRoomId ?? null,
                 action_date: formValues?.action_date ?? today,
                 with_inspection: {
                     ...DEFAULT_FORM_VALUES.with_inspection,
                     inspection_device_id:
                         formValues?.with_inspection?.inspection_device_id !== -1
                             ? formValues?.with_inspection?.inspection_device_id
-                            : initConfig.inspection_devices?.[0].device_id ?? undefined,
+                            : initConfig.inspection_devices?.[0].device_id ?? null,
                 },
             };
         },
-        [formOwnerId, today, initConfig, userId],
+        [formOwnerId, today, initConfig],
     );
     const [formValues, resetFormValues, handleChange] = useForm({
         defaultValues: { ...assignAssetDefaults() },
         defaultDateFormat: locale.config.dateFormat,
     });
+
+    const [location, setLocation] = useLocation();
+
+    const headerDepartmentText = locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? '') ?? '';
+    const headerRequiredText = locale?.form?.requiredText ?? '';
+
+    useEffect(() => {
+        if (!initConfigLoading && !!initConfig && !!initConfig?.user) {
+            const newUserId = initConfig.user.user_id ?? 1; // TODO - remove this bodge when API fixed
+            handleChange('user_id')(newUserId);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initConfig, initConfigLoading]);
 
     useEffect(() => {
         if (!!saveInspectionError) {
@@ -316,92 +159,34 @@ const TestTag = ({
     ]);
 
     const assignCurrentAsset = asset => {
-        const newFormValues = assignAssetDefaults(asset, formValues);
+        const newFormValues = assignAssetDefaults(asset, formValues, location);
         resetFormValues(newFormValues);
         setSelectedAsset(asset);
     };
 
     const assetIdElementRef = React.useRef();
-
     const hideSuccessMessage = () => {
-        // resetFormValues({ ...assignAssetDefaults(undefined, formValues) });/
         assignCurrentAsset({});
         hideSaveSuccessConfirmation();
         actions.clearSaveInspection();
-    };
-    useEffect(() => {
-        if (!isSaveSuccessOpen && assetIdElementRef.current && !!formValues?.room_id) {
+        if (!!assetIdElementRef.current && !!location?.room_id) {
             scrollToTopOfPage();
             assetIdElementRef.current.focus();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSaveSuccessOpen]);
+    };
 
     useEffect(() => {
         actions.loadConfig();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    React.useEffect(() => {
-        !!assetsList && setFormAssetList(...[assetsList]);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assetsList]);
+    }, [actions]);
 
     useEffect(() => {
-        setFormValidity(
-            validateValues(
-                formValues,
-                {
-                    initConfigLoading,
-                    floorListLoading,
-                    roomListLoading,
-                },
-                {
-                    initConfigError,
-                    floorListError,
-                    roomListError,
-                    assetsListError,
-                },
-            ),
-        );
+        (!!!initConfigError || initConfigError.length === 0) &&
+            (!!!floorListError || floorListError.length === 0) &&
+            (!!!roomListError || roomListError.length === 0) &&
+            (!!!assetsListError || assetsListError.length === 0) &&
+            validateValues(formValues);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValues]);
-    useEffect(() => {
-        if (!initConfigLoading && !!initConfig && initConfig?.sites.length > 0) {
-            setFormSiteId(initConfig.sites[0].site_id);
-            setUserId(initConfig.user.user_id);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initConfigLoading]);
-
-    useEffect(() => {
-        setFormBuildingId(-1);
-        setFormFloorId(-1);
-    }, [formSiteId]);
-
-    useEffect(() => {
-        if (formSiteId !== -1 && formBuildingId !== -1) {
-            actions.loadFloors(formBuildingId);
-            setFormFloorId(-1);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formBuildingId]);
-
-    useEffect(() => {
-        if (formSiteId !== -1 && formBuildingId !== -1 && formFloorId !== -1) {
-            actions.loadRooms(formFloorId);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formFloorId]);
-
-    useEffect(() => {
-        console.log('date effect', formValues.with_inspection);
-        if (formValues?.with_inspection?.inspection_status === testStatusEnum.PASSED.value) {
-            handleChange('with_inspection.inspection_date_next')(moment().add(formNextTestDate, 'months'));
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValues?.with_inspection?.inspection_status, formNextTestDate]);
+    }, [initConfigError, floorListError, roomListError, assetsListError, formValues]);
 
     const debounceAssetsSearch = React.useRef(
         debounce(
@@ -410,13 +195,6 @@ const TestTag = ({
         ),
         { noLeading: true, noTrailing: true },
     ).current;
-
-    const saveForm = () => {
-        if (isFormValid && !saveInspectionSaving) {
-            const transformedData = transformer(formValues, transformerRules);
-            actions.saveInspection(transformedData);
-        }
-    };
 
     const clearSaveError = () => {
         actions.clearSaveInspection();
@@ -462,657 +240,35 @@ const TestTag = ({
                 locale={saveErrorLocale}
                 hideCancelButton
             />
-            <Typography component={'h2'} variant={'h5'}>
-                {locale.form.pageSubtitle(initConfig?.user?.user_department ?? '')}
-            </Typography>
-            <Typography variant={'body1'} component={'p'}>
-                {locale.form.requiredText}
-            </Typography>
-            <StandardCard
-                title={locale.form.event.title}
-                headerAction={
-                    <IconButton
-                        className={clsx(classes.expand, {
-                            [classes.expandOpen]: eventExpanded,
-                        })}
-                        aria-expanded={eventExpanded}
-                        aria-label={locale.form.event.aria.collapseButtonLabel}
-                        onClick={() => setEventExpanded(!eventExpanded)}
-                    >
-                        <ExpandMoreIcon />
-                    </IconButton>
-                }
-            >
-                <Collapse in={eventExpanded} timeout="auto">
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} sm={12}>
-                            <KeyboardDatePicker
-                                {...locale.form.event.date}
-                                id="testntag-form-action-date"
-                                data-testid="testntag-form-action-date"
-                                InputLabelProps={{ shrink: true }}
-                                format={locale.config.dateFormatNoTime}
-                                minDate={startDate}
-                                autoOk
-                                disableFuture
-                                showTodayButton
-                                value={formValues.action_date}
-                                onChange={handleChange('action_date')}
-                                required
-                                autoFocus
-                                fullWidth={isMobileView}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Typography component={'h4'} variant={'h6'}>
-                                {locale.form.event.location.title}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel shrink>{locale.form.event.location.siteLabel}</InputLabel>
-                                <Select
-                                    className={classes.formSelect}
-                                    value={formSiteId === -1 ? '' : formSiteId}
-                                    onChange={e => {
-                                        setFormSiteId(e.target.value);
-                                    }}
-                                    error={formSiteId === -1}
-                                >
-                                    {!!initConfigLoading && (
-                                        <MenuItem value={-1} disabled key={'site-loading'}>
-                                            {locale.form.loading}
-                                        </MenuItem>
-                                    )}
-                                    {!!!initConfigLoading &&
-                                        !!!initConfigError &&
-                                        !!initConfig &&
-                                        initConfig?.sites?.length > 0 &&
-                                        initConfig.sites.map(site => (
-                                            <MenuItem value={site.site_id} key={site.site_id}>
-                                                {site.site_name}
-                                            </MenuItem>
-                                        ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+            <TestTagHeader departmentText={headerDepartmentText} requiredText={headerRequiredText} />
 
-                        <Grid item xs={12} sm={6} md={4}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <Autocomplete
-                                    fullWidth
-                                    options={
-                                        initConfig?.sites?.find(site => site.site_id === formSiteId)?.buildings ?? []
-                                    }
-                                    value={
-                                        initConfig?.sites
-                                            ?.find(site => site.site_id === formSiteId)
-                                            ?.buildings?.find(building => building.building_id === formBuildingId) ?? ''
-                                    }
-                                    onChange={(_, newValue) => {
-                                        setFormBuildingId(newValue.building_id);
-                                    }}
-                                    getOptionLabel={option => option.building_id_displayed}
-                                    renderInput={params => (
-                                        <TextField
-                                            {...params}
-                                            {...locale.form.event.location.building}
-                                            required
-                                            error={formSiteId !== -1 && formBuildingId === -1}
-                                            variant="standard"
-                                            InputLabelProps={{ shrink: true }}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                endAdornment: (
-                                                    <React.Fragment>
-                                                        {initConfigLoading ? (
-                                                            <CircularProgress color="inherit" size={20} />
-                                                        ) : null}
-                                                        {params.InputProps.endAdornment}
-                                                    </React.Fragment>
-                                                ),
-                                            }}
-                                        />
-                                    )}
-                                    disabled={formSiteId === -1 || initConfigLoading}
-                                    disableClearable
-                                    autoSelect
-                                    loading={!!initConfigLoading}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={2}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <Autocomplete
-                                    fullWidth
-                                    options={floorList?.floors ?? []}
-                                    value={floorList?.floors?.find(floor => floor.floor_id === formFloorId) ?? ''}
-                                    onChange={(_, newValue) => {
-                                        setFormFloorId(newValue.floor_id);
-                                    }}
-                                    getOptionLabel={option => option.floor_id_displayed ?? option}
-                                    renderInput={params => (
-                                        <TextField
-                                            {...params}
-                                            {...locale.form.event.location.floor}
-                                            error={formSiteId !== -1 && formBuildingId !== -1 && formFloorId === -1}
-                                            required
-                                            variant="standard"
-                                            InputLabelProps={{ shrink: true }}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                endAdornment: (
-                                                    <React.Fragment>
-                                                        {floorListLoading ? (
-                                                            <CircularProgress color="inherit" size={20} />
-                                                        ) : null}
-                                                        {params.InputProps.endAdornment}
-                                                    </React.Fragment>
-                                                ),
-                                            }}
-                                        />
-                                    )}
-                                    disabled={formBuildingId === -1 || floorListLoading}
-                                    disableClearable
-                                    autoSelect
-                                    loading={!!floorListLoading}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <Autocomplete
-                                    fullWidth
-                                    options={roomList?.rooms ?? []}
-                                    value={roomList?.rooms?.find(room => room.room_id === formValues.room_id) ?? ''}
-                                    onChange={(_, newValue) => {
-                                        handleChange('room_id')(newValue.room_id);
-                                    }}
-                                    getOptionLabel={option => option.room_id_displayed ?? option}
-                                    renderInput={params => (
-                                        <TextField
-                                            {...params}
-                                            {...locale.form.event.location.room}
-                                            required
-                                            error={
-                                                formSiteId !== -1 &&
-                                                formBuildingId !== -1 &&
-                                                formFloorId !== -1 &&
-                                                !isValidRoomId(formValues.room_id)
-                                            }
-                                            variant="standard"
-                                            InputLabelProps={{ shrink: true }}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                endAdornment: (
-                                                    <React.Fragment>
-                                                        {roomListLoading ? (
-                                                            <CircularProgress color="inherit" size={20} />
-                                                        ) : null}
-                                                        {params.InputProps.endAdornment}
-                                                    </React.Fragment>
-                                                ),
-                                            }}
-                                        />
-                                    )}
-                                    disabled={formFloorId === -1 || roomListLoading}
-                                    disableClearable
-                                    autoSelect
-                                    loading={!!roomListLoading}
-                                />
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                </Collapse>
-            </StandardCard>
+            <EventPanel
+                actions={actions}
+                location={location}
+                setLocation={setLocation}
+                actionDate={formValues?.action_date ?? ''}
+                handleChange={handleChange}
+                classes={classes}
+                isMobileView={isMobileView}
+            />
 
-            <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
-                <Grid container spacing={3}>
-                    <Grid xs={12} item md={3}>
-                        <FormControl className={classes.formControl} fullWidth>
-                            <Autocomplete
-                                fullWidth
-                                onChange={(event, newValue) => {
-                                    if (typeof newValue === 'string') {
-                                        assignCurrentAsset({ asset_id_displayed: newValue, isNew: true });
-                                    } else if (newValue && newValue.inputValue) {
-                                        // Create a new value from the user input
-                                        assignCurrentAsset({
-                                            asset_id_displayed: newValue.inputValue,
-                                            isNew: true,
-                                        });
-                                    } else {
-                                        assignCurrentAsset(newValue);
-                                    }
-                                }}
-                                filterOptions={(options, params) => {
-                                    const filtered = filter(options, params);
-                                    // Suggest the creation of a new value
-                                    if (params.inputValue !== '') {
-                                        filtered.push({
-                                            inputValue: params.inputValue,
-                                            asset_id_displayed: locale.form.asset.addText(params.inputValue),
-                                        });
-                                    }
-
-                                    return filtered;
-                                }}
-                                selectOnFocus
-                                handleHomeEndKeys
-                                options={formAssetList}
-                                getOptionLabel={option => {
-                                    // Value selected with enter, right from the input
-                                    if (typeof option === 'string') {
-                                        return option;
-                                    }
-                                    // Add "xxx" option created dynamically
-                                    if (option.inputValue) {
-                                        return option.inputValue;
-                                    }
-                                    // Regular option
-                                    return `${option.asset_id_displayed ?? ''}`;
-                                }}
-                                renderOption={option => option.asset_id_displayed}
-                                freeSolo
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        {...locale.form.asset.assetId}
-                                        ref={assetIdElementRef}
-                                        required
-                                        error={!isValidAssetId(formValues.asset_id_displayed)}
-                                        variant="standard"
-                                        InputLabelProps={{ shrink: true }}
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            endAdornment: (
-                                                <React.Fragment>
-                                                    {!!assetsListLoading ? (
-                                                        <CircularProgress color="inherit" size={20} />
-                                                    ) : null}
-                                                    {params.InputProps.endAdornment}
-                                                </React.Fragment>
-                                            ),
-                                        }}
-                                        onChange={e => debounceAssetsSearch(e.target.value)}
-                                    />
-                                )}
-                                loading={!!assetsListLoading}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid xs={12} item sm={6}>
-                        <FormControl className={classes.formControl} fullWidth>
-                            <Autocomplete
-                                fullWidth
-                                options={initConfig?.asset_types ?? []}
-                                value={
-                                    initConfig?.asset_types?.find(
-                                        assetType => assetType.asset_type_id === formValues.asset_type_id,
-                                    ) ?? ''
-                                }
-                                onChange={(_, newValue) => {
-                                    handleChange('asset_type_id')(newValue.asset_type_id);
-                                }}
-                                getOptionLabel={option => option.asset_type_name}
-                                getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
-                                autoHighlight
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        {...locale.form.asset.assetType}
-                                        required
-                                        error={
-                                            isValidAssetId(formValues.asset_id_displayed) &&
-                                            !isValidAssetTypeId(formValues.asset_type_id)
-                                        }
-                                        variant="standard"
-                                        InputLabelProps={{ shrink: true }}
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            endAdornment: (
-                                                <React.Fragment>
-                                                    {initConfigLoading ? (
-                                                        <CircularProgress color="inherit" size={20} />
-                                                    ) : null}
-                                                    {params.InputProps.endAdornment}
-                                                </React.Fragment>
-                                            ),
-                                        }}
-                                    />
-                                )}
-                                disabled={initConfigLoading}
-                                disableClearable
-                                autoSelect
-                                loading={!!initConfigLoading}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid xs={12} item sm={6} md={3}>
-                        <FormControl className={classes.formControl} fullWidth>
-                            <InputLabel shrink>{locale.form.asset.ownerLabel}</InputLabel>
-                            <Select className={classes.formSelect} value={formOwnerId}>
-                                {currentAssetOwnersList.map(owner => (
-                                    <MenuItem value={owner.value} key={owner.value}>
-                                        {owner.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </Grid>
-                <LastTestPanel
-                    asset={selectedAsset ?? {}}
-                    currentLocation={{ formSiteId, formBuildingId, formFloorId, formRoomId: formValues.room_id }}
-                    dateFormatPattern={locale.config.dateFormatDisplay}
-                    disabled={!!!selectedAsset?.last_test?.test_status ?? true}
-                    forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
-                    testStatusEnums={testStatusEnum}
-                    locale={locale.form.lastTestPanel}
-                />
-                <StandardCard
-                    title={locale.form.inspection.title}
-                    style={{ marginTop: 30, marginBottom: 30 }}
-                    smallTitle
-                    variant="outlined"
-                    noPadding={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
-                >
-                    <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} sm={6} md={3}>
-                                <FormControl className={classes.formControl} fullWidth>
-                                    <InputLabel required htmlFor="testResultTestingDevice">
-                                        {locale.form.inspection.deviceLabel}
-                                    </InputLabel>
-                                    <Select
-                                        fullWidth
-                                        className={classes.formSelect}
-                                        id="testResultTestingDevice"
-                                        value={formValues?.with_inspection?.inspection_device_id ?? ''}
-                                        onChange={e =>
-                                            handleChange('with_inspection.inspection_device_id')(e.target.value)
-                                        }
-                                        required
-                                        error={!isValidTestingDeviceId(formValues.with_inspection.inspection_device_id)}
-                                    >
-                                        {!!initConfigLoading && (
-                                            <MenuItem value={-1} disabled key={'devicetypes-loading'}>
-                                                {locale.form.loading}
-                                            </MenuItem>
-                                        )}
-                                        {!!!initConfigLoading &&
-                                            !!!initConfigError &&
-                                            !!initConfig &&
-                                            !!initConfig?.inspection_devices &&
-                                            initConfig?.inspection_devices?.length > 0 &&
-                                            initConfig.inspection_devices.map(device => (
-                                                <MenuItem value={device.device_id} key={device.device_id}>
-                                                    {device.device_model_name}
-                                                </MenuItem>
-                                            ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Box margin={1}>
-                                    <InputLabel shrink required htmlFor="testResultToggleButtons">
-                                        {locale.form.inspection.testResultLabel}
-                                    </InputLabel>
-                                    <ToggleButtonGroup
-                                        value={
-                                            formValues?.with_inspection?.inspection_status ?? testStatusEnum.NONE.value
-                                        }
-                                        exclusive
-                                        id="testResultToggleButtons"
-                                        size={isMobileView ? 'large' : 'small'}
-                                        defaultChecked={false}
-                                        onChange={(_, child) => {
-                                            handleChange('with_inspection.inspection_status')(child);
-                                        }}
-                                        style={{ display: 'flex' }}
-                                    >
-                                        <ToggleButton
-                                            value={testStatusEnum.PASSED.value}
-                                            aria-label={testStatusEnum.PASSED.label}
-                                            style={{
-                                                backgroundColor:
-                                                    formValues?.with_inspection?.inspection_status ===
-                                                    testStatusEnum.PASSED.value
-                                                        ? theme.palette.success.main
-                                                        : theme.palette.grey[300],
-                                                color:
-                                                    formValues?.with_inspection?.inspection_status ===
-                                                    testStatusEnum.PASSED.value
-                                                        ? theme.palette.primary.contrastText
-                                                        : theme.palette.text.main,
-                                            }}
-                                            classes={{ sizeLarge: classes.toggleButtonMobile }}
-                                        >
-                                            <DoneIcon /> {testStatusEnum.PASSED.label}
-                                        </ToggleButton>
-                                        <ToggleButton
-                                            value={testStatusEnum.FAILED.value}
-                                            aria-label={testStatusEnum.FAILED.label}
-                                            style={{
-                                                backgroundColor:
-                                                    formValues?.with_inspection?.inspection_status ===
-                                                    testStatusEnum.FAILED.value
-                                                        ? theme.palette.error.main
-                                                        : theme.palette.grey[300],
-                                                color:
-                                                    formValues?.with_inspection?.inspection_status ===
-                                                    testStatusEnum.FAILED.value
-                                                        ? theme.palette.primary.contrastText
-                                                        : theme.palette.text.main,
-                                            }}
-                                            classes={{ sizeLarge: classes.toggleButtonMobile }}
-                                        >
-                                            <ClearIcon /> {testStatusEnum.FAILED.label}
-                                        </ToggleButton>
-                                    </ToggleButtonGroup>
-                                </Box>
-                            </Grid>
-                            {formValues?.with_inspection?.inspection_status === testStatusEnum.PASSED.value && (
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                                        <InputLabel shrink required>
-                                            {locale.form.inspection.nextTestDateLabel}
-                                        </InputLabel>
-                                        <Select
-                                            fullWidth
-                                            className={classes.formSelect}
-                                            value={formNextTestDate}
-                                            onChange={e => setFormNextTestDate(e.target.value)}
-                                            required
-                                        >
-                                            {currentRetestList.map(retestPeriod => (
-                                                <MenuItem value={retestPeriod.value} key={retestPeriod.value}>
-                                                    {retestPeriod.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        <Typography component={'span'}>
-                                            {locale.form.inspection.nextTestDateFormatted(
-                                                moment()
-                                                    .add(formNextTestDate, 'months')
-                                                    .format(locale.config.dateFormatDisplay),
-                                            )}
-                                        </Typography>
-                                    </FormControl>
-                                </Grid>
-                            )}
-                            {formValues?.with_inspection?.inspection_status === testStatusEnum.FAILED.value && (
-                                <Grid item xs={12} sm={12}>
-                                    <FormControl className={classes.formControl} fullWidth>
-                                        <TextField
-                                            {...locale.form.inspection.failReason}
-                                            multiline
-                                            rows={4}
-                                            variant="standard"
-                                            InputProps={{ fullWidth: true }}
-                                            required
-                                            error={!isValidFailReason(formValues.with_inspection)}
-                                            value={formValues?.with_inspection?.inspection_fail_reason ?? undefined}
-                                            onChange={handleChange('with_inspection.inspection_fail_reason')}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                            )}
-
-                            <Grid item xs={12} sm={12}>
-                                <FormControl className={classes.formControl} fullWidth>
-                                    <TextField
-                                        {...locale.form.inspection.inspectionNotes}
-                                        multiline
-                                        rows={4}
-                                        variant="standard"
-                                        InputProps={{ fullWidth: true }}
-                                        value={formValues?.with_inspection?.inspection_notes ?? undefined}
-                                        onChange={handleChange('with_inspection.inspection_notes')}
-                                    />
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={3}>
-                            <Grid item sm={12}>
-                                <Typography component={'h4'} variant={'h6'}>
-                                    {locale.form.action.title}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Tabs
-                            value={selectedTabValue}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            onChange={(e, value) => setSelectedTabValue(value)}
-                            variant={isMobileView ? 'fullWidth' : 'standard'}
-                        >
-                            {locale.form.action.tabs.map((tab, index) => (
-                                <Tab
-                                    label={tab.label}
-                                    {...a11yProps(index)}
-                                    key={tab.value}
-                                    disabled={
-                                        (tab.value === 1 && !!formValues.with_discarded.isDiscarded) ||
-                                        (tab.value === 2 && !!formValues.with_repair.isRepair)
-                                    } // here make page mobile friendly test responses etc
-                                />
-                            ))}
-                        </Tabs>
-                        <TabPanel value={selectedTabValue} index={0}>
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                                        <InputLabel shrink>{locale.form.action.repair.label}</InputLabel>
-                                        <Select
-                                            fullWidth
-                                            className={classes.formSelect}
-                                            value={formValues.with_repair.isRepair ? 2 : 1}
-                                            onChange={e => handleChange('with_repair.isRepair')(e.target.value === 2)}
-                                            style={{ minWidth: 200 }}
-                                        >
-                                            {locale.form.action.repair.options.map(option => (
-                                                <MenuItem value={option.value} key={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl} fullWidth required>
-                                        <TextField
-                                            {...locale.form.action.repair.repairerDetails}
-                                            required
-                                            error={
-                                                !!formValues.with_repair.isRepair &&
-                                                !isValidRepair(formValues.with_repair)
-                                            }
-                                            multiline
-                                            rows={4}
-                                            variant="standard"
-                                            InputProps={{ fullWidth: true }}
-                                            disabled={!formValues.with_repair.isRepair}
-                                            value={formValues?.with_repair?.repairer_details ?? undefined}
-                                            onChange={handleChange('with_repair.repairer_details')}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                            </Grid>
-                        </TabPanel>
-                        <TabPanel value={selectedTabValue} index={1}>
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <Alert severity="warning">{locale.form.action.discard.alertMessage}</Alert>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                                        <InputLabel shrink>{locale.form.action.discard.label}</InputLabel>
-                                        <Select
-                                            fullWidth
-                                            className={classes.formSelect}
-                                            value={formValues.with_discarded.isDiscarded ? 2 : 1}
-                                            onChange={e =>
-                                                handleChange('with_discarded.isDiscarded')(e.target.value === 2)
-                                            }
-                                            style={{ minWidth: 200 }}
-                                        >
-                                            {locale.form.action.discard.options.map(option => (
-                                                <MenuItem value={option.value} key={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl} fullWidth required>
-                                        <TextField
-                                            {...locale.form.action.discard.discardReason}
-                                            required
-                                            error={
-                                                !!formValues.with_discarded.isDiscarded &&
-                                                !isValidDiscard(formValues.with_discarded)
-                                            }
-                                            multiline
-                                            rows={4}
-                                            variant="standard"
-                                            InputProps={{ fullWidth: true }}
-                                            disabled={!formValues.with_discarded.isDiscarded}
-                                            value={formValues?.with_discarded?.discard_reason ?? undefined}
-                                            onChange={handleChange('with_discarded.discard_reason')}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                            </Grid>
-                        </TabPanel>
-                    </Collapse>
-                </StandardCard>
-                <Grid container spacing={3} justify="flex-end">
-                    <Grid xs={12} sm="auto" item>
-                        <Button variant="outlined" fullWidth>
-                            {locale.form.buttons.cancel}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} sm="auto">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            disabled={!isFormValid || saveInspectionSaving}
-                            onClick={saveForm}
-                            fullWidth
-                        >
-                            {saveInspectionSaving ? (
-                                <CircularProgress color="inherit" size={25} />
-                            ) : (
-                                locale.form.buttons.save
-                            )}
-                        </Button>
-                    </Grid>
-                </Grid>
-            </StandardCard>
+            <AssetPanel
+                actions={actions}
+                location={location}
+                currentRetestList={currentRetestList}
+                currentAssetOwnersList={currentAssetOwnersList}
+                formValues={formValues}
+                selectedAsset={selectedAsset}
+                assetsSearch={debounceAssetsSearch}
+                assignCurrentAsset={assignCurrentAsset}
+                handleChange={handleChange}
+                focusElementRef={assetIdElementRef}
+                classes={classes}
+                defaultNextTestDateValue={defaultNextTestDateValue}
+                saveInspectionSaving={saveInspectionSaving}
+                isMobileView={isMobileView}
+                isValid={isValid}
+            />
         </StandardPage>
     );
 };
