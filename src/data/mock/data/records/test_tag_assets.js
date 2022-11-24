@@ -1,7 +1,7 @@
 export default [
     {
         "asset_id": 100000,
-        "asset_id_displayed": "UQL100000",
+        "asset_barcode": "UQL100000",
         "asset_next_test_due_date": "2027-10-01 00:00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
@@ -49,7 +49,7 @@ export default [
     },
     {
         "asset_id": 100100,
-        "asset_id_displayed": "UQL100100",
+        "asset_barcode": "UQL100100",
         "asset_next_test_due_date": "2027-10-01 00:00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
@@ -97,7 +97,7 @@ export default [
     },
     {
         "asset_id": 200000,
-        "asset_id_displayed": "UQL200000",
+        "asset_barcode": "UQL200000",
         "asset_next_test_due_date": "2027-10-01 00:00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "OUTFORREPAIR",
@@ -145,7 +145,7 @@ export default [
     },
     {
         "asset_id": 300000,
-        "asset_id_displayed": "UQL300000",
+        "asset_barcode": "UQL300000",
         "asset_next_test_due_date": "",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "DISCARDED",
@@ -193,7 +193,7 @@ export default [
     },
     {
         "asset_id": 310000,
-        "asset_id_displayed": "UQL310000",
+        "asset_barcode": "UQL310000",
         "asset_next_test_due_date": "2027-10-01 00:00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
@@ -241,16 +241,16 @@ export default [
     },
     {
         "asset_id": 310040,
-        "asset_id_displayed": "UQL310040",
+        "asset_barcode": "UQL310040",
         "asset_next_test_due_date": "2027-10-01 00:00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "CURRENT",
         "last_location": {
-            "room_id": 7,
-            "room_id_displayed": "W277",
+            "room_id": 49,
+            "room_id_displayed": "D201A",
             "room_id_description": 'Projector Room',
-            "floor_id": 4,
-            "floor_id_displayed": "2A",
+            "floor_id": 5,
+            "floor_id_displayed": "2",
             "building_id": 2,
             "building_id_displayed": "0002",
             "building_id_name": 'BSL',
@@ -289,7 +289,7 @@ export default [
     },
     {
         "asset_id": 310050,
-        "asset_id_displayed": "UQL310050",
+        "asset_barcode": "UQL310050",
         "asset_next_test_due_date": "2027-10-01 00:00",
         "asset_department_owned_by": "UQL-WSS",
         "asset_status": "FAILED",

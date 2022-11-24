@@ -1,5 +1,15 @@
 import { useCallback, useState } from 'react';
-
+import {
+    isValidEventDate,
+    isValidAssetId,
+    isValidOwner,
+    isValidRoomId,
+    isValidAssetTypeId,
+    isValidInspection,
+    isValidRepair,
+    isValidDiscard,
+    hasTestOrAction,
+} from './helpers';
 const moment = require('moment');
 
 export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH:MM' } = {}) => {
@@ -33,7 +43,8 @@ export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH
             setFormValues({ ...newFormValues });
             console.log('handleChange', newFormValues);
         },
-        [formValues, defaultDateFormat],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [defaultDateFormat, formValues],
     );
 
     const resetFormValues = newFormValues => {
@@ -43,4 +54,41 @@ export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH
     };
 
     return [formValues, resetFormValues, handleChange];
+};
+
+export const useValidation = ({ testStatusEnum = {} } = {}) => {
+    const [isValid, setIsValid] = useState(false);
+
+    const validateValues = currentValues => {
+        const val =
+            currentValues.user_id > 0 &&
+            isValidEventDate(currentValues.action_date) &&
+            isValidAssetId(currentValues.asset_barcode) &&
+            isValidOwner(currentValues.asset_department_owned_by) &&
+            isValidRoomId(currentValues.room_id) &&
+            isValidAssetTypeId(currentValues.asset_type_id) &&
+            isValidInspection(currentValues.with_inspection, testStatusEnum) &&
+            ((!!!currentValues.with_repair.isRepair && !!!currentValues.with_discarded.isDiscarded) ||
+                (!!currentValues.with_repair.isRepair !== !!currentValues.with_discarded.isDiscarded &&
+                    (isValidRepair(currentValues.with_repair) || isValidDiscard(currentValues.with_discarded)))) &&
+            hasTestOrAction(currentValues);
+
+        setIsValid(val);
+    };
+
+    return [isValid, validateValues];
+};
+
+export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultFloorId = -1, defaultRoomId = -1) => {
+    const [location, _setLocation] = useState({
+        formSiteId: defaultSiteId,
+        formBuildingId: defaultBuildingId,
+        formFloorId: defaultFloorId,
+        formRoomId: defaultRoomId,
+    });
+
+    const setLocation = update => {
+        _setLocation({ ...location, ...update });
+    };
+    return [location, setLocation];
 };

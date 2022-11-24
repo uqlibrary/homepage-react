@@ -1,9 +1,5 @@
 import { locale } from 'locale';
-import {
-    isAlertsAdminUser,
-    canSeeLearningResources,
-    isSpotlightsAdminUser /* , isTestTagAdminUser*/,
-} from 'helpers/access';
+import { isAlertsAdminUser, canSeeLearningResources, isSpotlightsAdminUser, isTestTagAdminUser } from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
@@ -25,8 +21,8 @@ export const pathConfig = {
         spotlightsview: spotlightid => `/admin/spotlights/view/${spotlightid}`,
         spotlightsclone: spotlightid => `/admin/spotlights/clone/${spotlightid}`,
         spotlights: '/admin/spotlights',
+        testntag: '/admin/testntag',
     },
-    testntag: '/testntag',
     bookExamBooth: '/book-exam-booth',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
     pastExamPaperSearch: '/exams',
@@ -44,7 +40,7 @@ export const flattedPathConfigExact = [
     '/admin/masquerade/',
     '/admin/spotlights/add',
     '/admin/spotlights',
-    '/testntag',
+    '/admin/testntag',
     '/book-exam-booth',
     '/exams',
     '/exams/',
@@ -92,12 +88,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.PastExamPaperSearch,
             exact: false,
             pageTitle: locale.pages.pastExamPaperSearch.title,
-        },
-        {
-            path: pathConfig.testntag,
-            component: components.TestTag,
-            exact: true,
-            pageTitle: locale.pages.admin.testntag.title,
         },
     ];
 
@@ -183,13 +173,22 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const testntagDisplay = [
+        {
+            path: pathConfig.admin.testntag,
+            component: components.TestTag,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+    ];
+
     return [
         ...publicPages,
         ...(account && canSeeLearningResources(account) ? courseResoures : []),
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
-        // ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
+        ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
         {
             component: components.NotFound,
         },
