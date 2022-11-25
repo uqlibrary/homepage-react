@@ -48,9 +48,7 @@ export const isValidInspection = (inspection, testStatusEnum) => {
     );
 };
 export const hasTestOrAction = currentValues =>
-    currentValues.with_inspection.inspection_status !== null ||
-    !!currentValues.with_repair.isRepair ||
-    !!currentValues.with_discarded.isDiscarded;
+    currentValues.inspection_status !== null || !!currentValues.isRepair || !!currentValues.isDiscarded;
 export const isValidRepairDetails = repairDetails => !isEmpty(repairDetails);
 export const isValidRepair = repair => !!repair.isRepair && isValidRepairDetails(repair.repairer_contact_details);
 export const isValidDiscardedDetails = discardedDetails => !isEmpty(discardedDetails);

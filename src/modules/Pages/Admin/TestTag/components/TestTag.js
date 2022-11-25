@@ -10,6 +10,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+import { transformer } from '../utils/transformers';
 import TestTagHeader from './TestTagHeader';
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
@@ -53,22 +54,16 @@ const DEFAULT_FORM_VALUES = {
     room_id: null,
     asset_type_id: null,
     action_date: null,
-    with_inspection: {
-        inspection_status: null,
-        inspection_device_id: null,
-        inspection_fail_reason: null,
-        inspection_notes: null,
-        inspection_date_next: null,
-    },
-    with_repair: {
-        isRepair: false,
-        repairer_name: null, // TODO, not needed for MVP
-        repairer_contact_details: null, // TODO, check name for API
-    },
-    with_discarded: {
-        isDiscarded: false,
-        discard_reason: null,
-    },
+    inspection_status: null,
+    inspection_device_id: null,
+    inspection_fail_reason: null,
+    inspection_notes: null,
+    inspection_date_next: null,
+    isRepair: false,
+    repairer_name: null, // TODO, not needed for MVP
+    repairer_contact_details: null, // TODO, check name for API
+    isDiscarded: false,
+    discard_reason: null,
 };
 
 const TestTag = ({
@@ -107,17 +102,15 @@ const TestTag = ({
                 user_id: formValues?.user_id ?? null,
                 room_id: location?.formRoomId ?? null,
                 action_date: formValues?.action_date ?? today,
-                with_inspection: {
-                    ...DEFAULT_FORM_VALUES.with_inspection,
-                    inspection_device_id:
-                        formValues?.with_inspection?.inspection_device_id !== -1
-                            ? formValues?.with_inspection?.inspection_device_id
-                            : initConfig.inspection_devices?.[0].device_id ?? null,
-                },
+                inspection_device_id:
+                    formValues?.inspection_device_id !== -1
+                        ? formValues?.inspection_device_id
+                        : initConfig?.inspection_devices?.[0].device_id ?? null,
             };
         },
-        [formOwnerId, today, initConfig],
+        [formOwnerId, initConfig?.inspection_devices, today],
     );
+
     const [formValues, resetFormValues, handleChange] = useForm({
         defaultValues: { ...assignAssetDefaults() },
         defaultDateFormat: locale.config.dateFormat,
@@ -208,6 +201,17 @@ const TestTag = ({
             : 'An unknown error occurred',
     };
 
+    const saveForm = () => {
+        if (isValid && !saveInspectionSaving) {
+            const transformedData = transformer(
+                formValues,
+                locale.config.transformerRules(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
+            );
+            console.log('saveForm', formValues, transformedData);
+            actions.saveInspection(transformedData);
+        }
+    };
+
     return (
         <StandardPage title={locale.form.pageTitle}>
             <ConfirmationBox
@@ -253,7 +257,7 @@ const TestTag = ({
             />
 
             <AssetPanel
-                actions={actions}
+                saveForm={saveForm}
                 location={location}
                 currentRetestList={currentRetestList}
                 currentAssetOwnersList={currentAssetOwnersList}

@@ -18,52 +18,14 @@ import InspectionPanel from './InspectionPanel';
 import LastTestPanel from './LastTestPanel';
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 
-import { transformer } from '../utils/transformers';
-
 import locale from '../testTag.locale';
 
 const filter = createFilterOptions();
 
 const testStatusEnum = statusEnum(locale);
 
-export const transformerRules = (passValue, failValue) => ({
-    asset_barcode: data => {
-        const id = data.asset_barcode;
-        delete data.asset_barcode;
-        return { asset_id_displayed: id };
-    },
-    with_inspection: data => {
-        if (data.with_inspection.inspection_status === passValue) {
-            data.with_inspection.inspection_fail_reason = null;
-        }
-
-        if (data.with_inspection.inspection_status === failValue) {
-            data.with_inspection.inspection_date_next = undefined;
-        }
-        return { with_inspection: data.with_inspection };
-    },
-    with_repair: data => {
-        if (data.with_repair.isRepair) {
-            data.with_discarded.discard_reason = null;
-        } else {
-            data.with_repair.repairer_contact_details = null;
-        }
-        delete data.with_repair.isRepair;
-        return { with_repair: data.with_repair, with_discarded: data.with_discarded };
-    },
-    with_discarded: data => {
-        if (data.with_discarded.isDiscarded) {
-            data.with_repair.repairer_contact_details = null;
-        } else {
-            data.with_discarded.discard_reason = null;
-        }
-        delete data.with_discarded.isDiscarded;
-        return { with_repair: data.with_repair, with_discarded: data.with_discarded };
-    },
-});
-
 const AssetPanel = ({
-    actions,
+    saveForm,
     currentRetestList,
     currentAssetOwnersList,
     formValues,
@@ -80,7 +42,7 @@ const AssetPanel = ({
     isValid,
 } = {}) => {
     AssetPanel.propTypes = {
-        actions: PropTypes.any.isRequired,
+        saveForm: PropTypes.func.isRequired,
         currentRetestList: PropTypes.array.isRequired,
         currentAssetOwnersList: PropTypes.array.isRequired,
         formValues: PropTypes.object.isRequired,
@@ -106,18 +68,8 @@ const AssetPanel = ({
         !!assetsList && setFormAssetList(...[assetsList]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
-
-    const saveForm = () => {
-        if (isValid && !saveInspectionSaving) {
-            const transformedData = transformer(
-                formValues,
-                transformerRules(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
-            );
-            console.log('saveForm', formValues, transformedData);
-            actions.saveInspection(transformedData);
-        }
-    };
-
+    // HERE - update asset selector onChange to use local state for entering text,
+    // and a debounced call to set in the formvalues object. same as notes in inspectionpanel
     return (
         <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
             <Grid container spacing={3}>
@@ -235,7 +187,7 @@ const AssetPanel = ({
                                     }}
                                 />
                             )}
-                            disabled={initConfigLoading}
+                            disabled={initConfigLoading || !isValidAssetId(formValues?.asset_barcode)}
                             disableClearable
                             autoSelect
                             loading={!!initConfigLoading}
@@ -245,7 +197,11 @@ const AssetPanel = ({
                 <Grid xs={12} item sm={6} md={3}>
                     <FormControl className={classes.formControl} fullWidth>
                         <InputLabel shrink>{locale.form.asset.ownerLabel}</InputLabel>
-                        <Select className={classes.formSelect} value={formValues.asset_department_owned_by}>
+                        <Select
+                            className={classes.formSelect}
+                            value={formValues.asset_department_owned_by}
+                            disabled={!isValidAssetId(formValues?.asset_barcode)}
+                        >
                             {currentAssetOwnersList.map(owner => (
                                 <MenuItem value={owner.value} key={owner.value}>
                                     {owner.label}
@@ -271,6 +227,7 @@ const AssetPanel = ({
                 currentRetestList={currentRetestList}
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 classes={classes}
+                disabled={!isValidAssetId(formValues?.asset_barcode)}
                 isMobileView={isMobileView}
             />
             <Grid container spacing={3} justify="flex-end">

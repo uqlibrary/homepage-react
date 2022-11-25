@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { useTheme } from '@material-ui/core';
-
 import { Grid } from '@material-ui/core';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -17,23 +15,34 @@ import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Alert from '@material-ui/lab/Alert';
-import TabPanel from './TabPanel';
+import { makeStyles } from '@material-ui/core/styles';
+import { debounce } from 'throttle-debounce';
 
+import ActionPanel from './ActionPanel';
 import locale from '../testTag.locale';
-const a11yProps = index => ({
-    id: `scrollable-auto-tab-${index}`,
-    'aria-controls': `scrollable-auto-tabpanel-${index}`,
-});
+import { isEmpty, isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
 
-import { isValidTestingDeviceId, isValidFailReason, isValidRepair, isValidDiscard, statusEnum } from '../utils/helpers';
 const testStatusEnum = statusEnum(locale);
-
 const moment = require('moment');
+
+const useStyles = makeStyles(theme => ({
+    toggleButtonRoot: {
+        color: `${theme.palette.text.main} !important`,
+        backgroundColor: `${theme.palette.grey[300]} !important`,
+    },
+    toggleButtonSuccess: {
+        color: `${theme.palette.primary.contrastText} !important`,
+        backgroundColor: `${theme.palette.success.main} !important`,
+    },
+    toggleButtonFailed: {
+        color: `${theme.palette.primary.contrastText} !important`,
+        backgroundColor: `${theme.palette.error.main} !important`,
+    },
+}));
+
+const DEBOUNCE_INTERVAL = 750;
 
 const InspectionPanel = ({
     formValues,
@@ -42,32 +51,55 @@ const InspectionPanel = ({
     currentRetestList,
     defaultNextTestDateValue,
     classes,
+    disabled,
     isMobileView,
 }) => {
     InspectionPanel.propTypes = {
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
         handleChange: PropTypes.func.isRequired,
-        currentRetestList: PropTypes.object.isRequired,
+        currentRetestList: PropTypes.array.isRequired,
         defaultNextTestDateValue: PropTypes.number.isRequired,
         classes: PropTypes.any.isRequired,
+        disabled: PropTypes.bool.isRequired,
         isMobileView: PropTypes.bool.isRequired,
     };
 
-    const theme = useTheme();
-    const [selectedTabValue, setSelectedTabValue] = useState(0);
+    const classesInternal = useStyles();
 
     const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
+    const [notes, setNotes] = useState(formValues.inspection_notes ?? '');
+    const [failReason, setFailReason] = useState(formValues.inspection_fail_reason ?? '');
 
     const [formNextTestDate, setFormNextTestDate] = useState(defaultNextTestDateValue);
     useEffect(() => {
-        console.log('date effect', formValues.with_inspection);
-        if (formValues?.with_inspection?.inspection_status === testStatusEnum.PASSED.value) {
-            handleChange('with_inspection.inspection_date_next')(moment().add(formNextTestDate, 'months'));
+        if (formValues.inspection_status === testStatusEnum.PASSED.value) {
+            handleChange('inspection_date_next')(moment().add(formNextTestDate, 'months'));
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValues?.with_inspection?.inspection_status, formNextTestDate]);
+    }, [formValues.inspection_status, formNextTestDate]);
+
+    useEffect(() => {
+        if (!isEmpty(notes) && isEmpty(formValues?.inspection_notes)) {
+            setNotes('');
+        }
+        if (!isEmpty(failReason) && isEmpty(formValues?.inspection_fail_reason)) {
+            setFailReason('');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formValues?.inspection_notes, formValues?.inspection_fail_reason]);
+
+    const debounceText = React.useRef(debounce(DEBOUNCE_INTERVAL, (e, key) => handleChange(key)(e))).current;
+
+    const handleNotesChange = e => {
+        setNotes(e.target.value);
+        debounceText(e, 'inspection_notes');
+    };
+    const handleFailReasonChange = e => {
+        setFailReason(e.target.value);
+        debounceText(e, 'inspection_fail_reason');
+    };
 
     return (
         <StandardCard
@@ -88,10 +120,11 @@ const InspectionPanel = ({
                                 fullWidth
                                 className={classes.formSelect}
                                 id="testResultTestingDevice"
-                                value={formValues?.with_inspection?.inspection_device_id ?? ''}
-                                onChange={e => handleChange('with_inspection.inspection_device_id')(e.target.value)}
+                                value={formValues.inspection_device_id ?? ''}
+                                onChange={e => handleChange('inspection_device_id')(e.target.value)}
                                 required
-                                error={!isValidTestingDeviceId(formValues.with_inspection.inspection_device_id)}
+                                error={!isValidTestingDeviceId(formValues.inspection_device_id)}
+                                disabled={disabled}
                             >
                                 {!!initConfigLoading && (
                                     <MenuItem value={-1} disabled key={'devicetypes-loading'}>
@@ -116,58 +149,44 @@ const InspectionPanel = ({
                                 {locale.form.inspection.testResultLabel}
                             </InputLabel>
                             <ToggleButtonGroup
-                                value={formValues?.with_inspection?.inspection_status ?? testStatusEnum.NONE.value}
+                                value={formValues.inspection_status ?? testStatusEnum.NONE.value}
                                 exclusive
                                 id="testResultToggleButtons"
                                 size={isMobileView ? 'large' : 'small'}
                                 defaultChecked={false}
                                 onChange={(_, child) => {
-                                    handleChange('with_inspection.inspection_status')(child);
+                                    handleChange('inspection_status')(child);
                                 }}
                                 style={{ display: 'flex' }}
                             >
                                 <ToggleButton
                                     value={testStatusEnum.PASSED.value}
                                     aria-label={testStatusEnum.PASSED.label}
-                                    style={{
-                                        backgroundColor:
-                                            formValues?.with_inspection?.inspection_status ===
-                                            testStatusEnum.PASSED.value
-                                                ? theme.palette.success.main
-                                                : theme.palette.grey[300],
-                                        color:
-                                            formValues?.with_inspection?.inspection_status ===
-                                            testStatusEnum.PASSED.value
-                                                ? theme.palette.primary.contrastText
-                                                : theme.palette.text.main,
+                                    classes={{
+                                        root: classesInternal.toggleButtonRoot,
+                                        selected: classesInternal.toggleButtonSuccess,
+                                        sizeLarge: classes.toggleButtonMobile,
                                     }}
-                                    classes={{ sizeLarge: classes.toggleButtonMobile }}
+                                    disabled={disabled}
                                 >
                                     <DoneIcon /> {testStatusEnum.PASSED.label}
                                 </ToggleButton>
                                 <ToggleButton
                                     value={testStatusEnum.FAILED.value}
                                     aria-label={testStatusEnum.FAILED.label}
-                                    style={{
-                                        backgroundColor:
-                                            formValues?.with_inspection?.inspection_status ===
-                                            testStatusEnum.FAILED.value
-                                                ? theme.palette.error.main
-                                                : theme.palette.grey[300],
-                                        color:
-                                            formValues?.with_inspection?.inspection_status ===
-                                            testStatusEnum.FAILED.value
-                                                ? theme.palette.primary.contrastText
-                                                : theme.palette.text.main,
+                                    classes={{
+                                        root: classesInternal.toggleButtonRoot,
+                                        selected: classesInternal.toggleButtonFailed,
+                                        sizeLarge: classes.toggleButtonMobile,
                                     }}
-                                    classes={{ sizeLarge: classes.toggleButtonMobile }}
+                                    disabled={disabled}
                                 >
                                     <ClearIcon /> {testStatusEnum.FAILED.label}
                                 </ToggleButton>
                             </ToggleButtonGroup>
                         </Box>
                     </Grid>
-                    {formValues?.with_inspection?.inspection_status === testStatusEnum.PASSED.value && (
+                    {formValues.inspection_status === testStatusEnum.PASSED.value && (
                         <Grid item xs={12}>
                             <FormControl className={classes.formControl} fullWidth={isMobileView}>
                                 <InputLabel shrink required>
@@ -179,6 +198,7 @@ const InspectionPanel = ({
                                     value={formNextTestDate}
                                     onChange={e => setFormNextTestDate(e.target.value)}
                                     required
+                                    disabled={disabled}
                                 >
                                     {currentRetestList.map(retestPeriod => (
                                         <MenuItem value={retestPeriod.value} key={retestPeriod.value}>
@@ -196,7 +216,7 @@ const InspectionPanel = ({
                             </FormControl>
                         </Grid>
                     )}
-                    {formValues?.with_inspection?.inspection_status === testStatusEnum.FAILED.value && (
+                    {formValues.inspection_status === testStatusEnum.FAILED.value && (
                         <Grid item xs={12} sm={12}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <TextField
@@ -206,9 +226,10 @@ const InspectionPanel = ({
                                     variant="standard"
                                     InputProps={{ fullWidth: true }}
                                     required
-                                    error={!isValidFailReason(formValues.with_inspection, testStatusEnum.FAILED.value)}
-                                    value={formValues?.with_inspection?.inspection_fail_reason ?? undefined}
-                                    onChange={handleChange('with_inspection.inspection_fail_reason')}
+                                    disabled={disabled}
+                                    error={!isValidFailReason(formValues, testStatusEnum.FAILED.value)}
+                                    value={failReason}
+                                    onChange={handleFailReasonChange}
                                 />
                             </FormControl>
                         </Grid>
@@ -222,122 +243,21 @@ const InspectionPanel = ({
                                 rows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
-                                value={formValues?.with_inspection?.inspection_notes ?? undefined}
-                                onChange={handleChange('with_inspection.inspection_notes')}
+                                disabled={disabled}
+                                value={notes}
+                                onChange={handleNotesChange}
                             />
                         </FormControl>
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
-                    <Grid item sm={12}>
-                        <Typography component={'h4'} variant={'h6'}>
-                            {locale.form.action.title}
-                        </Typography>
-                    </Grid>
-                </Grid>
-                <Tabs
-                    value={selectedTabValue}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    onChange={(e, value) => setSelectedTabValue(value)}
-                    variant={isMobileView ? 'fullWidth' : 'standard'}
-                >
-                    {locale.form.action.tabs.map((tab, index) => (
-                        <Tab
-                            label={tab.label}
-                            {...a11yProps(index)}
-                            key={tab.value}
-                            disabled={
-                                (tab.value === 1 && !!formValues.with_discarded.isDiscarded) ||
-                                (tab.value === 2 && !!formValues.with_repair.isRepair)
-                            } // here make page mobile friendly test responses etc
-                        />
-                    ))}
-                </Tabs>
-                <TabPanel value={selectedTabValue} index={0}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                                <InputLabel shrink>{locale.form.action.repair.label}</InputLabel>
-                                <Select
-                                    fullWidth
-                                    className={classes.formSelect}
-                                    value={formValues.with_repair.isRepair ? 2 : 1}
-                                    onChange={e => handleChange('with_repair.isRepair')(e.target.value === 2)}
-                                    style={{ minWidth: 200 }}
-                                >
-                                    {locale.form.action.repair.options.map(option => (
-                                        <MenuItem value={option.value} key={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl className={classes.formControl} fullWidth required>
-                                <TextField
-                                    {...locale.form.action.repair.repairerDetails}
-                                    required
-                                    error={!!formValues.with_repair.isRepair && !isValidRepair(formValues.with_repair)}
-                                    multiline
-                                    rows={4}
-                                    variant="standard"
-                                    InputProps={{ fullWidth: true }}
-                                    disabled={!formValues.with_repair.isRepair}
-                                    value={formValues?.with_repair?.repairer_contact_details ?? undefined}
-                                    onChange={handleChange('with_repair.repairer_contact_details')}
-                                />
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                </TabPanel>
-                <TabPanel value={selectedTabValue} index={1}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Alert severity="warning">{locale.form.action.discard.alertMessage}</Alert>
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                                <InputLabel shrink>{locale.form.action.discard.label}</InputLabel>
-                                <Select
-                                    fullWidth
-                                    className={classes.formSelect}
-                                    value={formValues.with_discarded.isDiscarded ? 2 : 1}
-                                    onChange={e => handleChange('with_discarded.isDiscarded')(e.target.value === 2)}
-                                    style={{ minWidth: 200 }}
-                                >
-                                    {locale.form.action.discard.options.map(option => (
-                                        <MenuItem value={option.value} key={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl className={classes.formControl} fullWidth required>
-                                <TextField
-                                    {...locale.form.action.discard.discardReason}
-                                    required
-                                    error={
-                                        !!formValues.with_discarded.isDiscarded &&
-                                        !isValidDiscard(formValues.with_discarded)
-                                    }
-                                    multiline
-                                    rows={4}
-                                    variant="standard"
-                                    InputProps={{ fullWidth: true }}
-                                    disabled={!formValues.with_discarded.isDiscarded}
-                                    value={formValues?.with_discarded?.discard_reason ?? undefined}
-                                    onChange={handleChange('with_discarded.discard_reason')}
-                                />
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                </TabPanel>
+                <ActionPanel
+                    formValues={formValues}
+                    debounceText={debounceText}
+                    handleChange={handleChange}
+                    classes={classes}
+                    isMobileView={isMobileView}
+                    disabled={disabled}
+                />
             </Collapse>
         </StandardCard>
     );
