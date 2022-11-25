@@ -192,11 +192,32 @@ export const PromoPanelForm = ({
     };
 
     const savePromoPanel = () => {
+        const schedules = [];
+        const defaults = [];
+        if (!isEdit) {
+            if (values.scheduledList.length > 0) {
+                values.scheduledList.map(item => {
+                    schedules.push({
+                        user_groups: [item.groupNames],
+                        panel_schedule_start_time: item.startDate,
+                        panel_schedule_end_time: item.endDate,
+                    });
+                });
+            }
+            if (values.defaultList.length > 0) {
+                values.defaultList.map(item => {
+                    defaults.push(item.groupNames);
+                });
+            }
+        }
+        console.log('Schedules and Defaults', schedules, defaults);
         const newValues = {
             panel_id: values.id,
             panel_title: values.title,
             panel_content: values.content,
             panel_admin_notes: values.admin_notes,
+            panel_schedule: schedules.length > 0 ? schedules : null,
+            panel_default_groups: defaults.length > 0 ? defaults : null,
         };
 
         setIsConfirmOpen(false);

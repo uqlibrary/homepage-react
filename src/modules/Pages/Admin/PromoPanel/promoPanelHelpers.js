@@ -150,14 +150,16 @@ export const addSchedule = (
                     }
                     // sent to API to add default
                 } else {
-                    actions.saveUserTypePanelSchedule({
-                        id: values.id,
-                        usergroup: item,
-                        payload: {
-                            panel_schedule_end_time: moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
-                            panel_schedule_start_time: moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
-                        },
-                    });
+                    if (!!values.id) {
+                        actions.saveUserTypePanelSchedule({
+                            id: values.id,
+                            usergroup: item,
+                            payload: {
+                                panel_schedule_end_time: moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
+                                panel_schedule_start_time: moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
+                            },
+                        });
+                    }
                     // sent to API to add schedule.
                 }
             }
