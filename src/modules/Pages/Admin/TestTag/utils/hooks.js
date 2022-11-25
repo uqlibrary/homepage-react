@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import {
     isValidEventDate,
     isValidAssetId,
@@ -15,37 +15,19 @@ const moment = require('moment');
 export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH:MM' } = {}) => {
     const [formValues, setFormValues] = useState({ ...defaultValues });
 
-    const handleChange = useCallback(
-        prop => event => {
-            let propValue = event?.target?.value ?? event;
-            // if (!!!propValue) return;
-            if (prop.indexOf('date') > -1) {
-                propValue = moment(event)
-                    .format(defaultDateFormat)
-                    .toString();
-            }
-
-            const propArray = prop.split('.');
-            const newFormValues = {
-                ...formValues,
-                // adapted from https://stackoverflow.com/a/52077261
-                // only works for 1 level deep objects i.e. {a:{b:'ok',c:{d:'wont work'}}}
-                ...propArray.reduceRight((res, key, idx) => {
-                    let retval;
-                    if (idx === propArray.length - 1) {
-                        retval = { [key]: propValue };
-                    } else if (idx === 0) {
-                        retval = { [key]: { ...(formValues[key] ?? {}), ...res } };
-                    } else retval = { [key]: res };
-                    return retval;
-                }, {}),
-            };
-            setFormValues({ ...newFormValues });
-            console.log('handleChange', newFormValues);
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [defaultDateFormat, formValues],
-    );
+    const handleChange = arg => event => {
+        const prop = arg; // .replace('-', '_').replace('.', '_');
+        let propValue = event?.target?.value ?? event;
+        if (prop.indexOf('date') > -1) {
+            propValue = moment(event)
+                .format(defaultDateFormat)
+                .toString();
+        }
+        setFormValues(prevState => {
+            console.log('handleChange', { ...prevState, [prop]: propValue });
+            return { ...prevState, [prop]: propValue };
+        });
+    };
 
     const resetFormValues = newFormValues => {
         const newValues = { ...formValues, ...newFormValues };
@@ -67,10 +49,10 @@ export const useValidation = ({ testStatusEnum = {} } = {}) => {
             isValidOwner(currentValues.asset_department_owned_by) &&
             isValidRoomId(currentValues.room_id) &&
             isValidAssetTypeId(currentValues.asset_type_id) &&
-            isValidInspection(currentValues.with_inspection, testStatusEnum) &&
-            ((!!!currentValues.with_repair.isRepair && !!!currentValues.with_discarded.isDiscarded) ||
-                (!!currentValues.with_repair.isRepair !== !!currentValues.with_discarded.isDiscarded &&
-                    (isValidRepair(currentValues.with_repair) || isValidDiscard(currentValues.with_discarded)))) &&
+            isValidInspection(currentValues, testStatusEnum) &&
+            ((!!!currentValues.isRepair && !!!currentValues.isDiscarded) ||
+                (!!currentValues.isRepair !== !!currentValues.isDiscarded &&
+                    (isValidRepair(currentValues) || isValidDiscard(currentValues)))) &&
             hasTestOrAction(currentValues);
 
         setIsValid(val);
