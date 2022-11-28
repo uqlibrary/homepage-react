@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { Grid } from '@material-ui/core';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,11 +17,11 @@ import Box from '@material-ui/core/Box';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
-import { debounce } from 'throttle-debounce';
 
 import ActionPanel from './ActionPanel';
+import DebouncedTextField from './DebouncedTextField';
 import locale from '../testTag.locale';
-import { isEmpty, isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
+import { isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
 
 const testStatusEnum = statusEnum(locale);
 const moment = require('moment');
@@ -41,8 +40,6 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: `${theme.palette.error.main} !important`,
     },
 }));
-
-const DEBOUNCE_INTERVAL = 750;
 
 const InspectionPanel = ({
     formValues,
@@ -68,8 +65,6 @@ const InspectionPanel = ({
     const classesInternal = useStyles();
 
     const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
-    const [notes, setNotes] = useState(formValues.inspection_notes ?? '');
-    const [failReason, setFailReason] = useState(formValues.inspection_fail_reason ?? '');
 
     const [formNextTestDate, setFormNextTestDate] = useState(defaultNextTestDateValue);
     useEffect(() => {
@@ -79,27 +74,6 @@ const InspectionPanel = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formValues.inspection_status, formNextTestDate]);
-
-    useEffect(() => {
-        if (!isEmpty(notes) && isEmpty(formValues?.inspection_notes)) {
-            setNotes('');
-        }
-        if (!isEmpty(failReason) && isEmpty(formValues?.inspection_fail_reason)) {
-            setFailReason('');
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValues?.inspection_notes, formValues?.inspection_fail_reason]);
-
-    const debounceText = React.useRef(debounce(DEBOUNCE_INTERVAL, (e, key) => handleChange(key)(e))).current;
-
-    const handleNotesChange = e => {
-        setNotes(e.target.value);
-        debounceText(e, 'inspection_notes');
-    };
-    const handleFailReasonChange = e => {
-        setFailReason(e.target.value);
-        debounceText(e, 'inspection_fail_reason');
-    };
 
     return (
         <StandardCard
@@ -219,7 +193,7 @@ const InspectionPanel = ({
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
                         <Grid item xs={12} sm={12}>
                             <FormControl className={classes.formControl} fullWidth>
-                                <TextField
+                                <DebouncedTextField
                                     {...locale.form.inspection.failReason}
                                     multiline
                                     rows={4}
@@ -228,8 +202,9 @@ const InspectionPanel = ({
                                     required
                                     disabled={disabled}
                                     error={!isValidFailReason(formValues, testStatusEnum.FAILED.value)}
-                                    value={failReason}
-                                    onChange={handleFailReasonChange}
+                                    value={formValues?.inspection_fail_reason ?? ''}
+                                    handleChange={handleChange}
+                                    updateKey="inspection_fail_reason"
                                 />
                             </FormControl>
                         </Grid>
@@ -237,22 +212,22 @@ const InspectionPanel = ({
 
                     <Grid item xs={12} sm={12}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <TextField
+                            <DebouncedTextField
                                 {...locale.form.inspection.inspectionNotes}
                                 multiline
                                 rows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled}
-                                value={notes}
-                                onChange={handleNotesChange}
+                                value={formValues?.inspection_notes ?? ''}
+                                handleChange={handleChange}
+                                updateKey="inspection_notes"
                             />
                         </FormControl>
                     </Grid>
                 </Grid>
                 <ActionPanel
                     formValues={formValues}
-                    debounceText={debounceText}
                     handleChange={handleChange}
                     classes={classes}
                     isMobileView={isMobileView}
