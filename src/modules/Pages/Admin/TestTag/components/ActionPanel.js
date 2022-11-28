@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Grid } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Alert from '@material-ui/lab/Alert';
-import TextField from '@material-ui/core/TextField';
+import DebouncedTextField from './DebouncedTextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -14,45 +14,23 @@ import Typography from '@material-ui/core/Typography';
 
 import locale from '../testTag.locale';
 import TabPanel from './TabPanel';
-import { isEmpty, isValidRepair, isValidDiscard } from '../utils/helpers';
+import { isValidRepair, isValidDiscard } from '../utils/helpers';
 
 const a11yProps = index => ({
     id: `scrollable-auto-tab-${index}`,
     'aria-controls': `scrollable-auto-tabpanel-${index}`,
 });
 
-const ActionPanel = ({ formValues, debounceText, handleChange, classes, isMobileView, disabled }) => {
+const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled }) => {
     ActionPanel.propTypes = {
         formValues: PropTypes.object.isRequired,
-        debounceText: PropTypes.func.isRequired,
         handleChange: PropTypes.func.isRequired,
         classes: PropTypes.any.isRequired,
         isMobileView: PropTypes.bool.isRequired,
         disabled: PropTypes.bool.isRequired,
     };
 
-    const [discardReason, setDiscardReason] = useState(formValues.repairer_contact_details ?? '');
-    const [repairDetails, setRepairDetails] = useState(formValues.discard_reason ?? '');
     const [selectedTabValue, setSelectedTabValue] = useState(0);
-
-    useEffect(() => {
-        if (!isEmpty(repairDetails) && isEmpty(formValues?.repairer_contact_details)) {
-            setRepairDetails('');
-        }
-        if (!isEmpty(discardReason) && isEmpty(formValues?.discard_reason)) {
-            setDiscardReason('');
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValues?.repairer_contact_details, formValues?.discard_reason]);
-
-    const handleDiscardReasonChange = e => {
-        setDiscardReason(e.target.value);
-        debounceText(e, 'discard_reason');
-    };
-    const handleRepairDetailsChange = e => {
-        setRepairDetails(e.target.value);
-        debounceText(e, 'repairer_contact_details');
-    };
 
     return (
         <>
@@ -106,7 +84,7 @@ const ActionPanel = ({ formValues, debounceText, handleChange, classes, isMobile
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth required>
-                            <TextField
+                            <DebouncedTextField
                                 {...locale.form.action.repair.repairerDetails}
                                 required
                                 error={!!formValues.isRepair && !isValidRepair(formValues)}
@@ -115,8 +93,9 @@ const ActionPanel = ({ formValues, debounceText, handleChange, classes, isMobile
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
                                 disabled={!formValues.isRepair}
-                                value={repairDetails}
-                                onChange={handleRepairDetailsChange}
+                                value={formValues.discard_reason ?? ''}
+                                onChange={handleChange}
+                                updateKey="repairer_contact_details"
                             />
                         </FormControl>
                     </Grid>
@@ -150,7 +129,7 @@ const ActionPanel = ({ formValues, debounceText, handleChange, classes, isMobile
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth required>
-                            <TextField
+                            <DebouncedTextField
                                 {...locale.form.action.discard.discardReason}
                                 required
                                 error={!!formValues.isDiscarded && !isValidDiscard(formValues)}
@@ -159,8 +138,9 @@ const ActionPanel = ({ formValues, debounceText, handleChange, classes, isMobile
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled || !formValues.isDiscarded}
-                                value={discardReason}
-                                onChange={handleDiscardReasonChange}
+                                value={formValues.repairer_contact_details ?? ''}
+                                onChange={handleChange}
+                                updateKey="discard_reason"
                             />
                         </FormControl>
                     </Grid>

@@ -24,7 +24,7 @@ export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH
                 .toString();
         }
         setFormValues(prevState => {
-            console.log('handleChange', { ...prevState, [prop]: propValue });
+            console.log('handleChange', prop, event, propValue, { ...prevState, [prop]: propValue });
             return { ...prevState, [prop]: propValue };
         });
     };
