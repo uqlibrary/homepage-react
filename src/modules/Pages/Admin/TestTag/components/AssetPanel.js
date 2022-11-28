@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import TextField from '@material-ui/core/TextField';
@@ -14,6 +14,9 @@ import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { debounce } from 'throttle-debounce';
+
+import { transformer } from '../utils/transformers';
 import InspectionPanel from './InspectionPanel';
 import LastTestPanel from './LastTestPanel';
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
@@ -24,14 +27,16 @@ const filter = createFilterOptions();
 
 const testStatusEnum = statusEnum(locale);
 
+const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
+
 const AssetPanel = ({
-    saveForm,
+    actions,
     currentRetestList,
     currentAssetOwnersList,
     formValues,
     selectedAsset,
+    resetForm,
     location,
-    assetsSearch,
     assignCurrentAsset,
     handleChange,
     focusElementRef,
@@ -42,13 +47,13 @@ const AssetPanel = ({
     isValid,
 } = {}) => {
     AssetPanel.propTypes = {
-        saveForm: PropTypes.func.isRequired,
+        actions: PropTypes.any.isRequired,
         currentRetestList: PropTypes.array.isRequired,
         currentAssetOwnersList: PropTypes.array.isRequired,
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object.isRequired,
+        resetForm: PropTypes.func.isRequired,
         location: PropTypes.object.isRequired,
-        assetsSearch: PropTypes.func.isRequired,
         assignCurrentAsset: PropTypes.func.isRequired,
         handleChange: PropTypes.func.isRequired,
         focusElementRef: PropTypes.any.isRequired,
@@ -63,13 +68,33 @@ const AssetPanel = ({
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
     const [formAssetList, setFormAssetList] = useState(assetsList ?? []);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const debounceAssetsSearch = React.useRef(
+        debounce(500, pattern => {
+            !!pattern && pattern.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH && actions.loadAssets(pattern);
+        }),
+    ).current;
 
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
+        if (assetsList?.length === 1) {
+            assignCurrentAsset(assetsList[0]);
+            setIsOpen(false);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
-    // HERE - update asset selector onChange to use local state for entering text,
-    // and a debounced call to set in the formvalues object. same as notes in inspectionpanel
+    const saveForm = () => {
+        if (isValid && !saveInspectionSaving) {
+            const transformedData = transformer(
+                formValues,
+                locale.config.transformerRules(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
+            );
+            console.log('saveForm', formValues, transformedData);
+            actions.saveInspection(transformedData);
+        }
+    };
+
     return (
         <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
             <Grid container spacing={3}>
@@ -77,6 +102,7 @@ const AssetPanel = ({
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             fullWidth
+                            open={isOpen}
                             value={formValues?.asset_barcode ?? null}
                             onChange={(event, newValue) => {
                                 if (typeof newValue === 'string') {
@@ -90,6 +116,7 @@ const AssetPanel = ({
                                 } else {
                                     assignCurrentAsset(newValue);
                                 }
+                                setIsOpen(false);
                             }}
                             filterOptions={(options, params) => {
                                 const filtered = filter(options, params);
@@ -140,7 +167,10 @@ const AssetPanel = ({
                                             </React.Fragment>
                                         ),
                                     }}
-                                    onChange={e => assetsSearch(e.target.value)}
+                                    onChange={e => {
+                                        !isOpen && setIsOpen(true);
+                                        debounceAssetsSearch(e.target.value);
+                                    }}
                                 />
                             )}
                             loading={!!assetsListLoading}
@@ -230,26 +260,28 @@ const AssetPanel = ({
                 disabled={!isValidAssetId(formValues?.asset_barcode)}
                 isMobileView={isMobileView}
             />
-            <Grid container spacing={3} justify="flex-end">
-                <Grid xs={12} sm="auto" item>
-                    <Button variant="outlined" fullWidth>
-                        {locale.form.buttons.cancel}
+            <Grid container spacing={3}>
+                <Grid xs={12} sm={6} item justify="flex-start">
+                    <Button variant="outlined" onClick={resetForm} fullWidth={isMobileView}>
+                        {locale.form.buttons.reset}
                     </Button>
                 </Grid>
-                <Grid item xs={12} sm="auto">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={!isValid || saveInspectionSaving}
-                        onClick={saveForm}
-                        fullWidth
-                    >
-                        {saveInspectionSaving ? (
-                            <CircularProgress color="inherit" size={25} />
-                        ) : (
-                            locale.form.buttons.save
-                        )}
-                    </Button>
+                <Grid item xs={12} sm={6}>
+                    <Box display={'flex'} justifyContent={'flex-end'}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={!isValid || saveInspectionSaving}
+                            onClick={saveForm}
+                            fullWidth={isMobileView}
+                        >
+                            {saveInspectionSaving ? (
+                                <CircularProgress color="inherit" size={25} />
+                            ) : (
+                                locale.form.buttons.save
+                            )}
+                        </Button>
+                    </Box>
                 </Grid>
             </Grid>
         </StandardCard>

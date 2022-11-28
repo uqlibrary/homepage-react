@@ -194,6 +194,7 @@ export default {
         },
         buttons: {
             cancel: 'CANCEL',
+            reset: 'RESET FORM',
             save: 'SAVE',
         },
         saveSuccessConfirmation: {

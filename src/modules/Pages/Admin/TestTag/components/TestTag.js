@@ -5,12 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-import { debounce } from 'throttle-debounce';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import { transformer } from '../utils/transformers';
 import TestTagHeader from './TestTagHeader';
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
@@ -42,8 +40,6 @@ const useStyles = makeStyles(theme => ({
         flex: 1,
     },
 }));
-
-const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
 
 const testStatusEnum = statusEnum(locale);
 
@@ -158,14 +154,17 @@ const TestTag = ({
     };
 
     const assetIdElementRef = React.useRef();
-    const hideSuccessMessage = () => {
+    const resetForm = () => {
         assignCurrentAsset({});
-        hideSaveSuccessConfirmation();
         actions.clearSaveInspection();
         if (!!assetIdElementRef.current) {
             scrollToTopOfPage();
             assetIdElementRef.current.focus();
         }
+    };
+    const hideSuccessMessage = () => {
+        hideSaveSuccessConfirmation();
+        resetForm();
     };
 
     useEffect(() => {
@@ -181,14 +180,6 @@ const TestTag = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initConfigError, floorListError, roomListError, assetsListError, formValues]);
 
-    const debounceAssetsSearch = React.useRef(
-        debounce(
-            500,
-            pattern => !!pattern && pattern.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH && actions.loadAssets(pattern),
-        ),
-        { noLeading: true, noTrailing: true },
-    ).current;
-
     const clearSaveError = () => {
         actions.clearSaveInspection();
         return hideSaveError();
@@ -199,17 +190,6 @@ const TestTag = ({
         confirmationTitle: !!saveInspectionError
             ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(saveInspectionError)}`
             : 'An unknown error occurred',
-    };
-
-    const saveForm = () => {
-        if (isValid && !saveInspectionSaving) {
-            const transformedData = transformer(
-                formValues,
-                locale.config.transformerRules(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
-            );
-            console.log('saveForm', formValues, transformedData);
-            actions.saveInspection(transformedData);
-        }
     };
 
     return (
@@ -257,13 +237,13 @@ const TestTag = ({
             />
 
             <AssetPanel
-                saveForm={saveForm}
+                actions={actions}
                 location={location}
+                resetForm={resetForm}
                 currentRetestList={currentRetestList}
                 currentAssetOwnersList={currentAssetOwnersList}
                 formValues={formValues}
                 selectedAsset={selectedAsset}
-                assetsSearch={debounceAssetsSearch}
                 assignCurrentAsset={assignCurrentAsset}
                 handleChange={handleChange}
                 focusElementRef={assetIdElementRef}
