@@ -92,9 +92,9 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 rows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
-                                disabled={!formValues.isRepair}
-                                value={formValues.discard_reason ?? ''}
-                                onChange={handleChange}
+                                disabled={disabled || !formValues.isRepair}
+                                value={formValues?.repairer_contact_details ?? ''}
+                                handleChange={handleChange}
                                 updateKey="repairer_contact_details"
                             />
                         </FormControl>
@@ -138,8 +138,8 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled || !formValues.isDiscarded}
-                                value={formValues.repairer_contact_details ?? ''}
-                                onChange={handleChange}
+                                value={formValues?.discard_reason ?? ''}
+                                handleChange={handleChange}
                                 updateKey="discard_reason"
                             />
                         </FormControl>

@@ -21,6 +21,7 @@ import clsx from 'clsx';
 import locale from '../testTag.locale';
 
 const moment = require('moment');
+const inputLabelProps = { shrink: true };
 
 const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, classes, isMobileView } = {}) => {
     EventPanel.propTypes = {
@@ -54,7 +55,7 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
             setLocation({ formSiteId: initConfig.sites[0].site_id });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initConfigLoading]);
+    }, [initConfig, initConfigLoading]);
 
     return (
         <StandardCard
@@ -77,9 +78,9 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                     <Grid item xs={12} sm={6} md={3}>
                         <KeyboardDatePicker
                             {...locale.form.event.date}
-                            id="testntag-form-action-date"
-                            data-testid="testntag-form-action-date"
-                            InputLabelProps={{ shrink: true }}
+                            id="testntag-form-event-date"
+                            data-testid="testntag-form-event-date"
+                            InputLabelProps={inputLabelProps}
                             format={locale.config.dateFormatNoTime}
                             minDate={startDate}
                             autoOk
@@ -101,6 +102,8 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                         <FormControl className={classes.formControl} fullWidth>
                             <InputLabel shrink>{locale.form.event.location.siteLabel}</InputLabel>
                             <Select
+                                id="testntag-form-siteid"
+                                data-testid="testntag-form-siteid"
                                 className={classes.formSelect}
                                 value={location.formSiteId === -1 ? '' : location.formSiteId}
                                 onChange={e => {
@@ -132,6 +135,8 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                     <Grid item xs={12} sm={6} md={4}>
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
+                                id="testntag-form-buildingid"
+                                data-testid="testntag-form-buildingid"
                                 fullWidth
                                 options={
                                     initConfig?.sites?.find(site => site.site_id === location.formSiteId)?.buildings ??
@@ -164,7 +169,7 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                                         required
                                         error={location.formSiteId !== -1 && location.formBuildingId === -1}
                                         variant="standard"
-                                        InputLabelProps={{ shrink: true }}
+                                        InputLabelProps={inputLabelProps}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
@@ -187,6 +192,8 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                     <Grid item xs={12} sm={6} md={2}>
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
+                                id="testntag-form-floorid"
+                                data-testid="testntag-form-floorid"
                                 fullWidth
                                 options={floorList?.floors ?? []}
                                 value={floorList?.floors?.find(floor => floor.floor_id === location.formFloorId) ?? ''}
@@ -212,7 +219,7 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                                         }
                                         required
                                         variant="standard"
-                                        InputLabelProps={{ shrink: true }}
+                                        InputLabelProps={inputLabelProps}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
@@ -235,6 +242,8 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                     <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
+                                id="testntag-form-roomid"
+                                data-testid="testntag-form-roomid"
                                 fullWidth
                                 options={roomList?.rooms ?? []}
                                 value={roomList?.rooms?.find(room => room.room_id === location.formRoomId) ?? ''}
@@ -254,7 +263,7 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                                             location.formRoomId === -1
                                         }
                                         variant="standard"
-                                        InputLabelProps={{ shrink: true }}
+                                        InputLabelProps={inputLabelProps}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
