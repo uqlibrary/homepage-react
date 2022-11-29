@@ -103,14 +103,14 @@ const AssetPanel = ({
                         <Autocomplete
                             fullWidth
                             open={isOpen}
-                            value={formValues?.asset_barcode ?? null}
+                            value={formValues?.asset_id_displayed ?? null}
                             onChange={(event, newValue) => {
                                 if (typeof newValue === 'string') {
-                                    assignCurrentAsset({ asset_barcode: newValue, isNew: true });
+                                    assignCurrentAsset({ asset_id_displayed: newValue, isNew: true });
                                 } else if (newValue && newValue.inputValue) {
                                     // Create a new value from the user input
                                     assignCurrentAsset({
-                                        asset_barcode: newValue.inputValue,
+                                        asset_id_displayed: newValue.inputValue,
                                         isNew: true,
                                     });
                                 } else {
@@ -124,7 +124,7 @@ const AssetPanel = ({
                                 if (params.inputValue !== '') {
                                     filtered.push({
                                         inputValue: params.inputValue,
-                                        asset_barcode: locale.form.asset.addText(params.inputValue),
+                                        asset_id_displayed: locale.form.asset.addText(params.inputValue),
                                     });
                                 }
 
@@ -143,16 +143,16 @@ const AssetPanel = ({
                                     return option.inputValue;
                                 }
                                 // Regular option
-                                return `${option.asset_barcode ?? ''}`;
+                                return `${option.asset_id_displayed ?? ''}`;
                             }}
-                            renderOption={option => option.asset_barcode}
+                            renderOption={option => option.asset_id_displayed}
                             freeSolo
                             renderInput={params => (
                                 <TextField
                                     {...params}
                                     {...locale.form.asset.assetId}
                                     required
-                                    error={!isValidAssetId(formValues.asset_barcode)}
+                                    error={!isValidAssetId(formValues.asset_id_displayed)}
                                     ref={focusElementRef}
                                     variant="standard"
                                     InputLabelProps={{ shrink: true }}
@@ -199,7 +199,7 @@ const AssetPanel = ({
                                     {...locale.form.asset.assetType}
                                     required
                                     error={
-                                        isValidAssetId(formValues.asset_barcode) &&
+                                        isValidAssetId(formValues.asset_id_displayed) &&
                                         !isValidAssetTypeId(formValues.asset_type_id)
                                     }
                                     variant="standard"
@@ -217,7 +217,7 @@ const AssetPanel = ({
                                     }}
                                 />
                             )}
-                            disabled={initConfigLoading || !isValidAssetId(formValues?.asset_barcode)}
+                            disabled={initConfigLoading || !isValidAssetId(formValues?.asset_id_displayed)}
                             disableClearable
                             autoSelect
                             loading={!!initConfigLoading}
@@ -230,7 +230,7 @@ const AssetPanel = ({
                         <Select
                             className={classes.formSelect}
                             value={formValues.asset_department_owned_by}
-                            disabled={!isValidAssetId(formValues?.asset_barcode)}
+                            disabled={!isValidAssetId(formValues?.asset_id_displayed)}
                         >
                             {currentAssetOwnersList.map(owner => (
                                 <MenuItem value={owner.value} key={owner.value}>
@@ -257,11 +257,11 @@ const AssetPanel = ({
                 currentRetestList={currentRetestList}
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 classes={classes}
-                disabled={!isValidAssetId(formValues?.asset_barcode)}
+                disabled={!isValidAssetId(formValues?.asset_id_displayed)}
                 isMobileView={isMobileView}
             />
             <Grid container spacing={3}>
-                <Grid xs={12} sm={6} item justify="flex-start">
+                <Grid xs={12} sm={6} item>
                     <Button variant="outlined" onClick={resetForm} fullWidth={isMobileView}>
                         {locale.form.buttons.reset}
                     </Button>

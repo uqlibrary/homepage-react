@@ -130,7 +130,7 @@ export function saveInspection(request) {
                 });
             })
             .catch(error => {
-                console.log('saveInspection error', error);
+                console.log('saveInspection error', error.message);
                 dispatch({
                     type: actions.TESTTAG_SAVE_INSPECTION_FAILED,
                     payload: error.message,

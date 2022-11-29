@@ -3,7 +3,6 @@ import {
     isValidEventDate,
     isValidAssetId,
     isValidOwner,
-    isValidRoomId,
     isValidAssetTypeId,
     isValidInspection,
     isValidRepair,
@@ -31,7 +30,6 @@ export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH
 
     const resetFormValues = newFormValues => {
         const newValues = { ...formValues, ...newFormValues };
-        console.log('resetFormValues', { ...newValues });
         setFormValues(newValues);
     };
 
@@ -45,9 +43,8 @@ export const useValidation = ({ testStatusEnum = {} } = {}) => {
         const val =
             currentValues.user_id > 0 &&
             isValidEventDate(currentValues.action_date) &&
-            isValidAssetId(currentValues.asset_barcode) &&
+            isValidAssetId(currentValues.asset_id_displayed) &&
             isValidOwner(currentValues.asset_department_owned_by) &&
-            isValidRoomId(currentValues.room_id) &&
             isValidAssetTypeId(currentValues.asset_type_id) &&
             isValidInspection(currentValues, testStatusEnum) &&
             ((!!!currentValues.isRepair && !!!currentValues.isDiscarded) ||

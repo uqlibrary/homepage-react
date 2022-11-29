@@ -48,10 +48,10 @@ export default {
       }
     ],
     "user": {
-        "user_id": 100,
-        "user_uid": "uqjsmit",
+        "user_id": 3,
+        "user_uid": "uqlsibba",
         "user_license_number": "123456",
-        "user_name": "John Smith",
+        "user_name": "Lee Sibbald",
         "user_department": "UQL",
         "user_current_flag": 1,
     },
