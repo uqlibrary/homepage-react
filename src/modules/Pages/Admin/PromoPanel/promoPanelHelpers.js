@@ -17,6 +17,7 @@ export const initLists = (
             scheduledList: isDefaultPanel ? [] : scheduledList,
             defaultList: isDefaultPanel ? scheduledList : [],
         });
+        console.log('I AM SETTING DISPLAY LIST');
         setDisplayList(scheduledList);
     }
     if (scheduledGroupNames.length > 0) {
@@ -143,25 +144,29 @@ export const addSchedule = (
                     groupNames: item,
                 });
 
-                // This is where we'll add the new functionality of update per row.
-                if (values.is_default_panel) {
-                    if (window.confirm('are you sure?')) {
-                        actions.saveDefaultUserTypePanel({ id: values.id, usergroup: item });
-                    }
-                    // sent to API to add default
-                } else {
-                    if (!!values.id) {
-                        actions.saveUserTypePanelSchedule({
-                            id: values.id,
-                            usergroup: item,
-                            payload: {
-                                panel_schedule_end_time: moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
-                                panel_schedule_start_time: moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
-                            },
-                        });
-                    }
-                    // sent to API to add schedule.
-                }
+                // // RETHINKING UPDATES PER ROW METHOD. LOOKING INTO QUEUE
+                // // This is where we'll add the new functionality of update per row.
+                // if (values.is_default_panel) {
+                //     if (window.confirm('are you sure?')) {
+                //         actions.saveDefaultUserTypePanel({ id: values.id, usergroup: item });
+                //     }
+                //     // sent to API to add default
+                // } else {
+                //     if (!!values.id) {
+                //         actions.saveUserTypePanelSchedule({
+                //             id: values.id,
+                //             usergroup: item,
+                //             payload: {
+                //                 panel_schedule_end_time: moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
+                //                 panel_schedule_start_time: moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
+                //             },
+                //         });
+                //     }
+                //     // sent to API to add schedule.
+                // }
+                // // END RETHINKING
+                actions.updateScheduleQueuelength(allocatedList.filter(filter => !!!filter.existing).length);
+                console.log('QUEUE ALLOCATED LIST', allocatedList);
             }
         }
     });
@@ -174,4 +179,39 @@ export const saveGroupDate = (idx, dateRange, displayList, setDisplayList, setIs
     newDisplayList[idx].endDate = dateRange.end;
     setDisplayList(newDisplayList);
     setIsEditingDate(false);
+};
+
+export const remapScheduleList = (scheduleList, promopanelid, setIsDefault) => {
+    const schedule = [];
+    const userlist = [];
+    scheduleList.map(item => {
+        if (`${item.panel_id}` === `${promopanelid}`) {
+            if (item.default_panels_for.length > 0) {
+                setIsDefault(true);
+                item.default_panels_for.map(element => {
+                    !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
+                    schedule.push({
+                        startDate: element.panel_schedule_start_time,
+                        endDate: element.panel_schedule_end_time,
+                        groupNames: element.usergroup_group,
+                        existing: true,
+                    });
+                });
+            } else {
+                setIsDefault(false);
+                item.panel_schedule.map(element => {
+                    !userlist.includes(element.usergroup_group_name) && userlist.push(element.usergroup_group_name);
+                    element.user_group_schedule.map(panelSchedule => {
+                        schedule.push({
+                            startDate: panelSchedule.panel_schedule_start_time,
+                            endDate: panelSchedule.panel_schedule_end_time,
+                            groupNames: element.usergroup_group,
+                            existing: true,
+                        });
+                    });
+                });
+            }
+        }
+    });
+    return [userlist, schedule];
 };

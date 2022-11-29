@@ -14,6 +14,11 @@ import {
     PROMOPANEL_UNSCHEDULE_API,
 } from 'repositories/routes';
 
+export function clearPromoUpdatedStatus() {
+    return dispatch => {
+        dispatch({ type: actions.CLEAR_PROMO_UPDATED_STATUS });
+    };
+}
 // Actions for Single Promo Panel Retrieval
 export function getAssignedPromoPanel() {
     return dispatch => {
@@ -120,6 +125,7 @@ export const savePromoPanel = request => {
         return post(PROMOPANEL_UPDATE_API({ id: request.panel_id }), request)
             .then(data => {
                 console.log('Save Successful');
+                // console.log('REQUEST INFORMATION', request);
                 dispatch({
                     type: actions.PROMOPANEL_SAVE_SUCCESS,
                     payload: data,
@@ -154,20 +160,26 @@ export const saveUserTypePanel = request => {
 };
 export const saveDefaultUserTypePanel = request => {
     return async dispatch => {
-        dispatch({ type: actions.PROMOPANEL_SAVING });
+        dispatch({ type: actions.PROMOPANEL_SCHEDULING });
         return put(PROMOPANEL_UPDATE_USERTYPE_DEFAULT({ id: request.id, usergroup: request.usergroup }), request)
             .then(data => {
                 dispatch({
-                    type: actions.PROMOPANEL_SAVE_SUCCESS,
+                    type: actions.PROMOPANEL_SCHEDULE_SUCCESS,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.PROMOPANEL_SAVE_FAILED,
+                    type: actions.PROMOPANEL_SCHEDULE_FAILED,
                     payload: error.message,
                 });
             });
+    };
+};
+
+export const updateScheduleQueuelength = queueLength => {
+    return dispatch => {
+        dispatch({ type: actions.PROMOPANEL_UPDATE_QUEUELENGTH, payload: queueLength });
     };
 };
 

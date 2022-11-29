@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/styles';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import Typography from '@material-ui/core/Typography';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-
+import { PromoPanelSaveConfirmation } from './Form/PromoPanelSaveConfirmation';
 import PromoPanelPreview from './PromoPanelPreview';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -99,6 +99,7 @@ export const PromoPanelForm = ({
     currentPanel,
     isEdit,
     isClone,
+    promoPanelSaving,
     // fullPromoPanelList,
     fullPromoPanelUserTypeList,
     knownGroups,
@@ -106,13 +107,16 @@ export const PromoPanelForm = ({
     actions,
     history,
     isDefaultPanel,
-    updated,
+    panelUpdated,
+    // scheduleUpdated,
+    queueLength,
 }) => {
     // const scheduledGroups = [];
     const classes = useStyles();
 
     // const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
     // const [scheduledGroups, setScheduledGroups] = useState(scheduledGroupNames);
+    const [adminNotes, setAdminNotes] = React.useState('');
     const [selectorGroupNames, setSelectorGroupNames] = React.useState(scheduledGroupNames);
     const [scheduleChangeIndex, setScheduleChangeIndex] = useState(null);
     const [isEditingDate, setIsEditingDate] = useState(false);
@@ -121,6 +125,7 @@ export const PromoPanelForm = ({
     const [confirmationMessage, setConfirmationMessage] = useState(null);
     const [confirmationMode, setConfirmationMode] = useState('');
     const [mode, setMode] = useState({ validate: true });
+    const [saveConfirmOpen, setSaveConfirmOpen] = useState(false);
 
     const [values, setValues] = useState({
         ...defaults,
@@ -136,11 +141,6 @@ export const PromoPanelForm = ({
         content: (currentPanel && currentPanel.panel_content) || '',
     });
     const [displayList, setDisplayList] = useState([]);
-
-    React.useEffect(() => {
-        console.log('Updated', updated);
-    }, [updated]);
-
     React.useEffect(() => {
         initLists(
             scheduledList,
@@ -152,16 +152,21 @@ export const PromoPanelForm = ({
             setDisplayList,
             setSelectorGroupNames,
         );
+        console.log('INIT LISTS');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scheduledGroupNames, scheduledList]);
 
+    React.useEffect(() => {
+        console.log('Current Panel Changed');
+        console.log(currentPanel);
+        console.log(scheduledList);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPanel]);
+
     // const [allocatedGroups, setAllocatedGroups] = useState(values.allocatedGroups);
-    const clearForm = () => {
-        setValues(defaults);
-    };
 
     const navigateToListPage = () => {
-        clearForm();
+        // clearForm();
 
         actions.clearCurrentPanel(); // force the list page to reload after save
 
@@ -194,36 +199,59 @@ export const PromoPanelForm = ({
     const savePromoPanel = () => {
         const schedules = [];
         const defaults = [];
-        if (!isEdit) {
-            if (values.scheduledList.length > 0) {
-                values.scheduledList.map(item => {
-                    schedules.push({
-                        user_groups: [item.groupNames],
-                        panel_schedule_start_time: item.startDate,
-                        panel_schedule_end_time: item.endDate,
-                    });
+        console.log('Saving Panel');
+        // if (!isEdit) {
+        if (values.scheduledList.length > 0) {
+            values.scheduledList.map(item => {
+                schedules.push({
+                    user_groups: [item.groupNames],
+                    panel_schedule_start_time: item.startDate,
+                    panel_schedule_end_time: item.endDate,
+                    existing: item.existing,
                 });
-            }
-            if (values.defaultList.length > 0) {
-                values.defaultList.map(item => {
-                    defaults.push(item.groupNames);
-                });
-            }
+            });
         }
-        console.log('Schedules and Defaults', schedules, defaults);
+        if (values.defaultList.length > 0) {
+            values.defaultList.map(item => {
+                defaults.push({ name: item.groupNames, existing: item.existing });
+            });
+        }
+        // }
         const newValues = {
             panel_id: values.id,
             panel_title: values.title,
             panel_content: values.content,
             panel_admin_notes: values.admin_notes,
-            panel_schedule: schedules.length > 0 ? schedules : null,
-            panel_default_groups: defaults.length > 0 ? defaults : null,
+            // panel_schedule: schedules.length > 0 ? schedules : null,
+            // panel_default_groups: defaults.length > 0 ? defaults : null,
         };
 
         setIsConfirmOpen(false);
         if (isEdit) {
             // actions.savePromoPanel(newValues).then(navigateToListPage());
             actions.savePromoPanel(newValues);
+            console.log('I should be in here', schedules, defaults);
+            if (schedules.length > 0) {
+                schedules.map(schedule => {
+                    if (!schedule.existing) {
+                        actions.saveUserTypePanelSchedule({
+                            id: newValues.panel_id,
+                            usergroup: schedule.user_groups[0],
+                            payload: {
+                                panel_schedule_start_time: schedule.panel_schedule_start_time,
+                                panel_schedule_end_time: schedule.panel_schedule_end_time,
+                            },
+                        });
+                    }
+                });
+            } else if (defaults.length > 0) {
+                console.log('THE DEFAULTS', defaults);
+                defaults.map(defaultItem => {
+                    if (!defaultItem.existing) {
+                        actions.saveDefaultUserTypePanel({ id: newValues.panel_id, usergroup: defaultItem.name });
+                    }
+                });
+            }
         } else {
             // actions.createPromoPanel(newValues).then(navigateToListPage());
             actions.createPromoPanel(newValues);
@@ -282,12 +310,14 @@ export const PromoPanelForm = ({
     };
 
     const handleChange = prop => event => {
+        console.log('HANDLING CHANGE');
         let propValue;
         if (['is_default_panel'].includes(prop)) {
             propValue = event.target.checked ? 1 : 0;
         } else if (['start', 'end'].includes(prop)) {
             propValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
+            console.log('It changed here');
             propValue = !!event.target.value ? event.target.value : event.target.checked;
             // fake switch because istanbul doesnt block on an else if in this version :(
             switch (true) {
@@ -323,6 +353,8 @@ export const PromoPanelForm = ({
             defaultList: values.is_default_panel ? [...newSchedules] : [...values.defaultList],
         });
         setDisplayList([...newSchedules]);
+
+        actions.updateScheduleQueuelength(newSchedules.filter(filter => !!!filter.existing).length);
     };
 
     const editPanelGroupSchedule = idx => {
@@ -337,6 +369,42 @@ export const PromoPanelForm = ({
     const handleSaveGroupDate = (idx, dateRange) => {
         saveGroupDate(idx, dateRange, displayList, setDisplayList, setIsEditingDate);
     };
+    const clearForm = () => {
+        // actions.clearPromoUpdatedStatus();
+        console.log('Values beforehand are:', values);
+        setValues({
+            ...defaults,
+            admin_notes: '',
+            title: '',
+            content: '',
+            // ['admin_notes']: 'ffff',
+            scheduledList: ['a'],
+            defaultList: ['b'],
+        });
+        console.log("I've updated the values");
+        console.log('Values therefore are:', values);
+        // initLists(
+        //     scheduledList,
+        //     scheduledGroupNames,
+        //     knownGroups,
+        //     values,
+        //     isDefaultPanel,
+        //     setValues,
+        //     setDisplayList,
+        //     setSelectorGroupNames,
+        // );
+
+        console.log('Values here', values);
+    };
+
+    const addNewPanel = () => {
+        clearForm();
+        window.location.reload(false);
+
+        // scrollToTopOfPage();
+    };
+
+    console.log('DISPLAYLIST', displayList);
 
     return (
         <>
@@ -411,24 +479,6 @@ export const PromoPanelForm = ({
                                 <span className={classes.contentRequired}>* This content is required</span>
                             )}
                         </Grid>
-                        {/* Put some form of confirmation here */}
-                        {!!!updated && (
-                            <Grid container spacing={2} style={{ padding: 18 }}>
-                                <Grid item xs={12} style={{ padding: 10, color: '#fff', backgroundColor: '#337733' }}>
-                                    Saved.
-                                </Grid>
-                            </Grid>
-                        )}
-                        {!!isEdit && (
-                            <PromoPanelContentButtons
-                                values={values}
-                                isEdit={isEdit}
-                                previewPromoPanel={previewPromoPanel}
-                                navigateToListPage={navigateToListPage}
-                                confirmSavePromo={confirmSavePromo}
-                                savePromoPanel={savePromoPanel}
-                            />
-                        )}
                     </Grid>
                 </form>
             </StandardCard>
@@ -438,6 +488,7 @@ export const PromoPanelForm = ({
                 <PromoPanelFormSchedules
                     values={values}
                     isEdit={isEdit}
+                    currentPanel={currentPanel}
                     scheduledList={scheduledList}
                     knownGroups={knownGroups}
                     defaults={defaults}
@@ -618,16 +669,16 @@ export const PromoPanelForm = ({
                                     })}
                             </Grid>
                         </Grid> */}
-                {!!!isEdit && (
-                    <PromoPanelContentButtons
-                        values={values}
-                        isEdit={isEdit}
-                        previewPromoPanel={previewPromoPanel}
-                        navigateToListPage={navigateToListPage}
-                        confirmSavePromo={confirmSavePromo}
-                        savePromoPanel={savePromoPanel}
-                    />
-                )}
+
+                <PromoPanelContentButtons
+                    values={values}
+                    isEdit={isEdit}
+                    previewPromoPanel={previewPromoPanel}
+                    navigateToListPage={navigateToListPage}
+                    confirmSavePromo={confirmSavePromo}
+                    savePromoPanel={savePromoPanel}
+                    promoPanelSaving={promoPanelSaving || (panelUpdated && queueLength > 0)}
+                />
             </StandardCard>
 
             <PromoPanelPreview
@@ -658,6 +709,22 @@ export const PromoPanelForm = ({
                 confirmAddSchedule={handleAddSchedule}
                 cancelAction={cancelConfirmation}
             />
+            <p>
+                {`${panelUpdated}`} {queueLength}
+            </p>
+            <PromoPanelSaveConfirmation
+                isConfirmOpen={panelUpdated && queueLength === 0}
+                title={isEdit ? 'Panel has been updated' : 'Panel has been created'}
+                content={
+                    values.scheduledList.length > 0 || values.defaultList.length > 0
+                        ? 'Panel is saved, and schedules / defaults assigned'
+                        : 'This panel is yet to be scheduled or assigned.'
+                }
+                primaryAction={addNewPanel}
+                primaryText={isEdit ? 'Continue Editing' : 'Add another panel'}
+                secondaryAction={navigateToListPage}
+                secondaryText={'Return to list'}
+            />
         </>
     );
 };
@@ -677,7 +744,10 @@ PromoPanelForm.propTypes = {
     isDefaultPanel: PropTypes.bool,
     isEdit: PropTypes.bool,
     isClone: PropTypes.bool,
-    updated: PropTypes.bool,
+    panelUpdated: PropTypes.bool,
+    scheduleUpdated: PropTypes.bool,
+    promoPanelSaving: PropTypes.bool,
+    queueLength: PropTypes.number,
 };
 
 PromoPanelForm.defaultProps = {

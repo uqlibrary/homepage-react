@@ -14,6 +14,7 @@ import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import Typography from '@material-ui/core/Typography';
 
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
+import { useEffect } from 'react';
 // import { formatDate } from '../Spotlights/spotlighthelpers';
 
 const moment = require('moment');
@@ -84,6 +85,7 @@ const useStyles = makeStyles(() => ({
 export const PromoPanelFormSchedules = ({
     values,
     isEdit,
+    currentPanel,
     scheduledList,
     knownGroups,
     defaults,
@@ -100,6 +102,7 @@ export const PromoPanelFormSchedules = ({
 
     // const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
     // const [scheduledGroups, setScheduledGroups] = useState(scheduledGroupNames);
+    console.log('Scheduled List', displayList);
 
     return (
         <>
@@ -283,9 +286,10 @@ export const PromoPanelFormSchedules = ({
 PromoPanelFormSchedules.propTypes = {
     values: PropTypes.object,
     isEdit: PropTypes.bool,
+    currentPanel: PropTypes.object,
     scheduledList: PropTypes.array,
     knownGroups: PropTypes.array,
-    defaults: PropTypes.array,
+    defaults: PropTypes.object,
     displayList: PropTypes.array,
     removePanelGroupSchedule: PropTypes.func,
     editPanelGroupSchedule: PropTypes.func,

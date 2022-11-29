@@ -181,4 +181,4 @@ PromoPanelGroupDateSelector.defaultProps = {
     scheduleChangeIndex: null,
 };
 
-export default React.memo(PromoPanelGroupDateSelector);
+export default PromoPanelGroupDateSelector;

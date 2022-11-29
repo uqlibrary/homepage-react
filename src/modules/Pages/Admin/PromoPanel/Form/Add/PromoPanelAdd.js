@@ -12,7 +12,6 @@ import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/PromoPanelForm';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopaneladmin.locale';
 
 export const PromoPanelAdd = ({
     actions,
@@ -20,8 +19,9 @@ export const PromoPanelAdd = ({
     promoPanelListLoading,
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
+    promoPanelSaving,
     history,
-    updated,
+    panelUpdated,
 }) => {
     const defaults = {
         id: '',
@@ -80,13 +80,14 @@ export const PromoPanelAdd = ({
                 <PromoPanelForm
                     scheduledList={[]}
                     scheduledGroupNames={[]}
+                    promoPanelSaving={promoPanelSaving}
                     fullPromoPanelList={promoPanelList}
                     fullPromoPanelUserTypeList={promoPanelUserTypeList}
                     defaults={defaults}
                     actions={actions}
                     history={history}
                     knownGroups={knownGroups}
-                    updated={updated}
+                    updated={panelUpdated}
                 />
             </section>
         </StandardPage>
@@ -94,8 +95,9 @@ export const PromoPanelAdd = ({
 };
 
 PromoPanelAdd.propTypes = {
-    updated: PropTypes.bool,
+    panelUpdated: PropTypes.bool,
     actions: PropTypes.any,
+    promoPanelSaving: PropTypes.bool,
     promoPanelList: PropTypes.array,
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,

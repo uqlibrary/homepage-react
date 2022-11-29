@@ -167,4 +167,4 @@ PromoPanelFormConfirmation.propTypes = {
 
 PromoPanelFormConfirmation.defaultProps = {};
 
-export default React.memo(PromoPanelFormConfirmation);
+export default PromoPanelFormConfirmation;

@@ -22,7 +22,7 @@ export const PromoPanelList = ({
     promoPanelUserTypesLoading,
     promoPanelActionError,
     history,
-    updated,
+    panelUpdated,
 
     // actions, spotlights, spotlightsLoading, spotlightsError, history
 }) => {
@@ -54,11 +54,11 @@ export const PromoPanelList = ({
 
     React.useEffect(() => {
         // do something with the promo Panel List and the user type here.
-        if (updated) {
+        if (panelUpdated) {
             actions.loadPromoPanelList().then(actions.loadPromoPanelUserList());
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updated]);
+    }, [panelUpdated]);
 
     // useEffect(() => {
     //     /* istanbul ignore else */
@@ -122,7 +122,7 @@ export const PromoPanelList = ({
 
 PromoPanelList.propTypes = {
     actions: PropTypes.any,
-    updated: PropTypes.bool,
+    panelUpdated: PropTypes.bool,
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
     promoPanelStatus: PropTypes.string,
@@ -134,4 +134,4 @@ PromoPanelList.propTypes = {
     history: PropTypes.object,
 };
 
-export default React.memo(PromoPanelList);
+export default PromoPanelList;

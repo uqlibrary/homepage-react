@@ -16,6 +16,7 @@ import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/PromoPanelForm';
 
 // import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { remapScheduleList } from '../../promoPanelHelpers';
 
 export const PromoPanelEdit = ({
     actions,
@@ -23,8 +24,10 @@ export const PromoPanelEdit = ({
     promoPanelListLoading,
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
+    promoPanelSaving,
     history,
-    updated,
+    panelUpdated,
+    queueLength,
 }) => {
     const { promopanelid } = useParams();
 
@@ -71,84 +74,88 @@ export const PromoPanelEdit = ({
             });
             setKnownGroups(known);
         }
+
         if (promoPanelList.length > 0) {
-            const userlist = [];
-            const schedule = [];
+            //    const userlist = [];
+            //    const schedule = [];
             setCurrentPanel(...promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`));
-            console.log(promoPanelList);
-            promoPanelList.map(item => {
-                if (`${item.panel_id}` === `${promopanelid}`) {
-                    if (item.default_panels_for.length > 0) {
-                        setIsDefault(true);
-                        item.default_panels_for.map(element => {
-                            !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
-                            schedule.push({
-                                startDate: element.panel_schedule_start_time,
-                                endDate: element.panel_schedule_end_time,
-                                groupNames: element.usergroup_group,
-                                existing: true,
-                            });
-                        });
-                    } else {
-                        setIsDefault(false);
-                        item.panel_schedule.map(element => {
-                            !userlist.includes(element.usergroup_group_name) &&
-                                userlist.push(element.usergroup_group_name);
-                            element.user_group_schedule.map(panelSchedule => {
-                                schedule.push({
-                                    startDate: panelSchedule.panel_schedule_start_time,
-                                    endDate: panelSchedule.panel_schedule_end_time,
-                                    groupNames: element.usergroup_group,
-                                    existing: true,
-                                });
-                            });
-                        });
-                    }
-                    // item.user_groups.map(element => {
-                    //     // if (element.is_panel_default_for_this_user === 'Y' && !isDefault) {
-                    //     //     setIsDefault(true);
-                    //     // }
 
-                    //     if (item.default_panels_for.length > 0) setIsDefault(true);
+            // remapScheduleList(promoPanelList, promopanelid, setIsDefault);
+            // promoPanelList.map(item => {
+            //     if (`${item.panel_id}` === `${promopanelid}`) {
+            //         if (item.default_panels_for.length > 0) {
+            //             setIsDefault(true);
+            //             item.default_panels_for.map(element => {
+            //                 !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
+            //                 schedule.push({
+            //                     startDate: element.panel_schedule_start_time,
+            //                     endDate: element.panel_schedule_end_time,
+            //                     groupNames: element.usergroup_group,
+            //                     existing: true,
+            //                 });
+            //             });
+            //         } else {
+            //             setIsDefault(false);
+            //             item.panel_schedule.map(element => {
+            //                 !userlist.includes(element.usergroup_group_name) &&
+            //                     userlist.push(element.usergroup_group_name);
+            //                 element.user_group_schedule.map(panelSchedule => {
+            //                     schedule.push({
+            //                         startDate: panelSchedule.panel_schedule_start_time,
+            //                         endDate: panelSchedule.panel_schedule_end_time,
+            //                         groupNames: element.usergroup_group,
+            //                         existing: true,
+            //                     });
+            //                 });
+            //             });
+            //         }
+            //         // item.user_groups.map(element => {
+            //         //     // if (element.is_panel_default_for_this_user === 'Y' && !isDefault) {
+            //         //     //     setIsDefault(true);
+            //         //     // }
 
-                    //     console.log('UserList', userlist);
+            //         //     if (item.default_panels_for.length > 0) setIsDefault(true);
 
-                    //     !userlist.includes(element.user_group) && userlist.push(element.user_group);
+            //         //     console.log('UserList', userlist);
 
-                    //     if (schedule.length < 1) {
-                    //         schedule.push({
-                    //             startDate: element.panel_schedule_start_time,
-                    //             endDate: element.panel_schedule_end_time,
-                    //             groupNames: element.user_group,
-                    //             existing: true,
-                    //         });
-                    //     } else {
-                    //         schedule.push({
-                    //             startDate: element.panel_schedule_start_time,
-                    //             endDate: element.panel_schedule_end_time,
-                    //             groupNames: element.user_group,
-                    //             existing: true,
-                    //         });
-                    //         // schedule.map((scheduleItem, index) => {
-                    //         //     if (
-                    //         //         scheduleItem.startDate === element.panel_schedule_start_time &&
-                    //         //         scheduleItem.endDate === element.panel_schedule_end_time
-                    //         //     ) {
-                    //         //         schedule[index].groupNames.push(element.user_group);
-                    //         //     } else {
-                    //         //         schedule.push({
-                    //         //             startDate: element.panel_schedule_start_time,
-                    //         //             endDate: element.panel_schedule_end_time,
-                    //         //             groupNames: [element.user_group],
-                    //         //         });
-                    //         //     }
-                    //         // });
-                    //     }
-                    // });
-                }
-                setUserList(userlist);
-                setScheduleList(schedule);
-            });
+            //         //     !userlist.includes(element.user_group) && userlist.push(element.user_group);
+
+            //         //     if (schedule.length < 1) {
+            //         //         schedule.push({
+            //         //             startDate: element.panel_schedule_start_time,
+            //         //             endDate: element.panel_schedule_end_time,
+            //         //             groupNames: element.user_group,
+            //         //             existing: true,
+            //         //         });
+            //         //     } else {
+            //         //         schedule.push({
+            //         //             startDate: element.panel_schedule_start_time,
+            //         //             endDate: element.panel_schedule_end_time,
+            //         //             groupNames: element.user_group,
+            //         //             existing: true,
+            //         //         });
+            //         //         // schedule.map((scheduleItem, index) => {
+            //         //         //     if (
+            //         //         //         scheduleItem.startDate === element.panel_schedule_start_time &&
+            //         //         //         scheduleItem.endDate === element.panel_schedule_end_time
+            //         //         //     ) {
+            //         //         //         schedule[index].groupNames.push(element.user_group);
+            //         //         //     } else {
+            //         //         //         schedule.push({
+            //         //         //             startDate: element.panel_schedule_start_time,
+            //         //         //             endDate: element.panel_schedule_end_time,
+            //         //         //             groupNames: [element.user_group],
+            //         //         //         });
+            //         //         //     }
+            //         //         // });
+            //         //     }
+            //         // });
+            //     }
+            const [userlist, schedulelist] = remapScheduleList(promoPanelList, promopanelid, setIsDefault);
+            console.log('USE EFFECT FIRED', userlist, schedulelist);
+            setUserList(userlist);
+            setScheduleList(schedulelist);
+            // };
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelList, promoPanelUserTypeList]);
@@ -163,6 +170,7 @@ export const PromoPanelEdit = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelList]);
+    console.log('CURRENT PANEL', currentPanel);
     return (
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">
@@ -178,8 +186,10 @@ export const PromoPanelEdit = ({
                         actions={actions}
                         history={history}
                         isEdit
+                        promoPanelSaving={promoPanelSaving}
                         isDefaultPanel={isDefault}
-                        updated={updated}
+                        panelUpdated={panelUpdated}
+                        queueLength={queueLength}
                     />
                 )}
             </section>
@@ -193,7 +203,8 @@ PromoPanelEdit.propTypes = {
     promoPanelUserTypesLoading: PropTypes.bool,
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
-
+    panelUpdated: PropTypes.bool,
+    promoPanelSaving: PropTypes.bool,
     history: PropTypes.object,
 };
 

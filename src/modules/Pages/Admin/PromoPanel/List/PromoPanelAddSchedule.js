@@ -288,4 +288,4 @@ PromoPanelAddSchedule.defaultProps = {
     promoPanelList: [],
 };
 
-export default React.memo(PromoPanelAddSchedule);
+export default PromoPanelAddSchedule;

@@ -59,6 +59,7 @@ const useStyles = makeStyles(() => ({
 export const PromoPanelContentButtons = ({
     values,
     isEdit,
+    promoPanelSaving,
     previewPromoPanel,
     navigateToListPage,
     confirmSavePromo,
@@ -89,12 +90,7 @@ export const PromoPanelContentButtons = ({
                         variant="contained"
                         children={'Preview'}
                         disabled={
-                            !!!values.admin_notes ||
-                            values.admin_notes.length < 1 ||
-                            !!!values.title ||
-                            values.title.length < 1 ||
-                            !!!values.content ||
-                            values.content.length < 1
+                            !!!values.title || values.title.length < 1 || !!!values.content || values.content.length < 1
                         }
                         onClick={previewPromoPanel}
                         className={classes.previewButton}
@@ -105,8 +101,7 @@ export const PromoPanelContentButtons = ({
                         variant="contained"
                         children={isEdit ? 'Save' : 'Create'}
                         disabled={
-                            !!!values.admin_notes ||
-                            values.admin_notes.length < 1 ||
+                            promoPanelSaving ||
                             !!!values.title ||
                             values.title.length < 1 ||
                             !!!values.content ||
@@ -123,7 +118,8 @@ export const PromoPanelContentButtons = ({
 };
 
 PromoPanelContentButtons.propTypes = {
-    values: PropTypes.array,
+    values: PropTypes.object,
+    promoPanelSaving: PropTypes.bool,
     isEdit: PropTypes.bool,
     previewPromoPanel: PropTypes.func,
     navigateToListPage: PropTypes.func,
