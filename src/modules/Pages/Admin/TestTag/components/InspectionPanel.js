@@ -118,7 +118,7 @@ const InspectionPanel = ({
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <Box margin={1}>
+                        <Box>
                             <InputLabel shrink required htmlFor="testResultToggleButtons">
                                 {locale.form.inspection.testResultLabel}
                             </InputLabel>
