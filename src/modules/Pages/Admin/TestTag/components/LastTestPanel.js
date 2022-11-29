@@ -17,7 +17,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 const moment = require('moment');
 
 const useTestPanelStyles = makeStyles(theme => ({
-    card: props => ({
+    card: {
+        marginTop: theme.spacing(2),
+    },
+    cardActive: props => ({
         borderColor: !props.pass ? theme.palette.error.main : theme.palette.success.main,
         [theme.breakpoints.down('xs')]: {
             borderTopWidth: 10,
@@ -81,14 +84,6 @@ const LastTestPanel = ({
     const [mismatchingLocation, setMismatchingLocation] = useState(false);
 
     useEffect(() => {
-        console.log(
-            'lasttestpanel',
-            asset?.asset_id,
-            currentLocation.formSiteId,
-            currentLocation.formBuildingId,
-            currentLocation.formFloorId,
-            currentLocation.formRoomId,
-        );
         if (!!asset?.asset_id) {
             setMismatchingLocation(
                 currentLocation.formSiteId !== lastLocation?.site_id ||
@@ -155,7 +150,7 @@ const LastTestPanel = ({
                     <ExpandMoreIcon />
                 </IconButton>
             }
-            className={!disabled ? classes.card : ''}
+            className={clsx({ [classes.card]: true, [classes.cardActive]: !disabled })}
         >
             <Collapse in={forceOpen || testPanelExpanded} timeout="auto">
                 <Grid container spacing={1}>

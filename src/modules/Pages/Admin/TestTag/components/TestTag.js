@@ -20,7 +20,6 @@ const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
     formControl: {
-        margin: theme.spacing(1),
         minWidth: 120,
     },
     formSelect: {
@@ -38,6 +37,9 @@ const useStyles = makeStyles(theme => ({
     },
     toggleButtonMobile: {
         flex: 1,
+    },
+    header: {
+        paddingBottom: theme.spacing(2),
     },
 }));
 
@@ -94,7 +96,7 @@ const TestTag = ({
                 ...DEFAULT_FORM_VALUES,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
                 asset_department_owned_by: formOwnerId ?? undefined,
-                asset_type_id: asset?.asset_type?.asset_type ?? undefined,
+                asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
                 user_id: formValues?.user_id ?? undefined,
                 room_id: location?.formRoomId ?? undefined,
                 action_date: formValues?.action_date ?? today,
@@ -227,7 +229,11 @@ const TestTag = ({
                 locale={saveErrorLocale}
                 hideCancelButton
             />
-            <TestTagHeader departmentText={headerDepartmentText} requiredText={locale?.form?.requiredText ?? ''} />
+            <TestTagHeader
+                departmentText={headerDepartmentText}
+                requiredText={locale?.form?.requiredText ?? ''}
+                className={classes.header}
+            />
 
             <EventPanel
                 actions={actions}
