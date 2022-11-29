@@ -13,6 +13,11 @@ export const mutateObject = (data, key) => {
     return value;
 };
 
+export const mutateClearObject = (data, key) => {
+    delete data[key];
+    return undefined;
+};
+
 export const transformer = (originalFormValues, transformerRules) => {
     const immFormData = Immutable.fromJS(originalFormValues);
     const newFormData = immFormData.toJS();

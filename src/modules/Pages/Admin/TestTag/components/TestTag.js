@@ -44,22 +44,22 @@ const useStyles = makeStyles(theme => ({
 const testStatusEnum = statusEnum(locale);
 
 const DEFAULT_FORM_VALUES = {
-    asset_barcode: null, // TODO, what name are we using here - this or asset_id_displayed?
-    user_id: null,
-    asset_department_owned_by: null,
-    room_id: null,
-    asset_type_id: null,
-    action_date: null,
-    inspection_status: null,
-    inspection_device_id: null,
-    inspection_fail_reason: null,
-    inspection_notes: null,
-    inspection_date_next: null,
+    asset_id_displayed: undefined,
+    user_id: undefined,
+    asset_department_owned_by: undefined,
+    room_id: undefined,
+    asset_type_id: undefined,
+    action_date: undefined,
+    inspection_status: undefined,
+    inspection_device_id: undefined,
+    inspection_fail_reason: undefined,
+    inspection_notes: undefined,
+    inspection_date_next: undefined,
     isRepair: false,
-    repairer_name: null, // TODO, not needed for MVP
-    repairer_contact_details: null, // TODO, check name for API
+    // repairer_name: undefined, // TODO, not needed for MVP
+    repairer_contact_details: undefined,
     isDiscarded: false,
-    discard_reason: null,
+    discard_reason: undefined,
 };
 
 const TestTag = ({
@@ -92,16 +92,16 @@ const TestTag = ({
         (asset = {}, formValues = {}, location = {}) => {
             return {
                 ...DEFAULT_FORM_VALUES,
-                asset_barcode: asset?.asset_barcode ?? null,
-                asset_department_owned_by: formOwnerId ?? null,
-                asset_type_id: asset?.asset_type?.asset_type ?? null,
-                user_id: formValues?.user_id ?? null,
-                room_id: location?.formRoomId ?? null,
+                asset_id_displayed: asset?.asset_id_displayed ?? undefined,
+                asset_department_owned_by: formOwnerId ?? undefined,
+                asset_type_id: asset?.asset_type?.asset_type ?? undefined,
+                user_id: formValues?.user_id ?? undefined,
+                room_id: location?.formRoomId ?? undefined,
                 action_date: formValues?.action_date ?? today,
                 inspection_device_id:
                     formValues?.inspection_device_id !== -1
                         ? formValues?.inspection_device_id
-                        : initConfig?.inspection_devices?.[0].device_id ?? null,
+                        : initConfig?.inspection_devices?.[0].device_id ?? undefined,
             };
         },
         [formOwnerId, initConfig?.inspection_devices, today],
@@ -114,11 +114,14 @@ const TestTag = ({
 
     const [location, setLocation] = useLocation();
 
-    const headerDepartmentText = locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? '') ?? '';
-    const headerRequiredText = locale?.form?.requiredText ?? '';
+    const headerDepartmentText = React.useMemo(
+        () => locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? '') ?? '',
+        [initConfig],
+    );
 
     useEffect(() => {
-        if (!initConfigLoading && !!initConfig && !!initConfig?.user) {
+        if (!initConfigLoading && !!initConfig) {
+            // && !!initConfig?.user) {
             const newUserId = initConfig.user.user_id ?? 1; // TODO - remove this bodge when API fixed
             handleChange('user_id')(newUserId);
         }
@@ -224,7 +227,7 @@ const TestTag = ({
                 locale={saveErrorLocale}
                 hideCancelButton
             />
-            <TestTagHeader departmentText={headerDepartmentText} requiredText={headerRequiredText} />
+            <TestTagHeader departmentText={headerDepartmentText} requiredText={locale?.form?.requiredText ?? ''} />
 
             <EventPanel
                 actions={actions}

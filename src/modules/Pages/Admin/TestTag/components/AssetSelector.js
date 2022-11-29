@@ -21,11 +21,11 @@ const AssetSelector = ({ assetBarcode, assetsListLoading, assetList, assignCurre
     const onChangeHandler = React.useCallback(
         (event, newValue) => {
             if (typeof newValue === 'string') {
-                assignCurrentAsset({ asset_barcode: newValue, isNew: true });
+                assignCurrentAsset({ asset_id_displayed: newValue, isNew: true });
             } else if (newValue && newValue.inputValue) {
                 // Create a new value from the user input
                 assignCurrentAsset({
-                    asset_barcode: newValue.inputValue,
+                    asset_id_displayed: newValue.inputValue,
                     isNew: true,
                 });
             } else {
@@ -41,7 +41,7 @@ const AssetSelector = ({ assetBarcode, assetsListLoading, assetList, assignCurre
         if (params.inputValue !== '') {
             filtered.push({
                 inputValue: params.inputValue,
-                asset_barcode: locale.form.asset.addText(params.inputValue),
+                asset_id_displayed: locale.form.asset.addText(params.inputValue),
             });
         }
 
@@ -59,10 +59,10 @@ const AssetSelector = ({ assetBarcode, assetsListLoading, assetList, assignCurre
             return option.inputValue;
         }
         // Regular option
-        return `${option.asset_barcode ?? ''}`;
+        return `${option.asset_id_displayed ?? ''}`;
     }, []);
 
-    const renderOptionHandler = React.useCallback(option => option.asset_barcode, []);
+    const renderOptionHandler = React.useCallback(option => option.asset_id_displayed, []);
 
     const assetSearchHandler = React.useCallback(e => assetsSearch(e.target.value), []);
 

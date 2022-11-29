@@ -155,7 +155,7 @@ const LastTestPanel = ({
                     <ExpandMoreIcon />
                 </IconButton>
             }
-            classes={!disabled ? classes : {}}
+            className={!disabled ? classes.card : ''}
         >
             <Collapse in={forceOpen || testPanelExpanded} timeout="auto">
                 <Grid container spacing={1}>

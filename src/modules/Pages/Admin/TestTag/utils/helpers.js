@@ -19,7 +19,7 @@ export const isValidEventDate = (date, format) => {
     return result;
 };
 export const isValidNextTestDate = (inspection, passedValue, format) => {
-    const date = inspection?.inspection_date_next ?? null;
+    const date = inspection?.inspection_date_next ?? undefined;
     if (!!!date || isEmpty(date)) return false;
     if (inspection.inspection_status !== passedValue) return true;
 
@@ -41,14 +41,15 @@ export const isValidFailReason = (inspection, failedValue) =>
     inspection.inspection_status !== failedValue || !isEmpty(inspection.inspection_fail_reason);
 export const isValidInspection = (inspection, testStatusEnum) => {
     return (
-        inspection.inspection_status === null ||
-        (isValidTestingDeviceId(inspection.inspection_device_id) &&
+        inspection.inspection_status === undefined ||
+        (isValidRoomId(inspection.room_id) &&
+            isValidTestingDeviceId(inspection.inspection_device_id) &&
             (isValidNextTestDate(inspection.inspection_date_next, testStatusEnum.PASSED.value) ||
                 isValidFailReason(inspection, testStatusEnum.FAILED.value)))
     );
 };
 export const hasTestOrAction = currentValues =>
-    currentValues.inspection_status !== null || !!currentValues.isRepair || !!currentValues.isDiscarded;
+    currentValues.inspection_status !== undefined || !!currentValues.isRepair || !!currentValues.isDiscarded;
 export const isValidRepairDetails = repairDetails => !isEmpty(repairDetails);
 export const isValidRepair = repair => !!repair.isRepair && isValidRepairDetails(repair.repairer_contact_details);
 export const isValidDiscardedDetails = discardedDetails => !isEmpty(discardedDetails);
