@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { connect } from 'react-redux';
 import TestTag from '../components/TestTag';
 import { bindActionCreators } from 'redux';
