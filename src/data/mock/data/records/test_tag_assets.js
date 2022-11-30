@@ -24,7 +24,7 @@ export default [
             "asset_type_class": "",
             "asset_type_power_rating": "",
         },
-        "last_test": {
+        "last_inspection": {
             "test_status": "CURRENT",
             "test_device_id": 1,
             "test_device_model_name": "TESTER 620-1",
@@ -72,7 +72,7 @@ export default [
             "asset_type_class": "",
             "asset_type_power_rating": "",
         },
-        "last_test": {
+        "last_inspection": {
             "test_status": "CURRENT",
             "test_device_id": 1,
             "test_device_model_name": "TESTER 620-1",
@@ -120,7 +120,7 @@ export default [
             "asset_type_class": "",
             "asset_type_power_rating": "",
         },
-        "last_test": {
+        "last_inspection": {
             "test_status": "FAIL",
             "test_device_id": 1,
             "test_device_model_name": "TESTER 620-1",
@@ -168,7 +168,7 @@ export default [
             "asset_type_class": "",
             "asset_type_power_rating": "",
         },
-        "last_test": {
+        "last_inspection": {
             "test_status": "CURRENT",
             "test_device_id": 2,
             "test_device_model_name": "TESTER 665-2",
@@ -216,7 +216,7 @@ export default [
             "asset_type_class": "",
             "asset_type_power_rating": "",
         },
-        "last_test": {
+        "last_inspection": {
             "test_status": "CURRENT",
             "test_device_id": 2,
             "test_device_model_name": "TESTER 665-2",
@@ -264,7 +264,7 @@ export default [
             "asset_type_class": "",
             "asset_type_power_rating": "",
         },
-        "last_test": {
+        "last_inspection": {
             "test_status": "CURRENT",
             "test_device_id": 1,
             "test_device_model_name": "TESTER 620-1",
@@ -312,7 +312,7 @@ export default [
             "asset_type_class": "",
             "asset_type_power_rating": "",
         },
-        "last_test": {
+        "last_inspection": {
         },
         "repair_latest": {
             "Repair_latest_repairer_details": "",

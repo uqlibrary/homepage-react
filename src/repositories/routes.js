@@ -175,4 +175,4 @@ export const TEST_TAG_ROOM_API = floorId => ({
 // export const TEST_TAG_ASSET_TYPES_API = () => ({ apiUrl: 'test_and_tag/asset/type' });
 // export const TEST_TAG_TEST_DEVICES_API = () => ({ apiUrl: 'test_and_tag/devices/current' });
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });
-export const TEST_TAG_SAVE_INSPECTION = () => ({ apiUrl: '/test_and_tag/inspect' });
+export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });

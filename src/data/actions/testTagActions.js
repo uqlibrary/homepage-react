@@ -2,15 +2,11 @@ import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
 import {
     TEST_TAG_CONFIG_API,
-    // TEST_TAG_SITE_API,
     TEST_TAG_FLOOR_API,
     TEST_TAG_ROOM_API,
-    // TEST_TAG_ASSET_TYPES_API,
-    // TEST_TAG_TEST_DEVICES_API,
     TEST_TAG_ASSETS_API,
-    TEST_TAG_SAVE_INSPECTION,
+    TEST_TAG_ASSET_ACTION,
 } from 'repositories/routes';
-// import { throwFetchErrors } from 'helpers/general';
 
 export function loadConfig() {
     return dispatch => {
@@ -121,7 +117,7 @@ export function clearAssets() {
 export function saveInspection(request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_SAVING });
-        return post(TEST_TAG_SAVE_INSPECTION(), request)
+        return post(TEST_TAG_ASSET_ACTION(), request)
             .then(data => {
                 console.log('saveInspection', data);
                 dispatch({
