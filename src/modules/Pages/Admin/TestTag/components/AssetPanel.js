@@ -17,8 +17,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { debounce } from 'throttle-debounce';
 
 import { transformer } from '../utils/transformers';
+import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
 import InspectionPanel from './InspectionPanel';
-import LastTestPanel from './LastTestPanel';
+import LastInspectionPanel from './LastInspectionPanel';
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 
 import locale from '../testTag.locale';
@@ -88,7 +89,7 @@ const AssetPanel = ({
         if (isValid && !saveInspectionSaving) {
             const transformedData = transformer(
                 formValues,
-                locale.config.transformerRules(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
+                saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
             );
             console.log('saveForm', formValues, transformedData);
             actions.saveInspection(transformedData);
@@ -241,14 +242,14 @@ const AssetPanel = ({
                     </FormControl>
                 </Grid>
             </Grid>
-            <LastTestPanel
+            <LastInspectionPanel
                 asset={selectedAsset ?? {}}
                 currentLocation={location}
                 dateFormatPattern={locale.config.dateFormatDisplay}
-                disabled={!!!selectedAsset?.last_test?.test_status ?? true}
+                disabled={!!!selectedAsset?.last_inspection?.test_status ?? true}
                 forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
                 testStatusEnums={testStatusEnum}
-                locale={locale.form.lastTestPanel}
+                locale={locale.form.lastInspectionPanel}
             />
             <InspectionPanel
                 formValues={formValues}

@@ -51,7 +51,7 @@ const useTestPanelStyles = makeStyles(theme => ({
     },
 }));
 
-const LastTestPanel = ({
+const LastInspectionPanel = ({
     asset,
     currentLocation,
     dateFormatPattern,
@@ -60,7 +60,7 @@ const LastTestPanel = ({
     disabled = false,
     forceOpen = false,
 } = {}) => {
-    LastTestPanel.propTypes = {
+    LastInspectionPanel.propTypes = {
         asset: PropTypes.object.isRequired,
         currentLocation: PropTypes.object.isRequired,
         dateFormatPattern: PropTypes.string.isRequired,
@@ -73,7 +73,7 @@ const LastTestPanel = ({
     const {
         asset_status: assetStatus,
         last_location: lastLocation,
-        last_test: lastTest,
+        last_inspection: lastTest,
         asset_next_test_due_date: nextTestDate,
     } = asset;
     const didPass = lastTest?.test_status === testStatusEnums.CURRENT.value;
@@ -244,4 +244,4 @@ const LastTestPanel = ({
     );
 };
 
-export default React.memo(LastTestPanel);
+export default React.memo(LastInspectionPanel);
