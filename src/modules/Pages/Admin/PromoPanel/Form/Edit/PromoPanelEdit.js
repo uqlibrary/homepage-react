@@ -116,8 +116,6 @@ export const PromoPanelEdit = ({
 
             //         //     if (item.default_panels_for.length > 0) setIsDefault(true);
 
-            //         //     console.log('UserList', userlist);
-
             //         //     !userlist.includes(element.user_group) && userlist.push(element.user_group);
 
             //         //     if (schedule.length < 1) {
@@ -152,7 +150,6 @@ export const PromoPanelEdit = ({
             //         // });
             //     }
             const [userlist, schedulelist] = remapScheduleList(promoPanelList, promopanelid, setIsDefault);
-            console.log('USE EFFECT FIRED', userlist, schedulelist);
             setUserList(userlist);
             setScheduleList(schedulelist);
             // };
@@ -170,7 +167,6 @@ export const PromoPanelEdit = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelList]);
-    console.log('CURRENT PANEL', currentPanel);
     return (
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">

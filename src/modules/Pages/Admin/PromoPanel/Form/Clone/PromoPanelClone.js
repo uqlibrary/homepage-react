@@ -66,7 +66,6 @@ export const PromoPanelClone = ({
             const userlist = [];
             const schedule = [];
             setCurrentPanel(...promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`));
-            console.log(promoPanelList);
             promoPanelList.map(item => {
                 if (`${item.panel_id}` === `${promopanelid}`) {
                     if (item.default_panels_for.length > 0) {

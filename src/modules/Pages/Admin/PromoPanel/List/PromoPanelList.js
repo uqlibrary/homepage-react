@@ -23,6 +23,7 @@ export const PromoPanelList = ({
     promoPanelActionError,
     history,
     panelUpdated,
+    promoPanelSaving,
 
     // actions, spotlights, spotlightsLoading, spotlightsError, history
 }) => {
@@ -85,35 +86,54 @@ export const PromoPanelList = ({
                 history={history}
                 showAddButton
             />
-            <StandardCard title={'Current and scheduled panels'} customBackgroundColor="#F7F7F7">
-                <PromoPanelListGroupPanels
-                    actions={actions}
-                    isLoading={promoPanelUserTypesLoading}
-                    userPanelList={promoPanelUserTypeList}
-                    promoPanelList={promoPanelList}
-                    history={history}
-                    // deletePanel={deletePanel}
-                    // title="Current and scheduled panels"
-                    canEdit
-                    canClone
-                    canDelete
-                    knownGroups={knownGroups}
-                    panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
-                />
-            </StandardCard>
 
+            <PromoPanelListGroupPanels
+                actions={actions}
+                isLoading={promoPanelUserTypesLoading}
+                userPanelList={promoPanelUserTypeList}
+                promoPanelList={promoPanelList}
+                history={history}
+                // deletePanel={deletePanel}
+                // title="Current and scheduled panels"
+                canEdit
+                canClone
+                canDelete
+                promoPanelSaving={promoPanelSaving}
+                knownGroups={knownGroups}
+                panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
+            />
+            {/* Unallocated Panels */}
             <PromoPanelListPanels
                 actions={actions}
                 isLoading={promoPanelListLoading}
                 history={history}
                 panelList={promoPanelList}
-                // deletePanel={deletePanel}
-                title="Panel List"
+                title="Unallocated"
                 canEdit
                 canClone
                 canDelete
                 knownGroups={knownGroups}
                 panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
+                showCurrent={false}
+                showFilter={false}
+                showPast
+                hideAlloc
+            />
+            {/* Past Panels */}
+            <PromoPanelListPanels
+                actions={actions}
+                isLoading={promoPanelListLoading}
+                history={history}
+                panelList={promoPanelList}
+                title="Past Panels"
+                canEdit
+                canClone
+                canDelete
+                knownGroups={knownGroups}
+                panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
+                showCurrent={false}
+                showFilter={false}
+                showPast
             />
             <h1> Past Panels Coming soon</h1>
         </StandardPage>
@@ -131,6 +151,7 @@ PromoPanelList.propTypes = {
     promoPanelActionError: PropTypes.object,
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,
+    promoPanelSaving: PropTypes.bool,
     history: PropTypes.object,
 };
 

@@ -102,7 +102,6 @@ export const PromoPanelFormSchedules = ({
 
     // const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
     // const [scheduledGroups, setScheduledGroups] = useState(scheduledGroupNames);
-    console.log('Scheduled List', displayList);
 
     return (
         <>

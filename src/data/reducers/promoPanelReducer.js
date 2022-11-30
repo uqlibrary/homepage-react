@@ -30,6 +30,10 @@ const handlers = {
         ...state,
         queueLength: action.payload,
     }),
+    [actions.PROMOPANEL_DECREMENT_QUEUELENGTH]: state => ({
+        ...state,
+        queueLength: state.queueLength > 0 ? state.queueLength - 1 : 0,
+    }),
     [actions.PROMOPANEL_CLEAR]: () => ({
         ...initialState,
     }),
@@ -148,6 +152,7 @@ const handlers = {
         promoPanelLoading: false,
         promoPanelActionError: null,
         promoPanelSaving: false,
+        queueLength: 0,
     }),
     [actions.PROMOPANEL_CREATE_FAILED]: (state, action) => ({
         ...initialState,

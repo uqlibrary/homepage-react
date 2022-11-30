@@ -152,14 +152,10 @@ export const PromoPanelForm = ({
             setDisplayList,
             setSelectorGroupNames,
         );
-        console.log('INIT LISTS');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scheduledGroupNames, scheduledList]);
 
     React.useEffect(() => {
-        console.log('Current Panel Changed');
-        console.log(currentPanel);
-        console.log(scheduledList);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPanel]);
 
@@ -199,7 +195,6 @@ export const PromoPanelForm = ({
     const savePromoPanel = () => {
         const schedules = [];
         const defaults = [];
-        console.log('Saving Panel');
         // if (!isEdit) {
         if (values.scheduledList.length > 0) {
             values.scheduledList.map(item => {
@@ -208,6 +203,7 @@ export const PromoPanelForm = ({
                     panel_schedule_start_time: item.startDate,
                     panel_schedule_end_time: item.endDate,
                     existing: item.existing,
+                    dateChanged: item.dateChanged,
                 });
             });
         }
@@ -222,17 +218,17 @@ export const PromoPanelForm = ({
             panel_title: values.title,
             panel_content: values.content,
             panel_admin_notes: values.admin_notes,
-            // panel_schedule: schedules.length > 0 ? schedules : null,
-            // panel_default_groups: defaults.length > 0 ? defaults : null,
+            panel_schedule: !isEdit && schedules.length > 0 ? schedules : null,
+            panel_default_groups: !isEdit && defaults.length > 0 ? defaults : null,
         };
 
         setIsConfirmOpen(false);
         if (isEdit) {
             // actions.savePromoPanel(newValues).then(navigateToListPage());
             actions.savePromoPanel(newValues);
-            console.log('I should be in here', schedules, defaults);
             if (schedules.length > 0) {
                 schedules.map(schedule => {
+                    console.log('Mapping Schedule', schedule);
                     if (!schedule.existing) {
                         actions.saveUserTypePanelSchedule({
                             id: newValues.panel_id,
@@ -243,9 +239,12 @@ export const PromoPanelForm = ({
                             },
                         });
                     }
+                    if (!!schedule.dateChanged) {
+                        console.log('UPDATE THE SCHEDULE DATES HERE');
+                        actions.decrementQueueLength();
+                    }
                 });
             } else if (defaults.length > 0) {
-                console.log('THE DEFAULTS', defaults);
                 defaults.map(defaultItem => {
                     if (!defaultItem.existing) {
                         actions.saveDefaultUserTypePanel({ id: newValues.panel_id, usergroup: defaultItem.name });
@@ -310,14 +309,12 @@ export const PromoPanelForm = ({
     };
 
     const handleChange = prop => event => {
-        console.log('HANDLING CHANGE');
         let propValue;
         if (['is_default_panel'].includes(prop)) {
             propValue = event.target.checked ? 1 : 0;
         } else if (['start', 'end'].includes(prop)) {
             propValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
-            console.log('It changed here');
             propValue = !!event.target.value ? event.target.value : event.target.checked;
             // fake switch because istanbul doesnt block on an else if in this version :(
             switch (true) {
@@ -354,7 +351,9 @@ export const PromoPanelForm = ({
         });
         setDisplayList([...newSchedules]);
 
-        actions.updateScheduleQueuelength(newSchedules.filter(filter => !!!filter.existing).length);
+        actions.updateScheduleQueuelength(
+            newSchedules.filter(filter => !!!filter.existing || !!filter.dateChanged).length,
+        );
     };
 
     const editPanelGroupSchedule = idx => {
@@ -367,11 +366,10 @@ export const PromoPanelForm = ({
         setIsEditingDate(false);
     };
     const handleSaveGroupDate = (idx, dateRange) => {
-        saveGroupDate(idx, dateRange, displayList, setDisplayList, setIsEditingDate);
+        saveGroupDate(idx, dateRange, displayList, setDisplayList, setIsEditingDate, actions);
     };
     const clearForm = () => {
         // actions.clearPromoUpdatedStatus();
-        console.log('Values beforehand are:', values);
         setValues({
             ...defaults,
             admin_notes: '',
@@ -381,8 +379,6 @@ export const PromoPanelForm = ({
             scheduledList: ['a'],
             defaultList: ['b'],
         });
-        console.log("I've updated the values");
-        console.log('Values therefore are:', values);
         // initLists(
         //     scheduledList,
         //     scheduledGroupNames,
@@ -393,8 +389,6 @@ export const PromoPanelForm = ({
         //     setDisplayList,
         //     setSelectorGroupNames,
         // );
-
-        console.log('Values here', values);
     };
 
     const addNewPanel = () => {
@@ -403,9 +397,7 @@ export const PromoPanelForm = ({
 
         // scrollToTopOfPage();
     };
-
-    console.log('DISPLAYLIST', displayList);
-
+    console.log('Display List', displayList);
     return (
         <>
             <StandardCard title={locale.editPage.Title(isEdit, isClone)}>

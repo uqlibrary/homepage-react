@@ -22,6 +22,7 @@ export const PromoPanelAdd = ({
     promoPanelSaving,
     history,
     panelUpdated,
+    queueLength,
 }) => {
     const defaults = {
         id: '',
@@ -87,7 +88,8 @@ export const PromoPanelAdd = ({
                     actions={actions}
                     history={history}
                     knownGroups={knownGroups}
-                    updated={panelUpdated}
+                    panelUpdated={panelUpdated}
+                    queueLength={queueLength}
                 />
             </section>
         </StandardPage>
@@ -107,6 +109,7 @@ PromoPanelAdd.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
+    queueLength: PropTypes.number,
 };
 
 export default PromoPanelAdd;

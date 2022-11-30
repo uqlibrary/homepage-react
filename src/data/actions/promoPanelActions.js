@@ -19,6 +19,11 @@ export function clearPromoUpdatedStatus() {
         dispatch({ type: actions.CLEAR_PROMO_UPDATED_STATUS });
     };
 }
+export function decrementQueueLength() {
+    return dispatch => {
+        dispatch({ type: actions.PROMOPANEL_DECREMENT_QUEUELENGTH });
+    };
+}
 // Actions for Single Promo Panel Retrieval
 export function getAssignedPromoPanel() {
     return dispatch => {
@@ -124,8 +129,6 @@ export const savePromoPanel = request => {
         dispatch({ type: actions.PROMOPANEL_SAVING });
         return post(PROMOPANEL_UPDATE_API({ id: request.panel_id }), request)
             .then(data => {
-                console.log('Save Successful');
-                // console.log('REQUEST INFORMATION', request);
                 dispatch({
                     type: actions.PROMOPANEL_SAVE_SUCCESS,
                     payload: data,
@@ -140,7 +143,6 @@ export const savePromoPanel = request => {
     };
 };
 export const saveUserTypePanel = request => {
-    console.log('SAVING USER TYPE PANEL');
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_SAVING });
         return post(PROMOPANEL_UPDATE_USERTYPE({ id: request.id, usergroup: request.usergroup }), request)
@@ -226,21 +228,20 @@ export const deletePanel = panelID => {
 };
 
 export const unschedulePanel = scheduleID => {
-    console.log('REMOVE SCHEDULE', scheduleID);
     return async dispatch => {
-        dispatch({ type: actions.PROMOPANEL_UNSCHEDULING });
+        dispatch({ type: actions.PROMOPANEL_SCHEDULING });
 
         try {
             const response = await destroy(PROMOPANEL_UNSCHEDULE_API({ id: scheduleID }));
             dispatch({
-                type: actions.PROMOPANEL_DELETE_SUCCESS,
+                type: actions.PROMOPANEL_SCHEDULE_SUCCESS,
                 payload: [],
             });
 
             return Promise.resolve(response.data);
         } catch (e) {
             dispatch({
-                type: actions.PROMOPANEL_DELETE_FAILED,
+                type: actions.PROMOPANEL_SCHEDULE_FAILED,
                 payload: e,
             });
 

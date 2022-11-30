@@ -155,6 +155,7 @@ export const PromoPanelListPanels = ({
     panelList,
     knownGroups,
     showBulkDelete,
+    showFilter,
     deletePanel,
     title,
     canEdit,
@@ -163,6 +164,9 @@ export const PromoPanelListPanels = ({
     headertag,
     panelError,
     history,
+    showCurrent,
+    showPast,
+    hideAlloc,
 }) => {
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -179,8 +183,19 @@ export const PromoPanelListPanels = ({
     const [filteredPanels, setFilteredPanels] = React.useState(panelList);
 
     React.useEffect(() => {
-        setFilteredPanels(panelList);
-    }, [panelList]);
+        console.log('USE EFFECT PANEL LIST', panelList);
+        let filteredList = panelList;
+        if (hideAlloc) {
+            filteredList = panelList.filter(item => item.default_panels_for.length < 1 && item.panel_schedule < 1);
+        }
+        if (!hideAlloc && showPast) {
+            filteredList = panelList.filter(item => {});
+        }
+        console.log('PANEL LIST AFTER FILTER', filteredList);
+        setFilteredPanels(filteredList);
+    }, [panelList, hideAlloc, showPast]);
+
+    React.useEffect(() => {}, [filteredPanels]);
 
     const classes = useStyles2();
     const rowMarker = 0;
@@ -334,37 +349,40 @@ export const PromoPanelListPanels = ({
                 additionalInformation={panelError}
             />
             <StandardCard title={title} customBackgroundColor="#F7F7F7">
-                <Grid container alignItems={'flex-end'} style={{ marginBottom: 10 }}>
-                    <Grid item xs={1} style={{ paddingBottom: 5 }}>
-                        Filter By:
+                {!!showFilter && (
+                    <Grid container alignItems={'flex-end'} style={{ marginBottom: 10 }}>
+                        <Grid item xs={1} style={{ paddingBottom: 5 }}>
+                            Filter By:
+                        </Grid>
+                        <Grid item xs={4}>
+                            {/* filter start */}
+                            <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
+                                <InputLabel id="group-selector">Filter by group</InputLabel>
+                                <Select
+                                    labelId="group-selector"
+                                    id="demo-multiple-checkbox"
+                                    label="Filter by group"
+                                    // InputLabel="testing"
+                                    multiple
+                                    value={selectorGroupNames}
+                                    onChange={handleGroupFilterChange}
+                                    renderValue={selected => {
+                                        return selected.join(', ');
+                                    }}
+                                >
+                                    {knownGroups.map(group => (
+                                        <MenuItem key={group.group} value={group.group}>
+                                            <Checkbox checked={selectorGroupNames.indexOf(group.group) > -1} />
+                                            <ListItemText primary={`${group.name}`} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            {/* filter end */}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                        {/* filter start */}
-                        <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
-                            <InputLabel id="group-selector">Filter by group</InputLabel>
-                            <Select
-                                labelId="group-selector"
-                                id="demo-multiple-checkbox"
-                                label="Filter by group"
-                                // InputLabel="testing"
-                                multiple
-                                value={selectorGroupNames}
-                                onChange={handleGroupFilterChange}
-                                renderValue={selected => {
-                                    return selected.join(', ');
-                                }}
-                            >
-                                {knownGroups.map(group => (
-                                    <MenuItem key={group.group} value={group.group}>
-                                        <Checkbox checked={selectorGroupNames.indexOf(group.group) > -1} />
-                                        <ListItemText primary={`${group.name}`} />
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        {/* filter end */}
-                    </Grid>
-                </Grid>
+                )}
+
                 {!!deleteActive && showBulkDelete && (
                     <div
                         data-testid={'headerRow-panelList'}
@@ -550,6 +568,7 @@ PromoPanelListPanels.propTypes = {
     panelList: PropTypes.array,
     title: PropTypes.string,
     showBulkDelete: PropTypes.bool,
+    showFilter: PropTypes.bool,
     canEdit: PropTypes.bool,
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
@@ -562,12 +581,16 @@ PromoPanelListPanels.propTypes = {
     actions: PropTypes.any,
     deletePanel: PropTypes.func,
     panelError: PropTypes.string,
+    showCurrent: PropTypes.bool,
+    showPast: PropTypes.bool,
+    hideAlloc: PropTypes.bool,
 };
 
 PromoPanelListPanels.defaultProps = {
     panelList: [],
-    footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
-    alertOrder: false, // what order should we sort the alerts in? false means unspecified
+    showCurrent: true,
+    showPast: true,
+    hideAlloc: false,
 };
 
 export default PromoPanelListPanels;

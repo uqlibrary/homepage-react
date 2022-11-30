@@ -10,14 +10,12 @@ export const initLists = (
     setDisplayList,
     setSelectorGroupNames,
 ) => {
-    console.log('I AM IN INIT LISTS');
     if (scheduledList.length > 0) {
         setValues({
             ...values,
             scheduledList: isDefaultPanel ? [] : scheduledList,
             defaultList: isDefaultPanel ? scheduledList : [],
         });
-        console.log('I AM SETTING DISPLAY LIST');
         setDisplayList(scheduledList);
     }
     if (scheduledGroupNames.length > 0) {
@@ -35,27 +33,21 @@ export const initLists = (
 
 export const filterPanelList = (panels, groups = [], filterByGroup = false) => {
     const filtered = [];
-    console.log('filterByGroup', filterByGroup);
     panels.map(panel => {
         let found = false;
         if (filterByGroup) {
-            console.log('CHECK', groups, panel.usergroup_group);
             if (groups.includes(panel.usergroup_group)) {
                 found = true;
-                console.log('found', groups, panel.usergroup_group_name);
             }
         } else {
             if (panel.default_panels_for && panel.default_panels_for.length > 0) {
-                console.log('It should be filtering');
                 panel.default_panels_for.map(defaultPanel => {
-                    console.log("Here's the loop", groups, defaultPanel);
                     if (groups.includes(defaultPanel.usergroup_group)) {
                         found = true;
                     }
                 });
             } else {
                 if (panel.panel_schedule && panel.panel_schedule.length > 0) {
-                    // console.log('Checking Scheduled');
                     panel.panel_schedule.map(item => {
                         if (groups.includes(item.usergroup_group)) {
                             found = true;
@@ -88,7 +80,6 @@ export const addSchedule = (
     const allocatedList = [...displayList];
     selectorGroupNames.map(item => {
         if (!!!values.is_default_panel && !!mode.validate) {
-            console.log('Full Promo Panel User Type List', fullPromoPanelUserTypeList);
             fullPromoPanelUserTypeList.map(schedules => {
                 if (schedules.usergroup_group === item) {
                     schedules.scheduled_panels &&
@@ -99,7 +90,6 @@ export const addSchedule = (
                                 (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(values.start)) &&
                                     moment(schedule.panel_schedule_start_time).isSameOrBefore(moment(values.end)))
                             ) {
-                                console.log('A CONFLICT WAS FOUND');
                                 setConfirmationMessage(
                                     locale.form.scheduleConflict.alert(
                                         item,
@@ -109,7 +99,7 @@ export const addSchedule = (
                                     ),
                                 );
                                 isValid = false;
-                            } else console.log('A CONFLICT WAS NOT FOUND');
+                            }
                         });
                 }
             });
@@ -123,7 +113,6 @@ export const addSchedule = (
                     }
                 });
             }
-            console.log('Allocated List', allocatedList);
             if (!values.is_default_panel && allocatedList.length > 0) {
                 allocatedList.map(alloc => {
                     if (
@@ -132,8 +121,6 @@ export const addSchedule = (
                         moment(values.end).isSame(moment(alloc.endDate))
                     ) {
                         push = false;
-                    } else {
-                        console.log('They dont match', values.start, alloc.startDate);
                     }
                 });
             }
@@ -165,19 +152,26 @@ export const addSchedule = (
                 //     // sent to API to add schedule.
                 // }
                 // // END RETHINKING
-                actions.updateScheduleQueuelength(allocatedList.filter(filter => !!!filter.existing).length);
-                console.log('QUEUE ALLOCATED LIST', allocatedList);
+                actions.updateScheduleQueuelength(
+                    allocatedList.filter(filter => !!!filter.existing || !!filter.dateChanged).length,
+                );
             }
         }
     });
     return [isValid, allocatedList];
 };
 
-export const saveGroupDate = (idx, dateRange, displayList, setDisplayList, setIsEditingDate) => {
+export const saveGroupDate = (idx, dateRange, displayList, setDisplayList, setIsEditingDate, actions) => {
     const newDisplayList = [...displayList];
+
     newDisplayList[idx].startDate = dateRange.start;
     newDisplayList[idx].endDate = dateRange.end;
+    newDisplayList[idx].dateChanged = true;
+    console.log('THE NEW DISPLAY LIST IS:', newDisplayList);
     setDisplayList(newDisplayList);
+    actions.updateScheduleQueuelength(
+        newDisplayList.filter(filter => !!!filter.existing || !!filter.dateChanged).length,
+    );
     setIsEditingDate(false);
 };
 
@@ -195,6 +189,7 @@ export const remapScheduleList = (scheduleList, promopanelid, setIsDefault) => {
                         endDate: element.panel_schedule_end_time,
                         groupNames: element.usergroup_group,
                         existing: true,
+                        dateChanged: false,
                     });
                 });
             } else {
@@ -207,6 +202,7 @@ export const remapScheduleList = (scheduleList, promopanelid, setIsDefault) => {
                             endDate: panelSchedule.panel_schedule_end_time,
                             groupNames: element.usergroup_group,
                             existing: true,
+                            dateChanged: false,
                         });
                     });
                 });

@@ -78,10 +78,10 @@ export const PromoPanelAddSchedule = ({
     // handleSaveGroupDate,
     // scheduleChangeIndex,
 }) => {
-    console.log('Panel List in Add Schedule', promoPanelList);
     const classes = useStyles();
 
     const [selectedPanel, setSelectedPanel] = useState('');
+    const [AvailablePanels, setAvailablePanels] = useState(promoPanelList);
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -93,6 +93,17 @@ export const PromoPanelAddSchedule = ({
     };
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(defaultEndDate);
+
+    useEffect(() => {
+        const available = [];
+        promoPanelList.length > 0 &&
+            promoPanelList.map(item => {
+                if (item.default_panels_for.length < 1) {
+                    available.push(item);
+                }
+            });
+        setAvailablePanels(available);
+    }, [promoPanelList]);
 
     useEffect(() => {
         setStartDate(defaultStartDate);
@@ -129,7 +140,6 @@ export const PromoPanelAddSchedule = ({
         // Check if there's a conflict here.
         setShowError(false);
         setErrorMessage('');
-        console.log('USER PANEL LIST CHECK', userPanelList);
         if (groupName && groupName !== '') {
             userPanelList.map(user => {
                 if (user.usergroup_group === groupName) {
@@ -189,7 +199,7 @@ export const PromoPanelAddSchedule = ({
                                     // renderValue={selected => selected.join(', ')}
                                     MenuProps={MenuProps}
                                 >
-                                    {promoPanelList.map(item => (
+                                    {AvailablePanels.map(item => (
                                         <MenuItem key={item.panel_id} value={item.panel_id}>
                                             <ListItemText primary={item.panel_title} />
                                         </MenuItem>
@@ -224,13 +234,13 @@ export const PromoPanelAddSchedule = ({
                                 value={endDate}
                                 label="End date"
                                 onChange={handleDateChange('end')}
-                                minDate={endDate}
                                 format="DD/MM/YYYY HH:mm a"
+                                minDate={startDate}
                                 showTodayButton
                                 todayLabel={'Today'}
                                 autoOk
                                 KeyboardButtonProps={{
-                                    'aria-label': 'Start Date',
+                                    'aria-label': 'End Date',
                                 }}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
