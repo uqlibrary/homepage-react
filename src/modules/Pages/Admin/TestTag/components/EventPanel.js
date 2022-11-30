@@ -72,6 +72,7 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                     <ExpandMoreIcon />
                 </IconButton>
             }
+            noPadding={!eventExpanded}
         >
             <Collapse in={eventExpanded} timeout="auto">
                 <Grid container spacing={3}>
