@@ -1,7 +1,7 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    assetsList: null,
+    assetsList: [],
     assetsListLoading: false,
     assetsListError: null,
 };

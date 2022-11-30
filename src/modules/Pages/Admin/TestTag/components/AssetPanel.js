@@ -68,7 +68,7 @@ const AssetPanel = ({
     const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
-    const [formAssetList, setFormAssetList] = useState(assetsList ?? []);
+    const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = useState(false);
 
     const debounceAssetsSearch = React.useRef(
@@ -85,6 +85,7 @@ const AssetPanel = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
+
     const saveForm = () => {
         if (isValid && !saveInspectionSaving) {
             const transformedData = transformer(
@@ -154,8 +155,9 @@ const AssetPanel = ({
                                     {...locale.form.asset.assetId}
                                     required
                                     error={!isValidAssetId(formValues.asset_id_displayed)}
-                                    ref={focusElementRef}
+                                    inputRef={focusElementRef}
                                     variant="standard"
+                                    onFocus={() => formAssetList?.length > 0 && setIsOpen(true)}
                                     InputLabelProps={{ shrink: true }}
                                     InputProps={{
                                         ...params.InputProps,

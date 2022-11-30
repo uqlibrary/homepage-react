@@ -160,13 +160,18 @@ const TestTag = ({
 
     const assetIdElementRef = React.useRef();
     const resetForm = () => {
-        assignCurrentAsset({});
+        actions.clearAssets();
         actions.clearSaveInspection();
-        if (!!assetIdElementRef.current) {
-            scrollToTopOfPage();
+        scrollToTopOfPage();
+        assignCurrentAsset({});
+    };
+    useEffect(() => {
+        if (formValues?.asset_id_displayed === undefined && assetIdElementRef.current && !!initConfig) {
             assetIdElementRef.current.focus();
         }
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formValues?.asset_id_displayed]);
+
     const hideSuccessMessage = () => {
         hideSaveSuccessConfirmation();
         resetForm();
