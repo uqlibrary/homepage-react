@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { mutateObject, mutateClearObject } from '../utils/transformers';
 
 export const saveInspectionTransformer = (passValue, failValue) => ({

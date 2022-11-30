@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'throttle-debounce';

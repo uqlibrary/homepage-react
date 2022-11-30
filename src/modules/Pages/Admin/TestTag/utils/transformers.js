@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import Immutable from 'immutable';
 
 export const mutateKey = (data, oldKey, newKey) => {
