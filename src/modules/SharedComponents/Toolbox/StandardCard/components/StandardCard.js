@@ -76,7 +76,7 @@ export class Cards extends Component {
             style = {},
             headerAction,
             variant,
-            className,
+            className = '',
         } = this.props;
         const customBG = !!this.props.customBackgroundColor
             ? { backgroundColor: this.props.customBackgroundColor }
@@ -105,7 +105,7 @@ export class Cards extends Component {
             <Card
                 data-testid={standardCardId}
                 id={standardCardId}
-                className={`StandardCard ${className}`}
+                className={`${classes.card} StandardCard ${className}`}
                 style={{ ...customBG, ...fullHeight, ...style }}
                 variant={variant ?? 'elevation'}
             >
