@@ -120,6 +120,7 @@ export const PromoPanelForm = ({
     const [selectorGroupNames, setSelectorGroupNames] = React.useState(scheduledGroupNames);
     const [scheduleChangeIndex, setScheduleChangeIndex] = useState(null);
     const [scheduleGroupIndex, setScheduleGroupIndex] = useState(null);
+    const [panelScheduleId, setPanelScheduleId] = useState(null);
     const [isEditingDate, setIsEditingDate] = useState(false);
     const [editDate, setEditDate] = useState({ start: null, end: null });
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -370,6 +371,7 @@ export const PromoPanelForm = ({
         console.log('ZZZ THE DISPLAY LIST INDEX:', displayList[idx]);
         setScheduleChangeIndex(idx);
         setScheduleGroupIndex(displayList[idx].groupNames);
+        setPanelScheduleId(displayList[idx].id);
         setEditDate({ start: displayList[idx].startDate, end: displayList[idx].endDate });
         setIsEditingDate(true);
     };
@@ -706,6 +708,10 @@ export const PromoPanelForm = ({
                 handleCloseGroupDate={handleCloseGroupDate}
                 handleSaveGroupDate={handleSaveGroupDate}
                 fullPromoPanelUserTypeList={fullPromoPanelUserTypeList}
+                setConfirmationMessage={setConfirmationMessage}
+                setIsConfirmOpen={setIsConfirmOpen}
+                setConfirmationMode={setConfirmationMode}
+                panelScheduleId={panelScheduleId}
             />
             <PromoPanelFormConfirmation
                 confirmationMode={confirmationMode}

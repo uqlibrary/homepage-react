@@ -119,9 +119,9 @@ export const PromoPanelAddSchedule = ({
                     user.scheduled_panels.map(panel => {
                         if (
                             (moment(startDate).isSameOrAfter(moment(panel.panel_schedule_start_time)) &&
-                                moment(startDate).isSameOrBefore(moment(panel.panel_schedule_end_time))) ||
+                                moment(startDate).isBefore(moment(panel.panel_schedule_end_time))) ||
                             (moment(panel.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
-                                moment(panel.panel_schedule_start_time).isSameOrBefore(moment(endDate)))
+                                moment(panel.panel_schedule_start_time).isBefore(moment(endDate)))
                         ) {
                             setErrorMessage('A schedule already exists within these times', panel);
                             setShowError(true);
@@ -146,9 +146,9 @@ export const PromoPanelAddSchedule = ({
                     user.scheduled_panels.map(panel => {
                         if (
                             (moment(startDate).isSameOrAfter(moment(panel.panel_schedule_start_time)) &&
-                                moment(startDate).isSameOrBefore(moment(panel.panel_schedule_end_time))) ||
+                                moment(startDate).isBefore(moment(panel.panel_schedule_end_time))) ||
                             (moment(panel.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
-                                moment(panel.panel_schedule_start_time).isSameOrBefore(moment(endDate)))
+                                moment(panel.panel_schedule_start_time).isBefore(moment(endDate)))
                         ) {
                             setErrorMessage('A schedule already exists within these times');
                             setShowError(true);

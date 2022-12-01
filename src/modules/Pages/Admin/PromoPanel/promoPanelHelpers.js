@@ -86,9 +86,9 @@ export const addSchedule = (
                         schedules.scheduled_panels.map(schedule => {
                             if (
                                 (moment(values.start).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-                                    moment(values.start).isSameOrBefore(moment(schedule.panel_schedule_end_time))) ||
+                                    moment(values.start).isBefore(moment(schedule.panel_schedule_end_time))) ||
                                 (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(values.start)) &&
-                                    moment(schedule.panel_schedule_start_time).isSameOrBefore(moment(values.end)))
+                                    moment(schedule.panel_schedule_start_time).isBefore(moment(values.end)))
                             ) {
                                 setConfirmationMessage(
                                     locale.form.scheduleConflict.alert(

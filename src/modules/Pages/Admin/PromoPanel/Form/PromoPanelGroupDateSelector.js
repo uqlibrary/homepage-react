@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import parse from 'html-react-parser';
 import Button from '@material-ui/core/Button';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 // import { formatDate } from '../Spotlights/spotlighthelpers';
 
 const moment = require('moment');
@@ -60,6 +61,10 @@ export const PromoPanelGroupDateSelector = ({
     scheduleChangeIndex,
     scheduleGroupIndex,
     fullPromoPanelUserTypeList,
+    setConfirmationMessage,
+    setIsConfirmOpen,
+    setConfirmationMode,
+    panelScheduleId,
 }) => {
     const classes = useStyles();
 
@@ -82,31 +87,38 @@ export const PromoPanelGroupDateSelector = ({
     };
 
     const handleGroupDateSave = () => {
-        // Maybe do it here?
-        // Check for conflict here.
         let isValid = true;
-        console.log('ZZZ GROUP INDEX', scheduleGroupIndex);
         fullPromoPanelUserTypeList.map(schedules => {
             if (schedules.usergroup_group === scheduleGroupIndex) {
                 schedules.scheduled_panels &&
                     schedules.scheduled_panels.map(schedule => {
-                        if (
-                            (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-                                moment(startDate).isSameOrBefore(moment(schedule.panel_schedule_end_time))) ||
-                            (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
-                                moment(schedule.panel_schedule_start_time).isSameOrBefore(moment(endDate)))
-                        ) {
-                            isValid = false;
+                        if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
+                            if (
+                                (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
+                                    moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
+                                (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
+                                    moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
+                            ) {
+                                isValid = false;
+                                setConfirmationMessage(
+                                    locale.form.scheduleConflict.alert(
+                                        scheduleGroupIndex,
+                                        schedule.panel_title,
+                                        schedule.panel_schedule_start_time,
+                                        schedule.panel_schedule_end_time,
+                                    ),
+                                );
+                            }
                         }
                     });
             }
         });
 
-        // end Check for Conflict.
         if (isValid) {
             handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
         } else {
-            alert("THERE'S A SCHEDULE CONFLICT");
+            setConfirmationMode('schedule');
+            setIsConfirmOpen(true);
         }
     };
 
@@ -200,6 +212,10 @@ PromoPanelGroupDateSelector.propTypes = {
     handleCloseGroupDate: PropTypes.func,
     handleSaveGroupDate: PropTypes.func,
     fullPromoPanelUserTypeList: PropTypes.array,
+    setConfirmationMessage: PropTypes.func,
+    setIsConfirmOpen: PropTypes.func,
+    setConfirmationMode: PropTypes.func,
+    panelScheduleId: PropTypes.number,
 };
 
 PromoPanelGroupDateSelector.defaultProps = {
