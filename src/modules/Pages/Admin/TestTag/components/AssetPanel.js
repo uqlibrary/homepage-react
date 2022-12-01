@@ -249,7 +249,7 @@ const AssetPanel = ({
                 asset={selectedAsset ?? {}}
                 currentLocation={location}
                 dateFormatPattern={locale.config.dateFormatDisplay}
-                disabled={!!!selectedAsset?.last_inspection?.test_status ?? true}
+                disabled={!!!selectedAsset?.last_inspection?.inspect_status ?? true}
                 forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
                 testStatusEnums={testStatusEnum}
                 locale={locale.form.lastInspectionPanel}
