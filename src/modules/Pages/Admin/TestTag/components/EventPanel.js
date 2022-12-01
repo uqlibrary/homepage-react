@@ -24,7 +24,16 @@ import locale from '../testTag.locale';
 const moment = require('moment');
 const inputLabelProps = { shrink: true };
 
-const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, classes, isMobileView } = {}) => {
+const EventPanel = ({
+    actions,
+    location,
+    setLocation,
+    actionDate,
+    handleChange,
+    classes,
+    hasInspection = false,
+    isMobileView,
+} = {}) => {
     EventPanel.propTypes = {
         actions: PropTypes.any.isRequired,
         location: PropTypes.object.isRequired,
@@ -32,8 +41,10 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
         actionDate: PropTypes.any,
         handleChange: PropTypes.func.isRequired,
         classes: PropTypes.object.isRequired,
+        hasInspection: PropTypes.bool,
         isMobileView: PropTypes.bool,
     };
+    console.log('hasInspection', hasInspection);
 
     const [eventExpanded, setEventExpanded] = useState(true);
 
@@ -168,8 +179,12 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                                     <TextField
                                         {...params}
                                         {...locale.form.event.location.building}
-                                        required
-                                        error={location.formSiteId !== -1 && location.formBuildingId === -1}
+                                        required={hasInspection}
+                                        error={
+                                            hasInspection &&
+                                            location.formSiteId !== -1 &&
+                                            location.formBuildingId === -1
+                                        }
                                         variant="standard"
                                         InputLabelProps={inputLabelProps}
                                         InputProps={{
@@ -214,12 +229,13 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                                     <TextField
                                         {...params}
                                         {...locale.form.event.location.floor}
+                                        required={hasInspection}
                                         error={
+                                            hasInspection &&
                                             location.formSiteId !== -1 &&
                                             location.formBuildingId !== -1 &&
                                             location.formFloorId === -1
                                         }
-                                        required
                                         variant="standard"
                                         InputLabelProps={inputLabelProps}
                                         InputProps={{
@@ -257,8 +273,9 @@ const EventPanel = ({ actions, location, setLocation, actionDate, handleChange, 
                                     <TextField
                                         {...params}
                                         {...locale.form.event.location.room}
-                                        required
+                                        required={hasInspection}
                                         error={
+                                            hasInspection &&
                                             location.formSiteId !== -1 &&
                                             location.formBuildingId !== -1 &&
                                             location.formFloorId !== -1 &&

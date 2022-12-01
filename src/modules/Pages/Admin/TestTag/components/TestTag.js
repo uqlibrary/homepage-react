@@ -248,6 +248,7 @@ const TestTag = ({
                 actionDate={formValues?.action_date ?? ''}
                 handleChange={handleChange}
                 classes={classes}
+                hasInspection={formValues?.inspection_status !== undefined}
                 isMobileView={isMobileView}
             />
 
