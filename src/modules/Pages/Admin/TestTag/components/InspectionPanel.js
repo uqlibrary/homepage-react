@@ -130,7 +130,7 @@ const InspectionPanel = ({
                                 size={isMobileView ? 'large' : 'small'}
                                 defaultChecked={false}
                                 onChange={(_, child) => {
-                                    handleChange('inspection_status')(child);
+                                    handleChange('inspection_status')(child ?? undefined);
                                 }}
                                 style={{ display: 'flex' }}
                             >
