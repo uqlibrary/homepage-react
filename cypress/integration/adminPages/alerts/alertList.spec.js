@@ -371,6 +371,7 @@ describe('Alert Admin List page', () => {
             // the error dialog doesnt appear
             cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
             // subsequent deletes also succeed
+            cy.wait(1000);
             cy.get('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]').check();
             cy.get('[data-testid="headerRow-past"] span span').contains('1 alert selected');
             cy.get('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]').check();
