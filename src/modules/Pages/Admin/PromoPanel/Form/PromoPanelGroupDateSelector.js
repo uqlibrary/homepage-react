@@ -58,6 +58,8 @@ export const PromoPanelGroupDateSelector = ({
     handleCloseGroupDate,
     handleSaveGroupDate,
     scheduleChangeIndex,
+    scheduleGroupIndex,
+    fullPromoPanelUserTypeList,
 }) => {
     const classes = useStyles();
 
@@ -80,7 +82,32 @@ export const PromoPanelGroupDateSelector = ({
     };
 
     const handleGroupDateSave = () => {
-        handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
+        // Maybe do it here?
+        // Check for conflict here.
+        let isValid = true;
+        console.log('ZZZ GROUP INDEX', scheduleGroupIndex);
+        fullPromoPanelUserTypeList.map(schedules => {
+            if (schedules.usergroup_group === scheduleGroupIndex) {
+                schedules.scheduled_panels &&
+                    schedules.scheduled_panels.map(schedule => {
+                        if (
+                            (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
+                                moment(startDate).isSameOrBefore(moment(schedule.panel_schedule_end_time))) ||
+                            (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
+                                moment(schedule.panel_schedule_start_time).isSameOrBefore(moment(endDate)))
+                        ) {
+                            isValid = false;
+                        }
+                    });
+            }
+        });
+
+        // end Check for Conflict.
+        if (isValid) {
+            handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
+        } else {
+            alert("THERE'S A SCHEDULE CONFLICT");
+        }
     };
 
     return (
@@ -169,8 +196,10 @@ PromoPanelGroupDateSelector.propTypes = {
     defaultStartDate: PropTypes.any,
     defaultEndDate: PropTypes.any,
     scheduleChangeIndex: PropTypes.number,
+    scheduleGroupIndex: PropTypes.string,
     handleCloseGroupDate: PropTypes.func,
     handleSaveGroupDate: PropTypes.func,
+    fullPromoPanelUserTypeList: PropTypes.array,
 };
 
 PromoPanelGroupDateSelector.defaultProps = {
@@ -179,6 +208,7 @@ PromoPanelGroupDateSelector.defaultProps = {
     helpButtonLabel: 'Help',
     helpContent: 'test',
     scheduleChangeIndex: null,
+    scheduleGroupIndex: null,
 };
 
 export default PromoPanelGroupDateSelector;
