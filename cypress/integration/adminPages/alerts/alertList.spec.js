@@ -5,7 +5,7 @@ describe('Alert Admin List page', () => {
     const numRowsHiddenAsNoDatainfo = 1;
     beforeEach(() => {
         cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
-        cy.viewport(1300, 1000);
+        cy.viewport(1300, 1200);
     });
     it('displays a list of alerts to the authorised user', () => {
         cy.waitUntil(() => cy.get('[data-testid="admin-alerts-list-current-list"]').should('exist'));
@@ -277,7 +277,7 @@ describe('Alert Admin List page', () => {
     context('Alert Admin deletion', () => {
         beforeEach(() => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
-            cy.viewport(1300, 1000);
+            cy.viewport(1300, 1400);
         });
         it('the user can select an alert to delete', () => {
             // select one alert and every thing looks right
