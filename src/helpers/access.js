@@ -152,9 +152,7 @@ const canSeeWebContentAdminPages = account => {
     );
 };
 const canSeeTestTagAdminPages = account => {
-    return (
-        !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins')) // group.includes('lib_libapi_TestTagUsers'))
-    );
+    return !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_TestTagUsers'));
 };
 
 export const isSpotlightsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
