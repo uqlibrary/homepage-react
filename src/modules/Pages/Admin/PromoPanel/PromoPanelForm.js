@@ -199,6 +199,7 @@ export const PromoPanelForm = ({
         if (values.scheduledList.length > 0) {
             values.scheduledList.map(item => {
                 schedules.push({
+                    id: item.id,
                     user_groups: [item.groupNames],
                     panel_schedule_start_time: item.startDate,
                     panel_schedule_end_time: item.endDate,
@@ -241,7 +242,15 @@ export const PromoPanelForm = ({
                     }
                     if (!!schedule.dateChanged) {
                         console.log('UPDATE THE SCHEDULE DATES HERE');
-                        actions.decrementQueueLength();
+                        // actions.decrementQueueLength();
+                        actions.updateUserTypePanelSchedule({
+                            id: schedule.id,
+                            usergroup: schedule.user_groups[0],
+                            payload: {
+                                panel_schedule_start_time: schedule.panel_schedule_start_time,
+                                panel_schedule_end_time: schedule.panel_schedule_end_time,
+                            },
+                        });
                     }
                 });
             } else if (defaults.length > 0) {

@@ -73,6 +73,7 @@ export const PromoPanelClone = ({
                         item.default_panels_for.map(element => {
                             !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
                             schedule.push({
+                                id: element.panel_shedule_id,
                                 startDate: element.panel_schedule_start_time,
                                 endDate: element.panel_schedule_end_time,
                                 groupNames: element.usergroup_group,
@@ -86,6 +87,7 @@ export const PromoPanelClone = ({
                                 userlist.push(element.usergroup_group_name);
                             element.user_group_schedule.map(panelSchedule => {
                                 schedule.push({
+                                    id: panelSchedule.panel_shedule_id,
                                     startDate: panelSchedule.panel_schedule_start_time,
                                     endDate: panelSchedule.panel_schedule_end_time,
                                     groupNames: element.usergroup_group,

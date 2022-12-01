@@ -12,6 +12,7 @@ import {
     PROMOPANEL_DELETE_API,
     PROMOPANEL_ADD_SCHEDULE_API,
     PROMOPANEL_UNSCHEDULE_API,
+    PROMOPANEL_UPDATE_SCHEDULE_API,
 } from 'repositories/routes';
 
 export function clearPromoUpdatedStatus() {
@@ -189,6 +190,24 @@ export const saveUserTypePanelSchedule = request => {
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_SCHEDULING });
         return post(PROMOPANEL_ADD_SCHEDULE_API({ id: request.id, usergroup: request.usergroup }), request.payload)
+            .then(data => {
+                dispatch({
+                    type: actions.PROMOPANEL_SCHEDULE_SUCCESS,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.PROMOPANEL_SCHEDULE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+};
+export const updateUserTypePanelSchedule = request => {
+    return async dispatch => {
+        dispatch({ type: actions.PROMOPANEL_SCHEDULING });
+        return put(PROMOPANEL_UPDATE_SCHEDULE_API({ id: request.id, usergroup: request.usergroup }), request.payload)
             .then(data => {
                 dispatch({
                     type: actions.PROMOPANEL_SCHEDULE_SUCCESS,

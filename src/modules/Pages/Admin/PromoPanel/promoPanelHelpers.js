@@ -198,6 +198,7 @@ export const remapScheduleList = (scheduleList, promopanelid, setIsDefault) => {
                     !userlist.includes(element.usergroup_group_name) && userlist.push(element.usergroup_group_name);
                     element.user_group_schedule.map(panelSchedule => {
                         schedule.push({
+                            id: panelSchedule.panel_schedule_id,
                             startDate: panelSchedule.panel_schedule_start_time,
                             endDate: panelSchedule.panel_schedule_end_time,
                             groupNames: element.usergroup_group,
