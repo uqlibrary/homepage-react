@@ -77,8 +77,7 @@ const LastInspectionPanel = ({
         last_inspection: lastTest,
         asset_next_test_due_date: nextTestDate,
     } = asset;
-    const didPass = lastTest?.test_status === testStatusEnums.CURRENT.value;
-
+    const didPass = lastTest?.inspect_status === testStatusEnums.CURRENT.value;
     const theme = useTheme();
     const classes = useTestPanelStyles({ pass: didPass });
     const [testPanelExpanded, setTestPanelExpanded] = useState(!disabled);
@@ -168,7 +167,7 @@ const LastInspectionPanel = ({
                             {locale.testDateLabel}
                         </Typography>
                         <Typography component={'span'}>
-                            {!!lastTest?.test_date && moment(lastTest.test_date).format(dateFormatPattern)}
+                            {!!lastTest?.inspect_date && moment(lastTest.inspect_date).format(dateFormatPattern)}
                         </Typography>
                     </Grid>
                     <Grid container item xs={12}>
@@ -222,14 +221,14 @@ const LastInspectionPanel = ({
                             <Typography component={'p'} className={classes.pastTestLabel}>
                                 {locale.failReasonLabel}
                             </Typography>
-                            <Typography component={'p'}>{lastTest?.test_fail_reason ?? locale.labelNone}</Typography>
+                            <Typography component={'p'}>{lastTest?.inspect_fail_reason ?? locale.labelNone}</Typography>
                         </Grid>
                     )}
                     <Grid item xs={12}>
                         <Typography component={'p'} className={classes.pastTestLabel}>
                             {locale.testNotesLabel}
                         </Typography>
-                        <Typography component={'p'}>{lastTest?.test_notes ?? locale.labelNone}</Typography>
+                        <Typography component={'p'}>{lastTest?.inspect_notes ?? locale.labelNone}</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>

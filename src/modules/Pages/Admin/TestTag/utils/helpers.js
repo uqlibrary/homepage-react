@@ -55,8 +55,8 @@ export const isValidRepairDetails = repairDetails => !isEmpty(repairDetails);
 export const isValidRepair = repair => !!repair.isRepair && isValidRepairDetails(repair.repairer_contact_details);
 export const isValidDiscardedDetails = discardedDetails => !isEmpty(discardedDetails);
 export const isValidDiscard = discard => !!discard.isDiscarded && isValidDiscardedDetails(discard.discard_reason);
-export const isAssetDiscarded = (lastTest, discardedValue) => lastTest.test_status === discardedValue;
-export const isAssetOutForRepair = (lastTest, outForRepairValue) => lastTest.test_status === outForRepairValue;
+export const isAssetDiscarded = (lastTest, discardedValue) => lastTest.inspect_status === discardedValue;
+export const isAssetOutForRepair = (lastTest, outForRepairValue) => lastTest.inspect_status === outForRepairValue;
 
 export const statusEnum = locale => ({
     CURRENT: { label: locale.config.currentLabel, value: 'CURRENT' },
