@@ -10,9 +10,14 @@ describe('Alert Admin List page', () => {
     it('displays a list of alerts to the authorised user', () => {
         cy.waitUntil(() => cy.get('[data-testid="admin-alerts-list-current-list"]').should('exist'));
         cy.get('[data-testid="admin-alerts-list-current-list"]').should('be.visible');
-        cy.get('[data-testid="admin-alerts-list-current-list"] tbody')
-            .children()
-            .should('have.length', 1 + numRowsHiddenAsNoDatainfo);
+        cy.waitUntil(
+            () =>
+                cy
+                    .get('[data-testid="admin-alerts-list-current-list"] tbody')
+                    .children()
+                    .then(elements => elements.length === 1 + numRowsHiddenAsNoDatainfo),
+            { timeout: 10000, interval: 500 },
+        );
         cy.get('[data-testid="headerRow-count-current"]').contains('1 alert');
 
         // this alert has all 3 chips
