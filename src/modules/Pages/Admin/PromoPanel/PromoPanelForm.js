@@ -1,17 +1,11 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import Typography from '@material-ui/core/Typography';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { PromoPanelSaveConfirmation } from './Form/PromoPanelSaveConfirmation';
@@ -21,25 +15,11 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
-// import { formatDate } from '../Spotlights/spotlighthelpers';
 import PromoPanelGroupDateSelector from './Form/PromoPanelGroupDateSelector';
 import PromoPanelFormConfirmation from './Form/PromoPanelFormConfirmation';
 import { addSchedule, initLists, saveGroupDate } from './promoPanelHelpers';
 import PromoPanelContentButtons from './PromoPanelContentButtons';
 import PromoPanelFormSchedules from './PromoPanelFormSchedules';
-
-const moment = require('moment');
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 6 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
 
 const useStyles = makeStyles(() => ({
     contentRequired: {
@@ -100,7 +80,6 @@ export const PromoPanelForm = ({
     isEdit,
     isClone,
     promoPanelSaving,
-    // fullPromoPanelList,
     fullPromoPanelUserTypeList,
     knownGroups,
     defaults,
@@ -108,15 +87,10 @@ export const PromoPanelForm = ({
     history,
     isDefaultPanel,
     panelUpdated,
-    // scheduleUpdated,
     queueLength,
 }) => {
-    // const scheduledGroups = [];
     const classes = useStyles();
 
-    // const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
-    // const [scheduledGroups, setScheduledGroups] = useState(scheduledGroupNames);
-    const [adminNotes, setAdminNotes] = React.useState('');
     const [selectorGroupNames, setSelectorGroupNames] = React.useState(scheduledGroupNames);
     const [scheduleChangeIndex, setScheduleChangeIndex] = useState(null);
     const [scheduleGroupIndex, setScheduleGroupIndex] = useState(null);
@@ -127,7 +101,6 @@ export const PromoPanelForm = ({
     const [confirmationMessage, setConfirmationMessage] = useState(null);
     const [confirmationMode, setConfirmationMode] = useState('');
     const [mode, setMode] = useState({ validate: true });
-    const [saveConfirmOpen, setSaveConfirmOpen] = useState(false);
 
     const [values, setValues] = useState({
         ...defaults,
@@ -137,13 +110,13 @@ export const PromoPanelForm = ({
         scheduledList: isDefaultPanel ? [] : scheduledList,
         defaultList: isDefaultPanel ? scheduledList : [],
         scheduledGroups: scheduledGroupNames,
-        test: 'test',
         admin_notes: (currentPanel && currentPanel.panel_admin_notes) || '',
         title: (currentPanel && currentPanel.panel_title) || '',
         content: (currentPanel && currentPanel.panel_content) || '',
     });
     const [displayList, setDisplayList] = useState([]);
-    React.useEffect(() => {
+
+    useEffect(() => {
         initLists(
             scheduledList,
             scheduledGroupNames,
@@ -157,15 +130,10 @@ export const PromoPanelForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scheduledGroupNames, scheduledList]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPanel]);
-
-    // const [allocatedGroups, setAllocatedGroups] = useState(values.allocatedGroups);
-
     const navigateToListPage = () => {
-        // clearForm();
-
         actions.clearCurrentPanel(); // force the list page to reload after save
 
         history.push('/admin/promopanel');
@@ -197,7 +165,7 @@ export const PromoPanelForm = ({
     const savePromoPanel = () => {
         const schedules = [];
         const defaults = [];
-        // if (!isEdit) {
+
         if (values.scheduledList.length > 0) {
             values.scheduledList.map(item => {
                 schedules.push({
@@ -215,7 +183,7 @@ export const PromoPanelForm = ({
                 defaults.push({ name: item.groupNames, existing: item.existing });
             });
         }
-        // }
+
         const newValues = {
             panel_id: values.id,
             panel_title: values.title,
@@ -227,11 +195,9 @@ export const PromoPanelForm = ({
 
         setIsConfirmOpen(false);
         if (isEdit) {
-            // actions.savePromoPanel(newValues).then(navigateToListPage());
             actions.savePromoPanel(newValues);
             if (schedules.length > 0) {
                 schedules.map(schedule => {
-                    console.log('Mapping Schedule', schedule);
                     if (!schedule.existing) {
                         actions.saveUserTypePanelSchedule({
                             id: newValues.panel_id,
@@ -243,8 +209,6 @@ export const PromoPanelForm = ({
                         });
                     }
                     if (!!schedule.dateChanged) {
-                        console.log('UPDATE THE SCHEDULE DATES HERE');
-                        // actions.decrementQueueLength();
                         actions.updateUserTypePanelSchedule({
                             id: schedule.id,
                             usergroup: schedule.user_groups[0],
@@ -263,7 +227,6 @@ export const PromoPanelForm = ({
                 });
             }
         } else {
-            // actions.createPromoPanel(newValues).then(navigateToListPage());
             actions.createPromoPanel(newValues);
         }
     };
@@ -368,7 +331,6 @@ export const PromoPanelForm = ({
     };
 
     const editPanelGroupSchedule = idx => {
-        console.log('ZZZ THE DISPLAY LIST INDEX:', displayList[idx]);
         setScheduleChangeIndex(idx);
         setScheduleGroupIndex(displayList[idx].groupNames);
         setPanelScheduleId(displayList[idx].id);
@@ -383,35 +345,20 @@ export const PromoPanelForm = ({
         saveGroupDate(idx, dateRange, displayList, setDisplayList, setIsEditingDate, actions);
     };
     const clearForm = () => {
-        // actions.clearPromoUpdatedStatus();
         setValues({
             ...defaults,
             admin_notes: '',
             title: '',
             content: '',
-            // ['admin_notes']: 'ffff',
-            scheduledList: ['a'],
-            defaultList: ['b'],
+            scheduledList: [],
+            defaultList: [],
         });
-        // initLists(
-        //     scheduledList,
-        //     scheduledGroupNames,
-        //     knownGroups,
-        //     values,
-        //     isDefaultPanel,
-        //     setValues,
-        //     setDisplayList,
-        //     setSelectorGroupNames,
-        // );
     };
 
     const addNewPanel = () => {
         clearForm();
         window.location.reload(false);
-
-        // scrollToTopOfPage();
     };
-    console.log('Display List', displayList);
     return (
         <>
             <StandardCard title={locale.editPage.Title(isEdit, isClone)}>
@@ -506,175 +453,6 @@ export const PromoPanelForm = ({
                     handleChange={handleChange}
                     handleGroupChange={handleGroupChange}
                 />
-                {/* <Grid item md={5} xs={12}>
-                    <Grid container>
-                        <Typography style={{ fontSize: 12 }}>{locale.form.labels.defaultPanelHelp}</Typography>
-                    </Grid>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <InputLabel
-                                title={locale.form.tooltips.defaultPanelCheckbox}
-                                className={`${classes.scheduleCell}`}
-                            >
-                                <Checkbox
-                                    checked={values.is_default_panel === 1}
-                                    data-testid="admin-spotlights-form-checkbox-published"
-                                    onChange={handleChange('is_default_panel')}
-                                    className={classes.checkbox}
-                                    disabled={isEdit && scheduledList.length > 0}
-                                />
-                                {locale.form.labels.defaultPanelCheckbox}
-                            </InputLabel>
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Grid container style={{ margin: '0 10px 0' }}>
-                    <Grid item xs={4}>
-
-
-                        <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
-                            <InputLabel id="group-selector">{locale.form.labels.groupSelectorLabel}</InputLabel>
-                            <Select
-                                labelId="group-selector"
-                                id="demo-multiple-checkbox"
-                                label={locale.form.labels.groupSelectorLabel}
-                                // InputLabel="testing"
-                                multiple
-                                value={selectorGroupNames}
-                                onChange={handleGroupChange}
-                                renderValue={selected => selected.join(', ')}
-                                MenuProps={MenuProps}
-                            >
-                                {knownGroups.map(item => (
-                                    <MenuItem key={item.group} value={item.group}>
-                                        <Checkbox checked={selectorGroupNames.indexOf(item.group) > -1} />
-                                        <ListItemText primary={item.name} />
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    {!!!values.is_default_panel && (
-                        <>
-                            <Grid item xs={4} align={'right'}>
-                                <KeyboardDateTimePicker
-                                    id="admin-promopanel-form-start-date"
-                                    data-testid="admin-promopanel-form-start-date"
-                                    value={values.start}
-                                    label={locale.form.labels.publishDate}
-                                    onChange={handleChange('start')}
-                                    minDate={defaults.minimumDate}
-                                    format="DD/MM/YYYY HH:mm a"
-                                    showTodayButton
-                                    todayLabel={locale.form.labels.datePopupNowButton}
-                                    InputLabelProps={{ style: { textAlign: 'left' } }}
-                                    autoOk
-                                    KeyboardButtonProps={{
-                                        'aria-label': locale.form.tooltips.publishDate,
-                                    }}
-                                />
-                                {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
-                                    <div className={classes.errorStyle}>This date is in the past.</div>
-                                )}
-                            </Grid>
-                            <Grid item xs={4} align={'right'}>
-                                <KeyboardDateTimePicker
-                                    id="admin-promopanel-form-end-date"
-                                    data-testid="admin-promopanel-form-end-date"
-                                    label={locale.form.labels.unpublishDate}
-                                    onChange={handleChange('end')}
-                                    value={values.end}
-                                    minDate={values.start}
-                                    format="DD/MM/YYYY HH:mm a"
-                                    autoOk
-                                    InputLabelProps={{ style: { textAlign: 'left' } }}
-                                    KeyboardButtonProps={{
-                                        'aria-label': locale.form.tooltips.unpublishDate,
-                                    }}
-                                    minDateMessage="Should not be before Date published"
-                                />
-                            </Grid>
-                        </>
-                    )}
-                </Grid>
-
-                <Grid container style={{ margin: '0 10px 0' }}>
-                    <>
-                        <Grid item xs={12} style={{ margin: '10px 0 10px' }}>
-                            <Button
-                                color="primary"
-                                children={values.is_default_panel ? 'Add default' : 'Add schedule'}
-                                data-testid="admin-promopanel-form-button-addSchedule"
-                                onClick={() => handleAddSchedule()}
-                                variant="contained"
-                                disabled={selectorGroupNames.length < 1}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography style={{ fontWeight: 'bold' }}>
-                                Currently {values.is_default_panel ? 'default' : 'scheduled'} for groups
-                            </Typography>
-                        </Grid>
-                        <Grid container style={{ border: '1px solid black', padding: '10px' }}>
-                            <Grid item xs={12}>
-                                <Grid container>
-                                    <Grid item xs={2}>
-                                        <Typography style={{ fontWeight: 'bold' }}>Group name</Typography>
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <Typography style={{ fontWeight: 'bold' }}>Scheduled Start</Typography>
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <Typography style={{ fontWeight: 'bold' }}>Scheduled End</Typography>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <Typography style={{ fontWeight: 'bold', textAlign: 'right' }}>
-                                            Actions
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                                {displayList.length > 0 &&
-                                    displayList.map((item, index) => {
-                                        return (
-                                            <Grid container key={index}>
-                                                <Grid item xs={2} style={{ padding: '10px 0 10px' }}>
-                                                    {item.groupNames}
-                                                </Grid>
-                                                <Grid item xs={3} style={{ padding: '10px 0 10px' }}>
-                                                    {(!values.is_default_panel &&
-                                                        moment(item.startDate).format('dddd DD/MM/YYYY HH:mm a')) ||
-                                                        'DEFAULT'}
-                                                </Grid>
-                                                <Grid item xs={3} style={{ padding: '10px 0 10px' }}>
-                                                    {!values.is_default_panel &&
-                                                        moment(item.endDate).format('dddd DD/MM/YYYY HH:mm a')}
-                                                </Grid>
-                                                <Grid item xs={4} style={{ textAlign: 'right' }}>
-                                                    {!!!values.is_default_panel && (
-                                                        <Button
-                                                            color="primary"
-                                                            children="Change Schedule"
-                                                            data-testid="admin-promopanel-form-button-editSchedule"
-                                                            onClick={() => editPanelGroupSchedule(index)}
-                                                            variant="contained"
-                                                        />
-                                                    )}
-
-                                                    <Button
-                                                        style={{ marginLeft: 10 }}
-                                                        color="primary"
-                                                        children="Remove group"
-                                                        data-testid="admin-promopanel-form-button-editSchedule"
-                                                        onClick={() => removePanelGroupSchedule(index)}
-                                                        variant="contained"
-                                                        disabled={!!item.existing}
-                                                    />
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })}
-                            </Grid>
-                        </Grid> */}
 
                 <PromoPanelContentButtons
                     values={values}
@@ -721,9 +499,7 @@ export const PromoPanelForm = ({
                 confirmAddSchedule={handleAddSchedule}
                 cancelAction={cancelConfirmation}
             />
-            <p>
-                {`${panelUpdated}`} {queueLength}
-            </p>
+
             <PromoPanelSaveConfirmation
                 isConfirmOpen={panelUpdated && queueLength === 0}
                 title={isEdit ? 'Panel has been updated' : 'Panel has been created'}

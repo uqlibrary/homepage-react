@@ -1,16 +1,8 @@
 import React, { useEffect } from 'react';
-
 import PropTypes from 'prop-types';
-
-// import Grid from '@material-ui/core/Grid';
-// import { makeStyles } from '@material-ui/styles';
-
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelListGroupPanels } from './PromoPanelListGroupPanels';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
-// mport { PromoPanelListActive } from './PromoPanelListActive';
-
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 
@@ -24,8 +16,6 @@ export const PromoPanelList = ({
     history,
     panelUpdated,
     promoPanelSaving,
-
-    // actions, spotlights, spotlightsLoading, spotlightsError, history
 }) => {
     const [knownGroups, setKnownGroups] = React.useState([]);
 
@@ -61,18 +51,6 @@ export const PromoPanelList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [panelUpdated]);
 
-    // useEffect(() => {
-    //     /* istanbul ignore else */
-    //     if (!promoPanelList || promoPanelList.length < 1) {
-    //         actions.loadPromoPanelList();
-    //     }
-    //     /* istanbul ignore else */
-    //     if (!promoPanelUserTypeList || promoPanelUserTypeList.length < 1) {
-    //         actions.loadPromoPanelUserList();
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [promoPanelList, promoPanelUserTypeList]);
-
     return (
         <StandardPage title="Promo panel management">
             {/* <PromoPanelListActive
@@ -86,15 +64,13 @@ export const PromoPanelList = ({
                 history={history}
                 showAddButton
             />
-
+            {/* Panels by group */}
             <PromoPanelListGroupPanels
                 actions={actions}
                 isLoading={promoPanelUserTypesLoading}
                 userPanelList={promoPanelUserTypeList}
                 promoPanelList={promoPanelList}
                 history={history}
-                // deletePanel={deletePanel}
-                // title="Current and scheduled panels"
                 canEdit
                 canClone
                 canDelete
@@ -135,7 +111,6 @@ export const PromoPanelList = ({
                 showFilter={false}
                 showPast
             />
-            <h1> Past Panels Coming soon</h1>
         </StandardPage>
     );
 };
@@ -145,9 +120,6 @@ PromoPanelList.propTypes = {
     panelUpdated: PropTypes.bool,
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
-    promoPanelStatus: PropTypes.string,
-    promoPanelListError: PropTypes.string,
-    promoPanelUserTypesError: PropTypes.object,
     promoPanelActionError: PropTypes.object,
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,

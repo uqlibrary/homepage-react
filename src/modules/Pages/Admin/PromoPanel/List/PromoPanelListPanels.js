@@ -189,7 +189,24 @@ export const PromoPanelListPanels = ({
             filteredList = panelList.filter(item => item.default_panels_for.length < 1 && item.panel_schedule < 1);
         }
         if (!hideAlloc && showPast) {
-            filteredList = panelList.filter(item => {});
+            const pastSchedules = [];
+            panelList.map(panel => {
+                let found = false;
+                if (panel.panel_schedule.length > 0) {
+                    panel.panel_schedule.map(scheduleEntry => {
+                        if (
+                            !found &&
+                            scheduleEntry.user_group_schedule.filter(entry =>
+                                moment(entry.panel_schedule_end_time).isAfter(moment()),
+                            ).length < 1
+                        ) {
+                            pastSchedules.push(panel);
+                            found = true;
+                        }
+                    });
+                }
+            });
+            filteredList = pastSchedules;
         }
         console.log('PANEL LIST AFTER FILTER', filteredList);
         setFilteredPanels(filteredList);

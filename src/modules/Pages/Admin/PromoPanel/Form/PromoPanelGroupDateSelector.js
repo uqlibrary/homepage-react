@@ -144,7 +144,7 @@ export const PromoPanelGroupDateSelector = ({
                                 value={startDate}
                                 label="Start date"
                                 onChange={handleChange('start')}
-                                minDate={startDate}
+                                // minDate={startDate}
                                 format="DD/MM/YYYY HH:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}
@@ -164,7 +164,7 @@ export const PromoPanelGroupDateSelector = ({
                                 value={endDate}
                                 label="End date"
                                 onChange={handleChange('end')}
-                                minDate={startDate}
+                                // minDate={startDate}
                                 format="DD/MM/YYYY HH:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}

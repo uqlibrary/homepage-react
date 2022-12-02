@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -14,8 +13,6 @@ import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import Typography from '@material-ui/core/Typography';
 
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
-import { useEffect } from 'react';
-// import { formatDate } from '../Spotlights/spotlighthelpers';
 
 const moment = require('moment');
 
@@ -85,7 +82,6 @@ const useStyles = makeStyles(() => ({
 export const PromoPanelFormSchedules = ({
     values,
     isEdit,
-    currentPanel,
     scheduledList,
     knownGroups,
     defaults,
@@ -97,19 +93,12 @@ export const PromoPanelFormSchedules = ({
     handleChange,
     handleGroupChange,
 }) => {
-    // const scheduledGroups = [];
     const classes = useStyles();
-
-    // const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
-    // const [scheduledGroups, setScheduledGroups] = useState(scheduledGroupNames);
 
     return (
         <>
             {/* Schedules */}
             <Grid item md={5} xs={12}>
-                {/* <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
-                        {locale.form.labels.defaultPanelLabel}
-                    </Typography> */}
                 <Grid container>
                     <Typography style={{ fontSize: 12 }}>{locale.form.labels.defaultPanelHelp}</Typography>
                 </Grid>
@@ -133,15 +122,12 @@ export const PromoPanelFormSchedules = ({
             </Grid>
             <Grid container style={{ margin: '0 10px 0' }}>
                 <Grid item xs={4}>
-                    {/* <Typography style={{ fontWeight: 'bold' }}>Group Assignment</Typography> */}
-
                     <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
                         <InputLabel id="group-selector">{locale.form.labels.groupSelectorLabel}</InputLabel>
                         <Select
                             labelId="group-selector"
                             id="demo-multiple-checkbox"
                             label={locale.form.labels.groupSelectorLabel}
-                            // InputLabel="testing"
                             multiple
                             value={selectorGroupNames}
                             onChange={handleGroupChange}
@@ -285,7 +271,6 @@ export const PromoPanelFormSchedules = ({
 PromoPanelFormSchedules.propTypes = {
     values: PropTypes.object,
     isEdit: PropTypes.bool,
-    currentPanel: PropTypes.object,
     scheduledList: PropTypes.array,
     knownGroups: PropTypes.array,
     defaults: PropTypes.object,
@@ -301,9 +286,6 @@ PromoPanelFormSchedules.propTypes = {
 PromoPanelFormSchedules.defaultProps = {
     isDefaultPanel: false,
     promoPanelList: [],
-    publicFileUploading: false, // whether a file is currently being uploaded. Only done by Add, other defaults false
-    publicFileUploadError: false,
-    publicFileUploadResult: false,
 };
 
 export default PromoPanelFormSchedules;
