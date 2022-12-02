@@ -1,13 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
-import { useCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -17,36 +13,25 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import ListItemText from '@material-ui/core/ListItemText';
-import TableFooter from '@material-ui/core/TableFooter';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelPreview } from '../PromoPanelPreview';
 import { Typography } from '@material-ui/core';
 import { PromoPanelSplitButton } from './PromoPanelSplitButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import CloseIcon from '@material-ui/icons/Close';
-import DeleteIcon from '@material-ui/icons/Delete';
 
-// import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../promoPanelAdmin.locale';
-import ReactSeventeenAdapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { getClassNumberFromPieces } from 'data/actions';
-// import AlertSplitButton from './AlertSplitButton';
+
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import PromoPanelScheduleHeaders from './PromoPanelScheduleHeaders';
 import { filterPanelList } from '../promoPanelHelpers';
 import PromoPanelAddSchedule from './PromoPanelAddSchedule';
 import PromoPanelAddNewDefault from './PromoPanelAddNewDefault';
-const moment = require('moment');
 
-// original based on https://codesandbox.io/s/hier2
-// per https://material-ui.com/components/tables/#custom-pagination-actions
+const moment = require('moment');
 
 const useStyles2 = makeStyles(
     theme => ({
@@ -149,17 +134,14 @@ export const PromoPanelListGroupPanels = ({
     isLoading,
     userPanelList,
     promoPanelList,
-    deletePanel,
     history,
-    title,
     canEdit,
     canClone,
-    canDelete,
-    headertag,
     panelError,
     knownGroups,
     promoPanelSaving,
 }) => {
+    // eslint-disable-next-line no-unused-vars
     const [isUnscheduleConfirmOpen, showUnscheduleConfirmation, hideUnscheduleConfirmation] = useConfirmationState();
     const [
         isUnscheduleFailureConfirmationOpen,
@@ -184,8 +166,8 @@ export const PromoPanelListGroupPanels = ({
 
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
-    const [unscheduleActive, setUnscheduleActive] = useState(false);
-    const [PanelNotice, setPanelNotice] = useState('');
+    // const [unscheduleActive, setUnscheduleActive] = useState(false);
+    // const [PanelNotice, setPanelNotice] = useState('');
     const classes = useStyles2();
     const clearAllCheckboxes = () => {
         const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
@@ -196,7 +178,7 @@ export const PromoPanelListGroupPanels = ({
         });
     };
     let rowMarker = 0;
-    const confirmUnscheduleLocale = numberOfCheckedBoxes => {
+    const confirmUnscheduleLocale = () => {
         return {
             ...locale.listPage.confirmUnschedule,
             confirmationTitle: locale.listPage.confirmUnschedule.confirmationTitle,
@@ -231,7 +213,7 @@ export const PromoPanelListGroupPanels = ({
         // Filter the selection, and store in filteredPanels.
     };
 
-    const onPreviewOpen = (row, item) => {
+    const onPreviewOpen = row => {
         const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
         setPreviewPanel({
             name: row.panel_admin_notes,
@@ -249,12 +231,10 @@ export const PromoPanelListGroupPanels = ({
         actions
             .deletePanel(id)
             .then(() => {
-                setPanelNotice('');
-                setUnscheduleActive(false);
                 actions.loadPromoPanelUserList();
                 clearAllCheckboxes();
             })
-            .catch(e => {
+            .catch(() => {
                 showUnscheduleFailureConfirmation();
             });
     }
@@ -262,12 +242,10 @@ export const PromoPanelListGroupPanels = ({
         actions
             .unschedulePanel(row.panel_schedule_id)
             .then(() => {
-                setPanelNotice('');
-                setUnscheduleActive(false);
                 actions.loadPromoPanelUserList();
                 clearAllCheckboxes();
             })
-            .catch(e => {
+            .catch(() => {
                 showUnscheduleFailureConfirmation();
             });
     }
@@ -467,7 +445,7 @@ export const PromoPanelListGroupPanels = ({
                                                                 canEdit={canEdit}
                                                                 canClone={canClone}
                                                                 canDelete={false}
-                                                                onPreview={row => onPreviewOpen(item.default_panel)}
+                                                                onPreview={() => onPreviewOpen(item.default_panel)}
                                                                 row={item.default_panel}
                                                                 align={'flex-end'}
                                                                 deletePanelById={item => {
