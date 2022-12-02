@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { useState } from 'react';
 import {
     isValidEventDate,
