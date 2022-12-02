@@ -1,11 +1,8 @@
-/* istanbul ignore file */
 import Immutable from 'immutable';
 
 export const mutateKey = (data, oldKey, newKey) => {
-    // const value = data[oldKey];
     data[newKey] = data[oldKey];
     delete data[oldKey];
-    // return { [newKey]: value };
 };
 
 export const mutateObject = (data, key) => {

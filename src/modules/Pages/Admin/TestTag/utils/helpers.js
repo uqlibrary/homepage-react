@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 const moment = require('moment');
 
 export const scrollToTopOfPage = () => {
@@ -7,14 +6,14 @@ export const scrollToTopOfPage = () => {
 };
 
 export const isEmpty = value => {
-    return !!!value || value === '' || (!!value.length && value.length === 0);
+    return typeof value !== 'string' ? true : !!!value || value === '' || (!!value.length && value.length === 0);
 };
 export const isValidEventDate = (date, format) => {
     if (isEmpty(date)) return false;
     const today = new moment();
     const formattedToday = today.startOf('day');
 
-    const formattedEventDate = new moment(date, format).startOf('day');
+    const formattedEventDate = moment(date, format).startOf('day');
     const result = !!moment(formattedEventDate).isValid() && moment(formattedEventDate).isSameOrBefore(formattedToday);
 
     return result;
@@ -22,8 +21,7 @@ export const isValidEventDate = (date, format) => {
 export const isValidNextTestDate = (inspection, passedValue, format) => {
     const date = inspection?.inspection_date_next ?? undefined;
     if (!!!date || isEmpty(date)) return false;
-    if (inspection.inspection_status !== passedValue) return true;
-
+    if (inspection.inspection_status !== passedValue) return false;
     const today = new moment();
     const formattedToday = today.startOf('day');
 
@@ -32,20 +30,23 @@ export const isValidNextTestDate = (inspection, passedValue, format) => {
 
     return result;
 };
-export const isValidAssetId = assetId => !isEmpty(assetId);
+export const isValidAssetId = assetId => {
+    return !isEmpty(assetId);
+};
 export const isValidOwner = owner => !isEmpty(owner);
 export const isValidRoomId = roomId => !!roomId && Number.isFinite(roomId) && roomId > 0;
 export const isValidAssetTypeId = assetTypeId => !!assetTypeId && Number.isFinite(assetTypeId) && assetTypeId > 0;
 export const isValidTestingDeviceId = testingDeviceId =>
     !!testingDeviceId && Number.isFinite(testingDeviceId) && testingDeviceId > 0;
 export const isValidFailReason = (inspection, failedValue) =>
-    inspection.inspection_status !== failedValue || !isEmpty(inspection.inspection_fail_reason);
+    inspection?.inspection_status === failedValue && !isEmpty(inspection?.inspection_fail_reason);
 export const isValidInspection = (inspection, testStatusEnum) => {
+    if (!!!testStatusEnum) return false;
     return (
         inspection.inspection_status === undefined ||
         (isValidRoomId(inspection.room_id) &&
             isValidTestingDeviceId(inspection.inspection_device_id) &&
-            (isValidNextTestDate(inspection.inspection_date_next, testStatusEnum.PASSED.value) ||
+            (isValidNextTestDate(inspection, testStatusEnum.PASSED.value) ||
                 isValidFailReason(inspection, testStatusEnum.FAILED.value)))
     );
 };
@@ -55,8 +56,6 @@ export const isValidRepairDetails = repairDetails => !isEmpty(repairDetails);
 export const isValidRepair = repair => !!repair.isRepair && isValidRepairDetails(repair.repairer_contact_details);
 export const isValidDiscardedDetails = discardedDetails => !isEmpty(discardedDetails);
 export const isValidDiscard = discard => !!discard.isDiscarded && isValidDiscardedDetails(discard.discard_reason);
-export const isAssetDiscarded = (lastTest, discardedValue) => lastTest.inspect_status === discardedValue;
-export const isAssetOutForRepair = (lastTest, outForRepairValue) => lastTest.inspect_status === outForRepairValue;
 
 export const statusEnum = locale => ({
     CURRENT: { label: locale.config.currentLabel, value: 'CURRENT' },
