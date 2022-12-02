@@ -327,11 +327,11 @@ export const PromoPanelListGroupPanels = ({
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="panel-delete-error-dialog"
-                onAction={hideUnscheduleConfirmation}
-                onClose={hideUnscheduleConfirmation}
+                onAction={hideUnscheduleFailureConfirmation}
+                onClose={hideUnscheduleFailureConfirmation}
                 hideCancelButton
-                isOpen={isUnscheduleConfirmOpen}
-                locale={locale.listPage.deleteError}
+                isOpen={isUnscheduleFailureConfirmationOpen}
+                locale={locale.listPage.unscheduleError}
                 showAdditionalInformation
                 additionalInformation={panelError}
             />

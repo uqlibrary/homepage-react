@@ -111,6 +111,7 @@ export const PromoPanelList = ({
                 showFilter={false}
                 showPast
             />
+            {!!!promoPanelActionError === null && <p>There's an error that occurred</p>}
         </StandardPage>
     );
 };

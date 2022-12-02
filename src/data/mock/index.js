@@ -43,6 +43,7 @@ const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 100 });
 const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+const panelRegExp = input =>  input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 // set session cookie in mock mode
 
 // Get user from query string
@@ -705,31 +706,49 @@ mock.onGet('exams/course/FREN1010/summary')
         () => {
             return[200, currentPanels]
         }
-        // withSetDelay([
-        //     200,
-        //     currentPanels
-        // ], 1.5),
+        
     )
     .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl).reply(
         () => {
             return[200, userListPanels]
         }
-        // withSetDelay([
-        //     200,
-        //     userListPanels
-        // ], 1),
+        
     )
-    .onDelete(routes.PROMOPANEL_DELETE_API({id: 1}).apiUrl).reply(
-        withSetDelay([200, {status: 'ok'}],1)
-    )
-    .onDelete(routes.PROMOPANEL_UNSCHEDULE_API({id: 3, userType: 'PUBLIC'}).apiUrl).reply(
+    
+    // Handle Delete of any panel that is NOT panel ID 9 (9 configured to throw error)
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: '[^9]'}).apiUrl))).reply(
         () => {
             return [200, {status: 'ok'}]
+        }
+    )
+    // Specific case to throw error for Delete panel 9.
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: 9}).apiUrl))).reply(
+        () => { 
+            return [500, {
+                "status": "error",
+                "message": "9 is not a valid panel id"
+            }]
+        }
+    )
+    // Handle Unschedule of any panel that is NOT schedule ID 11 (11 configured to throw error)
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({id: '(?!11).*'}).apiUrl))).reply(
+        () => {
+            return [200, {status: 'ok'}]
+        }
+    )
+    // Specific case to throw error for Delete on schedule 11
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({id: 11}).apiUrl))).reply(
+        () => {
+            return [500, {
+                "status": "error",
+                "message": "11 is not a valid schedule id"
+            }]
         }
     )
     .onAny()
     .reply(config => {
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
+        
     });
 
