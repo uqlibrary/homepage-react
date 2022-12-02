@@ -702,16 +702,22 @@ mock.onGet('exams/course/FREN1010/summary')
         ]),
     )
     .onGet(routes.PROMOPANEL_LIST_API().apiUrl).reply(
-        withSetDelay([
-            200,
-            currentPanels
-        ], 1.5),
+        () => {
+            return[200, currentPanels]
+        }
+        // withSetDelay([
+        //     200,
+        //     currentPanels
+        // ], 1.5),
     )
     .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl).reply(
-        withSetDelay([
-            200,
-            userListPanels
-        ], 1),
+        () => {
+            return[200, userListPanels]
+        }
+        // withSetDelay([
+        //     200,
+        //     userListPanels
+        // ], 1),
     )
     .onDelete(routes.PROMOPANEL_DELETE_API({id: 1}).apiUrl).reply(
         withSetDelay([200, {status: 'ok'}],1)

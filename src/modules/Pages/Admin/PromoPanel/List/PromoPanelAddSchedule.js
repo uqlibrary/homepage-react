@@ -94,6 +94,19 @@ export const PromoPanelAddSchedule = ({
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(defaultEndDate);
 
+    const getConflictErrormsg = (title, start, end) => {
+        return (
+            <>
+                <p>A schedule already exists within these here times</p>
+                <p>
+                    <strong>{title}</strong>
+                    <br />
+                    {start} &gt; {end}
+                </p>
+            </>
+        );
+    };
+
     useEffect(() => {
         const available = [];
         promoPanelList.length > 0 &&
@@ -123,7 +136,14 @@ export const PromoPanelAddSchedule = ({
                             (moment(panel.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
                                 moment(panel.panel_schedule_start_time).isBefore(moment(endDate)))
                         ) {
-                            setErrorMessage('A schedule already exists within these times', panel);
+                            setErrorMessage(
+                                getConflictErrormsg(
+                                    panel.panel_title,
+                                    panel.panel_schedule_start_time,
+                                    panel.panel_schedule_end_time,
+                                ),
+                            );
+
                             setShowError(true);
                         }
                     });
@@ -150,7 +170,13 @@ export const PromoPanelAddSchedule = ({
                             (moment(panel.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
                                 moment(panel.panel_schedule_start_time).isBefore(moment(endDate)))
                         ) {
-                            setErrorMessage('A schedule already exists within these times');
+                            setErrorMessage(
+                                getConflictErrormsg(
+                                    panel.panel_title,
+                                    panel.panel_schedule_start_time,
+                                    panel.panel_schedule_end_time,
+                                ),
+                            );
                             setShowError(true);
                         }
                     });

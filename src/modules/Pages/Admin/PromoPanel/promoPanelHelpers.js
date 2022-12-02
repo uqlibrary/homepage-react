@@ -131,27 +131,6 @@ export const addSchedule = (
                     groupNames: item,
                 });
 
-                // // RETHINKING UPDATES PER ROW METHOD. LOOKING INTO QUEUE
-                // // This is where we'll add the new functionality of update per row.
-                // if (values.is_default_panel) {
-                //     if (window.confirm('are you sure?')) {
-                //         actions.saveDefaultUserTypePanel({ id: values.id, usergroup: item });
-                //     }
-                //     // sent to API to add default
-                // } else {
-                //     if (!!values.id) {
-                //         actions.saveUserTypePanelSchedule({
-                //             id: values.id,
-                //             usergroup: item,
-                //             payload: {
-                //                 panel_schedule_end_time: moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
-                //                 panel_schedule_start_time: moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
-                //             },
-                //         });
-                //     }
-                //     // sent to API to add schedule.
-                // }
-                // // END RETHINKING
                 actions.updateScheduleQueuelength(
                     allocatedList.filter(filter => !!!filter.existing || !!filter.dateChanged).length,
                 );
@@ -167,7 +146,6 @@ export const saveGroupDate = (idx, dateRange, displayList, setDisplayList, setIs
     newDisplayList[idx].startDate = dateRange.start;
     newDisplayList[idx].endDate = dateRange.end;
     newDisplayList[idx].dateChanged = true;
-    console.log('THE NEW DISPLAY LIST IS:', newDisplayList);
     setDisplayList(newDisplayList);
     actions.updateScheduleQueuelength(
         newDisplayList.filter(filter => !!!filter.existing || !!filter.dateChanged).length,

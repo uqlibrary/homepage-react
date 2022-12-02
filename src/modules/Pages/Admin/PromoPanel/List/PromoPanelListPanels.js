@@ -183,7 +183,6 @@ export const PromoPanelListPanels = ({
     const [filteredPanels, setFilteredPanels] = React.useState(panelList);
 
     React.useEffect(() => {
-        console.log('USE EFFECT PANEL LIST', panelList);
         let filteredList = panelList;
         if (hideAlloc) {
             filteredList = panelList.filter(item => item.default_panels_for.length < 1 && item.panel_schedule < 1);
@@ -208,7 +207,6 @@ export const PromoPanelListPanels = ({
             });
             filteredList = pastSchedules;
         }
-        console.log('PANEL LIST AFTER FILTER', filteredList);
         setFilteredPanels(filteredList);
     }, [panelList, hideAlloc, showPast]);
 

@@ -299,15 +299,14 @@ export const PromoPanelListGroupPanels = ({
             .then(setIsAddingSchedule(false));
     };
     const setDefaultPanel = (panel, group) => {
-        // console.log('This is what I have', panel, group);
         actions.saveDefaultUserTypePanel({ id: panel, usergroup: group }).then(setIsAddingDefault(false));
     };
     const handleCloseGroupSchedule = () => {
-        setGroupName('');
+        // setGroupName('');
         setIsAddingSchedule(false);
     };
     const handleCloseGroupDefault = () => {
-        setGroupName('');
+        // setGroupName('');
         setIsAddingDefault(false);
     };
     // const needsPaginator = userows.length > footerDisplayMinLength;
