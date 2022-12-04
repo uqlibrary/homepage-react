@@ -15,6 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import clsx from 'clsx';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import locale from '../testTag.locale';
+import { statusEnum } from '../utils/helpers';
+
 const moment = require('moment');
 
 const useTestPanelStyles = makeStyles(theme => ({
@@ -56,8 +59,6 @@ const LastInspectionPanel = ({
     asset,
     currentLocation,
     dateFormatPattern,
-    testStatusEnums,
-    locale,
     disabled = false,
     forceOpen = false,
 } = {}) => {
@@ -65,11 +66,12 @@ const LastInspectionPanel = ({
         asset: PropTypes.object.isRequired,
         currentLocation: PropTypes.object.isRequired,
         dateFormatPattern: PropTypes.string.isRequired,
-        testStatusEnums: PropTypes.object.isRequired,
-        locale: PropTypes.object.isRequired,
         disabled: PropTypes.bool,
         forceOpen: PropTypes.bool,
     };
+
+    const testStatusEnum = statusEnum(locale);
+    const formLocale = locale.form.lastInspectionPanel;
 
     const {
         asset_status: assetStatus,
@@ -77,7 +79,7 @@ const LastInspectionPanel = ({
         last_inspection: lastTest,
         asset_next_test_due_date: nextTestDate,
     } = asset;
-    const didPass = lastTest?.inspect_status === testStatusEnums.CURRENT.value;
+    const didPass = lastTest?.inspect_status === testStatusEnum.PASSED.value;
     const theme = useTheme();
     const classes = useTestPanelStyles({ pass: didPass });
     const [testPanelExpanded, setTestPanelExpanded] = useState(!disabled);
@@ -114,7 +116,7 @@ const LastInspectionPanel = ({
             title={
                 <>
                     <Typography component={'span'} variant={'h6'} color={disabled ? 'textSecondary' : 'textPrimary'}>
-                        {locale.title(disabled ? locale.statusUnavailableLabel : '')}
+                        {formLocale.title(disabled ? formLocale.statusUnavailableLabel : '')}
                     </Typography>
                     {!!!disabled && (
                         <>
@@ -127,7 +129,7 @@ const LastInspectionPanel = ({
                                     )
                                 }
                                 classes={{ root: classes.chip }}
-                                label={didPass ? testStatusEnums.CURRENT.label : testStatusEnums.FAILED.label}
+                                label={didPass ? testStatusEnum.PASSED.label : testStatusEnum.FAILED.label}
                                 component={'span'}
                             />
                             {!!mismatchingLocation && (
@@ -143,7 +145,7 @@ const LastInspectionPanel = ({
                         [classes.expandOpen]: forceOpen || testPanelExpanded,
                     })}
                     aria-expanded={forceOpen || testPanelExpanded}
-                    aria-label={locale.aria.collapseButtonLabel}
+                    aria-label={formLocale.aria.collapseButtonLabel}
                     onClick={() => !forceOpen && setTestPanelExpanded(!testPanelExpanded)}
                     disabled={disabled}
                 >
@@ -156,15 +158,15 @@ const LastInspectionPanel = ({
                 <Grid container spacing={1}>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>
-                            {locale.statusLabel}
+                            {formLocale.statusLabel}
                         </Typography>
                         <Typography component={'span'}>
-                            {assetStatus?.toUpperCase() ?? locale.statusUnknownLabel}
+                            {assetStatus?.toUpperCase() ?? formLocale.statusUnknownLabel}
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>
-                            {locale.testDateLabel}
+                            {formLocale.testDateLabel}
                         </Typography>
                         <Typography component={'span'}>
                             {!!lastTest?.inspect_date && moment(lastTest.inspect_date).format(dateFormatPattern)}
@@ -173,25 +175,25 @@ const LastInspectionPanel = ({
                     <Grid container item xs={12}>
                         <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
-                                {locale.siteLabel}
+                                {formLocale.siteLabel}
                             </Typography>
                             <Typography component={'span'}>{lastLocation?.site_id_displayed}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} lg={3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
-                                {locale.buildingLabel}
+                                {formLocale.buildingLabel}
                             </Typography>
                             <Typography component={'span'}>{lastLocation?.building_id_displayed}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
-                                {locale.floorLabel}
+                                {formLocale.floorLabel}
                             </Typography>
                             <Typography component={'span'}>{lastLocation?.floor_id_displayed}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
-                                {locale.roomLabel}
+                                {formLocale.roomLabel}
                             </Typography>
                             <Typography component={'span'}>{lastLocation?.room_id_displayed}</Typography>
                         </Grid>
@@ -211,7 +213,7 @@ const LastInspectionPanel = ({
                                     className={classes.pastTestLabel}
                                     style={{ color: theme.palette.warning.main }}
                                 >
-                                    {locale.alertLocationMismatch}
+                                    {formLocale.alertLocationMismatch}
                                 </Typography>
                             </Grid>
                         )}
@@ -219,20 +221,22 @@ const LastInspectionPanel = ({
                     {!didPass && (
                         <Grid item xs={12}>
                             <Typography component={'p'} className={classes.pastTestLabel}>
-                                {locale.failReasonLabel}
+                                {formLocale.failReasonLabel}
                             </Typography>
-                            <Typography component={'p'}>{lastTest?.inspect_fail_reason ?? locale.labelNone}</Typography>
+                            <Typography component={'p'}>
+                                {lastTest?.inspect_fail_reason ?? formLocale.labelNone}
+                            </Typography>
                         </Grid>
                     )}
                     <Grid item xs={12}>
                         <Typography component={'p'} className={classes.pastTestLabel}>
-                            {locale.testNotesLabel}
+                            {formLocale.testNotesLabel}
                         </Typography>
-                        <Typography component={'p'}>{lastTest?.inspect_notes ?? locale.labelNone}</Typography>
+                        <Typography component={'p'}>{lastTest?.inspect_notes ?? formLocale.labelNone}</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>
-                            {locale.nextTestDateLabel}
+                            {formLocale.nextTestDateLabel}
                         </Typography>
                         <Typography component={'span'}>
                             {!!nextTestDate && moment(nextTestDate).format(dateFormatPattern)}
