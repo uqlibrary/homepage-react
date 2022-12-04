@@ -59,7 +59,6 @@ const DEFAULT_FORM_VALUES = {
     inspection_notes: undefined,
     inspection_date_next: undefined,
     isRepair: false,
-    // repairer_name: undefined, // TODO, not needed for MVP
     repairer_contact_details: undefined,
     isDiscarded: false,
     discard_reason: undefined,
@@ -124,9 +123,7 @@ const TestTag = ({
 
     useEffect(() => {
         if (!initConfigLoading && !!initConfig) {
-            // && !!initConfig?.user) {
-            const newUserId = initConfig.user.user_id ?? 1; // TODO - remove this bodge when API fixed
-            handleChange('user_id')(newUserId);
+            handleChange('user_id')(initConfig.user.user_id);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initConfig, initConfigLoading]);

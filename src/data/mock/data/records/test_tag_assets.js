@@ -25,7 +25,7 @@ export default [
             "asset_type_power_rating": "",
         },
         "last_inspection": {
-            "inspect_status": "CURRENT",
+            "inspect_status": "PASSED",
             "inspect_device_id": 1,
             "inspect_device_model_name": "TESTER 620-1",
             "inspect_device_serial_number": "W309876",
@@ -73,7 +73,7 @@ export default [
             "asset_type_power_rating": "",
         },
         "last_inspection": {
-            "inspect_status": "CURRENT",
+            "inspect_status": "PASSED",
             "inspect_device_id": 1,
             "inspect_device_model_name": "TESTER 620-1",
             "inspect_device_serial_number": "W309876",
@@ -121,7 +121,7 @@ export default [
             "asset_type_power_rating": "",
         },
         "last_inspection": {
-            "inspect_status": "FAIL",
+            "inspect_status": "FAILED",
             "inspect_device_id": 1,
             "inspect_device_model_name": "TESTER 620-1",
             "inspect_device_serial_number": "W309876",
@@ -169,7 +169,7 @@ export default [
             "asset_type_power_rating": "",
         },
         "last_inspection": {
-            "inspect_status": "CURRENT",
+            "inspect_status": "PASSED",
             "inspect_device_id": 2,
             "inspect_device_model_name": "TESTER 665-2",
             "inspect_device_serial_number": "W309876",
@@ -217,7 +217,7 @@ export default [
             "asset_type_power_rating": "",
         },
         "last_inspection": {
-            "inspect_status": "CURRENT",
+            "inspect_status": "PASSED",
             "inspect_device_id": 2,
             "inspect_device_model_name": "TESTER 665-2",
             "inspect_device_serial_number": "W309876",
@@ -265,7 +265,7 @@ export default [
             "asset_type_power_rating": "",
         },
         "last_inspection": {
-            "inspect_status": "CURRENT",
+            "inspect_status": "PASSED",
             "inspect_device_id": 1,
             "inspect_device_model_name": "TESTER 620-1",
             "inspect_device_serial_number": "W309876",

@@ -251,8 +251,6 @@ const AssetPanel = ({
                 dateFormatPattern={locale.config.dateFormatDisplay}
                 disabled={!!!selectedAsset?.last_inspection?.inspect_status ?? true}
                 forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
-                testStatusEnums={testStatusEnum}
-                locale={locale.form.lastInspectionPanel}
             />
             <InspectionPanel
                 formValues={formValues}
