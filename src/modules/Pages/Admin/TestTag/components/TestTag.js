@@ -89,7 +89,7 @@ const TestTag = ({
     const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
     const [isNetworkErrorOpen, showNetworkError, hideNetworkError] = useConfirmationState();
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
-    const [isValid, validateValues] = useValidation({ testStatusEnum });
+    const { isValid, validateValues } = useValidation({ testStatusEnum });
     const assignAssetDefaults = React.useCallback(
         (asset = {}, formValues = {}, location = {}) => {
             return {
@@ -109,12 +109,12 @@ const TestTag = ({
         [formOwnerId, initConfig?.inspection_devices, today],
     );
 
-    const [formValues, resetFormValues, handleChange] = useForm({
+    const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
         defaultDateFormat: locale.config.dateFormat,
     });
 
-    const [location, setLocation] = useLocation();
+    const { location, setLocation } = useLocation();
 
     const headerDepartmentText = React.useMemo(
         () => locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? '') ?? '',

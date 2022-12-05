@@ -1,6 +1,6 @@
 export default {
     config: {
-        dateFormat: 'YYYY-MM-DD HH:MM',
+        dateFormat: 'YYYY-MM-DD HH:mm',
         dateFormatNoTime: 'YYYY-MM-DD',
         dateFormatDisplay: 'Do MMMM, YYYY',
         currentLabel: 'CURRENT',
