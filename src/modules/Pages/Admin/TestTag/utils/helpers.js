@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const moment = require('moment');
 
 export const scrollToTopOfPage = () => {
