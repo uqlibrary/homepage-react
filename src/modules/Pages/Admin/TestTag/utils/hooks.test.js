@@ -6,6 +6,7 @@ describe('Tests custom hooks', () => {
         const setStateMock = jest.fn();
         const spyState = useState => [useState, setStateMock];
         jest.spyOn(React, 'useState').mockImplementation(spyState);
+        // eslint-disable-next-line no-unused-vars
         const [_, setLocation] = useLocation();
         setLocation({ formSiteId: 100 });
         expect(setStateMock).toHaveBeenCalledWith({
