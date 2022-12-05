@@ -1,10 +1,9 @@
-/* istanbul ignore file */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { Box } from '@material-ui/core';
 
-const TestTagHeader = ({ departmentText = '', requiredText = '', ...rest } = {}) => {
+const TestTagHeader = (/* istanbul ignore next*/ { departmentText = '', requiredText = '', ...rest } = {}) => {
     TestTagHeader.propTypes = {
         departmentText: PropTypes.string.isRequired,
         requiredText: PropTypes.string.isRequired,
