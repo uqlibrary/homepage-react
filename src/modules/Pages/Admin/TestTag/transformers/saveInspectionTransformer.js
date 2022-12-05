@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { mutateObject, mutateClearObject } from '../utils/transformers';
 
 export const saveInspectionTransformer = (passValue, failValue) => ({
@@ -83,7 +82,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
     },
     with_repair: state => {
         if (state.with_repair.isRepair) {
-            if (!!state.with_discarded) state.with_discarded.discard_reason = undefined;
+            /* istanbul ignore else */ if (!!state.with_discarded) state.with_discarded.discard_reason = undefined;
             delete state.with_repair.isRepair;
             return { with_repair: state.with_repair, with_discarded: state.with_discarded };
         } else {
@@ -92,7 +91,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
     },
     with_discarded: state => {
         if (state.with_discarded.isDiscarded) {
-            if (!!state.with_repair) state.with_repair.repairer_contact_details = undefined;
+            /* istanbul ignore else */ if (!!state.with_repair) state.with_repair.repairer_contact_details = undefined;
             delete state.with_discarded.isDiscarded;
             return { with_repair: state.with_repair, with_discarded: state.with_discarded };
         } else {
