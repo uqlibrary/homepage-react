@@ -102,9 +102,8 @@ export const PromoPanelList = ({
                 history={history}
                 panelList={promoPanelList}
                 title="Past Panels"
-                canEdit
                 canClone
-                canDelete
+                isPastPanels
                 knownGroups={knownGroups}
                 panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
                 showCurrent={false}

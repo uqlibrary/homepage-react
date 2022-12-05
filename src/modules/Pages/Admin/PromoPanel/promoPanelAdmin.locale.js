@@ -338,10 +338,10 @@ export default {
             confirmButtonLabel: 'Proceed',
         },
         confirmUnschedule: {
-            confirmationTitle: 'Unschedule [N] panels?',
+            confirmationTitle: 'Unschedule panel?',
             confirmationMessage: (
                 <Fragment>
-                    Are you sure you want to unschedule the selected panels for this group?
+                    Are you sure you want to unschedule the selected panel for this group?
                     <br />
                     The panel will no longer be scheduled for this group.
                 </Fragment>

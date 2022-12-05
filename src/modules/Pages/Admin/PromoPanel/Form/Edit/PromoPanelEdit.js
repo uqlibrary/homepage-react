@@ -12,7 +12,7 @@ import { useParams } from 'react-router';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/PromoPanelForm';
+import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
 
 // import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';

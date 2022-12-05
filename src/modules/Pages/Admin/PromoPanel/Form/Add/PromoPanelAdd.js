@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/PromoPanelForm';
+import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';

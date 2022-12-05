@@ -81,7 +81,7 @@ export const PromoPanelSplitButton = ({
                 <Grid item xs={12} className={classes.parent}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         <Button
-                            children={canEdit ? 'Edit' : 'Preview'}
+                            children={canEdit ? 'Edit' : 'View'}
                             color="primary"
                             data-testid={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
                             id={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
@@ -121,17 +121,19 @@ export const PromoPanelSplitButton = ({
                                                     key={`${alertId}-preview-button`}
                                                     onClick={() => handlePreview(row, item)}
                                                 >
-                                                    Preview
+                                                    View
                                                 </MenuItem>
-                                            ) : (
-                                                <MenuItem
-                                                    data-testid={`${alertId}-edit-button`}
-                                                    key={`${alertId}-edit-button`}
-                                                    onClick={() => navigateToEditForm(row.panel_id)}
-                                                >
-                                                    Edit
-                                                </MenuItem>
-                                            )}
+                                            ) : null
+                                            // (
+                                            //     <MenuItem
+                                            //         data-testid={`${alertId}-edit-button`}
+                                            //         key={`${alertId}-edit-button`}
+                                            //         onClick={() => navigateToEditForm(row.panel_id)}
+                                            //     >
+                                            //         Edit
+                                            //     </MenuItem>
+                                            // )
+                                            }
                                             {!!canClone && (
                                                 <MenuItem
                                                     data-testid={`${alertId}-clone-button`}

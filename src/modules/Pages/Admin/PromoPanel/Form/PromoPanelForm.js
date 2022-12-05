@@ -8,18 +8,18 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-import { PromoPanelSaveConfirmation } from './Form/PromoPanelSaveConfirmation';
-import PromoPanelPreview from './PromoPanelPreview';
+import { PromoPanelSaveConfirmation } from './PromoPanelSaveConfirmation';
+import PromoPanelPreview from '../PromoPanelPreview';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
-import PromoPanelGroupDateSelector from './Form/PromoPanelGroupDateSelector';
-import PromoPanelFormConfirmation from './Form/PromoPanelFormConfirmation';
-import { addSchedule, initLists, saveGroupDate } from './promoPanelHelpers';
-import PromoPanelContentButtons from './PromoPanelContentButtons';
-import PromoPanelFormSchedules from './PromoPanelFormSchedules';
+import PromoPanelGroupDateSelector from './PromoPanelGroupDateSelector';
+import PromoPanelFormConfirmation from './PromoPanelFormConfirmation';
+import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';
+import PromoPanelContentButtons from '../PromoPanelContentButtons';
+import PromoPanelFormSchedules from '../PromoPanelFormSchedules';
 
 const useStyles = makeStyles(() => ({
     contentRequired: {

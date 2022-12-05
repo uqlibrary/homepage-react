@@ -156,6 +156,7 @@ export const PromoPanelListPanels = ({
     knownGroups,
     showBulkDelete,
     showFilter,
+    isPastPanels,
     deletePanel,
     title,
     canEdit,
@@ -525,8 +526,9 @@ export const PromoPanelListPanels = ({
                                                     align="flex-end"
                                                     alertId={alert.id}
                                                     canEdit={canEdit}
+                                                    pastPanels={isPastPanels}
                                                     canClone={canClone}
-                                                    canDelete={!isDefaultPanel}
+                                                    canDelete={canDelete && !isDefaultPanel}
                                                     onPreview={item => onPreviewOpen(item)}
                                                     row={item}
                                                     deletePanelById={row => deletePanelById(row)}
@@ -581,6 +583,7 @@ export const PromoPanelListPanels = ({
 
 PromoPanelListPanels.propTypes = {
     panelList: PropTypes.array,
+    isPastPanels: PropTypes.bool,
     title: PropTypes.string,
     showBulkDelete: PropTypes.bool,
     showFilter: PropTypes.bool,
