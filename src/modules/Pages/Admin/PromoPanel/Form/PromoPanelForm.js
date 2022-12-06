@@ -19,7 +19,7 @@ import PromoPanelGroupDateSelector from './PromoPanelGroupDateSelector';
 import PromoPanelFormConfirmation from './PromoPanelFormConfirmation';
 import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';
 import PromoPanelContentButtons from '../PromoPanelContentButtons';
-import PromoPanelFormSchedules from '../PromoPanelFormSchedules';
+import PromoPanelFormSchedules from './PromoPanelFormSchedules';
 
 const useStyles = makeStyles(() => ({
     contentRequired: {
@@ -166,6 +166,7 @@ export const PromoPanelForm = ({
                 });
             });
         }
+        console.log('Scheduled List', schedules);
         if (values.defaultList.length > 0) {
             values.defaultList.map(item => {
                 defaults.push({ name: item.groupNames, existing: item.existing });
@@ -505,7 +506,11 @@ export const PromoPanelForm = ({
                 confirmAddSchedule={handleAddSchedule}
                 cancelAction={cancelConfirmation}
             />
-
+            {
+                <p>
+                    updated {`${panelUpdated}`} queueLength {queueLength}
+                </p>
+            }
             <PromoPanelSaveConfirmation
                 isConfirmOpen={panelUpdated && queueLength === 0}
                 title={isEdit ? 'Panel has been updated' : 'Panel has been created'}
