@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import parse from 'html-react-parser';
 import Button from '@material-ui/core/Button';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from '@material-ui/pickers';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 // import { formatDate } from '../Spotlights/spotlighthelpers';
 
@@ -70,6 +71,7 @@ export const PromoPanelGroupDateSelector = ({
 
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(defaultEndDate);
+    const [saveEnabled, setSaveEnabled] = useState(true);
 
     useEffect(() => {
         setStartDate(defaultStartDate);
@@ -77,9 +79,52 @@ export const PromoPanelGroupDateSelector = ({
     }, [defaultStartDate, defaultEndDate]);
 
     const handleChange = event => value => {
-        event === 'start'
-            ? setStartDate(value.format('YYYY-MM-DD HH:mm'))
-            : setEndDate(value.format('YYYY-MM-DD HH:mm'));
+        // console.log('The Value', value, event);
+        // console.log('XXXThe formatted value', value.format('YYYY-MM-DD HH:mm'));
+        // console.log('XXXValues', startDate, endDate);
+        if (event === 'start') {
+            if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
+                setSaveEnabled(false);
+            } else {
+                setSaveEnabled(true);
+            }
+            setStartDate(value.format('YYYY-MM-DD HH:mm'));
+        } else {
+            if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
+                setSaveEnabled(false);
+            } else {
+                setSaveEnabled(true);
+            }
+            setEndDate(value.format('YYYY-MM-DD HH:mm'));
+        }
+
+        // event === 'start'
+        //     ?
+        //     : setEndDate(value.format('YYYY-MM-DD HH:mm'));
+        // console.log('start, end', startDate, endDate);
+        // if (event === 'start') {
+        //     if (moment(endDate).isSameOrBefore(moment(value.format('YYYY-MM-DD HH:mm')))) {
+        //         setSaveEnabled(false);
+        //     } else {
+        //         setSaveEnabled(true);
+        //     }
+        // } else {
+        //     if (moment(value.format('YYYY-MM-DD HH:mm')).isSameOrBefore(moment(startDate))) {
+        //         setSaveEnabled(false);
+        //         console.log('Setting to false');
+        //     } else {
+        //         setSaveEnabled(true);
+        //         console.log('setting to true');
+        //     }
+        // }
+        // console.log('Checking the validity of the dates', startDate, endDate);
+        // if (moment(endDate).isBefore(moment(startDate))) {
+        //     setSaveEnabled(false);
+        //     console.log('Setting to false');
+        // } else {
+        //     setSaveEnabled(true);
+        //     console.log('setting to true');
+        // }
     };
 
     const handleGroupDateClose = () => {
@@ -122,6 +167,8 @@ export const PromoPanelGroupDateSelector = ({
         }
     };
 
+    console.log('DEFAULTS', defaultStartDate, defaultEndDate);
+
     return (
         <React.Fragment>
             <Dialog
@@ -138,7 +185,7 @@ export const PromoPanelGroupDateSelector = ({
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item xs>
-                            <KeyboardDateTimePicker
+                            <DateTimePicker
                                 id="admin-promopanel-group-start-date"
                                 data-testid="admin-promopanel-group-start-date"
                                 value={startDate}
@@ -157,8 +204,8 @@ export const PromoPanelGroupDateSelector = ({
                                 <div className={classes.errorStyle}>This date is in the past.</div>
                             )}
                         </Grid>
-                        <Grid item xs>
-                            <KeyboardDateTimePicker
+                        <Grid item xs align="left">
+                            <DateTimePicker
                                 id="admin-promopanel-group-end-date"
                                 data-testid="admin-promopanel-group-end-date"
                                 value={endDate}
@@ -177,25 +224,32 @@ export const PromoPanelGroupDateSelector = ({
                                 <div className={classes.errorStyle}>This date is in the past.</div>
                             )}
                         </Grid>
-                    </Grid>
+                        <Grid item xs={12}>
+                            {moment(endDate).isBefore(moment(startDate)) && (
+                                <span>Start Date cannot be after End Date.</span>
+                            )}
+                        </Grid>
 
-                    <Grid item xs={12} align="right">
-                        <Button
-                            style={{ marginTop: 10 }}
-                            color="secondary"
-                            children="Cancel"
-                            data-testid="admin-promopanel-group-button-cancel"
-                            variant="contained"
-                            onClick={handleGroupDateClose}
-                        />
-                        <Button
-                            style={{ marginTop: 10 }}
-                            color="primary"
-                            children="Save"
-                            data-testid="admin-promopanel-group-button-save"
-                            variant="contained"
-                            onClick={handleGroupDateSave}
-                        />
+                        <Grid item xs={12} align="right">
+                            <Button
+                                style={{ marginTop: 10 }}
+                                color="secondary"
+                                children="Cancel"
+                                data-testid="admin-promopanel-group-button-cancel"
+                                variant="contained"
+                                onClick={handleGroupDateClose}
+                            />
+
+                            <Button
+                                style={{ marginTop: 10 }}
+                                color="primary"
+                                children="Save"
+                                disabled={!saveEnabled}
+                                data-testid="admin-promopanel-group-button-save"
+                                variant="contained"
+                                onClick={handleGroupDateSave}
+                            />
+                        </Grid>
                     </Grid>
                 </DialogContent>
             </Dialog>
