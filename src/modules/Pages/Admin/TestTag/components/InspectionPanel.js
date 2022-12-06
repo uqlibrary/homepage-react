@@ -206,6 +206,8 @@ const InspectionPanel = ({
                                     value={formValues?.inspection_fail_reason ?? ''}
                                     handleChange={handleChange}
                                     updateKey="inspection_fail_reason"
+                                    id="inspectionFailReason"
+                                    data-testid="inspectionFailReason"
                                 />
                             </FormControl>
                         </Grid>
@@ -223,6 +225,8 @@ const InspectionPanel = ({
                                 value={formValues?.inspection_notes ?? ''}
                                 handleChange={handleChange}
                                 updateKey="inspection_notes"
+                                id="inspectionNotes"
+                                data-testid="inspectionNotes"
                             />
                         </FormControl>
                     </Grid>

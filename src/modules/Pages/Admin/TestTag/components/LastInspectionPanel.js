@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -55,13 +54,7 @@ const useTestPanelStyles = makeStyles(theme => ({
     },
 }));
 
-const LastInspectionPanel = ({
-    asset,
-    currentLocation,
-    dateFormatPattern,
-    disabled = false,
-    forceOpen = false,
-} = {}) => {
+const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabled = false, forceOpen = false }) => {
     LastInspectionPanel.propTypes = {
         asset: PropTypes.object.isRequired,
         currentLocation: PropTypes.object.isRequired,
@@ -82,11 +75,11 @@ const LastInspectionPanel = ({
     const didPass = lastTest?.inspect_status === testStatusEnum.PASSED.value;
     const theme = useTheme();
     const classes = useTestPanelStyles({ pass: didPass });
-    const [testPanelExpanded, setTestPanelExpanded] = useState(!disabled);
+    const [testPanelExpanded, setTestPanelExpanded] = React.useState(!disabled);
     const [mismatchingLocation, setMismatchingLocation] = useState(false);
 
     useEffect(() => {
-        if (!!asset?.asset_id) {
+        /* istanbul ignore else */ if (!!asset?.asset_id) {
             setMismatchingLocation(
                 currentLocation.formSiteId !== lastLocation?.site_id ||
                     currentLocation.formBuildingId !== lastLocation?.building_id ||
@@ -123,9 +116,15 @@ const LastInspectionPanel = ({
                             <Chip
                                 icon={
                                     didPass ? (
-                                        <DoneIcon classes={{ root: classes.chipIcon }} />
+                                        <DoneIcon
+                                            classes={{ root: classes.chipIcon }}
+                                            data-testid="lastInspectionPassChip"
+                                        />
                                     ) : (
-                                        <ClearIcon classes={{ root: classes.chipIcon }} />
+                                        <ClearIcon
+                                            classes={{ root: classes.chipIcon }}
+                                            data-testid="lastInspectionFailChip"
+                                        />
                                     )
                                 }
                                 classes={{ root: classes.chip }}
@@ -141,6 +140,8 @@ const LastInspectionPanel = ({
             }
             headerAction={
                 <IconButton
+                    id="headerExpandButton"
+                    data-testid="headerExpandButton"
                     className={clsx(classes.expand, {
                         [classes.expandOpen]: forceOpen || testPanelExpanded,
                     })}
@@ -224,7 +225,7 @@ const LastInspectionPanel = ({
                                 {formLocale.failReasonLabel}
                             </Typography>
                             <Typography component={'p'}>
-                                {lastTest?.inspect_fail_reason ?? formLocale.labelNone}
+                                {lastTest?.inspect_fail_reason ?? formLocale.noneLabel}
                             </Typography>
                         </Grid>
                     )}
@@ -232,7 +233,7 @@ const LastInspectionPanel = ({
                         <Typography component={'p'} className={classes.pastTestLabel}>
                             {formLocale.testNotesLabel}
                         </Typography>
-                        <Typography component={'p'}>{lastTest?.inspect_notes ?? formLocale.labelNone}</Typography>
+                        <Typography component={'p'}>{lastTest?.inspect_notes ?? formLocale.noneLabel}</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography component={'span'} className={classes.pastTestLabel}>
