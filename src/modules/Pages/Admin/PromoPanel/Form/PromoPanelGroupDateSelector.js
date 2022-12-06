@@ -128,6 +128,8 @@ export const PromoPanelGroupDateSelector = ({
     };
 
     const handleGroupDateClose = () => {
+        setStartDate(defaultStartDate);
+        setStartDate(defaultEndDate);
         handleCloseGroupDate();
     };
 
@@ -167,7 +169,7 @@ export const PromoPanelGroupDateSelector = ({
         }
     };
 
-    console.log('DEFAULTS', defaultStartDate, defaultEndDate);
+    // console.log('DEFAULTS', defaultStartDate, defaultEndDate);
 
     return (
         <React.Fragment>

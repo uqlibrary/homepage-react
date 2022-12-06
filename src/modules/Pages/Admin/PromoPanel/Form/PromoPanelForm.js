@@ -506,11 +506,11 @@ export const PromoPanelForm = ({
                 confirmAddSchedule={handleAddSchedule}
                 cancelAction={cancelConfirmation}
             />
-            {
+            {/* {
                 <p>
                     updated {`${panelUpdated}`} queueLength {queueLength}
                 </p>
-            }
+            } */}
             <PromoPanelSaveConfirmation
                 isConfirmOpen={panelUpdated && queueLength === 0}
                 title={isEdit ? 'Panel has been updated' : 'Panel has been created'}
