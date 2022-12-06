@@ -97,6 +97,8 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 value={formValues?.repairer_contact_details ?? ''}
                                 handleChange={handleChange}
                                 updateKey="repairer_contact_details"
+                                id="repairerDetails"
+                                data-testid="repairerDetails"
                             />
                         </FormControl>
                     </Grid>
@@ -142,6 +144,8 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 value={formValues?.discard_reason ?? ''}
                                 handleChange={handleChange}
                                 updateKey="discard_reason"
+                                id="discardReason"
+                                data-testid="discardReason"
                             />
                         </FormControl>
                     </Grid>
