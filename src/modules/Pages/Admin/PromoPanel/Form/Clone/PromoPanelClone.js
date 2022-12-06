@@ -16,6 +16,10 @@ export const PromoPanelClone = ({
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
     history,
+    queueLength,
+    promoPanelListError,
+    promoPanelUserTypesError,
+    promoPanelActionError,
 }) => {
     const { promopanelid } = useParams();
 
@@ -116,6 +120,12 @@ export const PromoPanelClone = ({
     }, [promoPanelList]);
     return (
         <StandardPage title="Promo Panel Management">
+            {(!!promoPanelListError || !!promoPanelUserTypesError) && (
+                <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
+                    <p>There was an error loading data from the server. Please refresh and try again.</p>
+                    <p>{promoPanelListError || promoPanelUserTypesError}</p>
+                </div>
+            )}
             <section aria-live="assertive">
                 {!!currentPanel && (
                     <PromoPanelForm
@@ -131,6 +141,7 @@ export const PromoPanelClone = ({
                         isEdit={false}
                         isClone
                         isDefaultPanel={false}
+                        queueLength={queueLength}
                     />
                 )}
             </section>
@@ -144,8 +155,11 @@ PromoPanelClone.propTypes = {
     promoPanelUserTypesLoading: PropTypes.bool,
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
-
     history: PropTypes.object,
+    queueLength: PropTypes.number,
+    promoPanelListError: PropTypes.string,
+    promoPanelUserTypesError: PropTypes.string,
+    promoPanelActionError: PropTypes.string,
 };
 
 export default PromoPanelClone;

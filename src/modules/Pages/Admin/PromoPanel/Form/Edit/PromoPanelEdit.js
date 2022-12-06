@@ -9,7 +9,6 @@ import { useParams } from 'react-router';
 //     getTimeSundayNextFormatted,
 // } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
@@ -28,6 +27,9 @@ export const PromoPanelEdit = ({
     history,
     panelUpdated,
     queueLength,
+    promoPanelListError,
+    promoPanelUserTypesError,
+    promoPanelActionError,
 }) => {
     const { promopanelid } = useParams();
 
@@ -169,6 +171,12 @@ export const PromoPanelEdit = ({
     }, [promoPanelList]);
     return (
         <StandardPage title="Promo Panel Management">
+            {(!!promoPanelListError || !!promoPanelUserTypesError) && (
+                <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
+                    <p>There was an error loading data from the server. Please refresh and try again.</p>
+                    <p>{promoPanelListError || promoPanelUserTypesError}</p>
+                </div>
+            )}
             <section aria-live="assertive">
                 {!!currentPanel && (
                     <PromoPanelForm
@@ -202,6 +210,10 @@ PromoPanelEdit.propTypes = {
     panelUpdated: PropTypes.bool,
     promoPanelSaving: PropTypes.bool,
     history: PropTypes.object,
+    queueLength: PropTypes.number,
+    promoPanelListError: PropTypes.string,
+    promoPanelUserTypesError: PropTypes.string,
+    promoPanelActionError: PropTypes.string,
 };
 
 export default PromoPanelEdit;

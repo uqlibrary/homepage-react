@@ -16,6 +16,9 @@ export const PromoPanelAdd = ({
     history,
     panelUpdated,
     queueLength,
+    promoPanelListError,
+    promoPanelUserTypesError,
+    promoPanelActionError,
 }) => {
     const defaults = {
         id: '',
@@ -70,6 +73,12 @@ export const PromoPanelAdd = ({
 
     return (
         <StandardPage title="Promo Panel Management">
+            {(!!promoPanelListError || !!promoPanelUserTypesError) && (
+                <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
+                    <p>There was an error loading data from the server. Please refresh and try again.</p>
+                    <p>{promoPanelListError || promoPanelUserTypesError}</p>
+                </div>
+            )}
             <section aria-live="assertive">
                 <PromoPanelForm
                     scheduledList={[]}
@@ -99,10 +108,10 @@ PromoPanelAdd.propTypes = {
     promoPanelUserTypeList: PropTypes.array,
     promoPanelLoading: PropTypes.bool,
     history: PropTypes.object,
-    publicFileUploading: PropTypes.any,
-    publicFileUploadError: PropTypes.any,
-    publicFileUploadResult: PropTypes.any,
     queueLength: PropTypes.number,
+    promoPanelListError: PropTypes.string,
+    promoPanelUserTypesError: PropTypes.string,
+    promoPanelActionError: PropTypes.string,
 };
 
 export default PromoPanelAdd;
