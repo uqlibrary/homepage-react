@@ -260,6 +260,7 @@ export const PromoPanelListGroupPanels = ({
         }
     };
     const navigateToEditForm = alertid => {
+        actions.updateScheduleQueuelength(0);
         history.push(`/admin/promopanel/edit/${alertid}`);
         scrollToTopOfPage();
     };
