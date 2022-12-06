@@ -16,6 +16,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { isEnrolledInSubject } from 'modules/Pages/LearningResources/components/SearchCourses';
 // import { formatDate } from '../Spotlights/spotlighthelpers';
 
 const moment = require('moment');
@@ -111,7 +112,7 @@ export const PromoPanelAddSchedule = ({
         const available = [];
         promoPanelList.length > 0 &&
             promoPanelList.map(item => {
-                if (item.default_panels_for.length < 1) {
+                if (item.default_panels_for.length < 1 && !(item.hasOwnProperty('is_past') && item.is_past)) {
                     available.push(item);
                 }
             });

@@ -13,11 +13,14 @@ export const PromoPanelList = ({
     promoPanelListLoading,
     promoPanelUserTypesLoading,
     promoPanelActionError,
+    promoPanelListError,
+    promoPanelUserTypesError,
     history,
     panelUpdated,
     promoPanelSaving,
 }) => {
     const [knownGroups, setKnownGroups] = React.useState([]);
+    const [hasError, setHasError] = React.useState(false);
 
     React.useEffect(() => {
         // do something with the promo Panel List and the user type here.
@@ -58,6 +61,12 @@ export const PromoPanelList = ({
                 panelList={promoPanelUserTypeList}
                 title="Currently shown panels"
             /> */}
+            {(!!promoPanelListError || !!promoPanelUserTypesError) && (
+                <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
+                    <p>There was an error loading data from the server. Please refresh and try again.</p>
+                    <p>{promoPanelListError || promoPanelUserTypesError}</p>
+                </div>
+            )}
             <PromoPanelUtilityArea
                 actions={actions}
                 helpContent={locale.listPage.help}
@@ -123,6 +132,8 @@ PromoPanelList.propTypes = {
     promoPanelActionError: PropTypes.object,
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,
+    promoPanelListError: PropTypes.string,
+    promoPanelUserTypesError: PropTypes.string,
     promoPanelSaving: PropTypes.bool,
     history: PropTypes.object,
 };

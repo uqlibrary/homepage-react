@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Select from '@material-ui/core/Select';
@@ -11,14 +10,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
@@ -36,12 +32,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../promoPanelAdmin.locale';
-import ReactSeventeenAdapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { getClassNumberFromPieces } from 'data/actions';
-// import AlertSplitButton from './AlertSplitButton';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { filterPanelList } from '../promoPanelHelpers';
-import { CollectionsBookmarkOutlined } from '@material-ui/icons';
 
 const moment = require('moment');
 
@@ -189,23 +181,6 @@ export const PromoPanelListPanels = ({
             filteredList = panelList.filter(item => item.default_panels_for.length < 1 && item.panel_schedule < 1);
         }
         if (!hideAlloc && showPast) {
-            // const pastSchedules = [];
-            // panelList.map(panel => {
-            //     let found = false;
-            //     if (panel.panel_schedule.length > 0) {
-            //         panel.panel_schedule.map(scheduleEntry => {
-            //             if (
-            //                 !found &&
-            //                 scheduleEntry.user_group_schedule.filter(entry =>
-            //                     moment(entry.panel_schedule_end_time).isAfter(moment()),
-            //                 ).length < 1
-            //             ) {
-            //                 pastSchedules.push(panel);
-            //                 found = true;
-            //             }
-            //         });
-            //     }
-            // });
             const pastSchedules = filteredList.filter(
                 panel => panel.hasOwnProperty('is_past') && panel.is_past === true,
             );

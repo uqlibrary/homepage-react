@@ -75,6 +75,7 @@ export function loadPromoPanelList() {
                 });
             })
             .catch(error => {
+                console.log('Catching error');
                 dispatch({
                     type: actions.PROMOPANEL_LIST_LOAD_FAILED,
                     payload: error.message,

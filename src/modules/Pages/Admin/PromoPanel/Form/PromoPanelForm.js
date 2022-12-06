@@ -149,18 +149,6 @@ export const PromoPanelForm = ({
     const cancelConfirmation = () => {
         setIsConfirmOpen(false);
     };
-    const confirmSavePromo = () => {
-        setConfirmationMode('save');
-        if (values.is_default_panel) {
-            // show the confirmation box that it will overwrite the groups default with THIS panel.
-            const formGroups = [];
-            displayList.map(item => {
-                formGroups.push(item.groupNames);
-            });
-            setConfirmationMessage(locale.form.defaultGroups.alert(formGroups));
-            setIsConfirmOpen(true);
-        }
-    };
 
     const savePromoPanel = () => {
         const schedules = [];
@@ -230,6 +218,24 @@ export const PromoPanelForm = ({
             actions.createPromoPanel(newValues);
         }
     };
+
+    const confirmSavePromo = () => {
+        setConfirmationMode('save');
+        if (values.is_default_panel) {
+            if (displayList.length > 0) {
+                // show the confirmation box that it will overwrite the groups default with THIS panel.
+                const formGroups = [];
+                displayList.map(item => {
+                    formGroups.push(item.groupNames);
+                });
+                setConfirmationMessage(locale.form.defaultGroups.alert(formGroups));
+                setIsConfirmOpen(true);
+            } else {
+                savePromoPanel();
+            }
+        }
+    };
+
     const handleContentChange = data => {
         setValues({
             ...values,
