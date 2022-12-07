@@ -13,6 +13,7 @@ import {
     PROMOPANEL_ADD_SCHEDULE_API,
     PROMOPANEL_UNSCHEDULE_API,
     PROMOPANEL_UPDATE_SCHEDULE_API,
+    PROMOPANEL_LIST_ACTIVE_PANELS_API,
 } from 'repositories/routes';
 
 export function clearPromoUpdatedStatus() {
@@ -97,6 +98,25 @@ export function loadPromoPanelUserList() {
             .catch(error => {
                 dispatch({
                     type: actions.PROMOPANEL_USERLIST_LOAD_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function loadActivePanelList() {
+    return async dispatch => {
+        dispatch({ type: actions.PROMOPANEL_LIST_ACTIVE_LOADING });
+        return get(PROMOPANEL_LIST_ACTIVE_PANELS_API())
+            .then(response => {
+                dispatch({
+                    type: actions.PROMOPANEL_LIST_ACTIVE_SUCCESS,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.PROMOPANEL_LIST_ACTIVE_FAILED,
                     payload: error.message,
                 });
             });

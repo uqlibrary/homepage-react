@@ -147,34 +147,34 @@ export const PromoPanelListActive = ({ panelList, title, isLoading, panelError }
     const [previewPanel, setPreviewPanel] = useState({});
     const handlePreviewClose = () => setPreviewOpen(false);
 
-    const calculateCurrentPanel = list => {
-        let currentPanel = null;
-        let panelType = null;
-        let panelEnd = null;
-        if (list.scheduled_panels && list.scheduled_panels.length > 0) {
-            list.scheduled_panels.map(item => {
-                const currentTime = new moment();
-                const startTime = moment(item.panel_schedule_start_time).toDate();
-                const endTime = moment(item.panel_schedule_end_time).toDate();
-                if (startTime < currentTime && endTime > currentTime) {
-                    currentPanel = item.panel_title;
-                    panelType = 'Scheduled';
-                    panelEnd = endTime;
-                }
-            });
-        }
-        if (!currentPanel && list.default_panel && Object.keys(list.default_panel).length > 0) {
-            currentPanel = list.default_panel.panel_title;
-            panelType = 'Default';
-            panelEnd = null;
-        }
-        if (!currentPanel) {
-            currentPanel = 'THERE IS NO PANEL / DEFAULT PANEL';
-            panelType = 'None';
-            panelEnd = null;
-        }
-        return [currentPanel, panelType, panelEnd];
-    };
+    // const calculateCurrentPanel = list => {
+    //     let currentPanel = null;
+    //     let panelType = null;
+    //     let panelEnd = null;
+    //     if (list.scheduled_panels && list.scheduled_panels.length > 0) {
+    //         list.scheduled_panels.map(item => {
+    //             const currentTime = new moment();
+    //             const startTime = moment(item.panel_schedule_start_time).toDate();
+    //             const endTime = moment(item.panel_schedule_end_time).toDate();
+    //             if (startTime < currentTime && endTime > currentTime) {
+    //                 currentPanel = item.panel_title;
+    //                 panelType = 'Scheduled';
+    //                 panelEnd = endTime;
+    //             }
+    //         });
+    //     }
+    //     if (!currentPanel && list.default_panel && Object.keys(list.default_panel).length > 0) {
+    //         currentPanel = list.default_panel.panel_title;
+    //         panelType = 'Default';
+    //         panelEnd = null;
+    //     }
+    //     if (!currentPanel) {
+    //         currentPanel = 'THERE IS NO PANEL / DEFAULT PANEL';
+    //         panelType = 'None';
+    //         panelEnd = null;
+    //     }
+    //     return [currentPanel, panelType, panelEnd];
+    // };
 
     // const needsPaginator = userows.length > footerDisplayMinLength;
     return (
@@ -204,29 +204,49 @@ export const PromoPanelListActive = ({ panelList, title, isLoading, panelError }
                                         Ending
                                     </Typography>
                                 </TableCell>
-                                <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
+                                {/* <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
                                     <Typography variant="body1" className={classes.headerCell}>
                                         Actions
                                     </Typography>
-                                </TableCell>
+                                </TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
+                            {!!isLoading && (
+                                <TableRow>
+                                    <TableCell colSpan={4} align="center">
+                                        <CircularProgress
+                                            id="ListTableSpinner"
+                                            color="primary"
+                                            size={38}
+                                            thickness={3}
+                                            aria-label="Loading Table Panels"
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            )}
                             {!isLoading &&
                                 panelList.map((item, id) => {
-                                    const [panelName, panelType, panelEnd] = calculateCurrentPanel(item);
+                                    console.log('ITEM', item);
+                                    // const [panelName, panelType, panelEnd] = calculateCurrentPanel(item);
                                     return (
                                         <React.Fragment key={id}>
                                             <TableRow>
-                                                <TableCell>{item.user_group_name}</TableCell>
+                                                <TableCell>{item.usergroup_group_name}</TableCell>
 
-                                                <TableCell>{panelName}</TableCell>
-                                                <TableCell>{panelType}</TableCell>
+                                                <TableCell>{item.active_panel.panel_title}</TableCell>
                                                 <TableCell>
-                                                    {(panelEnd && moment(panelEnd).format('dddd DD/MM/YYYY HH:mm a')) ||
+                                                    {!!item.active_panel.is_default_panel ? 'Default' : 'Scheduled'}{' '}
+                                                    Showing
+                                                </TableCell>
+                                                <TableCell>
+                                                    {(!!!item.active_panel.is_default_panel &&
+                                                        moment(item.active_panel.panel_schedule_end_time).format(
+                                                            'dddd DD/MM/YYYY HH:mm a',
+                                                        )) ||
                                                         '...'}
                                                 </TableCell>
-                                                <TableCell>...</TableCell>
+                                                {/* <TableCell>...</TableCell> */}
                                             </TableRow>
                                         </React.Fragment>
                                     );

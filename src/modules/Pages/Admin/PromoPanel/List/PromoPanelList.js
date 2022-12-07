@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { PromoPanelListGroupPanels } from './PromoPanelListGroupPanels';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
+import { PromoPanelListActive } from './PromoPanelListActive';
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 
@@ -10,11 +11,14 @@ export const PromoPanelList = ({
     actions,
     promoPanelList,
     promoPanelUserTypeList,
+    promoPanelActiveList,
     promoPanelListLoading,
     promoPanelUserTypesLoading,
     promoPanelActionError,
     promoPanelListError,
     promoPanelUserTypesError,
+    promoPanelActiveListError,
+    promoPanelActivePanelsLoading,
     history,
     panelUpdated,
     promoPanelSaving,
@@ -43,30 +47,33 @@ export const PromoPanelList = ({
         if (!promoPanelUserTypeList || promoPanelUserTypeList.length < 1) {
             actions.loadPromoPanelUserList();
         }
+        if (!promoPanelActiveList || promoPanelActiveList.length < 1) {
+            actions.loadActivePanelList();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     React.useEffect(() => {
         // do something with the promo Panel List and the user type here.
         if (panelUpdated) {
-            actions.loadPromoPanelList().then(actions.loadPromoPanelUserList());
+            actions.loadPromoPanelList().then(actions.loadPromoPanelUserList().then(actions.loadActivePanelList()));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [panelUpdated]);
 
     return (
         <StandardPage title="Promo panel management">
-            {/* <PromoPanelListActive
-                isLoading={promoPanelUserTypesLoading}
-                panelList={promoPanelUserTypeList}
-                title="Currently shown panels"
-            /> */}
-            {(!!promoPanelListError || !!promoPanelUserTypesError) && (
+            {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActiveListError) && (
                 <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
                     <p>{promoPanelListError || promoPanelUserTypesError}</p>
                 </div>
             )}
+            <PromoPanelListActive
+                isLoading={promoPanelActivePanelsLoading}
+                panelList={promoPanelActiveList}
+                title="Currently shown panels"
+            />
             <PromoPanelUtilityArea
                 actions={actions}
                 helpContent={locale.listPage.help}
@@ -93,7 +100,7 @@ export const PromoPanelList = ({
                 isLoading={promoPanelListLoading}
                 history={history}
                 panelList={promoPanelList}
-                title="Unallocated"
+                title="Unallocated panels"
                 canEdit
                 canClone
                 canDelete
@@ -110,7 +117,7 @@ export const PromoPanelList = ({
                 isLoading={promoPanelListLoading}
                 history={history}
                 panelList={promoPanelList}
-                title="Past Panels"
+                title="Past panels"
                 canClone
                 isPastPanels
                 knownGroups={knownGroups}
@@ -129,10 +136,13 @@ PromoPanelList.propTypes = {
     panelUpdated: PropTypes.bool,
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
+    promoPanelActiveList: PropTypes.array,
     promoPanelActionError: PropTypes.object,
+    promoPanelActiveListError: PropTypes.bool,
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,
     promoPanelListError: PropTypes.string,
+    promoPanelActivePanelsLoading: PropTypes.bool,
     promoPanelUserTypesError: PropTypes.string,
     promoPanelSaving: PropTypes.bool,
     history: PropTypes.object,

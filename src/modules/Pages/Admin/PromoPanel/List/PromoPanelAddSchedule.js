@@ -98,11 +98,11 @@ export const PromoPanelAddSchedule = ({
     const getConflictErrormsg = (title, start, end) => {
         return (
             <>
-                <p>A schedule already exists within these here times</p>
+                <p>A schedule already exists within these times</p>
                 <p>
                     <strong>{title}</strong>
                     <br />
-                    {start} &gt; {end}
+                    {moment(start).format('DD/MM/YYYY HH:mm a')} &gt; {moment(end).format('DD/MM/YYYY HH:mm a')}
                 </p>
             </>
         );

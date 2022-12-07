@@ -314,7 +314,7 @@ export const PromoPanelListGroupPanels = ({
                 showAdditionalInformation
                 additionalInformation={panelError}
             />
-            <StandardCard title={'Current and scheduled panels'} customBackgroundColor="#F7F7F7">
+            <StandardCard title={'Default and scheduled panels'} customBackgroundColor="#F7F7F7">
                 <Grid container alignItems={'flex-end'} style={{ marginBottom: 10 }}>
                     <Grid item xs={1} style={{ paddingBottom: 5 }}>
                         Filter By:

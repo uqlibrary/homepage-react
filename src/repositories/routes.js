@@ -168,6 +168,7 @@ export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });
 export const PROMOPANEL_CREATE_API = () => ({ apiUrl: 'promo_panel/panel' });
 export const PROMOPANEL_UPDATE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/${id}` });
 export const PROMOPANEL_LIST_USERTYPES_API = () => ({ apiUrl: 'promo_panel/user_groups' });
+export const PROMOPANEL_LIST_ACTIVE_PANELS_API = () => ({ apiUrl: 'promo_panel/user_groups/active' });
 export const PROMOPANEL_LIST_API = () => ({ apiUrl: 'promo_panel/panels' });
 export const PROMOPANEL_GET_BY_ID_API = ({ id }) => ({ apiUrl: `promo-panel/${id}` });
 export const PROMOPANEL_GET_CURRENT_API = () => ({ apiUrl: 'promo-panel' });
