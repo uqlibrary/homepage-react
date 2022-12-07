@@ -26,7 +26,7 @@ const formValues = {
     user_id: 3,
 };
 
-describe('TabPanel Renders component', () => {
+describe('TabPanel', () => {
     it('renders component', () => {
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
