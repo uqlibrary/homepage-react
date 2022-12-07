@@ -46,13 +46,13 @@ const AssetPanel = ({
     saveInspectionSaving,
     isMobileView,
     isValid,
-} = {}) => {
+}) => {
     AssetPanel.propTypes = {
         actions: PropTypes.any.isRequired,
         currentRetestList: PropTypes.array.isRequired,
         currentAssetOwnersList: PropTypes.array.isRequired,
         formValues: PropTypes.object.isRequired,
-        selectedAsset: PropTypes.object.isRequired,
+        selectedAsset: PropTypes.object,
         resetForm: PropTypes.func.isRequired,
         location: PropTypes.object.isRequired,
         assignCurrentAsset: PropTypes.func.isRequired,
@@ -69,7 +69,7 @@ const AssetPanel = ({
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
     const [formAssetList, setFormAssetList] = useState(assetsList);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = React.useState(false);
 
     const debounceAssetsSearch = React.useRef(
         debounce(500, pattern => {
@@ -103,6 +103,8 @@ const AssetPanel = ({
                 <Grid xs={12} item sm={6} md={3}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
+                            id="testntagFormAssetId"
+                            data-testid="testntagFormAssetId"
                             fullWidth
                             open={isOpen}
                             value={formValues?.asset_id_displayed ?? null}
@@ -164,7 +166,12 @@ const AssetPanel = ({
                                         endAdornment: (
                                             <React.Fragment>
                                                 {!!assetsListLoading ? (
-                                                    <CircularProgress color="inherit" size={20} />
+                                                    <CircularProgress
+                                                        color="inherit"
+                                                        size={20}
+                                                        id="assetIdSpinner"
+                                                        data-testid="assetIdSpinner"
+                                                    />
                                                 ) : null}
                                                 {params.InputProps.endAdornment}
                                             </React.Fragment>
@@ -173,6 +180,11 @@ const AssetPanel = ({
                                     onChange={e => {
                                         !isOpen && setIsOpen(true);
                                         debounceAssetsSearch(e.target.value);
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        id: 'testntagFormAssetIdInput',
+                                        'data-testid': 'testntagFormAssetIdInput',
                                     }}
                                 />
                             )}
@@ -183,6 +195,8 @@ const AssetPanel = ({
                 <Grid xs={12} item sm={6}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
+                            id="testntagFormAssetType"
+                            data-testid="testntagFormAssetType"
                             fullWidth
                             options={initConfig?.asset_types ?? []}
                             value={
@@ -212,11 +226,21 @@ const AssetPanel = ({
                                         endAdornment: (
                                             <React.Fragment>
                                                 {initConfigLoading ? (
-                                                    <CircularProgress color="inherit" size={20} />
+                                                    <CircularProgress
+                                                        color="inherit"
+                                                        size={20}
+                                                        id="assetTypeSpinner"
+                                                        data-testid="assetTypeSpinner"
+                                                    />
                                                 ) : null}
                                                 {params.InputProps.endAdornment}
                                             </React.Fragment>
                                         ),
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        id: 'testntagFormAssetTypeInput',
+                                        'data-testid': 'testntagFormAssetTypeInput',
                                     }}
                                 />
                             )}
@@ -231,9 +255,15 @@ const AssetPanel = ({
                     <FormControl className={classes.formControl} fullWidth>
                         <InputLabel shrink>{locale.form.asset.ownerLabel}</InputLabel>
                         <Select
+                            id="testntagFormOwnerid"
+                            data-testid="testntagFormOwnerid"
                             className={classes.formSelect}
                             value={formValues.asset_department_owned_by}
                             disabled={!isValidAssetId(formValues?.asset_id_displayed)}
+                            inputProps={{
+                                id: 'testntagFormOwneridInput',
+                                'data-testid': 'testntagFormOwneridInput',
+                            }}
                         >
                             {currentAssetOwnersList.map(owner => (
                                 <MenuItem value={owner.value} key={owner.value}>
@@ -248,7 +278,7 @@ const AssetPanel = ({
                 asset={selectedAsset ?? {}}
                 currentLocation={location}
                 dateFormatPattern={locale.config.dateFormatDisplay}
-                disabled={!!!selectedAsset?.last_inspection?.inspect_status ?? true}
+                disabled={!!!selectedAsset?.last_inspection?.inspect_status ?? /* istanbul ignore next */ true}
                 forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
             />
             <InspectionPanel
@@ -263,7 +293,13 @@ const AssetPanel = ({
             />
             <Grid container spacing={3}>
                 <Grid xs={12} sm={6} item>
-                    <Button variant="outlined" onClick={resetForm} fullWidth={isMobileView}>
+                    <Button
+                        variant="outlined"
+                        onClick={resetForm}
+                        fullWidth={isMobileView}
+                        id="testntagFormResetButton"
+                        data-testid="testntagFormResetButton"
+                    >
                         {locale.form.buttons.reset}
                     </Button>
                 </Grid>
@@ -275,9 +311,16 @@ const AssetPanel = ({
                             disabled={!isValid || saveInspectionSaving}
                             onClick={saveForm}
                             fullWidth={isMobileView}
+                            id="testntagFormSubmitButton"
+                            data-testid="testntagFormSubmitButton"
                         >
                             {saveInspectionSaving ? (
-                                <CircularProgress color="inherit" size={25} />
+                                <CircularProgress
+                                    color="inherit"
+                                    size={25}
+                                    id="saveInspectionSpinner"
+                                    data-testid="saveInspectionSpinner"
+                                />
                             ) : (
                                 locale.form.buttons.save
                             )}
