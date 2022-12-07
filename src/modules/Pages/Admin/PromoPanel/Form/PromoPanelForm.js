@@ -18,7 +18,7 @@ import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmi
 import PromoPanelGroupDateSelector from './PromoPanelGroupDateSelector';
 import PromoPanelFormConfirmation from './PromoPanelFormConfirmation';
 import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';
-import PromoPanelContentButtons from '../PromoPanelContentButtons';
+import PromoPanelContentButtons from './PromoPanelContentButtons';
 import PromoPanelFormSchedules from './PromoPanelFormSchedules';
 
 const useStyles = makeStyles(() => ({
@@ -120,7 +120,6 @@ export const PromoPanelForm = ({
         initLists(
             scheduledList,
             scheduledGroupNames,
-            knownGroups,
             values,
             isDefaultPanel,
             setValues,

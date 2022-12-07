@@ -205,7 +205,7 @@ export const PromoPanelGroupDateSelector = ({
                             <Button
                                 style={{ marginTop: 10 }}
                                 color="primary"
-                                children="Save"
+                                children="Ok"
                                 disabled={!saveEnabled}
                                 data-testid="admin-promopanel-group-button-save"
                                 variant="contained"

@@ -3,7 +3,6 @@ const moment = require('moment');
 export const initLists = (
     scheduledList,
     scheduledGroupNames,
-    knownGroups,
     values,
     isDefaultPanel,
     setValues,
