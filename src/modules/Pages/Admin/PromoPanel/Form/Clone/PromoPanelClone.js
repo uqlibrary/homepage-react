@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
-
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
-
-// import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 export const PromoPanelClone = ({
@@ -22,8 +18,6 @@ export const PromoPanelClone = ({
     promoPanelActionError,
 }) => {
     const { promopanelid } = useParams();
-
-    // const [scheduleList, setScheduleList] = React.useState([]);
     const [userList, setUserList] = React.useState([]);
     const [knownGroups, setKnownGroups] = React.useState([]);
     const [currentPanel, setCurrentPanel] = React.useState(null);
@@ -102,7 +96,6 @@ export const PromoPanelClone = ({
                     }
                 }
                 setUserList(userlist);
-                // setScheduleList(schedule);
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,14 +106,13 @@ export const PromoPanelClone = ({
         if (!!promoPanelList && promoPanelList.length > 0) {
             const activePanel = promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`);
             defaults.id = activePanel.id;
-            // defaults.startDateDefault = activePanel.
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelList]);
     return (
         <StandardPage title="Promo Panel Management">
-            {(!!promoPanelListError || !!promoPanelUserTypesError) && (
+            {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
                 <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
                     <p>{promoPanelListError || promoPanelUserTypesError}</p>

@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
-
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
@@ -63,17 +61,9 @@ export const PromoPanelAdd = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelList, promoPanelUserTypeList]);
 
-    // React.useEffect(() => {
-    //     /* istanbul ignore else */
-    //     if (!spotlightsLoading && !spotlights) {
-    //         actions.loadAllSpotlights();
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-
     return (
         <StandardPage title="Promo Panel Management">
-            {(!!promoPanelListError || !!promoPanelUserTypesError) && (
+            {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
                 <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
                     <p>{promoPanelListError || promoPanelUserTypesError}</p>
@@ -106,7 +96,6 @@ PromoPanelAdd.propTypes = {
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,
     promoPanelUserTypeList: PropTypes.array,
-    promoPanelLoading: PropTypes.bool,
     history: PropTypes.object,
     queueLength: PropTypes.number,
     promoPanelListError: PropTypes.string,

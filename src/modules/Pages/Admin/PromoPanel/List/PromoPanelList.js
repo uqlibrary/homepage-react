@@ -24,7 +24,6 @@ export const PromoPanelList = ({
     promoPanelSaving,
 }) => {
     const [knownGroups, setKnownGroups] = React.useState([]);
-    const [hasError, setHasError] = React.useState(false);
 
     React.useEffect(() => {
         // do something with the promo Panel List and the user type here.

@@ -178,8 +178,6 @@ PromoPanelSplitButton.propTypes = {
     deletePanelById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
     navigateToEditForm: PropTypes.func,
-    navigateToView: PropTypes.func,
-    navigateToMainFunction: PropTypes.func,
     confirmDeleteLocale: PropTypes.func,
 };
 

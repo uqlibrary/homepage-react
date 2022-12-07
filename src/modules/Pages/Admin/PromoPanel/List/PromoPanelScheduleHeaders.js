@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -28,30 +27,6 @@ export const PromoPanelScheduleHeaders = ({}) => {
             </TableRow>
         </TableHead>
     );
-};
-
-PromoPanelScheduleHeaders.propTypes = {
-    panelList: PropTypes.array,
-    title: PropTypes.string,
-    canEdit: PropTypes.bool,
-    canClone: PropTypes.bool,
-    canDelete: PropTypes.bool,
-    isLoading: PropTypes.bool,
-    rows: PropTypes.array,
-    headertag: PropTypes.string,
-    alertsLoading: PropTypes.any,
-    history: PropTypes.object,
-    actions: PropTypes.any,
-    deletePanel: PropTypes.any,
-    footerDisplayMinLength: PropTypes.number,
-    alertOrder: PropTypes.any,
-    panelError: PropTypes.string,
-};
-
-PromoPanelScheduleHeaders.defaultProps = {
-    footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
-    alertOrder: false, // what order should we sort the alerts in? false means unspecified
-    panelError: '',
 };
 
 export default PromoPanelScheduleHeaders;

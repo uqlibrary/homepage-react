@@ -4,14 +4,6 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 import { PromoPanelHelpDrawer } from './PromoPanelHelpDrawer';
-// import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
-
-/**
- * a block that shows:
- * - page heading
- * - utility buttons (help, add spotlight, anything else we want to put up here)
- * - the help drawer
- */
 
 const useStyles = makeStyles(() => ({
     actionButtonPlacer: {

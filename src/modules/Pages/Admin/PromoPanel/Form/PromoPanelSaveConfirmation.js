@@ -1,17 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
-import parse from 'html-react-parser';
 import Button from '@material-ui/core/Button';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import DialogContentText from '@material-ui/core/DialogContentText';
-// import { formatDate } from '../Spotlights/spotlighthelpers';
 
 export const useStyles = makeStyles(theme => ({
     alternateActionButtonClass: {
@@ -25,8 +21,6 @@ export const useStyles = makeStyles(theme => ({
 
 const moment = require('moment');
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-
 export const PromoPanelSaveConfirmation = ({
     isConfirmOpen,
     title,
@@ -36,7 +30,7 @@ export const PromoPanelSaveConfirmation = ({
     primaryText,
     secondaryText,
 }) => {
-    const classes = useStyles();
+    // const classes = useStyles();
     return (
         <React.Fragment>
             <Dialog open={isConfirmOpen} aria-labelledby="lightboxTitle">

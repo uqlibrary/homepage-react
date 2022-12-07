@@ -6,18 +6,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import parse from 'html-react-parser';
 import Button from '@material-ui/core/Button';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-import { isEnrolledInSubject } from 'modules/Pages/LearningResources/components/SearchCourses';
-// import { formatDate } from '../Spotlights/spotlighthelpers';
 
 const moment = require('moment');
 const ITEM_HEIGHT = 48;
@@ -75,9 +71,6 @@ export const PromoPanelAddSchedule = ({
     promoPanelList,
     handleAddGroupSchedule,
     handleCloseGroupSchedule,
-    // handleCloseGroupDate,
-    // handleSaveGroupDate,
-    // scheduleChangeIndex,
 }) => {
     const classes = useStyles();
 
@@ -189,13 +182,6 @@ export const PromoPanelAddSchedule = ({
     const handleGroupSchedule = () => {
         handleAddGroupSchedule(selectedPanel, groupName, startDate, endDate);
     };
-    // const handleGroupDateClose = () => {
-    //     handleCloseGroupDate();
-    // };
-
-    // const handleGroupDateSave = () => {
-    //     handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
-    // };
 
     return (
         <React.Fragment>
@@ -223,7 +209,6 @@ export const PromoPanelAddSchedule = ({
                                     label="Panel"
                                     value={selectedPanel}
                                     onChange={handlePanelChange}
-                                    // renderValue={selected => selected.join(', ')}
                                     MenuProps={MenuProps}
                                 >
                                     {AvailablePanels.map(item => (

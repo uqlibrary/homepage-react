@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,8 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import parse from 'html-react-parser';
 import Button from '@material-ui/core/Button';
-
-const moment = require('moment');
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -69,19 +66,6 @@ export const PromoPanelPreview = props => {
                             <p style={{ fontSize: 14, fontWeight: 100, lineHeight: 1, margin: 0 }}>
                                 {props.previewName}
                             </p>
-                            {/* <p style={{ fontSize: 12, fontWeight: 100 }}>
-                                <b>{'For Group: '}</b>
-                                {props.previewGroup.join(', ')}
-                            </p>
-                            {!!props.previewScheduled && (
-                                <p style={{ fontSize: 12, fontWeight: 100 }}>
-                                    <b>Schedule to</b>
-                                    <br />
-                                    <b>Start:</b> {moment(props.previewStart).format('dddd DD/MM/YYYY HH:mm a')}
-                                    <br />
-                                    <b>End:</b> {moment(props.previewEnd).format('dddd DD/MM/YYYY HH:mm a')}
-                                </p>
-                            )} */}
                         </>
                     }
                 />
@@ -125,18 +109,7 @@ PromoPanelPreview.propTypes = {
     previewName: PropTypes.string,
     previewTitle: PropTypes.string,
     previewContent: PropTypes.string,
-    previewGroup: PropTypes.array,
-    previewScheduled: PropTypes.bool,
-    previewStart: PropTypes.string,
-    previewEnd: PropTypes.string,
     handlePreviewClose: PropTypes.func,
-    handleLightboxClose: PropTypes.func,
-    helpButtonLabel: PropTypes.string,
-    helpContent: PropTypes.any,
-    isLightboxOpen: PropTypes.bool,
-    showViewByHistoryLightbox: PropTypes.func,
-    spotlightImageUrl: PropTypes.string,
-    spotlights: PropTypes.array,
 };
 
 PromoPanelPreview.defaultProps = {
@@ -144,7 +117,6 @@ PromoPanelPreview.defaultProps = {
     previewContent: '',
     helpButtonLabel: 'Help',
     helpContent: 'test',
-    spotlights: [],
 };
 
 export default React.memo(PromoPanelPreview);

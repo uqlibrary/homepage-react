@@ -506,11 +506,7 @@ export const PromoPanelForm = ({
                 confirmAddSchedule={handleAddSchedule}
                 cancelAction={cancelConfirmation}
             />
-            {/* {
-                <p>
-                    updated {`${panelUpdated}`} queueLength {queueLength}
-                </p>
-            } */}
+
             <PromoPanelSaveConfirmation
                 isConfirmOpen={panelUpdated && queueLength === 0}
                 title={isEdit ? 'Panel has been updated' : 'Panel has been created'}
@@ -531,12 +527,9 @@ export const PromoPanelForm = ({
 PromoPanelForm.propTypes = {
     knownGroups: PropTypes.array,
     actions: PropTypes.any,
-    promoPanelList: PropTypes.array,
     fullPromoPanelUserTypeList: PropTypes.array,
-    promoPanelUserTypeList: PropTypes.array,
     scheduledList: PropTypes.array,
     scheduledGroupNames: PropTypes.array,
-    userList: PropTypes.array,
     currentPanel: PropTypes.object,
     defaults: PropTypes.object,
     history: PropTypes.object,
@@ -544,7 +537,6 @@ PromoPanelForm.propTypes = {
     isEdit: PropTypes.bool,
     isClone: PropTypes.bool,
     panelUpdated: PropTypes.bool,
-    scheduleUpdated: PropTypes.bool,
     promoPanelSaving: PropTypes.bool,
     queueLength: PropTypes.number,
 };
@@ -552,9 +544,6 @@ PromoPanelForm.propTypes = {
 PromoPanelForm.defaultProps = {
     isDefaultPanel: false,
     promoPanelList: [],
-    publicFileUploading: false, // whether a file is currently being uploaded. Only done by Add, other defaults false
-    publicFileUploadError: false,
-    publicFileUploadResult: false,
 };
 
 export default PromoPanelForm;

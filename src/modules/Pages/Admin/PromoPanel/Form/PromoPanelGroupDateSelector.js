@@ -6,16 +6,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import parse from 'html-react-parser';
 import Button from '@material-ui/core/Button';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import { DateTimePicker } from '@material-ui/pickers';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
-// import { formatDate } from '../Spotlights/spotlighthelpers';
 
 const moment = require('moment');
-
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 const useStyles = makeStyles(theme => ({
     contentBox: {
@@ -79,9 +74,6 @@ export const PromoPanelGroupDateSelector = ({
     }, [defaultStartDate, defaultEndDate]);
 
     const handleChange = event => value => {
-        // console.log('The Value', value, event);
-        // console.log('XXXThe formatted value', value.format('YYYY-MM-DD HH:mm'));
-        // console.log('XXXValues', startDate, endDate);
         if (event === 'start') {
             if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
                 setSaveEnabled(false);
@@ -97,34 +89,6 @@ export const PromoPanelGroupDateSelector = ({
             }
             setEndDate(value.format('YYYY-MM-DD HH:mm'));
         }
-
-        // event === 'start'
-        //     ?
-        //     : setEndDate(value.format('YYYY-MM-DD HH:mm'));
-        // console.log('start, end', startDate, endDate);
-        // if (event === 'start') {
-        //     if (moment(endDate).isSameOrBefore(moment(value.format('YYYY-MM-DD HH:mm')))) {
-        //         setSaveEnabled(false);
-        //     } else {
-        //         setSaveEnabled(true);
-        //     }
-        // } else {
-        //     if (moment(value.format('YYYY-MM-DD HH:mm')).isSameOrBefore(moment(startDate))) {
-        //         setSaveEnabled(false);
-        //         console.log('Setting to false');
-        //     } else {
-        //         setSaveEnabled(true);
-        //         console.log('setting to true');
-        //     }
-        // }
-        // console.log('Checking the validity of the dates', startDate, endDate);
-        // if (moment(endDate).isBefore(moment(startDate))) {
-        //     setSaveEnabled(false);
-        //     console.log('Setting to false');
-        // } else {
-        //     setSaveEnabled(true);
-        //     console.log('setting to true');
-        // }
     };
 
     const handleGroupDateClose = () => {
@@ -169,8 +133,6 @@ export const PromoPanelGroupDateSelector = ({
         }
     };
 
-    // console.log('DEFAULTS', defaultStartDate, defaultEndDate);
-
     return (
         <React.Fragment>
             <Dialog
@@ -193,7 +155,6 @@ export const PromoPanelGroupDateSelector = ({
                                 value={startDate}
                                 label="Start date"
                                 onChange={handleChange('start')}
-                                // minDate={startDate}
                                 format="DD/MM/YYYY HH:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}
@@ -213,7 +174,6 @@ export const PromoPanelGroupDateSelector = ({
                                 value={endDate}
                                 label="End date"
                                 onChange={handleChange('end')}
-                                // minDate={startDate}
                                 format="DD/MM/YYYY HH:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}

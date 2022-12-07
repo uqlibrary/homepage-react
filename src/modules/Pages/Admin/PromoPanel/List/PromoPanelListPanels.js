@@ -37,9 +37,6 @@ import { filterPanelList } from '../promoPanelHelpers';
 
 const moment = require('moment');
 
-// original based on https://codesandbox.io/s/hier2
-// per https://material-ui.com/components/tables/#custom-pagination-actions
-
 const useStyles2 = makeStyles(
     theme => ({
         cellGroupRowOdd: {
@@ -149,7 +146,6 @@ export const PromoPanelListPanels = ({
     showBulkDelete,
     showFilter,
     isPastPanels,
-    deletePanel,
     title,
     canEdit,
     canClone,
@@ -157,7 +153,6 @@ export const PromoPanelListPanels = ({
     headertag,
     panelError,
     history,
-    showCurrent,
     showPast,
     hideAlloc,
 }) => {
@@ -192,7 +187,6 @@ export const PromoPanelListPanels = ({
     React.useEffect(() => {}, [filteredPanels]);
 
     const classes = useStyles2();
-    const rowMarker = 0;
     const regex = /(<([^>]+)>)/gi;
     const clearAllCheckboxes = () => {
         const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
@@ -356,7 +350,6 @@ export const PromoPanelListPanels = ({
                                     labelId="group-selector"
                                     id="demo-multiple-checkbox"
                                     label="Filter by group"
-                                    // InputLabel="testing"
                                     multiple
                                     value={selectorGroupNames}
                                     onChange={handleGroupFilterChange}
@@ -569,15 +562,11 @@ PromoPanelListPanels.propTypes = {
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
     knownGroups: PropTypes.array,
-    rows: PropTypes.array,
     isLoading: PropTypes.bool,
     headertag: PropTypes.string,
-    alertsLoading: PropTypes.any,
     history: PropTypes.object,
     actions: PropTypes.any,
-    deletePanel: PropTypes.func,
     panelError: PropTypes.string,
-    showCurrent: PropTypes.bool,
     showPast: PropTypes.bool,
     hideAlloc: PropTypes.bool,
 };

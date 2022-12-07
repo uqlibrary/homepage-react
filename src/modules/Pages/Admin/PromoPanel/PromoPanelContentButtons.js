@@ -65,12 +65,7 @@ export const PromoPanelContentButtons = ({
     confirmSavePromo,
     savePromoPanel,
 }) => {
-    // const scheduledGroups = [];
     const classes = useStyles();
-
-    // const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
-    // const [scheduledGroups, setScheduledGroups] = useState(scheduledGroupNames);
-
     return (
         <>
             <Grid container spacing={2} style={{ marginTop: '1rem' }}>
@@ -107,7 +102,6 @@ export const PromoPanelContentButtons = ({
                             !!!values.content ||
                             values.content.length < 1
                         }
-                        // disabled={!isFormValid}
                         onClick={values.is_default_panel ? confirmSavePromo : savePromoPanel}
                         className={classes.saveButton}
                     />

@@ -166,8 +166,6 @@ export const PromoPanelListGroupPanels = ({
 
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
-    // const [unscheduleActive, setUnscheduleActive] = useState(false);
-    // const [PanelNotice, setPanelNotice] = useState('');
     const classes = useStyles2();
     const clearAllCheckboxes = () => {
         const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
@@ -281,14 +279,11 @@ export const PromoPanelListGroupPanels = ({
         actions.saveDefaultUserTypePanel({ id: panel, usergroup: group }).then(setIsAddingDefault(false));
     };
     const handleCloseGroupSchedule = () => {
-        // setGroupName('');
         setIsAddingSchedule(false);
     };
     const handleCloseGroupDefault = () => {
-        // setGroupName('');
         setIsAddingDefault(false);
     };
-    // const needsPaginator = userows.length > footerDisplayMinLength;
 
     return (
         <React.Fragment>
@@ -327,7 +322,6 @@ export const PromoPanelListGroupPanels = ({
                                 labelId="group-selector"
                                 id="demo-multiple-checkbox"
                                 label="Filter by group"
-                                // InputLabel="testing"
                                 multiple
                                 value={selectorGroupNames}
                                 onChange={handleGroupFilterChange}
@@ -429,7 +423,6 @@ export const PromoPanelListGroupPanels = ({
                                                                     'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
                                                                     'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
                                                                 }}
-                                                                // onChange={() => handleGroupDefaultChange(null, item)}
                                                                 checked
                                                                 disabled
                                                             />
@@ -583,8 +576,6 @@ PromoPanelListGroupPanels.propTypes = {
 };
 
 PromoPanelListGroupPanels.defaultProps = {
-    footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
-    alertOrder: false, // what order should we sort the alerts in? false means unspecified
     panelError: '',
 };
 

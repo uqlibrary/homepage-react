@@ -6,16 +6,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import parse from 'html-react-parser';
 import Button from '@material-ui/core/Button';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
-import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -66,7 +62,6 @@ const useStyles = makeStyles(theme => ({
 export const PromoPanelAddNewDefault = ({
     isAddingDefault,
     groupName,
-    // userPanelList,
     promoPanelList,
     handleAddGroupDefault,
     handleCloseGroupDefault,
@@ -75,8 +70,8 @@ export const PromoPanelAddNewDefault = ({
 
     const [selectedPanel, setSelectedPanel] = useState('');
     const [AvailablePanels, setAvailablePanels] = useState(promoPanelList);
-    const [showError, setShowError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    // const [showError, setShowError] = useState(false);
+    // const [errorMessage, setErrorMessage] = useState('');
 
     const handlePanelChange = event => {
         const {
@@ -124,7 +119,6 @@ export const PromoPanelAddNewDefault = ({
                                     label="Panel"
                                     value={selectedPanel}
                                     onChange={handlePanelChange}
-                                    // renderValue={selected => selected.join(', ')}
                                     MenuProps={MenuProps}
                                 >
                                     {AvailablePanels.map(item => (
@@ -136,11 +130,11 @@ export const PromoPanelAddNewDefault = ({
                             </FormControl>
                         </Grid>
                     </Grid>
-                    {showError && (
+                    {/* {showError && (
                         <Grid item xs={12}>
                             {errorMessage}
                         </Grid>
-                    )}
+                    )} */}
 
                     <Grid item xs={12} align="right">
                         <Button
@@ -157,7 +151,7 @@ export const PromoPanelAddNewDefault = ({
                             children="Save"
                             data-testid="admin-promopanel-group-button-save"
                             variant="contained"
-                            disabled={showError || selectedPanel === ''}
+                            disabled={selectedPanel === ''}
                             onClick={handleGroupDefault}
                         />
                     </Grid>
