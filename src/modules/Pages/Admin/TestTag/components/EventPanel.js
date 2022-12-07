@@ -1,5 +1,4 @@
-/* istanbul ignore file */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -33,7 +32,7 @@ const EventPanel = ({
     classes,
     hasInspection = false,
     isMobileView,
-} = {}) => {
+}) => {
     EventPanel.propTypes = {
         actions: PropTypes.any.isRequired,
         location: PropTypes.object.isRequired,
@@ -44,9 +43,8 @@ const EventPanel = ({
         hasInspection: PropTypes.bool,
         isMobileView: PropTypes.bool,
     };
-    console.log('hasInspection', hasInspection);
 
-    const [eventExpanded, setEventExpanded] = useState(true);
+    const [eventExpanded, setEventExpanded] = React.useState(true);
 
     const startDate = moment()
         .startOf('year')
@@ -80,6 +78,8 @@ const EventPanel = ({
                     aria-expanded={eventExpanded}
                     aria-label={locale.form.event.aria.collapseButtonLabel}
                     onClick={() => setEventExpanded(!eventExpanded)}
+                    id="testntagEventPanelExpander"
+                    data-testid="testntagEventPanelExpander"
                 >
                     <ExpandMoreIcon />
                 </IconButton>
@@ -92,7 +92,9 @@ const EventPanel = ({
                         <KeyboardDatePicker
                             {...locale.form.event.date}
                             id="testntag-form-event-date"
-                            data-testid="testntag-form-event-date"
+                            inputProps={{
+                                'data-testid': 'testntag-form-event-date',
+                            }}
                             InputLabelProps={inputLabelProps}
                             format={locale.config.dateFormatNoTime}
                             minDate={startDate}
@@ -128,23 +130,31 @@ const EventPanel = ({
                                     });
                                 }}
                                 error={location.formSiteId === -1}
+                                inputProps={{
+                                    id: 'testntag-form-siteid-input',
+                                    'data-testid': 'testntag-form-siteid-input',
+                                }}
                             >
                                 {!!initConfigLoading && (
-                                    <MenuItem value={-1} disabled key={'site-loading'}>
+                                    <MenuItem value={-1} disabled key={'site-loading'} data-testid="tester">
                                         {locale.form.loading}
                                     </MenuItem>
                                 )}
                                 {!!initConfig &&
                                     initConfig?.sites?.length > 0 &&
                                     initConfig.sites.map(site => (
-                                        <MenuItem value={site.site_id} key={site.site_id}>
+                                        <MenuItem
+                                            value={site.site_id}
+                                            key={site.site_id}
+                                            id={`testntag-form-siteid-option-${site.site_id}`}
+                                            data-testid={`testntag-form-siteid-site.site_id-${site.site_id}`}
+                                        >
                                             {site.site_name}
                                         </MenuItem>
                                     ))}
                             </Select>
                         </FormControl>
                     </Grid>
-
                     <Grid item xs={12} sm={6} md={4}>
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
@@ -192,11 +202,21 @@ const EventPanel = ({
                                             endAdornment: (
                                                 <React.Fragment>
                                                     {!!initConfigLoading ? (
-                                                        <CircularProgress color="inherit" size={20} />
+                                                        <CircularProgress
+                                                            color="inherit"
+                                                            size={20}
+                                                            id="buildingSpinner"
+                                                            data-testid="buildingSpinner"
+                                                        />
                                                     ) : null}
                                                     {params.InputProps.endAdornment}
                                                 </React.Fragment>
                                             ),
+                                        }}
+                                        inputProps={{
+                                            ...params.inputProps,
+                                            id: 'testntag-form-buildingid-input',
+                                            'data-testid': 'testntag-form-buildingid-input',
                                         }}
                                     />
                                 )}
@@ -243,11 +263,21 @@ const EventPanel = ({
                                             endAdornment: (
                                                 <React.Fragment>
                                                     {floorListLoading ? (
-                                                        <CircularProgress color="inherit" size={20} />
+                                                        <CircularProgress
+                                                            color="inherit"
+                                                            size={20}
+                                                            id="floorSpinner"
+                                                            data-testid="floorSpinner"
+                                                        />
                                                     ) : null}
                                                     {params.InputProps.endAdornment}
                                                 </React.Fragment>
                                             ),
+                                        }}
+                                        inputProps={{
+                                            ...params.inputProps,
+                                            id: 'testntag-form-floorid-input',
+                                            'data-testid': 'testntag-form-floorid-input',
                                         }}
                                     />
                                 )}
@@ -288,11 +318,21 @@ const EventPanel = ({
                                             endAdornment: (
                                                 <React.Fragment>
                                                     {roomListLoading ? (
-                                                        <CircularProgress color="inherit" size={20} />
+                                                        <CircularProgress
+                                                            color="inherit"
+                                                            size={20}
+                                                            id="roomSpinner"
+                                                            data-testid="roomSpinner"
+                                                        />
                                                     ) : null}
                                                     {params.InputProps.endAdornment}
                                                 </React.Fragment>
                                             ),
+                                        }}
+                                        inputProps={{
+                                            ...params.inputProps,
+                                            id: 'testntag-form-roomid-input',
+                                            'data-testid': 'testntag-form-roomid-input',
                                         }}
                                     />
                                 )}
