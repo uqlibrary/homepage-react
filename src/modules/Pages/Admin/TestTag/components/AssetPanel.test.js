@@ -224,7 +224,7 @@ describe('AssetPanel', () => {
                 inspection_date_next: '2018-12-05 14:22',
             },
             with_repair: undefined,
-            with_discarded: undefined,
+            with_discard: undefined,
         };
 
         const { getByTestId } = setup({

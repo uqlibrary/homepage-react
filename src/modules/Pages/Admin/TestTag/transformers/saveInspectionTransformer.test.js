@@ -96,15 +96,15 @@ describe('saveInspectionTransformer functions work as expected', () => {
     });
 
     it('isDiscarded sets object and value', () => {
-        expect(transformer.isDiscarded({ with_discarded: { existing: 'value' } }, { isDiscarded: true })).toEqual({
-            with_discarded: { existing: 'value', isDiscarded: true },
+        expect(transformer.isDiscarded({ with_discard: { existing: 'value' } }, { isDiscarded: true })).toEqual({
+            with_discard: { existing: 'value', isDiscarded: true },
         });
     });
     it('discard_reason sets object and value', () => {
         expect(
-            transformer.discard_reason({ with_discarded: { existing: 'value' } }, { discard_reason: 'details' }),
+            transformer.discard_reason({ with_discard: { existing: 'value' } }, { discard_reason: 'details' }),
         ).toEqual({
-            with_discarded: { existing: 'value', discard_reason: 'details' },
+            with_discard: { existing: 'value', discard_reason: 'details' },
         });
     });
 
@@ -154,13 +154,13 @@ describe('saveInspectionTransformer functions work as expected', () => {
                     isRepair: true,
                     repairer_contact_details: 'details',
                 },
-                with_discarded: { discard_reason: 'reason' },
+                with_discard: { discard_reason: 'reason' },
             }),
         ).toEqual({
             with_repair: {
                 repairer_contact_details: 'details',
             },
-            with_discarded: {
+            with_discard: {
                 discard_reason: undefined,
             },
         });
@@ -171,21 +171,21 @@ describe('saveInspectionTransformer functions work as expected', () => {
                     isRepair: false,
                     repairer_contact_details: 'details',
                 },
-                with_discarded: { discard_reason: 'reason' },
+                with_discard: { discard_reason: 'reason' },
             }),
         ).toEqual({
             with_repair: undefined,
-            with_discarded: {
+            with_discard: {
                 discard_reason: 'reason',
             },
         });
     });
 
-    it('with_discarded modified object based on set flags', () => {
+    it('with_discard modified object based on set flags', () => {
         // clear repair details
         expect(
-            transformer.with_discarded({
-                with_discarded: {
+            transformer.with_discard({
+                with_discard: {
                     isDiscarded: true,
                     discard_reason: 'details',
                 },
@@ -194,7 +194,7 @@ describe('saveInspectionTransformer functions work as expected', () => {
                 },
             }),
         ).toEqual({
-            with_discarded: {
+            with_discard: {
                 discard_reason: 'details',
             },
             with_repair: {
@@ -203,8 +203,8 @@ describe('saveInspectionTransformer functions work as expected', () => {
         });
         // clear discard details
         expect(
-            transformer.with_discarded({
-                with_discarded: {
+            transformer.with_discard({
+                with_discard: {
                     isDiscarded: false,
                     discard_reason: 'details',
                 },
@@ -213,7 +213,7 @@ describe('saveInspectionTransformer functions work as expected', () => {
                 },
             }),
         ).toEqual({
-            with_discarded: undefined,
+            with_discard: undefined,
             with_repair: {
                 repairer_contact_details: 'details',
             },
