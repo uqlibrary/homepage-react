@@ -57,8 +57,10 @@ export const ConfirmationBox = ({
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
-            <DialogContent style={{ minWidth: 400 }}>
-                <DialogContentText data-testid="message-content">{locale.confirmationMessage}</DialogContentText>
+            <DialogContent>
+                <DialogContentText data-testid="message-content" component="div">
+                    {locale.confirmationMessage}
+                </DialogContentText>
                 {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
             <DialogActions>
