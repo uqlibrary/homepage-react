@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -69,7 +68,7 @@ const InspectionPanel = ({
 
     const [formNextTestDate, setFormNextTestDate] = useState(defaultNextTestDateValue);
     useEffect(() => {
-        if (formValues.inspection_status === testStatusEnum.PASSED.value) {
+        /* istanbul ignore else */ if (formValues.inspection_status === testStatusEnum.PASSED.value) {
             handleChange('inspection_date_next')(moment().add(formNextTestDate, 'months'));
         }
 
