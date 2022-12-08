@@ -73,7 +73,7 @@ describe('TabPanel', () => {
         const testInputId = 'repairerDetails-input';
         const updateKey = 'repairer_contact_details';
         const newValue = 'repair details';
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop =>
             jest.fn(event => {
                 expect(prop).toEqual(updateKey);
