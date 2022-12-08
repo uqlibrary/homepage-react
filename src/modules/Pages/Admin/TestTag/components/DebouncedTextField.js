@@ -1,14 +1,13 @@
-/* istanbul ignore file */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'throttle-debounce';
 import TextField from '@material-ui/core/TextField';
 
 const DEBOUNCE_INTERVAL = 500;
 
-const DebouncedTextField = ({ handleChange, updateKey, value, interval = DEBOUNCE_INTERVAL, ...rest } = {}) => {
+const DebouncedTextField = ({ handleChange, updateKey, value, interval = DEBOUNCE_INTERVAL, ...rest }) => {
     const debounceText = React.useRef(debounce(interval, (e, key) => handleChange(key)(e))).current;
-    const [internalValue, setInternalValue] = useState(value ?? '');
+    const [internalValue, setInternalValue] = React.useState(value ?? '');
 
     const debounceChange = useCallback(e => {
         setInternalValue(e.target.value);
@@ -24,7 +23,17 @@ const DebouncedTextField = ({ handleChange, updateKey, value, interval = DEBOUNC
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    return <TextField onChange={debounceChange} value={internalValue} {...rest} />;
+    return (
+        <TextField
+            onChange={debounceChange}
+            value={internalValue}
+            {...rest}
+            inputProps={{
+                id: `${rest.id ?? ''}-input`,
+                'data-testid': `${rest['data-testid'] ?? /* istanbul ignore next */ ''}-input`,
+            }}
+        />
+    );
 };
 
 DebouncedTextField.propTypes = {

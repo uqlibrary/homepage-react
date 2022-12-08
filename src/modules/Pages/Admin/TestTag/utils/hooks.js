@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { useState } from 'react';
 import {
     isValidEventDate,
@@ -12,16 +11,15 @@ import {
 } from './helpers';
 const moment = require('moment');
 
-export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH:MM' } = {}) => {
+export const useForm = (
+    /* istanbul ignore next */ { defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH:mm' } = {},
+) => {
     const [formValues, setFormValues] = useState({ ...defaultValues });
 
-    const handleChange = arg => event => {
-        const prop = arg; // .replace('-', '_').replace('.', '_');
+    const handleChange = prop => event => {
         let propValue = event?.target?.value ?? event;
         if (prop.indexOf('date') > -1) {
-            propValue = moment(event)
-                .format(defaultDateFormat)
-                .toString();
+            propValue = moment(propValue).format(defaultDateFormat);
         }
         setFormValues(prevState => {
             console.log('handleChange', prop, event, propValue, { ...prevState, [prop]: propValue });
@@ -34,10 +32,10 @@ export const useForm = ({ defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH
         setFormValues(newValues);
     };
 
-    return [formValues, resetFormValues, handleChange];
+    return { formValues, resetFormValues, handleChange };
 };
 
-export const useValidation = ({ testStatusEnum = {} } = {}) => {
+export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {} } = {}) => {
     const [isValid, setIsValid] = useState(false);
 
     const validateValues = currentValues => {
@@ -52,11 +50,10 @@ export const useValidation = ({ testStatusEnum = {} } = {}) => {
                 (!!currentValues.isRepair !== !!currentValues.isDiscarded &&
                     (isValidRepair(currentValues) || isValidDiscard(currentValues)))) &&
             hasTestOrAction(currentValues);
-
         setIsValid(val);
     };
 
-    return [isValid, validateValues];
+    return { isValid, validateValues };
 };
 
 export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultFloorId = -1, defaultRoomId = -1) => {
@@ -70,5 +67,5 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
     const setLocation = update => {
         _setLocation({ ...location, ...update });
     };
-    return [location, setLocation];
+    return { location, setLocation };
 };

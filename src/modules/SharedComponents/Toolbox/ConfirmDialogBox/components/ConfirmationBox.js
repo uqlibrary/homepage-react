@@ -57,8 +57,10 @@ export const ConfirmationBox = ({
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
-            <DialogContent style={{ minWidth: 400 }}>
-                <DialogContentText data-testid="message-content">{locale.confirmationMessage}</DialogContentText>
+            <DialogContent>
+                <DialogContentText data-testid="message-content" component="div">
+                    {locale.confirmationMessage}
+                </DialogContentText>
                 {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
             <DialogActions>
@@ -76,7 +78,7 @@ export const ConfirmationBox = ({
                                 fullWidth
                                 onClick={_onAction}
                                 id="confirm-action"
-                                data-testid={`confirm-${confirmationBoxId}`}
+                                data-testid="confirm-action"
                             />
                         </Grid>
                     )}
@@ -90,7 +92,7 @@ export const ConfirmationBox = ({
                                 fullWidth
                                 onClick={_onAlternateAction}
                                 id="confirm-alternate-action"
-                                data-testid={`confirm-alternate-${confirmationBoxId}`}
+                                data-testid="confirm-alternate-action"
                             />
                         </Grid>
                     )}
@@ -103,7 +105,7 @@ export const ConfirmationBox = ({
                                 fullWidth
                                 onClick={_onCancelAction}
                                 id="confirm-cancel-action"
-                                data-testid={`cancel-${confirmationBoxId}`}
+                                data-testid="confirm-cancel-action"
                             />
                         </Grid>
                     )}

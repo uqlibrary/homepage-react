@@ -86,6 +86,12 @@ export const WithRedux = ({ initialState = Immutable.Map(), children }) => (
     <Provider store={getStore(initialState)}>{children}</Provider>
 );
 
+export const WithReduxStore = ({ initialState = Immutable.Map(), children }) => (
+    <Provider store={getStore(initialState)}>
+        <AllTheProviders>{children}</AllTheProviders>
+    </Provider>
+);
+
 module.exports = {
     ...domTestingLib,
     ...reactTestingLib,
@@ -95,5 +101,6 @@ module.exports = {
     withRedux,
     withRouter,
     WithRedux,
+    WithReduxStore,
     RenderWithRouter,
 };

@@ -738,7 +738,12 @@ mock.onGet('exams/course/FREN1010/summary')
 
     .onPost(routes.TEST_TAG_ASSET_ACTION().api)
     .reply(()=>{
-        return [200, {message: 'hmm something went wrong'}];
+        return [200, {message: {
+            asset_id_displayed:'UQL000298',
+            user_id: '13962556',
+            action_date: '2022-11-16',
+            asset_next_test_due_date: '2023Nov16',
+            }}];
     })
 
 

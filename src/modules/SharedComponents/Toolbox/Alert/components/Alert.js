@@ -270,12 +270,20 @@ export const Alert = ({
                 return customIcon;
             case 'error':
                 return (
-                    <Error id="error-icon" className="icon" aria-label="Error alert." focusable aria-hidden="false" />
+                    <Error
+                        id="error-icon"
+                        data-testid="error-icon"
+                        className="icon"
+                        aria-label="Error alert."
+                        focusable
+                        aria-hidden="false"
+                    />
                 );
             case 'error_outline':
                 return (
                     <ErrorOutline
                         id="error-outline-icon"
+                        data-testid="error-outline-icon"
                         className="icon"
                         aria-label="Error alert."
                         focusable
@@ -286,6 +294,7 @@ export const Alert = ({
                 return (
                     <Warning
                         id="warning-icon"
+                        data-testid="warning-icon"
                         className="icon"
                         aria-label="Important alert."
                         focusable
@@ -293,11 +302,21 @@ export const Alert = ({
                     />
                 );
             case 'info':
-                return <Info id="info-icon" className="icon" aria-label="Alert." focusable aria-hidden="false" />;
+                return (
+                    <Info
+                        id="info-icon"
+                        data-testid="info-icon"
+                        className="icon"
+                        aria-label="Alert."
+                        focusable
+                        aria-hidden="false"
+                    />
+                );
             case 'info_outline':
                 return (
                     <InfoOutlined
                         id="info-outline-icon"
+                        data-testid="info-outline-icon"
                         className="icon"
                         aria-label="Alert."
                         focusable
@@ -305,11 +324,21 @@ export const Alert = ({
                     />
                 );
             case 'help':
-                return <Help id="help-icon" className="icon" aria-label="Help alert." focusable aria-hidden="false" />;
+                return (
+                    <Help
+                        id="help-icon"
+                        data-testid="help-icon"
+                        className="icon"
+                        aria-label="Help alert."
+                        focusable
+                        aria-hidden="false"
+                    />
+                );
             case 'help_outline':
                 return (
                     <HelpOutline
                         id="help-outline-icon"
+                        data-testid="help-outline-icon"
                         className="icon"
                         aria-label="Help aler.t"
                         focusable
@@ -318,11 +347,25 @@ export const Alert = ({
                 );
             case 'done':
                 return (
-                    <Done id="done-icon" className="icon" aria-label="Success alert." focusable aria-hidden="false" />
+                    <Done
+                        id="done-icon"
+                        data-testid="done-icon"
+                        className="icon"
+                        aria-label="Success alert."
+                        focusable
+                        aria-hidden="false"
+                    />
                 );
             default:
                 return (
-                    <Error id="error-icon" className="icon" aria-label="Error alert." focusable aria-hidden="false" />
+                    <Error
+                        id="error-icon"
+                        data-testid="error-icon"
+                        className="icon"
+                        aria-label="Error alert."
+                        focusable
+                        aria-hidden="false"
+                    />
                 );
         }
     };
@@ -354,6 +397,7 @@ export const Alert = ({
                                     {showLoader ? (
                                         <CircularProgress
                                             id="spinner"
+                                            data-testid="spinner"
                                             className="spinner"
                                             size={38}
                                             thickness={3}

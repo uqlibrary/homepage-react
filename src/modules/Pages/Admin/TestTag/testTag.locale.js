@@ -1,6 +1,9 @@
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
+
 export default {
     config: {
-        dateFormat: 'YYYY-MM-DD HH:MM',
+        dateFormat: 'YYYY-MM-DD HH:mm',
         dateFormatNoTime: 'YYYY-MM-DD',
         dateFormatDisplay: 'Do MMMM, YYYY',
         currentLabel: 'CURRENT',
@@ -37,7 +40,7 @@ export default {
         },
         asset: {
             title: 'Asset',
-            addText: pid => `Add ${pid}`,
+            addText: 'ADD NEW ASSET',
             assetId: {
                 label: 'Asset ID',
                 helperText: 'Enter a new ID to add',
@@ -119,14 +122,19 @@ export default {
             reset: 'RESET FORM',
             save: 'SAVE',
         },
-        saveSuccessConfirmation: {
-            confirmationTitle: 'Inspection and/or action successfully saved.',
-            confirmationMessage: '',
+        defaultSaveSuccessTitle: (
+            <Typography align="center" component="div" variant="h6">
+                Asset saved
+            </Typography>
+        ),
+        defaultSaveSuccessMessage: '',
+        saveSuccessConfirmation: (title, message = '') => ({
+            confirmationTitle: title,
+            confirmationMessage: message,
             confirmButtonLabel: 'Ok',
-        },
+        }),
         saveError: {
-            confirmationTitle:
-                'Your inspection could not be saved. Please try again or contact support if the issue persists.',
+            confirmationTitle: 'Asset could not be saved. Please try again or contact support if the issue persists.',
             confirmButtonLabel: 'OK',
         },
         networkError: {

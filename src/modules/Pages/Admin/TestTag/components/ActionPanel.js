@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Grid } from '@material-ui/core';
@@ -31,7 +31,7 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
         disabled: PropTypes.bool.isRequired,
     };
 
-    const [selectedTabValue, setSelectedTabValue] = useState(0);
+    const [selectedTabValue, setSelectedTabValue] = React.useState(0);
 
     return (
         <>
@@ -58,7 +58,9 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                             disabled ||
                             (tab.value === 1 && !!formValues.isDiscarded) ||
                             (tab.value === 2 && !!formValues.isRepair)
-                        } // here make page mobile friendly test responses etc
+                        }
+                        id={`tab-${tab.label.replace(' ', '_').toLowerCase()}`}
+                        data-testid={`tab-${tab.label.replace(' ', '_').toLowerCase()}`}
                     />
                 ))}
             </Tabs>
@@ -74,9 +76,17 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 onChange={e => handleChange('isRepair')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
                                 disabled={disabled}
+                                id="selectIsRepair"
+                                data-testid="selectIsRepair"
+                                inputProps={{ id: 'selectIsRepair-input', 'data-testid': 'selectIsRepair-input' }}
                             >
                                 {locale.form.action.repair.options.map(option => (
-                                    <MenuItem value={option.value} key={option.value}>
+                                    <MenuItem
+                                        value={option.value}
+                                        key={option.value}
+                                        id={`selectIsRepair-option-${option.value}`}
+                                        data-testid={`selectIsRepair-option-${option.value}`}
+                                    >
                                         {option.label}
                                     </MenuItem>
                                 ))}
@@ -97,6 +107,8 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 value={formValues?.repairer_contact_details ?? ''}
                                 handleChange={handleChange}
                                 updateKey="repairer_contact_details"
+                                id="repairerDetails"
+                                data-testid="repairerDetails"
                             />
                         </FormControl>
                     </Grid>
@@ -119,9 +131,17 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 onChange={e => handleChange('isDiscarded')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
                                 disabled={disabled}
+                                id="selectIsDiscarded"
+                                data-testid="selectIsDiscarded"
+                                inputProps={{ id: 'selectIsDiscarded-input', 'data-testid': 'selectIsDiscarded-input' }}
                             >
                                 {locale.form.action.discard.options.map(option => (
-                                    <MenuItem value={option.value} key={option.value}>
+                                    <MenuItem
+                                        value={option.value}
+                                        key={option.value}
+                                        id={`selectIsDiscarded-option-${option.value}`}
+                                        data-testid={`selectIsDiscarded-option-${option.value}`}
+                                    >
                                         {option.label}
                                     </MenuItem>
                                 ))}
@@ -142,6 +162,8 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 value={formValues?.discard_reason ?? ''}
                                 handleChange={handleChange}
                                 updateKey="discard_reason"
+                                id="discardReason"
+                                data-testid="discardReason"
                             />
                         </FormControl>
                     </Grid>

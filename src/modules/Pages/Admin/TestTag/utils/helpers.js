@@ -1,6 +1,6 @@
-/* istanbul ignore file */
 const moment = require('moment');
 
+/* istanbul ignore next */
 export const scrollToTopOfPage = () => {
     const topOfPage = document.getElementById('StandardPage');
     !!topOfPage && topOfPage.scrollIntoView();
@@ -16,7 +16,6 @@ export const isValidEventDate = (date, format) => {
 
     const formattedEventDate = moment(date, format).startOf('day');
     const result = !!moment(formattedEventDate).isValid() && moment(formattedEventDate).isSameOrBefore(formattedToday);
-
     return result;
 };
 export const isValidNextTestDate = (inspection, passedValue, format) => {
@@ -42,6 +41,7 @@ export const isValidTestingDeviceId = testingDeviceId =>
 export const isValidFailReason = (inspection, failedValue) =>
     inspection?.inspection_status === failedValue && !isEmpty(inspection?.inspection_fail_reason);
 export const isValidInspection = (inspection, testStatusEnum) => {
+    /* istanbul ignore next */
     if (!!!testStatusEnum) return false;
     return (
         inspection.inspection_status === undefined ||
