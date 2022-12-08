@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -110,12 +111,11 @@ const AssetPanel = ({
                             value={formValues?.asset_id_displayed ?? null}
                             onChange={(event, newValue) => {
                                 if (typeof newValue === 'string') {
-                                    assignCurrentAsset({ asset_id_displayed: newValue, isNew: true });
+                                    assignCurrentAsset({ asset_id_displayed: newValue });
                                 } else if (newValue && newValue.inputValue) {
                                     // Create a new value from the user input
                                     assignCurrentAsset({
                                         asset_id_displayed: newValue.inputValue,
-                                        isNew: true,
                                     });
                                 } else {
                                     assignCurrentAsset(newValue);
@@ -125,15 +125,16 @@ const AssetPanel = ({
                             filterOptions={(options, params) => {
                                 const filtered = filter(options, params);
                                 // Suggest the creation of a new value
-                                if (params.inputValue !== '') {
-                                    filtered.push({
-                                        inputValue: params.inputValue,
-                                        asset_id_displayed: locale.form.asset.addText(params.inputValue),
-                                    });
-                                }
+                                // if (params.inputValue !== '') {
+                                filtered.push({
+                                    inputValue: 'NEW ASSET',
+                                    asset_id_displayed: locale.form.asset.addText,
+                                });
+                                // }
 
                                 return filtered;
                             }}
+                            openOnFocus
                             selectOnFocus
                             handleHomeEndKeys
                             options={formAssetList}
@@ -159,7 +160,8 @@ const AssetPanel = ({
                                     error={!isValidAssetId(formValues.asset_id_displayed)}
                                     inputRef={focusElementRef}
                                     variant="standard"
-                                    onFocus={() => formAssetList?.length > 0 && setIsOpen(true)}
+                                    onFocus={() => setIsOpen(true)}
+                                    onBlur={() => setIsOpen(false)}
                                     InputLabelProps={{ shrink: true }}
                                     InputProps={{
                                         ...params.InputProps,

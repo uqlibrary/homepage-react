@@ -1,13 +1,16 @@
+/* istanbul ignore file */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { useTheme } from '@material-ui/core';
+import { Box, useTheme } from '@material-ui/core';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Typography from '@material-ui/core/Typography';
+import { Grid } from '@material-ui/core';
 
 import TestTagHeader from './TestTagHeader';
 import EventPanel from './EventPanel';
@@ -41,7 +44,72 @@ const useStyles = makeStyles(theme => ({
     header: {
         paddingBottom: theme.spacing(2),
     },
+    dialogSuccessContainer: {
+        backgroundColor: '#69B400',
+        color: 'black',
+        border: '1px solid #69B400',
+        borderRadius: '6px',
+    },
+    dialogSuccessTitle: {
+        textAlign: 'center',
+        padding: '8px',
+        '& >p': {
+            fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
+    dialogSuccessBarcode: {
+        backgroundColor: 'white',
+        padding: '8px',
+        textAlign: 'center',
+        '& >h6': {
+            fontFamily: 'monospace, monospace',
+        },
+    },
+    dialogSuccessLineItems: {
+        padding: '8px',
+        [theme.breakpoints.down('xs')]: {
+            textAlign: 'center',
+        },
+        '& >p': {
+            fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
 }));
+
+const getSuccessDialog = (response, classes) => {
+    if (!!!response || !!!response?.message) return {};
+    const { message } = response;
+    const messageFragment = (
+        <Box display="flex" alignItems="center" justifyContent="center">
+            <Grid container item xs={12} sm={6} alignItems="center" className={classes.dialogSuccessContainer}>
+                <Grid item xs={12} className={classes.dialogSuccessTitle} variant="subtitle1">
+                    <Typography gutterBottom>Tested By: {message.user_id}</Typography>
+                </Grid>
+                <Grid item xs={12} className={classes.dialogSuccessBarcode}>
+                    <Typography gutterBottom variant="h6">
+                        {message.asset_id_displayed}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                    <Typography gutterBottom>Date Tested:</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                    <Typography gutterBottom>{message.action_date}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                    <Typography gutterBottom>Date Due:</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                    <Typography gutterBottom>{message.asset_next_test_due_date ?? 'n/a'}</Typography>
+                </Grid>
+            </Grid>
+        </Box>
+    );
+
+    return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
+};
 
 const testStatusEnum = statusEnum(locale);
 
@@ -119,7 +187,6 @@ const TestTag = ({
         () => locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? '') ?? '',
         [initConfig],
     );
-
     useEffect(() => {
         if (!initConfigLoading && !!initConfig) {
             handleChange('user_id')(initConfig.user.user_id);
@@ -131,7 +198,7 @@ const TestTag = ({
         if (!!saveInspectionError) {
             showSaveError();
         }
-        if (saveInspectionSuccess) {
+        if (!!saveInspectionSuccess) {
             showSaveSuccessConfirmation();
         }
         if (!!initConfigError || !!floorListError || !!roomListError || !!assetsListError) {
@@ -219,7 +286,7 @@ const TestTag = ({
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
-                locale={locale.form.saveSuccessConfirmation}
+                locale={getSuccessDialog(saveInspectionSuccess, classes)}
             />
             <ConfirmationBox
                 actionButtonColor="primary"
