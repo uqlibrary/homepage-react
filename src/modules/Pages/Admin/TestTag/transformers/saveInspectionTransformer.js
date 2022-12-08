@@ -56,10 +56,10 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
         },
     }),
     isDiscarded: (state, data) => ({
-        with_discarded: { ...state.with_discarded, isDiscarded: mutateObject(data, 'isDiscarded') },
+        with_discard: { ...state.with_discard, isDiscarded: mutateObject(data, 'isDiscarded') },
     }),
     discard_reason: (state, data) => ({
-        with_discarded: { ...state.with_discarded, discard_reason: mutateObject(data, 'discard_reason') },
+        with_discard: { ...state.with_discard, discard_reason: mutateObject(data, 'discard_reason') },
     }),
     room_id: (_, data) => {
         if (data.room_id === -1) return { room_id: undefined };
@@ -82,20 +82,20 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
     },
     with_repair: state => {
         if (state.with_repair.isRepair) {
-            /* istanbul ignore else */ if (!!state.with_discarded) state.with_discarded.discard_reason = undefined;
+            /* istanbul ignore else */ if (!!state.with_discard) state.with_discard.discard_reason = undefined;
             delete state.with_repair.isRepair;
-            return { with_repair: state.with_repair, with_discarded: state.with_discarded };
+            return { with_repair: state.with_repair, with_discard: state.with_discard };
         } else {
-            return { with_repair: undefined, with_discarded: state.with_discarded };
+            return { with_repair: undefined, with_discard: state.with_discard };
         }
     },
-    with_discarded: state => {
-        if (state.with_discarded.isDiscarded) {
+    with_discard: state => {
+        if (state.with_discard.isDiscarded) {
             /* istanbul ignore else */ if (!!state.with_repair) state.with_repair.repairer_contact_details = undefined;
-            delete state.with_discarded.isDiscarded;
-            return { with_repair: state.with_repair, with_discarded: state.with_discarded };
+            delete state.with_discard.isDiscarded;
+            return { with_repair: state.with_repair, with_discard: state.with_discard };
         } else {
-            return { with_discarded: undefined, with_repair: state.with_repair };
+            return { with_discard: undefined, with_repair: state.with_repair };
         }
     },
 });
