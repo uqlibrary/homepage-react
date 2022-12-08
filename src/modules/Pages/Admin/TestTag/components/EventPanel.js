@@ -150,7 +150,9 @@ const EventPanel = ({
                                             id={`testntag-form-siteid-option-${site.site_id}`}
                                             data-testid={`testntag-form-siteid-site.site_id-${site.site_id}`}
                                         >
-                                            {site.site_name}
+                                            {site.site_id_displayed ?? ''}
+                                            {site.site_id_displayed ? ' - ' : ''}
+                                            {site.site_name ?? ''}
                                         </MenuItem>
                                     ))}
                             </Select>
@@ -185,7 +187,11 @@ const EventPanel = ({
                                         updateLocation({ formBuildingId: newValue.building_id });
                                     }
                                 }}
-                                getOptionLabel={option => option.building_id_displayed}
+                                getOptionLabel={option =>
+                                    `${option.building_id_displayed ?? ''}${
+                                        option.building_id_displayed ? ' - ' : ''
+                                    }${option.building_name ?? ''}`
+                                }
                                 renderInput={params => (
                                     <TextField
                                         {...params}
