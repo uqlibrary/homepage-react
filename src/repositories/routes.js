@@ -171,7 +171,7 @@ export const PROMOPANEL_LIST_USERTYPES_API = () => ({ apiUrl: 'promo_panel/user_
 export const PROMOPANEL_LIST_ACTIVE_PANELS_API = () => ({ apiUrl: 'promo_panel/user_groups/active' });
 export const PROMOPANEL_LIST_API = () => ({ apiUrl: 'promo_panel/panels' });
 export const PROMOPANEL_GET_BY_ID_API = ({ id }) => ({ apiUrl: `promo-panel/${id}` });
-export const PROMOPANEL_GET_CURRENT_API = () => ({ apiUrl: 'promo-panel' });
+export const PROMOPANEL_GET_CURRENT_API = () => ({ apiUrl: 'promo_panel' });
 export const PROMOPANEL_ADD_SCHEDULE_API = ({ id, usergroup }) => ({
     apiUrl: `promo_panel/user_type/${usergroup}/panel/${id}/schedule`,
 });

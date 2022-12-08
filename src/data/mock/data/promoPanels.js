@@ -448,3 +448,90 @@ export const userListPanels = [
         ]
     }
 ]
+
+export const activePanels = [
+    {
+      "usergroup_group_id": 1,
+      "usergroup_group": "student",
+      "usergroup_group_name": "Student",
+      "active_panel": {
+        "is_default_panel": false,
+        "panel_id": 7,
+        "panel_title": "some special upcoming event for students",
+        "panel_content": "words",
+        "panel_admin_notes": "",
+        "panel_schedule_start_time": "2022-11-01 00:00:00",
+        "panel_schedule_end_time": "2090-12-15 00:00:00"
+      }
+    },
+    {
+      "usergroup_group_id": 2,
+      "usergroup_group": "hdr",
+      "usergroup_group_name": "Hdrs",
+      "active_panel": {
+        "is_default_panel": true,
+        "panel_id": 1,
+        "panel_title": "Services for students",
+        "panel_content": "<div><p>visit our website</p></div>",
+        "panel_admin_notes": "",
+        "panel_schedule_start_time": null,
+        "panel_schedule_end_time": null
+      }
+    },
+    {
+      "usergroup_group_id": 3,
+      "usergroup_group": "staff",
+      "usergroup_group_name": "UQ staff",
+      "active_panel": {
+        "is_default_panel": true,
+        "panel_id": 3,
+        "panel_title": "staff default",
+        "panel_content": "staff content",
+        "panel_admin_notes": "",
+        "panel_schedule_start_time": null,
+        "panel_schedule_end_time": null
+      }
+    },
+    {
+      "usergroup_group_id": 4,
+      "usergroup_group": "alumni",
+      "usergroup_group_name": "Alumni",
+      "active_panel": {
+        "is_default_panel": true,
+        "panel_id": 4,
+        "panel_title": "alumni default",
+        "panel_content": "aluni default",
+        "panel_admin_notes": "",
+        "panel_schedule_start_time": null,
+        "panel_schedule_end_time": null
+      }
+    },
+    {
+      "usergroup_group_id": 5,
+      "usergroup_group": "other",
+      "usergroup_group_name": "Other",
+      "active_panel": {
+        "is_default_panel": true,
+        "panel_id": 5,
+        "panel_title": "other users default",
+        "panel_content": "other user content",
+        "panel_admin_notes": "",
+        "panel_schedule_start_time": null,
+        "panel_schedule_end_time": null
+      }
+    },
+    {
+      "usergroup_group_id": 6,
+      "usergroup_group": "public",
+      "usergroup_group_name": "Logged out",
+      "active_panel": {
+        "is_default_panel": true,
+        "panel_id": 6,
+        "panel_title": "public default",
+        "panel_content": "public content",
+        "panel_admin_notes": "",
+        "panel_schedule_start_time": null,
+        "panel_schedule_end_time": null
+      }
+    }
+  ]

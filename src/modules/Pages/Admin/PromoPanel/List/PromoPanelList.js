@@ -48,6 +48,7 @@ export const PromoPanelList = ({
         }
         if (!promoPanelActiveList || promoPanelActiveList.length < 1) {
             actions.loadActivePanelList();
+            actions.getAssignedPromoPanel();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -136,8 +137,8 @@ PromoPanelList.propTypes = {
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
     promoPanelActiveList: PropTypes.array,
-    promoPanelActionError: PropTypes.object,
-    promoPanelActiveListError: PropTypes.bool,
+    promoPanelActionError: PropTypes.string,
+    promoPanelActiveListError: PropTypes.string,
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,
     promoPanelListError: PropTypes.string,

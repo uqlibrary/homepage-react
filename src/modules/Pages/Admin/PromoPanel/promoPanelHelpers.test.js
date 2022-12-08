@@ -2,18 +2,57 @@ import * as Helpers from './promoPanelHelpers';
 import * as MockData from 'data/mock/data/promoPanels';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 
+const actions = {
+    updateScheduleQueuelength: jest.fn(),
+};
+
+describe('Init Lists', () => {
+    test('Initialises lists', () => {
+        const setValues = jest.fn();
+        const setDisplayList = jest.fn();
+        const setSelectorGroupNames = jest.fn();
+
+        const scheduledList = ['A', 'B', 'C'];
+        const scheduledGroupNames = ['Group1', 'Group2'];
+
+        const values = { Title: 'Value1', Content: 'Value2' };
+        // Checking with values IS default panel
+        Helpers.initLists(scheduledList, [], values, true, setValues, setDisplayList, setSelectorGroupNames);
+        expect(setValues).toBeCalledWith({
+            Content: 'Value2',
+            Title: 'Value1',
+            defaultList: ['A', 'B', 'C'],
+            scheduledList: [],
+        });
+        Helpers.initLists([], scheduledGroupNames, values, true, setValues, setDisplayList, setSelectorGroupNames);
+        expect(setValues).toBeCalledWith({
+            Content: 'Value2',
+            Title: 'Value1',
+            defaultList: ['A', 'B', 'C'],
+            scheduledList: [],
+        });
+        // Checking with value NOT default panel
+        Helpers.initLists(scheduledList, [], values, false, setValues, setDisplayList, setSelectorGroupNames);
+        expect(setValues).toBeCalledWith({
+            Content: 'Value2',
+            Title: 'Value1',
+            defaultList: ['A', 'B', 'C'],
+            scheduledList: [],
+        });
+    });
+});
 describe('Filter Panel List', () => {
     const UserGroupPanels = [
         {
-            usergroup_group: 'TEST1',
+            usergroup_group: 'GROUPA',
         },
         {
-            usergroup_group: 'TEST2',
+            usergroup_group: 'GROUPB',
         },
     ];
     const Panels = [
         {
-            panel_title: 'TEST1',
+            panel_title: 'PANEL1',
             default_panels_for: [
                 {
                     usergroup_group: 'GROUPX',
@@ -24,7 +63,7 @@ describe('Filter Panel List', () => {
             ],
         },
         {
-            panel_title: 'TEST2',
+            panel_title: 'PANEL2',
             default_panels_for: [
                 {
                     usergroup_group: 'GROUPA',
@@ -35,7 +74,7 @@ describe('Filter Panel List', () => {
             ],
         },
         {
-            panel_title: 'TEST3',
+            panel_title: 'PANEL3',
             default_panels_for: [],
             panel_schedule: [
                 {
@@ -51,14 +90,14 @@ describe('Filter Panel List', () => {
         },
     ];
     test('filters by basic group (Group List)', () => {
-        const group = 'TEST2';
-        const expected = [{ usergroup_group: 'TEST2' }];
+        const group = 'GROUPA';
+        const expected = [{ usergroup_group: 'GROUPA' }];
         expect(Helpers.filterPanelList(UserGroupPanels, group, true)).toEqual(expected);
     });
     test('filters by group against panel (Panel List)', () => {
         const expected = [
             {
-                panel_title: 'TEST2',
+                panel_title: 'PANEL2',
                 default_panels_for: [
                     {
                         usergroup_group: 'GROUPA',
@@ -69,7 +108,7 @@ describe('Filter Panel List', () => {
                 ],
             },
             {
-                panel_title: 'TEST3',
+                panel_title: 'PANEL3',
                 default_panels_for: [],
                 panel_schedule: [
                     {
@@ -89,6 +128,16 @@ describe('Filter Panel List', () => {
     test('empty filter returns full list', () => {
         expect(Helpers.filterPanelList(Panels, '')).toEqual(Panels);
     });
+    test('panel list with no schedule or default return full if no group supplied', () => {
+        expect(Helpers.filterPanelList([{ default_panels_for: [], panel_schedule: [] }], undefined)).toEqual([
+            { default_panels_for: [], panel_schedule: [] },
+        ]);
+    });
+    test('not found group list returns full panel list', () => {
+        expect(Helpers.filterPanelList([{ default_panels_for: [], panel_schedule: [] }], ['NONE'])).toEqual([
+            { default_panels_for: [], panel_schedule: [] },
+        ]);
+    });
 });
 
 describe('Add Schedule', () => {
@@ -99,9 +148,6 @@ describe('Add Schedule', () => {
             end: '3000-10-11T00:00:00Z',
         };
         const setConfirmationMsg = jest.fn();
-        const actions = {
-            updateScheduleQueuelength: jest.fn(),
-        };
         const expected = [
             true,
             [{ endDate: '3000-10-11 10:00:00', groupNames: 'TESTA', startDate: '3000-10-10 10:00:00' }],
@@ -114,9 +160,81 @@ describe('Add Schedule', () => {
                 values,
                 setConfirmationMsg,
                 locale,
-                'schedule',
+                { validate: false },
                 actions,
             ),
         ).toEqual(expected);
+        expect(actions.updateScheduleQueuelength).toBeCalledWith(1);
+    });
+    test('Can detect a conflict - Before Date.', () => {
+        const displayList = [];
+        const values = {
+            start: '2090-12-15 00:00:00',
+            end: '2090-12-16 00:00:00',
+        };
+        const setConfirmationMsg = jest.fn();
+        const actions = {
+            updateScheduleQueuelength: jest.fn(),
+        };
+        const expected = [false, []];
+        expect(
+            Helpers.addSchedule(
+                displayList,
+                MockData.userListPanels,
+                ['student'],
+                values,
+                setConfirmationMsg,
+                locale,
+                { validate: true },
+                actions,
+            ),
+        ).toEqual(expected);
+        expect(setConfirmationMsg).toBeCalled();
+    });
+    test('Can detect a conflict - After Date.', () => {
+        const displayList = [];
+        const values = {
+            start: '2090-12-11 00:00:00',
+            end: '2090-12-16 00:00:00',
+        };
+        const setConfirmationMsg = jest.fn();
+        const actions = {
+            updateScheduleQueuelength: jest.fn(),
+        };
+        const expected = [false, []];
+        expect(
+            Helpers.addSchedule(
+                displayList,
+                MockData.userListPanels,
+                ['student'],
+                values,
+                setConfirmationMsg,
+                locale,
+                { validate: true },
+                actions,
+            ),
+        ).toEqual(expected);
+        expect(setConfirmationMsg).toBeCalled();
+    });
+});
+describe('Save group date', () => {
+    test('Can save a group date', () => {
+        const setDisplayList = jest.fn();
+        const setIsEditingDate = jest.fn();
+        const displayList = [{ startDate: '2000-01-01 00:00:00', endDate: '2000-01-01 00:00:00', dateChanged: false }];
+        Helpers.saveGroupDate(
+            0,
+            {
+                start: '2090-12-15 00:00:00',
+                end: '2090-12-16 00:00:00',
+            },
+            displayList,
+            setDisplayList,
+            setIsEditingDate,
+            actions,
+        );
+        const expected = [{ dateChanged: true, endDate: '2090-12-16 00:00:00', startDate: '2090-12-15 00:00:00' }];
+        expect(setDisplayList).toBeCalledWith(expected);
+        expect(setIsEditingDate).toBeCalledWith(false);
     });
 });

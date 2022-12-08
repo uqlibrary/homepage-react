@@ -164,7 +164,6 @@ export const PromoPanelListActive = ({ panelList, title, isLoading }) => {
                             )}
                             {!isLoading &&
                                 panelList.map((item, id) => {
-                                    console.log('ITEM', item);
                                     return (
                                         <React.Fragment key={id}>
                                             <TableRow>
