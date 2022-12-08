@@ -35,7 +35,7 @@ import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 
-import {currentPanels, userListPanels, activePanels} from "./data/promoPanels";
+import {currentPanels, userListPanels, activePanels, mockScheduleReturn} from "./data/promoPanels";
 
 const moment = require('moment');
 
@@ -743,6 +743,13 @@ mock.onGet('exams/course/FREN1010/summary')
                 "status": "error",
                 "message": "11 is not a valid schedule id"
             }]
+        }
+    )
+    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_ADD_SCHEDULE_API({id: '.*', usergroup: '.*'}).apiUrl))).reply(
+        () => {
+            return [200, 
+                mockScheduleReturn
+            ]
         }
     )
     .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl).reply(

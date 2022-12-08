@@ -170,7 +170,6 @@ export const PROMOPANEL_UPDATE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/$
 export const PROMOPANEL_LIST_USERTYPES_API = () => ({ apiUrl: 'promo_panel/user_groups' });
 export const PROMOPANEL_LIST_ACTIVE_PANELS_API = () => ({ apiUrl: 'promo_panel/user_groups/active' });
 export const PROMOPANEL_LIST_API = () => ({ apiUrl: 'promo_panel/panels' });
-export const PROMOPANEL_GET_BY_ID_API = ({ id }) => ({ apiUrl: `promo-panel/${id}` });
 export const PROMOPANEL_GET_CURRENT_API = () => ({ apiUrl: 'promo_panel' });
 export const PROMOPANEL_ADD_SCHEDULE_API = ({ id, usergroup }) => ({
     apiUrl: `promo_panel/user_type/${usergroup}/panel/${id}/schedule`,
@@ -181,9 +180,7 @@ export const PROMOPANEL_UPDATE_SCHEDULE_API = ({ id, usergroup }) => ({
 export const PROMOPANEL_UPDATE_USERTYPE_DEFAULT = ({ id, usergroup }) => ({
     apiUrl: `promo_panel/user_type/${usergroup}/panel/${id}/default`,
 });
-export const PROMOPANEL_UPDATE_USERTYPE = ({ id, usergroup }) => ({
-    apiUrl: `promo-panel/user-type/${usergroup}/${id}`,
-});
+
 export const PROMOPANEL_DELETE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/${id}` });
 
 export const PROMOPANEL_UNSCHEDULE_API = ({ id }) => ({

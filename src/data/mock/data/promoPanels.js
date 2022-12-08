@@ -534,4 +534,30 @@ export const activePanels = [
         "panel_schedule_end_time": null
       }
     }
-  ]
+]
+
+export const mockScheduleReturn = {
+    "status": "OK",
+    "data": {
+        "panel_id": 2,
+        "panel_title": "hdr default",
+        "panel_content": "hdr content",
+        "panel_admin_notes": "",
+        "panel_created_at": "2022-11-07T00:00:00.000000Z",
+        "panel_schedule": [
+            {
+                "usergroup_group_id": 1,
+                "usergroup_group": "student",
+                "usergroup_group_name": "Student",
+                "user_group_schedule": [
+                    {
+                        "panel_schedule_id": 13,
+                        "panel_schedule_start_time": "2100-01-01 00:01:00",
+                        "panel_schedule_end_time": "2100-01-01 23:59:00"
+                    }
+                ]
+            }
+        ],
+        "is_past": false
+    }
+}
