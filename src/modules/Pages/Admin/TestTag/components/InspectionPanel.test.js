@@ -4,6 +4,7 @@ import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
 import configData from '../../../../../data/mock/data/testing/testTagOnLoad';
+import assetData from '../../../../../data/mock/data/testing/testTagAssets';
 
 const formValues = {
     action_date: '2016-12-05 14:22',
@@ -14,7 +15,7 @@ const formValues = {
     inspection_date_next: '2018-12-05 14:22',
     inspection_device_id: 1,
     inspection_fail_reason: undefined,
-    inspection_notes: 'notes',
+    inspection_notes: '',
     inspection_status: 'PASSED',
     isDiscarded: false,
     isRepair: false,
@@ -61,7 +62,7 @@ function setup(testProps = {}) {
     );
 }
 
-describe('TabPanel', () => {
+describe('InspectionPanel', () => {
     it('renders component', async () => {
         const updateKey = 'inspection_date_next';
         const newValue = '2018-06-30';
@@ -72,7 +73,7 @@ describe('TabPanel', () => {
             }),
         );
 
-        const { getByText, getByTestId } = setup({
+        const { getByText } = setup({
             formValues,
             selectedAsset: {},
             handleChange,
@@ -82,23 +83,85 @@ describe('TabPanel', () => {
         await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
     });
 
-    // it('renders component', async () => {
-    //     const updateKey = 'inspection_date_next';
-    //     const newValue = '2018-06-30';
-    //     const handleChange = jest.fn(prop =>
-    //         jest.fn(value => {
-    //             expect(prop).toEqual(updateKey);
-    //             expect(value.format('YYYY-MM-DD')).toEqual(newValue);
-    //         }),
-    //     );
+    it('allows entry of inspection notes text', async () => {
+        const testId = 'inspectionNotes';
+        const testInputId = 'inspectionNotes-input';
+        const updateKey = 'inspection_notes';
+        const newValue = 'some inspection notes';
 
-    //     const { getByText, getByTestId } = setup({
-    //         formValues,
-    //         selectedAsset: {},
-    //         handleChange,
-    //     });
+        const handleChange = jest.fn(prop =>
+            jest.fn(event => {
+                if (prop === updateKey) {
+                    expect(prop).toEqual(updateKey);
+                    expect(event.target.value).toEqual(newValue);
+                }
+            }),
+        );
 
-    //     expect(getByText(locale.form.inspection.title)).toBeInTheDocument();
-    //     await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
-    // });
+        const { getByTestId } = setup({
+            formValues,
+            handleChange,
+            selectedAsset: { ...assetData[0] },
+        });
+
+        expect(getByTestId(testId)).toBeInTheDocument();
+        expect(getByTestId(testInputId)).toBeInTheDocument();
+        act(() => {
+            fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });
+        });
+        await waitFor(() => expect(handleChange).toHaveBeenLastCalledWith(updateKey));
+    });
+
+    it('allows entry of fail reason text', async () => {
+        const testId = 'inspectionFailReason';
+        const testInputId = 'inspectionFailReason-input';
+        const updateKey = 'inspection_fail_reason';
+        const newValue = 'some fail reason';
+
+        const handleChange = jest.fn(prop =>
+            jest.fn(event => {
+                if (prop === updateKey) {
+                    expect(prop).toEqual(updateKey);
+                    expect(event.target.value).toEqual(newValue);
+                }
+            }),
+        );
+
+        const testValues = { ...formValues };
+        testValues.inspection_status = 'FAILED';
+
+        const { getByTestId } = setup({
+            formValues: testValues,
+            handleChange,
+            selectedAsset: { ...assetData[0] },
+        });
+
+        expect(getByTestId(testId)).toBeInTheDocument();
+        expect(getByTestId(testInputId)).toBeInTheDocument();
+        act(() => {
+            fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });
+        });
+        await waitFor(() => expect(handleChange).toHaveBeenLastCalledWith(updateKey));
+    });
+
+    it('handles defaults', async () => {
+        // code coverage
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(value => {}));
+
+        const testValues = { ...formValues };
+        delete testValues.inspection_device_id;
+        delete testValues.inspection_status;
+        delete testValues.inspection_notes;
+
+        const { getByText } = setup({
+            formValues: testValues,
+            selectedAsset: {},
+            handleChange,
+            isMobileView: true,
+            state: { testTagOnLoadReducer: { initConfig: [], initConfigLoading: true } },
+        });
+
+        expect(getByText(locale.form.inspection.title)).toBeInTheDocument();
+    });
 });
