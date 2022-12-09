@@ -687,24 +687,6 @@ mock.onGet('exams/course/FREN1010/summary')
     
     /** TEST AND TAG ROUTES **/
 
-    // ASSET TYPES
-    // .onGet('test_and_tag/asset/type')
-    // .reply(()=>{
-    //     return [200, testTag_assetTypes];
-    // })
-
-    // TEST DEVICES TYPES
-    // .onGet('test_and_tag/devices/current')
-    // .reply(()=>{
-    //     return [200, testTag_testDevices];
-    // })
-    
-    // T&T SITE
-    // .onGet('test_and_tag/site/current')
-    // .reply(()=>{
-    //     return [200, testTag_siteList];
-    // })
-
     // CONFIG
     .onGet('test_and_tag/onload')
     .reply(()=>{
@@ -736,16 +718,14 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()))];
     })
 
-    .onPost(routes.TEST_TAG_ASSET_ACTION().api)
-    .reply(()=>{
-        return [200, {message: {
-            asset_id_displayed:'UQL000298',
-            user_id: '13962556',
-            action_date: '2022-11-16',
-            asset_next_test_due_date: '2023Nov16',
-            }}];
-    })
-
+    .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
+    .reply(() => [200, {message: {
+        asset_id_displayed:'UQL000298',
+        user_licence_number: '13962556',
+        action_date: '2022-11-16',
+        asset_next_test_due_date: '2023Nov16',
+        }}]
+        )
 
     .onGet('exams/search/fail')
     .reply(() => {
