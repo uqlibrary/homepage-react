@@ -7,6 +7,7 @@ import {
     PROMOPANEL_LIST_API,
     PROMOPANEL_GET_BY_ID_API,
     PROMOPANEL_GET_CURRENT_API,
+    PROMOPANEL_GET_ANON_API,
     PROMOPANEL_UPDATE_USERTYPE_DEFAULT,
     PROMOPANEL_UPDATE_USERTYPE,
     PROMOPANEL_DELETE_API,
@@ -28,21 +29,37 @@ export function decrementQueueLength() {
 }
 // Actions for Single Promo Panel Retrieval
 export function getAssignedPromoPanel() {
-    return dispatch => {
+    return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_LOADING });
-        return get(PROMOPANEL_GET_CURRENT_API())
-            .then(response => {
-                dispatch({
-                    type: actions.PROMOPANEL_LOAD_SUCCESS,
-                    payload: response,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.PROMOPANEL_LOAD_FAILED,
-                    payload: error.message,
-                });
+        try {
+            const response = await get(PROMOPANEL_GET_CURRENT_API());
+            dispatch({
+                type: actions.PROMOPANEL_LOAD_SUCCESS,
+                payload: response,
             });
+        } catch (error) {
+            dispatch({
+                type: actions.PROMOPANEL_LOAD_FAILED,
+                payload: error.message,
+            });
+        }
+    };
+}
+export function getAnonPromoPanel() {
+    return async dispatch => {
+        dispatch({ type: actions.PROMOPANEL_LOADING });
+        try {
+            const response = await get(PROMOPANEL_GET_ANON_API());
+            dispatch({
+                type: actions.PROMOPANEL_LOAD_SUCCESS,
+                payload: response,
+            });
+        } catch (error) {
+            dispatch({
+                type: actions.PROMOPANEL_LOAD_FAILED,
+                payload: error.message,
+            });
+        }
     };
 }
 

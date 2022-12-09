@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+
 import { useDispatch } from 'react-redux';
 import {
     loadPrintBalance,
@@ -15,6 +16,7 @@ import {
     loadCompAvail,
     loadTrainingEvents,
     getAssignedPromoPanel,
+    getAnonPromoPanel,
 } from 'data/actions';
 import ContentLoader from 'react-content-loader';
 import { lazy } from 'react';
@@ -79,12 +81,22 @@ export const Index = ({
             dispatch(loadCurrentSpotlights());
             dispatch(loadLibHours());
             dispatch(loadCompAvail());
-            dispatch(getAssignedPromoPanel());
         }
     }, [accountLoading, dispatch]);
+
     useEffect(() => {
         if (accountLoading === false) {
             dispatch(loadTrainingEvents(account));
+            // Grab the relevant promo panel here.
+            if (!!!account) {
+                console.log('I have no account');
+                // load anonymous panel
+                dispatch(getAnonPromoPanel());
+            } else {
+                // load specific panel.
+                console.log('I have a specific account');
+                dispatch(getAssignedPromoPanel());
+            }
         }
     }, [account, accountLoading, dispatch]);
     useEffect(() => {

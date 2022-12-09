@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-
+import parse from 'html-react-parser';
 import { promoPanel as locale } from './promoPanel.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -17,14 +17,19 @@ const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActi
             title={
                 <Grid container>
                     <Grid item xs={10} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title}
+                        {!!!promoPanelActionError && currentPromoPanel && currentPromoPanel.active_panel.panel_title}
+                        {!!promoPanelActionError &&
+                            (!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title)}
                     </Grid>
                 </Grid>
             }
         >
             <Grid container spacing={1}>
                 <Grid item xs>
-                    {!!!promoPanelActionError && <PromoPanelLoader />}
+                    {console.log('Current Promo panel', currentPromoPanel)}
+                    {!!!promoPanelActionError &&
+                        currentPromoPanel &&
+                        parse(currentPromoPanel.active_panel.panel_content)}
                     {!!promoPanelActionError &&
                         (!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content)}
                 </Grid>

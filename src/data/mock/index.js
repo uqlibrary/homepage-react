@@ -716,13 +716,13 @@ mock.onGet('exams/course/FREN1010/summary')
     )
     
     // Handle Delete of any panel that is NOT panel ID 9 (9 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: '[^9]'}).apiUrl))).reply(
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: '[^2]'}).apiUrl))).reply(
         () => {
             return [200, {status: 'ok'}]
         }
     )
     // Specific case to throw error for Delete panel 9.
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: 9}).apiUrl))).reply(
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: 2}).apiUrl))).reply(
         () => { 
             return [500, {
                 "status": "error",
