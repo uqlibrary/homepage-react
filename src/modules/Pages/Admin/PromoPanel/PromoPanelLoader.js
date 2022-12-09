@@ -1,6 +1,6 @@
 import ContentLoader from 'react-content-loader';
 import { PropTypes } from 'prop-types';
-import React from 'React';
+import React from 'react';
 
 const PromoPanelLoader = props => {
     return (
