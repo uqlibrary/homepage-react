@@ -14,6 +14,7 @@ import {
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
+    getAssignedPromoPanel,
 } from 'data/actions';
 import ContentLoader from 'react-content-loader';
 import { lazy } from 'react';
@@ -68,6 +69,8 @@ export const Index = ({
     possibleRecordsLoading,
     incompleteNTRO,
     incompleteNTROLoading,
+    currentPromoPanel,
+    promoPanelActionError,
 }) => {
     const dispatch = useDispatch();
     // Load homepage data requirements
@@ -76,6 +79,7 @@ export const Index = ({
             dispatch(loadCurrentSpotlights());
             dispatch(loadLibHours());
             dispatch(loadCompAvail());
+            dispatch(getAssignedPromoPanel());
         }
     }, [accountLoading, dispatch]);
     useEffect(() => {
@@ -218,7 +222,7 @@ export const Index = ({
                     )}
 
                     <Grid item xs={12} md={4}>
-                        <PromoPanel account={account} accountLoading={accountLoading} />
+                        <PromoPanel account={account} accountLoading={accountLoading} promoPanelActionError={promoPanelActionError} currentPromoPanel={currentPromoPanel} />
                     </Grid>
                 </Grid>
             </StandardPage>
@@ -251,6 +255,8 @@ Index.propTypes = {
     possibleRecordsLoading: PropTypes.bool,
     incompleteNTRO: PropTypes.object,
     incompleteNTROLoading: PropTypes.bool,
+    currentPromoPanel: PropTypes.object,
+    promoPanelActionError: PropTypes.string,
 };
 
 Index.defaultProps = {};

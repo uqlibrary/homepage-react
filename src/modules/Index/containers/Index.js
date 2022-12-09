@@ -8,6 +8,7 @@ const mapStateToProps = state => {
     return {
         ...state.get('accountReducer'),
         ...state.get('homeReducer'),
+        ...state.get('promoPanelReducer'),
     };
 };
 

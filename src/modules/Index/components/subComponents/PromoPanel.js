@@ -6,8 +6,9 @@ import { promoPanel as locale } from './promoPanel.locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Grid from '@material-ui/core/Grid';
+import PromoPanelLoader from 'modules/Pages/Admin/PromoPanel/PromoPanelLoader';
 
-const PromoPanel = ({ account, accountLoading }) => {
+const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActionError }) => {
     return accountLoading === false ? (
         <StandardCard
             primaryHeader
@@ -23,18 +24,24 @@ const PromoPanel = ({ account, accountLoading }) => {
         >
             <Grid container spacing={1}>
                 <Grid item xs>
-                    {!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content}
+                    {!!!promoPanelActionError && <PromoPanelLoader />}
+                    {!!promoPanelActionError &&
+                        (!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content)}
                 </Grid>
             </Grid>
         </StandardCard>
     ) : (
-        <div className="promopanel empty" />
+        <div className="promopanel empty">
+            <PromoPanelLoader />
+        </div>
     );
 };
 
 PromoPanel.propTypes = {
     account: PropTypes.object,
     accountLoading: PropTypes.bool,
+    currentPromoPanel: PropTypes.object,
+    promoPanelActionError: PropTypes.string,
 };
 
 PromoPanel.defaultProps = {};
