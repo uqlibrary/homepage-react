@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, useTheme } from '@material-ui/core';
+import { Box, Grid, useTheme } from '@material-ui/core';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Typography from '@material-ui/core/Typography';
@@ -35,9 +35,22 @@ const useTestPanelStyles = makeStyles(theme => ({
     chip: props => ({
         backgroundColor: !props.pass ? theme.palette.error.main : theme.palette.success.main,
         color: theme.palette.primary.contrastText,
+        marginRight: theme.spacing(1),
     }),
     chipIcon: {
         color: theme.palette.primary.contrastText,
+    },
+    title: {
+        display: 'block',
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            display: 'inline',
+            width: 'auto',
+            paddingRight: theme.spacing(1),
+        },
+        [theme.breakpoints.down('xs')]: {
+            paddingBottom: theme.spacing(1),
+        },
     },
     pastTestLabel: {
         fontWeight: 'bold',
@@ -107,8 +120,13 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
             variant="outlined"
             noPadding={!(forceOpen || testPanelExpanded)}
             title={
-                <>
-                    <Typography component={'span'} variant={'h6'} color={disabled ? 'textSecondary' : 'textPrimary'}>
+                <Box display="flex" flexWrap="wrap" alignItems="center">
+                    <Typography
+                        component={'span'}
+                        variant={'h6'}
+                        color={disabled ? 'textSecondary' : 'textPrimary'}
+                        className={classes.title}
+                    >
                         {formLocale.title(disabled ? formLocale.statusUnavailableLabel : '')}
                     </Typography>
                     {!!!disabled && (
@@ -136,7 +154,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             )}
                         </>
                     )}
-                </>
+                </Box>
             }
             headerAction={
                 <IconButton
@@ -174,19 +192,27 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         </Typography>
                     </Grid>
                     <Grid container item xs={12}>
-                        <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
+                        <Grid item xs={12} sm={6}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
                                 {formLocale.siteLabel}
                             </Typography>
-                            <Typography component={'span'}>{lastLocation?.site_id_displayed}</Typography>
+                            <Typography component={'span'}>
+                                {lastLocation?.site_id_displayed ?? ''}
+                                {lastLocation?.site_id_displayed ? ' - ' : ''}
+                                {lastLocation?.site_name ?? ''}
+                            </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={6} lg={3}>
+                        <Grid item xs={12} sm={6}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
                                 {formLocale.buildingLabel}
                             </Typography>
-                            <Typography component={'span'}>{lastLocation?.building_id_displayed}</Typography>
+                            <Typography component={'span'}>
+                                {lastLocation?.building_id_displayed ?? ''}
+                                {lastLocation?.building_id_displayed ? ' - ' : ''}
+                                {lastLocation?.building_name ?? ''}
+                            </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
+                        <Grid item xs={12} sm={6}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
                                 {formLocale.floorLabel}
                             </Typography>
@@ -199,7 +225,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             <Typography component={'span'}>{lastLocation?.room_id_displayed}</Typography>
                         </Grid>
                         {!!mismatchingLocation && (
-                            <Grid item xs={12} lg={3}>
+                            <Grid item xs={12} lg={6}>
                                 <ReportProblemOutlinedIcon
                                     style={{
                                         color: theme.palette.warning.main,

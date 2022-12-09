@@ -99,9 +99,14 @@ describe('Helper functions', () => {
         checkStandardArguments(isValidAssetTypeId, false);
     });
     it('isValidTestingDeviceId function validates testing device ids', () => {
-        expect(isValidTestingDeviceId(1)).toBe(true);
-        expect(isValidTestingDeviceId('text')).toBe(false);
-        checkStandardArguments(isValidTestingDeviceId, false);
+        expect(isValidTestingDeviceId(1, 'PASSED', testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceId(1, 'FAILED', testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceId(-1, undefined, testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceId(-1, null, testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceId(1, undefined, testStatusEnum)).toBe(false);
+        expect(isValidTestingDeviceId(1, null, testStatusEnum)).toBe(false);
+        expect(isValidTestingDeviceId('text', 'PASSED', testStatusEnum)).toBe(false);
+        checkStandardArguments(val => isValidTestingDeviceId(val, 'PASSED', testStatusEnum), false);
     });
     it('isValidFailReason function validates failed values', () => {
         const validObject1 = { inspection_fail_reason: 'reason', inspection_status: FAIL };

@@ -36,8 +36,13 @@ export const isValidAssetId = assetId => {
 export const isValidOwner = owner => !isEmpty(owner);
 export const isValidRoomId = roomId => !!roomId && Number.isFinite(roomId) && roomId > 0;
 export const isValidAssetTypeId = assetTypeId => !!assetTypeId && Number.isFinite(assetTypeId) && assetTypeId > 0;
-export const isValidTestingDeviceId = testingDeviceId =>
-    !!testingDeviceId && Number.isFinite(testingDeviceId) && testingDeviceId > 0;
+export const isValidTestingDeviceId = (testingDeviceId, inspectionStatus, enums) =>
+    ((inspectionStatus === enums.PASSED.value || inspectionStatus === enums.FAILED.value) &&
+        !!testingDeviceId &&
+        Number.isFinite(testingDeviceId) &&
+        testingDeviceId > 0) ||
+    ((inspectionStatus === undefined || inspectionStatus === null) &&
+        (!Number.isFinite(testingDeviceId) || testingDeviceId === -1));
 export const isValidFailReason = (inspection, failedValue) =>
     inspection?.inspection_status === failedValue && !isEmpty(inspection?.inspection_fail_reason);
 export const isValidInspection = (inspection, testStatusEnum) => {
@@ -46,7 +51,7 @@ export const isValidInspection = (inspection, testStatusEnum) => {
     return (
         inspection.inspection_status === undefined ||
         (isValidRoomId(inspection.room_id) &&
-            isValidTestingDeviceId(inspection.inspection_device_id) &&
+            isValidTestingDeviceId(inspection.inspection_device_id, inspection.inspection_status, testStatusEnum) &&
             (isValidNextTestDate(inspection, testStatusEnum.PASSED.value) ||
                 isValidFailReason(inspection, testStatusEnum.FAILED.value)))
     );

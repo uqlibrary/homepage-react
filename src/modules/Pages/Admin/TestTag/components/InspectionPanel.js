@@ -98,7 +98,13 @@ const InspectionPanel = ({
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => handleChange('inspection_device_id')(e.target.value)}
                                 required
-                                error={!isValidTestingDeviceId(formValues.inspection_device_id)}
+                                error={
+                                    !isValidTestingDeviceId(
+                                        formValues.inspection_device_id,
+                                        formValues.inspection_status,
+                                        testStatusEnum,
+                                    )
+                                }
                                 disabled={disabled}
                             >
                                 {!!initConfigLoading && (
