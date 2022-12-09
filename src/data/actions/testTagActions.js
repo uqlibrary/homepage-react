@@ -126,7 +126,7 @@ export function saveInspection(request) {
                 });
             })
             .catch(error => {
-                console.log('saveInspection error', error.message);
+                console.log('saveInspection error', error);
                 dispatch({
                     type: actions.TESTTAG_SAVE_INSPECTION_FAILED,
                     payload: error.message,

@@ -10,7 +10,7 @@ function setup(testProps = {}, renderer = rtlRender) {
     return renderer(<LastInspectionPanel {...testProps} />);
 }
 
-describe('TabPanel Renders component', () => {
+describe('LastInspectionPanel Renders component', () => {
     const asset = {
         asset_id: 100000,
         asset_next_test_due_date: '2027-10-01 00:00',
@@ -23,10 +23,10 @@ describe('TabPanel Renders component', () => {
             floor_id_displayed: '1',
             building_id: 1,
             building_id_displayed: '0001',
-            building_id_name: 'BSL',
+            building_name: 'BSL',
             site_id: 1,
             site_id_displayed: '001',
-            site_id_name: 'St Lucia',
+            site_name: 'St Lucia',
         },
         last_inspection: {
             inspect_status: 'PASSED',
@@ -55,8 +55,12 @@ describe('TabPanel Renders component', () => {
                     moment(asset.last_inspection.inspect_date).format(dateFormatPattern),
             ),
         ).toBeInTheDocument();
-        expect(getByText(asset.last_location.site_id_displayed)).toBeInTheDocument();
-        expect(getByText(asset.last_location.building_id_displayed)).toBeInTheDocument();
+        expect(
+            getByText(`${asset.last_location.site_id_displayed} - ${asset.last_location.site_name}`),
+        ).toBeInTheDocument();
+        expect(
+            getByText(`${asset.last_location.building_id_displayed} - ${asset.last_location.building_name}`),
+        ).toBeInTheDocument();
         expect(getByText(asset.last_location.floor_id_displayed)).toBeInTheDocument();
         expect(getByText(asset.last_location.room_id_displayed)).toBeInTheDocument();
         if (asset.last_inspection.inspect_status === 'FAILED') {
