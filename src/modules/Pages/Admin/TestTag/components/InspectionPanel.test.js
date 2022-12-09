@@ -73,13 +73,15 @@ describe('InspectionPanel', () => {
             }),
         );
 
-        const { getByText } = setup({
+        const { getByText, getByTestId } = setup({
             formValues,
             selectedAsset: {},
             handleChange,
         });
 
         expect(getByText(locale.form.inspection.title)).toBeInTheDocument();
+        expect(getByTestId('testResultTestingDevice')).toBeInTheDocument();
+        expect(getByTestId('testResultToggleButtons')).toBeInTheDocument();
         await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
     });
 
