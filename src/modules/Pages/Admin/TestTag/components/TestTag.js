@@ -277,6 +277,7 @@ const TestTag = ({
                 onClose={hideNetworkError}
                 isOpen={isNetworkErrorOpen}
                 locale={locale.form.networkError}
+                noMinContentWidth
             />
             <ConfirmationBox
                 actionButtonColor="secondary"
@@ -287,6 +288,7 @@ const TestTag = ({
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
                 locale={getSuccessDialog(saveInspectionSuccess, classes)}
+                noMinContentWidth
             />
             <ConfirmationBox
                 actionButtonColor="primary"
@@ -297,6 +299,7 @@ const TestTag = ({
                 isOpen={isSaveErrorOpen}
                 locale={saveErrorLocale}
                 hideCancelButton
+                noMinContentWidth
             />
             <TestTagHeader
                 departmentText={headerDepartmentText}
