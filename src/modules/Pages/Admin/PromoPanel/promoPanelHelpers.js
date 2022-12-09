@@ -96,11 +96,6 @@ export const addSchedule = (
                                 (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(values.start)) &&
                                     moment(schedule.panel_schedule_start_time).isBefore(moment(values.end)))
                             ) {
-                                console.log(
-                                    'Collision',
-                                    schedule.panel_schedule_start_time,
-                                    schedule.panel_schedule_end_time,
-                                );
                                 setConfirmationMessage(
                                     locale.form.scheduleConflict.alert(
                                         item,

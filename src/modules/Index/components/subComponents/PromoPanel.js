@@ -26,7 +26,6 @@ const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActi
         >
             <Grid container spacing={1}>
                 <Grid item xs>
-                    {console.log('Current Promo panel', currentPromoPanel)}
                     {!!!promoPanelActionError &&
                         currentPromoPanel &&
                         parse(currentPromoPanel.active_panel.panel_content)}

@@ -55,7 +55,7 @@ export const ConfirmationBox = ({
         onClose();
         !!onAlternateAction && onAlternateAction();
     };
-    console.log('Additional Information', additionalInformation);
+
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
