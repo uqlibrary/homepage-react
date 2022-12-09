@@ -36,6 +36,7 @@ export const ConfirmationBox = ({
     onClose,
     showAlternateActionButton,
     showInputForm,
+    noMinContentWidth,
 }) => {
     const classes = useStyles();
 
@@ -57,7 +58,7 @@ export const ConfirmationBox = ({
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
-            <DialogContent>
+            <DialogContent style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }}>
                 <DialogContentText data-testid="message-content" component="div">
                     {locale.confirmationMessage}
                 </DialogContentText>
@@ -78,7 +79,7 @@ export const ConfirmationBox = ({
                                 fullWidth
                                 onClick={_onAction}
                                 id="confirm-action"
-                                data-testid="confirm-action"
+                                data-testid={`confirm-${confirmationBoxId}`}
                             />
                         </Grid>
                     )}
@@ -92,7 +93,7 @@ export const ConfirmationBox = ({
                                 fullWidth
                                 onClick={_onAlternateAction}
                                 id="confirm-alternate-action"
-                                data-testid="confirm-alternate-action"
+                                data-testid={`confirm-alternate-${confirmationBoxId}`}
                             />
                         </Grid>
                     )}
@@ -105,7 +106,7 @@ export const ConfirmationBox = ({
                                 fullWidth
                                 onClick={_onCancelAction}
                                 id="confirm-cancel-action"
-                                data-testid="confirm-cancel-action"
+                                data-testid={`cancel-${confirmationBoxId}`}
                             />
                         </Grid>
                     )}
@@ -131,6 +132,7 @@ ConfirmationBox.propTypes = {
     onClose: PropTypes.func,
     showAlternateActionButton: PropTypes.bool,
     showInputForm: PropTypes.bool,
+    noMinContentWidth: PropTypes.bool,
 };
 
 ConfirmationBox.defaultProps = {
@@ -146,6 +148,7 @@ ConfirmationBox.defaultProps = {
     },
     showAlternateActionButton: false,
     showInputForm: false,
+    noMinContentWidth: false,
 };
 
 export default React.memo(ConfirmationBox);
