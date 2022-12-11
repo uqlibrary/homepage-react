@@ -73,6 +73,7 @@ export const Index = ({
     incompleteNTROLoading,
     currentPromoPanel,
     promoPanelActionError,
+    promoPanelLoading,
 }) => {
     const dispatch = useDispatch();
     // Load homepage data requirements
@@ -234,7 +235,7 @@ export const Index = ({
                     )}
 
                     <Grid item xs={12} md={4}>
-                        <PromoPanel account={account} accountLoading={accountLoading} promoPanelActionError={promoPanelActionError} currentPromoPanel={currentPromoPanel} />
+                        <PromoPanel promoPanelLoading={promoPanelLoading} account={account} accountLoading={accountLoading} promoPanelActionError={promoPanelActionError} currentPromoPanel={currentPromoPanel} />
                     </Grid>
                 </Grid>
             </StandardPage>

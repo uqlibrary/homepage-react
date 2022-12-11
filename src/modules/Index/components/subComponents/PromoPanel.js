@@ -8,8 +8,8 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import PromoPanelLoader from 'modules/Pages/Admin/PromoPanel/PromoPanelLoader';
 
-const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActionError }) => {
-    return accountLoading === false ? (
+const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActionError, promoPanelLoading }) => {
+    return accountLoading === false && promoPanelLoading === false ? (
         <StandardCard
             primaryHeader
             fullHeight
@@ -46,6 +46,7 @@ PromoPanel.propTypes = {
     accountLoading: PropTypes.bool,
     currentPromoPanel: PropTypes.object,
     promoPanelActionError: PropTypes.string,
+    promoPanelLoading: PropTypes.bool,
 };
 
 PromoPanel.defaultProps = {};
