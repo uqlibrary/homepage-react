@@ -167,7 +167,11 @@ describe('Add Schedule', () => {
         expect(actions.updateScheduleQueuelength).toBeCalledWith(1);
     });
     test('Can detect a conflict - Before Date.', () => {
-        const displayList = [];
+        const displayList = [
+            {
+                groupNames: 'testing',
+            },
+        ];
         const values = {
             start: '2090-12-15 00:00:00',
             end: '2090-12-16 00:00:00',
@@ -176,7 +180,7 @@ describe('Add Schedule', () => {
         const actions = {
             updateScheduleQueuelength: jest.fn(),
         };
-        const expected = [false, []];
+        const expected = [false, [...displayList]];
         expect(
             Helpers.addSchedule(
                 displayList,
@@ -216,6 +220,120 @@ describe('Add Schedule', () => {
         ).toEqual(expected);
         expect(setConfirmationMsg).toBeCalled();
     });
+    test('Can detect a duplicate - Prior to save values.', () => {
+        const displayList = [
+            {
+                groupNames: 'student',
+                startDate: '2010-12-11 00:00:00',
+                endDate: '2010-12-16 00:00:00',
+            },
+        ];
+        const values = {
+            start: '2010-12-11 00:00:00',
+            end: '2010-12-16 00:00:00',
+        };
+        const setConfirmationMsg = jest.fn();
+        const actions = {
+            updateScheduleQueuelength: jest.fn(),
+        };
+        const expected = [true, [...displayList]];
+        expect(
+            Helpers.addSchedule(
+                displayList,
+                MockData.userListPanels,
+                ['student'],
+                values,
+                setConfirmationMsg,
+                locale,
+                { validate: true },
+                actions,
+            ),
+        ).toEqual(expected);
+    });
+
+    test('Can add default panel', () => {
+        const displayList = [
+            {
+                endDate: null,
+                startDate: null,
+                groupNames: 'testing',
+            },
+        ];
+        const values = {
+            is_default_panel: true,
+        };
+        const setConfirmationMsg = jest.fn();
+        const actions = {
+            updateScheduleQueuelength: jest.fn(),
+        };
+        const expected = [
+            true,
+            [
+                {
+                    endDate: null,
+                    groupNames: 'testing',
+                    startDate: null,
+                },
+                {
+                    endDate: null,
+                    groupNames: 'student',
+                    startDate: null,
+                },
+            ],
+        ];
+        expect(
+            Helpers.addSchedule(
+                displayList,
+                MockData.userListPanels,
+                ['student'],
+                values,
+                setConfirmationMsg,
+                locale,
+                { validate: true },
+                actions,
+            ),
+        ).toEqual(expected);
+    });
+    test('will not add default panel if one exists', () => {
+        const displayList = [
+            {
+                endDate: null,
+                startDate: null,
+                groupNames: 'student',
+                dateChanged: true,
+            },
+        ];
+        const values = {
+            is_default_panel: true,
+        };
+        const setConfirmationMsg = jest.fn();
+        const actions = {
+            updateScheduleQueuelength: jest.fn(),
+        };
+        const expected = [
+            true,
+            [
+                {
+                    dateChanged: true,
+                    endDate: null,
+                    groupNames: 'student',
+                    startDate: null,
+                },
+            ],
+        ];
+        expect(
+            Helpers.addSchedule(
+                displayList,
+                MockData.userListPanels,
+                ['student'],
+                values,
+                setConfirmationMsg,
+                locale,
+                { validate: true },
+                actions,
+            ),
+        ).toEqual(expected);
+    });
 });
 describe('Save group date', () => {
     test('Can save a group date', () => {
@@ -236,5 +354,79 @@ describe('Save group date', () => {
         const expected = [{ dateChanged: true, endDate: '2090-12-16 00:00:00', startDate: '2090-12-15 00:00:00' }];
         expect(setDisplayList).toBeCalledWith(expected);
         expect(setIsEditingDate).toBeCalledWith(false);
+    });
+});
+
+describe('Remamp Schedule List', () => {
+    test('Will not return anything if not relevant to panel', () => {
+        const setIsDefault = jest.fn();
+        const scheduleList = [
+            {
+                panel_id: 10,
+            },
+        ];
+
+        expect(Helpers.remapScheduleList(scheduleList, 5, setIsDefault)).toEqual([[], []]);
+    });
+    test('Will return mapped data for panel if group found for panel id (defaults)', () => {
+        const setIsDefault = jest.fn();
+        const scheduleList = [
+            {
+                panel_id: 10,
+                default_panels_for: [
+                    {
+                        usergroup_group: 'student',
+                    },
+                ],
+            },
+        ];
+
+        expect(Helpers.remapScheduleList(scheduleList, 10, setIsDefault)).toEqual([
+            ['student'],
+            [
+                {
+                    dateChanged: false,
+                    endDate: null,
+                    existing: true,
+                    groupNames: 'student',
+                    startDate: null,
+                },
+            ],
+        ]);
+    });
+    test('Will return mapped data for panel if group found for panel id (schedules)', () => {
+        const setIsDefault = jest.fn();
+        const scheduleList = [
+            {
+                panel_id: 10,
+                default_panels_for: [],
+                panel_schedule: [
+                    {
+                        usergroup_group: 'student',
+                        user_group_schedule: [
+                            {
+                                panel_schedule_id: 1,
+                                panel_schedule_start_time: '2090-12-15 00:00:00',
+                                panel_schedule_end_time: '2090-12-16 00:00:00',
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        expect(Helpers.remapScheduleList(scheduleList, 10, setIsDefault)).toEqual([
+            ['student'],
+            [
+                {
+                    id: 1,
+                    dateChanged: false,
+                    endDate: '2090-12-16 00:00:00',
+                    existing: true,
+                    groupNames: 'student',
+                    startDate: '2090-12-15 00:00:00',
+                },
+            ],
+        ]);
     });
 });

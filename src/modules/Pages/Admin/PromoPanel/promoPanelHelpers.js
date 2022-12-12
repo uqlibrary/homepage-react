@@ -110,23 +110,23 @@ export const addSchedule = (
                 }
             });
         }
+        /* istanbul ignore else */
         if (isValid) {
-            /* istanbul ignore else */
             let push = true;
+            /* istanbul ignore else */
             if (values.is_default_panel && allocatedList.length > 0) {
-                /* istanbul ignore else */
                 allocatedList.map(alloc => {
+                    /* istanbul ignore else */
                     if (alloc.groupNames === item) {
-                        /* istanbul ignore else */
                         push = false;
                     }
                 });
             }
+            /* istanbul ignore else */
             if (!values.is_default_panel && allocatedList.length > 0) {
-                /* istanbul ignore else */
                 allocatedList.map(alloc => {
+                    /* istanbul ignore else  */
                     if (
-                        /* istanbul ignore else */
                         alloc.groupNames === item &&
                         moment(values.start).isSame(moment(alloc.startDate)) &&
                         moment(values.end).isSame(moment(alloc.endDate))
@@ -135,8 +135,8 @@ export const addSchedule = (
                     }
                 });
             }
+            /* istanbul ignore else */
             if (push) {
-                /* istanbul ignore else */
                 allocatedList.push({
                     startDate: values.is_default_panel ? null : moment(values.start).format('YYYY-MM-DD HH:mm:ss'),
                     endDate: values.is_default_panel ? null : moment(values.end).format('YYYY-MM-DD HH:mm:ss'),
@@ -144,7 +144,9 @@ export const addSchedule = (
                 });
 
                 actions.updateScheduleQueuelength(
-                    allocatedList.filter(filter => !!!filter.existing || !!filter.dateChanged).length,
+                    allocatedList.filter(
+                        filter => !!!filter.existing || /* istanbul ignore next */ !!filter.dateChanged,
+                    ).length,
                 );
             }
         }
@@ -160,7 +162,7 @@ export const saveGroupDate = (idx, dateRange, displayList, setDisplayList, setIs
     newDisplayList[idx].dateChanged = true;
     setDisplayList(newDisplayList);
     actions.updateScheduleQueuelength(
-        newDisplayList.filter(filter => !!!filter.existing || !!filter.dateChanged).length,
+        newDisplayList.filter(filter => !!!filter.existing || /* istanbul ignore next */ !!filter.dateChanged).length,
     );
     setIsEditingDate(false);
 };
@@ -175,8 +177,8 @@ export const remapScheduleList = (scheduleList, promopanelid, setIsDefault) => {
                 item.default_panels_for.map(element => {
                     !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
                     schedule.push({
-                        startDate: element.panel_schedule_start_time,
-                        endDate: element.panel_schedule_end_time,
+                        startDate: element.panel_schedule_start_time || null,
+                        endDate: element.panel_schedule_end_time || null,
                         groupNames: element.usergroup_group,
                         existing: true,
                         dateChanged: false,
@@ -185,7 +187,7 @@ export const remapScheduleList = (scheduleList, promopanelid, setIsDefault) => {
             } else {
                 setIsDefault(false);
                 item.panel_schedule.map(element => {
-                    !userlist.includes(element.usergroup_group_name) && userlist.push(element.usergroup_group_name);
+                    !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
                     element.user_group_schedule.map(panelSchedule => {
                         schedule.push({
                             id: panelSchedule.panel_schedule_id,

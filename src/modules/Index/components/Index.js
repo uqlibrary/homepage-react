@@ -270,6 +270,7 @@ Index.propTypes = {
     incompleteNTROLoading: PropTypes.bool,
     currentPromoPanel: PropTypes.object,
     promoPanelActionError: PropTypes.string,
+    promoPanelLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};
