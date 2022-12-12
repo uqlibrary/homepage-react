@@ -167,4 +167,155 @@ describe('PromoPanel reducer', () => {
             promoPanelUserTypeList: 'test',
         });
     });
+    it('should handle panel user list loading failed', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_USERLIST_LOAD_FAILED, payload: 'error' });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: false,
+            scheduleUpdated: false,
+            promoPanelUserTypesError: 'error',
+            promoPanelUserTypesLoading: false,
+            promoPanelUserTypeList: [],
+        });
+    });
+    it('should handle panel creating', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_CREATING });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: false,
+            scheduleUpdated: false,
+            promoPanelLoading: false,
+            promoPanelActionError: null,
+            promoPanelSaving: true,
+        });
+    });
+    it('should handle panel creating success', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_CREATE_SUCCESS, payload: 'test' });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: true,
+            scheduleUpdated: false,
+            currentPromoPanel: 'test',
+            promoPanelLoading: false,
+            promoPanelActionError: null,
+            promoPanelSaving: false,
+            queueLength: 0,
+        });
+    });
+    it('should handle panel creating failure', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_CREATE_FAILED, payload: 'error' });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: false,
+            scheduleUpdated: false,
+            promoPanelLoading: false,
+            promoPanelActionError: 'error',
+            promoPanelSaving: false,
+        });
+    });
+    it('should handle panel saving', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_SAVING });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: false,
+            scheduleUpdated: false,
+            promoPanelLoading: true,
+            promoPanelActionError: null,
+            promoPanelSaving: true,
+        });
+    });
+    it('should handle panel saving success', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_SAVE_SUCCESS, payload: 'test' });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: true,
+            scheduleUpdated: false,
+            currentPromoPanel: 'test',
+            promoPanelLoading: false,
+            promoPanelActionError: null,
+            promoPanelSaving: false,
+        });
+    });
+    it('should handle panel saving failure', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_SAVE_FAILED, payload: 'error' });
+        expect(test).toEqual({
+            ...emptyState,
+            promoPanelLoading: false,
+            scheduleUpdated: false,
+            promoPanelActionError: 'error',
+            promoPanelSaving: false,
+        });
+    });
+    it('should handle panel scheduling', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_SCHEDULING });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: false,
+            scheduleUpdated: false,
+            promoPanelLoading: true,
+            promoPanelActionError: null,
+            promoPanelSaving: true,
+        });
+    });
+    it('should handle panel scheduling success and map queueLength accordingly', () => {
+        const test = promoPanelReducer(
+            { ...emptyState, queueLength: 1 },
+            { type: actions.PROMOPANEL_SCHEDULE_SUCCESS, payload: 'test' },
+        );
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: true,
+            currentPanel: 'test',
+            scheduleUpdated: true,
+            promoPanelLoading: false,
+            promoPanelActionError: null,
+            promoPanelSaving: false,
+            queueLength: 0,
+        });
+    });
+    it('should handle panel scheduling failure', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_SCHEDULE_FAILED, payload: 'error' });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: false,
+            scheduleUpdated: false,
+            promoPanelLoading: false,
+            promoPanelActionError: 'error',
+            promoPanelSaving: false,
+        });
+    });
+    it('should handle panel deleting', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_DELETING });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: false,
+            scheduleUpdated: false,
+            promoPanelLoading: true,
+            promoPanelActionError: null,
+            promoPanelSaving: true,
+        });
+    });
+    it('should handle panel deleting success', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_DELETE_SUCCESS });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: true,
+            scheduleUpdated: false,
+            currentPromoPanel: null,
+            promoPanelLoading: false,
+            promoPanelActionError: null,
+            promoPanelSaving: false,
+        });
+    });
+    it('should handle panel deleting failure', () => {
+        const test = promoPanelReducer(emptyState, { type: actions.PROMOPANEL_DELETE_FAILED, payload: 'error' });
+        expect(test).toEqual({
+            ...emptyState,
+            panelUpdated: false,
+            scheduleUpdated: false,
+            promoPanelLoading: false,
+            promoPanelActionError: 'error',
+            promoPanelSaving: false,
+        });
+    });
 });
