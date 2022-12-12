@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -162,7 +161,7 @@ const TestTag = ({
             return {
                 ...DEFAULT_FORM_VALUES,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
-                asset_department_owned_by: formOwnerId ?? undefined,
+                asset_department_owned_by: formOwnerId ?? /* istanbul ignore next */ undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
                 user_id: formValues?.user_id ?? undefined,
                 room_id: location?.formRoomId ?? undefined,
@@ -170,7 +169,7 @@ const TestTag = ({
                 inspection_device_id:
                     formValues?.inspection_device_id !== -1
                         ? formValues?.inspection_device_id
-                        : initConfig?.inspection_devices?.[0].device_id ?? undefined,
+                        : initConfig?.inspection_devices?.[0].device_id ?? /* istanbul ignore next */ undefined,
             };
         },
         [formOwnerId, initConfig?.inspection_devices, today],
@@ -184,11 +183,13 @@ const TestTag = ({
     const { location, setLocation } = useLocation();
 
     const headerDepartmentText = React.useMemo(
-        () => locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? '') ?? '',
+        () =>
+            locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? /* istanbul ignore next */ '') ??
+            /* istanbul ignore next */ '',
         [initConfig],
     );
     useEffect(() => {
-        if (!initConfigLoading && !!initConfig) {
+        /* istanbul ignore else */ if (!initConfigLoading && !!initConfig) {
             handleChange('user_id')(initConfig.user.user_id);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -230,7 +231,11 @@ const TestTag = ({
         assignCurrentAsset({});
     };
     useEffect(() => {
-        if (formValues?.asset_id_displayed === undefined && assetIdElementRef.current && !!initConfig) {
+        /* istanbul ignore else */ if (
+            formValues?.asset_id_displayed === undefined &&
+            assetIdElementRef.current &&
+            !!initConfig
+        ) {
             assetIdElementRef.current.focus();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -246,10 +251,10 @@ const TestTag = ({
     }, [actions]);
 
     useEffect(() => {
-        (!!!initConfigError || initConfigError.length === 0) &&
-            (!!!floorListError || floorListError.length === 0) &&
-            (!!!roomListError || roomListError.length === 0) &&
-            (!!!assetsListError || assetsListError.length === 0) &&
+        (!!!initConfigError || /* istanbul ignore next */ initConfigError.length === 0) &&
+            (!!!floorListError || /* istanbul ignore next */ floorListError.length === 0) &&
+            (!!!roomListError || /* istanbul ignore next */ roomListError.length === 0) &&
+            (!!!assetsListError || /* istanbul ignore next */ assetsListError.length === 0) &&
             validateValues(formValues);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initConfigError, floorListError, roomListError, assetsListError, formValues]);
@@ -261,9 +266,7 @@ const TestTag = ({
 
     const saveErrorLocale = {
         ...locale.form.saveError,
-        confirmationTitle: !!saveInspectionError
-            ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(saveInspectionError)}`
-            : 'An unknown error occurred',
+        confirmationTitle: locale.form.saveError.confirmationTitle(saveInspectionError),
     };
 
     return (
@@ -271,7 +274,7 @@ const TestTag = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="tag-test-network-error"
+                confirmationBoxId="testTag-network-error"
                 hideCancelButton
                 onAction={hideNetworkError}
                 onClose={hideNetworkError}
@@ -282,7 +285,7 @@ const TestTag = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="tag-test-save-succeeded"
+                confirmationBoxId="testTag-save-succeeded"
                 hideCancelButton
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
@@ -303,7 +306,7 @@ const TestTag = ({
             />
             <TestTagHeader
                 departmentText={headerDepartmentText}
-                requiredText={locale?.form?.requiredText ?? ''}
+                requiredText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
                 className={classes.header}
             />
 
@@ -311,7 +314,7 @@ const TestTag = ({
                 actions={actions}
                 location={location}
                 setLocation={setLocation}
-                actionDate={formValues?.action_date ?? ''}
+                actionDate={formValues?.action_date ?? /* istanbul ignore next */ ''}
                 handleChange={handleChange}
                 classes={classes}
                 hasInspection={formValues?.inspection_status !== undefined}
