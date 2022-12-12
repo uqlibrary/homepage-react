@@ -1,12 +1,12 @@
 import ContentLoader from 'react-content-loader';
-import { PropTypes } from 'prop-types';
+// import { PropTypes } from 'prop-types';
 import React from 'react';
 
 const PromoPanelLoader = props => {
     return (
         <ContentLoader
             speed={2}
-            uniqueKey="training"
+            uniqueKey="promopanels"
             width={'100%'}
             height={'100%'}
             viewBox="0 0 365 300"
@@ -37,11 +37,7 @@ const PromoPanelLoader = props => {
     );
 };
 
-PromoPanelLoader.propTypes = {
-    trainingEvents: PropTypes.any,
-    trainingEventsLoading: PropTypes.bool,
-    trainingEventsError: PropTypes.bool,
-};
+PromoPanelLoader.propTypes = {};
 
 PromoPanelLoader.defaultProps = {};
 

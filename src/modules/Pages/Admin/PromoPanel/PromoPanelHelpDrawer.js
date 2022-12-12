@@ -59,7 +59,8 @@ export const PromoPanelHelpDrawer = ({ open, helpContent, closeHelpLightbox }) =
                             color="primary"
                             className={classes.button}
                             children={helpContent?.buttonLabel || 'Close'}
-                            data-testid="spotlights-helpdrawer-close-button"
+                            data-testid="promopanel-helpdrawer-close-button"
+                            id="promopanel-helpdrawer-close-button"
                             onClick={closeHelpLightbox}
                         />
                     </div>
@@ -75,3 +76,5 @@ PromoPanelHelpDrawer.propTypes = {
     setHelpLightboxOpen: PropTypes.any,
     closeHelpLightbox: PropTypes.any,
 };
+
+export default PromoPanelHelpDrawer;

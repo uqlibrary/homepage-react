@@ -53,12 +53,12 @@ export const PromoPanelPreview = props => {
         <React.Fragment>
             <Dialog
                 open={props.isPreviewOpen}
-                aria-labelledby="lightboxTitle"
+                aria-labelledby="promopanel-preview-title"
                 PaperProps={{ classes: { root: classes.dialogPaper } }}
             >
                 <DialogTitle
-                    id="lightboxTitle"
-                    data-testid="spotlights-viewbyimage-lightbox-title"
+                    id="promopanel-preview-title"
+                    data-testid="promopanel-preview-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
                     children={
                         <>
@@ -93,7 +93,8 @@ export const PromoPanelPreview = props => {
                             style={{ marginTop: 10 }}
                             color="secondary"
                             children="Close"
-                            data-testid="admin-promopanel-form-button-cancel"
+                            id="admin-promopanel-preview-button-cancel"
+                            data-testid="admin-promopanel-preview-button-cancel"
                             variant="contained"
                             onClick={props.handlePreviewClose}
                         />
