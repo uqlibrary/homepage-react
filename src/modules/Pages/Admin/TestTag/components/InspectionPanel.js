@@ -95,6 +95,7 @@ const InspectionPanel = ({
                                 fullWidth
                                 className={classes.formSelect}
                                 id="testResultTestingDevice"
+                                data-testid="testResultTestingDevice"
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => handleChange('inspection_device_id')(e.target.value)}
                                 required
@@ -133,6 +134,7 @@ const InspectionPanel = ({
                                 value={formValues.inspection_status ?? testStatusEnum.NONE.value}
                                 exclusive
                                 id="testResultToggleButtons"
+                                data-testid="testResultToggleButtons"
                                 size={isMobileView ? 'large' : 'small'}
                                 defaultChecked={false}
                                 onChange={(_, child) => {
@@ -141,6 +143,8 @@ const InspectionPanel = ({
                                 style={{ display: 'flex' }}
                             >
                                 <ToggleButton
+                                    id={`testResultToggleButtons-${testStatusEnum.PASSED.value}`}
+                                    data-testid={`testResultToggleButtons-${testStatusEnum.PASSED.value}`}
                                     value={testStatusEnum.PASSED.value}
                                     aria-label={testStatusEnum.PASSED.label}
                                     classes={{
@@ -153,6 +157,8 @@ const InspectionPanel = ({
                                     <DoneIcon /> {testStatusEnum.PASSED.label}
                                 </ToggleButton>
                                 <ToggleButton
+                                    id={`testResultToggleButtons-${testStatusEnum.FAILED.value}`}
+                                    data-testid={`testResultToggleButtons-${testStatusEnum.FAILED.value}`}
                                     value={testStatusEnum.FAILED.value}
                                     aria-label={testStatusEnum.FAILED.label}
                                     classes={{
@@ -174,6 +180,8 @@ const InspectionPanel = ({
                                     {locale.form.inspection.nextTestDateLabel}
                                 </InputLabel>
                                 <Select
+                                    id="testResultNextDate"
+                                    data-testid="testResultNextDate"
                                     fullWidth
                                     className={classes.formSelect}
                                     value={formNextTestDate}
@@ -182,7 +190,12 @@ const InspectionPanel = ({
                                     disabled={disabled}
                                 >
                                     {currentRetestList.map(retestPeriod => (
-                                        <MenuItem value={retestPeriod.value} key={retestPeriod.value}>
+                                        <MenuItem
+                                            value={retestPeriod.value}
+                                            key={retestPeriod.value}
+                                            id={`testResultNextDate-${retestPeriod.value}`}
+                                            data-testid={`testResultNextDate-${retestPeriod.value}`}
+                                        >
                                             {retestPeriod.label}
                                         </MenuItem>
                                     ))}
