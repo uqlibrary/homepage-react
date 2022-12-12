@@ -48,6 +48,34 @@ describe('TabPanel', () => {
         const classes = {};
         const isMobileView = false;
         const disabled = false;
+        const testValues = { ...formValues };
+        testValues.inspection_status = 'FAILED';
+
+        const setStateMock = jest.fn();
+        const spyState = useState => [useState, setStateMock];
+        jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
+
+        const { getByTestId } = setup({ formValues: testValues, handleChange, classes, isMobileView, disabled });
+
+        act(() => {
+            fireEvent.click(getByTestId('tab-discard'));
+        });
+
+        expect(setStateMock).toHaveBeenCalledWith(1);
+
+        act(() => {
+            fireEvent.click(getByTestId('tab-repair'));
+        });
+
+        expect(setStateMock).toHaveBeenCalledWith(0);
+    });
+
+    it('allows selection of only discard tab', () => {
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
+        const classes = {};
+        const isMobileView = false;
+        const disabled = false;
 
         const setStateMock = jest.fn();
         const spyState = useState => [useState, setStateMock];
@@ -64,8 +92,8 @@ describe('TabPanel', () => {
         act(() => {
             fireEvent.click(getByTestId('tab-repair'));
         });
-
-        expect(setStateMock).toHaveBeenCalledWith(0);
+        // can only access the Repair tab if status === FAILED
+        expect(setStateMock).not.toHaveBeenCalledWith(0);
     });
 
     it('allows entry of repair text', async () => {
@@ -84,6 +112,7 @@ describe('TabPanel', () => {
         const isMobileView = false;
         const disabled = false;
         const testAsset = { ...formValues };
+        testAsset.inspection_status = 'FAILED';
         testAsset.isRepair = true;
         testAsset.repairer_contact_details = '';
 
