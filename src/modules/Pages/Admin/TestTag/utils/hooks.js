@@ -48,7 +48,10 @@ export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {} }
             isValidInspection(currentValues, testStatusEnum) &&
             ((!!!currentValues.isRepair && !!!currentValues.isDiscarded) ||
                 (!!currentValues.isRepair !== !!currentValues.isDiscarded &&
-                    (isValidRepair(currentValues) || isValidDiscard(currentValues)))) &&
+                    (isValidRepair(currentValues) || isValidDiscard(currentValues))) ||
+                (!!currentValues.isRepair === !!currentValues.isDiscarded &&
+                    currentValues.inspection_status === testStatusEnum.PASSED.value &&
+                    isValidDiscard(currentValues))) &&
             hasTestOrAction(currentValues);
         setIsValid(val);
     };
