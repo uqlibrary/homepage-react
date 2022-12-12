@@ -79,30 +79,30 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const getSuccessDialog = (response, classes) => {
-    if (!!!response || !!!response?.message) return {};
-    const { message } = response;
+    if (!!!response || !!!response?.data) return {};
+    const { data } = response;
     const messageFragment = (
         <Box display="flex" alignItems="center" justifyContent="center">
             <Grid container item xs={12} sm={6} alignItems="center" className={classes.dialogSuccessContainer}>
                 <Grid item xs={12} className={classes.dialogSuccessTitle} variant="subtitle1">
-                    <Typography gutterBottom>Tested By: {message.user_licence_number}</Typography>
+                    <Typography gutterBottom>Tested By: {data.user_licence_number}</Typography>
                 </Grid>
                 <Grid item xs={12} className={classes.dialogSuccessBarcode}>
                     <Typography gutterBottom variant="h6">
-                        {message.asset_id_displayed}
+                        {data.asset_id_displayed}
                     </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
                     <Typography gutterBottom>Date Tested:</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>{message.action_date}</Typography>
+                    <Typography gutterBottom>{data.action_date}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
                     <Typography gutterBottom>Date Due:</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>{message.asset_next_test_due_date ?? 'n/a'}</Typography>
+                    <Typography gutterBottom>{data.asset_next_test_due_date ?? 'n/a'}</Typography>
                 </Grid>
             </Grid>
         </Box>
