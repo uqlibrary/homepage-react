@@ -134,7 +134,10 @@ export default {
             confirmButtonLabel: 'Ok',
         }),
         saveError: {
-            confirmationTitle: 'Asset could not be saved. Please try again or contact support if the issue persists.',
+            confirmationTitle: saveInspectionError =>
+                !!saveInspectionError
+                    ? `An error occurred: ${JSON.stringify(saveInspectionError)}`
+                    : 'An unknown error occurred',
             confirmButtonLabel: 'OK',
         },
         networkError: {
