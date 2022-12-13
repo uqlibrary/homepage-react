@@ -145,5 +145,13 @@ export default {
                 'A network error occurred while loading the requested data. Please try again or contact support if the issue persists.',
             confirmButtonLabel: 'OK',
         },
+        dialogLabels: {
+            testedBy: 'Tested By:',
+            testedDate: 'Date Tested:',
+            dateNextDue: 'Date Due:',
+            notApplicable: 'N/A',
+            outOfService: 'OUT OF SERVICE',
+            tagPlacedBy: 'TAG PLACED BY:',
+        },
     },
 };

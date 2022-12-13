@@ -107,7 +107,7 @@ describe('TestTag', () => {
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     });
 
-    it('should show a save success dialog panel', async () => {
+    it('should show a save success for PASSED asset dialog panel', async () => {
         const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
@@ -120,6 +120,7 @@ describe('TestTag', () => {
             },
             saveInspectionSuccess: {
                 data: {
+                    asset_status: 'CURRENT',
                     asset_id_displayed: 'UQL000705',
                     user_licence_number: 'NOT LICENCED',
                     action_date: '2022-12-12',
@@ -133,6 +134,117 @@ describe('TestTag', () => {
         expect(getByText('Tested By: NOT LICENCED')).toBeInTheDocument();
         expect(getByText('2022-12-12')).toBeInTheDocument();
         expect(getByText('2023Dec12')).toBeInTheDocument();
+        act(() => {
+            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+        });
+        expect(clearSaveInspectionFn).toHaveBeenCalled();
+        expect(clearAssetsFn).toHaveBeenCalled();
+        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+    });
+
+    it('should show a save success for FAILED asset dialog panel', async () => {
+        const loadConfigFn = jest.fn();
+        const clearSaveInspectionFn = jest.fn();
+        const clearAssetsFn = jest.fn();
+
+        const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
+            actions: {
+                loadConfig: loadConfigFn,
+                clearSaveInspection: clearSaveInspectionFn,
+                clearAssets: clearAssetsFn,
+            },
+            saveInspectionSuccess: {
+                data: {
+                    asset_status: 'FAILED',
+                    asset_id_displayed: 'UQL000705',
+                    user_licence_number: '1234567890',
+                    action_date: '2022-12-12',
+                    asset_next_test_due_date: '2023Dec12',
+                },
+            },
+        });
+
+        await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
+        expect(getByText('Asset saved')).toBeInTheDocument();
+        expect(getByText('FAILED')).toBeInTheDocument();
+        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(queryByText('UQL000705')).not.toBeInTheDocument();
+        expect(queryByText('2022-12-12')).not.toBeInTheDocument();
+        expect(queryByText('2023Dec12')).not.toBeInTheDocument();
+        act(() => {
+            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+        });
+        expect(clearSaveInspectionFn).toHaveBeenCalled();
+        expect(clearAssetsFn).toHaveBeenCalled();
+        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+    });
+
+    it('should show a save success for OUTFORREPAIR asset dialog panel', async () => {
+        const loadConfigFn = jest.fn();
+        const clearSaveInspectionFn = jest.fn();
+        const clearAssetsFn = jest.fn();
+
+        const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
+            actions: {
+                loadConfig: loadConfigFn,
+                clearSaveInspection: clearSaveInspectionFn,
+                clearAssets: clearAssetsFn,
+            },
+            saveInspectionSuccess: {
+                data: {
+                    asset_status: 'OUTFORREPAIR',
+                    asset_id_displayed: 'UQL000705',
+                    user_licence_number: '1234567890',
+                    action_date: '2022-12-12',
+                    asset_next_test_due_date: '2023Dec12',
+                },
+            },
+        });
+
+        await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
+        expect(getByText('Asset saved')).toBeInTheDocument();
+        expect(getByText('OUTFORREPAIR')).toBeInTheDocument();
+        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(queryByText('UQL000705')).not.toBeInTheDocument();
+        expect(queryByText('2022-12-12')).not.toBeInTheDocument();
+        expect(queryByText('2023Dec12')).not.toBeInTheDocument();
+        act(() => {
+            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+        });
+        expect(clearSaveInspectionFn).toHaveBeenCalled();
+        expect(clearAssetsFn).toHaveBeenCalled();
+        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+    });
+
+    it('should show a save success for DISCARDED asset dialog panel', async () => {
+        const loadConfigFn = jest.fn();
+        const clearSaveInspectionFn = jest.fn();
+        const clearAssetsFn = jest.fn();
+
+        const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
+            actions: {
+                loadConfig: loadConfigFn,
+                clearSaveInspection: clearSaveInspectionFn,
+                clearAssets: clearAssetsFn,
+            },
+            saveInspectionSuccess: {
+                data: {
+                    asset_status: 'DISCARDED',
+                    asset_id_displayed: 'UQL000705',
+                    user_licence_number: '1234567890',
+                    action_date: '2022-12-12',
+                    asset_next_test_due_date: '2023Dec12',
+                },
+            },
+        });
+
+        await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
+        expect(getByText('Asset saved')).toBeInTheDocument();
+        expect(getByText('DISCARDED')).toBeInTheDocument();
+        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(queryByText('UQL000705')).not.toBeInTheDocument();
+        expect(queryByText('2022-12-12')).not.toBeInTheDocument();
+        expect(queryByText('2023Dec12')).not.toBeInTheDocument();
         act(() => {
             fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
         });
