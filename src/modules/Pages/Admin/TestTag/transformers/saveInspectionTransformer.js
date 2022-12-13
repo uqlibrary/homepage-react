@@ -81,7 +81,8 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
         }
     },
     with_repair: state => {
-        if (state.with_repair.isRepair) {
+        // repair option only for FAILED inspections
+        if (state.with_inspection?.inspection_status === failValue && state.with_repair.isRepair) {
             /* istanbul ignore else */ if (!!state.with_discard) state.with_discard.discard_reason = undefined;
             delete state.with_repair.isRepair;
             return { with_repair: state.with_repair, with_discard: state.with_discard };

@@ -11,6 +11,7 @@ import { useConfirmationState } from 'hooks';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core';
+import clsx from 'clsx';
 
 import TestTagHeader from './TestTagHeader';
 import EventPanel from './EventPanel';
@@ -18,8 +19,8 @@ import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
 import { useForm, useValidation, useLocation } from '../utils/hooks';
 import locale from '../testTag.locale';
-
 const moment = require('moment');
+const testStatusEnum = statusEnum(locale);
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -44,17 +45,40 @@ const useStyles = makeStyles(theme => ({
     header: {
         paddingBottom: theme.spacing(2),
     },
-    dialogSuccessContainer: {
-        backgroundColor: '#69B400',
-        color: 'black',
-        border: '1px solid #69B400',
+    dialogContainer: {
         borderRadius: '6px',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        color: 'black',
     },
-    dialogSuccessTitle: {
+    dialogPassedContainer: {
+        backgroundColor: '#69B400',
+        borderColor: '#69B400',
+    },
+    dialogFailedContainer: {
+        backgroundColor: '#ef000c',
+        borderColor: '#ef000c',
+    },
+    dialogTitle: {
         textAlign: 'center',
         padding: '8px',
         '& >p': {
             fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
+    dialogFailedTitle: {
+        '& >h4': {
+            fontWeight: '700',
+            fontFamily: 'monospace, monospace',
+            textDecoration: 'underline',
+        },
+    },
+    dialogFailedAssetStatus: {
+        textAlign: 'center',
+        padding: '8px',
+        '& >h5': {
+            fontWeight: '700',
             fontFamily: 'monospace, monospace',
         },
     },
@@ -76,42 +100,89 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
+    dialogFailedLineItems: {
+        padding: '8px',
+        textAlign: 'center',
+        '& >p': {
+            fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
 }));
-
-const getSuccessDialog = (response, classes) => {
+const savedDialogMessages = {
+    [testStatusEnum.CURRENT.value]: (data, classes, locale) => (
+        <Grid
+            container
+            item
+            xs={12}
+            sm={6}
+            alignItems="center"
+            className={clsx([classes.dialogContainer, classes.dialogPassedContainer])}
+        >
+            <Grid item xs={12} className={clsx([classes.dialogTitle, classes.dialogSuccessTitle])} variant="subtitle1">
+                <Typography gutterBottom>
+                    {locale.testedBy} {data.user_licence_number}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.dialogSuccessBarcode}>
+                <Typography gutterBottom variant="h6">
+                    {data.asset_id_displayed}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                <Typography gutterBottom>{locale.testedDate}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                <Typography gutterBottom>{data.action_date}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                <Typography gutterBottom>{locale.dateNextDue}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                <Typography gutterBottom>{data.asset_next_test_due_date ?? locale.notApplicable}</Typography>
+            </Grid>
+        </Grid>
+    ),
+    other: (data, classes, locale) => (
+        <Grid
+            container
+            item
+            xs={12}
+            sm={6}
+            alignItems="center"
+            className={clsx([classes.dialogContainer, classes.dialogFailedContainer])}
+        >
+            <Grid item xs={12} className={clsx([classes.dialogTitle, classes.dialogFailedTitle])}>
+                <Typography gutterBottom variant="h4">
+                    {locale.outOfService}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.dialogFailedAssetStatus}>
+                <Typography gutterBottom variant="h5">
+                    {data.asset_status}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.dialogFailedLineItems} variant="subtitle1">
+                <Typography gutterBottom data-testid="testTagDialogTaggedBy">
+                    {locale.tagPlacedBy}
+                    <br />
+                    {data.user_licence_number}
+                </Typography>
+            </Grid>
+        </Grid>
+    ),
+};
+const getSuccessDialog = (response, classes, locale) => {
     if (!!!response || !!!response?.data) return {};
     const { data } = response;
+    const key = data.asset_status !== testStatusEnum.CURRENT.value ? 'other' : data.asset_status;
     const messageFragment = (
         <Box display="flex" alignItems="center" justifyContent="center">
-            <Grid container item xs={12} sm={6} alignItems="center" className={classes.dialogSuccessContainer}>
-                <Grid item xs={12} className={classes.dialogSuccessTitle} variant="subtitle1">
-                    <Typography gutterBottom>Tested By: {data.user_licence_number}</Typography>
-                </Grid>
-                <Grid item xs={12} className={classes.dialogSuccessBarcode}>
-                    <Typography gutterBottom variant="h6">
-                        {data.asset_id_displayed}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>Date Tested:</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>{data.action_date}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>Date Due:</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>{data.asset_next_test_due_date ?? 'n/a'}</Typography>
-                </Grid>
-            </Grid>
+            {savedDialogMessages[key](data, classes, locale.form.dialogLabels)}
         </Box>
     );
-
     return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
 };
-
-const testStatusEnum = statusEnum(locale);
 
 const DEFAULT_FORM_VALUES = {
     asset_id_displayed: undefined,
@@ -162,7 +233,7 @@ const TestTag = ({
             return {
                 ...DEFAULT_FORM_VALUES,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
-                asset_department_owned_by: formOwnerId ?? undefined,
+                asset_department_owned_by: formOwnerId ?? /* istanbul ignore next */ undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
                 user_id: formValues?.user_id ?? undefined,
                 room_id: location?.formRoomId ?? undefined,
@@ -170,7 +241,7 @@ const TestTag = ({
                 inspection_device_id:
                     formValues?.inspection_device_id !== -1
                         ? formValues?.inspection_device_id
-                        : initConfig?.inspection_devices?.[0].device_id ?? undefined,
+                        : initConfig?.inspection_devices?.[0].device_id ?? /* istanbul ignore next */ undefined,
             };
         },
         [formOwnerId, initConfig?.inspection_devices, today],
@@ -184,11 +255,13 @@ const TestTag = ({
     const { location, setLocation } = useLocation();
 
     const headerDepartmentText = React.useMemo(
-        () => locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? '') ?? '',
+        () =>
+            locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? /* istanbul ignore next */ '') ??
+            /* istanbul ignore next */ '',
         [initConfig],
     );
     useEffect(() => {
-        if (!initConfigLoading && !!initConfig) {
+        /* istanbul ignore else */ if (!initConfigLoading && !!initConfig) {
             handleChange('user_id')(initConfig.user.user_id);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -230,7 +303,11 @@ const TestTag = ({
         assignCurrentAsset({});
     };
     useEffect(() => {
-        if (formValues?.asset_id_displayed === undefined && assetIdElementRef.current && !!initConfig) {
+        /* istanbul ignore else */ if (
+            formValues?.asset_id_displayed === undefined &&
+            assetIdElementRef.current &&
+            !!initConfig
+        ) {
             assetIdElementRef.current.focus();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -246,10 +323,10 @@ const TestTag = ({
     }, [actions]);
 
     useEffect(() => {
-        (!!!initConfigError || initConfigError.length === 0) &&
-            (!!!floorListError || floorListError.length === 0) &&
-            (!!!roomListError || roomListError.length === 0) &&
-            (!!!assetsListError || assetsListError.length === 0) &&
+        (!!!initConfigError || /* istanbul ignore next */ initConfigError.length === 0) &&
+            (!!!floorListError || /* istanbul ignore next */ floorListError.length === 0) &&
+            (!!!roomListError || /* istanbul ignore next */ roomListError.length === 0) &&
+            (!!!assetsListError || /* istanbul ignore next */ assetsListError.length === 0) &&
             validateValues(formValues);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initConfigError, floorListError, roomListError, assetsListError, formValues]);
@@ -261,9 +338,7 @@ const TestTag = ({
 
     const saveErrorLocale = {
         ...locale.form.saveError,
-        confirmationTitle: !!saveInspectionError
-            ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(saveInspectionError)}`
-            : 'An unknown error occurred',
+        confirmationTitle: locale.form.saveError.confirmationTitle(saveInspectionError),
     };
 
     return (
@@ -271,7 +346,7 @@ const TestTag = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="tag-test-network-error"
+                confirmationBoxId="testTag-network-error"
                 hideCancelButton
                 onAction={hideNetworkError}
                 onClose={hideNetworkError}
@@ -282,12 +357,12 @@ const TestTag = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="tag-test-save-succeeded"
+                confirmationBoxId="testTag-save-succeeded"
                 hideCancelButton
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
-                locale={getSuccessDialog(saveInspectionSuccess, classes)}
+                locale={getSuccessDialog(saveInspectionSuccess, classes, locale)}
                 noMinContentWidth
             />
             <ConfirmationBox
@@ -303,7 +378,7 @@ const TestTag = ({
             />
             <TestTagHeader
                 departmentText={headerDepartmentText}
-                requiredText={locale?.form?.requiredText ?? ''}
+                requiredText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
                 className={classes.header}
             />
 
@@ -311,7 +386,7 @@ const TestTag = ({
                 actions={actions}
                 location={location}
                 setLocation={setLocation}
-                actionDate={formValues?.action_date ?? ''}
+                actionDate={formValues?.action_date ?? /* istanbul ignore next */ ''}
                 handleChange={handleChange}
                 classes={classes}
                 hasInspection={formValues?.inspection_status !== undefined}

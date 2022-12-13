@@ -134,13 +134,24 @@ export default {
             confirmButtonLabel: 'Ok',
         }),
         saveError: {
-            confirmationTitle: 'Asset could not be saved. Please try again or contact support if the issue persists.',
+            confirmationTitle: saveInspectionError =>
+                !!saveInspectionError
+                    ? `An error occurred: ${JSON.stringify(saveInspectionError)}`
+                    : 'An unknown error occurred',
             confirmButtonLabel: 'OK',
         },
         networkError: {
             confirmationTitle:
                 'A network error occurred while loading the requested data. Please try again or contact support if the issue persists.',
             confirmButtonLabel: 'OK',
+        },
+        dialogLabels: {
+            testedBy: 'Tested By:',
+            testedDate: 'Date Tested:',
+            dateNextDue: 'Date Due:',
+            notApplicable: 'N/A',
+            outOfService: 'OUT OF SERVICE',
+            tagPlacedBy: 'TAG PLACED BY:',
         },
     },
 };

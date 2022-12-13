@@ -147,9 +147,10 @@ describe('saveInspectionTransformer functions work as expected', () => {
     });
 
     it('with_repair modified object based on set flags', () => {
-        // clear discard details
+        // clear discard details if repair status and inspection failed
         expect(
             transformer.with_repair({
+                with_inspection: { inspection_status: 'FAILED' },
                 with_repair: {
                     isRepair: true,
                     repairer_contact_details: 'details',
@@ -162,6 +163,22 @@ describe('saveInspectionTransformer functions work as expected', () => {
             },
             with_discard: {
                 discard_reason: undefined,
+            },
+        });
+        // clear repair details if repair status and inspection PASSED
+        expect(
+            transformer.with_repair({
+                with_inspection: { inspection_status: 'PASSED' },
+                with_repair: {
+                    isRepair: true,
+                    repairer_contact_details: 'details',
+                },
+                with_discard: { discard_reason: 'reason' },
+            }),
+        ).toEqual({
+            with_repair: undefined,
+            with_discard: {
+                discard_reason: 'reason',
             },
         });
         // clear repair details

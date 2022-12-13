@@ -15,7 +15,9 @@ import Typography from '@material-ui/core/Typography';
 
 import locale from '../testTag.locale';
 import TabPanel from './TabPanel';
-import { isValidRepair, isValidDiscard } from '../utils/helpers';
+import { isValidRepair, isValidDiscard, statusEnum } from '../utils/helpers';
+
+const testStatusEnum = statusEnum(locale);
 
 const a11yProps = index => ({
     id: `scrollable-auto-tab-${index}`,
@@ -32,6 +34,13 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
     };
 
     const [selectedTabValue, setSelectedTabValue] = React.useState(0);
+
+    React.useEffect(() => {
+        if (selectedTabValue === 0 && formValues?.inspection_status === testStatusEnum.PASSED.value) {
+            setSelectedTabValue(1);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formValues?.inspection_status]);
 
     return (
         <>
@@ -57,7 +66,8 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                         disabled={
                             disabled ||
                             (tab.value === 1 && !!formValues.isDiscarded) ||
-                            (tab.value === 2 && !!formValues.isRepair)
+                            (tab.value === 2 && !!formValues.isRepair) ||
+                            (tab.value === 1 && formValues?.inspection_status === testStatusEnum.PASSED.value)
                         }
                         id={`tab-${tab.label.replace(' ', '_').toLowerCase()}`}
                         data-testid={`tab-${tab.label.replace(' ', '_').toLowerCase()}`}
