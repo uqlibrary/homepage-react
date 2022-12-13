@@ -111,6 +111,7 @@ export const PromoPanelEdit = ({
                         isDefaultPanel={isDefault}
                         panelUpdated={panelUpdated}
                         queueLength={queueLength}
+                        promoPanelActionError={promoPanelActionError}
                     />
                 )}
             </section>

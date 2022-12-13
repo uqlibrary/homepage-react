@@ -88,6 +88,7 @@ export const PromoPanelForm = ({
     isDefaultPanel,
     panelUpdated,
     queueLength,
+    promoPanelActionError,
 }) => {
     const classes = useStyles();
 
@@ -115,6 +116,7 @@ export const PromoPanelForm = ({
         content: (currentPanel && currentPanel.panel_content) || '',
     });
     const [displayList, setDisplayList] = useState([]);
+    const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
         initLists(
@@ -128,6 +130,13 @@ export const PromoPanelForm = ({
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scheduledGroupNames, scheduledList]);
+
+    useEffect(() => {
+        if (!hasError && !!promoPanelActionError) {
+            setHasError(true);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [promoPanelActionError]);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -368,6 +377,11 @@ export const PromoPanelForm = ({
     return (
         <>
             <StandardCard title={locale.editPage.Title(isEdit, isClone)}>
+                {!!hasError && (
+                    <div>
+                        <p>There is a form Error.</p>
+                    </div>
+                )}
                 <form className={classes.spotlightForm}>
                     {/* Confirmation Boxes here */}
                     <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
@@ -538,6 +552,7 @@ PromoPanelForm.propTypes = {
     panelUpdated: PropTypes.bool,
     promoPanelSaving: PropTypes.bool,
     queueLength: PropTypes.number,
+    promoPanelActionError: PropTypes.string,
 };
 
 PromoPanelForm.defaultProps = {
