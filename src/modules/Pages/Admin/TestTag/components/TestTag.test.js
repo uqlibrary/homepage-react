@@ -1,6 +1,6 @@
 import React from 'react';
 import TestTag from './TestTag';
-import { rtlRender, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
+import { rtlRender, act, fireEvent, WithReduxStore, waitFor, screen } from 'test-utils';
 import Immutable from 'immutable';
 
 import configData from '../../../../../data/mock/data/testing/testTagOnLoad';
@@ -164,11 +164,12 @@ describe('TestTag', () => {
             },
         });
 
+        screen.debug(undefined, 50000);
+
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByText('FAILED')).toBeInTheDocument();
         expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
-        expect(queryByText('UQL000705')).not.toBeInTheDocument();
+        expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
         act(() => {
@@ -203,9 +204,8 @@ describe('TestTag', () => {
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByText('OUTFORREPAIR')).toBeInTheDocument();
         expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
-        expect(queryByText('UQL000705')).not.toBeInTheDocument();
+        expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
         act(() => {
@@ -240,9 +240,8 @@ describe('TestTag', () => {
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByText('DISCARDED')).toBeInTheDocument();
         expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
-        expect(queryByText('UQL000705')).not.toBeInTheDocument();
+        expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
         act(() => {
