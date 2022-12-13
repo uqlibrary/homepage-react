@@ -11,6 +11,7 @@ import { useConfirmationState } from 'hooks';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core';
+import clsx from 'clsx';
 
 import TestTagHeader from './TestTagHeader';
 import EventPanel from './EventPanel';
@@ -18,8 +19,8 @@ import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
 import { useForm, useValidation, useLocation } from '../utils/hooks';
 import locale from '../testTag.locale';
-
 const moment = require('moment');
+const testStatusEnum = statusEnum(locale);
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -44,17 +45,40 @@ const useStyles = makeStyles(theme => ({
     header: {
         paddingBottom: theme.spacing(2),
     },
-    dialogSuccessContainer: {
-        backgroundColor: '#69B400',
-        color: 'black',
-        border: '1px solid #69B400',
+    dialogContainer: {
         borderRadius: '6px',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        color: 'black',
     },
-    dialogSuccessTitle: {
+    dialogPassedContainer: {
+        backgroundColor: '#69B400',
+        borderColor: '#69B400',
+    },
+    dialogFailedContainer: {
+        backgroundColor: '#ef000c',
+        borderColor: '#ef000c',
+    },
+    dialogTitle: {
         textAlign: 'center',
         padding: '8px',
         '& >p': {
             fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
+    dialogFailedTitle: {
+        '& >h4': {
+            fontWeight: '700',
+            fontFamily: 'monospace, monospace',
+            textDecoration: 'underline',
+        },
+    },
+    dialogFailedAssetStatus: {
+        textAlign: 'center',
+        padding: '8px',
+        '& >h5': {
+            fontWeight: '700',
             fontFamily: 'monospace, monospace',
         },
     },
@@ -76,42 +100,89 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
+    dialogFailedLineItems: {
+        padding: '8px',
+        textAlign: 'center',
+        '& >p': {
+            fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
 }));
-
-const getSuccessDialog = (response, classes) => {
+const savedDialogMessages = {
+    [testStatusEnum.CURRENT.value]: (data, classes, locale) => (
+        <Grid
+            container
+            item
+            xs={12}
+            sm={6}
+            alignItems="center"
+            className={clsx([classes.dialogContainer, classes.dialogPassedContainer])}
+        >
+            <Grid item xs={12} className={clsx([classes.dialogTitle, classes.dialogSuccessTitle])} variant="subtitle1">
+                <Typography gutterBottom>
+                    {locale.testedBy} {data.user_licence_number}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.dialogSuccessBarcode}>
+                <Typography gutterBottom variant="h6">
+                    {data.asset_id_displayed}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                <Typography gutterBottom>{locale.testedDate}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                <Typography gutterBottom>{data.action_date}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                <Typography gutterBottom>{locale.dateNextDue}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
+                <Typography gutterBottom>{data.asset_next_test_due_date ?? locale.notApplicable}</Typography>
+            </Grid>
+        </Grid>
+    ),
+    other: (data, classes, locale) => (
+        <Grid
+            container
+            item
+            xs={12}
+            sm={6}
+            alignItems="center"
+            className={clsx([classes.dialogContainer, classes.dialogFailedContainer])}
+        >
+            <Grid item xs={12} className={clsx([classes.dialogTitle, classes.dialogFailedTitle])}>
+                <Typography gutterBottom variant="h4">
+                    {locale.outOfService}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.dialogFailedAssetStatus}>
+                <Typography gutterBottom variant="h5">
+                    {data.asset_status}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.dialogFailedLineItems} variant="subtitle1">
+                <Typography gutterBottom data-testid="testTagDialogTaggedBy">
+                    {locale.tagPlacedBy}
+                    <br />
+                    {data.user_licence_number}
+                </Typography>
+            </Grid>
+        </Grid>
+    ),
+};
+const getSuccessDialog = (response, classes, locale) => {
     if (!!!response || !!!response?.data) return {};
     const { data } = response;
+    const key = data.asset_status !== testStatusEnum.CURRENT.value ? 'other' : data.asset_status;
     const messageFragment = (
         <Box display="flex" alignItems="center" justifyContent="center">
-            <Grid container item xs={12} sm={6} alignItems="center" className={classes.dialogSuccessContainer}>
-                <Grid item xs={12} className={classes.dialogSuccessTitle} variant="subtitle1">
-                    <Typography gutterBottom>Tested By: {data.user_licence_number}</Typography>
-                </Grid>
-                <Grid item xs={12} className={classes.dialogSuccessBarcode}>
-                    <Typography gutterBottom variant="h6">
-                        {data.asset_id_displayed}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>Date Tested:</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>{data.action_date}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>Date Due:</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                    <Typography gutterBottom>{data.asset_next_test_due_date ?? 'n/a'}</Typography>
-                </Grid>
-            </Grid>
+            {savedDialogMessages[key](data, classes, locale.form.dialogLabels)}
         </Box>
     );
-
     return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
 };
-
-const testStatusEnum = statusEnum(locale);
 
 const DEFAULT_FORM_VALUES = {
     asset_id_displayed: undefined,
@@ -291,7 +362,7 @@ const TestTag = ({
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
-                locale={getSuccessDialog(saveInspectionSuccess, classes)}
+                locale={getSuccessDialog(saveInspectionSuccess, classes, locale)}
                 noMinContentWidth
             />
             <ConfirmationBox
