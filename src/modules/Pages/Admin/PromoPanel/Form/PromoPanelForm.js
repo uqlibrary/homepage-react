@@ -377,11 +377,6 @@ export const PromoPanelForm = ({
     return (
         <>
             <StandardCard title={locale.editPage.Title(isEdit, isClone)}>
-                {!!hasError && (
-                    <div>
-                        <p>There is a form Error.</p>
-                    </div>
-                )}
                 <form className={classes.spotlightForm}>
                     {/* Confirmation Boxes here */}
                     <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
