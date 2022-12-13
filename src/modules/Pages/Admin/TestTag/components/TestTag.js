@@ -82,7 +82,7 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
-    dialogSuccessBarcode: {
+    dialogBarcode: {
         backgroundColor: 'white',
         padding: '8px',
         textAlign: 'center',
@@ -124,7 +124,7 @@ const savedDialogMessages = {
                     {locale.testedBy} {data.user_licence_number}
                 </Typography>
             </Grid>
-            <Grid item xs={12} className={classes.dialogSuccessBarcode}>
+            <Grid item xs={12} className={classes.dialogBarcode}>
                 <Typography gutterBottom variant="h6">
                     {data.asset_id_displayed}
                 </Typography>
@@ -157,9 +157,9 @@ const savedDialogMessages = {
                     {locale.outOfService}
                 </Typography>
             </Grid>
-            <Grid item xs={12} className={classes.dialogFailedAssetStatus}>
-                <Typography gutterBottom variant="h5">
-                    {data.asset_status}
+            <Grid item xs={12} className={classes.dialogBarcode}>
+                <Typography gutterBottom variant="h6">
+                    {data.asset_id_displayed}
                 </Typography>
             </Grid>
             <Grid item xs={12} className={classes.dialogFailedLineItems} variant="subtitle1">
