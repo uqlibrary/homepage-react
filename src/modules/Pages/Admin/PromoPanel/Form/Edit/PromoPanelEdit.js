@@ -91,7 +91,7 @@ export const PromoPanelEdit = ({
             {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
                 <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
-                    <p>{promoPanelListError || promoPanelUserTypesError}</p>
+                    <p>{promoPanelListError || promoPanelUserTypesError || promoPanelActionError}</p>
                 </div>
             )}
             <section aria-live="assertive">

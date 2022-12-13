@@ -262,6 +262,11 @@ export const PromoPanelListGroupPanels = ({
         history.push(`/admin/promopanel/edit/${alertid}`);
         scrollToTopOfPage();
     };
+    const navigateToCloneForm = panelId => {
+        actions.updateScheduleQueuelength(0);
+        history.push(`/admin/promopanel/clone/${panelId}`);
+        scrollToTopOfPage();
+    };
 
     const schedulePanel = (panel, group, start, end) => {
         actions
@@ -446,6 +451,7 @@ export const PromoPanelListGroupPanels = ({
                                                                     unschedulePanelById(item.default_panel);
                                                                 }}
                                                                 mainButtonLabel={'Edit'}
+                                                                navigateToCloneForm={navigateToCloneForm}
                                                                 navigateToEditForm={row => navigateToEditForm(row)}
                                                                 confirmDeleteLocale={confirmUnscheduleLocale}
                                                             />
@@ -505,6 +511,7 @@ export const PromoPanelListGroupPanels = ({
                                                                         align={'flex-end'}
                                                                         deletePanelById={() => unschedulePanelById(row)}
                                                                         mainButtonLabel={'Edit'}
+                                                                        navigateToCloneForm={navigateToCloneForm}
                                                                         navigateToEditForm={row =>
                                                                             navigateToEditForm(row)
                                                                         }

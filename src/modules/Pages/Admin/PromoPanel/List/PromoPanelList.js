@@ -6,6 +6,7 @@ import { PromoPanelListPanels } from './PromoPanelListPanels';
 import { PromoPanelListActive } from './PromoPanelListActive';
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
+import { scrollToTopOfPage } from '../../Alerts/alerthelpers';
 
 export const PromoPanelList = ({
     actions,
@@ -61,12 +62,30 @@ export const PromoPanelList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [panelUpdated]);
 
+    const hasError = () => {
+        if (
+            !!promoPanelListError ||
+            !!promoPanelUserTypesError ||
+            !!promoPanelActiveListError ||
+            !!promoPanelActionError
+        ) {
+            scrollToTopOfPage();
+            return true;
+        }
+        return false;
+    };
+
     return (
         <StandardPage title="Promo panel management">
-            {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActiveListError) && (
+            {hasError() && (
                 <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
-                    <p>{promoPanelListError || promoPanelUserTypesError}</p>
+                    <p>
+                        {promoPanelListError ||
+                            promoPanelUserTypesError ||
+                            promoPanelActiveListError ||
+                            promoPanelActionError}
+                    </p>
                 </div>
             )}
             <PromoPanelListActive
@@ -80,6 +99,7 @@ export const PromoPanelList = ({
                 history={history}
                 showAddButton
             />
+
             {/* Panels by group */}
             <PromoPanelListGroupPanels
                 actions={actions}

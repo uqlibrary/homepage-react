@@ -173,13 +173,13 @@ export const PROMOPANEL_LIST_API = () => ({ apiUrl: 'promo_panel/panels' });
 export const PROMOPANEL_GET_CURRENT_API = () => ({ apiUrl: 'promo_panel' });
 export const PROMOPANEL_GET_ANON_API = () => ({ apiUrl: 'promo_panel/loggedout' });
 export const PROMOPANEL_ADD_SCHEDULE_API = ({ id, usergroup }) => ({
-    apiUrl: `promo_panel/user_type/${usergroup}/panel/${id}/schedule`,
+    apiUrl: `promo_panel/group/${usergroup}/panel/${id}/schedule`,
 });
 export const PROMOPANEL_UPDATE_SCHEDULE_API = ({ id, usergroup }) => ({
     apiUrl: `promo_panel/group/${usergroup}/schedule/${id}`,
 });
 export const PROMOPANEL_UPDATE_USERTYPE_DEFAULT = ({ id, usergroup }) => ({
-    apiUrl: `promo_panel/user_type/${usergroup}/panel/${id}/default`,
+    apiUrl: `promo_panel/group/${usergroup}/panel/${id}/default`,
 });
 
 export const PROMOPANEL_DELETE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/${id}` });
