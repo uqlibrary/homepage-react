@@ -5,7 +5,6 @@ import {
     PROMOPANEL_UPDATE_API,
     PROMOPANEL_LIST_USERTYPES_API,
     PROMOPANEL_LIST_API,
-    PROMOPANEL_GET_BY_ID_API,
     PROMOPANEL_GET_CURRENT_API,
     PROMOPANEL_GET_ANON_API,
     PROMOPANEL_UPDATE_USERTYPE_DEFAULT,
@@ -180,24 +179,24 @@ export const savePromoPanel = request => {
             });
     };
 };
-export const saveUserTypePanel = request => {
-    return async dispatch => {
-        dispatch({ type: actions.PROMOPANEL_SAVING });
-        return post(PROMOPANEL_UPDATE_USERTYPE({ id: request.id, usergroup: request.usergroup }), request)
-            .then(data => {
-                dispatch({
-                    type: actions.PROMOPANEL_SAVE_SUCCESS,
-                    payload: data,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.PROMOPANEL_SAVE_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-};
+// export const saveUserTypePanel = request => {
+//     return async dispatch => {
+//         dispatch({ type: actions.PROMOPANEL_SAVING });
+//         return post(PROMOPANEL_UPDATE_USERTYPE({ id: request.id, usergroup: request.usergroup }), request)
+//             .then(data => {
+//                 dispatch({
+//                     type: actions.PROMOPANEL_SAVE_SUCCESS,
+//                     payload: data,
+//                 });
+//             })
+//             .catch(error => {
+//                 dispatch({
+//                     type: actions.PROMOPANEL_SAVE_FAILED,
+//                     payload: error.message,
+//                 });
+//             });
+//     };
+// };
 export const saveDefaultUserTypePanel = request => {
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_SCHEDULING });
