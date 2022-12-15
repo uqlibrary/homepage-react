@@ -7,28 +7,24 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Summer Semester',
+        title: 'Holiday hours',
         content: (
             <div>
-                <p>Congratulations to everyone who has completed their Semester 2 courses and exams.</p>
-                <p>For Summer Semester students, we are open on-campus and online:</p>
-                <ul>
-                    <li>Study in a range of comfortable spaces. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</li>
-                    <li><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</li>
-                </ul>
+                <p>We are closed for the Christmas break from Friday 23 December and will reopen on Tuesday 3 January 2023.</p>
+                <p>Selected 24/7 spaces and collections are available through the break with your UQ ID card. All other libraries, collections, and our library services will be closed.</p>
+                <p>Visit <a href="https://web.library.uq.edu.au/blog/2022/12/library-hours-christmas-holidays?utm_source=homepage&amp;utm_medium=web&amp;utm_campaign=christmas22">Library hours over Christmas</a> for more information.</p>
+                <p>Have a happy and safe holiday!</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Summer Semester',
+        title: 'Holiday hours',
         content: (
             <div>
-                <p>Congratulations to everyone who has completed their Semester 2 courses and exams.</p>
-                <p>For Summer Semester students, we are open on-campus and online:</p>
-                <ul>
-                    <li>Study in a range of comfortable spaces. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</li>
-                    <li><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</li>
-                </ul>
+                <p>We are closed for the Christmas break from Friday 23 December and will reopen on Tuesday 3 January 2023.</p>
+                <p>Selected 24/7 spaces and collections are available through the break with your UQ ID card. All other libraries, collections, and our library services will be closed.</p>
+                <p>Visit <a href="https://web.library.uq.edu.au/blog/2022/12/library-hours-christmas-holidays?utm_source=homepage&amp;utm_medium=web&amp;utm_campaign=christmas22">Library hours over Christmas</a> for more information.</p>
+                <p>Have a happy and safe holiday!</p>
             </div>
         ),
     },
