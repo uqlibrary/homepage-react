@@ -561,3 +561,31 @@ export const mockScheduleReturn = {
         "is_past": false
     }
 }
+export const mockPublicPanel = {
+    "usergroup_group_id": 6,
+    "usergroup_group": "public",
+    "usergroup_group_name": "Logged Out",
+    "active_panel": {
+      "is_default_panel": true,
+      "panel_id": 20,
+      "panel_title": "General default panel",
+      "panel_content": "<p>This is the <strong>General Default </strong>Panel, assigned from the promo panel management application.</p><p>This is assigned to some / all groups, depending on the test case.</p><p>You can edit the contents of this panel, or change the schedules / defaults if you wish.</p>",
+      "panel_admin_notes": "General Default Panel",
+      "panel_schedule_start_time": null,
+      "panel_schedule_end_time": null
+    }
+  }
+  export const mockAuthenticatedPanel = {
+    "usergroup_group_id": 1,
+    "usergroup_group": "authenticated",
+    "usergroup_group_name": "Authenticated",
+    "active_panel": {
+      "is_default_panel": true,
+      "panel_id": 1,
+      "panel_title": "Authenticated Panel",
+      "panel_content": "<p>This is the <strong>Authenticated </strong>Panel, assigned from the promo panel management application.</p><p>This is assigned to authenticated users.</p><p>You can edit the contents of this panel, or change the schedules / defaults if you wish.</p>",
+      "panel_admin_notes": "General Default Panel",
+      "panel_schedule_start_time": null,
+      "panel_schedule_end_time": null
+    }
+  }

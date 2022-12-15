@@ -35,7 +35,7 @@ import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 
-import {currentPanels, userListPanels, activePanels, mockScheduleReturn} from "./data/promoPanels";
+import {currentPanels, userListPanels, activePanels, mockScheduleReturn, mockAuthenticatedPanel, mockPublicPanel} from "./data/promoPanels";
 
 const moment = require('moment');
 
@@ -755,6 +755,16 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl).reply(
         () => {
             return [200, activePanels]
+        }
+    )
+    .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl).reply(
+        () => {
+            return [200, mockAuthenticatedPanel]
+        }
+    )
+    .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl).reply(
+        () => {
+            return [200, mockPublicPanel]
         }
     )
     .onAny()

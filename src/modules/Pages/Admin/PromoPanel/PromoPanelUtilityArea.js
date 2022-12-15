@@ -12,13 +12,12 @@ const useStyles = makeStyles(() => ({
         marginRight: 16,
     },
 }));
-export const PromoPanelUtilityArea = ({ actions, helpButtonLabel, helpContent, history, showAddButton }) => {
+export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, showAddButton }) => {
     const classes = useStyles();
 
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 
     const navigateToAddPage = () => {
-        actions.clearASpotlight();
         history.push('/admin/promopanel/add');
     };
 
@@ -61,7 +60,6 @@ export const PromoPanelUtilityArea = ({ actions, helpButtonLabel, helpContent, h
 };
 
 PromoPanelUtilityArea.propTypes = {
-    actions: PropTypes.any,
     helpContent: PropTypes.any,
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,

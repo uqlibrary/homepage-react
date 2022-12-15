@@ -8,7 +8,6 @@ import {
     PROMOPANEL_GET_CURRENT_API,
     PROMOPANEL_GET_ANON_API,
     PROMOPANEL_UPDATE_USERTYPE_DEFAULT,
-    PROMOPANEL_UPDATE_USERTYPE,
     PROMOPANEL_DELETE_API,
     PROMOPANEL_ADD_SCHEDULE_API,
     PROMOPANEL_UNSCHEDULE_API,
@@ -61,25 +60,26 @@ export function getAnonPromoPanel() {
         }
     };
 }
-
-export function getPromoPanelByID(request) {
-    return dispatch => {
-        dispatch({ type: actions.PROMOPANEL_LOADING });
-        return get(PROMOPANEL_GET_BY_ID_API({ id: request.id }))
-            .then(response => {
-                dispatch({
-                    type: actions.PROMOPANEL_LOAD_SUCCESS,
-                    payload: response,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.PROMOPANEL_LOAD_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-}
+// NEW API Appears to render this action no longer used.
+// Commenting out for now - removing in future update.
+// export function getPromoPanelByID(request) {
+//     return dispatch => {
+//         dispatch({ type: actions.PROMOPANEL_LOADING });
+//         return get(PROMOPANEL_GET_BY_ID_API({ id: request.id }))
+//             .then(response => {
+//                 dispatch({
+//                     type: actions.PROMOPANEL_LOAD_SUCCESS,
+//                     payload: response,
+//                 });
+//             })
+//             .catch(error => {
+//                 dispatch({
+//                     type: actions.PROMOPANEL_LOAD_FAILED,
+//                     payload: error.message,
+//                 });
+//             });
+//     };
+// }
 
 export function loadPromoPanelList() {
     return async dispatch => {
@@ -179,6 +179,8 @@ export const savePromoPanel = request => {
             });
     };
 };
+// NEW API Appears to render this action no longer used.
+// Commenting out for now - removing in future update.
 // export const saveUserTypePanel = request => {
 //     return async dispatch => {
 //         dispatch({ type: actions.PROMOPANEL_SAVING });
