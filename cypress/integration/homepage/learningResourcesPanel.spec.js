@@ -1,6 +1,6 @@
-import { accounts } from '../../../src/mock/data';
+import { accounts } from '../../../src/data/mock/data';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
-import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
+import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResourceSearchSuggestions';
 
 context('The Homepage Learning Resource Panel', () => {
     it('Learning resources panel is accessible', () => {
@@ -87,5 +87,16 @@ context('The Homepage Learning Resource Panel', () => {
         );
         const classPanelId = 'classpanel-0';
         cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
+    });
+
+    // at one point, a course code entered in all caps would not match a complete course code
+    it('The search field loads the matching result for a complete course code', () => {
+        cy.visit('/?user=s3333333');
+        cy.get('div[data-testid=learning-resources-panel] form input')
+            .clear()
+            .type('ACCT1101');
+        cy.get('ul#homepage-learningresource-autocomplete-popup')
+            .children()
+            .should('have.length', 1 + 1); // add one for title
     });
 });

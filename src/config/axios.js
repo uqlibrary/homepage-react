@@ -3,10 +3,12 @@ import Cookies from 'js-cookie';
 import { setupCache } from 'axios-cache-adapter';
 import { API_URL, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, TOKEN_NAME } from './general';
 import { store } from 'config/store';
-import { logout } from 'actions/account';
-import { showAppAlert } from 'actions/app';
+import { logout } from 'data/actions/account';
+import { showAppAlert } from 'data/actions/app';
 import locale from 'locale/global';
-import Raven from 'raven-js';
+
+import * as Sentry from '@sentry/browser';
+
 import param from 'can-param';
 import { COMP_AVAIL_API, CURRENT_ACCOUNT_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
 
@@ -76,7 +78,9 @@ api.interceptors.request.use(request => {
 
 const reportToSentry = error => {
     // the non-logged in user always generates a 403 on the Account call. We dont need to report that to Sentry
-    const isCallToAccountAPI = error?.response?.request?.responseUrl?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`);
+    const isCallToAccountAPI =
+        error?.response?.request?.responseUrl?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`) ||
+        error?.response?.request?.responseURL?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`);
     if (error?.response?.status === 403 && isCallToAccountAPI) {
         return false;
     }
@@ -89,7 +93,11 @@ const reportToSentry = error => {
     } else {
         detailedError = `Something happened in setting up the request that triggered an Error: ${error.message}`;
     }
-    Raven.captureException(error, { extra: { error: detailedError } });
+    Sentry.withScope(scope => {
+        scope.setExtra('error', detailedError);
+        Sentry.captureException(error);
+    });
+
     return true;
 };
 
@@ -115,7 +123,12 @@ api.interceptors.response.use(
     error => {
         let errorMessage = null;
         if (!!error && !!error.config) {
-            if (!!error.response && !!error.response.status && error.response.status === 403) {
+            if (
+                !!error.response &&
+                !!error.response.status &&
+                error.response.status === 403 &&
+                error?.response?.request?.responseUrl === 'account'
+            ) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
@@ -149,6 +162,16 @@ api.interceptors.response.use(
                         ...errorMessage,
                         ...error.response.data,
                     };
+                }
+                if (error.response.status === 403) {
+                    if (!!error?.response?.request?.responseUrl && error.response.request.responseUrl !== 'account') {
+                        // if the api was account, we default to the global.js errorMessages entry
+                        // as it is the most common case for a 403
+                        errorMessage = {
+                            ...error.response,
+                            message: 'Your submission failed. Please try again or notify support',
+                        };
+                    }
                 }
             }
         }

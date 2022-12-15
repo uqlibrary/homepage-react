@@ -1,8 +1,6 @@
 # HOMEPAGE-REACT
 
 [![Codebuild Status for uqlibrary/homepage-react](https://codebuild.ap-southeast-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSUhCeGFUaW5iaHMyYjNIcnNWTGJMOTA3eThjRFFTYVhyY3NiSDVTWlJlbnl5VllnUHlvRzVyeWdhYW52VnduNUNzbDBPZUkreVFvUTFkQkhyQ0YxZUJZPSIsIml2UGFyYW1ldGVyU3BlYyI6IldlOVk5dlVxU0ROSE5IaDciLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/homepage-master/view?region=ap-southeast-2)
-[![Dependency Status](https://david-dm.org/uqlibrary/homepage-react.svg)](https://david-dm.org/uqlibrary/homepage-react)
-[![Dev Dependency Status](https://david-dm.org/uqlibrary/homepage-react/dev-status.svg)](https://david-dm.org/uqlibrary/homepage-react)
 
 A repo for the Library of The University of Queensland website homepage
 
@@ -50,12 +48,9 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
   - runs <http://localhost:2020/>
 - `npm run start:url` to use api
   - runs <http://dev-homepage.library.uq.edu.au:2020/#/>
-  - add `dev-homepage.library.uq.edu.au` to your /etc/hosts file using your external IP)
+  - add `dev-homepage.library.uq.edu.au` to your /etc/hosts file using your local LAN IP address - as the start script binds local port 2020 to host dev-homepage.library.uq.edu.au, this will result in binding to your local running dev environment)
   - to use staging data from the aws api as a backend set API_URL in .env to `https://api.library.uq.edu.au/staging/` (You can only access staging api if you are on a UQ IP address, eg VPN)
   - to use api locally as a backend, set API_URL in .env to `http://dev-api.library.uq.edu.au:8050/` and bring up api repo [(cf)](https://github.com/uqlibrary/api)
-  - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
-    ('mysessiontoken': your session token can be seen by logging in at library.uq.edu.au then inspecting any of the api requests for the `x-uql-token` value)
-
   - you may need to block CORS errors - eg with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) Chrome Extension, or by launching the browser with CORS disabled.
 
       ```sh
@@ -65,6 +60,11 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
     - You will also need to run Chrome in no-security mode by adding the alias `alias chrome-no-cors='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --disable-web-security --user-data-dir=~/chrome-dev-profile > /dev/null 2>&1'` and then running chrome by `chrome-no-cors`. or `open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security`
 
   - for Hot Reloading to work in IntelliJ products, turn "safe write" off in the settings
+  - for a logged in session, add UQLID and UQLID_USER_GROUP cookies for logged-in users (values can be found under Developer Tools -> Application Tab -> Cookies after logging into https://www.library.uq.edu.au/)
+    - Examples `UQLID: HJDFhjdiuere893434uieruiNMDFND90a` `UQLID_USER_GROUP: LIBRARYSTAFFB`
+
+  - Alternative logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
+    ('mysessiontoken': your session token can be seen by logging in at library.uq.edu.au then inspecting any of the api requests for the `x-uql-token` value)
 
 - `npm run start:build`
   - runs production build version on <http://dev-homepage.library.uq.edu.au:9000/> and `http://localhost:9000/`

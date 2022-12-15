@@ -20,7 +20,10 @@ describe('learningResourcesLocale', () => {
         isAString(locale.myCourses.readingLists.title);
         expect(typeof locale.myCourses.readingLists.error).toEqual('object');
         isAString(locale.myCourses.readingLists.error.none);
-        isAString(locale.myCourses.readingLists.error.unavailable);
+        expect(typeof locale.myCourses.readingLists.error.unavailable).toEqual('object');
+        isAString(locale.myCourses.readingLists.error.unavailable.label);
+        isAString(locale.myCourses.readingLists.error.unavailable.tryManually);
+        isAValidLink(locale.myCourses.readingLists.error.unavailable.linkOut);
         isAString(locale.myCourses.readingLists.error.multiple);
         expect(typeof locale.myCourses.readingLists.error.footer).toEqual('object');
         isAString(locale.myCourses.readingLists.error.footer.linkLabel);

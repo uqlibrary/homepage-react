@@ -46,7 +46,8 @@ export default {
             dimensionsWarning: 'Larger images will affect page load time and smaller ones may be pixelated',
             maxSize: 400000, // 400 x 1000 bytes = 400kb
             uploadError: {
-                confirmationTitle: 'An error occurred while uploading the file',
+                confirmationTitle:
+                    'Your image could not be uploaded. Please check or recreate the image and try again.',
                 confirmButtonLabel: 'OK',
             },
             fileTooLarge: {
