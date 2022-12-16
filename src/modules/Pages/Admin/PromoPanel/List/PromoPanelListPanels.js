@@ -416,7 +416,13 @@ export const PromoPanelListPanels = ({
                 )}
 
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table" id="admin-promoPanel-list">
+                    <Table
+                        sx={{ minWidth: 650 }}
+                        size="small"
+                        aria-label="a dense table"
+                        id={`admin-promoPanel-list${isPastPanels ? 'past' : ''}`}
+                        data-testid={`admin-promoPanel-list${isPastPanels ? 'past' : ''}`}
+                    >
                         <TableHead>
                             <TableRow>
                                 {showBulkDelete && <TableCell component="th" scope="row" />}
@@ -440,7 +446,7 @@ export const PromoPanelListPanels = ({
                                 <TableRow>
                                     <TableCell colSpan={5} align="center">
                                         <CircularProgress
-                                            id="spinner"
+                                            id={`spinner${isPastPanels ? 'past' : ''}`}
                                             color="primary"
                                             size={38}
                                             thickness={3}
@@ -478,21 +484,21 @@ export const PromoPanelListPanels = ({
                                                     )}
                                                 </TableCell>
                                             )}
-                                            <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                            <TableCell component="td" className={classes.cellGroupName}>
                                                 <Typography variant="body1">{item.panel_title}</Typography>
                                             </TableCell>
-                                            <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                            <TableCell component="td" className={classes.cellGroupName}>
                                                 <Typography variant="body1" className={classes.ellipsis}>
                                                     {(!!item.panel_content && item.panel_content.replace(regex, ' ')) ||
                                                         ' '}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                            <TableCell component="td" className={classes.cellGroupName}>
                                                 <Typography variant="body1">
                                                     {moment(item.panel_created_at).format('dddd DD/MM/YYYY HH:mm a')}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                            <TableCell component="td" className={classes.cellGroupName}>
                                                 <PromoPanelSplitButton
                                                     align="flex-end"
                                                     alertId={alert.id}

@@ -2,7 +2,8 @@ import ContentLoader from 'react-content-loader';
 // import { PropTypes } from 'prop-types';
 import React from 'react';
 
-const PromoPanelLoader = props => {
+const PromoPanelLoader = /* istanbul ignore next */ () => {
+    /* istanbul ignore next */
     return (
         <ContentLoader
             speed={2}
@@ -12,7 +13,6 @@ const PromoPanelLoader = props => {
             viewBox="0 0 365 300"
             backgroundColor="#f3f3f3"
             foregroundColor="#e2e2e2"
-            {...props}
         >
             <rect x="5%" y="15" rx="3" ry="3" width="50%" height="14" />
             <rect x="5%" y="40" rx="3" ry="3" width="40%" height="10" />

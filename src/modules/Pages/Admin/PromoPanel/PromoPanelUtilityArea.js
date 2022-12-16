@@ -12,14 +12,15 @@ const useStyles = makeStyles(() => ({
         marginRight: 16,
     },
 }));
+
+export const navigateToAddPage = history => {
+    history.push('/admin/promopanel/add');
+};
+
 export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, showAddButton }) => {
     const classes = useStyles();
 
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
-
-    const navigateToAddPage = () => {
-        history.push('/admin/promopanel/add');
-    };
 
     const openHelpLightbox = () => setHelpLightboxOpen(true);
     const closeHelpLightbox = () => setHelpLightboxOpen(false);
@@ -44,7 +45,8 @@ export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, s
                         children="Add panel"
                         color="primary"
                         data-testid="admin-promopanel-add-display-button"
-                        onClick={() => navigateToAddPage()}
+                        id="admin-promopanel-add-display-button"
+                        onClick={() => navigateToAddPage(history)}
                         variant="contained"
                     />
                 </div>

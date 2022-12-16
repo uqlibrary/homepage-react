@@ -31,6 +31,7 @@ Object {
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
           data-testid="admin-promopanel-add-display-button"
+          id="admin-promopanel-add-display-button"
           tabindex="0"
           type="button"
         >
@@ -73,6 +74,7 @@ Object {
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
         data-testid="admin-promopanel-add-display-button"
+        id="admin-promopanel-add-display-button"
         tabindex="0"
         type="button"
       >

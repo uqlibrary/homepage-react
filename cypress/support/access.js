@@ -44,9 +44,12 @@ export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
         const titleSelector = `div[data-testid="${panelname}"] h2`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             if (key === 'promo') {
+                console.log('Title Selector', titleSelector);
+                console.log('Title', title);
+                const titleCheck = loggedin ? 'Authenticated Panel' : 'General default';
                 cy.get(titleSelector)
                     .should('exist')
-                    .contains(title);
+                    .contains(titleCheck);
             } else {
                 cy.log(`checking panel ${panelname} contains ${value.title}`);
                 cy.get(titleSelector).contains(value.title);

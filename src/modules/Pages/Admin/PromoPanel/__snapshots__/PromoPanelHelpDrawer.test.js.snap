@@ -33,6 +33,7 @@ Object {
         >
           <h2
             data-testid="help-drawer-title"
+            id="help-drawer-title"
           >
             Promo Panels
           </h2>

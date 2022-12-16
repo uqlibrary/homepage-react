@@ -51,7 +51,9 @@ export const PromoPanelHelpDrawer = ({ open, helpContent, closeHelpLightbox }) =
         >
             <Fade in={open}>
                 <div className={classes.paper}>
-                    <h2 data-testid="help-drawer-title">{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
+                    <h2 data-testid="help-drawer-title" id="help-drawer-title">
+                        {helpContent?.title || /* istanbul ignore next */ 'TBA'}
+                    </h2>
                     <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
                     <div>
                         <Button

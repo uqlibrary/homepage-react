@@ -354,7 +354,7 @@ export const PromoPanelListGroupPanels = ({
                                 <TableRow>
                                     <TableCell colSpan={7} align="center">
                                         <CircularProgress
-                                            id="ListTableSpinner"
+                                            id="ListTableSpinner-groupPanels"
                                             color="primary"
                                             size={38}
                                             thickness={3}
@@ -375,7 +375,6 @@ export const PromoPanelListGroupPanels = ({
                                                         <TableCell
                                                             colSpan={4}
                                                             component="td"
-                                                            scope="row"
                                                             className={classes.cellGroupName}
                                                         >
                                                             <Typography variant="body1" style={{ paddingBottom: 5 }}>
@@ -385,7 +384,6 @@ export const PromoPanelListGroupPanels = ({
                                                         <TableCell
                                                             colSpan={2}
                                                             component="td"
-                                                            scope="row"
                                                             style={{ textAlign: 'right' }}
                                                         >
                                                             <Button
@@ -423,10 +421,10 @@ export const PromoPanelListGroupPanels = ({
                                                         </TableCell>
                                                         <TableCell className={classes.checkboxCell}>
                                                             <Checkbox
-                                                                id={`panel-table-default-checkbox-${item.default_panel.panel_id}`}
+                                                                id={`panel-table-default-checkbox-${item.default_panel.panel_id}-${item.usergroup_group}`}
                                                                 inputProps={{
-                                                                    'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
-                                                                    'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
+                                                                    'aria-label': `panel-table-default-checkbox-${item.default_panel.panel_id}-${item.usergroup_group}`,
+                                                                    'data-testid': `panel-table-default-checkbox-${item.default_panel.panel_id}-${item.usergroup_group}`,
                                                                 }}
                                                                 checked
                                                                 disabled
@@ -446,6 +444,7 @@ export const PromoPanelListGroupPanels = ({
                                                                 canDelete={false}
                                                                 onPreview={() => onPreviewOpen(item.default_panel)}
                                                                 row={item.default_panel}
+                                                                group={item.usergroup_group}
                                                                 align={'flex-end'}
                                                                 deletePanelById={item => {
                                                                     unschedulePanelById(item.default_panel);
@@ -508,6 +507,7 @@ export const PromoPanelListGroupPanels = ({
                                                                         canUnschedule
                                                                         onPreview={row => onPreviewOpen(row, item)}
                                                                         row={row}
+                                                                        group={item.usergroup_group}
                                                                         align={'flex-end'}
                                                                         deletePanelById={() => unschedulePanelById(row)}
                                                                         mainButtonLabel={'Edit'}

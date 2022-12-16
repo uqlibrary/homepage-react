@@ -431,6 +431,7 @@
             "src/modules/SharedComponents/Toolbox/Alert/components/*.{js,jsx}",
             "src/modules/SharedComponents/Toolbox/ScrollToTop/components/*.{js,jsx}",
             "src/modules/SharedComponents/Toolbox/helpers/*.{js,jsx}",
+            "src/modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale.js",
             "!src/modules/Pages/Admin/**",
             "!src/modules/App/**",
             "!src/modules/Index/**",

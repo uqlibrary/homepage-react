@@ -141,6 +141,7 @@ export const PromoPanelForm = ({
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPanel]);
+
     const navigateToListPage = () => {
         actions.clearCurrentPanel(); // force the list page to reload after save
 
@@ -174,7 +175,6 @@ export const PromoPanelForm = ({
                 });
             });
         }
-        console.log('Scheduled List', schedules);
         if (values.defaultList.length > 0) {
             values.defaultList.map(item => {
                 defaults.push({ name: item.groupNames, existing: item.existing });

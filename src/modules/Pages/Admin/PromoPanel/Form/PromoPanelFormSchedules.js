@@ -110,7 +110,7 @@ export const PromoPanelFormSchedules = ({
                         >
                             <Checkbox
                                 checked={values.is_default_panel === 1}
-                                data-testid="admin-spotlights-form-checkbox-published"
+                                data-testid="admin-promopanel-form-default-panel"
                                 onChange={handleChange('is_default_panel')}
                                 className={classes.checkbox}
                                 disabled={isEdit && scheduledList.length > 0}
@@ -126,7 +126,8 @@ export const PromoPanelFormSchedules = ({
                         <InputLabel id="group-selector">{locale.form.labels.groupSelectorLabel}</InputLabel>
                         <Select
                             labelId="group-selector"
-                            id="demo-multiple-checkbox"
+                            id="group-multiple-checkbox"
+                            data-testid="group-selector"
                             label={locale.form.labels.groupSelectorLabel}
                             multiple
                             value={selectorGroupNames}

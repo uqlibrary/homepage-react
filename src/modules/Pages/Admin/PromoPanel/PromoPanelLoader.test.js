@@ -8,7 +8,7 @@ function setup(testProps = {}) {
 
 describe('Component PromoPanel Loader', () => {
     it('should render correctly', () => {
-        const wrapper = setup({ speed: 2 });
+        const wrapper = setup();
         expect(wrapper).toMatchSnapshot();
     });
 });

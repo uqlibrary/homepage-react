@@ -31,6 +31,7 @@ export const PromoPanelSplitButton = ({
     canEdit,
     align,
     row,
+    group,
     item,
     canClone,
     canDelete,
@@ -70,7 +71,7 @@ export const PromoPanelSplitButton = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="alert-delete-confirm"
+                confirmationBoxId="panel-delete-confirm"
                 onAction={() => deletePanelById(row.panel_id)}
                 onClose={hideDeleteConfirmation}
                 onCancelAction={hideDeleteConfirmation}
@@ -83,8 +84,8 @@ export const PromoPanelSplitButton = ({
                         <Button
                             children={canEdit ? 'Edit' : 'View'}
                             color="primary"
-                            data-testid={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
-                            id={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
+                            data-testid={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${group}`}
+                            id={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${group}`}
                             onClick={() => (canEdit ? navigateToEditForm(row.panel_id) : handlePreview(row, item))}
                             variant="contained"
                         />
@@ -95,7 +96,7 @@ export const PromoPanelSplitButton = ({
                             aria-expanded={open ? 'true' : undefined}
                             aria-label="More actions"
                             aria-haspopup="menu"
-                            data-testid={`alert-list-arrowicon-${alertId}`}
+                            data-testid={`alert-list-arrowicon-${row.panel_id}-${group}`}
                             onClick={handleToggle}
                             title="More actions"
                         >
@@ -117,7 +118,7 @@ export const PromoPanelSplitButton = ({
                                         <MenuList id="split-button-menu">
                                             {!!canEdit ? (
                                                 <MenuItem
-                                                    data-testid={`${alertId}-preview-button`}
+                                                    data-testid={`${alertId}-preview-button-${group}`}
                                                     key={`${alertId}-preview-button`}
                                                     onClick={() => handlePreview(row, item)}
                                                 >
@@ -136,8 +137,8 @@ export const PromoPanelSplitButton = ({
                                             }
                                             {!!canClone && (
                                                 <MenuItem
-                                                    data-testid={`${alertId}-clone-button`}
-                                                    key={`${alertId}-clone-button`}
+                                                    data-testid={`${row.panel_id}-clone-button-${group}`}
+                                                    key={`${row.panel_id}-clone-button`}
                                                     onClick={() => navigateToCloneForm(row.panel_id)}
                                                 >
                                                     Clone
@@ -145,8 +146,8 @@ export const PromoPanelSplitButton = ({
                                             )}
                                             {!!(canDelete || canUnschedule) && (
                                                 <MenuItem
-                                                    data-testid={`${alertId}-delete-button`}
-                                                    key={`${alertId}-delete-button`}
+                                                    data-testid={`${row.panel_id}-delete-button`}
+                                                    key={`${row.panel_id}-delete-button`}
                                                     onClick={showDeleteConfirmation}
                                                 >
                                                     {canDelete ? 'Delete' : 'Unschedule'}
@@ -169,6 +170,7 @@ PromoPanelSplitButton.propTypes = {
     align: PropTypes.string,
     item: PropTypes.object,
     canEdit: PropTypes.bool,
+    group: PropTypes.string,
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
     canUnschedule: PropTypes.bool,

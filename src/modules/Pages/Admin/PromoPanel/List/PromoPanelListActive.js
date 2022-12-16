@@ -153,7 +153,7 @@ export const PromoPanelListActive = ({ panelList, title, isLoading }) => {
                                 <TableRow>
                                     <TableCell colSpan={4} align="center">
                                         <CircularProgress
-                                            id="ListTableSpinner"
+                                            id="ListTableSpinner-activePanels"
                                             color="primary"
                                             size={38}
                                             thickness={3}
