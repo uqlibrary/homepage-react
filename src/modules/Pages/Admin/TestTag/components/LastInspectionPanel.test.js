@@ -72,11 +72,14 @@ describe('LastInspectionPanel Renders component', () => {
             // TODO, a better test for None as it may appear via missing inspect_fail_reason too
             expect(getByText(formLocale.noneLabel)).toBeInTheDocument();
         }
-        expect(
-            getByText(
-                !!asset.asset_next_test_due_date && moment(asset.asset_next_test_due_date).format(dateFormatPattern),
-            ),
-        ).toBeInTheDocument();
+        if (asset.last_inspection.inspect_status === 'PASSED') {
+            expect(
+                getByText(
+                    !!asset.asset_next_test_due_date &&
+                        moment(asset.asset_next_test_due_date).format(dateFormatPattern),
+                ),
+            ).toBeInTheDocument();
+        }
     };
 
     it('should render disabled panel', () => {
@@ -175,7 +178,6 @@ describe('LastInspectionPanel Renders component', () => {
         });
         expect(queryByText(formLocale.alertLocationMismatch)).not.toBeInTheDocument();
         expect(getByTestId('lastInspectionFailChip')).toBeInTheDocument();
-
         assertFormText({ getByText, asset: testAsset });
     });
 
