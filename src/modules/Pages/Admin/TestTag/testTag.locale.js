@@ -69,6 +69,8 @@ export default {
             testNotesLabel: 'Inspection Notes: ',
             nextTestDateLabel: 'Next Inspection Date: ',
             noneLabel: 'None',
+            repairDetailsLabel: 'Repair Details: ',
+            discardReasonLabel: 'Discard Reason: ',
         },
         inspection: {
             title: 'Inspection',
@@ -85,16 +87,6 @@ export default {
         },
         action: {
             title: 'Action',
-            tabs: [
-                {
-                    label: 'Repair',
-                    value: 1,
-                },
-                {
-                    label: 'Discard',
-                    value: 2,
-                },
-            ],
             repair: {
                 label: 'Send for Repair?',
                 options: [

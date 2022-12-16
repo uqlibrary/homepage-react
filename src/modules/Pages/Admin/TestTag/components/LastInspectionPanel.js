@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import clsx from 'clsx';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import { isEmpty } from '../utils/helpers';
 import locale from '../testTag.locale';
 import { statusEnum } from '../utils/helpers';
 
@@ -84,8 +85,12 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
         last_location: lastLocation,
         last_inspection: lastTest,
         asset_next_test_due_date: nextTestDate,
+        last_repair: lastRepair,
+        last_discard: lastDiscard,
     } = asset;
     const didPass = lastTest?.inspect_status === testStatusEnum.PASSED.value;
+    const isRepair = !isEmpty(lastRepair?.repair_date);
+    const isDiscard = !isEmpty(lastDiscard?.discard_date);
     const theme = useTheme();
     const classes = useTestPanelStyles({ pass: didPass });
     const [testPanelExpanded, setTestPanelExpanded] = React.useState(!disabled);
@@ -171,6 +176,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     <ExpandMoreIcon />
                 </IconButton>
             }
+            style={{ marginBottom: 30 }}
             className={clsx({ [classes.card]: true, [classes.cardActive]: !disabled })}
         >
             <Collapse in={forceOpen || testPanelExpanded} timeout="auto">
@@ -261,14 +267,30 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         </Typography>
                         <Typography component={'p'}>{lastTest?.inspect_notes ?? formLocale.noneLabel}</Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Typography component={'span'} className={classes.pastTestLabel}>
-                            {formLocale.nextTestDateLabel}
-                        </Typography>
-                        <Typography component={'span'}>
-                            {!!nextTestDate && moment(nextTestDate).format(dateFormatPattern)}
-                        </Typography>
-                    </Grid>
+                    {didPass && (
+                        <Grid item xs={12}>
+                            <Typography component={'span'} className={classes.pastTestLabel}>
+                                {formLocale.nextTestDateLabel}
+                            </Typography>
+                            <Typography component={'span'}>{moment(nextTestDate).format(dateFormatPattern)}</Typography>
+                        </Grid>
+                    )}
+                    {!!isRepair && (
+                        <Grid item xs={12}>
+                            <Typography component={'p'} className={classes.pastTestLabel}>
+                                {formLocale.repairDetailsLabel}
+                            </Typography>
+                            <Typography component={'p'}>{lastRepair?.repairer_name}</Typography>
+                        </Grid>
+                    )}
+                    {!!isDiscard && (
+                        <Grid item xs={12}>
+                            <Typography component={'p'} className={classes.pastTestLabel}>
+                                {formLocale.discardReasonLabel}
+                            </Typography>
+                            <Typography component={'p'}>{lastDiscard?.discard_reason}</Typography>
+                        </Grid>
+                    )}
                 </Grid>
             </Collapse>
         </StandardCard>

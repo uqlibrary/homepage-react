@@ -1,7 +1,8 @@
 import { mutateObject, mutateClearObject } from '../utils/transformers';
+import { isEmpty } from '../utils/helpers';
 
 export const saveInspectionTransformer = (passValue, failValue) => ({
-    inspection_status: (state, data) => ({
+    inspection_status: ({ state, data }) => ({
         with_inspection: {
             ...state.with_inspection,
             inspection_status:
@@ -10,7 +11,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
                     : mutateObject(data, 'inspection_status'),
         },
     }),
-    inspection_device_id: (state, data) => ({
+    inspection_device_id: ({ state, data }) => ({
         with_inspection: {
             ...state.with_inspection,
             inspection_device_id:
@@ -19,7 +20,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
                     : mutateObject(data, 'inspection_device_id'),
         },
     }),
-    inspection_fail_reason: (state, data) => ({
+    inspection_fail_reason: ({ state, data }) => ({
         with_inspection: {
             ...state.with_inspection,
             inspection_fail_reason:
@@ -28,7 +29,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
                     : mutateObject(data, 'inspection_fail_reason'),
         },
     }),
-    inspection_notes: (state, data) => ({
+    inspection_notes: ({ state, data }) => ({
         with_inspection: {
             ...state.with_inspection,
             inspection_notes:
@@ -37,7 +38,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
                     : mutateObject(data, 'inspection_notes'),
         },
     }),
-    inspection_date_next: (state, data) => ({
+    inspection_date_next: ({ state, data }) => ({
         with_inspection: {
             ...state.with_inspection,
             inspection_date_next:
@@ -46,26 +47,26 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
                     : mutateObject(data, 'inspection_date_next'),
         },
     }),
-    isRepair: (state, data) => ({
+    isRepair: ({ state, data }) => ({
         with_repair: { ...state.with_repair, isRepair: mutateObject(data, 'isRepair') },
     }),
-    repairer_contact_details: (state, data) => ({
+    repairer_contact_details: ({ state, data }) => ({
         with_repair: {
             ...state.with_repair,
             repairer_contact_details: mutateObject(data, 'repairer_contact_details'),
         },
     }),
-    isDiscarded: (state, data) => ({
+    isDiscarded: ({ state, data }) => ({
         with_discard: { ...state.with_discard, isDiscarded: mutateObject(data, 'isDiscarded') },
     }),
-    discard_reason: (state, data) => ({
+    discard_reason: ({ state, data }) => ({
         with_discard: { ...state.with_discard, discard_reason: mutateObject(data, 'discard_reason') },
     }),
-    room_id: (_, data) => {
+    room_id: ({ data }) => {
         if (data.room_id === -1) return { room_id: undefined };
         else return {};
     },
-    with_inspection: state => {
+    with_inspection: ({ state }) => {
         if (state.with_inspection.inspection_status === undefined) {
             return { with_inspection: undefined };
         } else {
@@ -80,21 +81,30 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
             return { with_inspection: state.with_inspection };
         }
     },
-    with_repair: state => {
+    with_repair: ({ state, params: lastInspection }) => {
         // repair option only for FAILED inspections
-        if (state.with_inspection?.inspection_status !== passValue && state.with_repair.isRepair) {
+        if (
+            state.with_repair?.isRepair &&
+            (state.with_inspection?.inspection_status === failValue ||
+                (isEmpty(state.with_inspection?.inspection_status) && lastInspection?.inspect_status === failValue))
+        ) {
             /* istanbul ignore else */ if (!!state.with_discard) state.with_discard.discard_reason = undefined;
             delete state.with_repair.isRepair;
-            return { with_repair: state.with_repair, with_discard: state.with_discard };
+            return { with_repair: state.with_repair, with_discard: undefined }; // can't discard and repair
         } else {
             return { with_repair: undefined, with_discard: state.with_discard };
         }
     },
-    with_discard: state => {
-        if (state.with_discard.isDiscarded) {
+    with_discard: ({ state, params: lastInspection }) => {
+        if (
+            state.with_discard?.isDiscarded &&
+            (!isEmpty(state.with_inspection?.inspection_status) ||
+                lastInspection?.inspect_status === passValue ||
+                lastInspection?.inspect_status === failValue)
+        ) {
             /* istanbul ignore else */ if (!!state.with_repair) state.with_repair.repairer_contact_details = undefined;
             delete state.with_discard.isDiscarded;
-            return { with_repair: state.with_repair, with_discard: state.with_discard };
+            return { with_repair: undefined, with_discard: state.with_discard }; // can't discard and repair
         } else {
             return { with_discard: undefined, with_repair: state.with_repair };
         }

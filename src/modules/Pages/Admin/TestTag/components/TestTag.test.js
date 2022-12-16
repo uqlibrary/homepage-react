@@ -15,11 +15,29 @@ const currentRetestList = [
 
 const currentAssetOwnersList = [{ value: 'UQL-WSS', label: 'UQL-WSS' }];
 const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
+const DEFAULT_FORM_VALUES = {
+    asset_id_displayed: undefined,
+    user_id: undefined,
+    asset_department_owned_by: undefined,
+    room_id: undefined,
+    asset_type_id: undefined,
+    action_date: undefined,
+    inspection_status: undefined,
+    inspection_device_id: undefined,
+    inspection_fail_reason: undefined,
+    inspection_notes: undefined,
+    inspection_date_next: undefined,
+    isRepair: false,
+    repairer_contact_details: undefined,
+    isDiscarded: false,
+    discard_reason: undefined,
+};
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
+        defaultFormValues = DEFAULT_FORM_VALUES,
         assetsListError = null,
         initConfig = configData,
         initConfigLoading = false,
@@ -41,6 +59,7 @@ function setup(testProps = {}, renderer = rtlRender) {
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <TestTag
                 actions={actions}
+                defaultFormValues={defaultFormValues}
                 currentRetestList={currentRetestList}
                 currentAssetOwnersList={currentAssetOwnersList}
                 defaultNextTestDateValue={DEFAULT_NEXT_TEST_DATE_VALUE}
@@ -244,6 +263,40 @@ describe('TestTag', () => {
         expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
+        act(() => {
+            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+        });
+        expect(clearSaveInspectionFn).toHaveBeenCalled();
+        expect(clearAssetsFn).toHaveBeenCalled();
+        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+    });
+
+    it('should show defaults (coverage)', async () => {
+        const loadConfigFn = jest.fn();
+        const clearSaveInspectionFn = jest.fn();
+        const clearAssetsFn = jest.fn();
+
+        const { getByRole, getByText, getByTestId, queryByRole } = setup({
+            actions: {
+                loadConfig: loadConfigFn,
+                clearSaveInspection: clearSaveInspectionFn,
+                clearAssets: clearAssetsFn,
+            },
+            saveInspectionSuccess: {
+                data: {
+                    asset_status: 'CURRENT',
+                    asset_id_displayed: 'UQL000705',
+                    user_licence_number: 'NOT LICENCED',
+                    action_date: '2022-12-12',
+                },
+            },
+        });
+        await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
+        expect(getByText('Asset saved')).toBeInTheDocument();
+        expect(getByText('UQL000705')).toBeInTheDocument();
+        expect(getByText('Tested By: NOT LICENCED')).toBeInTheDocument();
+        expect(getByText('2022-12-12')).toBeInTheDocument();
+        expect(getByText('N/A')).toBeInTheDocument();
         act(() => {
             fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
         });

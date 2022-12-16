@@ -193,26 +193,102 @@ describe('Helper functions', () => {
         checkStandardArguments(isValidRepairDetails, false);
     });
     it('isValidRepair function validates repairs', () => {
-        const validObject1 = { isRepair: true, repairer_contact_details: 'details' };
-        const invalidObject1 = { isRepair: false, repairer_contact_details: 'details' };
-        const invalidObject2 = { isRepair: true, repairer_contact_details: '' };
-        expect(isValidRepair(validObject1)).toBe(true);
-        expect(isValidRepair({})).toBe(false);
-        expect(isValidRepair(invalidObject1)).toBe(false);
-        expect(isValidRepair(invalidObject2)).toBe(false);
+        const isValid = ({ formValues, lastInspection }) =>
+            isValidRepair({ ...{ formValues }, ...{ lastInspection }, failed: 'FAILED' });
+        const validObject1 = { isRepair: true, repairer_contact_details: 'details', inspection_status: 'FAILED' };
+        const validObject2 = { isRepair: true, repairer_contact_details: 'details' };
+        const invalidObject1 = { isRepair: true, repairer_contact_details: null, inspection_status: 'FAILED' };
+        const invalidObject2 = { isRepair: true, repairer_contact_details: null };
+        const invalidObject3 = { isRepair: true, repairer_contact_details: 'details', inspection_status: 'PASSED' };
+        const invalidObject5 = { isRepair: false, repairer_contact_details: 'details', inspection_status: 'FAILED' };
+
+        expect(isValid({ formValues: validObject1, lastInspection: {} })).toBe(true);
+        expect(isValid({ formValues: validObject2, lastInspection: { inspect_status: 'FAILED' } })).toBe(true);
+        expect(isValid({})).toBe(false);
+        expect(
+            isValid({
+                formValues: invalidObject1,
+                lastInspection: { inspect_status: 'FAILED' },
+            }),
+        ).toBe(false);
+        expect(isValid({ formValues: invalidObject1, lastInspection: {} })).toBe(false);
+        expect(
+            isValid({
+                formValues: invalidObject2,
+                lastInspection: { inspect_status: 'FAILED' },
+            }),
+        ).toBe(false);
+        expect(isValid({ formValues: invalidObject2, lastInspection: {} })).toBe(false);
+        expect(
+            isValid({
+                formValues: invalidObject3,
+                lastInspection: { inspect_status: 'PASSED' },
+            }),
+        ).toBe(false);
+        expect(isValid({ formValues: invalidObject3, lastInspection: {} })).toBe(false);
+        expect(
+            isValid({
+                formValues: validObject2,
+                lastInspection: { inspect_status: 'PASSED' },
+            }),
+        ).toBe(false);
+        expect(isValid({ formValues: validObject2, lastInspection: {} })).toBe(false);
+        expect(isValid({ formValues: invalidObject5, lastInspection: {} })).toBe(false);
     });
     it('isValidDiscardedDetails function validates discarded details', () => {
         expect(isValidDiscardedDetails('details')).toBe(true);
         checkStandardArguments(isValidDiscardedDetails, false);
     });
     it('isValidDiscard function validates discards', () => {
-        const validObject1 = { isDiscarded: true, discard_reason: 'details' };
-        const invalidObject1 = { isDiscarded: false, discard_reason: 'details' };
-        const invalidObject2 = { isDiscarded: true, discard_reason: '' };
-        expect(isValidDiscard(validObject1)).toBe(true);
-        expect(isValidDiscard({})).toBe(false);
-        expect(isValidDiscard(invalidObject1)).toBe(false);
-        expect(isValidDiscard(invalidObject2)).toBe(false);
+        const isValid = ({ formValues, lastInspection }) =>
+            isValidDiscard({ ...{ formValues }, ...{ lastInspection }, passed: 'PASSED', failed: 'FAILED' });
+        const validObject1 = { isDiscarded: true, discard_reason: 'details', inspection_status: 'FAILED' };
+        const validObject2 = { isDiscarded: true, discard_reason: 'details' };
+        const validObject3 = { isDiscarded: true, discard_reason: 'details', inspection_status: 'PASSED' };
+        const invalidObject1 = { isDiscarded: true, discard_reason: null, inspection_status: 'FAILED' };
+        const invalidObject2 = { isDiscarded: true, discard_reason: null };
+        const invalidObject5 = { isDiscarded: false, discard_reason: 'details', inspection_status: 'FAILED' };
+        // needs new params { formValues, lastInspection, failed: failValue }
+        expect(isValid({ formValues: validObject1, lastInspection: {} })).toBe(true);
+        expect(
+            isValid({
+                formValues: validObject2,
+                lastInspection: { inspect_status: 'FAILED' },
+            }),
+        ).toBe(true);
+        expect(
+            isValid({
+                formValues: validObject3,
+                lastInspection: { inspect_status: 'PASSED' },
+            }),
+        ).toBe(true);
+
+        expect(isValid({})).toBe(false);
+        expect(
+            isValid({
+                formValues: invalidObject1,
+                lastInspection: { inspect_status: 'FAILED' },
+            }),
+        ).toBe(false);
+        expect(isValid({ formValues: invalidObject1, lastInspection: {} })).toBe(false);
+        expect(
+            isValid({
+                formValues: invalidObject2,
+                lastInspection: { inspect_status: 'FAILED' },
+            }),
+        ).toBe(false);
+        expect(isValid({ formValues: invalidObject2, lastInspection: {} })).toBe(false);
+        expect(isValid({ formValues: validObject2, lastInspection: { inspect_status: 'OUTFORREPAIR' } })).toBe(false);
+        // expect(
+        //     isValid({
+        //         formValues: validObject2,
+        //         lastInspection: { inspect_status: 'PASSED' },
+        //         passed: 'PASSED',
+        //         failed: 'FAILED',
+        //     }),
+        // ).toBe(false);
+        expect(isValid({ formValues: validObject2, lastInspection: {} })).toBe(false);
+        expect(isValid({ formValues: invalidObject5, lastInspection: {} })).toBe(false);
     });
     it('creates a valid enum object', () => {
         const expected = {

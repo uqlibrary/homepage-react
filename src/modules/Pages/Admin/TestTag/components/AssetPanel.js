@@ -92,6 +92,7 @@ const AssetPanel = ({
             const transformedData = transformer(
                 formValues,
                 saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
+                selectedAsset?.last_inspection ?? {},
             );
             console.log('saveForm', formValues, transformedData);
             actions.saveInspection(transformedData);
@@ -283,16 +284,18 @@ const AssetPanel = ({
                 disabled={!!!selectedAsset?.last_inspection?.inspect_status ?? /* istanbul ignore next */ true}
                 forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
             />
-            <InspectionPanel
-                formValues={formValues}
-                selectedAsset={selectedAsset}
-                handleChange={handleChange}
-                currentRetestList={currentRetestList}
-                defaultNextTestDateValue={defaultNextTestDateValue}
-                classes={classes}
-                disabled={!isValidAssetId(formValues?.asset_id_displayed)}
-                isMobileView={isMobileView}
-            />
+            {selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value && (
+                <InspectionPanel
+                    formValues={formValues}
+                    selectedAsset={selectedAsset}
+                    handleChange={handleChange}
+                    currentRetestList={currentRetestList}
+                    defaultNextTestDateValue={defaultNextTestDateValue}
+                    classes={classes}
+                    disabled={!isValidAssetId(formValues?.asset_id_displayed)}
+                    isMobileView={isMobileView}
+                />
+            )}
             <Grid container spacing={3}>
                 <Grid xs={12} sm={6} item>
                     <Button
