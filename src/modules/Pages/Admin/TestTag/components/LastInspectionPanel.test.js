@@ -11,37 +11,50 @@ function setup(testProps = {}, renderer = rtlRender) {
 }
 
 describe('LastInspectionPanel Renders component', () => {
-    const asset = {
-        asset_id: 100000,
-        asset_next_test_due_date: '2027-10-01 00:00',
-        asset_status: 'CURRENT',
-        last_location: {
-            room_id: 1,
-            room_id_displayed: 'W111',
-            room_id_description: 'Projector Room',
-            floor_id: 1,
-            floor_id_displayed: '1',
-            building_id: 1,
-            building_id_displayed: '0001',
-            building_name: 'BSL',
-            site_id: 1,
-            site_id_displayed: '001',
-            site_name: 'St Lucia',
-        },
-        last_inspection: {
-            inspect_status: 'PASSED',
-            inspect_device_id: 1,
-            inspect_device_model_name: 'TESTER 620-1',
-            inspect_device_serial_number: 'W309876',
-            inspect_device_department: 'UQL_WSS',
-            inspect_device_calibrated_date_last: '2016-01-02 00:00',
-            inspect_device_calibrated_by_last: 1,
-            inspect_device_calibration_due_date: '2022-10-01 00:00',
-            inspect_date: '2016-10-01 00:00',
-            inspect_fail_reason: 'Fail reason',
-            inspect_notes: 'Some notes',
-        },
-    };
+    let asset;
+
+    beforeEach(() => {
+        asset = {
+            asset_id: 100000,
+            asset_next_test_due_date: '2027-10-01 00:00',
+            asset_status: 'CURRENT',
+            last_location: {
+                room_id: 1,
+                room_id_displayed: 'W111',
+                room_id_description: 'Projector Room',
+                floor_id: 1,
+                floor_id_displayed: '1',
+                building_id: 1,
+                building_id_displayed: '0001',
+                building_name: 'BSL',
+                site_id: 1,
+                site_id_displayed: '001',
+                site_name: 'St Lucia',
+            },
+            last_inspection: {
+                inspect_status: 'PASSED',
+                inspect_device_id: 1,
+                inspect_device_model_name: 'TESTER 620-1',
+                inspect_device_serial_number: 'W309876',
+                inspect_device_department: 'UQL_WSS',
+                inspect_device_calibrated_date_last: '2016-01-02 00:00',
+                inspect_device_calibrated_by_last: 1,
+                inspect_device_calibration_due_date: '2022-10-01 00:00',
+                inspect_date: '2016-10-01 00:00',
+                inspect_fail_reason: 'Fail reason',
+                inspect_notes: 'Some notes',
+            },
+            last_repair: {
+                repair_date: '2022-12-14 10:14:00',
+                repairer_name: 'Some repair',
+            },
+            last_discard: {
+                discard_date: '2022-12-14 10:14:00',
+                discard_reason: 'Some discard',
+            },
+        };
+    });
+
     const dateFormatPattern = locale.config.dateFormatDisplay;
     const formLocale = locale.form.lastInspectionPanel;
 
@@ -80,6 +93,8 @@ describe('LastInspectionPanel Renders component', () => {
                 ),
             ).toBeInTheDocument();
         }
+        expect(getByText(asset.last_repair.repairer_name)).toBeInTheDocument();
+        expect(getByText(asset.last_discard.discard_reason)).toBeInTheDocument();
     };
 
     it('should render disabled panel', () => {
@@ -227,5 +242,31 @@ describe('LastInspectionPanel Renders component', () => {
             fireEvent.click(getByTestId('headerExpandButton'));
         });
         expect(setStateMock).not.toHaveBeenCalled();
+    });
+
+    it('should handle defaults (coverage)', () => {
+        const currentLocation = {
+            formSiteId: 2,
+            formBuildingId: 1,
+            formFloorId: 1,
+            formRoomId: 1,
+        };
+        const testAsset = { ...asset, last_location: { ...asset.last_location } };
+        delete testAsset.last_location.site_id_displayed;
+        delete testAsset.last_location.site_name;
+        delete testAsset.last_location.building_id_displayed;
+        delete testAsset.last_location.building_name;
+        const { getByText, getByTestId, queryByText } = setup({
+            asset: testAsset,
+            currentLocation,
+            dateFormatPattern,
+        });
+
+        expect(getByText(formLocale.alertLocationMismatch)).toBeInTheDocument();
+        expect(getByTestId('lastInspectionPassChip')).toBeInTheDocument();
+        expect(queryByText(asset.last_location.site_id_displayed)).not.toBeInTheDocument();
+        expect(queryByText(asset.last_location.site_name)).not.toBeInTheDocument();
+        expect(queryByText(asset.last_location.building_id_displayed)).not.toBeInTheDocument();
+        expect(queryByText(asset.last_location.building_name)).not.toBeInTheDocument();
     });
 });

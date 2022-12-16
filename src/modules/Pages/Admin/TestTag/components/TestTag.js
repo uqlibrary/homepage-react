@@ -184,26 +184,9 @@ const getSuccessDialog = (response, classes, locale) => {
     return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
 };
 
-const DEFAULT_FORM_VALUES = {
-    asset_id_displayed: undefined,
-    user_id: undefined,
-    asset_department_owned_by: undefined,
-    room_id: undefined,
-    asset_type_id: undefined,
-    action_date: undefined,
-    inspection_status: undefined,
-    inspection_device_id: undefined,
-    inspection_fail_reason: undefined,
-    inspection_notes: undefined,
-    inspection_date_next: undefined,
-    isRepair: false,
-    repairer_contact_details: undefined,
-    isDiscarded: false,
-    discard_reason: undefined,
-};
-
 const TestTag = ({
     actions,
+    defaultFormValues,
     currentRetestList,
     currentAssetOwnersList,
     defaultNextTestDateValue,
@@ -231,7 +214,7 @@ const TestTag = ({
     const assignAssetDefaults = React.useCallback(
         (asset = {}, formValues = {}, location = {}) => {
             return {
-                ...DEFAULT_FORM_VALUES,
+                ...defaultFormValues,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
                 asset_department_owned_by: formOwnerId ?? /* istanbul ignore next */ undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
@@ -244,7 +227,7 @@ const TestTag = ({
                         : initConfig?.inspection_devices?.[0].device_id ?? /* istanbul ignore next */ undefined,
             };
         },
-        [formOwnerId, initConfig?.inspection_devices, today],
+        [formOwnerId, initConfig?.inspection_devices, defaultFormValues, today],
     );
 
     const { formValues, resetFormValues, handleChange } = useForm({
@@ -416,6 +399,7 @@ const TestTag = ({
 
 TestTag.propTypes = {
     actions: PropTypes.object,
+    defaultFormValues: PropTypes.object,
     currentRetestList: PropTypes.array,
     currentAssetOwnersList: PropTypes.array,
     defaultNextTestDateValue: PropTypes.number,
