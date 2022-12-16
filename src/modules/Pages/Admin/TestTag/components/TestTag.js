@@ -327,9 +327,9 @@ const TestTag = ({
             (!!!floorListError || /* istanbul ignore next */ floorListError.length === 0) &&
             (!!!roomListError || /* istanbul ignore next */ roomListError.length === 0) &&
             (!!!assetsListError || /* istanbul ignore next */ assetsListError.length === 0) &&
-            validateValues(formValues);
+            validateValues(formValues, selectedAsset?.last_inspection);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initConfigError, floorListError, roomListError, assetsListError, formValues]);
+    }, [initConfigError, floorListError, roomListError, assetsListError, formValues, selectedAsset]);
 
     const clearSaveError = () => {
         actions.clearSaveInspection();

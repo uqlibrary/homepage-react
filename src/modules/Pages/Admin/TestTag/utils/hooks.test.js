@@ -94,76 +94,6 @@ describe('Tests custom hooks', () => {
             result.current.validateValues(valid1);
         });
         expect(result.current.isValid).toBe(true);
-
-        // valid repair without inspection
-        const valid2 = {
-            action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
-            asset_id_displayed: 'UQL310000',
-            asset_type_id: 1,
-            discard_reason: undefined,
-            inspection_date_next: undefined,
-            inspection_device_id: undefined,
-            inspection_fail_reason: undefined,
-            inspection_notes: undefined,
-            inspection_status: undefined,
-            isDiscarded: false,
-            isRepair: true,
-            repairer_contact_details: 'details',
-            room_id: -1,
-            user_id: 3,
-        };
-        act(() => {
-            result.current.validateValues(valid2);
-        });
-        expect(result.current.isValid).toBe(true);
-
-        // valid discard without inspection
-        const valid3 = {
-            action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
-            asset_id_displayed: 'UQL310000',
-            asset_type_id: 1,
-            discard_reason: 'details',
-            inspection_date_next: undefined,
-            inspection_device_id: undefined,
-            inspection_fail_reason: undefined,
-            inspection_notes: undefined,
-            inspection_status: undefined,
-            isDiscarded: true,
-            isRepair: false,
-            repairer_contact_details: undefined,
-            room_id: -1,
-            user_id: 3,
-        };
-        act(() => {
-            result.current.validateValues(valid3);
-        });
-        expect(result.current.isValid).toBe(true);
-
-        // valid inspection with repair
-        const valid4 = {
-            action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
-            asset_id_displayed: 'UQL310000',
-            asset_type_id: 1,
-            discard_reason: undefined,
-            inspection_date_next: '2018-12-05 14:22',
-            inspection_device_id: 1,
-            inspection_fail_reason: undefined,
-            inspection_notes: 'notes',
-            inspection_status: 'PASSED',
-            isDiscarded: false,
-            isRepair: true,
-            repairer_contact_details: 'details',
-            room_id: 1,
-            user_id: 3,
-        };
-        act(() => {
-            result.current.validateValues(valid4);
-        });
-        expect(result.current.isValid).toBe(true);
-
         // valid inspection with discard
         const valid5 = {
             action_date: '2016-12-05 14:22',
@@ -187,6 +117,51 @@ describe('Tests custom hooks', () => {
         });
         expect(result.current.isValid).toBe(true);
 
+        // invalid repair without inspection
+        const invalid0a = {
+            action_date: '2016-12-05 14:22',
+            asset_department_owned_by: 'UQL-WSS',
+            asset_id_displayed: 'UQL310000',
+            asset_type_id: 1,
+            discard_reason: undefined,
+            inspection_date_next: undefined,
+            inspection_device_id: undefined,
+            inspection_fail_reason: undefined,
+            inspection_notes: undefined,
+            inspection_status: undefined,
+            isDiscarded: false,
+            isRepair: true,
+            repairer_contact_details: 'details',
+            room_id: -1,
+            user_id: 3,
+        };
+        act(() => {
+            result.current.validateValues(invalid0a);
+        });
+        expect(result.current.isValid).toBe(false);
+
+        // invalid discard without inspection
+        const invalid0b = {
+            action_date: '2016-12-05 14:22',
+            asset_department_owned_by: 'UQL-WSS',
+            asset_id_displayed: 'UQL310000',
+            asset_type_id: 1,
+            discard_reason: 'details',
+            inspection_date_next: undefined,
+            inspection_device_id: undefined,
+            inspection_fail_reason: undefined,
+            inspection_notes: undefined,
+            inspection_status: undefined,
+            isDiscarded: true,
+            isRepair: false,
+            repairer_contact_details: undefined,
+            room_id: -1,
+            user_id: 3,
+        };
+        act(() => {
+            result.current.validateValues(invalid0b);
+        });
+        expect(result.current.isValid).toBe(false);
         // invalid request without date
         const invalid1 = {
             action_date: undefined, // required
@@ -394,8 +369,8 @@ describe('Tests custom hooks', () => {
         });
         expect(result.current.isValid).toBe(false);
 
-        // valid inspection with repair and discard when status === PASSED
-        const valid6 = {
+        // invalid inspection with repair and discard when status === PASSED
+        const invalid8a = {
             action_date: '2016-12-05 14:22',
             asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
@@ -413,9 +388,9 @@ describe('Tests custom hooks', () => {
             user_id: 3,
         };
         act(() => {
-            result.current.validateValues(valid6);
+            result.current.validateValues(invalid8a);
         });
-        expect(result.current.isValid).toBe(true);
+        expect(result.current.isValid).toBe(false);
 
         // invalid inspection with repair and discard when status FAILED (can only supply one)
         const invalid8b = {
@@ -529,6 +504,29 @@ describe('Tests custom hooks', () => {
         };
         act(() => {
             result.current.validateValues(invalid12);
+        });
+        expect(result.current.isValid).toBe(false);
+
+        // invalid inspection with repair and PASS
+        const invalid13 = {
+            action_date: '2016-12-05 14:22',
+            asset_department_owned_by: 'UQL-WSS',
+            asset_id_displayed: 'UQL310000',
+            asset_type_id: 1,
+            discard_reason: undefined,
+            inspection_date_next: '2018-12-05 14:22',
+            inspection_device_id: 1,
+            inspection_fail_reason: undefined,
+            inspection_notes: 'notes',
+            inspection_status: 'PASSED',
+            isDiscarded: false,
+            isRepair: true,
+            repairer_contact_details: 'details',
+            room_id: 1,
+            user_id: 3,
+        };
+        act(() => {
+            result.current.validateValues(invalid13);
         });
         expect(result.current.isValid).toBe(false);
     });

@@ -16,13 +16,16 @@ export const mutateClearObject = (data, key) => {
     return undefined;
 };
 
-export const transformer = (originalFormValues, transformerRules) => {
+export const transformer = (originalFormValues, transformerRules, extraParams = undefined) => {
     const immFormData = Immutable.fromJS(originalFormValues);
     const newFormData = immFormData.toJS();
     // reducer assumes each transform rule is a function, and must return
     // a keyed object
     const newVals = Object.keys(transformerRules).reduce(
-        (prev, current) => ({ ...prev, ...transformerRules[current](prev, newFormData) }),
+        (prev, current) => ({
+            ...prev,
+            ...transformerRules[current]({ state: prev, data: newFormData, params: extraParams }),
+        }),
         {},
     );
     return { ...newFormData, ...newVals };

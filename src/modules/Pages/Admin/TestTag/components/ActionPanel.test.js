@@ -26,7 +26,7 @@ const formValues = {
     user_id: 3,
 };
 
-describe('TabPanel', () => {
+describe('ActionPanel', () => {
     it('renders component', () => {
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
@@ -37,9 +37,8 @@ describe('TabPanel', () => {
         const { getByText, getByTestId } = setup({ formValues, handleChange, classes, isMobileView, disabled });
 
         expect(getByText(locale.form.action.title)).toBeInTheDocument();
-        locale.form.action.tabs.forEach(tab => {
-            expect(getByTestId(`tab-${tab.label.replace(' ', '_').toLowerCase()}`)).toBeInTheDocument();
-        });
+        expect(getByTestId('tab-repair')).toBeInTheDocument();
+        expect(getByTestId('tab-discard')).toBeInTheDocument();
     });
 
     it('allows selection of tabs', () => {
