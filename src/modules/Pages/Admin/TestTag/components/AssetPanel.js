@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -88,11 +87,11 @@ const AssetPanel = ({
     }, [assetsList]);
 
     const saveForm = () => {
-        if (isValid && !saveInspectionSaving) {
+        /* istanbul ignore else */ if (isValid && !saveInspectionSaving) {
             const transformedData = transformer(
                 formValues,
                 saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
-                selectedAsset?.last_inspection ?? {},
+                selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
             );
             console.log('saveForm', formValues, transformedData);
             actions.saveInspection(transformedData);
@@ -149,7 +148,7 @@ const AssetPanel = ({
                                     return option.inputValue;
                                 }
                                 // Regular option
-                                return `${option.asset_id_displayed ?? ''}`;
+                                return `${option.asset_id_displayed ?? /* istanbul ignore next */ ''}`;
                             }}
                             renderOption={option => option.asset_id_displayed}
                             freeSolo
