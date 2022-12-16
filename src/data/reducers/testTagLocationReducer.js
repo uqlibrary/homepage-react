@@ -1,9 +1,6 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    // siteList: null,
-    // siteListLoading: false,
-    // siteListError: null,
     floorList: null,
     floorListLoading: false,
     floorListError: null,
@@ -20,7 +17,6 @@ const handlers = {
         floorListError: false,
     }),
     [actions.TESTTAG_FLOOR_LIST_LOADED]: (state, action) => {
-        console.log('FLOOR ACTION', action);
         return {
             ...initialState,
             ...state,
@@ -45,7 +41,6 @@ const handlers = {
         roomListError: false,
     }),
     [actions.TESTTAG_ROOM_LIST_LOADED]: (state, action) => {
-        console.log('ROOM ACTION', action);
         return {
             ...initialState,
             ...state,
