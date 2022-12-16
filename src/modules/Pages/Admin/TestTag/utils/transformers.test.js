@@ -53,22 +53,22 @@ describe('Tests transformer functions', () => {
             f: 'e-newkey',
         };
         const rules = {
-            a: (state, data) => ({
+            a: ({ state, data }) => ({
                 with_a: {
                     ...state.with_a,
                     a: mutateObject(data, 'a'),
                 },
             }),
-            c: (_, data) => ({
+            c: ({ data }) => ({
                 c: mutateClearObject(data, 'c'),
             }),
-            d: (state, data) => ({
+            d: ({ state, data }) => ({
                 with_a: {
                     ...state.with_a,
                     d: mutateObject(data, 'd'),
                 },
             }),
-            e: (_, data) => mutateKey(data, 'e', 'f'),
+            e: ({ data }) => mutateKey(data, 'e', 'f'),
         };
         expect(transformer(original, rules)).toEqual(expected);
     });

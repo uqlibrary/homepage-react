@@ -56,12 +56,20 @@ export const isValidInspection = (inspection, testStatusEnum) => {
                 isValidFailReason(inspection, testStatusEnum.FAILED.value)))
     );
 };
-export const hasTestOrAction = currentValues =>
-    currentValues.inspection_status !== undefined || !!currentValues.isRepair || !!currentValues.isDiscarded;
+export const hasTestOrAction = formValues =>
+    !isEmpty(formValues.inspection_status) || !!formValues.isRepair || !!formValues.isDiscarded;
 export const isValidRepairDetails = repairDetails => !isEmpty(repairDetails);
-export const isValidRepair = repair => !!repair.isRepair && isValidRepairDetails(repair.repairer_contact_details);
+export const isValidRepair = ({ formValues, lastInspection, failed: failValue }) =>
+    !!formValues?.isRepair &&
+    (formValues.inspection_status === failValue || lastInspection?.inspect_status === failValue) &&
+    isValidRepairDetails(formValues.repairer_contact_details);
 export const isValidDiscardedDetails = discardedDetails => !isEmpty(discardedDetails);
-export const isValidDiscard = discard => !!discard.isDiscarded && isValidDiscardedDetails(discard.discard_reason);
+export const isValidDiscard = ({ formValues, lastInspection, passed: passValue, failed: failValue }) =>
+    !!formValues?.isDiscarded &&
+    (!isEmpty(formValues.inspection_status) ||
+        lastInspection?.inspect_status === passValue ||
+        lastInspection?.inspect_status === failValue) &&
+    isValidDiscardedDetails(formValues.discard_reason);
 
 export const statusEnum = locale => ({
     CURRENT: { label: locale.config.currentLabel, value: 'CURRENT' },

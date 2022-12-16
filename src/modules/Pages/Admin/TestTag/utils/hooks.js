@@ -38,21 +38,29 @@ export const useForm = (
 export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {} } = {}) => {
     const [isValid, setIsValid] = useState(false);
 
-    const validateValues = currentValues => {
+    const validateValues = (formValues, lastInspection) => {
         const val =
-            currentValues.user_id > 0 &&
-            isValidEventDate(currentValues.action_date) &&
-            isValidAssetId(currentValues.asset_id_displayed) &&
-            isValidOwner(currentValues.asset_department_owned_by) &&
-            isValidAssetTypeId(currentValues.asset_type_id) &&
-            isValidInspection(currentValues, testStatusEnum) &&
-            ((!!!currentValues.isRepair && !!!currentValues.isDiscarded) ||
-                (!!currentValues.isRepair !== !!currentValues.isDiscarded &&
-                    (isValidRepair(currentValues) || isValidDiscard(currentValues))) ||
-                (!!currentValues.isRepair === !!currentValues.isDiscarded &&
-                    currentValues.inspection_status === testStatusEnum.PASSED.value &&
-                    isValidDiscard(currentValues))) &&
-            hasTestOrAction(currentValues);
+            formValues.user_id > 0 &&
+            isValidEventDate(formValues.action_date) &&
+            isValidAssetId(formValues.asset_id_displayed) &&
+            isValidOwner(formValues.asset_department_owned_by) &&
+            isValidAssetTypeId(formValues.asset_type_id) &&
+            isValidInspection(formValues, testStatusEnum) &&
+            ((!!!formValues.isRepair && !!!formValues.isDiscarded) ||
+                (!!formValues.isRepair !== !!formValues.isDiscarded &&
+                    (isValidRepair({
+                        formValues,
+                        lastInspection,
+                        passed: testStatusEnum.PASSED.value,
+                        failed: testStatusEnum.FAILED.value,
+                    }) ||
+                        isValidDiscard({
+                            formValues,
+                            lastInspection,
+                            passed: testStatusEnum.PASSED.value,
+                            failed: testStatusEnum.FAILED.value,
+                        })))) &&
+            hasTestOrAction(formValues);
         setIsValid(val);
     };
 

@@ -15,7 +15,7 @@ import Typography from '@material-ui/core/Typography';
 
 import locale from '../testTag.locale';
 import TabPanel from './TabPanel';
-import { isValidRepair, isValidDiscard, statusEnum } from '../utils/helpers';
+import { isValidRepair, isValidDiscard, isEmpty, statusEnum } from '../utils/helpers';
 
 const testStatusEnum = statusEnum(locale);
 
@@ -24,9 +24,10 @@ const a11yProps = index => ({
     'aria-controls': `scrollable-auto-tabpanel-${index}`,
 });
 
-const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled }) => {
+const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobileView, disabled }) => {
     ActionPanel.propTypes = {
         formValues: PropTypes.object.isRequired,
+        selectedAsset: PropTypes.object.isRequired,
         handleChange: PropTypes.func.isRequired,
         classes: PropTypes.any.isRequired,
         isMobileView: PropTypes.bool.isRequired,
@@ -36,11 +37,43 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
     const [selectedTabValue, setSelectedTabValue] = React.useState(0);
 
     React.useEffect(() => {
-        if (selectedTabValue === 0 && formValues?.inspection_status === testStatusEnum.PASSED.value) {
-            setSelectedTabValue(1);
+        if (isEmpty(formValues?.inspection_status)) {
+            handleChange('isRepair')(false);
+            handleChange('isDiscarded')(false);
+        }
+        if (
+            formValues?.inspection_status === testStatusEnum.PASSED.value ||
+            selectedAsset?.last_inspection?.inspect_status === testStatusEnum.PASSED.value
+        ) {
+            if (!!formValues.isRepair) handleChange('isRepair')(false);
+            if (selectedTabValue === 0) {
+                setSelectedTabValue(1);
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValues?.inspection_status]);
+    }, [formValues?.inspection_status, selectedAsset?.last_inspection?.inspect_status]);
+
+    const isRepairDisabled = React.useMemo(
+        () =>
+            !!formValues.isDiscarded ||
+            (isEmpty(formValues?.inspection_status) && isEmpty(selectedAsset?.last_inspection?.inspect_status)) ||
+            (isEmpty(formValues?.inspection_status) &&
+                !isEmpty(selectedAsset?.last_inspection?.inspect_status) &&
+                selectedAsset?.last_inspection?.inspect_status !== testStatusEnum.FAILED.value) ||
+            (!isEmpty(formValues?.inspection_status) && formValues?.inspection_status !== testStatusEnum.FAILED.value),
+        [formValues?.isDiscarded, formValues?.inspection_status, selectedAsset?.last_inspection?.inspect_status],
+    );
+    const isDiscardDisabled = React.useMemo(
+        () =>
+            !!formValues.isRepair ||
+            (isEmpty(formValues?.inspection_status) && isEmpty(selectedAsset?.last_inspection?.inspect_status)) ||
+            (!isEmpty(selectedAsset?.last_inspection?.inspect_status) &&
+                selectedAsset?.last_inspection?.inspect_status === testStatusEnum.OUTFORREPAIR.value) ||
+            (!isEmpty(formValues?.inspection_status) &&
+                formValues?.inspection_status !== testStatusEnum.FAILED.value &&
+                formValues?.inspection_status !== testStatusEnum.PASSED.value),
+        [formValues?.isRepair, formValues?.inspection_status, selectedAsset?.last_inspection?.inspect_status],
+    );
 
     return (
         <>
@@ -51,6 +84,7 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                     </Typography>
                 </Grid>
             </Grid>
+
             <Tabs
                 value={selectedTabValue}
                 indicatorColor="primary"
@@ -58,21 +92,22 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                 onChange={(e, value) => setSelectedTabValue(value)}
                 variant={isMobileView ? 'fullWidth' : 'standard'}
             >
-                {locale.form.action.tabs.map((tab, index) => (
-                    <Tab
-                        label={tab.label}
-                        {...a11yProps(index)}
-                        key={tab.value}
-                        disabled={
-                            disabled ||
-                            (tab.value === 1 && !!formValues.isDiscarded) ||
-                            (tab.value === 2 && !!formValues.isRepair) ||
-                            (tab.value === 1 && formValues?.inspection_status === testStatusEnum.PASSED.value)
-                        }
-                        id={`tab-${tab.label.replace(' ', '_').toLowerCase()}`}
-                        data-testid={`tab-${tab.label.replace(' ', '_').toLowerCase()}`}
-                    />
-                ))}
+                <Tab
+                    label="Repair"
+                    key="Repair"
+                    {...a11yProps(1)}
+                    disabled={disabled || isRepairDisabled}
+                    id="tab-repair"
+                    data-testid="tab-repair"
+                />
+                <Tab
+                    label="Discard"
+                    key="Discard"
+                    {...a11yProps(2)}
+                    disabled={disabled || isDiscardDisabled}
+                    id="tab-discard"
+                    data-testid="tab-discard"
+                />
             </Tabs>
             <TabPanel value={selectedTabValue} index={0}>
                 <Grid container spacing={3}>
@@ -85,7 +120,7 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 value={formValues.isRepair ? 2 : 1}
                                 onChange={e => handleChange('isRepair')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
-                                disabled={disabled}
+                                disabled={disabled || isRepairDisabled}
                                 id="selectIsRepair"
                                 data-testid="selectIsRepair"
                                 inputProps={{ id: 'selectIsRepair-input', 'data-testid': 'selectIsRepair-input' }}
@@ -108,12 +143,19 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                             <DebouncedTextField
                                 {...locale.form.action.repair.repairerDetails}
                                 required
-                                error={!!formValues.isRepair && !isValidRepair(formValues)}
+                                error={
+                                    !!formValues.isRepair &&
+                                    !isValidRepair({
+                                        formValues,
+                                        lastInspection: selectedAsset?.last_inspection ?? {},
+                                        passed: testStatusEnum.FAILED.value,
+                                    })
+                                }
                                 multiline
                                 rows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
-                                disabled={disabled || !formValues.isRepair}
+                                disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
                                 value={formValues?.repairer_contact_details ?? ''}
                                 handleChange={handleChange}
                                 updateKey="repairer_contact_details"
@@ -140,7 +182,7 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                                 value={formValues.isDiscarded ? 2 : 1}
                                 onChange={e => handleChange('isDiscarded')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
-                                disabled={disabled}
+                                disabled={disabled || isDiscardDisabled}
                                 id="selectIsDiscarded"
                                 data-testid="selectIsDiscarded"
                                 inputProps={{ id: 'selectIsDiscarded-input', 'data-testid': 'selectIsDiscarded-input' }}
@@ -163,12 +205,20 @@ const ActionPanel = ({ formValues, handleChange, classes, isMobileView, disabled
                             <DebouncedTextField
                                 {...locale.form.action.discard.discardReason}
                                 required
-                                error={!!formValues.isDiscarded && !isValidDiscard(formValues)}
+                                error={
+                                    !!formValues.isDiscarded &&
+                                    !isValidDiscard({
+                                        formValues,
+                                        lastInspection: selectedAsset?.last_inspection ?? {},
+                                        passed: testStatusEnum.PASSED.value,
+                                        failed: testStatusEnum.FAILED.value,
+                                    })
+                                }
                                 multiline
                                 rows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
-                                disabled={disabled || !formValues.isDiscarded}
+                                disabled={disabled || isDiscardDisabled || !!!formValues.isDiscarded}
                                 value={formValues?.discard_reason ?? ''}
                                 handleChange={handleChange}
                                 updateKey="discard_reason"
