@@ -37,14 +37,28 @@ export default [
             "inspect_fail_reason": "",
             "inspect_notes": "",
         },
-        "repair_latest": {
-            "Repair_latest_repairer_details": "",
-            "Repair_latest_date_sent": "",
+        "last_repair": {
+            "repair_date": "2022-12-14 10:14:00",
+            "user_id": 3,
+            "user_uid": "uqlsibba",
+            "user_licence_number": "NOT LICENCED",
+            "user_name": "Lee Sibbald",
+            "user_department": "UQL",
+            "user_current_flag": 1,
+            "repairer_id": 9,
+            "repairer_name": "mr repairs, someplace, sometown",
+            "repairer_contact_details": "",
+            "repairer_current_flag": 1
         },
-        "discarded": {
-            "is_discarded": "N",
-            "discard_reason": "",
-            "discard_date": "",
+        "last_discard": {
+            "discard_date": "2022-12-14 10:33:00",
+            "discard_reason": "Asset being passed to RBH (Qld Health)",
+            "user_id": 1,
+            "user_uid": "uqddegro",
+            "user_licence_number": "13962556",
+            "user_name": "David de Groot",
+            "user_department": "UQL",
+            "user_current_flag": 1
         }
     },
     {
@@ -85,14 +99,28 @@ export default [
             "inspect_fail_reason": "",
             "inspect_notes": "",
         },
-        "repair_latest": {
-            "Repair_latest_repairer_details": "",
-            "Repair_latest_date_sent": "",
+        "last_repair": {
+            "repair_date": "2022-12-14 10:14:00",
+            "user_id": 3,
+            "user_uid": "uqlsibba",
+            "user_licence_number": "NOT LICENCED",
+            "user_name": "Lee Sibbald",
+            "user_department": "UQL",
+            "user_current_flag": 1,
+            "repairer_id": 9,
+            "repairer_name": "mr repairs, someplace, sometown",
+            "repairer_contact_details": "",
+            "repairer_current_flag": 1
         },
-        "discarded": {
-            "is_discarded": "N",
-            "discard_reason": "",
-            "discard_date": "",
+        "last_discard": {
+            "discard_date": "2022-12-14 10:33:00",
+            "discard_reason": "Asset being passed to RBH (Qld Health)",
+            "user_id": 1,
+            "user_uid": "uqddegro",
+            "user_licence_number": "13962556",
+            "user_name": "David de Groot",
+            "user_department": "UQL",
+            "user_current_flag": 1
         }
     },
     {
@@ -133,15 +161,29 @@ export default [
             "inspect_fail_reason": "Failed to power up",
             "inspect_notes": "Will send for repair, good chance can be fixed.",
         },
-        "repair_latest": {
-            "Repair_latest_repairer_details": "ABC Repairers, Brisbane, Queensland, 4000",
-            "Repair_latest_date_sent": "2022-10-01 00:00",
+        "last_repair": {
+            "repair_date": "2022-12-14 10:14:00",
+            "user_id": 3,
+            "user_uid": "uqlsibba",
+            "user_licence_number": "NOT LICENCED",
+            "user_name": "Lee Sibbald",
+            "user_department": "UQL",
+            "user_current_flag": 1,
+            "repairer_id": 9,
+            "repairer_name": "mr repairs, someplace, sometown",
+            "repairer_contact_details": "",
+            "repairer_current_flag": 1
         },
-        "discarded": {
-            "is_discarded": "N",
-            "discard_reason": "",
-            "discard_date": "",
-        }
+         "last_discard": {
+        "discard_date": "2022-12-14 10:33:00",
+        "discard_reason": "Asset being passed to RBH (Qld Health)",
+        "user_id": 1,
+        "user_uid": "uqddegro",
+        "user_licence_number": "13962556",
+        "user_name": "David de Groot",
+        "user_department": "UQL",
+        "user_current_flag": 1
+    }
     },
     {
         "asset_id": 300000,
@@ -181,14 +223,28 @@ export default [
             "inspect_fail_reason": "",
             "inspect_notes": "",
         },
-        "repair_latest": {
-            "Repair_latest_repairer_details": "",
-            "Repair_latest_date_sent": "",
+        "last_repair": {
+            "repair_date": "2022-12-14 10:14:00",
+            "user_id": 3,
+            "user_uid": "uqlsibba",
+            "user_licence_number": "NOT LICENCED",
+            "user_name": "Lee Sibbald",
+            "user_department": "UQL",
+            "user_current_flag": 1,
+            "repairer_id": 9,
+            "repairer_name": "mr repairs, someplace, sometown",
+            "repairer_contact_details": "",
+            "repairer_current_flag": 1
         },
-        "discarded": {
-            "is_discarded": "Y",
-            "discard_reason": "Asset sequestered to another department",
-            "discard_date": "April 24, 2022",
+        "last_discard": {
+            "discard_date": "2022-12-14 10:33:00",
+            "discard_reason": "Asset being passed to RBH (Qld Health)",
+            "user_id": 1,
+            "user_uid": "uqddegro",
+            "user_licence_number": "13962556",
+            "user_name": "David de Groot",
+            "user_department": "UQL",
+            "user_current_flag": 1
         }
     },
     {
@@ -229,15 +285,29 @@ export default [
             "inspect_fail_reason": "",
             "inspect_notes": "",
         },
-        "repair_latest": {
-            "Repair_latest_repairer_details": "",
-            "Repair_latest_date_sent": "",
+        "last_repair": {
+            "repair_date": "2022-12-14 10:14:00",
+            "user_id": 3,
+            "user_uid": "uqlsibba",
+            "user_licence_number": "NOT LICENCED",
+            "user_name": "Lee Sibbald",
+            "user_department": "UQL",
+            "user_current_flag": 1,
+            "repairer_id": 9,
+            "repairer_name": "mr repairs, someplace, sometown",
+            "repairer_contact_details": "",
+            "repairer_current_flag": 1
         },
-        "discarded": {
-            "is_discarded": "N",
-            "discard_reason": "",
-            "discard_date": "",
-        }
+         "last_discard": {
+        "discard_date": "2022-12-14 10:33:00",
+        "discard_reason": "Asset being passed to RBH (Qld Health)",
+        "user_id": 1,
+        "user_uid": "uqddegro",
+        "user_licence_number": "13962556",
+        "user_name": "David de Groot",
+        "user_department": "UQL",
+        "user_current_flag": 1
+    }
     },
     {
         "asset_id": 310040,
@@ -277,15 +347,29 @@ export default [
             "inspect_fail_reason": "",
             "inspect_notes": "",
         },
-        "repair_latest": {
-            "Repair_latest_repairer_details": "",
-            "Repair_latest_date_sent": "",
+        "last_repair": {
+            "repair_date": "2022-12-14 10:14:00",
+            "user_id": 3,
+            "user_uid": "uqlsibba",
+            "user_licence_number": "NOT LICENCED",
+            "user_name": "Lee Sibbald",
+            "user_department": "UQL",
+            "user_current_flag": 1,
+            "repairer_id": 9,
+            "repairer_name": "mr repairs, someplace, sometown",
+            "repairer_contact_details": "",
+            "repairer_current_flag": 1
         },
-        "discarded": {
-            "is_discarded": "N",
-            "discard_reason": "",
-            "discard_date": "",
-        }
+         "last_discard": {
+        "discard_date": "2022-12-14 10:33:00",
+        "discard_reason": "Asset being passed to RBH (Qld Health)",
+        "user_id": 1,
+        "user_uid": "uqddegro",
+        "user_licence_number": "13962556",
+        "user_name": "David de Groot",
+        "user_department": "UQL",
+        "user_current_flag": 1
+    }
     },
     {
         "asset_id": 310050,
@@ -314,15 +398,29 @@ export default [
         },
         "last_inspection": {
         },
-        "repair_latest": {
-            "Repair_latest_repairer_details": "",
-            "Repair_latest_date_sent": "",
+        "last_repair": {
+            "repair_date": "2022-12-14 10:14:00",
+            "user_id": 3,
+            "user_uid": "uqlsibba",
+            "user_licence_number": "NOT LICENCED",
+            "user_name": "Lee Sibbald",
+            "user_department": "UQL",
+            "user_current_flag": 1,
+            "repairer_id": 9,
+            "repairer_name": "mr repairs, someplace, sometown",
+            "repairer_contact_details": "",
+            "repairer_current_flag": 1
         },
-        "discarded": {
-            "is_discarded": "N",
-            "discard_reason": "",
-            "discard_date": "",
-        }
+         "last_discard": {
+        "discard_date": "2022-12-14 10:33:00",
+        "discard_reason": "Asset being passed to RBH (Qld Health)",
+        "user_id": 1,
+        "user_uid": "uqddegro",
+        "user_licence_number": "13962556",
+        "user_name": "David de Groot",
+        "user_department": "UQL",
+        "user_current_flag": 1
+    }
     },
     
 ];    
