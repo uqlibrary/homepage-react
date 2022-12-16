@@ -70,7 +70,9 @@ const InspectionPanel = ({
     const [formNextTestDate, setFormNextTestDate] = useState(defaultNextTestDateValue);
     useEffect(() => {
         /* istanbul ignore else */ if (formValues.inspection_status === testStatusEnum.PASSED.value) {
-            handleChange('inspection_date_next')(moment().add(formNextTestDate, 'months'));
+            handleChange('inspection_date_next')(
+                moment(formValues.action_date, locale.config.dateFormat).add(formNextTestDate, 'months'),
+            );
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,7 +81,7 @@ const InspectionPanel = ({
     return (
         <StandardCard
             title={locale.form.inspection.title}
-            style={{ marginTop: 30, marginBottom: 30 }}
+            style={{ marginBottom: 30 }}
             smallTitle
             variant="outlined"
             noPadding={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
@@ -202,7 +204,7 @@ const InspectionPanel = ({
                                 </Select>
                                 <Typography component={'span'}>
                                     {locale.form.inspection.nextTestDateFormatted(
-                                        moment()
+                                        moment(formValues.action_date, locale.config.dateFormat)
                                             .add(formNextTestDate, 'months')
                                             .format(locale.config.dateFormatDisplay),
                                     )}
@@ -252,6 +254,7 @@ const InspectionPanel = ({
                 </Grid>
                 <ActionPanel
                     formValues={formValues}
+                    selectedAsset={selectedAsset}
                     handleChange={handleChange}
                     classes={classes}
                     isMobileView={isMobileView}

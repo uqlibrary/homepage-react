@@ -65,7 +65,7 @@ function setup(testProps = {}) {
 describe('InspectionPanel', () => {
     it('renders component', async () => {
         const updateKey = 'inspection_date_next';
-        const newValue = '2018-06-30';
+        const newValue = '2017-12-05';
         const handleChange = jest.fn(prop =>
             jest.fn(value => {
                 expect(prop).toEqual(updateKey);
