@@ -78,7 +78,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
         <>
             <Grid container spacing={3}>
                 <Grid item sm={12}>
-                    <Typography component={'h4'} variant={'h6'}>
+                    <Typography component={'h3'} variant={'h6'}>
                         {locale.form.action.title}
                     </Typography>
                 </Grid>

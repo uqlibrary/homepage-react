@@ -162,7 +162,7 @@ const AssetPanel = ({
                                     variant="standard"
                                     onFocus={() => setIsOpen(true)}
                                     onBlur={() => setIsOpen(false)}
-                                    InputLabelProps={{ shrink: true }}
+                                    InputLabelProps={{ shrink: true, for: 'testntagFormAssetIdInput' }}
                                     InputProps={{
                                         ...params.InputProps,
                                         endAdornment: (
@@ -222,7 +222,7 @@ const AssetPanel = ({
                                         !isValidAssetTypeId(formValues.asset_type_id)
                                     }
                                     variant="standard"
-                                    InputLabelProps={{ shrink: true }}
+                                    InputLabelProps={{ shrink: true, for: 'testntagFormAssetTypeInput' }}
                                     InputProps={{
                                         ...params.InputProps,
                                         endAdornment: (
