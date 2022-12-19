@@ -122,6 +122,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
 
     return (
         <StandardCard
+            standardCardId="lastInspectionPanel"
             variant="outlined"
             noPadding={!(forceOpen || testPanelExpanded)}
             title={
@@ -155,7 +156,11 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                                 component={'span'}
                             />
                             {!!mismatchingLocation && (
-                                <ReportProblemOutlinedIcon style={{ color: theme.palette.warning.main }} />
+                                <ReportProblemOutlinedIcon
+                                    style={{ color: theme.palette.warning.main }}
+                                    id="lastInspectionLocationMismatch"
+                                    data-testid="lastInspectionLocationMismatch"
+                                />
                             )}
                         </>
                     )}
