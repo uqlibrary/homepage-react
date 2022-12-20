@@ -7,24 +7,23 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Holiday hours',
+        title: 'Summer Semester',
         content: (
             <div>
-                <p>We are closed for the Christmas break from Friday 23 December and will reopen on Tuesday 3 January 2023.</p>
-                <p>Selected 24/7 spaces and collections are available through the break with your UQ ID card. All other libraries, collections, and our library services will be closed.</p>
-                <p>Visit <a href="https://web.library.uq.edu.au/blog/2022/12/library-hours-christmas-holidays?utm_source=homepage&amp;utm_medium=web&amp;utm_campaign=christmas22">Library hours over Christmas</a> for more information.</p>
-                <p>Have a happy and safe holiday!</p>
+                <p>The Library is open during Summer Semester.</p>
+                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
+            </div>
             </div>
         ),
     },
     loggedin: {
-        title: 'Holiday hours',
+        title: 'Summer Semester',
         content: (
             <div>
-                <p>We are closed for the Christmas break from Friday 23 December and will reopen on Tuesday 3 January 2023.</p>
-                <p>Selected 24/7 spaces and collections are available through the break with your UQ ID card. All other libraries, collections, and our library services will be closed.</p>
-                <p>Visit <a href="https://web.library.uq.edu.au/blog/2022/12/library-hours-christmas-holidays?utm_source=homepage&amp;utm_medium=web&amp;utm_campaign=christmas22">Library hours over Christmas</a> for more information.</p>
-                <p>Have a happy and safe holiday!</p>
+                <p>The Library is open during Summer Semester.</p>
+                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
             </div>
         ),
     },
