@@ -23,7 +23,7 @@ export const NotFound = ({ account, accountLoading }) => {
                 <ScriptTag
                     type="text/javascript"
                     src={`/404.js?requri=${window.location.pathname}&requester=${
-                        !accountLoading && account ? account.id : 'NA'
+                        !accountLoading && account ? /* istanbul ignore next */ account.id : 'NA'
                     }`}
                 />
                 {locale.notFound.urlChangeAdvisory.find(changeAdvice => isCurrentPage(changeAdvice.linkPattern))
