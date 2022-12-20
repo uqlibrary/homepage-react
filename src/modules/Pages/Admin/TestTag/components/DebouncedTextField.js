@@ -28,6 +28,7 @@ const DebouncedTextField = ({ handleChange, updateKey, value, interval = DEBOUNC
             onChange={debounceChange}
             value={internalValue}
             {...rest}
+            InputLabelProps={{ for: `${rest.id ?? ''}-input` }}
             inputProps={{
                 id: `${rest.id ?? ''}-input`,
                 'data-testid': `${rest['data-testid'] ?? /* istanbul ignore next */ ''}-input`,

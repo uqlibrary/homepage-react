@@ -107,10 +107,15 @@ const EventPanel = ({
                             required
                             autoFocus
                             fullWidth={isMobileView}
+                            KeyboardButtonProps={{
+                                'aria-label': 'Event date',
+                                id: 'testntag-form-event-date-button',
+                                'data-testid': 'testntag-form-event-date-button',
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                        <Typography component={'h4'} variant={'h6'}>
+                        <Typography component={'h3'} variant={'h6'}>
                             {locale.form.event.location.title}
                         </Typography>
                     </Grid>
@@ -203,7 +208,7 @@ const EventPanel = ({
                                             location.formBuildingId === -1
                                         }
                                         variant="standard"
-                                        InputLabelProps={inputLabelProps}
+                                        InputLabelProps={{ ...inputLabelProps, for: 'testntag-form-buildingid-input' }}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
@@ -264,7 +269,7 @@ const EventPanel = ({
                                             location.formFloorId === -1
                                         }
                                         variant="standard"
-                                        InputLabelProps={inputLabelProps}
+                                        InputLabelProps={{ ...inputLabelProps, for: 'testntag-form-floorid-input' }}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
@@ -319,7 +324,7 @@ const EventPanel = ({
                                             location.formRoomId === -1
                                         }
                                         variant="standard"
-                                        InputLabelProps={inputLabelProps}
+                                        InputLabelProps={{ ...inputLabelProps, for: 'testntag-form-roomid-input' }}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (

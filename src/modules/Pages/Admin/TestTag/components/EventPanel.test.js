@@ -48,7 +48,7 @@ function setup(testProps = {}) {
     );
 }
 
-describe('TabPanel', () => {
+describe('EventPanel', () => {
     it('renders component', () => {
         const actions = {};
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
@@ -189,5 +189,42 @@ describe('TabPanel', () => {
         expect(getByTestId('buildingSpinner')).toBeInTheDocument();
         expect(getByTestId('floorSpinner')).toBeInTheDocument();
         expect(getByTestId('roomSpinner')).toBeInTheDocument();
+    });
+
+    it('should handle defaults (coverage)', () => {
+        const actions = {};
+        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+        const setLocation = jest.fn();
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
+
+        const setStateMock = jest.fn();
+        const spyState = useState => [useState, setStateMock];
+        jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
+        const testConfig = JSON.parse(JSON.stringify(configData)); // deep copy
+
+        testConfig.sites.forEach(site => {
+            delete site.site_id_displayed;
+            delete site.site_name;
+        });
+
+        console.log(testConfig, '<<>>', configData);
+        const { getByText, queryByText } = setup({
+            state: {
+                testTagOnLoadReducer: { initConfig: testConfig, initConfigLoading: false },
+            },
+            actions,
+            location,
+            setLocation,
+            handleChange,
+        });
+
+        expect(getByText(locale.form.event.title)).toBeInTheDocument();
+        expect(setLocation).toHaveBeenCalledWith({ formSiteId: 1 });
+        configData.sites.forEach(site => {
+            console.log(site);
+            expect(queryByText(site.site_id_displayed)).not.toBeInTheDocument();
+            expect(queryByText(site.site_name)).not.toBeInTheDocument();
+        });
     });
 });

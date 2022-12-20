@@ -88,11 +88,11 @@ const AssetPanel = ({
     }, [assetsList]);
 
     const saveForm = () => {
-        if (isValid && !saveInspectionSaving) {
+        /* istanbul ignore else */ if (isValid && !saveInspectionSaving) {
             const transformedData = transformer(
                 formValues,
                 saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
-                selectedAsset?.last_inspection ?? {},
+                selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
             );
             console.log('saveForm', formValues, transformedData);
             actions.saveInspection(transformedData);
@@ -149,7 +149,7 @@ const AssetPanel = ({
                                     return option.inputValue;
                                 }
                                 // Regular option
-                                return `${option.asset_id_displayed ?? ''}`;
+                                return `${option.asset_id_displayed ?? /* istanbul ignore next */ ''}`;
                             }}
                             renderOption={option => option.asset_id_displayed}
                             freeSolo
@@ -163,7 +163,7 @@ const AssetPanel = ({
                                     variant="standard"
                                     onFocus={() => setIsOpen(true)}
                                     onBlur={() => setIsOpen(false)}
-                                    InputLabelProps={{ shrink: true }}
+                                    InputLabelProps={{ shrink: true, for: 'testntagFormAssetIdInput' }}
                                     InputProps={{
                                         ...params.InputProps,
                                         endAdornment: (
@@ -223,7 +223,7 @@ const AssetPanel = ({
                                         !isValidAssetTypeId(formValues.asset_type_id)
                                     }
                                     variant="standard"
-                                    InputLabelProps={{ shrink: true }}
+                                    InputLabelProps={{ shrink: true, for: 'testntagFormAssetTypeInput' }}
                                     InputProps={{
                                         ...params.InputProps,
                                         endAdornment: (
