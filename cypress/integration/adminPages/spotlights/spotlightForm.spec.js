@@ -352,7 +352,11 @@ describe('Spotlights Admin Form Pages', () => {
         it('edit page is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
-            cy.wait(1000);
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="admin-spotlights-form-button-save"]')
+                    .should('have.css', 'background-color', 'rgb(35, 119, 203)'),
+            );
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Edit spotlight');
             cy.checkA11y('[data-testid="StandardPage"]', {
