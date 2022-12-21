@@ -273,9 +273,14 @@ describe('Alerts Admin Form Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('exist'));
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
-                .children()
-                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+            cy.waitUntil(
+                () =>
+                    cy
+                        .get('[data-testid="admin-alerts-list-future-list"] tbody')
+                        .children()
+                        .then(elements => elements.length === 5 + numRowsHiddenAsNoDatainfo),
+                { timeout: 10000, interval: 500 },
+            );
             // then we click the add button and see an empty form
             cy.get('[data-testid="admin-alerts-help-display-button"]').click();
             cy.waitUntil(() => cy.get('[data-testid="standard-card-create-alert"]').should('exist'));

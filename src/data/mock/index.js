@@ -34,12 +34,19 @@ import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
+import testTag_onLoad from './data/records/test_tag_onLoad';
+//import testTag_siteList from './data/records/test_tag_sites';
+import testTag_floorList from './data/records/test_tag_floors';
+import testTag_roomList from './data/records/test_tag_rooms';
+//import testTag_assetTypes from './data/records/test_tag_asset_types';
+import testTag_testDevices from './data/records/test_tag_test_devices';
+import testTag_assets from './data/records/test_tag_assets';
 
 const moment = require('moment');
 
 const queryString = require('query-string');
-const mock = new MockAdapter(api, { delayResponse: 100 });
-const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 100 });
+const mock = new MockAdapter(api, { delayResponse: 1000 });
+const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
 const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 // set session cookie in mock mode
 
@@ -677,12 +684,64 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
+    
+    /** TEST AND TAG ROUTES **/
+
+    // CONFIG
+    .onGet('test_and_tag/onload')
+    .reply(()=>{
+        return [200, testTag_onLoad];
+    })
+
+    // T&T FLOORS
+    .onGet(/test_and_tag\/building\/\d+\/current/)
+    .reply(config=>{
+        const r = /\d+/;
+        const id = parseInt(config.url.match(r)?.[0],10 ?? 0);
+        return [200, testTag_floorList.find(floor=>floor.building_id === id)];
+    })
+    
+    // T&T ROOMS
+    .onGet(/test_and_tag\/floor\/\d+\/current/)
+    .reply(config=>{
+        const r = /\d+/;
+        const id = parseInt(config.url.match(r)?.[0],10 ?? 0);
+        return [200, testTag_roomList.find(room=>room.floor_id === id)];
+    })
+    
+
+    // ASSETS (with pattern matching)
+    .onGet(/test_and_tag\/asset\/search\/current\/*/)
+    .reply(config=>{
+        const pattern = config.url.split('/').pop();
+        // filter array to matching asset id's
+        return [200, testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()))];
+    })
+
+    .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
+    .reply(() => [200, {data: {
+        asset_status: 'FAILED',
+        asset_id_displayed:'UQL000298',
+        user_licence_number: '13962556',
+        action_date: '2022-11-16',
+        asset_next_test_due_date: '2023Nov16',
+        }}]
+    )
+    // .reply(() => [200, {data: {
+    //     asset_status: 'CURRENT',
+    //     asset_id_displayed:'UQL000298',
+    //     user_licence_number: '13962556',
+    //     action_date: '2022-11-16',
+    //     asset_next_test_due_date: '2023Nov16',
+    //     }}]
+    // )
+
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
     })
     .onAny()
-    .reply(config => {
+    .reply(function(config) {
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
