@@ -14,7 +14,7 @@ import PromoPanelPreview from '../PromoPanelPreview';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
+import { default as locale } from 'locale/promopanel.locale';
 import PromoPanelGroupDateSelector from './PromoPanelGroupDateSelector';
 import PromoPanelFormConfirmation from './PromoPanelFormConfirmation';
 import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';

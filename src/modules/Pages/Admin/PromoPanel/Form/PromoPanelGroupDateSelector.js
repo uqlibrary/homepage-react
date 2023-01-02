@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { DateTimePicker } from '@material-ui/pickers';
-import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
+import { default as locale } from 'locale/promopanel.locale';
 
 const moment = require('moment');
 
@@ -161,10 +161,17 @@ export const PromoPanelGroupDateSelector = ({
                                 autoOk
                                 KeyboardButtonProps={{
                                     'aria-label': 'Start Date',
+                                    'data-testid': 'end-date-calendar',
                                 }}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div className={classes.errorStyle}>This date is in the past.</div>
+                                <div
+                                    className={classes.errorStyle}
+                                    id="start-date-warning"
+                                    data-testid="start-date-warning"
+                                >
+                                    This date is in the past.
+                                </div>
                             )}
                         </Grid>
                         <Grid item xs align="left">
@@ -180,10 +187,17 @@ export const PromoPanelGroupDateSelector = ({
                                 autoOk
                                 KeyboardButtonProps={{
                                     'aria-label': 'Start Date',
+                                    'data-testid': 'end-date-calendar',
                                 }}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div className={classes.errorStyle}>This date is in the past.</div>
+                                <div
+                                    className={classes.errorStyle}
+                                    id="end-date-warning"
+                                    data-testid="end-date-warning"
+                                >
+                                    This date is in the past.
+                                </div>
                             )}
                         </Grid>
                         <Grid item xs={12}>

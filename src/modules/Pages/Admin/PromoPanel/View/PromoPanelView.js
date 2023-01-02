@@ -13,7 +13,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 // import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
-import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
+import { default as locale } from 'locale/promopanel.locale';
 // import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 export const PromoPanelView = ({

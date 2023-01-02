@@ -35,5 +35,24 @@ describe('Promopanel Admin Form Pages', () => {
             testId('admin-promopanel-add-display-button').click();
             cy.waitUntil(() => testId('standard-card-create-a-promo-header').should('exist'));
         });
+        it('List Scheduler works correctly', () => {
+            cy.viewport(1300, 1400);
+            cy.get('h2')
+                .should('be.visible')
+                .contains('panel');
+            cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
+            testId('schedule-panel-hdr').click();
+            // const Element = document.getElementById('admin-promopanel-group-start-date');
+            // console.log('Element', Element);
+            // testId('admin-promopanel-group-start-date')
+            //    .querySelector('button')
+            //    .click();
+            cy.get('[aria-label="Start Date"]').click();
+            cy.get('.MuiPickersModal-withAdditionalAction > button:first-of-type').click();
+            cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
+            cy.get('[aria-label="Start Date"]').click();
+            cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
+            cy.get('#group-selector').click({ force: true });
+        });
     });
 });

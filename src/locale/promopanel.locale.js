@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+
 /* eslint-disable prettier/prettier */
 /* eslint-disable max-len */
 /* eslint-disable no-trailing-spaces */

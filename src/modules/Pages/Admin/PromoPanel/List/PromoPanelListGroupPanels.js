@@ -23,7 +23,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
-import { default as locale } from '../promoPanelAdmin.locale';
+import { default as locale } from '../../../../../locale/promopanel.locale';
 
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import PromoPanelScheduleHeaders from './PromoPanelScheduleHeaders';
@@ -389,6 +389,8 @@ export const PromoPanelListGroupPanels = ({
                                                             <Button
                                                                 style={{ marginRight: 5 }}
                                                                 variant="contained"
+                                                                data-testid={`schedule-panel-${item.usergroup_group}`}
+                                                                id={`schedule-panel-${item.usergroup_group}`}
                                                                 onClick={() => onAddSchedule(item.usergroup_group)}
                                                             >
                                                                 Schedule panel
@@ -396,6 +398,8 @@ export const PromoPanelListGroupPanels = ({
                                                             <Button
                                                                 variant="contained"
                                                                 onClick={() => onAddNewDefault(item.usergroup_group)}
+                                                                data-testid={`default-panel-${item.usergroup_group}`}
+                                                                id={`default-panel-${item.usergroup_group}`}
                                                             >
                                                                 Set Default
                                                             </Button>

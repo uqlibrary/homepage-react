@@ -31,7 +31,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 // import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
-import { default as locale } from '../promoPanelAdmin.locale';
+import { default as locale } from '../../../../../locale/promopanel.locale';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { filterPanelList } from '../promoPanelHelpers';
 

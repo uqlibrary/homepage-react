@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/styles';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import Typography from '@material-ui/core/Typography';
 
-import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
+import { default as locale } from 'locale/promopanel.locale';
 
 const moment = require('moment');
 
