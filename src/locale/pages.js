@@ -66,6 +66,9 @@ export default {
                     view: { title: 'View a Promo Panel' },
                 },
             },
+            testntag: {
+                title: 'Test and Tag',
+            },
         },
         learningresources: {
             title: 'Learning resources',

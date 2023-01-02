@@ -38,6 +38,7 @@ export const ConfirmationBox = ({
     showInputForm,
     showAdditionalInformation,
     additionalInformation,
+    noMinContentWidth,
 }) => {
     const classes = useStyles();
 
@@ -59,8 +60,10 @@ export const ConfirmationBox = ({
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
-            <DialogContent style={{ minWidth: 400 }}>
-                <DialogContentText data-testid="message-content">{locale.confirmationMessage}</DialogContentText>
+            <DialogContent style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }}>
+                <DialogContentText data-testid="message-content" component="div">
+                    {locale.confirmationMessage}
+                </DialogContentText>
                 {!!showAdditionalInformation && !!additionalInformation && (
                     <DialogContentText data-testid="message-content">
                         <strong>Info: </strong>
@@ -140,6 +143,7 @@ ConfirmationBox.propTypes = {
     showInputForm: PropTypes.bool,
     additionalInformation: PropTypes.string,
     showAdditionalInformation: PropTypes.bool,
+    noMinContentWidth: PropTypes.bool,
 };
 
 ConfirmationBox.defaultProps = {
@@ -157,6 +161,7 @@ ConfirmationBox.defaultProps = {
     showAlternateActionButton: false,
     showInputForm: false,
     additionalInformation: null,
+    noMinContentWidth: false,
 };
 
 export default React.memo(ConfirmationBox);

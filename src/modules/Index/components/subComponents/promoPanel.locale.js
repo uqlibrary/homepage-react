@@ -10,12 +10,9 @@ export const promoPanel = {
         title: 'Fallback Panel',
         content: (
             <div>
-                <p>Congratulations to everyone who has completed their Semester 2 courses and exams.</p>
-                <p>For Summer Semester students, we are open on-campus and online:</p>
-                <ul>
-                    <li>Study in a range of comfortable spaces. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</li>
-                    <li><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</li>
-                </ul>
+                <p>The Library is open during Summer Semester.</p>
+                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
             </div>
         ),
     },
@@ -23,12 +20,9 @@ export const promoPanel = {
         title: 'FallBack Loggedin',
         content: (
             <div>
-                <p>Congratulations to everyone who has completed their Semester 2 courses and exams.</p>
-                <p>For Summer Semester students, we are open on-campus and online:</p>
-                <ul>
-                    <li>Study in a range of comfortable spaces. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</li>
-                    <li><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</li>
-                </ul>
+                <p>The Library is open during Summer Semester.</p>
+                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
             </div>
         ),
     },

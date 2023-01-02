@@ -3,6 +3,7 @@ import {
     isAlertsAdminUser,
     canSeeLearningResources,
     isSpotlightsAdminUser,
+    isTestTagAdminUser,
     isPromoPanelAdminUser,
 } from 'helpers/access';
 
@@ -31,6 +32,7 @@ export const pathConfig = {
         spotlightsview: spotlightid => `/admin/spotlights/view/${spotlightid}`,
         spotlightsclone: spotlightid => `/admin/spotlights/clone/${spotlightid}`,
         spotlights: '/admin/spotlights',
+        testntag: '/admin/testntag',
     },
     bookExamBooth: '/book-exam-booth',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
@@ -51,6 +53,7 @@ export const flattedPathConfigExact = [
     '/admin/spotlights',
     '/admin/promopanel/add',
     '/admin/promopanel',
+    '/admin/testntag',
     '/book-exam-booth',
     '/exams',
     '/exams/',
@@ -219,6 +222,15 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const testntagDisplay = [
+        {
+            path: pathConfig.admin.testntag,
+            component: components.TestTag,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+    ];
+
     return [
         ...publicPages,
         ...(account && canSeeLearningResources(account) ? courseResoures : []),
@@ -226,6 +238,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
+        ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
         {
             component: components.NotFound,
         },
