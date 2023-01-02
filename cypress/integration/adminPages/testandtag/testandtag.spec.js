@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
-describe('Spotlight Admin View page', () => {
+describe('Test & Tag page', () => {
     beforeEach(() => {
         cy.visit('http://localhost:2020/admin/testntag?user=uqtesttag');
     });
