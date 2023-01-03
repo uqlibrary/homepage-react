@@ -159,6 +159,14 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetIdInput').should('have.value', 'AN ASSET ID');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
+            it.only('should restrict length of asset IDs', () => {
+                const initialText = 'ABCDEFGHIJKLMNOP'; // not a long enough text
+                const croppedText = 'ABCDEFGHIJKL';
+                // this is for code coverage. Will be removed post MVP
+                cy.data('testntagFormAssetIdInput').click();
+                cy.data('testntagFormAssetIdInput').type(`${initialText}{enter}`);
+                cy.data('testntagFormAssetIdInput').should('have.value', croppedText);
+            });
             it('should allow selection of new asset and type', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
                 cy.data('testntagFormAssetIdInput').click();

@@ -187,6 +187,7 @@ const AssetPanel = ({
                                         ...params.inputProps,
                                         id: 'testntagFormAssetIdInput',
                                         'data-testid': 'testntagFormAssetIdInput',
+                                        maxLength: 12,
                                     }}
                                 />
                             )}
