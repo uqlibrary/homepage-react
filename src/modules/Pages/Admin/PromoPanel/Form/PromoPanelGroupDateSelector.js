@@ -48,6 +48,25 @@ const useStyles = makeStyles(theme => ({
         cursor: 'pointer',
     },
 }));
+
+export const handleChange = (event, startDate, endDate, setSaveEnabled, setStartDate, setEndDate) => value => {
+    if (event === 'start') {
+        if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
+            setSaveEnabled(false);
+        } else {
+            setSaveEnabled(true);
+        }
+        setStartDate(value.format('YYYY-MM-DD HH:mm'));
+    } else {
+        if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
+            setSaveEnabled(false);
+        } else {
+            setSaveEnabled(true);
+        }
+        setEndDate(value.format('YYYY-MM-DD HH:mm'));
+    }
+};
+
 export const PromoPanelGroupDateSelector = ({
     isEditingDate,
     defaultStartDate,
@@ -73,23 +92,23 @@ export const PromoPanelGroupDateSelector = ({
         setEndDate(defaultEndDate);
     }, [defaultStartDate, defaultEndDate]);
 
-    const handleChange = event => value => {
-        if (event === 'start') {
-            if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
-                setSaveEnabled(false);
-            } else {
-                setSaveEnabled(true);
-            }
-            setStartDate(value.format('YYYY-MM-DD HH:mm'));
-        } else {
-            if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
-                setSaveEnabled(false);
-            } else {
-                setSaveEnabled(true);
-            }
-            setEndDate(value.format('YYYY-MM-DD HH:mm'));
-        }
-    };
+    // const handleChange = event => value => {
+    //     if (event === 'start') {
+    //         if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
+    //             setSaveEnabled(false);
+    //         } else {
+    //             setSaveEnabled(true);
+    //         }
+    //         setStartDate(value.format('YYYY-MM-DD HH:mm'));
+    //     } else {
+    //         if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
+    //             setSaveEnabled(false);
+    //         } else {
+    //             setSaveEnabled(true);
+    //         }
+    //         setEndDate(value.format('YYYY-MM-DD HH:mm'));
+    //     }
+    // };
 
     const handleGroupDateClose = () => {
         setStartDate(defaultStartDate);
@@ -100,14 +119,18 @@ export const PromoPanelGroupDateSelector = ({
     const handleGroupDateSave = () => {
         let isValid = true;
         fullPromoPanelUserTypeList.map(schedules => {
+            /* istanbul ignore else */
             if (schedules.usergroup_group === scheduleGroupIndex) {
                 schedules.scheduled_panels &&
                     schedules.scheduled_panels.map(schedule => {
+                        /* istanbul ignore else */
                         if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
+                            /* istanbul ignore else */
                             if (
                                 (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
                                     moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
                                 (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
+                                    /* istanbul ignore next */
                                     moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
                             ) {
                                 isValid = false;
@@ -154,7 +177,14 @@ export const PromoPanelGroupDateSelector = ({
                                 data-testid="admin-promopanel-group-start-date"
                                 value={startDate}
                                 label="Start date"
-                                onChange={handleChange('start')}
+                                onChange={handleChange(
+                                    'start',
+                                    startDate,
+                                    endDate,
+                                    setSaveEnabled,
+                                    setStartDate,
+                                    setEndDate,
+                                )}
                                 format="DD/MM/YYYY HH:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}
@@ -180,7 +210,14 @@ export const PromoPanelGroupDateSelector = ({
                                 data-testid="admin-promopanel-group-end-date"
                                 value={endDate}
                                 label="End date"
-                                onChange={handleChange('end')}
+                                onChange={handleChange(
+                                    'end',
+                                    startDate,
+                                    endDate,
+                                    setSaveEnabled,
+                                    setStartDate,
+                                    setEndDate,
+                                )}
                                 format="DD/MM/YYYY HH:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}

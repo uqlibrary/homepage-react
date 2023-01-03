@@ -44,8 +44,8 @@ describe('Promopanel Admin Form Pages', () => {
             // cy.get('#group-multiple-checkbox').type('{esc}', { force: true });
             testId('standard-card-create-a-promo-header').click({ force: true });
             testId('admin-promopanel-form-button-addSchedule').click({ force: true });
-            testId('admin-promopanel-form-button-editSchedule').should('exist');
-            testId('admin-promopanel-form-button-editSchedule').click({ force: true });
+            testId('admin-promopanel-form-button-removeSchedule-0').should('exist');
+            testId('admin-promopanel-form-button-removeSchedule-0').click({ force: true });
             testId('admin-promopanel-form-button-cancel').click({ force: true });
             testId('StandardPage-title').should('contain', 'Promo panel management');
         });

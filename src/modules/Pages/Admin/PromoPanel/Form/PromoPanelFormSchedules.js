@@ -164,7 +164,9 @@ export const PromoPanelFormSchedules = ({
                                 }}
                             />
                             {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div className={classes.errorStyle}>This date is in the past.</div>
+                                <div data-testid="admin-promopanel-startdate-past" className={classes.errorStyle}>
+                                    This date is in the past.
+                                </div>
                             )}
                         </Grid>
                         <Grid item xs={4} align={'right'}>
@@ -242,7 +244,7 @@ export const PromoPanelFormSchedules = ({
                                                     <Button
                                                         color="primary"
                                                         children="Change Schedule"
-                                                        data-testid="admin-promopanel-form-button-editSchedule"
+                                                        data-testid={`admin-promopanel-form-button-editSchedule-${index}`}
                                                         onClick={() => editPanelGroupSchedule(index)}
                                                         variant="contained"
                                                     />
@@ -252,7 +254,7 @@ export const PromoPanelFormSchedules = ({
                                                     style={{ marginLeft: 10 }}
                                                     color="primary"
                                                     children="Remove group"
-                                                    data-testid="admin-promopanel-form-button-editSchedule"
+                                                    data-testid={`admin-promopanel-form-button-removeSchedule-${index}`}
                                                     onClick={() => removePanelGroupSchedule(index)}
                                                     variant="contained"
                                                     disabled={!!item.existing}
