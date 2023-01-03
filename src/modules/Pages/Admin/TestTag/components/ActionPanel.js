@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -27,7 +26,7 @@ const a11yProps = index => ({
 const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobileView, disabled }) => {
     ActionPanel.propTypes = {
         formValues: PropTypes.object.isRequired,
-        selectedAsset: PropTypes.object.isRequired,
+        selectedAsset: PropTypes.object,
         handleChange: PropTypes.func.isRequired,
         classes: PropTypes.any.isRequired,
         isMobileView: PropTypes.bool.isRequired,
@@ -45,7 +44,9 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
             formValues?.inspection_status === testStatusEnum.PASSED.value ||
             selectedAsset?.last_inspection?.inspect_status === testStatusEnum.PASSED.value
         ) {
-            if (!!formValues.isRepair) handleChange('isRepair')(false);
+            if (!!formValues.isRepair) {
+                handleChange('isRepair')(false);
+            }
             if (selectedTabValue === 0) {
                 setSelectedTabValue(1);
             }

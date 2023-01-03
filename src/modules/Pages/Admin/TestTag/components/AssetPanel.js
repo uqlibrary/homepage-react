@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
