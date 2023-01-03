@@ -30,12 +30,12 @@ describe('Promo Panel Group Date Selector', () => {
         expect(getByTestId('end-date-warning')).toBeInTheDocument();
     });
     it('Should not render date warnings if dates are OK', () => {
-        const { getByTestId, queryByTestId } = setup({
+        const { queryByTestId } = setup({
             defaultStartDate: '2040/01/01 00:00:00',
             defaultEndDate: '2040/01/02 23:59:00',
         });
         expect(queryByTestId('start-date-warning')).not.toBeInTheDocument();
         expect(queryByTestId('end-date-warning')).not.toBeInTheDocument();
-        screen.debug(undefined, 10000);
+        // screen.debug(undefined, 10000);
     });
 });

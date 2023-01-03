@@ -59,7 +59,7 @@ Object {
             class="MuiDialogContent-root"
           >
             <div
-              class="MuiPaper-root MuiCard-root Cards-card-4 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root Cards-card-4 StandardCard  MuiPaper-elevation1 MuiPaper-rounded"
               data-testid="promo-panel"
               id="promo-panel"
               style="height: 100%;"
@@ -87,6 +87,9 @@ Object {
                     </div>
                   </h2>
                 </div>
+                <div
+                  class="MuiCardHeader-action"
+                />
               </div>
               <div
                 class="MuiCardContent-root"

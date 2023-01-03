@@ -12,6 +12,7 @@ export const PromoPanelClone = ({
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
     history,
+    panelUpdated,
     queueLength,
     promoPanelListError,
     promoPanelUserTypesError,
@@ -133,6 +134,7 @@ export const PromoPanelClone = ({
                         isEdit={false}
                         isClone
                         isDefaultPanel={false}
+                        panelUpdated={panelUpdated}
                         queueLength={queueLength}
                     />
                 )}
@@ -148,6 +150,7 @@ PromoPanelClone.propTypes = {
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
     history: PropTypes.object,
+    panelUpdated: PropTypes.bool,
     queueLength: PropTypes.number,
     promoPanelListError: PropTypes.string,
     promoPanelUserTypesError: PropTypes.string,
