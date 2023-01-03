@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -49,6 +48,7 @@ const EventPanel = ({
 
     const startDate = moment()
         .startOf('year')
+        .subtract(5, 'year')
         .format(locale.config.dateFormat);
 
     const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
@@ -181,16 +181,16 @@ const EventPanel = ({
                                         ) ?? ''
                                 }
                                 onChange={(_, newValue) => {
-                                    if (location.formSiteId !== -1 && newValue.building_id !== -1) {
-                                        updateLocation({
-                                            formBuildingId: newValue.building_id,
-                                            formFloorId: -1,
-                                            formRoomId: -1,
-                                        });
-                                        actions.loadFloors(newValue.building_id);
-                                    } else {
+                                    // if (location.formSiteId !== -1 && newValue.building_id !== -1) {
+                                    updateLocation({
+                                        formBuildingId: newValue.building_id,
+                                        formFloorId: -1,
+                                        formRoomId: -1,
+                                    });
+                                    actions.loadFloors(newValue.building_id);
+                                    /* } else {
                                         updateLocation({ formBuildingId: newValue.building_id });
-                                    }
+                                    }*/
                                 }}
                                 getOptionLabel={option =>
                                     `${option.building_id_displayed ?? ''}${
@@ -247,14 +247,14 @@ const EventPanel = ({
                                 options={floorList?.floors ?? []}
                                 value={floorList?.floors?.find(floor => floor.floor_id === location.formFloorId) ?? ''}
                                 onChange={(_, newValue) => {
-                                    if (
+                                    /* if (
                                         location.formSiteId !== -1 &&
                                         location.formBuildingId !== -1 &&
                                         newValue.floor_id !== -1
-                                    ) {
-                                        updateLocation({ formFloorId: newValue.floor_id, formRoomId: -1 });
-                                        actions.loadRooms(newValue.floor_id);
-                                    } else updateLocation({ formFloorId: newValue.floor_id });
+                                    ) {*/
+                                    updateLocation({ formFloorId: newValue.floor_id, formRoomId: -1 });
+                                    actions.loadRooms(newValue.floor_id);
+                                    // } else updateLocation({ formFloorId: newValue.floor_id });
                                 }}
                                 getOptionLabel={option => option.floor_id_displayed ?? option}
                                 renderInput={params => (

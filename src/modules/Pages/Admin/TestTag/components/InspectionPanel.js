@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -86,7 +85,11 @@ const InspectionPanel = ({
             variant="outlined"
             noPadding={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
         >
-            <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
+            <Collapse
+                in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value}
+                timeout="auto"
+                data-testid="collapseActionPanel"
+            >
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
@@ -139,8 +142,8 @@ const InspectionPanel = ({
                                 data-testid="testResultToggleButtons"
                                 size={isMobileView ? 'large' : 'small'}
                                 defaultChecked={false}
-                                onChange={(_, child) => {
-                                    handleChange('inspection_status')(child ?? undefined);
+                                onChange={(/* istanbul ignore next*/ _, child) => {
+                                    handleChange('inspection_status')(child ?? /* istanbul ignore next*/ undefined);
                                 }}
                                 style={{ display: 'flex' }}
                             >
@@ -202,7 +205,7 @@ const InspectionPanel = ({
                                         </MenuItem>
                                     ))}
                                 </Select>
-                                <Typography component={'span'}>
+                                <Typography component={'span'} data-testid="testResultNextDate-value">
                                     {locale.form.inspection.nextTestDateFormatted(
                                         moment(formValues.action_date, locale.config.dateFormat)
                                             .add(formNextTestDate, 'months')

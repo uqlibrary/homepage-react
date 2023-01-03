@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -222,7 +221,7 @@ const TestTag = ({
                 room_id: location?.formRoomId ?? undefined,
                 action_date: formValues?.action_date ?? today,
                 inspection_device_id:
-                    formValues?.inspection_device_id !== -1
+                    formValues?.inspection_device_id !== undefined
                         ? formValues?.inspection_device_id
                         : initConfig?.inspection_devices?.[0].device_id ?? /* istanbul ignore next */ undefined,
             };
