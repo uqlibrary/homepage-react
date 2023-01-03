@@ -24,7 +24,7 @@ export const pathConfig = {
         masquerade: '/admin/masquerade',
         promopaneladd: '/admin/promopanel/add',
         promopaneledit: promopanelid => `/admin/promopanel/edit/${promopanelid}`,
-        promopanelview: promopanelid => `/admin/promopanel/view/${promopanelid}`,
+        // promopanelview: promopanelid => `/admin/promopanel/view/${promopanelid}`,
         promopanelclone: promopanelid => `/admin/promopanel/clone/${promopanelid}`,
         promopanel: '/admin/promopanel',
         spotlightsadd: '/admin/spotlights/add',
@@ -183,11 +183,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.PromoPanelClone,
             pageTitle: locale.pages.admin.promopanel.form.clone.title,
         },
-        {
-            path: pathConfig.admin.promopanelview(promopanelid),
-            component: components.PromoPanelView,
-            pageTitle: locale.pages.admin.promopanel.form.view.title,
-        },
+        // {
+        //     path: pathConfig.admin.promopanelview(promopanelid),
+        //     component: components.PromoPanelView,
+        //     pageTitle: locale.pages.admin.promopanel.form.view.title,
+        // },
     ];
 
     const spotlightidRegExp = '.*';

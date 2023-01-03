@@ -25,7 +25,7 @@ export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Page
 export const PromoPanelList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/List/PromoPanelListContainer')));
 export const PromoPanelAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Add/PromoPanelAddContainer')));
 export const PromoPanelEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Edit/PromoPanelEditContainer')));
-export const PromoPanelView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/View/PromoPanelViewContainer')));
+// export const PromoPanelView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/View/PromoPanelViewContainer')));
 export const PromoPanelClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Clone/PromoPanelCloneContainer')));
 
 
