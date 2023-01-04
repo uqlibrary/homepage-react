@@ -159,7 +159,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetIdInput').should('have.value', 'AN ASSET ID');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
-            it.only('should restrict length of asset IDs', () => {
+            it('should restrict length of asset IDs', () => {
                 const initialText = 'ABCDEFGHIJKLMNOP'; // not a long enough text
                 const croppedText = 'ABCDEFGHIJKL';
                 // this is for code coverage. Will be removed post MVP
