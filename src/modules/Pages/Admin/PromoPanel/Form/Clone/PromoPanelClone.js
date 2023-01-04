@@ -112,7 +112,7 @@ export const PromoPanelClone = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelList]);
     return (
-        <StandardPage title="Promo Panel Management">
+        <StandardPage title="Promo panel management">
             {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
                 <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
                     <p>There was an error loading data from the server. Please refresh and try again.</p>

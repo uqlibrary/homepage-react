@@ -144,7 +144,7 @@ export default {
             text: (
                 <div>
                     <p>
-                        UQ Library's Promo Panel Management application provides authorised users with an interface to
+                        UQ Library's Promo panel management application provides authorised users with an interface to
                         add, update, remove and schedule promo panels (shown on the homepage), for either a logged out user, or a specified logged in user group.
                     </p>
                 </div>

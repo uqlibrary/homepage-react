@@ -52,4 +52,31 @@ describe('access to Spotlight Admin is controlled', () => {
             cy.get('h1').contains('Permission denied');
         });
     });
+
+    context('PromoPanel Admin access allowed for admins', () => {
+        it('displays correct page for admin users (list)', () => {
+            cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Promo panel management');
+        });
+        it('add page displays to authorised users', () => {
+            cy.visit('http://localhost:2020/admin/promopanel/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Promo panel management');
+        });
+        it('edit page displays to authorised users', () => {
+            cy.visit('http://localhost:2020/admin/promopanel/edit/1?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Promo panel management');
+        });
+        it('clone page displays to authorised users', () => {
+            cy.visit('http://localhost:2020/admin/promopanel/clone/1?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Promo panel management');
+        });
+    });
 });

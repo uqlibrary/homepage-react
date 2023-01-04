@@ -156,7 +156,8 @@ export const PromoPanelListPanels = ({
     showPast,
     hideAlloc,
 }) => {
-    const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
+    // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
+    // const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
         isDeleteFailureConfirmationOpen,
         showDeleteFailureConfirmation,
@@ -165,8 +166,9 @@ export const PromoPanelListPanels = ({
 
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
-    const [deleteActive, setDeleteActive] = useState(false);
-    const [panelNotice, setPanelNotice] = useState('');
+    // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
+    // const [deleteActive, setDeleteActive] = useState(false);
+    // const [panelNotice, setPanelNotice] = useState('');
     const [selectorGroupNames, setSelectorGroupNames] = React.useState([]);
     const [filteredPanels, setFilteredPanels] = React.useState(panelList);
 
@@ -188,24 +190,26 @@ export const PromoPanelListPanels = ({
 
     const classes = useStyles2();
     const regex = /(<([^>]+)>)/gi;
-    const clearAllCheckboxes = () => {
-        const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
-        checkBoxList.forEach(ii => {
-            if (ii.checked) {
-                ii.click();
-            }
-        });
-        setDeleteActive(false);
-    };
-    const reEnableAllCheckboxes = () => {
-        const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
-        checkBoxList.forEach(ii => {
-            ii.disabled = false;
-            ii.parentElement.parentElement.classList.remove('Mui-disabled');
-        });
-    };
-
-    const isDefaultPanel = value => value && value.length > 0;
+    // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
+    // const clearAllCheckboxes = () => {
+    //     const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
+    //     checkBoxList.forEach(ii => {
+    //         if (ii.checked) {
+    //             ii.click();
+    //         }
+    //     });
+    //     setDeleteActive(false);
+    // };
+    // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
+    // const reEnableAllCheckboxes = () => {
+    //     const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
+    //     checkBoxList.forEach(ii => {
+    //         ii.disabled = false;
+    //         ii.parentElement.parentElement.classList.remove('Mui-disabled');
+    //     });
+    // };
+    // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
+    // const isDefaultPanel = value => value && value.length > 0;
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
             ...locale.listPage.confirmDelete,
@@ -214,7 +218,8 @@ export const PromoPanelListPanels = ({
                 .replace('alerts', numberOfCheckedBoxes === 1 ? 'alert' : 'alerts'),
         };
     };
-    const checkBoxIdPrefix = 'list-checkbox-';
+    // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
+    // const checkBoxIdPrefix = 'list-checkbox-';
 
     const onPreviewOpen = (row, item) => {
         const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
@@ -228,67 +233,71 @@ export const PromoPanelListPanels = ({
         });
         setPreviewOpen(true);
     };
-    function getNumberCheckboxesSelected() {
-        return document.querySelectorAll('#admin-promoPanel-list tr.promoPanel-data-row :checked').length;
-    }
-    const handlePreviewClose = () => setPreviewOpen(false);
-    const handleCheckboxChange = e => {
-        const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
-        const thisType = e.target.closest('table').parentElement.id;
-        /* istanbul ignore else */
-        if (!!e.target && !!e.target.checked) {
-            // handle a checkbox being turned on
-            if (numberCheckboxesSelected === 1) {
-                setDeleteActive(true);
-            }
-            // disable any checkboxes in a different alert list
-            const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
-            checkBoxList.forEach(ii => {
-                const thetype = ii.closest('table').parentElement.id;
-                if (thetype !== thisType) {
-                    ii.disabled = true;
-                    ii.parentElement.parentElement.classList.add('Mui-disabled');
-                }
-            });
-        } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
-            // handle a checkbox being turned off
-            if (numberCheckboxesSelected === 0) {
-                setDeleteActive(false);
-                reEnableAllCheckboxes();
-            }
-        }
-        setPanelNotice(
-            '[n] panel[s] selected'
-                .replace('[n]', numberCheckboxesSelected)
-                .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
-        );
-    };
-    const headerCountIndicator = rowCount => {
-        return '[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : '');
-    };
+    const handlePreviewClose = () => setPreviewOpen(false);
+    // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
+    // function getNumberCheckboxesSelected() {
+    //     return document.querySelectorAll('#admin-promoPanel-list tr.promoPanel-data-row :checked').length;
+    // }
+    // const handleCheckboxChange = e => {
+    //     const numberCheckboxesSelected = getNumberCheckboxesSelected();
+
+    //     const thisType = e.target.closest('table').parentElement.id;
+    //     /* istanbul ignore else */
+    //     if (!!e.target && !!e.target.checked) {
+    //         // handle a checkbox being turned on
+    //         if (numberCheckboxesSelected === 1) {
+    //             setDeleteActive(true);
+    //         }
+    //         // disable any checkboxes in a different alert list
+    //         const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
+    //         checkBoxList.forEach(ii => {
+    //             const thetype = ii.closest('table').parentElement.id;
+    //             if (thetype !== thisType) {
+    //                 ii.disabled = true;
+    //                 ii.parentElement.parentElement.classList.add('Mui-disabled');
+    //             }
+    //         });
+    //     } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
+    //         // handle a checkbox being turned off
+    //         if (numberCheckboxesSelected === 0) {
+    //             setDeleteActive(false);
+    //             reEnableAllCheckboxes();
+    //         }
+    //     }
+    //     setPanelNotice(
+    //         '[n] panel[s] selected'
+    //             .replace('[n]', numberCheckboxesSelected)
+    //             .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
+    //     );
+    // };
+    // ** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS **
+    // const headerCountIndicator = rowCount => {
+    //     return '[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : '');
+    // };
     function deletePanelById(id) {
         actions
             .deletePanel(id)
             .then(() => {
-                setPanelNotice('');
-                setDeleteActive(false);
+                // setPanelNotice('');
+                // setDeleteActive(false);
                 actions.loadPromoPanelList();
             })
             .catch(e => {
                 showDeleteFailureConfirmation();
             });
     }
-    const deleteSelectedPanels = () => {
-        const checkboxes = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]:checked');
-        /* istanbul ignore else */
-        if (!!checkboxes && checkboxes.length > 0) {
-            checkboxes.forEach(c => {
-                const id = c.value.replace(checkBoxIdPrefix, '');
-                deletePanelById(id);
-            });
-        }
-    };
+    // ** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS **
+    // const deleteSelectedPanels = () => {
+    //     const checkboxes = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]:checked');
+    //     /* istanbul ignore else */
+    //     if (!!checkboxes && checkboxes.length > 0) {
+    //         checkboxes.forEach(c => {
+    //             const id = c.value.replace(checkBoxIdPrefix, '');
+    //             deletePanelById(id);
+    //         });
+    //     }
+    // };
 
     const navigateToEditForm = panelId => {
         history.push(`/admin/promopanel/edit/${panelId}`);
@@ -307,14 +316,17 @@ export const PromoPanelListPanels = ({
         const selections = typeof value === 'string' ? value.split(',') : value;
 
         setSelectorGroupNames(selections);
-        clearAllCheckboxes();
+
+        // clearAllCheckboxes();
 
         setFilteredPanels(filterPanelList(panelList, selections));
         // Filter the selection, and store in filteredPanels.
     };
     return (
         <React.Fragment>
-            <ConfirmationBox
+            {/*
+                ** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS **
+                <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
                 confirmationBoxId="panel-delete-confirm"
@@ -323,7 +335,7 @@ export const PromoPanelListPanels = ({
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
                 locale={confirmDeleteLocale(getNumberCheckboxesSelected())}
-            />
+            /> */}
             <ConfirmationBox
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
@@ -370,7 +382,9 @@ export const PromoPanelListPanels = ({
                     </Grid>
                 )}
 
-                {!!deleteActive && showBulkDelete && (
+                {/*
+                    *** COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS ***
+                    {!!deleteActive && showBulkDelete && (
                     <div
                         data-testid={'headerRow-panelList'}
                         className={`${classes.headerRow} ${classes.headerRowHighlighted}`}
@@ -398,7 +412,7 @@ export const PromoPanelListPanels = ({
                             >
                                 <DeleteIcon
                                     className={`${
-                                        !!deleteActive ? classes.iconHighlighted : /* istanbul ignore next */ ''
+                                        !!deleteActive ? classes.iconHighlighted :  ''
                                     }`}
                                 />
                             </IconButton>
@@ -413,7 +427,7 @@ export const PromoPanelListPanels = ({
                             </IconButton>
                         </span>
                     </div>
-                )}
+                )} */}
 
                 <TableContainer component={Paper}>
                     <Table
@@ -469,21 +483,25 @@ export const PromoPanelListPanels = ({
                                 return (
                                     <React.Fragment key={item.panel_id}>
                                         <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
-                                            {showBulkDelete && (
-                                                <TableCell component="td" scope="row" className={classes.checkboxCell}>
-                                                    {!isDefaultPanel && (
-                                                        <Checkbox
-                                                            id={`panel-table-item-checkbox-${item.panel_id}`}
-                                                            inputProps={{
-                                                                'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
-                                                                'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
-                                                            }}
-                                                            onChange={handleCheckboxChange}
-                                                            value={`${checkBoxIdPrefix}${item.panel_id}`}
-                                                        />
-                                                    )}
-                                                </TableCell>
-                                            )}
+                                            {
+                                                // ** COMMENTED OUT PENDING FEEDBACK RE: BULK ACTIONS ***
+                                                // showBulkDelete && (
+                                                // <TableCell component="td" scope="row"
+                                                // className={classes.checkboxCell}>
+                                                //     {!isDefaultPanel && (
+                                                //         <Checkbox
+                                                //         id={`panel-table-item-checkbox-${item.panel_id}`}
+                                                //         inputProps={{
+                                                //         'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
+                                                //         'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
+                                                //         }}
+                                                //         onChange={handleCheckboxChange}
+                                                //         value={`${checkBoxIdPrefix}${item.panel_id}`}
+                                                //         />
+                                                //     )}
+                                                // </TableCell>
+                                                // )
+                                            }
                                             <TableCell component="td" className={classes.cellGroupName}>
                                                 <Typography variant="body1">{item.panel_title}</Typography>
                                             </TableCell>

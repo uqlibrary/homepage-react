@@ -167,14 +167,15 @@ export const PromoPanelListGroupPanels = ({
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
     const classes = useStyles2();
-    const clearAllCheckboxes = () => {
-        const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
-        checkBoxList.forEach(ii => {
-            if (ii.checked) {
-                ii.click();
-            }
-        });
-    };
+    // *** COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS
+    // const clearAllCheckboxes = () => {
+    //     const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
+    //     checkBoxList.forEach(ii => {
+    //         if (ii.checked) {
+    //             ii.click();
+    //         }
+    //     });
+    // };
     let rowMarker = 0;
     const confirmUnscheduleLocale = () => {
         return {
@@ -183,11 +184,12 @@ export const PromoPanelListGroupPanels = ({
         };
     };
 
-    const checkBoxIdPrefix = 'table-checkbox-';
+    // COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS
+    // const checkBoxIdPrefix = 'table-checkbox-';
 
-    function getNumberCheckboxesSelected() {
-        return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
-    }
+    // function getNumberCheckboxesSelected() {
+    //     return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
+    // }
 
     const onAddSchedule = groupName => {
         setGroupName(groupName);
@@ -205,7 +207,7 @@ export const PromoPanelListGroupPanels = ({
         const selections = typeof value === 'string' ? value.split(',') : value;
 
         setSelectorGroupNames(selections);
-        clearAllCheckboxes();
+        // clearAllCheckboxes();
 
         setFilteredPanels(filterPanelList(userPanelList, selections, true));
         // Filter the selection, and store in filteredPanels.
@@ -224,39 +226,40 @@ export const PromoPanelListGroupPanels = ({
         setPreviewOpen(true);
     };
     const handlePreviewClose = () => setPreviewOpen(false);
-
-    function deletePanelById(id) {
-        actions
-            .deletePanel(id)
-            .then(() => {
-                actions.loadPromoPanelUserList();
-                clearAllCheckboxes();
-            })
-            .catch(() => {
-                showUnscheduleFailureConfirmation();
-            });
-    }
+    // ** COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS
+    // function deletePanelById(id) {
+    //     actions
+    //         .deletePanel(id)
+    //         .then(() => {
+    //             actions.loadPromoPanelUserList();
+    //             // clearAllCheckboxes();
+    //         })
+    //         .catch(() => {
+    //             showUnscheduleFailureConfirmation();
+    //         });
+    // }
     function unschedulePanelById(row) {
         actions
             .unschedulePanel(row.panel_schedule_id)
             .then(() => {
                 actions.loadPromoPanelUserList();
-                clearAllCheckboxes();
+                // clearAllCheckboxes();
             })
             .catch(() => {
                 showUnscheduleFailureConfirmation();
             });
     }
-    const unscheduleSelectedPanels = () => {
-        const checkboxes = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]:checked');
-        /* istanbul ignore else */
-        if (!!checkboxes && checkboxes.length > 0) {
-            checkboxes.forEach(c => {
-                const id = c.value.replace(checkBoxIdPrefix, '');
-                deletePanelById(id);
-            });
-        }
-    };
+    // ** COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS
+    // const unscheduleSelectedPanels = () => {
+    //     const checkboxes = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]:checked');
+    //     /* istanbul ignore else */
+    //     if (!!checkboxes && checkboxes.length > 0) {
+    //         checkboxes.forEach(c => {
+    //             const id = c.value.replace(checkBoxIdPrefix, '');
+    //             deletePanelById(id);
+    //         });
+    //     }
+    // };
     const navigateToEditForm = alertid => {
         actions.updateScheduleQueuelength(0);
         history.push(`/admin/promopanel/edit/${alertid}`);
@@ -292,6 +295,8 @@ export const PromoPanelListGroupPanels = ({
 
     return (
         <React.Fragment>
+            {/*
+            ** COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
@@ -301,7 +306,7 @@ export const PromoPanelListGroupPanels = ({
                 onCancelAction={hideUnscheduleConfirmation}
                 isOpen={isUnscheduleConfirmOpen}
                 locale={confirmUnscheduleLocale(getNumberCheckboxesSelected())}
-            />
+            /> */}
             <ConfirmationBox
                 actionButtonColor="primary"
                 actionButtonVariant="contained"

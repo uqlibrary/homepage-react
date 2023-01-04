@@ -36,15 +36,13 @@ export const PromoPanelAdd = ({
 
     React.useEffect(() => {
         /* istanbul ignore else */
-        if (
-            !!!promoPanelListLoading &&
-            !!!promoPanelUserTypesLoading &&
-            (promoPanelList.length < 1 || promoPanelUserTypeList.length < 1)
-        ) {
+        if (!!!promoPanelListLoading && promoPanelList.length < 1) {
             actions.loadPromoPanelList();
+        }
+        /* istanbul ignore else */
+        if (!!!promoPanelUserTypesLoading && promoPanelUserTypeList.length < 1) {
             actions.loadPromoPanelUserList();
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -59,31 +57,36 @@ export const PromoPanelAdd = ({
             setKnownGroups(known);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [promoPanelList, promoPanelUserTypeList]);
+    }, [promoPanelUserTypeList]);
 
     return (
-        <StandardPage title="Promo Panel Management">
+        <StandardPage title="Promo panel management">
             {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
-                <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
+                <div
+                    data-testid="Promopanel-Error"
+                    style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}
+                >
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
                     <p>{promoPanelListError || promoPanelUserTypesError}</p>
                 </div>
             )}
-            <section aria-live="assertive">
-                <PromoPanelForm
-                    scheduledList={[]}
-                    scheduledGroupNames={[]}
-                    promoPanelSaving={promoPanelSaving}
-                    fullPromoPanelList={promoPanelList}
-                    fullPromoPanelUserTypeList={promoPanelUserTypeList}
-                    defaults={defaults}
-                    actions={actions}
-                    history={history}
-                    knownGroups={knownGroups}
-                    panelUpdated={panelUpdated}
-                    queueLength={queueLength}
-                />
-            </section>
+            {!!!promoPanelListError && !!!promoPanelUserTypesError && !!!promoPanelActionError && (
+                <section aria-live="assertive">
+                    <PromoPanelForm
+                        scheduledList={[]}
+                        scheduledGroupNames={[]}
+                        promoPanelSaving={promoPanelSaving}
+                        fullPromoPanelList={promoPanelList}
+                        fullPromoPanelUserTypeList={promoPanelUserTypeList}
+                        defaults={defaults}
+                        actions={actions}
+                        history={history}
+                        knownGroups={knownGroups}
+                        panelUpdated={panelUpdated}
+                        queueLength={queueLength}
+                    />
+                </section>
+            )}
         </StandardPage>
     );
 };
