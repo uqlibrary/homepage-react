@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
-describe('Test & Tag page', () => {
+describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
         cy.visit('http://localhost:2020/admin/testntag?user=uqtesttag');
     });
@@ -58,18 +58,15 @@ describe('Test & Tag page', () => {
         cy.get('h1').contains('UQ Asset Test and Tag');
         cy.get('h2').contains('Managing Assets for UQL');
         cy.waitUntil(() => cy.data('testntag-form-siteid').should('contain', 'St Lucia'));
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Inspection Form',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.wait(1000);
+        cy.checkA11y('[data-testid="StandardPage"]', {
+            reportName: 'Test and Tag Inspection Form',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
     });
 
-    describe('Desktop', () => {
-        beforeEach(() => {
-            cy.viewport(1300, 1000);
-        });
-
+    const runAllTests = () => {
         describe('Event panel functionality', () => {
             const today = moment();
             it('should show correct dates', () => {
@@ -161,6 +158,14 @@ describe('Test & Tag page', () => {
                 cy.data('testntagFormAssetIdInput').type('AN ASSET ID{enter}');
                 cy.data('testntagFormAssetIdInput').should('have.value', 'AN ASSET ID');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
+            });
+            it.only('should restrict length of asset IDs', () => {
+                const initialText = 'ABCDEFGHIJKLMNOP'; // not a long enough text
+                const croppedText = 'ABCDEFGHIJKL';
+                // this is for code coverage. Will be removed post MVP
+                cy.data('testntagFormAssetIdInput').click();
+                cy.data('testntagFormAssetIdInput').type(`${initialText}{enter}`);
+                cy.data('testntagFormAssetIdInput').should('have.value', croppedText);
             });
             it('should allow selection of new asset and type', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
@@ -262,9 +267,159 @@ describe('Test & Tag page', () => {
 
         describe('Inspection panel functionality', () => {
             it('should allow entry of inspection details', () => {
+                cy.data('testResultToggleButtons-PASSED').should('be.disabled');
+                cy.data('testResultToggleButtons-FAILED').should('be.disabled');
                 selectAssetId('NEW ASSET');
                 selectAssetType('PowerBoard');
+
+                cy.data('testResultToggleButtons-PASSED').should('not.be.disabled');
+                cy.data('testResultToggleButtons-FAILED').should('not.be.disabled');
+                cy.data('testResultTestingDevice').click();
+                selectListbox('AV 025');
+                cy.data('testResultTestingDevice').should('contain', 'AV 025');
+                cy.data('testResultToggleButtons-PASSED').click();
+
+                const today = moment();
+
+                const plus3months = locale.form.inspection.nextTestDateFormatted(
+                    moment(today, locale.config.dateFormat)
+                        .add(3, 'months')
+                        .format(locale.config.dateFormatDisplay),
+                );
+                const plus6months = locale.form.inspection.nextTestDateFormatted(
+                    moment(today, locale.config.dateFormat)
+                        .add(6, 'months')
+                        .format(locale.config.dateFormatDisplay),
+                );
+                const plus12months = locale.form.inspection.nextTestDateFormatted(
+                    moment(today, locale.config.dateFormat)
+                        .add(12, 'months')
+                        .format(locale.config.dateFormatDisplay),
+                );
+                const plus60months = locale.form.inspection.nextTestDateFormatted(
+                    moment(today, locale.config.dateFormat)
+                        .add(60, 'months')
+                        .format(locale.config.dateFormatDisplay),
+                );
+
+                cy.data('testResultNextDate').should('exist');
+                cy.data('testResultNextDate-value').should('contain', plus12months); // default 12 months
+                // 3 months
+                cy.data('testResultNextDate').click();
+                selectListbox('3 months');
+                cy.data('testResultNextDate-value').should('contain', plus3months);
+                // 6 months
+                cy.data('testResultNextDate').click();
+                selectListbox('6 months');
+                cy.data('testResultNextDate-value').should('contain', plus6months);
+                // 5 years
+                cy.data('testResultNextDate').click();
+                selectListbox('5 years');
+                cy.data('testResultNextDate-value').should('contain', plus60months);
+
+                cy.data('inspectionNotes-input').type('Test notes');
+
+                cy.data('testResultToggleButtons-FAILED').click();
+                cy.data('testResultNextDate').should('not.exist');
+                cy.data('inspectionFailReason').should('exist');
+                cy.data('inspectionFailReason-input').type('Failed reason');
+
+                cy.data('testntagFormResetButton').click();
+                cy.data('testResultToggleButtons-PASSED').should('be.disabled');
+                cy.data('testResultToggleButtons-FAILED').should('be.disabled');
             });
         });
+
+        describe('Action panel functionality', () => {
+            it('should allow enter of repair/discard details', () => {
+                selectAssetId('NEW ASSET');
+                selectAssetType('PowerBoard');
+                cy.data('testResultToggleButtons-PASSED').click();
+                cy.data('tab-repair').should('be.disabled');
+                cy.data('tab-discard').should('not.be.disabled');
+                cy.data('testResultToggleButtons-FAILED').click();
+                cy.data('tab-repair').should('not.be.disabled');
+                cy.data('tab-discard').should('not.be.disabled');
+
+                cy.data('testntagFormAssetIdInput').type('UQL310000'); // last inspection = passed
+                cy.wait(2000);
+                cy.data('testntagFormAssetIdInput').should('have.value', 'UQL310000');
+                cy.data('tab-repair').should('be.disabled'); // shouldnt be able to send for repair
+                cy.data('tab-discard').should('not.be.disabled');
+
+                cy.data('testntagFormAssetIdInput')
+                    .clear()
+                    .type('UQL20000'); // last inspection = failed
+                cy.wait(2000);
+                cy.data('testntagFormAssetIdInput').should('have.value', 'UQL200000');
+                cy.data('tab-repair').should('not.be.disabled'); // failed should be able send for repair
+                cy.data('tab-discard').should('not.be.disabled');
+
+                cy.data('discardReason-input').should('be.disabled');
+                cy.data('selectIsDiscarded').click();
+                selectListbox('YES');
+                cy.data('tab-repair').should('be.disabled'); // can only enter details for one tab at a time
+                cy.data('discardReason-input').should('not.be.disabled');
+                cy.data('discardReason-input').type('Discard reason');
+                cy.data('selectIsDiscarded').click();
+                selectListbox('NO');
+                cy.data('tab-repair').should('not.be.disabled'); // can only enter details for one tab at a time
+
+                cy.data('tab-repair').click();
+                cy.data('selectIsRepair').click();
+                selectListbox('YES');
+                cy.data('tab-discard').should('be.disabled'); // can only enter details for one tab at a time
+                cy.data('repairerDetails-input').should('exist');
+                cy.data('repairerDetails-input').should('not.be.disabled');
+                cy.data('repairerDetails-input').type('Repair reason');
+
+                cy.data('testResultToggleButtons-PASSED').click(); // can't allow repair option if test passes
+                cy.data('tab-repair').should('be.disabled'); // make sure repair tab disables
+                cy.data('tab-discard').should('not.be.disabled'); // discard tab should be enabled and auto selected
+                cy.data('tab-discard').should('have.class', 'Mui-selected'); // check it is selected
+
+                cy.data('testntagFormResetButton').click();
+                cy.data('tab-repair').should('be.disabled');
+                cy.data('tab-discard').should('be.disabled');
+            });
+        });
+
+        describe('saving values', () => {
+            it('should enable save button and show saved message', () => {
+                cy.data('testntagFormSubmitButton').should('be.disabled');
+                cy.data('testntag-form-siteid').should('contain', 'St Lucia');
+                selectLocation({ building: 'Forgan Smith Building', floor: '2', room: 'W212' });
+                selectAssetId('NEW ASSET');
+                selectAssetType('PowerBoard');
+                cy.data('testResultToggleButtons-PASSED').click();
+                cy.data('inspectionNotes-input').type('Test notes');
+                cy.data('testntagFormSubmitButton').should('not.be.disabled');
+                cy.data('testntagFormSubmitButton').click();
+                cy.wait(2000);
+                cy.get('[role=presentation]').within(() => {
+                    cy.contains('Asset saved');
+                    cy.contains('UQL000298');
+                    cy.data('confirm-testTag-save-succeeded').click();
+                });
+
+                cy.data('testntagFormAssetIdInput').should('have.value', '');
+            });
+        });
+    };
+
+    describe('Desktop', () => {
+        beforeEach(() => {
+            cy.viewport(1300, 1000);
+        });
+
+        runAllTests();
+    });
+
+    describe('Mobile', () => {
+        beforeEach(() => {
+            cy.viewport(320, 480);
+        });
+
+        runAllTests();
     });
 });

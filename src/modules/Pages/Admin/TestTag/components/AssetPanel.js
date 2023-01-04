@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -188,6 +187,7 @@ const AssetPanel = ({
                                         ...params.inputProps,
                                         id: 'testntagFormAssetIdInput',
                                         'data-testid': 'testntagFormAssetIdInput',
+                                        maxLength: 12,
                                     }}
                                 />
                             )}
