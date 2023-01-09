@@ -205,7 +205,7 @@ export const PromoPanelAddSchedule = ({
                                 <InputLabel id="group-selector">Panel</InputLabel>
                                 <Select
                                     labelId="group-selector"
-                                    id="demo-multiple-checkbox"
+                                    id="new-scheduled-panel-for-group"
                                     label="Panel"
                                     value={selectedPanel}
                                     onChange={handlePanelChange}
@@ -261,7 +261,7 @@ export const PromoPanelAddSchedule = ({
                         </Grid>
                     </Grid>
                     {showError && (
-                        <Grid item xs={12}>
+                        <Grid item xs={12} data-testid="schedule-error-conflict">
                             {errorMessage}
                         </Grid>
                     )}

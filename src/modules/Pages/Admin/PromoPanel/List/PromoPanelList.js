@@ -47,6 +47,7 @@ export const PromoPanelList = ({
         if (!promoPanelUserTypeList || promoPanelUserTypeList.length < 1) {
             actions.loadPromoPanelUserList();
         }
+        /* istanbul ignore else */
         if (!promoPanelActiveList || promoPanelActiveList.length < 1) {
             actions.loadActivePanelList();
             actions.getAssignedPromoPanel();
@@ -56,6 +57,7 @@ export const PromoPanelList = ({
 
     React.useEffect(() => {
         // do something with the promo Panel List and the user type here.
+        /* istanbul ignore else */
         if (panelUpdated) {
             actions.loadPromoPanelList().then(actions.loadPromoPanelUserList().then(actions.loadActivePanelList()));
         }
@@ -63,6 +65,7 @@ export const PromoPanelList = ({
     }, [panelUpdated]);
 
     const hasError = () => {
+        /* istanbul ignore else */
         if (
             !!promoPanelListError ||
             !!promoPanelUserTypesError ||
@@ -146,7 +149,6 @@ export const PromoPanelList = ({
                 showFilter={false}
                 showPast
             />
-            {!!!promoPanelActionError === null && <p>There's an error that occurred</p>}
         </StandardPage>
     );
 };

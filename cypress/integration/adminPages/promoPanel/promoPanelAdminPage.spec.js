@@ -1,4 +1,4 @@
-import { testId } from '../../../support/promopanel';
+import { saveButtonIsDisabled, previewIsDisabled, testId } from '../../../support/promopanel';
 
 describe('Promopanel Admin Form Pages', () => {
     context('Promopanel Admin Add page', () => {
@@ -53,6 +53,44 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('[aria-label="Start Date"]').click();
             cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
             cy.get('#group-selector').click({ force: true });
+        });
+        it('Can clone a panel as a scheduled panel', () => {
+            cy.viewport(1300, 1400);
+            cy.get('h2')
+                .should('be.visible')
+                .contains('panel');
+            cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
+            testId('alert-list-arrowicon-2-none').click();
+            testId('2-clone-button-none').click();
+            testId('admin-promopanel-form-admin-note').type('Test Admin Note');
+            testId('admin-promopanel-form-title')
+                .clear()
+                .type('Test Admin Title');
+            cy.get('.ck-content')
+                .clear()
+                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+                // depending on the platform. Best to just leave as plain text for testing.
+                .type('This is the content of the panel');
+            saveButtonIsDisabled(false);
+            previewIsDisabled(false);
+            cy.get('#group-multiple-checkbox').click();
+            cy.get('[data-value="alumni"]').click();
+            cy.get('body').click();
+            testId('admin-promopanel-form-button-addSchedule').click();
+            testId('admin-promopanel-form-button-save').click();
+            testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');
+            // testId('schedule-panel-hdr').click();
+            // // const Element = document.getElementById('admin-promopanel-group-start-date');
+            // // console.log('Element', Element);
+            // // testId('admin-promopanel-group-start-date')
+            // //    .querySelector('button')
+            // //    .click();
+            // cy.get('[aria-label="Start Date"]').click();
+            // cy.get('.MuiPickersModal-withAdditionalAction > button:first-of-type').click();
+            // cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
+            // cy.get('[aria-label="Start Date"]').click();
+            // cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
+            // cy.get('#group-selector').click({ force: true });
         });
     });
 });

@@ -136,7 +136,8 @@ export const PromoPanelSplitButton = ({
                                             }
                                             {!!canClone && (
                                                 <MenuItem
-                                                    data-testid={`${row.panel_id}-clone-button-${group}`}
+                                                    data-testid={`${row.panel_id}-clone-button-${(group && group) ||
+                                                        'none'}`}
                                                     key={`${row.panel_id}-clone-button`}
                                                     onClick={() => navigateToCloneForm(row.panel_id)}
                                                 >

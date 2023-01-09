@@ -62,38 +62,40 @@ export const PromoPanelClone = ({
             setKnownGroups(known);
         }
         if (promoPanelList.length > 0) {
+            // console.log('Length of PromoPanelList is greater than 0', promoPanelList);
             const userlist = [];
-            const schedule = [];
+            // const schedule = [];
             setCurrentPanel(...promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`));
             promoPanelList.map(item => {
                 if (`${item.panel_id}` === `${promopanelid}`) {
                     if (item.default_panels_for.length > 0) {
                         setIsDefault(true);
-                        item.default_panels_for.map(element => {
-                            !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
-                            schedule.push({
-                                id: element.panel_shedule_id,
-                                startDate: element.panel_schedule_start_time,
-                                endDate: element.panel_schedule_end_time,
-                                groupNames: element.usergroup_group,
-                                existing: true,
-                            });
-                        });
+                        // item.default_panels_for.map(element => {
+                        //     !userlist.includes(element.usergroup_group) && userlist.push(element.usergroup_group);
+                        //     schedule.push({
+                        //         id: element.panel_shedule_id,
+                        //         startDate: element.panel_schedule_start_time,
+                        //         endDate: element.panel_schedule_end_time,
+                        //         groupNames: element.usergroup_group,
+                        //         existing: true,
+                        //     });
+                        // });
                     } else {
                         setIsDefault(false);
-                        item.panel_schedule.map(element => {
-                            !userlist.includes(element.usergroup_group_name) &&
-                                userlist.push(element.usergroup_group_name);
-                            element.user_group_schedule.map(panelSchedule => {
-                                schedule.push({
-                                    id: panelSchedule.panel_shedule_id,
-                                    startDate: panelSchedule.panel_schedule_start_time,
-                                    endDate: panelSchedule.panel_schedule_end_time,
-                                    groupNames: element.usergroup_group,
-                                    existing: true,
-                                });
-                            });
-                        });
+                        console.log('Panel Schedule for clone:', item);
+                        // item.panel_schedule.map(element => {
+                        //     !userlist.includes(element.usergroup_group_name) &&
+                        //         userlist.push(element.usergroup_group_name);
+                        //     element.user_group_schedule.map(panelSchedule => {
+                        //         schedule.push({
+                        //             id: panelSchedule.panel_shedule_id,
+                        //             startDate: panelSchedule.panel_schedule_start_time,
+                        //             endDate: panelSchedule.panel_schedule_end_time,
+                        //             groupNames: element.usergroup_group,
+                        //             existing: true,
+                        //         });
+                        //     });
+                        // });
                     }
                 }
                 setUserList(userlist);
@@ -114,7 +116,11 @@ export const PromoPanelClone = ({
     return (
         <StandardPage title="Promo panel management">
             {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
-                <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
+                <div
+                    data-testid="promo-panel-error"
+                    id="promo-panel-error"
+                    style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}
+                >
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
                     <p>{promoPanelListError || promoPanelUserTypesError}</p>
                 </div>
