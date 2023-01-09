@@ -70,6 +70,8 @@ export default {
         labels: {
             titleField: 'Title of the Promo Panel',
             titleLabel: 'Title',
+            startDate: 'Panel Start Date',
+            endDate: 'Panel End Date',
             defaultPanelLabel: 'Schedule or set a default panel',
             defaultPanelHelp: 'Schedule this promo or set the default panel for one or more user groups.',
             defaultPanelCheckbox: 'Set the default for selected user groups',

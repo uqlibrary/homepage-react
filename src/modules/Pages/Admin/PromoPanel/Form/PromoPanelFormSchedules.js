@@ -151,7 +151,7 @@ export const PromoPanelFormSchedules = ({
                                 id="admin-promopanel-form-start-date"
                                 data-testid="admin-promopanel-form-start-date"
                                 value={values.start}
-                                label={locale.form.labels.publishDate}
+                                label={locale.form.labels.startDate}
                                 onChange={handleChange('start')}
                                 minDate={defaults.minimumDate}
                                 format="DD/MM/YYYY HH:mm a"
@@ -160,7 +160,7 @@ export const PromoPanelFormSchedules = ({
                                 InputLabelProps={{ style: { textAlign: 'left' } }}
                                 autoOk
                                 KeyboardButtonProps={{
-                                    'aria-label': locale.form.tooltips.publishDate,
+                                    'aria-label': locale.form.labels.startDate,
                                 }}
                             />
                             {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
@@ -173,7 +173,7 @@ export const PromoPanelFormSchedules = ({
                             <KeyboardDateTimePicker
                                 id="admin-promopanel-form-end-date"
                                 data-testid="admin-promopanel-form-end-date"
-                                label={locale.form.labels.unpublishDate}
+                                label={locale.form.labels.endDate}
                                 onChange={handleChange('end')}
                                 value={values.end}
                                 minDate={values.start}
@@ -181,7 +181,7 @@ export const PromoPanelFormSchedules = ({
                                 autoOk
                                 InputLabelProps={{ style: { textAlign: 'left' } }}
                                 KeyboardButtonProps={{
-                                    'aria-label': locale.form.tooltips.unpublishDate,
+                                    'aria-label': locale.form.labels.endDate,
                                 }}
                                 minDateMessage="Should not be before Date published"
                             />

@@ -36,7 +36,6 @@ export const PromoPanelSplitButton = ({
     canClone,
     canDelete,
     canUnschedule,
-    alertId,
     onPreview,
     deletePanelById,
     mainButtonLabel,
@@ -96,7 +95,7 @@ export const PromoPanelSplitButton = ({
                             aria-expanded={open ? 'true' : undefined}
                             aria-label="More actions"
                             aria-haspopup="menu"
-                            data-testid={`alert-list-arrowicon-${row.panel_id}-${group}`}
+                            data-testid={`alert-list-arrowicon-${row.panel_id}-${(group && group) || 'none'}`}
                             onClick={handleToggle}
                             title="More actions"
                         >
@@ -118,8 +117,8 @@ export const PromoPanelSplitButton = ({
                                         <MenuList id="split-button-menu">
                                             {!!canEdit ? (
                                                 <MenuItem
-                                                    data-testid={`${alertId}-preview-button-${group}`}
-                                                    key={`${alertId}-preview-button`}
+                                                    data-testid={`${row.panel_id}-preview-button-${group}`}
+                                                    key={`${row.panel_id}-preview-button-${group}`}
                                                     onClick={() => handlePreview(row, item)}
                                                 >
                                                     View
@@ -174,7 +173,6 @@ PromoPanelSplitButton.propTypes = {
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
     canUnschedule: PropTypes.bool,
-    alertId: PropTypes.string,
     onPreview: PropTypes.func,
     mainButtonLabel: PropTypes.string,
     deletePanelById: PropTypes.func,

@@ -21,8 +21,8 @@ export const currentPanels = [
     },
     {
         "panel_id": 2,
-        "panel_title": "hdr default",
-        "panel_content": "hdr content",
+        "panel_title": "unallocated one",
+        "panel_content": "unallocated content",
         "panel_admin_notes": "",
         "panel_created_at": "2022-11-07T00:00:00.000000Z",
         "panel_schedule": [],
@@ -257,7 +257,39 @@ export const currentPanels = [
             }
         ],
         "default_panels_for": []
-    }
+    },
+    {
+        "panel_id": 99,
+        "panel_title": "unallocated two",
+        "panel_content": "unallocated content",
+        "panel_admin_notes": "",
+        "panel_created_at": "2022-11-07T00:00:00.000000Z",
+        "panel_schedule": [],
+        "default_panels_for": []
+    },
+    {
+        "panel_id": 50,
+        is_past: true,
+        "panel_title": "past panel",
+        "panel_content": "Past panel",
+        "panel_admin_notes": "past",
+        "panel_created_at": "2022-11-07T00:00:00.000000Z",
+        "panel_schedule": [
+            {
+                "usergroup_group_id": 1,
+                "usergroup_group": "student",
+                "usergroup_group_name": "Student",
+                "user_group_schedule": [
+                    {
+                        "panel_schedule_id": 50,
+                        "panel_schedule_start_time": "1980-02-01 00:00:00",
+                        "panel_schedule_end_time": "1980-02-08 00:00:00"
+                    }
+                ]
+            }
+        ],
+        "default_panels_for": []
+    },
 ]
 
 export const userListPanels = [
@@ -298,6 +330,16 @@ export const userListPanels = [
                 "panel_schedule_id": 12,
                 "panel_schedule_start_time": "2022-02-01 00:00:00",
                 "panel_schedule_end_time": "2022-02-08 00:00:00"
+            },
+            {
+                "panel_id": 50,
+                "is_past": true,
+                "panel_title": "Orientation",
+                "panel_content": "<div>\n                    <p>Get to know your Library this O-Week <span style=\"white-space: nowrap;\">(18-22 July)</span> and Connect Week <span style=\"white-space: nowrap;\">(25-29 July)</span>.</p>\n                    <p>Add <a href=\"https://orientation.uq.edu.au/event-search/organiser/3778\">Library orientation sessions</a> to your Orientation Plan such as an introduction to Learn.UQ (Blackboard) or a Library Q&amp;A session!</p>\n                    <p>Read our <a href=\"https://web.library.uq.edu.au/blog/2022/07/welcome-library-orientation\">Getting started tips</a> and make the most of your <a href=\"https://life.uq.edu.au/orientation\">orientation experience</a> with UQ Life.</p>\n                </div>",
+                "panel_admin_notes": "",
+                "panel_schedule_id": 50,
+                "panel_schedule_start_time": "1980-02-01 00:00:00",
+                "panel_schedule_end_time": "1980-02-08 00:00:00"
             }
         ]
     },
@@ -540,8 +582,8 @@ export const mockScheduleReturn = {
     "status": "OK",
     "data": {
         "panel_id": 2,
-        "panel_title": "hdr default",
-        "panel_content": "hdr content",
+        "panel_title": "unallocated one",
+        "panel_content": "unallocated content",
         "panel_admin_notes": "",
         "panel_created_at": "2022-11-07T00:00:00.000000Z",
         "panel_schedule": [

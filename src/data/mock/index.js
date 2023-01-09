@@ -774,18 +774,18 @@ mock.onGet('exams/course/FREN1010/summary')
         
     )
     
-    // Handle Delete of any panel that is NOT panel ID 9 (9 configured to throw error)
+    // Handle Delete of any panel that does NOT start with a 2 (2 configured to throw error)
     .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: '[^2]'}).apiUrl))).reply(
         () => {
             return [200, {status: 'ok'}]
         }
     )
-    // Specific case to throw error for Delete panel 9.
+    // Specific case to throw error for Delete panel 2.
     .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: 2}).apiUrl))).reply(
         () => { 
-            return [500, {
+            return [400, {
                 "status": "error",
-                "message": "9 is not a valid panel id"
+                "message": "2 is not a valid panel id"
             }]
         }
     )
@@ -798,7 +798,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // Specific case to throw error for Delete on schedule 11
     .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({id: 11}).apiUrl))).reply(
         () => {
-            return [500, {
+            return [400, {
                 "status": "error",
                 "message": "11 is not a valid schedule id"
             }]
@@ -824,6 +824,12 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl).reply(
         () => {
             return [200, mockPublicPanel]
+        }
+    )
+    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_USERTYPE_DEFAULT({id: '.*', usergroup: '.*'}).apiUrl)))
+    .reply(
+        () => {
+            return [200, '']
         }
     )
     .onAny()

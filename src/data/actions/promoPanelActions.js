@@ -279,7 +279,7 @@ export const deletePanel = panelID => {
         } catch (e) {
             dispatch({
                 type: actions.PROMOPANEL_DELETE_FAILED,
-                payload: e,
+                payload: e.message,
             });
 
             return Promise.reject(e);

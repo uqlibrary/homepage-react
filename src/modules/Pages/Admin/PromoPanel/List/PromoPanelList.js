@@ -157,7 +157,7 @@ PromoPanelList.propTypes = {
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
     promoPanelActiveList: PropTypes.array,
-    promoPanelActionError: PropTypes.string,
+    promoPanelActionError: PropTypes.any,
     promoPanelActiveListError: PropTypes.string,
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,

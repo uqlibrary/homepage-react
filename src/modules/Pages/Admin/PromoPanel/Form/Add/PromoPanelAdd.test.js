@@ -22,9 +22,12 @@ function setup(testProps = {}) {
 }
 
 describe('Promo Panel Add Container', () => {
-    it('Shows error if error occurs', () => {
+    it('Shows error if error occurs for promoPanelListError', () => {
         const { getByTestId } = setup({ promoPanelListError: 'Error' });
-        // screen.debug(undefined, 10000);
+        expect(getByTestId('Promopanel-Error')).toBeInTheDocument();
+    });
+    it('Shows error if error occurs for promoPanelUserTypesError', () => {
+        const { getByTestId } = setup({ promoPanelUserTypesError: 'Error' });
         expect(getByTestId('Promopanel-Error')).toBeInTheDocument();
     });
 });

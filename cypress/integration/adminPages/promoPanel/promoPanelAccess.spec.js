@@ -1,4 +1,4 @@
-describe('access to Spotlight Admin is controlled', () => {
+describe('access to Promopanel Admin is controlled', () => {
     context('Promo Panel public access blocked', () => {
         it('displays an "unauthorised" page to public users', () => {
             cy.visit('http://localhost:2020/admin/promopanel?user=public');

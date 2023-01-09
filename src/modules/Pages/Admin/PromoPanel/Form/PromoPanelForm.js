@@ -88,7 +88,7 @@ export const PromoPanelForm = ({
     isDefaultPanel,
     panelUpdated,
     queueLength,
-    promoPanelActionError,
+    // promoPanelActionError,
 }) => {
     const classes = useStyles();
 
@@ -116,7 +116,7 @@ export const PromoPanelForm = ({
         content: (currentPanel && currentPanel.panel_content) || '',
     });
     const [displayList, setDisplayList] = useState([]);
-    const [hasError, setHasError] = useState(false);
+    // const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
         initLists(
@@ -131,16 +131,12 @@ export const PromoPanelForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scheduledGroupNames, scheduledList]);
 
-    useEffect(() => {
-        if (!hasError && !!promoPanelActionError) {
-            setHasError(true);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [promoPanelActionError]);
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPanel]);
+    // useEffect(() => {
+    //     if (!hasError && !!promoPanelActionError) {
+    //         setHasError(true);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [promoPanelActionError]);
 
     const navigateToListPage = () => {
         actions.clearCurrentPanel(); // force the list page to reload after save
