@@ -127,17 +127,7 @@ export const PromoPanelSplitButton = ({
                                                 >
                                                     View
                                                 </MenuItem>
-                                            ) : null
-                                            // (
-                                            //     <MenuItem
-                                            //         data-testid={`${alertId}-edit-button`}
-                                            //         key={`${alertId}-edit-button`}
-                                            //         onClick={() => navigateToEditForm(row.panel_id)}
-                                            //     >
-                                            //         Edit
-                                            //     </MenuItem>
-                                            // )
-                                            }
+                                            ) : null}
                                             {!!canClone && (
                                                 <MenuItem
                                                     data-testid={`${row.panel_id}-clone-button-${(group && group) ||
