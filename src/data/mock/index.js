@@ -732,22 +732,22 @@ mock.onGet('exams/course/FREN1010/summary')
     })
 
     .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
-    .reply(() => [200, {data: {
-        asset_status: 'FAILED',
-        asset_id_displayed:'UQL000298',
-        user_licence_number: '13962556',
-        action_date: '2022-11-16',
-        asset_next_test_due_date: '2023Nov16',
-        }}]
-    )
     // .reply(() => [200, {data: {
-    //     asset_status: 'CURRENT',
+    //     asset_status: 'FAILED',
     //     asset_id_displayed:'UQL000298',
     //     user_licence_number: '13962556',
     //     action_date: '2022-11-16',
     //     asset_next_test_due_date: '2023Nov16',
     //     }}]
     // )
+    .reply(() => [200, {data: {
+        asset_status: 'CURRENT',
+        asset_id_displayed:'UQL000298',
+        user_licence_number: '13962556',
+        action_date: '2022-11-16',
+        asset_next_test_due_date: '2023Nov16',
+        }}]
+    )
 
     .onGet('exams/search/fail')
     .reply(() => {

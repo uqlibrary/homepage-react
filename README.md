@@ -377,12 +377,14 @@ Deployment pipelines are setup for branches: "master", "staging, "production" an
 - Master branch is always deployed to staging/production
 - Deployments to production are hosted on <https://homepage-production.library.uq.edu.au/> and <https://www.library.uq.edu.au/>
 - Deployments to staging are hosted on <https://homepage-staging.library.uq.edu.au/>
-- Some other branches are deployed on <https://homepage-development.library.uq.edu.au/branchName/>. (Only certain branches are deployed now we are using AWS)
-
-* Note: avoid certain words in your branch name, eg exams - Cloudfront overrides these routes and you won't be able to view the deployment.
+- Some other branches are deployed on <https://homepage-development.library.uq.edu.au/branchName/>. (Only certain branches are deployed now we are using AWS - [How to create a new CodePipeline](https://docs.google.com/document/d/1uyHOE5eOdPuVkjElNv8xNQJN-A5VU3iV7KOne72UoK8/edit))
+- Note: avoid certain words in your branch name, eg exams - Cloudfront overrides these routes and you won't be able to view the deployment.
   See [Cloudfront list of reserved routes](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-east-1&skipRegion=true#/distributions/E34LPPV7N4XONM/behaviors)
+- Homepage branch reusable-staging is used to test changes to repo reusable-webcomponents that affect Homepage by calling the *staging* branch of reusable. All other branches of homepage display the *production* branch of reusable. Do not merge the Homepage branch `staging_reusable` into any other branch as it has the wrong version of reusable  (the git hooks forbid it, if installed). Instructions:
 
-* Branch `reusable-staging` is used to test changes to reusable that appear on the homepage. All other branches of homepage display production reusable. Do not merge _from_ `staging_reusable` as it has the wrong version of reusable  (the git hooks forbid it, if installed)
+    * merge your reusable-webcomponents feature branch into reusable-webcomponents staging branch & push and allow to build
+    * if you have homepage changes merge them into homepage feature branch reusable-staging & push and allow to build
+    * load <https://homepage-development.library.uq.edu.au/reusable-staging/#/> (View Source to confirm it is loading the staging reusable file: <https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js">)
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
 to URL/Cloudfront restrictions
