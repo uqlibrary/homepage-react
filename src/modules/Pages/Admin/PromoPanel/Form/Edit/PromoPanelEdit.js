@@ -45,12 +45,19 @@ export const PromoPanelEdit = ({
 
     React.useEffect(() => {
         /* istanbul ignore else */
-        if (
-            !!!promoPanelListLoading &&
-            !!!promoPanelUserTypesLoading &&
-            (promoPanelList.length < 1 || promoPanelUserTypeList.length < 1)
-        ) {
+        // if (
+        //     !!!promoPanelListLoading &&
+        //     !!!promoPanelUserTypesLoading &&
+        //     (promoPanelList.length < 1 || promoPanelUserTypeList.length < 1)
+        // ) {
+        //     actions.loadPromoPanelList();
+        //     actions.loadPromoPanelUserList();
+        // }
+
+        if (!!!promoPanelListLoading && promoPanelList.length < 1) {
             actions.loadPromoPanelList();
+        }
+        if (!!!promoPanelUserTypesLoading && promoPanelUserTypeList.length < 1) {
             actions.loadPromoPanelUserList();
         }
 
@@ -58,11 +65,18 @@ export const PromoPanelEdit = ({
     }, []);
 
     React.useEffect(() => {
+        // console.log('Using Effect:');
         if (promoPanelUserTypeList.length > 0) {
+            // console.log('Greater than zero');
             const known = [];
             promoPanelUserTypeList.map(item => {
-                !known.some(e => e.group === item.usergroup_group) &&
+                // console.log('item mapping', known, item);
+                if (!known.some(e => e.group === item.usergroup_group)) {
                     known.push({ group: item.usergroup_group, name: item.usergroup_group_name });
+                }
+                // !known.some(e => e.group === item.usergroup_group) &&
+                //     console.log('push') &&
+                //     known.push({ group: item.usergroup_group, name: item.usergroup_group_name });
             });
             setKnownGroups(known);
         }
@@ -89,7 +103,11 @@ export const PromoPanelEdit = ({
     return (
         <StandardPage title="Promo panel management">
             {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
-                <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
+                <div
+                    data-testid="panel-error"
+                    id="panel-error"
+                    style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}
+                >
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
                     <p>{promoPanelListError || promoPanelUserTypesError || promoPanelActionError}</p>
                 </div>

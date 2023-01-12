@@ -330,7 +330,8 @@ export const PromoPanelListGroupPanels = ({
                             <InputLabel id="group-selector">Filter by group</InputLabel>
                             <Select
                                 labelId="group-selector"
-                                id="demo-multiple-checkbox"
+                                id="group-filter"
+                                data-testid="group-filter"
                                 label="Filter by group"
                                 multiple
                                 value={selectorGroupNames}
@@ -340,7 +341,11 @@ export const PromoPanelListGroupPanels = ({
                                 }}
                             >
                                 {knownGroups.map(group => (
-                                    <MenuItem key={group.group} value={group.group}>
+                                    <MenuItem
+                                        key={group.group}
+                                        value={group.group}
+                                        data-testid={`filter-select-${group.group}`}
+                                    >
                                         <Checkbox checked={selectorGroupNames.indexOf(group.group) > -1} />
                                         <ListItemText primary={`${group.name}`} />
                                     </MenuItem>
@@ -359,6 +364,7 @@ export const PromoPanelListGroupPanels = ({
                                 <TableRow>
                                     <TableCell colSpan={7} align="center">
                                         <CircularProgress
+                                            data-testid="ListTableSpinner-groupPanels"
                                             id="ListTableSpinner-groupPanels"
                                             color="primary"
                                             size={38}
@@ -382,7 +388,11 @@ export const PromoPanelListGroupPanels = ({
                                                             component="td"
                                                             className={classes.cellGroupName}
                                                         >
-                                                            <Typography variant="body1" style={{ paddingBottom: 5 }}>
+                                                            <Typography
+                                                                data-testid={`block-${item.usergroup_group}`}
+                                                                variant="body1"
+                                                                style={{ paddingBottom: 5 }}
+                                                            >
                                                                 {item.usergroup_group_name}
                                                             </Typography>
                                                         </TableCell>

@@ -167,11 +167,26 @@ export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });
 
 export const PROMOPANEL_CREATE_API = () => ({ apiUrl: 'promo_panel/panel' });
 export const PROMOPANEL_UPDATE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/${id}` });
-export const PROMOPANEL_LIST_USERTYPES_API = () => ({ apiUrl: 'promo_panel/groups' });
-export const PROMOPANEL_LIST_ACTIVE_PANELS_API = () => ({ apiUrl: 'promo_panel/groups/active' });
-export const PROMOPANEL_LIST_API = () => ({ apiUrl: 'promo_panel/panels' });
-export const PROMOPANEL_GET_CURRENT_API = () => ({ apiUrl: 'promo_panel' });
-export const PROMOPANEL_GET_ANON_API = () => ({ apiUrl: 'promo_panel/loggedout' });
+export const PROMOPANEL_LIST_USERTYPES_API = () => ({
+    apiUrl: 'promo_panel/groups',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+export const PROMOPANEL_LIST_ACTIVE_PANELS_API = () => ({
+    apiUrl: 'promo_panel/groups/active',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+export const PROMOPANEL_LIST_API = () => ({
+    apiUrl: 'promo_panel/panels',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+export const PROMOPANEL_GET_CURRENT_API = () => ({
+    apiUrl: 'promo_panel',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+export const PROMOPANEL_GET_ANON_API = () => ({
+    apiUrl: 'promo_panel/loggedout',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
 export const PROMOPANEL_ADD_SCHEDULE_API = ({ id, usergroup }) => ({
     apiUrl: `promo_panel/group/${usergroup}/panel/${id}/schedule`,
 });

@@ -68,7 +68,8 @@ export const PromoPanelSplitButton = ({
     return (
         <React.Fragment>
             <ConfirmationBox
-                actionButtonColor="secondary"
+                actionButtonColor="primary"
+                cancelButtonColor="secondary"
                 actionButtonVariant="contained"
                 confirmationBoxId="panel-delete-confirm"
                 onAction={() => deletePanelById(row.panel_id)}
@@ -77,13 +78,15 @@ export const PromoPanelSplitButton = ({
                 isOpen={isDeleteConfirmOpen}
                 locale={confirmDeleteLocale(1)}
             />
-            <Grid container direction="column" alignItems={!!align ? align : 'center'}>
+            <Grid container direction="column" alignItems={!!align ? align : /* istanbul ignore next */ 'center'}>
                 <Grid item xs={12} className={classes.parent}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         <Button
                             children={canEdit ? 'Edit' : 'View'}
                             color="primary"
-                            data-testid={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${group}`}
+                            data-testid={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${(group &&
+                                group) ||
+                                /* istanbul ignore next */ 'none'}`}
                             id={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${group}`}
                             onClick={() => (canEdit ? navigateToEditForm(row.panel_id) : handlePreview(row, item))}
                             variant="contained"
@@ -95,7 +98,8 @@ export const PromoPanelSplitButton = ({
                             aria-expanded={open ? 'true' : undefined}
                             aria-label="More actions"
                             aria-haspopup="menu"
-                            data-testid={`alert-list-arrowicon-${row.panel_id}-${(group && group) || 'none'}`}
+                            data-testid={`alert-list-arrowicon-${row.panel_id}-${(group && group) ||
+                                /* istanbul ignore next */ 'none'}`}
                             onClick={handleToggle}
                             title="More actions"
                         >
@@ -137,7 +141,7 @@ export const PromoPanelSplitButton = ({
                                             {!!canClone && (
                                                 <MenuItem
                                                     data-testid={`${row.panel_id}-clone-button-${(group && group) ||
-                                                        'none'}`}
+                                                        /* istanbul ignore next */ 'none'}`}
                                                     key={`${row.panel_id}-clone-button`}
                                                     onClick={() => navigateToCloneForm(row.panel_id)}
                                                 >

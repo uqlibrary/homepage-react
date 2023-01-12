@@ -35,6 +35,37 @@ describe('Promopanel Admin Form Pages', () => {
             testId('admin-promopanel-add-display-button').click();
             cy.waitUntil(() => testId('standard-card-create-a-promo-header').should('exist'));
         });
+
+        it('Filter works correctly', () => {
+            cy.viewport(1300, 1400);
+            cy.get('h2')
+                .should('be.visible')
+                .contains('panel');
+            cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
+            testId('block-student').should('exist');
+            testId('group-filter').click();
+            testId('filter-select-hdr').click();
+            cy.get('body').click();
+            testId('block-student').should('not.exist');
+            testId('group-filter').click();
+            testId('filter-select-hdr').click();
+            cy.get('body').click();
+            testId('block-student').should('exist');
+        });
+        it('can preview a past panel', () => {
+            cy.viewport(1300, 1400);
+            cy.get('h2')
+                .should('be.visible')
+                .contains('panel');
+            cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
+            testId('panel-list-item-edit-50-none').click();
+            testId('promo-panel-header')
+                .should('exist')
+                .should('contain', 'past panel');
+            testId('admin-promopanel-preview-button-cancel').click();
+            testId('promo-panel-header').should('not.exist');
+        });
+
         it('List Scheduler works correctly', () => {
             cy.viewport(1300, 1400);
             cy.get('h2')
@@ -53,6 +84,11 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('[aria-label="Start Date"]').click();
             cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
             cy.get('#group-selector').click({ force: true });
+            cy.get('#new-scheduled-panel-for-group').click();
+            cy.get('[data-value="7"]').click();
+            testId('admin-promopanel-group-button-save').click();
+            testId('ListTableSpinner-groupPanels').should('exist'); // Loading
+            testId('ListTableSpinner-groupPanels').should('not.exist'); // Loading Finished
         });
         it('Can clone a panel as a scheduled panel', () => {
             cy.viewport(1300, 1400);
@@ -91,6 +127,21 @@ describe('Promopanel Admin Form Pages', () => {
             // cy.get('[aria-label="Start Date"]').click();
             // cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
             // cy.get('#group-selector').click({ force: true });
+        });
+        it('can unschedule a panel', () => {
+            cy.viewport(1300, 1400);
+            cy.get('h2')
+                .should('be.visible')
+                .contains('panel');
+            cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
+            testId('alert-list-arrowicon-8-student').click();
+            testId('8-delete-button').click();
+            testId('cancel-panel-delete-confirm').click();
+            testId('alert-list-arrowicon-8-student').click();
+            testId('8-delete-button').click();
+            testId('confirm-panel-delete-confirm').click();
+            testId('ListTableSpinner-groupPanels').should('exist'); // Loading
+            testId('ListTableSpinner-groupPanels').should('not.exist'); // Loading Finished
         });
     });
 });

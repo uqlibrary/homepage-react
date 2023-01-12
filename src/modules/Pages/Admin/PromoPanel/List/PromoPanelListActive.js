@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -15,110 +14,37 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const moment = require('moment');
 
-const useStyles = makeStyles(
-    theme => ({
-        cellGroupRowOdd: {
-            backgroundColor: '#eee',
-        },
-        cellEmpty: {
-            borderBottom: 'none',
-        },
-        cellGroupRowEven: {
-            backgroundColor: 'none',
-        },
-        cellGroupName: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 5,
-            paddingBottom: 0,
-            fontWeight: 400,
-            borderBottom: 'none',
-            color: '#FFF',
-        },
-        cellGroupDetails: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 0,
-            paddingBottom: 5,
-            fontWeight: 400,
-            borderBottom: 'none',
-        },
-        cellGroupDetailsLast: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 0,
-            paddingBottom: 20,
-            fontWeight: 400,
-            borderBottom: 'none',
-        },
-        table: {
-            minWidth: 500,
-        },
-        startDate: {
-            whiteSpace: 'pre', // makes moment format able to take a carriage return
-        },
-        endDate: {
-            whiteSpace: 'pre',
-        },
-        headerRow: {
-            display: 'flex',
-            padding: '0 0.5rem',
-        },
-        headerCell: {
-            fontWeight: 'bold',
-        },
-        headerRowHighlighted: {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
-        iconHighlighted: {
-            color: '#fff',
-        },
-        chipblock: {
-            '&>div': {
-                marginBottom: 4,
-            },
-            '&>div>div': {
-                marginBottom: 4,
-            },
-        },
-        urgent: {
-            backgroundColor: theme.palette.warning.light,
-            color: '#000',
-        },
-        tableRow: {
-            borderBottom: '1px solid #bbb',
-        },
-        tableRowGroup: {
-            backgroundColor: '#333',
-            color: '#fff',
-            borderBottom: 'none',
-        },
-        extreme: {
-            backgroundColor: theme.palette.error.main,
-            color: '#fff',
-        },
-        system: {
-            backgroundColor: '#666666',
-            color: '#fff',
-        },
-        checkboxCell: {
-            borderBottom: 'none',
-            '& input[type="checkbox"]:checked + svg': {
-                fill: '#222',
-            },
-        },
-        removedChip: {
-            textDecoration: 'line-through',
-        },
-    }),
-    { withTheme: true },
-);
+const useStyles = makeStyles(() => ({
+    cellEmpty: {
+        borderBottom: 'none',
+    },
+    table: {
+        minWidth: 500,
+    },
+    startDate: {
+        whiteSpace: 'pre', // makes moment format able to take a carriage return
+    },
+    endDate: {
+        whiteSpace: 'pre',
+    },
+    headerRow: {
+        display: 'flex',
+        padding: '0 0.5rem',
+    },
+    headerCell: {
+        fontWeight: 'bold',
+    },
+    tableRow: {
+        borderBottom: '1px solid #bbb',
+    },
+    tableRowGroup: {
+        backgroundColor: '#333',
+        color: '#fff',
+        borderBottom: 'none',
+    },
+}));
 export const PromoPanelListActive = ({ panelList, title, isLoading }) => {
     const classes = useStyles();
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const handlePreviewClose = () => setPreviewOpen(false);
-
     return (
         <React.Fragment>
             <StandardCard title={title} customBackgroundColor="#F7F7F7">

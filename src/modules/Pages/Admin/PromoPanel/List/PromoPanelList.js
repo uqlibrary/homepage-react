@@ -50,7 +50,7 @@ export const PromoPanelList = ({
         /* istanbul ignore else */
         if (!promoPanelActiveList || promoPanelActiveList.length < 1) {
             actions.loadActivePanelList();
-            actions.getAssignedPromoPanel();
+            // actions.getAssignedPromoPanel();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
