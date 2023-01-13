@@ -239,7 +239,7 @@ export const PromoPanelGroupDateSelector = ({
                         </Grid>
                         <Grid item xs={12}>
                             {moment(endDate).isBefore(moment(startDate)) && (
-                                <span>Start Date cannot be after End Date.</span>
+                                <span data-testid="panel-start-date-warning">Start Date cannot be after End Date.</span>
                             )}
                         </Grid>
 

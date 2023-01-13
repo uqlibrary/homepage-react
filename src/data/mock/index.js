@@ -761,6 +761,22 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
+    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({id: '.*'}).apiUrl))).reply(
+        withDelay([
+            200, 
+            {
+                status: "OK"
+            }
+        ])
+    )
+    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({id: '.*', usergroup: '.*'}).apiUrl))).reply(
+        withDelay([
+            201,
+            {
+                status: "OK",
+            }
+        ])
+    )
     .onGet(routes.PROMOPANEL_LIST_API().apiUrl).reply(
         () => {
             return[200, currentPanels]

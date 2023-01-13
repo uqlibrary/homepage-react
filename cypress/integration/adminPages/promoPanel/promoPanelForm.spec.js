@@ -20,6 +20,29 @@ describe('Promopanel Admin Form Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('can enter new data into form fields for non-assigned panel', () => {
+            saveButtonIsDisabled(true);
+            addScheduleIsDisabled(true);
+            previewIsDisabled(true);
+            testId('admin-promopanel-form-admin-note').type('Test Admin Note');
+            testId('admin-promopanel-form-title').type('Test Admin Title');
+            cy.get('.ck-content')
+                .clear()
+                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+                // depending on the platform. Best to just leave as plain text for testing.
+                .type('This is the content of the panel');
+            saveButtonIsDisabled(false);
+            previewIsDisabled(false);
+            testId('admin-promopanel-form-button-preview').click();
+            testId('promopanel-preview-title').should('be.visible');
+            testId('admin-promopanel-preview-button-cancel').click();
+            testId('promopanel-preview-title').should('not.be.visible');
+            testId('standard-card-schedule-or-set-a-default-panel-content').should('be.visible');
+            testId('admin-promopanel-form-default-panel').click();
+            testId('admin-promopanel-form-button-save').click();
+            testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');
+            testId('admin-promopanel-group-button-save').click();
+        });
         it('can enter new data into form fields for a default panel', () => {
             saveButtonIsDisabled(true);
             addScheduleIsDisabled(true);

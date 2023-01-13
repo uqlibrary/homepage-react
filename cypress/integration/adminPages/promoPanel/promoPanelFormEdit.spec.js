@@ -140,5 +140,39 @@ describe('Promopanel Admin Form Pages', () => {
             //     testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');
             //     testId('admin-promopanel-group-button-save').click();
         });
+        it('can close without modification', () => {
+            cy.get('[data-testid="admin-promopanel-form-button-editSchedule-0"] > .MuiButton-label').click();
+            cy.get('[data-testid="admin-promopanel-group-button-cancel"]').click();
+        });
+        it('can edit an existing schedule', () => {
+            cy.get('[data-testid="admin-promopanel-form-button-editSchedule-0"] > .MuiButton-label').click();
+            cy.get('#admin-promopanel-group-start-date').click();
+            cy.get('.MuiButton-textPrimary:nth-child(1) > .MuiButton-label').click();
+            cy.get('.MuiButton-textPrimary:nth-child(3) > .MuiButton-label').click();
+            cy.get('[data-testid="admin-promopanel-group-button-save"] > .MuiButton-label').click();
+            testId('admin-promopanel-form-button-save').click();
+            testId('admin-promopanel-group-button-save').click();
+        });
+        it('can detect dates in the past', () => {
+            cy.get('[data-testid="admin-promopanel-form-button-editSchedule-0"] > .MuiButton-label').click();
+            cy.get('#admin-promopanel-group-start-date').click();
+            cy.get('.MuiDialogActions-root > :nth-child(1)').click(); // Today Button.
+            cy.get('.MuiPickersCalendarHeader-switchHeader > :nth-child(1)').click(); // Month Prior
+            cy.get('.MuiPickersCalendar-transitionContainer > :nth-child(1) > :nth-child(2) > :nth-child(1)').click(); // First Day of second week in said month
+            cy.get('.MuiDialogActions-root > :nth-child(3)').click(); // OK button
+            cy.get('#admin-promopanel-group-end-date').click();
+            cy.get('.MuiDialogActions-root > :nth-child(1)').click(); // Today Button.
+            cy.get('.MuiPickersCalendarHeader-switchHeader > :nth-child(1)').click(); // Month Prior
+            cy.get('.MuiPickersCalendarHeader-switchHeader > :nth-child(1)').click(); // Month Prior
+            cy.get('.MuiPickersCalendar-transitionContainer > :nth-child(1) > :nth-child(2) > :nth-child(1)').click(); // First Day of second week in said month
+            cy.get('.MuiDialogActions-root > :nth-child(3)').click(); // OK button
+            testId('panel-start-date-warning').should('exist');
+            cy.get('#admin-promopanel-group-end-date').click();
+            cy.get('.MuiDialogActions-root > :nth-child(1)').click(); // Today Button.
+            cy.get('.MuiDialogActions-root > :nth-child(3)').click(); // OK button
+            testId('panel-start-date-warning').should('not.exist');
+            testId('admin-promopanel-group-button-save').click();
+            testId('admin-promopanel-form-button-save').click();
+        });
     });
 });

@@ -227,6 +227,7 @@ export const PromoPanelForm = ({
     const confirmSavePromo = () => {
         setConfirmationMode('save');
         if (values.is_default_panel) {
+            /* istanbul ignore else */
             if (displayList.length > 0) {
                 // show the confirmation box that it will overwrite the groups default with THIS panel.
                 const formGroups = [];
@@ -301,19 +302,19 @@ export const PromoPanelForm = ({
             propValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
-            // fake switch because istanbul doesnt block on an else if in this version :(
-            switch (true) {
-                case ['active', 'weight'].includes(prop):
-                    propValue = !!propValue ? 1 : /* istanbul ignore next */ 0;
-                    break;
-                /* istanbul ignore next */
-                case propValue === false:
-                    // it returns false when we clear a text field
-                    propValue = '';
-                    break;
-                /* istanbul ignore next */
-                default:
-            }
+            // // fake switch because istanbul doesnt block on an else if in this version :(
+            // switch (true) {
+            //     case ['active', 'weight'].includes(prop):
+            //         propValue = !!propValue ? 1 : /* istanbul ignore next */ 0;
+            //         break;
+            //     /* istanbul ignore next */
+            //     case propValue === false:
+            //         // it returns false when we clear a text field
+            //         propValue = '';
+            //         break;
+            //     /* istanbul ignore next */
+            //     default:
+            // }
         }
         setValues({
             ...values,
@@ -342,6 +343,7 @@ export const PromoPanelForm = ({
     };
 
     const editPanelGroupSchedule = idx => {
+        console.log('Editing Schedule');
         setScheduleChangeIndex(idx);
         setScheduleGroupIndex(displayList[idx].groupNames);
         setPanelScheduleId(displayList[idx].id);
@@ -354,6 +356,10 @@ export const PromoPanelForm = ({
     };
     const handleSaveGroupDate = (idx, dateRange) => {
         saveGroupDate(idx, dateRange, displayList, setDisplayList, setIsEditingDate, actions);
+        setValues({
+            ...values,
+            scheduledList: displayList,
+        });
     };
     const clearForm = () => {
         setValues({

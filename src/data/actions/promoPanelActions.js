@@ -210,7 +210,6 @@ export const saveDefaultUserTypePanel = request => {
                 });
             })
             .catch(error => {
-                console.log('Failing on saveDefaultUserTypePanel', error.message);
                 dispatch({
                     type: actions.PROMOPANEL_SCHEDULE_FAILED,
                     payload: !!error.message ? error.message : 'Unknown Error',
@@ -236,7 +235,6 @@ export const saveUserTypePanelSchedule = request => {
                 });
             })
             .catch(error => {
-                console.log('Failing on saveUserTypePanelSchedule');
                 dispatch({
                     type: actions.PROMOPANEL_SCHEDULE_FAILED,
                     payload: !!error.message ? error.message : 'Unknown Error',
@@ -255,7 +253,6 @@ export const updateUserTypePanelSchedule = request => {
                 });
             })
             .catch(error => {
-                console.log('Failing on updateUserTypePanelSchedule');
                 dispatch({
                     type: actions.PROMOPANEL_SCHEDULE_FAILED,
                     payload: !!error.message ? error.message : 'Unknown Error',
@@ -300,7 +297,6 @@ export const unschedulePanel = scheduleID => {
 
             return Promise.resolve(response.data);
         } catch (e) {
-            console.log('Failing on unschedulePanel');
             dispatch({
                 type: actions.PROMOPANEL_SCHEDULE_FAILED,
                 payload: !!e.message ? e.message : 'Unknown Error',
