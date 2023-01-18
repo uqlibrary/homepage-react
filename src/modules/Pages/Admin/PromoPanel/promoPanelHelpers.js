@@ -109,6 +109,7 @@ export const addSchedule = (
                         });
                 }
             });
+            // Here is where I should be doing the checks for conflict.
         }
         /* istanbul ignore else */
         if (isValid) {
@@ -123,15 +124,26 @@ export const addSchedule = (
                 });
             }
             /* istanbul ignore else */
-            if (!values.is_default_panel && allocatedList.length > 0) {
+            if (!!!values.is_default_panel && allocatedList.length > 0) {
                 allocatedList.map(alloc => {
                     /* istanbul ignore else  */
                     if (
-                        alloc.groupNames === item &&
-                        moment(values.start).isSame(moment(alloc.startDate)) &&
-                        moment(values.end).isSame(moment(alloc.endDate))
+                        (moment(values.start).isSameOrAfter(moment(alloc.startDate)) &&
+                            moment(values.start).isBefore(moment(alloc.endDate))) ||
+                        (moment(alloc.startDate).isSameOrAfter(moment(values.start)) &&
+                            moment(alloc.startDate).isBefore(moment(values.end)) &&
+                            alloc.groupNames === item)
                     ) {
                         push = false;
+                        isValid = false;
+                        setConfirmationMessage(
+                            locale.form.scheduleConflict.alert(
+                                item,
+                                'Recently added schedule in this panel',
+                                alloc.startDate,
+                                alloc.endDate,
+                            ),
+                        );
                     }
                 });
             }

@@ -80,6 +80,7 @@ export const PromoPanelGroupDateSelector = ({
     setIsConfirmOpen,
     setConfirmationMode,
     panelScheduleId,
+    displayList,
 }) => {
     const classes = useStyles();
 
@@ -118,6 +119,7 @@ export const PromoPanelGroupDateSelector = ({
 
     const handleGroupDateSave = () => {
         let isValid = true;
+        // Check against existing schedules already saved
         fullPromoPanelUserTypeList.map(schedules => {
             /* istanbul ignore else */
             if (schedules.usergroup_group === scheduleGroupIndex) {
@@ -145,6 +147,26 @@ export const PromoPanelGroupDateSelector = ({
                             }
                         }
                     });
+            }
+        });
+        displayList.map(alloc => {
+            /* istanbul ignore else  */
+            if (
+                (moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
+                    moment(startDate).isBefore(moment(alloc.endDate))) ||
+                (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
+                    moment(alloc.startDate).isBefore(moment(endDate)) &&
+                    isValid)
+            ) {
+                isValid = false;
+                setConfirmationMessage(
+                    locale.form.scheduleConflict.alert(
+                        scheduleGroupIndex,
+                        `Schedule existing in this panel for ${scheduleGroupIndex}`,
+                        alloc.startDate,
+                        alloc.endDate,
+                    ),
+                );
             }
         });
 
@@ -283,6 +305,7 @@ PromoPanelGroupDateSelector.propTypes = {
     setIsConfirmOpen: PropTypes.func,
     setConfirmationMode: PropTypes.func,
     panelScheduleId: PropTypes.number,
+    displayList: PropTypes.object,
 };
 
 PromoPanelGroupDateSelector.defaultProps = {

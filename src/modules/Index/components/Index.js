@@ -90,12 +90,10 @@ export const Index = ({
             dispatch(loadTrainingEvents(account));
             // Grab the relevant promo panel here.
             if (!!!account) {
-                console.log('I have no account');
                 // load anonymous panel
                 dispatch(getAnonPromoPanel());
             } else {
                 // load specific panel.
-                console.log('I have a specific account');
                 dispatch(getAssignedPromoPanel());
             }
         }

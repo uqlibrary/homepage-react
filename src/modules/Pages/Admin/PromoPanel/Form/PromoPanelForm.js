@@ -503,6 +503,7 @@ export const PromoPanelForm = ({
                 handleCloseGroupDate={handleCloseGroupDate}
                 handleSaveGroupDate={handleSaveGroupDate}
                 fullPromoPanelUserTypeList={fullPromoPanelUserTypeList}
+                displayList={displayList}
                 setConfirmationMessage={setConfirmationMessage}
                 setIsConfirmOpen={setIsConfirmOpen}
                 setConfirmationMode={setConfirmationMode}
