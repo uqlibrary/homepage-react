@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import locale from './notfound.locale';
 
 import { AUTH_URL_LOGIN } from 'config';
-import { flattedPathConfig, flattedPathConfigExact, adminEditRegexConfig } from 'config/routes';
+import { adminEditRegexConfig, flattedPathConfig, flattedPathConfigExact } from 'config/routes';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import ScriptTag from 'react-script-tag';
+import { Script404 } from './Script404';
 
 export const NotFound = ({ account, accountLoading }) => {
     const location = useLocation();
@@ -20,12 +20,7 @@ export const NotFound = ({ account, accountLoading }) => {
     if (!(isValidRoute || isValidFileRoute)) {
         return (
             <StandardPage standardPageId="not-found" title={locale.notFound.title}>
-                <ScriptTag
-                    type="text/javascript"
-                    src={`/404.js?requri=${window.location.pathname}&requester=${
-                        !accountLoading && account ? /* istanbul ignore next */ account.id : 'NA'
-                    }`}
-                />
+                <Script404 />
                 {locale.notFound.urlChangeAdvisory.find(changeAdvice => isCurrentPage(changeAdvice.linkPattern))
                     ? locale.notFound.urlChangeAdvisory.map(changeAdvice => {
                           return isCurrentPage(changeAdvice.linkPattern)
