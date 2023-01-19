@@ -149,14 +149,16 @@ export const PromoPanelGroupDateSelector = ({
                     });
             }
         });
-        displayList.map(alloc => {
+        displayList.map((alloc, index) => {
             /* istanbul ignore else  */
             if (
-                (moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
+                ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
                     moment(startDate).isBefore(moment(alloc.endDate))) ||
-                (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
-                    moment(alloc.startDate).isBefore(moment(endDate)) &&
-                    isValid)
+                    (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
+                        moment(alloc.startDate).isBefore(moment(endDate)))) &&
+                isValid &&
+                index !== scheduleChangeIndex &&
+                scheduleGroupIndex === alloc.groupNames
             ) {
                 isValid = false;
                 setConfirmationMessage(

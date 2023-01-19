@@ -128,11 +128,11 @@ export const addSchedule = (
                 allocatedList.map(alloc => {
                     /* istanbul ignore else  */
                     if (
-                        (moment(values.start).isSameOrAfter(moment(alloc.startDate)) &&
+                        ((moment(values.start).isSameOrAfter(moment(alloc.startDate)) &&
                             moment(values.start).isBefore(moment(alloc.endDate))) ||
-                        (moment(alloc.startDate).isSameOrAfter(moment(values.start)) &&
-                            moment(alloc.startDate).isBefore(moment(values.end)) &&
-                            alloc.groupNames === item)
+                            (moment(alloc.startDate).isSameOrAfter(moment(values.start)) &&
+                                moment(alloc.startDate).isBefore(moment(values.end)))) &&
+                        alloc.groupNames === item
                     ) {
                         push = false;
                         isValid = false;
