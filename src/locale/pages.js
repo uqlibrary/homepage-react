@@ -57,6 +57,9 @@ export default {
                     view: { title: 'View a Spotlight' },
                 },
             },
+            testntag: {
+                title: 'Test and Tag',
+            },
         },
         learningresources: {
             title: 'Learning resources',

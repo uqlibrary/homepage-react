@@ -17,6 +17,7 @@ export const SpotlightsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Ad
 export const SpotlightsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Edit/SpotlightsEditContainer')));
 export const SpotlightsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/View/SpotlightsViewContainer')));
 export const SpotlightsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Clone/SpotlightsCloneContainer')));
+export const TestTag = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/containers/TestTag')));
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
