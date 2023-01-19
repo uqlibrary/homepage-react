@@ -93,7 +93,7 @@ describe('Alerts Admin View Page', () => {
         cy.get('uq-alert[id="alert-preview"]')
             .shadow()
             .within(() => {
-                cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
+                cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Important alert.');
                 cy.get('[data-testid="alert-title"]').should('have.text', 'Example alert:');
                 cy.get('[data-testid="alert-message"]').should('have.text', 'This alert can be edited in mock.');
                 cy.get('[data-testid="alert-close"]').should('not.exist');
@@ -102,7 +102,7 @@ describe('Alerts Admin View Page', () => {
                     'title',
                     'On the live website, this button will visit https://about.uq.edu.au/coronavirus when clicked',
                 );
-                cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
+                cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Important alert.');
             });
     });
 });
@@ -114,7 +114,7 @@ describe('Alerts Admin View Page - other page tests', () => {
         cy.get('uq-alert[id="alert-preview"]')
             .shadow()
             .within(() => {
-                cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Alert.');
+                cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Alert.');
                 cy.get('[data-testid="alert-title"]').should('have.text', 'Sample alert 2:');
                 cy.get('[data-testid="alert-message"]').should('have.text', 'Has mock data.');
                 cy.get('[data-testid="alert-close"]').should('exist');
@@ -131,7 +131,11 @@ describe('Alerts Admin View Page - other page tests', () => {
         cy.get('uq-alert[id="alert-preview"]')
             .shadow()
             .within(() => {
-                cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Very important alert.');
+                cy.get('[data-testid="alert-alert-preview"]').should(
+                    'have.attr',
+                    'aria-label',
+                    'Very important alert.',
+                );
                 cy.get('[data-testid="alert-title"]').should('have.text', 'Face masks in the Library:');
                 cy.get('[data-testid="alert-message"]').should(
                     'have.text',
@@ -143,7 +147,11 @@ describe('Alerts Admin View Page - other page tests', () => {
                     'title',
                     'On the live website, this button will visit https://about.uq.edu.au/coronavirus when clicked',
                 );
-                cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Very important alert.');
+                cy.get('[data-testid="alert-alert-preview"]').should(
+                    'have.attr',
+                    'aria-label',
+                    'Very important alert.',
+                );
             });
 
         // the editing user displays correctly

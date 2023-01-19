@@ -17,17 +17,23 @@ describe('Spotlight Admin: past list filter session storage', () => {
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
         waitUntilSpotlightListPageHasLoaded();
         // initally, all 5 records show
-        cy.get('[data-testid="spotlight-list-past"] tbody')
-            .children()
-            .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+        cy.waitUntil(() => {
+            return cy
+                .get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+        });
         cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(totalCountPastRecords));
 
         // we reduce the number of rows displayed by typing into the filter input field
         cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
         cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
-        cy.get('[data-testid="spotlight-list-past"] tbody')
-            .children()
-            .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+        cy.waitUntil(() => {
+            return cy
+                .get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+        });
 
         // we load the view page, then click the cancel button to come back to the list page
         clickButton('[data-testid="spotlight-list-past"] tbody tr:first-child button:first-child', 'View');
@@ -45,10 +51,13 @@ describe('Spotlight Admin: past list filter session storage', () => {
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
         cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
         cy.get('[data-testid="spotlights-list-clear-text-field"] input').should('have.value', 'can');
-        cy.get('[data-testid="spotlight-list-past"] tbody')
-            .children()
-            .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
-        // the current and scheduled lists arent filtered
+        cy.waitUntil(() => {
+            return cy
+                .get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+        });
+        // the current and scheduled lists aren't filtered
         cy.get('[data-testid="admin-spotlights-list-current-list"] tbody')
             .children()
             .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
@@ -65,29 +74,31 @@ describe('Spotlight Admin: past list filter session storage', () => {
             return cy
                 .get('[data-testid="spotlight-list-past"] tbody')
                 .children()
-                .its('length')
-                .should('eq', 5 + numRowsHiddenAsNoDatainfo);
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
         });
-        cy.get('[data-testid="spotlight-list-past"] tbody')
-            .children()
-            .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
     });
     it('the filter text is maintained when the user visits a Clone page', () => {
         // the list page loads
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
         waitUntilSpotlightListPageHasLoaded();
         // initally, all 5 records show
-        cy.get('[data-testid="spotlight-list-past"] tbody')
-            .children()
-            .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+        cy.waitUntil(() => {
+            return cy
+                .get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+        });
         cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(totalCountPastRecords));
 
         // we reduce the number of rows displayed by typing into the filter input field
         cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
         cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
-        cy.get('[data-testid="spotlight-list-past"] tbody')
-            .children()
-            .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+        cy.waitUntil(() => {
+            return cy
+                .get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+        });
 
         // we load the Clone page, then click the cancel button to come back to the List page
         cy.get('[data-testid="spotlight-list-past"] tbody tr:first-child button:nth-child(2)')
@@ -112,9 +123,12 @@ describe('Spotlight Admin: past list filter session storage', () => {
         cy.get('[data-testid="admin-spotlights-list-past-list"] h3').should('be.visible');
         cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
         cy.get('[data-testid="spotlights-list-clear-text-field"] input').should('have.value', 'can');
-        cy.get('[data-testid="spotlight-list-past"] tbody')
-            .children()
-            .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+        cy.waitUntil(() => {
+            return cy
+                .get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+        });
 
         // we use the 'x' button to clear the text field and restore the rows to 5
         cy.get('[data-testid="spotlights-list-clear-text-filter-clear-button"]')
@@ -125,11 +139,7 @@ describe('Spotlight Admin: past list filter session storage', () => {
             return cy
                 .get('[data-testid="spotlight-list-past"] tbody')
                 .children()
-                .its('length')
-                .should('eq', 5 + numRowsHiddenAsNoDatainfo);
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
         });
-        cy.get('[data-testid="spotlight-list-past"] tbody')
-            .children()
-            .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
     });
 });

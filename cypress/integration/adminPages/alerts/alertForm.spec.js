@@ -83,7 +83,7 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('[data-testid="alert-title"]').should('have.text', 'No title supplied');
                     cy.get('[data-testid="alert-message"]').should('have.text', 'No message supplied');
                     cy.get('[data-testid="alert-close"]').should('exist');
-                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Alert.');
                     cy.get('[data-testid="alert-close"] svg').should(
                         'have.attr',
                         'aria-label',
@@ -103,7 +103,7 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('[data-testid="alert-title"]').should('have.text', 'alert title');
                     cy.get('[data-testid="alert-message"]').should('have.text', 'the body');
                     cy.get('[data-testid="alert-close"]').should('exist');
-                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
+                    cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Important alert.');
                     cy.get('[data-testid="alert-alert-preview"]').should('have.css', 'background-color', URGENT_COLOUR);
                 });
         });
@@ -121,7 +121,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
-                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Alert.');
                     cy.get('[data-testid="alert-title"]').should('have.text', 'alert title 2');
                     cy.get('[data-testid="alert-message"]').should('have.text', 'body 2');
                     cy.get('[data-testid="alert-close"]').should('not.exist');
@@ -154,7 +154,11 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
-                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Very important alert.');
+                    cy.get('[data-testid="alert-alert-preview"]').should(
+                        'have.attr',
+                        'aria-label',
+                        'Very important alert.',
+                    );
                     cy.get('[data-testid="alert-title"]').should('have.text', 'alert title 2');
                     cy.get('[data-testid="alert-message"]').should('have.text', 'body 2');
                     cy.get('[data-testid="alert-close"]').should('not.exist');
@@ -453,7 +457,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
-                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
+                    cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Important alert.');
                     cy.get('[data-testid="alert-title"]').should('have.text', 'Updated alert');
                 });
             // user can toggle the Preview
@@ -484,7 +488,11 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('uq-alert[id="alert-preview"]')
                         .shadow()
                         .within(() => {
-                            cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
+                            cy.get('[data-testid="alert-alert-preview"]').should(
+                                'have.attr',
+                                'aria-label',
+                                'Important alert.',
+                            );
                             cy.get('[data-testid="alert-title"]').contains('Example alert:');
                             cy.get('[data-testid="alert-message"]').contains('This alert can be edited in mock.');
                             cy.get('[data-testid="alert-alert-preview-action-button"]').contains(

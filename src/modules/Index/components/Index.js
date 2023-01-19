@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+
 import { useDispatch } from 'react-redux';
 import {
     loadPrintBalance,
@@ -14,6 +15,8 @@ import {
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
+    getAssignedPromoPanel,
+    getAnonPromoPanel,
 } from 'data/actions';
 import ContentLoader from 'react-content-loader';
 import { lazy } from 'react';
@@ -68,6 +71,9 @@ export const Index = ({
     possibleRecordsLoading,
     incompleteNTRO,
     incompleteNTROLoading,
+    currentPromoPanel,
+    promoPanelActionError,
+    promoPanelLoading,
 }) => {
     const dispatch = useDispatch();
     // Load homepage data requirements
@@ -78,9 +84,18 @@ export const Index = ({
             dispatch(loadCompAvail());
         }
     }, [accountLoading, dispatch]);
+
     useEffect(() => {
         if (accountLoading === false) {
             dispatch(loadTrainingEvents(account));
+            // Grab the relevant promo panel here.
+            if (!!!account) {
+                // load anonymous panel
+                dispatch(getAnonPromoPanel());
+            } else {
+                // load specific panel.
+                dispatch(getAssignedPromoPanel());
+            }
         }
     }, [account, accountLoading, dispatch]);
     useEffect(() => {
@@ -218,7 +233,7 @@ export const Index = ({
                     )}
 
                     <Grid item xs={12} md={4}>
-                        <PromoPanel account={account} accountLoading={accountLoading} />
+                        <PromoPanel promoPanelLoading={promoPanelLoading} account={account} accountLoading={accountLoading} promoPanelActionError={promoPanelActionError} currentPromoPanel={currentPromoPanel} />
                     </Grid>
                 </Grid>
             </StandardPage>
@@ -251,6 +266,9 @@ Index.propTypes = {
     possibleRecordsLoading: PropTypes.bool,
     incompleteNTRO: PropTypes.object,
     incompleteNTROLoading: PropTypes.bool,
+    currentPromoPanel: PropTypes.object,
+    promoPanelActionError: PropTypes.string,
+    promoPanelLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};

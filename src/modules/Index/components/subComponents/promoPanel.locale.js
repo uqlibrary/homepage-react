@@ -7,7 +7,7 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Summer Semester',
+        title: 'Fallback Panel',
         content: (
             <div>
                 <p>The Library is open during Summer Semester.</p>
@@ -17,7 +17,7 @@ export const promoPanel = {
         ),
     },
     loggedin: {
-        title: 'Summer Semester',
+        title: 'FallBack Loggedin',
         content: (
             <div>
                 <p>The Library is open during Summer Semester.</p>

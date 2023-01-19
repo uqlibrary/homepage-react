@@ -22,6 +22,13 @@ export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
 
+export const PromoPanelList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/List/PromoPanelListContainer')));
+export const PromoPanelAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Add/PromoPanelAddContainer')));
+export const PromoPanelEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Edit/PromoPanelEditContainer')));
+// export const PromoPanelView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/View/PromoPanelViewContainer')));
+export const PromoPanelClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Clone/PromoPanelCloneContainer')));
+
+
 // always load components
 export { IndexContainer as Index } from 'modules/Index';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
