@@ -149,28 +149,30 @@ export const PromoPanelGroupDateSelector = ({
                     });
             }
         });
-        displayList.map((alloc, index) => {
-            /* istanbul ignore else  */
-            if (
-                ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
-                    moment(startDate).isBefore(moment(alloc.endDate))) ||
-                    (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
-                        moment(alloc.startDate).isBefore(moment(endDate)))) &&
-                isValid &&
-                index !== scheduleChangeIndex &&
-                scheduleGroupIndex === alloc.groupNames
-            ) {
-                isValid = false;
-                setConfirmationMessage(
-                    locale.form.scheduleConflict.alert(
-                        scheduleGroupIndex,
-                        `Schedule existing in this panel for ${scheduleGroupIndex}`,
-                        alloc.startDate,
-                        alloc.endDate,
-                    ),
-                );
-            }
-        });
+        !!displayList &&
+            displayList.length > 0 &&
+            displayList.map((alloc, index) => {
+                /* istanbul ignore else  */
+                if (
+                    ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
+                        moment(startDate).isBefore(moment(alloc.endDate))) ||
+                        (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
+                            moment(alloc.startDate).isBefore(moment(endDate)))) &&
+                    isValid &&
+                    index !== scheduleChangeIndex &&
+                    scheduleGroupIndex === alloc.groupNames
+                ) {
+                    isValid = false;
+                    setConfirmationMessage(
+                        locale.form.scheduleConflict.alert(
+                            scheduleGroupIndex,
+                            `Schedule existing in this panel for ${scheduleGroupIndex}`,
+                            alloc.startDate,
+                            alloc.endDate,
+                        ),
+                    );
+                }
+            });
 
         if (isValid) {
             handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });

@@ -166,15 +166,17 @@ describe('Add Schedule', () => {
         ).toEqual(expected);
         expect(actions.updateScheduleQueuelength).toBeCalledWith(1);
     });
-    test('Can detect a conflict - Before Date.', () => {
+    test('Can detect a conflict - Before Date Changed.', () => {
         const displayList = [
             {
-                groupNames: 'testing',
+                groupNames: 'student',
+                startDate: '2010-12-11 00:00:00',
+                endDate: '2010-12-16 00:00:00',
             },
         ];
         const values = {
-            start: '2090-12-15 00:00:00',
-            end: '2090-12-16 00:00:00',
+            start: '2010-12-12 00:00:00',
+            end: '2010-12-17 00:00:00',
         };
         const setConfirmationMsg = jest.fn();
         const actions = {
@@ -195,17 +197,56 @@ describe('Add Schedule', () => {
         ).toEqual(expected);
         expect(setConfirmationMsg).toBeCalled();
     });
-    test('Can detect a conflict - After Date.', () => {
-        const displayList = [];
+    test('Can detect a conflict - After Date Changed.', () => {
+        const displayList = [
+            {
+                groupNames: 'student',
+                startDate: '2010-12-11 00:00:00',
+                endDate: '2010-12-16 00:00:00',
+            },
+        ];
         const values = {
-            start: '2090-12-11 00:00:00',
+            start: '2010-12-07 00:00:00',
+            end: '2010-12-12 00:00:00',
+        };
+        const setConfirmationMsg = jest.fn();
+        const actions = {
+            updateScheduleQueuelength: jest.fn(),
+        };
+        const expected = [false, [...displayList]];
+        expect(
+            Helpers.addSchedule(
+                displayList,
+                MockData.userListPanels,
+                ['student'],
+                values,
+                setConfirmationMsg,
+                locale,
+                { validate: true },
+                actions,
+            ),
+        ).toEqual(expected);
+        expect(setConfirmationMsg).toBeCalled();
+    });
+
+    test('Can detect a conflict - Conflict with existing.', () => {
+        const displayList = [
+            {
+                groupNames: 'student',
+                startDate: '2010-12-11 00:00:00',
+                endDate: '2010-12-16 00:00:00',
+            },
+        ];
+
+        const values = {
+            start: '2090-12-07 00:00:00',
             end: '2090-12-16 00:00:00',
         };
         const setConfirmationMsg = jest.fn();
         const actions = {
             updateScheduleQueuelength: jest.fn(),
         };
-        const expected = [false, []];
+        const expected = [false, [...displayList]];
         expect(
             Helpers.addSchedule(
                 displayList,
@@ -236,7 +277,7 @@ describe('Add Schedule', () => {
         const actions = {
             updateScheduleQueuelength: jest.fn(),
         };
-        const expected = [true, [...displayList]];
+        const expected = [false, [...displayList]];
         expect(
             Helpers.addSchedule(
                 displayList,
