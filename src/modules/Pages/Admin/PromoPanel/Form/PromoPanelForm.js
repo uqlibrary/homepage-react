@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';

@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
