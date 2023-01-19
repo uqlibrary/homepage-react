@@ -56,7 +56,6 @@ export const ConfirmationBox = ({
         onClose();
         !!onAlternateAction && onAlternateAction();
     };
-
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
@@ -65,7 +64,7 @@ export const ConfirmationBox = ({
                     {locale.confirmationMessage}
                 </DialogContentText>
                 {!!showAdditionalInformation && !!additionalInformation && (
-                    <DialogContentText data-testid="message-content">
+                    <DialogContentText data-testid="message-content-additional">
                         <strong>Info: </strong>
                         {additionalInformation}
                     </DialogContentText>
