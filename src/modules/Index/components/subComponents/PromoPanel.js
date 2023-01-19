@@ -25,7 +25,7 @@ const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActi
             }
         >
             <Grid container spacing={1}>
-                <Grid item xs>
+                <Grid item xs data-testid={!!promoPanelActionError ? 'panel-fallback-content' : null}>
                     {!!!promoPanelActionError &&
                         currentPromoPanel &&
                         parse(currentPromoPanel.active_panel.panel_content)}

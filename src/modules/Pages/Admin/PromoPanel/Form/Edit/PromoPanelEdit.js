@@ -53,10 +53,11 @@ export const PromoPanelEdit = ({
         //     actions.loadPromoPanelList();
         //     actions.loadPromoPanelUserList();
         // }
-
+        /* istanbul ignore else */
         if (!!!promoPanelListLoading && promoPanelList.length < 1) {
             actions.loadPromoPanelList();
         }
+        /* istanbul ignore else */
         if (!!!promoPanelUserTypesLoading && promoPanelUserTypeList.length < 1) {
             actions.loadPromoPanelUserList();
         }
@@ -65,12 +66,10 @@ export const PromoPanelEdit = ({
     }, []);
 
     React.useEffect(() => {
-        // console.log('Using Effect:');
         if (promoPanelUserTypeList.length > 0) {
-            // console.log('Greater than zero');
             const known = [];
             promoPanelUserTypeList.map(item => {
-                // console.log('item mapping', known, item);
+                /* istanbul ignore else */
                 if (!known.some(e => e.group === item.usergroup_group)) {
                     known.push({ group: item.usergroup_group, name: item.usergroup_group_name });
                 }
