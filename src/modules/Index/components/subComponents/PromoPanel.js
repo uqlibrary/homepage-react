@@ -12,7 +12,13 @@ import PromoPanelLoader from 'modules/Pages/Admin/PromoPanel/PromoPanelLoader';
 const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActionError, promoPanelLoading }) => {
     if (!!!accountLoading && !!!promoPanelLoading) {
         const eventID = Sentry.captureException(
-            new Error('Promopanel API failed to load', { cause: 'Account loading or PromoPanel Loading error' }),
+            new Error('Promopanel API failed to load.', {
+                extra: {
+                    message: 'Account loading or PromoPanel Loading error',
+                    account: (!!account && account) || 'Empty',
+                    panelError: promoPanelActionError,
+                },
+            }),
         );
         console.log('Firing to sentry', eventID);
     }
