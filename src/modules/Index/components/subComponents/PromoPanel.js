@@ -2,6 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import parse from 'html-react-parser';
 import { promoPanel as locale } from './promoPanel.locale';
+import * as Sentry from '@sentry/browser';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -9,6 +10,11 @@ import Grid from '@material-ui/core/Grid';
 import PromoPanelLoader from 'modules/Pages/Admin/PromoPanel/PromoPanelLoader';
 
 const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActionError, promoPanelLoading }) => {
+    if (!!!accountLoading && !!!promoPanelLoading) {
+        const eventID = Sentry.captureException('TESTING SENTRY PROMOPANEL ERROR');
+        console.log('Firing to sentry', eventID);
+    }
+
     return accountLoading === false && promoPanelLoading === false ? (
         <StandardCard
             primaryHeader
