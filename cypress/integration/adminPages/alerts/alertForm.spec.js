@@ -371,7 +371,7 @@ describe('Alerts Admin Form Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it.only('the edit form presets the correct data', () => {
+        it('the edit form presets the correct data', () => {
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');

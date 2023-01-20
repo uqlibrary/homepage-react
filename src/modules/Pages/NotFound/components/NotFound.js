@@ -20,7 +20,7 @@ export const NotFound = ({ account, accountLoading }) => {
     if (!(isValidRoute || isValidFileRoute)) {
         return (
             <StandardPage standardPageId="not-found" title={locale.notFound.title}>
-                <Script404 />
+                <Script404 account={account} accountLoading={accountLoading} />
                 {locale.notFound.urlChangeAdvisory.find(changeAdvice => isCurrentPage(changeAdvice.linkPattern))
                     ? locale.notFound.urlChangeAdvisory.map(changeAdvice => {
                           return isCurrentPage(changeAdvice.linkPattern)
