@@ -9,18 +9,24 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import PromoPanelLoader from 'modules/Pages/Admin/PromoPanel/PromoPanelLoader';
 
+export const reportToSentry = ([error, context = {}]) =>
+    Sentry.withScope(scope => {
+        scope.setTags(context.tags);
+        scope.setExtras(context.extra);
+        Sentry.captureException(error);
+    });
+
 const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActionError, promoPanelLoading }) => {
-    if (!!!accountLoading && !!!promoPanelLoading) {
-        // const eventID = Sentry.captureException(
-        //     new Error('Promopanel API failed to load.', {
-        //         extra: {
-        //             message: 'Account loading or PromoPanel Loading error',
-        //             account: (!!account && account) || 'Empty',
-        //             panelError: promoPanelActionError,
-        //         },
-        //     }),
-        // );
-        // console.log('Firing to sentry', eventID);
+    if (!!promoPanelActionError) {
+        reportToSentry([
+            new Error('Promo Panel API failed to load panel.'),
+            {
+                extra: {
+                    message: 'PromoPanel Action load error',
+                    panelError: promoPanelActionError,
+                },
+            },
+        ]);
     }
 
     return accountLoading === false && promoPanelLoading === false ? (
