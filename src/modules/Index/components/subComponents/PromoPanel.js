@@ -11,7 +11,6 @@ import PromoPanelLoader from 'modules/Pages/Admin/PromoPanel/PromoPanelLoader';
 
 export const reportToSentry = ([error, context = {}]) =>
     Sentry.withScope(scope => {
-        scope.setTags(context.tags);
         scope.setExtras(context.extra);
         Sentry.captureException(error);
     });
