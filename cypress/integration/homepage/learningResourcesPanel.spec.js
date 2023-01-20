@@ -3,7 +3,7 @@ import { default as locale } from '../../../src/modules/Pages/LearningResources/
 import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResourceSearchSuggestions';
 
 context('The Homepage Learning Resource Panel', () => {
-    it.only('Learning resources panel is accessible', () => {
+    it('Learning resources panel is accessible', () => {
         cy.visit('/?user=s1111111');
         cy.injectAxe();
         // cy.wait(2000);
