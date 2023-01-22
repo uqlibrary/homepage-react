@@ -77,3 +77,12 @@ export function waitUntilSpotlightListPageHasLoaded() {
             .should('eq', numberOfRowsPerPageOptions);
     });
 }
+
+export function dateHasValue(dateField, expectedDate) {
+    // dev uses minutes only, AWS pipelines uses minutes and seconds - check it starts with minutes
+    cy.get(dateField)
+        .should('have.attr', 'value')
+        .then(dateValue => {
+            expect(dateValue.startsWith(expectedDate)).to.be.true;
+        });
+}

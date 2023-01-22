@@ -126,6 +126,10 @@ const useStyles = makeStyles(
             fontStyle: 'italic',
             fontSize: '0.8em',
         },
+        screenreader: {
+            position: 'absolute',
+            left: -9999,
+        },
     }),
     { withTheme: true },
 );
@@ -769,6 +773,7 @@ export const SpotlightsListAsTable = ({
                                     scope="row"
                                     style={{ width: 50, padding: 0, textAlign: 'center', color: '#666' }}
                                 >
+                                    <span className={classes.screenreader}>Select</span>
                                     <DeleteOutlinedIcon />
                                 </TableCell>
                                 {tableType === 'current' && (
@@ -792,6 +797,7 @@ export const SpotlightsListAsTable = ({
                                     Spotlight
                                 </TableCell>
                                 <TableCell component="th" scope="row" style={{ width: 260 }}>
+                                    <span className={classes.screenreader}>Title</span>
                                     {!!canTextFilter && (
                                         <div style={{ position: 'relative' }}>
                                             <TextField
@@ -850,7 +856,9 @@ export const SpotlightsListAsTable = ({
                                         </TableSortLabel>
                                     </TableCell>
                                 )}
-                                <TableCell component="th" scope="row" />
+                                <TableCell component="th" scope="row">
+                                    <span className={classes.screenreader}>Actions</span>
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <Droppable droppableId={`droppable-section-${tableType}`}>

@@ -54,7 +54,7 @@ describe('Spotlights Admin List Page', () => {
         cy.viewport(1300, 1000);
         cy.get('h2').should('be.visible');
         cy.get('h2').contains('All spotlights');
-        cy.wait(1000);
+        waitUntilSpotlightListPageHasLoaded();
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Spotlights Admin',
             scopeName: 'Content',
