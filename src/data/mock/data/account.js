@@ -172,7 +172,7 @@ export const accounts = {
             "CAMPUS": "STLUC",
             "INSTRUCTION_MODE": "EX",
             "ACAD_GROUP": "SCI",
-            "STRM": "7060",
+            "STRM": "7081", // all these Semester values would match in a real account as "current_classes" is the current semester
         }
         ],
         "expiryDate": "31-03-18",
