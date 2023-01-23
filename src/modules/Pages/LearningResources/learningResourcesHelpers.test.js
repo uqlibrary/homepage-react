@@ -6,7 +6,7 @@ import {
     reverseA11yProps,
     trimNotes,
 } from './learningResourcesHelpers';
-import { isValidInput } from './components/LearningResources';
+import { getQueryParams, isValidInput } from './components/LearningResources';
 
 describe('filterProps helper', () => {
     it('should make plurals of words properly', () => {
@@ -97,5 +97,31 @@ describe('filterProps helper', () => {
     it('should trim text properly', () => {
         expect(trimNotes('the quick brown fox jumped over the lazy yellow dog', 10)).toEqual('the quick...');
         expect(trimNotes('good test', 20)).toEqual('good test');
+    });
+
+    it('should extract parameters from the url  correctly', () => {
+        const input1 = '?coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%203%202020';
+        const expected1 = {
+            coursecode: 'PHIL1002',
+            campus: 'St Lucia',
+            semester: 'Semester 3 2020',
+        };
+        expect(getQueryParams(input1)).toEqual(expected1);
+
+        const input2 = '?coursecode=FREN3355&campus=St%20Lucia&semester=Yearlong%202022';
+        const expected2 = {
+            coursecode: 'FREN3355',
+            campus: 'St Lucia',
+            semester: 'Yearlong 2022',
+        };
+        expect(getQueryParams(input2)).toEqual(expected2);
+
+        const input3 = '?coursecode=FREN1010&campus=Gatton&semester=Semester%201%202020';
+        const expected3 = {
+            coursecode: 'FREN1010',
+            campus: 'Gatton',
+            semester: 'Semester 1 2020',
+        };
+        expect(getQueryParams(input3)).toEqual(expected3);
     });
 });

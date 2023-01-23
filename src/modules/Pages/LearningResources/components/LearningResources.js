@@ -81,6 +81,25 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+export const getQueryParams = qs => {
+    const qs1 = qs.split('+').join(' ');
+    const re = /[?&]?([^=]+)=([^&]*)/g;
+    const params = {};
+
+    let tokens;
+    // eslint-disable-next-line no-cond-assign
+    while ((tokens = re.exec(qs1))) {
+        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+    }
+
+    return isValidInput(params)
+        ? {
+              ...params,
+              campus: getNormalisedCampus(params),
+          }
+        : [];
+};
+
 export const LearningResources = ({
     actions,
     examLearningResourceList,
@@ -105,25 +124,6 @@ export const LearningResources = ({
     const classes = useStyles();
     const { account } = useAccountContext();
     const location = useLocation();
-
-    const getQueryParams = qs => {
-        const qs1 = qs.split('+').join(' ');
-        const re = /[?&]?([^=]+)=([^&]*)/g;
-        const params = {};
-
-        let tokens;
-        // eslint-disable-next-line no-cond-assign
-        while ((tokens = re.exec(qs1))) {
-            params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
-        }
-
-        return isValidInput(params)
-            ? {
-                  ...params,
-                  campus: getNormalisedCampus(params),
-              }
-            : [];
-    };
 
     // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);
