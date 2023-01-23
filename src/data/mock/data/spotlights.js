@@ -3,7 +3,7 @@ export const spotlights = [{
     'start': '2021-03-15 00:02:00',
     'end': '2099-03-21 23:59:00',
     'title': 'Can be deleted and edited',
-    'url': 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
+    'url': 'http://localhost:2020/learning-resources?user=uqstaff&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
     'img_url': 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     'img_alt':
         'Academic Integrity Modules - Everything you need to know about academic integrity at UQ',

@@ -42,9 +42,8 @@ context('Spotlights on homepage', () => {
         cy.get('[data-testid="spotlights-previous-button"]').should(previousButtonStatus);
         cy.get('[data-testid="spotlights-next-button"]').should(nextButtonStatus);
     }
-    it('Spotlights homepage renders as expected', () => {
+    it('Spotlights homepage controls act as expected', () => {
         cy.visit('/');
-        cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.log('Spootlights navigation tests');
         cy.get(
@@ -78,5 +77,27 @@ context('Spotlights on homepage', () => {
             .click();
         cy.wait(600);
         slideWithFocusIs(1);
+    });
+    it('should land on the expected page when a spotlight is clicked', () => {
+        cy.visit('/');
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="spotlights-image-0"]')
+                .should('exist')
+                .and(
+                    'have.attr',
+                    'src',
+                    'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+                )
+                .click(),
+        );
+        cy.waitUntil(() =>
+            cy
+                .url()
+                .should(
+                    'include',
+                    'http://localhost:2020/learning-resources?user=uqstaff&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
+                ),
+        );
     });
 });
