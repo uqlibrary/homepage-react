@@ -125,6 +125,7 @@ export const LearningResourceSearch = ({
                 <Grid item xs={12} sm>
                     <Autocomplete
                         data-testid={`${elementId}-autocomplete`}
+                        aria-controls={`${elementId}-autocomplete-popup`}
                         blurOnSelect="mouse"
                         id={`${elementId}-autocomplete`}
                         options={getOptions()}

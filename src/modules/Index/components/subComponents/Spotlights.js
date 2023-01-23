@@ -194,21 +194,16 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                     key={index}
                                     id={`spotlights-slide-${index}`}
                                     data-testid={`spotlights-slide-${index}`}
+                                    onClick={() => (window.location = item.link)}
+                                    style={{ cursor: 'pointer' }}
                                 >
-                                    <a
-                                        href={item.link}
-                                        aria-label={item.aria}
-                                        id={`spotlights-link-${index}`}
-                                        data-testid={`spotlights-link-${index}`}
-                                    >
-                                        <Image
-                                            src={item.src}
-                                            alt={item.alt}
-                                            style={{ width: '100%' }}
-                                            id={`spotlights-image-${index}`}
-                                            data-testid={`spotlights-image-${index}`}
-                                        />
-                                    </a>
+                                    <Image
+                                        src={item.src}
+                                        alt={item.alt}
+                                        style={{ width: '100%' }}
+                                        id={`spotlights-image-${index}`}
+                                        data-testid={`spotlights-image-${index}`}
+                                    />
                                 </Slide>
                             ))}
                         </Slider>
