@@ -92,6 +92,13 @@ describe('filterProps helper', () => {
             other: 'some other option that isnt allowed',
         };
         expect(isValidInput(params7)).toBe(false);
+
+        const params8 = {
+            campus: 'some words in front St Lucia',
+            coursecode: 'FREN1010',
+            semester: 'Semester 2 2020',
+        };
+        expect(isValidInput(params8)).toBe(true);
     });
 
     it('should trim text properly', () => {
@@ -123,5 +130,30 @@ describe('filterProps helper', () => {
             semester: 'Semester 1 2020',
         };
         expect(getQueryParams(input3)).toEqual(expected3);
+
+        const input4 = '?coursecode=FREN1020&campus=St%20Lucia&semester=Semester%201%202023';
+        const expected4 = {
+            coursecode: 'FREN1020',
+            campus: 'St Lucia',
+            semester: 'Semester 1 2023',
+        };
+        expect(getQueryParams(input4)).toEqual(expected4);
+
+        const input5 = '?coursecode=FREN1020&campus=St%20Lucia&semester=Summer%202022/23';
+        const expected5 = {
+            coursecode: 'FREN1020',
+            campus: 'St Lucia',
+            semester: 'Summer 2022/23',
+        };
+        expect(getQueryParams(input5)).toEqual(expected5);
+
+        const input =
+            '?coursecode=EDUC4634&campus=/%20EDUC4648%20/%20EDUC7648%20Languages%20Curriculum%20Studies%20-%20St%20Lucia&semester=Yearlong%202023';
+        const expected = {
+            coursecode: 'EDUC4634',
+            campus: 'St Lucia',
+            semester: 'Yearlong 2023',
+        };
+        expect(getQueryParams(input)).toEqual(expected);
     });
 });

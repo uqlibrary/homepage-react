@@ -69,7 +69,7 @@ export const isValidInput = params => {
         valid = !!getNormalisedCampus(params);
     }
 
-    const validSemesterPattern = new RegExp('^[A-Za-z0-9, ]+$');
+    const validSemesterPattern = new RegExp('^[A-Za-z0-9,/ ]+$');
     valid = !!valid && !!params.semester && validSemesterPattern.test(params.semester);
 
     return valid;
@@ -91,13 +91,14 @@ export const getQueryParams = qs => {
     while ((tokens = re.exec(qs1))) {
         params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
     }
+    if (!isValidInput(params)) {
+        return [];
+    }
 
-    return isValidInput(params)
-        ? {
-              ...params,
-              campus: getNormalisedCampus(params),
-          }
-        : [];
+    return {
+        ...params,
+        campus: getNormalisedCampus(params),
+    };
 };
 
 export const LearningResources = ({
