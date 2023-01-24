@@ -4,7 +4,7 @@ export default {
     "reading_lists": [{
         "campus": "St Lucia",
         "url": "http://lr.library.uq.edu.au/lists/4C10616A-F167-0F96-48B7-3F66B5E05138",
-        "period": "Semester 2 2020",
+        "period": "Summer 2022/23",
         "list": [
             {
                 "referenceType": "Webpage",
@@ -234,7 +234,7 @@ export default {
     }, {
         "campus": "St Lucia",
         "url": "http://lr.library.uq.edu.au/lists/4C10616A-F167-0F96-48B7-12345678",
-        "period": "Semester 2 2020",
+        "period": "Summer 2022/23",
         "list": [
             {
                 "referenceType": "Webpage",
