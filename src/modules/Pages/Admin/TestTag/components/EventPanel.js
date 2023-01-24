@@ -208,7 +208,10 @@ const EventPanel = ({
                                             location.formBuildingId === -1
                                         }
                                         variant="standard"
-                                        InputLabelProps={{ ...inputLabelProps, for: 'testntag-form-buildingid-input' }}
+                                        InputLabelProps={{
+                                            ...inputLabelProps,
+                                            htmlFor: 'testntag-form-buildingid-input',
+                                        }}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
@@ -269,7 +272,7 @@ const EventPanel = ({
                                             location.formFloorId === -1
                                         }
                                         variant="standard"
-                                        InputLabelProps={{ ...inputLabelProps, for: 'testntag-form-floorid-input' }}
+                                        InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-floorid-input' }}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (
@@ -324,7 +327,7 @@ const EventPanel = ({
                                             location.formRoomId === -1
                                         }
                                         variant="standard"
-                                        InputLabelProps={{ ...inputLabelProps, for: 'testntag-form-roomid-input' }}
+                                        InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-roomid-input' }}
                                         InputProps={{
                                             ...params.InputProps,
                                             endAdornment: (

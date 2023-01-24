@@ -34,7 +34,6 @@ function getNormalisedCampus(params) {
             found = validCampusname;
         }
     });
-    // console.log('params', found, params);
     return found;
 }
 
