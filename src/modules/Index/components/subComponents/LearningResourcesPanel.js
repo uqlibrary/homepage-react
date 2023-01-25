@@ -60,13 +60,13 @@ export const LearningResourcesPanel = ({ account, history }) => {
 
     const navigateToLearningResourcePage = option => {
         /* istanbul ignore next */
-        if (!option.courseCode || !option.campus || !option.semester) {
+        if (!option.courseCode) {
             return; // should never happen
         }
         const course = {
             classnumber: option.courseCode,
-            campus: option.campus,
-            semester: option.semester,
+            campus: option.campus || '',
+            semester: option.semester || '',
         };
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
