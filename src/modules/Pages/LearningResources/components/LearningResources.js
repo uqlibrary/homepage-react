@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router';
@@ -20,6 +20,22 @@ import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { makeStyles } from '@material-ui/styles';
+
+// lecturers are now maintaining their own courses (it used to be the Library learning Resource team)
+// the Talis screen is just a text field, in which they are supposed to put the course ID
+// and then a space and the campus - freeform :(
+// now lecturers are putting much longer strings into some courses, eg where they have combined courses
+// EDUC1234 / EDUC1235 / EDUC6789 St Lucia
+// assume they are following their instructions and putting the campus on the end
+function getNormalisedCampus(params) {
+    let found = false;
+    Object.values(global.campuses).map(validCampusname => {
+        if (!!params.campus && params.campus.endsWith(validCampusname)) {
+            found = validCampusname;
+        }
+    });
+    return found;
+}
 
 export const isValidInput = params => {
     /**
@@ -49,16 +65,10 @@ export const isValidInput = params => {
     valid = !!valid && !!params.coursecode && validCourseCodePattern.test(params.coursecode);
 
     if (!!valid) {
-        let found = false;
-        Object.values(global.campuses).map(value => {
-            if (!!params.campus && value === params.campus) {
-                found = true;
-            }
-        });
-        valid = found;
+        valid = !!getNormalisedCampus(params);
     }
 
-    const validSemesterPattern = new RegExp('^[A-Za-z0-9, ]+$');
+    const validSemesterPattern = new RegExp('^[A-Za-z0-9,/ ]+$');
     valid = !!valid && !!params.semester && validSemesterPattern.test(params.semester);
 
     return valid;
@@ -69,6 +79,26 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.primary.light,
     },
 }));
+
+export const getQueryParams = qs => {
+    const qs1 = qs.split('+').join(' ');
+    const re = /[?&]?([^=]+)=([^&]*)/g;
+    const params = {};
+
+    let tokens;
+    // eslint-disable-next-line no-cond-assign
+    while ((tokens = re.exec(qs1))) {
+        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+    }
+    if (!isValidInput(params)) {
+        return [];
+    }
+
+    return {
+        ...params,
+        campus: getNormalisedCampus(params),
+    };
+};
 
 export const LearningResources = ({
     actions,
@@ -94,20 +124,6 @@ export const LearningResources = ({
     const classes = useStyles();
     const { account } = useAccountContext();
     const location = useLocation();
-
-    const getQueryParams = qs => {
-        const qs1 = qs.split('+').join(' ');
-        const re = /[?&]?([^=]+)=([^&]*)/g;
-        const params = {};
-
-        let tokens;
-        // eslint-disable-next-line no-cond-assign
-        while ((tokens = re.exec(qs1))) {
-            params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
-        }
-
-        return isValidInput(params) ? params : [];
-    };
 
     // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);

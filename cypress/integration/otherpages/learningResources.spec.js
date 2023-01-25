@@ -51,9 +51,10 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
     const readingList = firstReadingListItems(courseReadingList);
     const firstReadingListTitle = readingList.title || 'mock data is missing';
     const firstReadingListLink = readingList.itemLink || 'mock data is missing';
+    const readingListHeader = getReadingListHeader(FREN1010ReadingList);
     cy.get('[data-testid="learning-resource-subject-reading-list"]')
         .find(`${headerLevel}`)
-        .contains(getReadingListHeader(FREN1010ReadingList));
+        .contains(readingListHeader);
     cy.get(`div[data-testid="reading-list-${courseCode}"`).should('not.contain', 'Reading list currently unavailable');
     cy.get('[data-testid="learning-resource-subject-reading-list"]')
         .find('a')
@@ -69,9 +70,8 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
         courseReadingList.reading_lists.length > 0 &&
         courseReadingList.reading_lists[0];
     const readingListLink = readingList.url || 'mock data is missing';
-    cy.get('[data-testid="learning-resource-subject-reading-list"]')
-        .find('h3')
-        .contains(getReadingListHeader(courseReadingList));
+    const readingListHeader = getReadingListHeader(courseReadingList);
+    cy.get('[data-testid="learning-resource-subject-reading-list"] h3').contains(readingListHeader);
     const numberExcessReadingLists =
         readingListLength(courseReadingList) - locale.myCourses.readingLists.visibleItemsCount;
     cy.get('div[data-testid=reading-list-more-link] a')
@@ -441,7 +441,8 @@ context('The Learning Resources Page', () => {
         the_user_lands_on_the_Search_tab();
 
         a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
-        cy.get('[data-testid="reading-list-FREN1010"]').contains(getReadingListHeader(FREN1010ReadingList));
+        const readingListHeader = getReadingListHeader(FREN1010ReadingList);
+        cy.get('[data-testid="reading-list-FREN1010"]').contains(readingListHeader);
         cy.get('[data-testid="past-exams-FREN1010"]').contains('Past exam papers (16 items)');
         cy.get('[data-testid="guides-FREN1010"]').should('contain', 'French Studies');
 
@@ -553,8 +554,10 @@ context('The Learning Resources Page', () => {
         cy.viewport(1300, 1000);
 
         // enter a repeating string
-        cy.get('input[data-testid="full-learningresource-autocomplete-input-wrapper"]').type('FREN 1');
-        // and the drop down will not appear
+        cy.get('input[data-testid="full-learningresource-autocomplete-input-wrapper"]')
+            .clear()
+            .type('FREN 1');
+        // and the drop-down will not appear
         cy.get('ul#full-learningresource-autocomplete-popup')
             .children()
             .should('have.length', 1 + 1);
@@ -595,7 +598,7 @@ context('The Learning Resources Page', () => {
         );
         cy.waitUntil(() =>
             cy
-                .get('[data-testid="reading-list-FREN1010-content"]')
+                .get('[data-testid="reading-list-FREN1010-content"] h3')
                 .should('exist')
                 .should('contain', 'Reading list for Semester 2 2020 at St Lucia (2 items)'),
         );
@@ -627,13 +630,13 @@ context('The Learning Resources Page', () => {
     // a subject with multiple reading lists displays correctly
     it('the content on the Philosophy page is correct', () => {
         cy.visit(
-            '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%202%202020',
+            '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%203%202020',
         );
         cy.waitUntil(() =>
             cy
                 .get('[data-testid="reading-list-PHIL1002-content"]')
                 .should('exist')
-                .should('contain', 'Reading list for Semester 2 2020 at St Lucia'),
+                .should('contain', 'Reading list for Semester 3 2020 at St Lucia'),
         );
 
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'PHIL1002');
@@ -644,14 +647,14 @@ context('The Learning Resources Page', () => {
 
         cy.get('[data-testid="reading-list-PHIL1002-content"]').should(
             'contain',
-            'Reading list for Semester 2 2020 at St Lucia',
+            'Reading list for Semester 3 2020 at St Lucia',
         );
         cy.get('[data-testid="reading-list-multiple-label"]').should(
             'contain',
             'More than one reading list found for PHIL1002. Please select a list:',
         );
-        cy.get('[data-testid="reading-list-link-0"]').should('contain', 'PHIL1002 St Lucia, Semester 2 2020');
-        cy.get('[data-testid="reading-list-link-1"]').should('contain', 'PHIL1002 St Lucia, Semester 2 2020');
+        cy.get('[data-testid="reading-list-link-0"]').should('contain', 'PHIL1002 St Lucia, Summer 2022/23');
+        cy.get('[data-testid="reading-list-link-1"]').should('contain', 'PHIL1002 St Lucia, Summer 2022/23');
         cy.get('[data-testid="reading-list-multiple-label"]')
             .parent()
             .children()
