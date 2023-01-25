@@ -138,9 +138,9 @@ export function loadCourseReadingListsSuggestions(keyword) {
                     });
                 const payload = sorter.reverse().map((item, index) => {
                     const specifier =
-                        (item.course_title ? `${item.course_title}, ` : '') +
-                        (item.campus ? `${item.campus}, ` : '') +
-                        (item.period ? item.period : '');
+                        (item.course_title ? `${item.course_title}` : '') +
+                        (item.campus ? `, ${item.campus}` : '') +
+                        (item.period ? `, ${item.period}` : '');
                     const append = !!specifier ? ` (${specifier})` : '';
                     return {
                         courseCode: item.name,

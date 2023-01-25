@@ -95,6 +95,34 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
     });
 
+    it('The Learning resources panel displays results with incomplete  data correctly', () => {
+        cy.visit('/?user=s3333333');
+        cy.viewport(1300, 1000);
+        cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
+
+        cy.get('div[data-testid=learning-resources-panel] form input').should(
+            'have.attr',
+            'placeholder',
+            locale.search.placeholder,
+        );
+
+        // user enters FREN
+        cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');
+
+        // the subjects that are missing some data appear correctly
+        cy.waitUntil(() =>
+            cy
+                .get('#homepage-learningresource-autocomplete-option-0')
+                .contains('FREN1010 (has mock data - Introductory French 1, St Lucia, Semester 2 2020)'),
+        );
+        cy.get('#homepage-learningresource-autocomplete-option-1').contains(
+            'FREN1012 (French subject with blank semester, St Lucia)',
+        );
+        cy.get('#homepage-learningresource-autocomplete-option-2').contains(
+            'FREN1011 (French subject with blank campus, Semester 2 2020)',
+        );
+    });
+
     // at one point, a course code entered in all caps would not match a complete course code
     it('The search field loads the matching result for a complete course code', () => {
         cy.visit('/?user=s3333333');

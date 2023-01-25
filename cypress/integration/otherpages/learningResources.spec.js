@@ -213,7 +213,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
     courseReadingList,
     searchSuggestions,
     typeChar = 'FREN',
-    numberOfMatchingSubject = 1, // autocomplete finds this many entries for typeChar
+    numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
 ) {
     const courseCode = courseReadingList.coursecode || 'mock data is missing';
     const frenchSearchSuggestion = searchSuggestions
@@ -271,7 +271,7 @@ function a_user_can_use_the_search_bar_to_load_a_subject(
     courseReadingList,
     searchSuggestions,
     typeChar = 'FREN',
-    numberOfMatchingSubject = 1, // autocomplete finds this many entries for typeChar
+    numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
     tabId = 0,
 ) {
     load_a_subject_in_learning_resource_page_search_tab(
@@ -560,11 +560,11 @@ context('The Learning Resources Page', () => {
         // and the drop-down will not appear
         cy.get('ul#full-learningresource-autocomplete-popup')
             .children()
-            .should('have.length', 1 + 1);
+            .should('have.length', 3 + 1);
     });
 
     // a subject with one reading list which contains more than the minimum number displays correctly
-    it('the content on the history page is correct', () => {
+    it('the content on the history tab is correct', () => {
         cy.visit(
             '/learning-resources?coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020&user=s1111111',
         );
@@ -592,7 +592,7 @@ context('The Learning Resources Page', () => {
     });
 
     // a subject with one reading list which has only the minimum number of items displays correctly
-    it('the content on the french page is correct', () => {
+    it('the content on the french tab is correct', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
         );
@@ -628,7 +628,7 @@ context('The Learning Resources Page', () => {
     });
 
     // a subject with multiple reading lists displays correctly
-    it('the content on the Philosophy page is correct', () => {
+    it('the content on the Philosophy tab is correct', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%203%202020',
         );
