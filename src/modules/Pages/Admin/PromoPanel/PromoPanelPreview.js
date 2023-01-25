@@ -52,6 +52,7 @@ export const PromoPanelPreview = props => {
     return (
         <React.Fragment>
             <Dialog
+                onClose={props.handlePreviewClose}
                 open={props.isPreviewOpen}
                 aria-labelledby="promopanel-preview-title"
                 PaperProps={{ classes: { root: classes.dialogPaper } }}
