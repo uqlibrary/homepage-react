@@ -287,7 +287,13 @@ export const PromoPanelGroupDateSelector = ({
                                     setStartDate,
                                     setEndDate,
                                 )}
-                                format="DD/MM/YYYY HH:mm a"
+                                format="ddd D MMM YYYY h:mma"
+                                InputProps={{
+                                    style: {
+                                        width: '100%',
+                                        marginRight: 25,
+                                    },
+                                }}
                                 showTodayButton
                                 todayLabel={'Today'}
                                 autoOk
@@ -321,7 +327,13 @@ export const PromoPanelGroupDateSelector = ({
                                     setStartDate,
                                     setEndDate,
                                 )}
-                                format="DD/MM/YYYY HH:mm a"
+                                format="ddd D MMM YYYY h:mma"
+                                InputProps={{
+                                    style: {
+                                        width: '100%',
+                                        marginRight: 25,
+                                    },
+                                }}
                                 showTodayButton
                                 todayLabel={'Today'}
                                 autoOk

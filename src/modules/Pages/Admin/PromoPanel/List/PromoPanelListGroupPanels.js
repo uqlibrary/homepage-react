@@ -390,7 +390,7 @@ export const PromoPanelListGroupPanels = ({
                                     return (
                                         <React.Fragment key={id}>
                                             <TableRow className={classes.tableRowGroup}>
-                                                <TableCell colSpan={4} component="td" className={classes.cellGroupName}>
+                                                <TableCell colSpan={3} component="td" className={classes.cellGroupName}>
                                                     <Typography
                                                         data-testid={`block-${item.usergroup_group}`}
                                                         variant="body1"
@@ -448,18 +448,18 @@ export const PromoPanelListGroupPanels = ({
                                                                             {row.panel_admin_notes}
                                                                         </Typography>
                                                                     </TableCell>
-                                                                    <TableCell className={classes.checkboxCell} />
+
                                                                     <TableCell className={classes.cellGroupDetails}>
                                                                         <Typography variant="body1">
                                                                             {moment(
                                                                                 row.panel_schedule_start_time,
-                                                                            ).format('dddd DD/MM/YYYY HH:mm a')}
+                                                                            ).format('ddd D MMM YYYY h:mma')}
                                                                         </Typography>
                                                                     </TableCell>
                                                                     <TableCell className={classes.cellGroupDetails}>
                                                                         <Typography variant="body1">
                                                                             {moment(row.panel_schedule_end_time).format(
-                                                                                'dddd DD/MM/YYYY HH:mm a',
+                                                                                'ddd D MMM YYYY h:mma',
                                                                             )}
                                                                         </Typography>
                                                                     </TableCell>
@@ -515,19 +515,11 @@ export const PromoPanelListGroupPanels = ({
                                                                 {item.default_panel.panel_admin_notes}
                                                             </Typography>
                                                         </TableCell>
-                                                        <TableCell className={classes.checkboxCell}>
-                                                            <Checkbox
-                                                                id={`panel-table-default-checkbox-${item.default_panel.panel_id}-${item.usergroup_group}`}
-                                                                inputProps={{
-                                                                    'aria-label': `panel-table-default-checkbox-${item.default_panel.panel_id}-${item.usergroup_group}`,
-                                                                    'data-testid': `panel-table-default-checkbox-${item.default_panel.panel_id}-${item.usergroup_group}`,
-                                                                }}
-                                                                checked
-                                                                disabled
-                                                            />
-                                                        </TableCell>
+
                                                         <TableCell className={classes.cellGroupDetails}>
-                                                            <Typography variant="body1">Default</Typography>
+                                                            <Typography variant="body1">
+                                                                <strong>Default</strong>
+                                                            </Typography>
                                                         </TableCell>
                                                         <TableCell className={classes.cellGroupDetails}>
                                                             <Typography variant="body1" />
@@ -542,10 +534,10 @@ export const PromoPanelListGroupPanels = ({
                                                                 row={item.default_panel}
                                                                 group={item.usergroup_group}
                                                                 align={'flex-end'}
-                                                                deletePanelById={item => {
-                                                                    /* istanbul ignore next */
-                                                                    unschedulePanelById(item.default_panel);
-                                                                }}
+                                                                deletePanelById={
+                                                                    /* istanbul ignore next */ item =>
+                                                                        unschedulePanelById(item.default_panel)
+                                                                }
                                                                 mainButtonLabel={'Edit'}
                                                                 navigateToCloneForm={navigateToCloneForm}
                                                                 navigateToEditForm={row => navigateToEditForm(row)}

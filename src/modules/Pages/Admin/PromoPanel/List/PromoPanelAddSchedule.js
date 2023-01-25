@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
     },
     dialogPaper: {
         // make the block take up more of the page
-        width: 500,
+        width: 550,
     },
     link: {
         marginBottom: 10,
@@ -260,9 +260,14 @@ export const PromoPanelAddSchedule = ({
                                 onChange={handleDateChange('start')}
                                 InputProps={{
                                     id: 'picker-start-date-text',
+                                    style: {
+                                        width: '100%',
+                                        marginRight: 25,
+                                    },
+                                    readOnly: true,
                                 }}
                                 // minDate={startDate}
-                                format="DD/MM/YYYY HH:mm a"
+                                format="ddd D MMM YYYY h:mma"
                                 showTodayButton
                                 todayLabel={'Today'}
                                 autoOk
@@ -284,7 +289,15 @@ export const PromoPanelAddSchedule = ({
                                 value={endDate}
                                 label="End date"
                                 onChange={handleDateChange('end')}
-                                format="DD/MM/YYYY HH:mm a"
+                                format="ddd D MMM YYYY h:mma"
+                                InputProps={{
+                                    id: 'picker-end-date-text',
+                                    style: {
+                                        width: '100%',
+                                        marginRight: 25,
+                                    },
+                                    readOnly: true,
+                                }}
                                 minDate={startDate}
                                 showTodayButton
                                 todayLabel={'Today'}

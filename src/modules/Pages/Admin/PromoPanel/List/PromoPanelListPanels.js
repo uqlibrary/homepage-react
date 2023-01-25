@@ -509,7 +509,7 @@ export const PromoPanelListPanels = ({
                                             </TableCell>
                                             <TableCell component="td" className={classes.cellGroupName}>
                                                 <Typography variant="body1">
-                                                    {moment(item.panel_created_at).format('dddd DD/MM/YYYY HH:mm a')}
+                                                    {moment(item.panel_created_at).format('ddd D MMM YYYY h:mma')}
                                                 </Typography>
                                             </TableCell>
                                             <TableCell component="td" className={classes.cellGroupName}>

@@ -307,7 +307,7 @@ export const PromoPanelForm = ({
         if (['is_default_panel'].includes(prop)) {
             propValue = event.target.checked ? 1 : 0;
         } else if (['start', 'end'].includes(prop)) {
-            propValue = event.format('YYYY/MM/DD hh:mm a');
+            propValue = !!event && event.format('YYYY/MM/DD hh:mm a');
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
         }
