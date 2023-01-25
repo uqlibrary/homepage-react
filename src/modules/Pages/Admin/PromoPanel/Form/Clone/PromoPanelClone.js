@@ -82,7 +82,6 @@ export const PromoPanelClone = ({
                         // });
                     } else {
                         setIsDefault(false);
-                        console.log('Panel Schedule for clone:', item);
                         // item.panel_schedule.map(element => {
                         //     !userlist.includes(element.usergroup_group_name) &&
                         //         userlist.push(element.usergroup_group_name);

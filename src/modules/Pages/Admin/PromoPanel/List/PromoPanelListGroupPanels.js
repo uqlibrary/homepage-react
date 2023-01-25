@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
@@ -157,6 +155,7 @@ export const PromoPanelListGroupPanels = ({
     const [groupName, setGroupName] = React.useState('');
     const [selectorGroupNames, setSelectorGroupNames] = React.useState([]);
     const [filteredPanels, setFilteredPanels] = React.useState(userPanelList);
+    /* istanbul ignore next */
     React.useEffect(() => {
         if (selectorGroupNames.length > 0) {
             setFilteredPanels(filterPanelList(userPanelList, selectorGroupNames, true));
@@ -201,6 +200,8 @@ export const PromoPanelListGroupPanels = ({
         setGroupName(groupName);
         setIsAddingDefault(true);
     };
+    // Ignoring, as there may be changes to filter, at the present without filter type is always string
+    /* istanbul ignore next */
     const handleGroupFilterChange = event => {
         const {
             target: { value },
@@ -216,7 +217,8 @@ export const PromoPanelListGroupPanels = ({
     };
 
     const onPreviewOpen = row => {
-        const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
+        // const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
+        const scheduled = false;
         setPreviewPanel({
             name: row.panel_admin_notes,
             title: row.panel_title,
@@ -247,9 +249,13 @@ export const PromoPanelListGroupPanels = ({
                 actions.loadPromoPanelUserList();
                 // clearAllCheckboxes();
             })
-            .catch(() => {
-                showUnscheduleFailureConfirmation();
-            });
+            /* istanbul ignore next */
+            .catch(
+                /* istanbul ignore next */ () => {
+                    /* istanbul ignore next */
+                    showUnscheduleFailureConfirmation();
+                },
+            );
     }
     // ** COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS
     // const unscheduleSelectedPanels = () => {
@@ -291,6 +297,7 @@ export const PromoPanelListGroupPanels = ({
     const handleCloseGroupSchedule = () => {
         setIsAddingSchedule(false);
     };
+    /* istanbul ignore next */
     const handleCloseGroupDefault = () => {
         setIsAddingDefault(false);
     };
@@ -382,52 +389,120 @@ export const PromoPanelListGroupPanels = ({
                                     rowMarker = 0;
                                     return (
                                         <React.Fragment key={id}>
+                                            <TableRow className={classes.tableRowGroup}>
+                                                <TableCell colSpan={4} component="td" className={classes.cellGroupName}>
+                                                    <Typography
+                                                        data-testid={`block-${item.usergroup_group}`}
+                                                        variant="body1"
+                                                        style={{ paddingBottom: 5 }}
+                                                    >
+                                                        {item.usergroup_group_name}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell colSpan={2} component="td" style={{ textAlign: 'right' }}>
+                                                    <Button
+                                                        style={{ marginRight: 5 }}
+                                                        variant="contained"
+                                                        data-testid={`schedule-panel-${item.usergroup_group}`}
+                                                        id={`schedule-panel-${item.usergroup_group}`}
+                                                        onClick={() => onAddSchedule(item.usergroup_group)}
+                                                    >
+                                                        Schedule panel
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        onClick={() => onAddNewDefault(item.usergroup_group)}
+                                                        data-testid={`default-panel-${item.usergroup_group}`}
+                                                        id={`default-panel-${item.usergroup_group}`}
+                                                    >
+                                                        Set Default
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+
+                                            {item.scheduled_panels.length > 0 &&
+                                                item.scheduled_panels.map((row, id) => {
+                                                    if (
+                                                        row.panel_schedule_end_time &&
+                                                        moment(row.panel_schedule_end_time).toDate() > new moment()
+                                                    ) {
+                                                        rowMarker++;
+                                                        return (
+                                                            <>
+                                                                <TableRow
+                                                                    className={`${
+                                                                        classes.tableRow
+                                                                    } promoPanel-data-row ${
+                                                                        rowMarker % 2 === 0
+                                                                            ? classes.cellGroupRowEven
+                                                                            : classes.cellGroupRowOdd
+                                                                    }`}
+                                                                    key={id}
+                                                                >
+                                                                    <TableCell className={classes.cellEmpty} />
+
+                                                                    <TableCell className={classes.cellGroupDetails}>
+                                                                        <Typography variant="body1">
+                                                                            <strong>{row.panel_title}</strong>
+                                                                            <br />
+                                                                            {row.panel_admin_notes}
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                    <TableCell className={classes.checkboxCell} />
+                                                                    <TableCell className={classes.cellGroupDetails}>
+                                                                        <Typography variant="body1">
+                                                                            {moment(
+                                                                                row.panel_schedule_start_time,
+                                                                            ).format('dddd DD/MM/YYYY HH:mm a')}
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                    <TableCell className={classes.cellGroupDetails}>
+                                                                        <Typography variant="body1">
+                                                                            {moment(row.panel_schedule_end_time).format(
+                                                                                'dddd DD/MM/YYYY HH:mm a',
+                                                                            )}
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                    <TableCell className={classes.cellGroupDetails}>
+                                                                        <PromoPanelSplitButton
+                                                                            alertId={alert.id}
+                                                                            canEdit={canEdit}
+                                                                            canClone={canClone}
+                                                                            canUnschedule
+                                                                            onPreview={
+                                                                                /* istanbul ignore next */ row =>
+                                                                                    onPreviewOpen(row, item)
+                                                                            }
+                                                                            row={row}
+                                                                            group={item.usergroup_group}
+                                                                            align={'flex-end'}
+                                                                            deletePanelById={() =>
+                                                                                unschedulePanelById(row)
+                                                                            }
+                                                                            mainButtonLabel={'Edit'}
+                                                                            navigateToCloneForm={navigateToCloneForm}
+                                                                            navigateToEditForm={row =>
+                                                                                navigateToEditForm(row)
+                                                                            }
+                                                                            confirmDeleteLocale={
+                                                                                confirmUnscheduleLocale
+                                                                            }
+                                                                        />
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            </>
+                                                        );
+                                                    } else {
+                                                        return null;
+                                                    }
+                                                })}
                                             {!!item.default_panel && Object.keys(item.default_panel).length > 0 && (
                                                 <>
-                                                    <TableRow className={classes.tableRowGroup}>
-                                                        <TableCell
-                                                            colSpan={4}
-                                                            component="td"
-                                                            className={classes.cellGroupName}
-                                                        >
-                                                            <Typography
-                                                                data-testid={`block-${item.usergroup_group}`}
-                                                                variant="body1"
-                                                                style={{ paddingBottom: 5 }}
-                                                            >
-                                                                {item.usergroup_group_name}
-                                                            </Typography>
-                                                        </TableCell>
-                                                        <TableCell
-                                                            colSpan={2}
-                                                            component="td"
-                                                            style={{ textAlign: 'right' }}
-                                                        >
-                                                            <Button
-                                                                style={{ marginRight: 5 }}
-                                                                variant="contained"
-                                                                data-testid={`schedule-panel-${item.usergroup_group}`}
-                                                                id={`schedule-panel-${item.usergroup_group}`}
-                                                                onClick={() => onAddSchedule(item.usergroup_group)}
-                                                            >
-                                                                Schedule panel
-                                                            </Button>
-                                                            <Button
-                                                                variant="contained"
-                                                                onClick={() => onAddNewDefault(item.usergroup_group)}
-                                                                data-testid={`default-panel-${item.usergroup_group}`}
-                                                                id={`default-panel-${item.usergroup_group}`}
-                                                            >
-                                                                Set Default
-                                                            </Button>
-                                                        </TableCell>
-                                                    </TableRow>
-
                                                     <TableRow
                                                         className={`${classes.tableRow} promoPanel-data-row ${
                                                             rowMarker % 2 === 0
                                                                 ? classes.cellGroupRowEven
-                                                                : classes.cellGroupRowOdd
+                                                                : /* istanbul ignore next */ classes.cellGroupRowOdd
                                                         }`}
                                                         key={id}
                                                     >
@@ -468,6 +543,7 @@ export const PromoPanelListGroupPanels = ({
                                                                 group={item.usergroup_group}
                                                                 align={'flex-end'}
                                                                 deletePanelById={item => {
+                                                                    /* istanbul ignore next */
                                                                     unschedulePanelById(item.default_panel);
                                                                 }}
                                                                 mainButtonLabel={'Edit'}
@@ -479,72 +555,6 @@ export const PromoPanelListGroupPanels = ({
                                                     </TableRow>
                                                 </>
                                             )}
-
-                                            {item.scheduled_panels.length > 0 &&
-                                                item.scheduled_panels.map((row, id) => {
-                                                    if (
-                                                        row.panel_schedule_end_time &&
-                                                        moment(row.panel_schedule_end_time).toDate() > new moment()
-                                                    ) {
-                                                        rowMarker++;
-                                                        return (
-                                                            <TableRow
-                                                                className={`${classes.tableRow} promoPanel-data-row ${
-                                                                    rowMarker % 2 === 0
-                                                                        ? classes.cellGroupRowEven
-                                                                        : classes.cellGroupRowOdd
-                                                                }`}
-                                                                key={id}
-                                                            >
-                                                                <TableCell className={classes.cellEmpty} />
-
-                                                                <TableCell className={classes.cellGroupDetails}>
-                                                                    <Typography variant="body1">
-                                                                        <strong>{row.panel_title}</strong>
-                                                                        <br />
-                                                                        {row.panel_admin_notes}
-                                                                    </Typography>
-                                                                </TableCell>
-                                                                <TableCell className={classes.checkboxCell} />
-                                                                <TableCell className={classes.cellGroupDetails}>
-                                                                    <Typography variant="body1">
-                                                                        {moment(row.panel_schedule_start_time).format(
-                                                                            'dddd DD/MM/YYYY HH:mm a',
-                                                                        )}
-                                                                    </Typography>
-                                                                </TableCell>
-                                                                <TableCell className={classes.cellGroupDetails}>
-                                                                    <Typography variant="body1">
-                                                                        {moment(row.panel_schedule_end_time).format(
-                                                                            'dddd DD/MM/YYYY HH:mm a',
-                                                                        )}
-                                                                    </Typography>
-                                                                </TableCell>
-                                                                <TableCell className={classes.cellGroupDetails}>
-                                                                    <PromoPanelSplitButton
-                                                                        alertId={alert.id}
-                                                                        canEdit={canEdit}
-                                                                        canClone={canClone}
-                                                                        canUnschedule
-                                                                        onPreview={row => onPreviewOpen(row, item)}
-                                                                        row={row}
-                                                                        group={item.usergroup_group}
-                                                                        align={'flex-end'}
-                                                                        deletePanelById={() => unschedulePanelById(row)}
-                                                                        mainButtonLabel={'Edit'}
-                                                                        navigateToCloneForm={navigateToCloneForm}
-                                                                        navigateToEditForm={row =>
-                                                                            navigateToEditForm(row)
-                                                                        }
-                                                                        confirmDeleteLocale={confirmUnscheduleLocale}
-                                                                    />
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        );
-                                                    } else {
-                                                        return null;
-                                                    }
-                                                })}
                                         </React.Fragment>
                                     );
                                 })}

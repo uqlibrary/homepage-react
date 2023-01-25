@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
@@ -69,6 +66,83 @@ export const handleChange = (event, startDate, endDate, setSaveEnabled, setStart
     }
 };
 
+export const handleGroupDateSave = (
+    displayList,
+    fullPromoPanelUserTypeList,
+    scheduleGroupIndex,
+    scheduleChangeIndex,
+    panelScheduleId,
+    startDate,
+    endDate,
+    setConfirmationMessage,
+    handleSaveGroupDate,
+    setConfirmationMode,
+    setIsConfirmOpen,
+) => {
+    let isValid = true;
+    // Check against existing schedules already saved
+    fullPromoPanelUserTypeList.map(schedules => {
+        /* istanbul ignore else */
+        if (schedules.usergroup_group === scheduleGroupIndex) {
+            schedules.scheduled_panels &&
+                schedules.scheduled_panels.map(schedule => {
+                    /* istanbul ignore else */
+                    if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
+                        /* istanbul ignore else */
+                        if (
+                            (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
+                                moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
+                            (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
+                                /* istanbul ignore next */
+                                moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
+                        ) {
+                            isValid = false;
+                            setConfirmationMessage(
+                                locale.form.scheduleConflict.alert(
+                                    scheduleGroupIndex,
+                                    schedule.panel_title,
+                                    schedule.panel_schedule_start_time,
+                                    schedule.panel_schedule_end_time,
+                                ),
+                            );
+                        }
+                    }
+                });
+        }
+    });
+    !!displayList &&
+        displayList.length > 0 &&
+        displayList.map((alloc, index) => {
+            /* istanbul ignore else  */
+            if (
+                ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
+                    moment(startDate).isBefore(moment(alloc.endDate))) ||
+                    (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
+                        moment(alloc.startDate).isBefore(moment(endDate)))) &&
+                isValid &&
+                index !== scheduleChangeIndex &&
+                scheduleGroupIndex === alloc.groupNames
+            ) {
+                isValid = false;
+                setConfirmationMessage(
+                    locale.form.scheduleConflict.alert(
+                        scheduleGroupIndex,
+                        `Schedule existing in this panel for ${scheduleGroupIndex}`,
+                        alloc.startDate,
+                        alloc.endDate,
+                    ),
+                );
+            }
+        });
+
+    if (isValid) {
+        handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
+    } else {
+        setConfirmationMode('schedule');
+        setIsConfirmOpen(true);
+    }
+};
+
 export const PromoPanelGroupDateSelector = ({
     isEditingDate,
     defaultStartDate,
@@ -119,70 +193,70 @@ export const PromoPanelGroupDateSelector = ({
         handleCloseGroupDate();
     };
 
-    const handleGroupDateSave = () => {
-        let isValid = true;
-        // Check against existing schedules already saved
-        fullPromoPanelUserTypeList.map(schedules => {
-            /* istanbul ignore else */
-            if (schedules.usergroup_group === scheduleGroupIndex) {
-                schedules.scheduled_panels &&
-                    schedules.scheduled_panels.map(schedule => {
-                        /* istanbul ignore else */
-                        if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
-                            /* istanbul ignore else */
-                            if (
-                                (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-                                    moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
-                                (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
-                                    /* istanbul ignore next */
-                                    moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
-                            ) {
-                                isValid = false;
-                                setConfirmationMessage(
-                                    locale.form.scheduleConflict.alert(
-                                        scheduleGroupIndex,
-                                        schedule.panel_title,
-                                        schedule.panel_schedule_start_time,
-                                        schedule.panel_schedule_end_time,
-                                    ),
-                                );
-                            }
-                        }
-                    });
-            }
-        });
-        !!displayList &&
-            displayList.length > 0 &&
-            displayList.map((alloc, index) => {
-                /* istanbul ignore else  */
-                if (
-                    ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
-                        moment(startDate).isBefore(moment(alloc.endDate))) ||
-                        (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
-                            moment(alloc.startDate).isBefore(moment(endDate)))) &&
-                    isValid &&
-                    index !== scheduleChangeIndex &&
-                    scheduleGroupIndex === alloc.groupNames
-                ) {
-                    isValid = false;
-                    setConfirmationMessage(
-                        locale.form.scheduleConflict.alert(
-                            scheduleGroupIndex,
-                            `Schedule existing in this panel for ${scheduleGroupIndex}`,
-                            alloc.startDate,
-                            alloc.endDate,
-                        ),
-                    );
-                }
-            });
+    // const handleGroupDateSave = () => {
+    //     let isValid = true;
+    //     // Check against existing schedules already saved
+    //     fullPromoPanelUserTypeList.map(schedules => {
+    //         /* istanbul ignore else */
+    //         if (schedules.usergroup_group === scheduleGroupIndex) {
+    //             schedules.scheduled_panels &&
+    //                 schedules.scheduled_panels.map(schedule => {
+    //                     /* istanbul ignore else */
+    //                     if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
+    //                         /* istanbul ignore else */
+    //                         if (
+    //                             (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
+    //                                 moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
+    //                             (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
+    //                                 /* istanbul ignore next */
+    //                                 moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
+    //                         ) {
+    //                             isValid = false;
+    //                             setConfirmationMessage(
+    //                                 locale.form.scheduleConflict.alert(
+    //                                     scheduleGroupIndex,
+    //                                     schedule.panel_title,
+    //                                     schedule.panel_schedule_start_time,
+    //                                     schedule.panel_schedule_end_time,
+    //                                 ),
+    //                             );
+    //                         }
+    //                     }
+    //                 });
+    //         }
+    //     });
+    //     !!displayList &&
+    //         displayList.length > 0 &&
+    //         displayList.map((alloc, index) => {
+    //             /* istanbul ignore else  */
+    //             if (
+    //                 ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
+    //                     moment(startDate).isBefore(moment(alloc.endDate))) ||
+    //                     (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
+    //                         moment(alloc.startDate).isBefore(moment(endDate)))) &&
+    //                 isValid &&
+    //                 index !== scheduleChangeIndex &&
+    //                 scheduleGroupIndex === alloc.groupNames
+    //             ) {
+    //                 isValid = false;
+    //                 setConfirmationMessage(
+    //                     locale.form.scheduleConflict.alert(
+    //                         scheduleGroupIndex,
+    //                         `Schedule existing in this panel for ${scheduleGroupIndex}`,
+    //                         alloc.startDate,
+    //                         alloc.endDate,
+    //                     ),
+    //                 );
+    //             }
+    //         });
 
-        if (isValid) {
-            handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
-        } else {
-            setConfirmationMode('schedule');
-            setIsConfirmOpen(true);
-        }
-    };
+    //     if (isValid) {
+    //         handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
+    //     } else {
+    //         setConfirmationMode('schedule');
+    //         setIsConfirmOpen(true);
+    //     }
+    // };
 
     return (
         <React.Fragment>
@@ -220,6 +294,7 @@ export const PromoPanelGroupDateSelector = ({
                                 KeyboardButtonProps={{
                                     'aria-label': 'Start Date',
                                     'data-testid': 'end-date-calendar',
+                                    id: 'start-date-calendar',
                                 }}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
@@ -253,6 +328,7 @@ export const PromoPanelGroupDateSelector = ({
                                 KeyboardButtonProps={{
                                     'aria-label': 'Start Date',
                                     'data-testid': 'end-date-calendar',
+                                    id: 'end-date-calendar',
                                 }}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
@@ -288,7 +364,21 @@ export const PromoPanelGroupDateSelector = ({
                                 disabled={!saveEnabled}
                                 data-testid="admin-promopanel-group-button-save"
                                 variant="contained"
-                                onClick={handleGroupDateSave}
+                                onClick={() =>
+                                    handleGroupDateSave(
+                                        displayList,
+                                        fullPromoPanelUserTypeList,
+                                        scheduleGroupIndex,
+                                        scheduleChangeIndex,
+                                        panelScheduleId,
+                                        startDate,
+                                        endDate,
+                                        setConfirmationMessage,
+                                        handleSaveGroupDate,
+                                        setConfirmationMode,
+                                        setIsConfirmOpen,
+                                    )
+                                }
                             />
                         </Grid>
                     </Grid>
@@ -311,7 +401,7 @@ PromoPanelGroupDateSelector.propTypes = {
     setIsConfirmOpen: PropTypes.func,
     setConfirmationMode: PropTypes.func,
     panelScheduleId: PropTypes.number,
-    displayList: PropTypes.object,
+    displayList: PropTypes.array,
 };
 
 PromoPanelGroupDateSelector.defaultProps = {

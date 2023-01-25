@@ -1,17 +1,14 @@
-/* istanbul ignore file */
-
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
-import ListItemText from '@material-ui/core/ListItemText';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Grid from '@material-ui/core/Grid';
+// import Select from '@material-ui/core/Select';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import Checkbox from '@material-ui/core/Checkbox';
+// import ListItemText from '@material-ui/core/ListItemText';
+// import FormControl from '@material-ui/core/FormControl';
+// import InputLabel from '@material-ui/core/InputLabel';
+// import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -19,7 +16,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelPreview } from '../PromoPanelPreview';
 import { Typography } from '@material-ui/core';
@@ -27,15 +23,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { PromoPanelSplitButton } from './PromoPanelSplitButton';
 
-import CloseIcon from '@material-ui/icons/Close';
-import DeleteIcon from '@material-ui/icons/Delete';
-
-// import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../../../../locale/promopanel.locale';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-import { filterPanelList } from '../promoPanelHelpers';
+// import { filterPanelList } from '../promoPanelHelpers';
 
 const moment = require('moment');
 
@@ -144,15 +136,14 @@ export const PromoPanelListPanels = ({
     actions,
     isLoading,
     panelList,
-    knownGroups,
-    showBulkDelete,
-    showFilter,
+    // knownGroups,
+    // showBulkDelete,
+    // showFilter,
     isPastPanels,
     title,
     canEdit,
     canClone,
     canDelete,
-    headertag,
     panelError,
     history,
     showPast,
@@ -171,7 +162,7 @@ export const PromoPanelListPanels = ({
     // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
     // const [deleteActive, setDeleteActive] = useState(false);
     // const [panelNotice, setPanelNotice] = useState('');
-    const [selectorGroupNames, setSelectorGroupNames] = React.useState([]);
+    // const [selectorGroupNames, setSelectorGroupNames] = React.useState([]);
     const [filteredPanels, setFilteredPanels] = React.useState(panelList);
 
     React.useEffect(() => {
@@ -212,19 +203,18 @@ export const PromoPanelListPanels = ({
     // };
     // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
     // const isDefaultPanel = value => value && value.length > 0;
-    const confirmDeleteLocale = numberOfCheckedBoxes => {
+    const confirmDeleteLocale = () => {
         return {
             ...locale.listPage.confirmDelete,
-            confirmationTitle: locale.listPage.confirmDelete.confirmationTitle
-                .replace('[N]', numberOfCheckedBoxes)
-                .replace('alerts', numberOfCheckedBoxes === 1 ? 'alert' : 'alerts'),
+            confirmationTitle: locale.listPage.confirmDelete.confirmationTitle,
         };
     };
     // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
     // const checkBoxIdPrefix = 'list-checkbox-';
 
-    const onPreviewOpen = (row, item) => {
-        const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
+    const onPreviewOpen = row => {
+        // const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
+        const scheduled = false;
         setPreviewPanel({
             name: row.panel_admin_notes,
             title: row.panel_title,
@@ -277,6 +267,7 @@ export const PromoPanelListPanels = ({
     // const headerCountIndicator = rowCount => {
     //     return '[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : '');
     // };
+    /* istanbul ignore next */
     function deletePanelById(id) {
         actions
             .deletePanel(id)
@@ -285,7 +276,7 @@ export const PromoPanelListPanels = ({
                 // setDeleteActive(false);
                 actions.loadPromoPanelList();
             })
-            .catch(e => {
+            .catch(() => {
                 showDeleteFailureConfirmation();
             });
     }
@@ -310,20 +301,22 @@ export const PromoPanelListPanels = ({
         history.push(`/admin/promopanel/clone/${panelId}`);
         scrollToTopOfPage();
     };
-    const handleGroupFilterChange = event => {
-        const {
-            target: { value },
-        } = event;
+    // COMMENTED OUT AS THERE IS PRESENTLY NO FILTER FOR THIS
+    // const handleGroupFilterChange = event => {
+    //     const {
+    //         target: { value },
+    //     } = event;
 
-        const selections = typeof value === 'string' ? value.split(',') : value;
+    //     const selections = typeof value === 'string' ? value.split(',') : value;
 
-        setSelectorGroupNames(selections);
+    //     setSelectorGroupNames(selections);
 
-        // clearAllCheckboxes();
+    //     // clearAllCheckboxes();
 
-        setFilteredPanels(filterPanelList(panelList, selections));
-        // Filter the selection, and store in filteredPanels.
-    };
+    //     setFilteredPanels(filterPanelList(panelList, selections));
+    //     // Filter the selection, and store in filteredPanels.
+    // };
+
     return (
         <React.Fragment>
             {/*
@@ -351,13 +344,14 @@ export const PromoPanelListPanels = ({
                 additionalInformation={panelError}
             />
             <StandardCard title={title} customBackgroundColor="#F7F7F7">
-                {!!showFilter && (
+                {/* FILTER COMMENTED OUT PENDING FEEDBACK */}
+                {/* {!!showFilter && (
                     <Grid container alignItems={'flex-end'} style={{ marginBottom: 10 }}>
                         <Grid item xs={1} style={{ paddingBottom: 5 }}>
                             Filter By:
                         </Grid>
                         <Grid item xs={4}>
-                            {/* filter start */}
+
                             <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
                                 <InputLabel id="group-selector">Filter by group</InputLabel>
                                 <Select
@@ -379,10 +373,10 @@ export const PromoPanelListPanels = ({
                                     ))}
                                 </Select>
                             </FormControl>
-                            {/* filter end */}
+
                         </Grid>
                     </Grid>
-                )}
+                )} */}
 
                 {/*
                     *** COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS ***
@@ -441,7 +435,7 @@ export const PromoPanelListPanels = ({
                     >
                         <TableHead>
                             <TableRow>
-                                {showBulkDelete && <TableCell component="th" scope="row" />}
+                                {/* {showBulkDelete && <TableCell component="th" scope="row" />} */}
 
                                 <TableCell component="th" scope="row">
                                     Name
@@ -510,7 +504,7 @@ export const PromoPanelListPanels = ({
                                             <TableCell component="td" className={classes.cellGroupName}>
                                                 <Typography variant="body1" className={classes.ellipsis}>
                                                     {(!!item.panel_content && item.panel_content.replace(regex, ' ')) ||
-                                                        ' '}
+                                                        /* istanbul ignore next */ ' '}
                                                 </Typography>
                                             </TableCell>
                                             <TableCell component="td" className={classes.cellGroupName}>

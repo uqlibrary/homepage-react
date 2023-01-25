@@ -99,7 +99,7 @@ export default {
     },
     listPage: {
         confirmDelete: {
-            confirmationTitle: 'Remove [N] panels?',
+            confirmationTitle: 'Remove selected panels?',
             confirmationMessage: (
                 <Fragment>
                     Are you sure you want to remove the selected panels?

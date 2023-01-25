@@ -1,6 +1,7 @@
 import React from 'react';
-import PromoPanel from './PromoPanel';
-import { rtlRender, screen } from '../../../../../utils/test-utils';
+import PromoPanel, { reportToSentry } from './PromoPanel';
+import { rtlRender } from '../../../../../utils/test-utils';
+import * as Sentry from '@sentry/browser';
 
 function setup(testProps = {}) {
     const props = {
@@ -47,5 +48,20 @@ describe('Promo Panel display', () => {
     it('Renders promopanel loader when account or panel is loading', () => {
         const { queryByTestId } = setup({ promoPanelLoading: true });
         expect(queryByTestId('panel-fallback-content')).not.toBeInTheDocument();
+    });
+    it('correctly fires an error to sentry if no error loaded', () => {
+        const mockSentryScope = jest.spyOn(Sentry, 'withScope');
+        reportToSentry([
+            new Error('Promo Panel API failed to load panel.'),
+            {
+                extra: {
+                    message: 'PromoPanel Action load error',
+                    panelError: 'Error',
+                },
+            },
+        ]);
+        expect(mockSentryScope).toBeCalled();
+        reportToSentry([new Error('Promo Panel API failed to load panel.')]);
+        expect(mockSentryScope).toBeCalled();
     });
 });

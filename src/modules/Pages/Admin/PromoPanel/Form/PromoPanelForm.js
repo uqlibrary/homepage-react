@@ -160,7 +160,7 @@ export const PromoPanelForm = ({
     const savePromoPanel = () => {
         const schedules = [];
         const defaults = [];
-
+        /* istanbul ignore else */
         if (values.scheduledList.length > 0) {
             values.scheduledList.map(item => {
                 schedules.push({
@@ -173,12 +173,12 @@ export const PromoPanelForm = ({
                 });
             });
         }
+        /* istanbul ignore else */
         if (values.defaultList.length > 0) {
             values.defaultList.map(item => {
                 defaults.push({ name: item.groupNames, existing: item.existing });
             });
         }
-
         const newValues = {
             panel_id: values.id,
             panel_title: values.title,
@@ -193,6 +193,7 @@ export const PromoPanelForm = ({
             actions.savePromoPanel(newValues);
             if (schedules.length > 0) {
                 schedules.map(schedule => {
+                    /* istanbul ignore else */
                     if (!schedule.existing) {
                         actions.saveUserTypePanelSchedule({
                             id: newValues.panel_id,
@@ -203,6 +204,7 @@ export const PromoPanelForm = ({
                             },
                         });
                     }
+                    /* istanbul ignore else */
                     if (!!schedule.dateChanged) {
                         actions.updateUserTypePanelSchedule({
                             id: schedule.id,
@@ -214,12 +216,16 @@ export const PromoPanelForm = ({
                         });
                     }
                 });
-            } else if (defaults.length > 0) {
-                defaults.map(defaultItem => {
-                    if (!defaultItem.existing) {
-                        actions.saveDefaultUserTypePanel({ id: newValues.panel_id, usergroup: defaultItem.name });
-                    }
-                });
+            } else {
+                /* istanbul ignore else */
+                if (defaults.length > 0) {
+                    defaults.map(defaultItem => {
+                        /* istanbul ignore else */
+                        if (!defaultItem.existing) {
+                            actions.saveDefaultUserTypePanel({ id: newValues.panel_id, usergroup: defaultItem.name });
+                        }
+                    });
+                }
             }
         } else {
             actions.createPromoPanel(newValues);
@@ -228,8 +234,8 @@ export const PromoPanelForm = ({
 
     const confirmSavePromo = () => {
         setConfirmationMode('save');
+        /* istanbul ignore else */
         if (values.is_default_panel) {
-            /* istanbul ignore else */
             if (displayList.length > 0) {
                 // show the confirmation box that it will overwrite the groups default with THIS panel.
                 const formGroups = [];
@@ -304,19 +310,6 @@ export const PromoPanelForm = ({
             propValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
-            // // fake switch because istanbul doesnt block on an else if in this version :(
-            // switch (true) {
-            //     case ['active', 'weight'].includes(prop):
-            //         propValue = !!propValue ? 1 : /* istanbul ignore next */ 0;
-            //         break;
-            //     /* istanbul ignore next */
-            //     case propValue === false:
-            //         // it returns false when we clear a text field
-            //         propValue = '';
-            //         break;
-            //     /* istanbul ignore next */
-            //     default:
-            // }
         }
         setValues({
             ...values,
@@ -324,6 +317,7 @@ export const PromoPanelForm = ({
             end: values.end || /* istanbul ignore next */ defaults.endDateDefault,
             [prop]: propValue,
         });
+        /* istanbul ignore else */
         if (['is_default_panel'].includes(prop)) {
             setDisplayList(event.target.checked ? [...values.defaultList] : [...values.scheduledList]);
         }
@@ -345,7 +339,6 @@ export const PromoPanelForm = ({
     };
 
     const editPanelGroupSchedule = idx => {
-        console.log('Editing Schedule');
         setScheduleChangeIndex(idx);
         setScheduleGroupIndex(displayList[idx].groupNames);
         setPanelScheduleId(displayList[idx].id);

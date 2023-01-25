@@ -14,6 +14,20 @@ describe('Promo Panel List', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('can navigate to a panel from admin page', () => {
+            cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');
+            cy.viewport(1300, 1300);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Promo panel management');
+            testId('panel-list-item-edit-1-student').click();
+            testId('standard-card-edit-a-promo-header').should('contain', 'Edit a promo');
+            testId('admin-promopanel-form-button-cancel').click();
+            testId('panel-list-item-edit-8-student').click();
+            testId('standard-card-edit-a-promo-header').should('contain', 'Edit a promo');
+            testId('admin-promopanel-form-button-cancel').click();
+            testId('panel-list-item-edit-2-none').click();
+            testId('admin-promopanel-form-button-cancel').click();
+        });
 
         it('Split buttons work as expected', () => {
             cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');
@@ -31,6 +45,14 @@ describe('Promo Panel List', () => {
             testId('1-clone-button-student').click();
             cy.get('h1').should('be.visible');
             testId('standard-card-clone-a-promo-header').should('be.visible');
+        });
+        it('Split buttons has view as default for past panels', () => {
+            cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Promo panel management');
+            testId('panel-list-item-edit-50-none').click();
+            testId('admin-promopanel-preview-button-cancel').click();
         });
         it('Split delete work as expected', () => {
             cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');

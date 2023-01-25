@@ -128,6 +128,31 @@ describe('Promopanel Admin Form Pages', () => {
             // cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
             // cy.get('#group-selector').click({ force: true });
         });
+
+        it('can detect dates in the past', () => {
+            cy.viewport(1300, 1400);
+            cy.get('h2')
+                .should('be.visible')
+                .contains('panel');
+            cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
+            testId('schedule-panel-hdr').click();
+            cy.get('#picker-start-date').click();
+            // cy.get('.MuiToolbar-root > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root').click();
+            cy.contains(new Date().getFullYear()).click();
+            cy.get('.MuiPickersYearSelection-container')
+                .contains('1999')
+                .click({ force: true });
+            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
+            testId('start-date-error').should('contain', 'This date is in the past');
+            cy.get('#picker-end-date').click();
+            // cy.get('.MuiToolbar-root > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root').click();
+            cy.contains(new Date().getFullYear()).click();
+            cy.get('.MuiPickersYearSelection-container')
+                .contains('1999')
+                .click({ force: true });
+            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
+            testId('end-date-error').should('contain', 'This date is in the past');
+        });
         it('can unschedule a panel', () => {
             cy.viewport(1300, 1400);
             cy.get('h2')
@@ -142,6 +167,28 @@ describe('Promopanel Admin Form Pages', () => {
             testId('confirm-panel-delete-confirm').click();
             testId('ListTableSpinner-groupPanels').should('exist'); // Loading
             testId('ListTableSpinner-groupPanels').should('not.exist'); // Loading Finished
+        });
+        it('can delete a panel', () => {
+            cy.viewport(1300, 1400);
+            cy.get('h2')
+                .should('be.visible')
+                .contains('panel');
+            cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
+            testId('alert-list-arrowicon-2-none').click();
+            testId('2-delete-button').click();
+            testId('confirm-panel-delete-confirm').click();
+            testId('message-title').should('contain', 'Some records did not delete successfully');
+            testId('confirm-panel-delete-error-dialog').click();
+            testId('alert-list-arrowicon-99-none').click();
+            testId('99-delete-button').click();
+            testId('confirm-panel-delete-confirm').click();
+            testId('message-title').should('not.be.visible');
+
+            // testId('alert-list-arrowicon-8-student').click();
+            // testId('8-delete-button').click();
+            // testId('confirm-panel-delete-confirm').click();
+            // testId('ListTableSpinner-groupPanels').should('exist'); // Loading
+            // testId('ListTableSpinner-groupPanels').should('not.exist'); // Loading Finished
         });
     });
 });

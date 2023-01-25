@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
@@ -156,10 +153,42 @@ export const PromoPanelAddSchedule = ({
         // Check if there's a conflict here.
         setShowError(false);
         setErrorMessage('');
+        // if (groupName && groupName !== '') {
+        //     userPanelList.map(user => {
+        //         console.log(user, startDate, value);
+        //         if (user.usergroup_group === groupName) {
+        //             user.scheduled_panels.map(panel => {
+        //                 if (
+        //                     (moment(startDate).isSameOrAfter(moment(panel.panel_schedule_start_time)) &&
+        //                         moment(startDate).isBefore(moment(panel.panel_schedule_end_time))) ||
+        //                     (moment(panel.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
+        //                         moment(panel.panel_schedule_start_time).isBefore(moment(endDate)))
+        //                 ) {
+        //                     setErrorMessage(
+        //                         getConflictErrormsg(
+        //                             panel.panel_title,
+        //                             panel.panel_schedule_start_time,
+        //                             panel.panel_schedule_end_time,
+        //                         ),
+        //                     );
+        //                     console.log('setting show error BACK TO EEEEEK!');
+        //                     setShowError(true);
+        //                 }
+        //             });
+        //         }
+        //     });
+        // }
+    };
+
+    const handleGroupSchedule = () => {
+        let valid = true;
+        /* istanbul ignore else */
         if (groupName && groupName !== '') {
             userPanelList.map(user => {
+                /* istanbul ignore else */
                 if (user.usergroup_group === groupName) {
                     user.scheduled_panels.map(panel => {
+                        /* istanbul ignore next */
                         if (
                             (moment(startDate).isSameOrAfter(moment(panel.panel_schedule_start_time)) &&
                                 moment(startDate).isBefore(moment(panel.panel_schedule_end_time))) ||
@@ -174,15 +203,16 @@ export const PromoPanelAddSchedule = ({
                                 ),
                             );
                             setShowError(true);
+                            valid = false;
                         }
                     });
                 }
             });
         }
-    };
-
-    const handleGroupSchedule = () => {
-        handleAddGroupSchedule(selectedPanel, groupName, startDate, endDate);
+        /* istanbul ignore else */
+        if (valid) {
+            handleAddGroupSchedule(selectedPanel, groupName, startDate, endDate);
+        }
     };
 
     return (
@@ -228,17 +258,23 @@ export const PromoPanelAddSchedule = ({
                                 value={startDate}
                                 label="Start date"
                                 onChange={handleDateChange('start')}
-                                minDate={startDate}
+                                InputProps={{
+                                    id: 'picker-start-date-text',
+                                }}
+                                // minDate={startDate}
                                 format="DD/MM/YYYY HH:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}
                                 autoOk
                                 KeyboardButtonProps={{
                                     'aria-label': 'Start Date',
+                                    id: 'picker-start-date',
                                 }}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div className={classes.errorStyle}>This date is in the past.</div>
+                                <div className={classes.errorStyle} data-testid="start-date-error">
+                                    This date is in the past.
+                                </div>
                             )}
                         </Grid>
                         <Grid item xs>
@@ -255,10 +291,13 @@ export const PromoPanelAddSchedule = ({
                                 autoOk
                                 KeyboardButtonProps={{
                                     'aria-label': 'End Date',
+                                    id: 'picker-end-date',
                                 }}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div className={classes.errorStyle}>This date is in the past.</div>
+                                <div className={classes.errorStyle} data-testid="end-date-error">
+                                    This date is in the past.
+                                </div>
                             )}
                         </Grid>
                     </Grid>

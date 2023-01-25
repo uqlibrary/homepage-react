@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -89,7 +87,8 @@ export const PromoPanelSplitButton = ({
                             data-testid={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${(group &&
                                 group) ||
                                 /* istanbul ignore next */ 'none'}`}
-                            id={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${group}`}
+                            id={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${(group && group) ||
+                                /* istanbul ignore next */ 'none'}`}
                             onClick={() => (canEdit ? navigateToEditForm(row.panel_id) : handlePreview(row, item))}
                             variant="contained"
                         />
@@ -121,7 +120,7 @@ export const PromoPanelSplitButton = ({
                                 <Paper className={classes.menuWrapper}>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
-                                            {!!canEdit ? (
+                                            {!!canEdit && (
                                                 <MenuItem
                                                     data-testid={`${row.panel_id}-preview-button-${group}`}
                                                     key={`${row.panel_id}-preview-button-${group}`}
@@ -129,7 +128,7 @@ export const PromoPanelSplitButton = ({
                                                 >
                                                     View
                                                 </MenuItem>
-                                            ) : null}
+                                            )}
                                             {!!canClone && (
                                                 <MenuItem
                                                     data-testid={`${row.panel_id}-clone-button-${(group && group) ||

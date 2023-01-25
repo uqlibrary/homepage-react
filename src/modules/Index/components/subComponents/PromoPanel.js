@@ -15,7 +15,14 @@ export const reportToSentry = ([error, context = {}]) =>
         Sentry.captureException(error);
     });
 
-const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActionError, promoPanelLoading }) => {
+const PromoPanel = ({
+    useAPI,
+    account,
+    accountLoading,
+    currentPromoPanel,
+    promoPanelActionError,
+    promoPanelLoading,
+}) => {
     if (!!promoPanelActionError) {
         reportToSentry([
             new Error('Promo Panel API failed to load panel.'),
@@ -36,8 +43,13 @@ const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActi
             title={
                 <Grid container>
                     <Grid item xs={10} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {!!!promoPanelActionError && currentPromoPanel && currentPromoPanel.active_panel.panel_title}
-                        {!!promoPanelActionError &&
+                        {!!useAPI &&
+                            !!!promoPanelActionError &&
+                            currentPromoPanel &&
+                            currentPromoPanel.active_panel.panel_title}
+                        {!!!useAPI && locale.loggeout.title}
+                        {!!useAPI &&
+                            !!promoPanelActionError &&
                             (!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title)}
                     </Grid>
                 </Grid>
@@ -45,10 +57,13 @@ const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActi
         >
             <Grid container spacing={1}>
                 <Grid item xs data-testid={!!promoPanelActionError ? 'panel-fallback-content' : null}>
-                    {!!!promoPanelActionError &&
+                    {!!useAPI &&
+                        !!!promoPanelActionError &&
                         currentPromoPanel &&
                         parse(currentPromoPanel.active_panel.panel_content)}
-                    {!!promoPanelActionError &&
+                    {!!!useAPI && locale.loggedout.content}
+                    {!!useAPI &&
+                        !!promoPanelActionError &&
                         (!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content)}
                 </Grid>
             </Grid>
@@ -61,6 +76,7 @@ const PromoPanel = ({ account, accountLoading, currentPromoPanel, promoPanelActi
 };
 
 PromoPanel.propTypes = {
+    useAPI: PropTypes.bool,
     account: PropTypes.object,
     accountLoading: PropTypes.bool,
     currentPromoPanel: PropTypes.object,
