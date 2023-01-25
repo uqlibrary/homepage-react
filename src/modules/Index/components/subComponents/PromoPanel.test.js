@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/browser';
 function setup(testProps = {}) {
     const props = {
         account: { id: 1 },
+        useAPI: true,
         accountLoading: false,
         currentPromoPanel: {
             active_panel: {
@@ -63,5 +64,9 @@ describe('Promo Panel display', () => {
         expect(mockSentryScope).toBeCalled();
         reportToSentry([new Error('Promo Panel API failed to load panel.')]);
         expect(mockSentryScope).toBeCalled();
+    });
+    it('renders panel uses fallback when set to not use API', () => {
+        const { getByTestId } = setup({ useAPI: false });
+        expect(getByTestId('panel-fallback-content')).toBeInTheDocument();
     });
 });

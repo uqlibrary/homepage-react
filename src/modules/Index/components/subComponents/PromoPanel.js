@@ -47,7 +47,7 @@ const PromoPanel = ({
                             !!!promoPanelActionError &&
                             currentPromoPanel &&
                             currentPromoPanel.active_panel.panel_title}
-                        {!!!useAPI && locale.loggeout.title}
+                        {!!!useAPI && locale.loggedout.title}
                         {!!useAPI &&
                             !!promoPanelActionError &&
                             (!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title)}
@@ -56,7 +56,7 @@ const PromoPanel = ({
             }
         >
             <Grid container spacing={1}>
-                <Grid item xs data-testid={!!promoPanelActionError ? 'panel-fallback-content' : null}>
+                <Grid item xs data-testid={!!!useAPI || !!promoPanelActionError ? 'panel-fallback-content' : null}>
                     {!!useAPI &&
                         !!!promoPanelActionError &&
                         currentPromoPanel &&
