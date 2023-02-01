@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // import { default as locale } from '../learningResources.locale';
-import { Guides } from './Guides';
-import { PastExamPapers } from './PastExamPapers';
-import { ReadingLists } from './ReadingLists';
-import { SubjectLinks } from './SubjectLinks';
+import { Guides } from '../panels/Guides';
+import { PastExamPapers } from '../panels/PastExamPapers';
+import { ReadingLists } from '../panels/ReadingLists';
+import { SubjectLinks } from '../panels/SubjectLinks';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';

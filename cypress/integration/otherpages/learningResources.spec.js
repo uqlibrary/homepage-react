@@ -1,7 +1,7 @@
 /* eslint camelcase: 0 */
 /* eslint max-len: 0 */
-import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
-import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/learningResourcesHelpers';
+import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
+import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../../src/data/mock/data/records/courseReadingList_FREN1010';
 import { default as FREN1011ReadingList } from '../../../src/data/mock/data/records/coursereadinglist_FREN1011';
 import { default as FREN1010Guide } from '../../../src/data/mock/data/records/libraryGuides_FREN1010';

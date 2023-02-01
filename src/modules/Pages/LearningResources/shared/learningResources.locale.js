@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 
 import DocumentIcon from '@material-ui/icons/Description';
 import CourtHouseIcon from '@material-ui/icons/AccountBalance';
-import { SpacedArrowForwardIcon } from './components/SpacedArrowForwardIcon';
+import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
 export default {
     title: 'Learning resources',
