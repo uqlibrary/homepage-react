@@ -209,7 +209,7 @@ const AssetPanel = ({
                             onChange={(_, newValue) => {
                                 handleChange('asset_type_id')(newValue.asset_type_id);
                             }}
-                            getOptionLabel={option => option.asset_type_name}
+                            getOptionLabel={option => option.asset_type_name ?? ''}
                             getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
                             autoHighlight
                             renderInput={params => (
