@@ -7,6 +7,7 @@ import * as mockData from './data';
 import fetchMock from 'fetch-mock';
 
 import exams_FREN1010 from './data/records/examListFREN1010';
+import exams_FREN1011 from './data/records/examListFREN1011';
 import exams_HIST1201 from './data/records/examListHIST1201';
 import exams_PHIL1002 from './data/records/examListPHIL1002';
 import exams_ACCT1101 from './data/records/examListACCT1101';
@@ -15,6 +16,7 @@ import libraryGuides_HIST1201 from './data/records/libraryGuides_HIST1201';
 import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
 import libraryGuides_ACCT1101 from './data/records/libraryGuides_ACCT1101';
 import courseReadingList_FREN1010 from './data/records/courseReadingList_FREN1010';
+import courseReadingList_FREN1011 from './data/records/courseReadingList_FREN1011';
 import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
@@ -542,6 +544,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, exams_FREN1010];
     })
+    .onGet('exams/course/FREN1011/summary')
+    .reply(() => {
+        return [200, exams_FREN1011];
+    })
     .onGet('exams/course/HIST1201/summary')
     .reply(() => {
         return [200, exams_HIST1201];
@@ -556,6 +562,10 @@ mock.onGet('exams/course/FREN1010/summary')
     })
 
     .onGet('library_guides/FREN1010')
+    .reply(() => {
+        return [200, libraryGuides_FREN1010];
+    })
+    .onGet('library_guides/FREN1011')
     .reply(() => {
         return [200, libraryGuides_FREN1010];
     })
@@ -575,6 +585,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet('learning_resources/reading_list/summary/FREN1010/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_FREN1010];
+    })
+    .onGet('learning_resources/reading_list/summary/FREN1011//Semester%25202%25202020')
+    .reply(() => {
+        return [200, courseReadingList_FREN1011];
     })
     .onGet('learning_resources/reading_list/summary/HIST1201/St Lucia/Semester%25202%25202020')
     .reply(() => {
