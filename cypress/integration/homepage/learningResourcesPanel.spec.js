@@ -95,7 +95,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
     });
 
-    it('The Learning resources panel displays results with incomplete  data correctly', () => {
+    it('The Learning resources panel displays results with incomplete data correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);

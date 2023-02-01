@@ -3,8 +3,10 @@
 import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
 import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/learningResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../../src/data/mock/data/records/courseReadingList_FREN1010';
+import { default as FREN1011ReadingList } from '../../../src/data/mock/data/records/coursereadinglist_FREN1011';
 import { default as FREN1010Guide } from '../../../src/data/mock/data/records/libraryGuides_FREN1010';
 import { default as FREN1010Exam } from '../../../src/data/mock/data/records/examListFREN1010';
+import { default as FREN1011Exam } from '../../../src/data/mock/data/records/examListFREN1011';
 import { default as HIST1201ReadingList } from '../../../src/data/mock/data/records/courseReadingList_HIST1201';
 import { default as PHIL1002ReadingList } from '../../../src/data/mock/data/records/courseReadingList_PHIL1002';
 import { default as PHIL1002Guide } from '../../../src/data/mock/data/records/libraryGuides_PHIL1002';
@@ -45,9 +47,8 @@ function firstReadingListItems(courseReadingList) {
 function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_with_the_maximum_num_displayable_items(
     courseCode,
     courseReadingList,
-    displayType = 'mycourses',
+    headerLevel = 'h3',
 ) {
-    const headerLevel = displayType === 'mycourses' ? 'h3' : 'h4';
     const readingList = firstReadingListItems(courseReadingList);
     const firstReadingListTitle = readingList.title || 'mock data is missing';
     const firstReadingListLink = readingList.itemLink || 'mock data is missing';
@@ -64,6 +65,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
 
 function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_of_more_than_the_max_displayable_items(
     courseReadingList,
+    headerLevel = 'h3',
 ) {
     const readingList =
         !!courseReadingList.reading_lists &&
@@ -71,7 +73,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
         courseReadingList.reading_lists[0];
     const readingListLink = readingList.url || 'mock data is missing';
     const readingListHeader = getReadingListHeader(courseReadingList);
-    cy.get('[data-testid="learning-resource-subject-reading-list"] h3').contains(readingListHeader);
+    cy.get(`[data-testid="learning-resource-subject-reading-list"] ${headerLevel}`).contains(readingListHeader);
     const numberExcessReadingLists =
         readingListLength(courseReadingList) - locale.myCourses.readingLists.visibleItemsCount;
     cy.get('div[data-testid=reading-list-more-link] a')
@@ -472,7 +474,7 @@ context('The Learning Resources Page', () => {
         reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_with_the_maximum_num_displayable_items(
             'ACCT1101',
             ACCT1101ReadingList,
-            'searchresults',
+            'h4',
         );
 
         exams_panel_loads_correctly_for_a_subject_with_many_exams(ACCT1101Exam, 'searchresults');
@@ -480,6 +482,24 @@ context('The Learning Resources Page', () => {
         guides_panel_loads_correctly_for_a_subject_with_one_guide(ACCT1101Guide, 'ACCT1101', 'searchresults');
 
         course_links_panel_loads_correctly_for_a_subject(ACCT1101ReadingList);
+    });
+
+    it('A user who searches for a course that happens to have a blank campus gets the course they requested', () => {
+        cy.visit('/learning-resources?user=s1111111&coursecode=FREN1011&campus=&semester=Semester%202%202020');
+        cy.viewport(1300, 1000);
+
+        the_user_lands_on_the_Search_tab(FREN1011ReadingList);
+
+        reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_of_more_than_the_max_displayable_items(
+            FREN1011ReadingList,
+            'h4',
+        );
+
+        exams_panel_loads_correctly_for_a_subject_with_many_exams(FREN1011Exam, 'searchresults');
+
+        guides_panel_loads_correctly_for_a_subject_with_one_guide(FREN1010Guide, 'FREN1011', 'searchresults');
+
+        course_links_panel_loads_correctly_for_a_subject(FREN1011ReadingList);
     });
 
     it('A user who searches for a subject they are enrolled in will be changed to the mycourses tab', () => {

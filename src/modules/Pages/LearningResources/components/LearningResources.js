@@ -30,7 +30,7 @@ import { makeStyles } from '@material-ui/styles';
 function getNormalisedCampus(params) {
     let found = false;
     Object.values(global.campuses).map(validCampusname => {
-        if (!!params.campus && params.campus.endsWith(validCampusname)) {
+        if (!!params.campus && params.campus.includes(validCampusname)) {
             found = validCampusname;
         }
     });
@@ -65,7 +65,7 @@ export const isValidInput = params => {
     valid = !!valid && !!params.coursecode && validCourseCodePattern.test(params.coursecode);
 
     if (!!valid) {
-        valid = !!getNormalisedCampus(params);
+        valid = !params.campus || !!getNormalisedCampus(params);
     }
 
     const validSemesterPattern = new RegExp('^[A-Za-z0-9,/ ]+$');

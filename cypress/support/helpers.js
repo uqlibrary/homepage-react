@@ -59,9 +59,10 @@ export function readingListLength(courseReadingList) {
  */
 export const getReadingListHeader = courseReadingList => {
     const readingList = courseReadingList?.reading_lists?.[0];
-    return `${locale.myCourses.readingLists.title} for ${readingList.period} at ${
-        readingList.campus
-    } (${readingListLength(courseReadingList)} items)`;
+    const campusMarker = !!readingList.campus ? ` at ${readingList.campus}` : '';
+    return `${locale.myCourses.readingLists.title} for ${readingList.period}${campusMarker} (${readingListLength(
+        courseReadingList,
+    )} items)`;
 };
 
 export function waitUntilSpotlightListPageHasLoaded() {
