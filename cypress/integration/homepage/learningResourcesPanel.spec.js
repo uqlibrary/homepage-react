@@ -1,5 +1,5 @@
 import { accounts } from '../../../src/data/mock/data';
-import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
+import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResourceSearchSuggestions';
 
 context('The Homepage Learning Resource Panel', () => {

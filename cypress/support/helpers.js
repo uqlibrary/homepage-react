@@ -7,7 +7,7 @@
  * @param string selector
  * @param string expectedButtonLabel
  */
-import { default as locale } from '../../src/modules/Pages/LearningResources/learningResources.locale';
+import { default as locale } from '../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 
 export function clickButton(selector, expectedButtonLabel) {
     cy.waitUntil(() => cy.get(selector).should('exist'));

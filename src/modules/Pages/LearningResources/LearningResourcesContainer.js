@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import LearningResources from '../components/LearningResources';
+import LearningResources from './LearningResources';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';

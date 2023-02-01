@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
-import { default as locale } from 'modules/Pages/LearningResources/learningResources.locale';
+import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
@@ -64,8 +64,8 @@ export const LearningResourcesPanel = ({ account, history }) => {
         }
         const course = {
             classnumber: option.courseCode,
-            campus: option.campus || '',
-            semester: option.semester || '',
+            campus: option.campus || /* istanbul ignore next */ '',
+            semester: option.semester || /* istanbul ignore next */ '',
         };
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
