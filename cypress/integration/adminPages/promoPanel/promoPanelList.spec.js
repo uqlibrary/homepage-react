@@ -16,32 +16,34 @@ describe('Promo Panel List', () => {
         });
         it('can navigate to a panel from admin page', () => {
             cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');
-            cy.viewport(1300, 1300);
+            cy.viewport(1000, 1800);
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Promo panel management');
-            testId('panel-list-item-edit-1-student').click();
+            testId('panel-list-arrowicon-1-student').click();
+            testId('1-edit-button-student').click();
             testId('standard-card-edit-a-promo-header').should('contain', 'Edit a promo');
             testId('admin-promopanel-form-button-cancel').click();
-            testId('panel-list-item-edit-8-student').click();
+            testId('panel-list-arrowicon-8-student').click();
+            testId('8-edit-button-student').click();
             testId('standard-card-edit-a-promo-header').should('contain', 'Edit a promo');
             testId('admin-promopanel-form-button-cancel').click();
-            testId('panel-list-item-edit-2-none').click();
+            testId('panel-list-arrowicon-2-none').click();
+            testId('2-edit-button-none').click();
             testId('admin-promopanel-form-button-cancel').click();
         });
 
         it('Split buttons work as expected', () => {
             cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');
-            cy.viewport(1300, 1000);
+            cy.viewport(1000, 1800);
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Promo panel management');
-            testId('alert-list-arrowicon-1-student').click();
-            testId('1-preview-button-student').click();
+            testId('panel-list-item-preview-1-student').click();
             testId('promopanel-preview-title').should('contain', 'Preview');
             testId('admin-promopanel-preview-button-cancel').click();
-            testId('alert-list-arrowicon-2-none').click();
+            testId('panel-list-arrowicon-2-none').click();
             testId('2-delete-button').click();
             testId('cancel-panel-delete-confirm').click();
-            testId('alert-list-arrowicon-1-student').click();
+            testId('panel-list-arrowicon-1-student').click();
             testId('1-clone-button-student').click();
             cy.get('h1').should('be.visible');
             testId('standard-card-clone-a-promo-header').should('be.visible');
@@ -51,7 +53,7 @@ describe('Promo Panel List', () => {
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Promo panel management');
-            testId('panel-list-item-edit-50-none').click();
+            testId('panel-list-item-preview-50-none').click();
             testId('admin-promopanel-preview-button-cancel').click();
         });
         it('Split delete work as expected', () => {
@@ -59,18 +61,17 @@ describe('Promo Panel List', () => {
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Promo panel management');
-            testId('alert-list-arrowicon-1-student').click();
-            testId('1-preview-button-student').click();
+            testId('panel-list-item-preview-1-student').click();
             testId('promopanel-preview-title').should('contain', 'Preview');
             testId('admin-promopanel-preview-button-cancel').click();
             // test for error
-            testId('alert-list-arrowicon-2-none').click();
+            testId('panel-list-arrowicon-2-none').click();
             testId('2-delete-button').click();
             testId('confirm-panel-delete-confirm').click();
             testId('message-title').should('contain', 'Some records did not delete successfully');
             testId('confirm-panel-delete-error-dialog').click();
             // test for successful
-            testId('alert-list-arrowicon-99-none').click();
+            testId('panel-list-arrowicon-99-none').click();
             testId('99-delete-button').click();
             testId('confirm-panel-delete-confirm').click();
         });
