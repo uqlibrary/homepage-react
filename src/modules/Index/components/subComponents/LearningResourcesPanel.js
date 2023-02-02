@@ -101,24 +101,18 @@ export const LearningResourcesPanel = ({ account, history }) => {
                     </Grid>
                     {account.current_classes.map((item, index) => {
                         return (
-                            <Grid
-                                item
-                                xs={12}
-                                data-testid={`hcr-${index}`}
-                                key={`hcr-${index}`}
-                                style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
-                            >
+                            <Grid item xs={12} data-testid={`hcr-${index}`} key={`hcr-${index}`}>
                                 <Link
                                     to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
                                     data-testid={`learning-resource-panel-course-link-${index}`}
                                 >
                                     {item.classnumber}
-                                </Link>
-                                {' - '}
-                                {item.DESCR}
+                                </Link>{' '}
+                                <span title={item.DESCR.length > 25 ? item.DESCR : ''}>{item.DESCR}</span>
                             </Grid>
                         );
                     })}
+                    ;
                 </Grid>
             ) : (
                 <div style={{ marginLeft: 16 }}>{locale.homepagePanel.noCourses}</div>
