@@ -3,7 +3,7 @@
 import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../../src/data/mock/data/records/courseReadingList_FREN1010';
-import { default as FREN1011ReadingList } from '../../../src/data/mock/data/records/coursereadinglist_FREN1011';
+import { default as FREN1011ReadingList } from '../../../src/data/mock/data/records/courseReadinglist_FREN1011';
 import { default as FREN1010Guide } from '../../../src/data/mock/data/records/libraryGuides_FREN1010';
 import { default as FREN1010Exam } from '../../../src/data/mock/data/records/examListFREN1010';
 import { default as FREN1011Exam } from '../../../src/data/mock/data/records/examListFREN1011';
