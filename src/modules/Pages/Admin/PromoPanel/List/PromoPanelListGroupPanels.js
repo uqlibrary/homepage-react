@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
@@ -207,14 +209,18 @@ export const PromoPanelListGroupPanels = ({
         const {
             target: { value },
         } = event;
-
         const selections = typeof value === 'string' ? value.split(',') : value;
 
-        setSelectorGroupNames(selections);
-        // clearAllCheckboxes();
+        if (!value.includes('000')) {
+            setSelectorGroupNames(selections);
+            setFilteredPanels(filterPanelList(userPanelList, selections, true));
+            // clearAllCheckboxes();
 
-        setFilteredPanels(filterPanelList(userPanelList, selections, true));
-        // Filter the selection, and store in filteredPanels.
+            // Filter the selection, and store in filteredPanels.
+        } else {
+            setSelectorGroupNames([]);
+            setFilteredPanels(filterPanelList(userPanelList, [], true));
+        }
     };
 
     const onPreviewOpen = row => {
@@ -350,6 +356,14 @@ export const PromoPanelListGroupPanels = ({
                                     return selected.join(', ');
                                 }}
                             >
+                                <MenuItem key="clear-All" value="000" align={'right'} data-testid="filter-clear-all">
+                                    <Chip
+                                        label="Clear selection"
+                                        size="small"
+                                        icon={<DeleteIcon />}
+                                        variant="outlined"
+                                    />
+                                </MenuItem>
                                 {knownGroups.map(group => (
                                     <MenuItem
                                         key={group.group}

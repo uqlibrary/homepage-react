@@ -51,6 +51,14 @@ describe('Promopanel Admin Form Pages', () => {
             testId('filter-select-hdr').click();
             cy.get('body').click();
             testId('block-student').should('exist');
+            testId('group-filter').click();
+            testId('filter-select-hdr').click();
+            cy.get('body').click();
+            testId('block-student').should('not.exist');
+            testId('group-filter').click();
+            testId('filter-clear-all').click();
+            cy.get('body').click();
+            testId('block-student').should('exist');
         });
         it('can preview a past panel', () => {
             cy.viewport(1300, 1400);
