@@ -119,7 +119,9 @@ export const LearningResourcesPanel = ({ account, history }) => {
                                 >
                                     {item.classnumber}
                                 </Link>{' '}
-                                <span title={item.DESCR.length > 25 ? item.DESCR : ''}>{item.DESCR}</span>
+                                {/* because the panel width is driven by window size, show a title
+                                    so ellipsis doesn't hide some meaningful difference between course titles */}
+                                <span title={item.DESCR}>{item.DESCR}</span>
                             </Grid>
                         );
                     })}
