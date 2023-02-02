@@ -16,7 +16,7 @@ import libraryGuides_HIST1201 from './data/records/libraryGuides_HIST1201';
 import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
 import libraryGuides_ACCT1101 from './data/records/libraryGuides_ACCT1101';
 import courseReadingList_FREN1010 from './data/records/courseReadingList_FREN1010';
-import courseReadingList_FREN1011 from './data/records/courseReadingList_FREN1011';
+import courseReadingList_FREN1011 from './data/records/courseReadinglist_FREN1011';
 import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
