@@ -22,6 +22,9 @@ describe('Promopanel Admin Form Pages', () => {
             testId('admin-promopanel-form-button-cancel').click();
         });
         it('can update data into form fields for a default panel', () => {
+            testId('admin-promoPanel-help-button').click();
+            testId('help-drawer-title').should('exist');
+            testId('promopanel-helpdrawer-close-button').click();
             saveButtonIsDisabled(false);
             addScheduleIsDisabled(true);
             previewIsDisabled(false);

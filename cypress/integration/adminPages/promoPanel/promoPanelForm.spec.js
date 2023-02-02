@@ -21,6 +21,9 @@ describe('Promopanel Admin Form Pages', () => {
             });
         });
         it('can enter new data into form fields for non-assigned panel', () => {
+            testId('admin-promoPanel-help-button').click();
+            testId('help-drawer-title').should('exist');
+            testId('promopanel-helpdrawer-close-button').click();
             saveButtonIsDisabled(true);
             addScheduleIsDisabled(true);
             previewIsDisabled(true);

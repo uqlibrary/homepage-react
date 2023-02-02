@@ -93,6 +93,9 @@ describe('Promopanel Admin Form Pages', () => {
             cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
             testId('panel-list-arrowicon-2-none').click();
             testId('2-clone-button-none').click();
+            testId('admin-promoPanel-help-button').click();
+            testId('help-drawer-title').should('exist');
+            testId('promopanel-helpdrawer-close-button').click();
             testId('admin-promopanel-form-admin-note').type('Test Admin Note');
             testId('admin-promopanel-form-title')
                 .clear()
