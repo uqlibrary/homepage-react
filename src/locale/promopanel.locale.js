@@ -9,18 +9,7 @@ import React, { Fragment } from 'react';
 const moment = require('moment');
 
 export default {
-    editPage: {
-        Title: (isEdit, isClone) => {
-            if (isEdit) {
-                return 'Edit a promo';
-            } else if (isClone) {
-                return 'Clone a promo';
-            } else {
-                return 'Create a promo';
-            }
-        },
-       
-    },
+    
     editor: {
         config: {
             removePlugins: [
@@ -153,4 +142,54 @@ export default {
             ),
         },
     },
+    addPage: {
+        help: {
+            title: 'Promo Panels Add Page',
+            text: (
+                <div>
+                    <p>
+                        UQ Library's Promo panel management add application provides authorised users with an interface to
+                        add, update, remove and schedule promo panels (shown on the homepage), for either a logged out user, or a specified logged in user group.
+                    </p>
+                </div>
+            ),
+        },
+    },
+    clonePage: {
+        help: {
+            title: 'Promo Panels Clone Page',
+            text: (
+                <div>
+                    <p>
+                        UQ Library's Promo panel management clone application provides authorised users with an interface to
+                        add, update, remove and schedule promo panels (shown on the homepage), for either a logged out user, or a specified logged in user group.
+                    </p>
+                </div>
+            ),
+        },
+    },
+    editPage: {
+        Title: (isEdit, isClone) => {
+            if (isEdit) {
+                return 'Edit a promo';
+            } else if (isClone) {
+                return 'Clone a promo';
+            } else {
+                return 'Create a promo';
+            }
+        },
+        help: {
+            title: 'Promo Panels Edit Page',
+            text: (
+                <div>
+                    <p>
+                        UQ Library's Promo panel management edit application provides authorised users with an interface to
+                        add, update, remove and schedule promo panels (shown on the homepage), for either a logged out user, or a specified logged in user group.
+                    </p>
+                </div>
+            ),
+        },
+       
+    },
+
 };

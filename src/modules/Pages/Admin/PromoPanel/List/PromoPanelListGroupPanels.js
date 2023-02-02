@@ -49,7 +49,7 @@ const useStyles2 = makeStyles(
             marginBottom: 0,
             paddingTop: 5,
             paddingBottom: 0,
-            fontWeight: 400,
+            fontWeight: 900,
             borderBottom: 'none',
             color: '#FFF',
         },
@@ -105,8 +105,9 @@ const useStyles2 = makeStyles(
             borderBottom: '1px solid #bbb',
         },
         tableRowGroup: {
-            backgroundColor: '#333',
+            backgroundColor: '#51247a',
             color: '#fff',
+            fontWeight: 'bold',
             borderBottom: 'none',
         },
         extreme: {
@@ -394,7 +395,7 @@ export const PromoPanelListGroupPanels = ({
                                                     <Typography
                                                         data-testid={`block-${item.usergroup_group}`}
                                                         variant="body1"
-                                                        style={{ paddingBottom: 5 }}
+                                                        style={{ paddingBottom: 5, fontWeight: 'bold' }}
                                                     >
                                                         {item.usergroup_group_name}
                                                     </Typography>
@@ -463,7 +464,10 @@ export const PromoPanelListGroupPanels = ({
                                                                             )}
                                                                         </Typography>
                                                                     </TableCell>
-                                                                    <TableCell className={classes.cellGroupDetails}>
+                                                                    <TableCell
+                                                                        className={classes.cellGroupDetails}
+                                                                        style={{ padding: 5 }}
+                                                                    >
                                                                         <PromoPanelSplitButton
                                                                             alertId={alert.id}
                                                                             canEdit={canEdit}
@@ -496,11 +500,12 @@ export const PromoPanelListGroupPanels = ({
                                                         return null;
                                                     }
                                                 })}
+
                                             {!!item.default_panel && Object.keys(item.default_panel).length > 0 && (
                                                 <>
                                                     <TableRow
                                                         className={`${classes.tableRow} promoPanel-data-row ${
-                                                            rowMarker % 2 === 0
+                                                            rowMarker % 2 !== 0
                                                                 ? classes.cellGroupRowEven
                                                                 : /* istanbul ignore next */ classes.cellGroupRowOdd
                                                         }`}
@@ -524,7 +529,10 @@ export const PromoPanelListGroupPanels = ({
                                                         <TableCell className={classes.cellGroupDetails}>
                                                             <Typography variant="body1" />
                                                         </TableCell>
-                                                        <TableCell className={classes.cellGroupDetails}>
+                                                        <TableCell
+                                                            className={classes.cellGroupDetails}
+                                                            style={{ padding: 5 }}
+                                                        >
                                                             <PromoPanelSplitButton
                                                                 alertId={alert.id}
                                                                 canEdit={canEdit}
