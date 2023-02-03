@@ -6,7 +6,7 @@ import {
     reverseA11yProps,
     trimNotes,
 } from './learningResourcesHelpers';
-import { getQueryParams, isValidInput } from './components/LearningResources';
+import { getQueryParams, isValidInput } from '../LearningResources';
 
 describe('filterProps helper', () => {
     it('should make plurals of words properly', () => {

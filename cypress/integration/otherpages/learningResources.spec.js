@@ -1,10 +1,12 @@
 /* eslint camelcase: 0 */
 /* eslint max-len: 0 */
-import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
-import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/learningResourcesHelpers';
+import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
+import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../../src/data/mock/data/records/courseReadingList_FREN1010';
+import { default as FREN1011ReadingList } from '../../../src/data/mock/data/records/courseReadinglist_FREN1011';
 import { default as FREN1010Guide } from '../../../src/data/mock/data/records/libraryGuides_FREN1010';
 import { default as FREN1010Exam } from '../../../src/data/mock/data/records/examListFREN1010';
+import { default as FREN1011Exam } from '../../../src/data/mock/data/records/examListFREN1011';
 import { default as HIST1201ReadingList } from '../../../src/data/mock/data/records/courseReadingList_HIST1201';
 import { default as PHIL1002ReadingList } from '../../../src/data/mock/data/records/courseReadingList_PHIL1002';
 import { default as PHIL1002Guide } from '../../../src/data/mock/data/records/libraryGuides_PHIL1002';
@@ -45,9 +47,8 @@ function firstReadingListItems(courseReadingList) {
 function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_with_the_maximum_num_displayable_items(
     courseCode,
     courseReadingList,
-    displayType = 'mycourses',
+    headerLevel = 'h3',
 ) {
-    const headerLevel = displayType === 'mycourses' ? 'h3' : 'h4';
     const readingList = firstReadingListItems(courseReadingList);
     const firstReadingListTitle = readingList.title || 'mock data is missing';
     const firstReadingListLink = readingList.itemLink || 'mock data is missing';
@@ -64,6 +65,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
 
 function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_of_more_than_the_max_displayable_items(
     courseReadingList,
+    headerLevel = 'h3',
 ) {
     const readingList =
         !!courseReadingList.reading_lists &&
@@ -71,7 +73,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
         courseReadingList.reading_lists[0];
     const readingListLink = readingList.url || 'mock data is missing';
     const readingListHeader = getReadingListHeader(courseReadingList);
-    cy.get('[data-testid="learning-resource-subject-reading-list"] h3').contains(readingListHeader);
+    cy.get(`[data-testid="learning-resource-subject-reading-list"] ${headerLevel}`).contains(readingListHeader);
     const numberExcessReadingLists =
         readingListLength(courseReadingList) - locale.myCourses.readingLists.visibleItemsCount;
     cy.get('div[data-testid=reading-list-more-link] a')
@@ -213,7 +215,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
     courseReadingList,
     searchSuggestions,
     typeChar = 'FREN',
-    numberOfMatchingSubject = 1, // autocomplete finds this many entries for typeChar
+    numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
 ) {
     const courseCode = courseReadingList.coursecode || 'mock data is missing';
     const frenchSearchSuggestion = searchSuggestions
@@ -271,7 +273,7 @@ function a_user_can_use_the_search_bar_to_load_a_subject(
     courseReadingList,
     searchSuggestions,
     typeChar = 'FREN',
-    numberOfMatchingSubject = 1, // autocomplete finds this many entries for typeChar
+    numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
     tabId = 0,
 ) {
     load_a_subject_in_learning_resource_page_search_tab(
@@ -472,7 +474,7 @@ context('The Learning Resources Page', () => {
         reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_with_the_maximum_num_displayable_items(
             'ACCT1101',
             ACCT1101ReadingList,
-            'searchresults',
+            'h4',
         );
 
         exams_panel_loads_correctly_for_a_subject_with_many_exams(ACCT1101Exam, 'searchresults');
@@ -480,6 +482,24 @@ context('The Learning Resources Page', () => {
         guides_panel_loads_correctly_for_a_subject_with_one_guide(ACCT1101Guide, 'ACCT1101', 'searchresults');
 
         course_links_panel_loads_correctly_for_a_subject(ACCT1101ReadingList);
+    });
+
+    it('A user who searches for a course that happens to have a blank campus gets the course they requested', () => {
+        cy.visit('/learning-resources?user=s1111111&coursecode=FREN1011&campus=&semester=Semester%202%202020');
+        cy.viewport(1300, 1000);
+
+        the_user_lands_on_the_Search_tab(FREN1011ReadingList);
+
+        reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_of_more_than_the_max_displayable_items(
+            FREN1011ReadingList,
+            'h4',
+        );
+
+        exams_panel_loads_correctly_for_a_subject_with_many_exams(FREN1011Exam, 'searchresults');
+
+        guides_panel_loads_correctly_for_a_subject_with_one_guide(FREN1010Guide, 'FREN1011', 'searchresults');
+
+        course_links_panel_loads_correctly_for_a_subject(FREN1011ReadingList);
     });
 
     it('A user who searches for a subject they are enrolled in will be changed to the mycourses tab', () => {
@@ -560,11 +580,11 @@ context('The Learning Resources Page', () => {
         // and the drop-down will not appear
         cy.get('ul#full-learningresource-autocomplete-popup')
             .children()
-            .should('have.length', 1 + 1);
+            .should('have.length', 3 + 1);
     });
 
     // a subject with one reading list which contains more than the minimum number displays correctly
-    it('the content on the history page is correct', () => {
+    it('the content on the history tab is correct', () => {
         cy.visit(
             '/learning-resources?coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020&user=s1111111',
         );
@@ -592,7 +612,7 @@ context('The Learning Resources Page', () => {
     });
 
     // a subject with one reading list which has only the minimum number of items displays correctly
-    it('the content on the french page is correct', () => {
+    it('the content on the french tab is correct', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
         );
@@ -628,7 +648,7 @@ context('The Learning Resources Page', () => {
     });
 
     // a subject with multiple reading lists displays correctly
-    it('the content on the Philosophy page is correct', () => {
+    it('the content on the Philosophy tab is correct', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%203%202020',
         );

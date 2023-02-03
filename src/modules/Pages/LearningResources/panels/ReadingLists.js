@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
-import locale from '../learningResources.locale';
-import { _pluralise, trimNotes } from '../learningResourcesHelpers';
+import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
+import locale from '../shared/learningResources.locale';
+import { _pluralise, trimNotes } from '../shared/learningResourcesHelpers';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';

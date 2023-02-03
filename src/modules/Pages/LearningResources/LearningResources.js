@@ -4,13 +4,13 @@ import { useAccountContext } from 'context';
 import { useLocation } from 'react-router';
 import { throttle } from 'throttle-debounce';
 
-import locale from '../learningResources.locale';
+import locale from './shared/learningResources.locale';
 import global from 'locale/global';
-import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../learningResourcesHelpers';
+import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from './shared/learningResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
-import { courseTabLabel, MyCourses } from './MyCourses';
-import { SearchCourses } from './SearchCourses';
-import { TabPanel } from './TabPanel';
+import { courseTabLabel, MyCourses } from './panels/MyCourses';
+import { CourseSearch } from './panels/CourseSearch';
+import { TabPanel } from './shared/TabPanel';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -30,7 +30,7 @@ import { makeStyles } from '@material-ui/styles';
 function getNormalisedCampus(params) {
     let found = false;
     Object.values(global.campuses).map(validCampusname => {
-        if (!!params.campus && params.campus.endsWith(validCampusname)) {
+        if (!!params.campus && params.campus.includes(validCampusname)) {
             found = validCampusname;
         }
     });
@@ -65,7 +65,7 @@ export const isValidInput = params => {
     valid = !!valid && !!params.coursecode && validCourseCodePattern.test(params.coursecode);
 
     if (!!valid) {
-        valid = !!getNormalisedCampus(params);
+        valid = !params.campus || !!getNormalisedCampus(params);
     }
 
     const validSemesterPattern = new RegExp('^[A-Za-z0-9,/ ]+$');
@@ -370,7 +370,7 @@ export const LearningResources = ({
                                 label="topmenu"
                                 {...reverseA11yProps('1')}
                             >
-                                <SearchCourses
+                                <CourseSearch
                                     account={account}
                                     listSearchedSubjects={listSearchedSubjects}
                                     loadNewSubject={loadNewSubject}
