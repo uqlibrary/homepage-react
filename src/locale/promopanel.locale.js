@@ -189,7 +189,6 @@ export default {
                 return 'Create a promo';
             }
         },
-       
     },
 
 };

@@ -7,22 +7,18 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Fallback Panel',
+        title: 'Message not found',
         content: (
             <div>
-                <p>The Library is open during Summer Semester.</p>
-                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
+                <p>We can’t display your library service message right now. Please refresh your browser or try again later.</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'FallBack Loggedin',
+        title: 'Message not found',
         content: (
             <div>
-                <p>The Library is open during Summer Semester.</p>
-                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
+                <p>We can’t display your library service message right now. Please refresh your browser or try again later.</p>
             </div>
         ),
     },
