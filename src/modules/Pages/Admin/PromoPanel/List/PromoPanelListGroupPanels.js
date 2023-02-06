@@ -346,6 +346,7 @@ export const PromoPanelListGroupPanels = ({
                             <InputLabel id="group-selector">Filter by group</InputLabel>
                             <Select
                                 labelId="group-selector"
+                                placeholder="Filter by group"
                                 id="group-filter"
                                 data-testid="group-filter"
                                 label="Filter by group"
@@ -354,6 +355,15 @@ export const PromoPanelListGroupPanels = ({
                                 onChange={handleGroupFilterChange}
                                 renderValue={selected => {
                                     return selected.join(', ');
+                                }}
+                                onClose={() => {
+                                    // This will stop the dropdown being selected after click-away
+                                    // MUI Dropdowns seem to require TWO clicks away to deselect
+                                    // (one to close the popper, one to close the select)
+                                    // Jake didnt want that behavior. This rectifies that.
+                                    setTimeout(() => {
+                                        document.activeElement.blur();
+                                    }, 0);
                                 }}
                             >
                                 <MenuItem key="clear-All" value="000" align={'right'} data-testid="filter-clear-all">
