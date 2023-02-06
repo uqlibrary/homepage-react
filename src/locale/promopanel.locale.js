@@ -168,16 +168,7 @@ export default {
             ),
         },
     },
-    editPage: {
-        Title: (isEdit, isClone) => {
-            if (isEdit) {
-                return 'Edit a promo';
-            } else if (isClone) {
-                return 'Clone a promo';
-            } else {
-                return 'Create a promo';
-            }
-        },
+    editPage: { 
         help: {
             title: 'Promo Panels Edit Page',
             text: (
@@ -188,6 +179,15 @@ export default {
                     </p>
                 </div>
             ),
+        },
+        Title: (isEdit, isClone) => {
+            if (isEdit) {
+                return 'Edit a promo';
+            } else if (isClone) {
+                return 'Clone a promo';
+            } else {
+                return 'Create a promo';
+            }
         },
        
     },
