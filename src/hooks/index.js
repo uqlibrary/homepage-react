@@ -38,3 +38,21 @@ export function useTitle(title) {
         };
     });
 }
+
+// from https://stackoverflow.com/a/34425083
+export function useScript(params) {
+    useEffect(() => {
+        const { url, fileType } = params;
+        const script = document.createElement('script');
+
+        script.src = url;
+        script.type = fileType;
+        script.async = true;
+
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, [params]);
+}

@@ -1,4 +1,18 @@
 export default [{
+        name: 'FREN1011',
+        url: 'http:\/\/lr.library.uq.edu.au\/lists\/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F',
+        type: 'learning_resource',
+        course_title: 'French subject with blank campus',
+        campus: '',
+        period: 'Semester 2 2020',
+    }, {
+        name: 'FREN1012',
+        url: 'http:\/\/lr.library.uq.edu.au\/lists\/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F',
+        type: 'learning_resource',
+        course_title: 'French subject with blank semester',
+        campus: 'St Lucia',
+        period: '',
+    }, {
         name: 'FREN1010',
         url: 'http:\/\/lr.library.uq.edu.au\/lists\/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F',
         type: 'learning_resource',

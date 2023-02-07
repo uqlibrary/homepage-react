@@ -10,8 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import { throttle } from 'throttle-debounce';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/learningResourcesHelpers';
-import { default as locale } from 'modules/Pages/LearningResources/learningResources.locale';
+import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
+import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 const useStyles = makeStyles(
     () => ({
@@ -125,6 +125,7 @@ export const LearningResourceSearch = ({
                 <Grid item xs={12} sm>
                     <Autocomplete
                         data-testid={`${elementId}-autocomplete`}
+                        aria-controls={`${elementId}-autocomplete-popup`}
                         blurOnSelect="mouse"
                         id={`${elementId}-autocomplete`}
                         options={getOptions()}

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
-import { default as locale } from 'modules/Pages/LearningResources/learningResources.locale';
+import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
@@ -21,7 +21,6 @@ const useStyles = makeStyles(() => ({
         overflowY: 'auto',
         marginRight: -16,
         marginTop: 4,
-        marginBottom: -24,
         marginLeft: -16,
         padding: '0 30px 8px',
     },
@@ -60,13 +59,13 @@ export const LearningResourcesPanel = ({ account, history }) => {
 
     const navigateToLearningResourcePage = option => {
         /* istanbul ignore next */
-        if (!option.courseCode || !option.campus || !option.semester) {
+        if (!option.courseCode) {
             return; // should never happen
         }
         const course = {
             classnumber: option.courseCode,
-            campus: option.campus,
-            semester: option.semester,
+            campus: option.campus || /* istanbul ignore next */ '',
+            semester: option.semester || /* istanbul ignore next */ '',
         };
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
@@ -107,16 +106,22 @@ export const LearningResourcesPanel = ({ account, history }) => {
                                 xs={12}
                                 data-testid={`hcr-${index}`}
                                 key={`hcr-${index}`}
-                                style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
+                                style={{
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    paddingBottom: 8,
+                                }}
                             >
                                 <Link
                                     to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
                                     data-testid={`learning-resource-panel-course-link-${index}`}
                                 >
                                     {item.classnumber}
-                                </Link>
-                                {' - '}
-                                {item.DESCR}
+                                </Link>{' '}
+                                {/* because the panel width is driven by window size, show a title
+                                    so ellipsis doesn't hide some meaningful difference between course titles */}
+                                <span title={item.DESCR}>{item.DESCR}</span>
                             </Grid>
                         );
                     })}

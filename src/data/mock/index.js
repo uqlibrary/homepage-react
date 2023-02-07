@@ -7,6 +7,7 @@ import * as mockData from './data';
 import fetchMock from 'fetch-mock';
 
 import exams_FREN1010 from './data/records/examListFREN1010';
+import exams_FREN1011 from './data/records/examListFREN1011';
 import exams_HIST1201 from './data/records/examListHIST1201';
 import exams_PHIL1002 from './data/records/examListPHIL1002';
 import exams_ACCT1101 from './data/records/examListACCT1101';
@@ -15,6 +16,7 @@ import libraryGuides_HIST1201 from './data/records/libraryGuides_HIST1201';
 import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
 import libraryGuides_ACCT1101 from './data/records/libraryGuides_ACCT1101';
 import courseReadingList_FREN1010 from './data/records/courseReadingList_FREN1010';
+import courseReadingList_FREN1011 from './data/records/courseReadinglist_FREN1011';
 import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
@@ -555,6 +557,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, exams_FREN1010];
     })
+    .onGet('exams/course/FREN1011/summary')
+    .reply(() => {
+        return [200, exams_FREN1011];
+    })
     .onGet('exams/course/HIST1201/summary')
     .reply(() => {
         return [200, exams_HIST1201];
@@ -569,6 +575,10 @@ mock.onGet('exams/course/FREN1010/summary')
     })
 
     .onGet('library_guides/FREN1010')
+    .reply(() => {
+        return [200, libraryGuides_FREN1010];
+    })
+    .onGet('library_guides/FREN1011')
     .reply(() => {
         return [200, libraryGuides_FREN1010];
     })
@@ -589,11 +599,15 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, courseReadingList_FREN1010];
     })
+    .onGet('learning_resources/reading_list/summary/FREN1011//Semester%25202%25202020')
+    .reply(() => {
+        return [200, courseReadingList_FREN1011];
+    })
     .onGet('learning_resources/reading_list/summary/HIST1201/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_HIST1201];
     })
-    .onGet('learning_resources/reading_list/summary/PHIL1002/St Lucia/Semester%25202%25202020')
+    .onGet('learning_resources/reading_list/summary/PHIL1002/St Lucia/Semester%25203%25202020')
     .reply(() => {
         return [200, courseReadingList_PHIL1002];
     })
@@ -697,38 +711,40 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
-    
+
     /** TEST AND TAG ROUTES **/
 
     // CONFIG
     .onGet('test_and_tag/onload')
-    .reply(()=>{
+    .reply(() => {
         return [200, testTag_onLoad];
     })
 
     // T&T FLOORS
     .onGet(/test_and_tag\/building\/\d+\/current/)
-    .reply(config=>{
+    .reply(config => {
         const r = /\d+/;
-        const id = parseInt(config.url.match(r)?.[0],10 ?? 0);
-        return [200, testTag_floorList.find(floor=>floor.building_id === id)];
+        const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
+        return [200, testTag_floorList.find(floor => floor.building_id === id)];
     })
-    
+
     // T&T ROOMS
     .onGet(/test_and_tag\/floor\/\d+\/current/)
-    .reply(config=>{
+    .reply(config => {
         const r = /\d+/;
-        const id = parseInt(config.url.match(r)?.[0],10 ?? 0);
-        return [200, testTag_roomList.find(room=>room.floor_id === id)];
+        const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
+        return [200, testTag_roomList.find(room => room.floor_id === id)];
     })
-    
 
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)
-    .reply(config=>{
+    .reply(config => {
         const pattern = config.url.split('/').pop();
         // filter array to matching asset id's
-        return [200, testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()))];
+        return [
+            200,
+            testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase())),
+        ];
     })
 
     .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
@@ -740,14 +756,18 @@ mock.onGet('exams/course/FREN1010/summary')
     //     asset_next_test_due_date: '2023Nov16',
     //     }}]
     // )
-    .reply(() => [200, {data: {
-        asset_status: 'CURRENT',
-        asset_id_displayed:'UQL000298',
-        user_licence_number: '13962556',
-        action_date: '2022-11-16',
-        asset_next_test_due_date: '2023Nov16',
-        }}]
-    )
+    .reply(() => [
+        200,
+        {
+            data: {
+                asset_status: 'CURRENT',
+                asset_id_displayed: 'UQL000298',
+                user_licence_number: '13962556',
+                action_date: '2022-11-16',
+                asset_next_test_due_date: '2023Nov16',
+            },
+        },
+    ])
 
     .onGet('exams/search/fail')
     .reply(() => {

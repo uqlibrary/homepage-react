@@ -208,7 +208,6 @@ describe('EventPanel', () => {
             delete site.site_name;
         });
 
-        console.log(testConfig, '<<>>', configData);
         const { getByText, queryByText } = setup({
             state: {
                 testTagOnLoadReducer: { initConfig: testConfig, initConfigLoading: false },
@@ -222,7 +221,6 @@ describe('EventPanel', () => {
         expect(getByText(locale.form.event.title)).toBeInTheDocument();
         expect(setLocation).toHaveBeenCalledWith({ formSiteId: 1 });
         configData.sites.forEach(site => {
-            console.log(site);
             expect(queryByText(site.site_id_displayed)).not.toBeInTheDocument();
             expect(queryByText(site.site_name)).not.toBeInTheDocument();
         });

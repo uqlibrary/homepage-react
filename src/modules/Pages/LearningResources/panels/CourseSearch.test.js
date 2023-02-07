@@ -1,6 +1,6 @@
-import { isEnrolledInSubject } from './SearchCourses';
+import { isEnrolledInSubject } from './CourseSearch';
 
-describe('SearchCourses component', () => {
+describe('CourseSearch component', () => {
     it('should determine enrolment as false for invalid class', () => {
         const accountWithInvalidClass = {
             current_classes: [

@@ -72,7 +72,7 @@ context('Personalised panel', () => {
             .contains('St Lucia')
             .click();
 
-        // a wiggling location button displays in both these panels
+        // a wiggling location button displays in both these subComponents
         cy.get('[data-testid=computers-wiggler]').should('exist');
         cy.get('[data-testid=hours-wiggler]').should('exist');
 

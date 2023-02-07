@@ -93,7 +93,6 @@ const AssetPanel = ({
                 saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
                 selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
             );
-            console.log('saveForm', formValues, transformedData);
             actions.saveInspection(transformedData);
         }
     };
@@ -162,7 +161,7 @@ const AssetPanel = ({
                                     variant="standard"
                                     onFocus={() => setIsOpen(true)}
                                     onBlur={() => setIsOpen(false)}
-                                    InputLabelProps={{ shrink: true, for: 'testntagFormAssetIdInput' }}
+                                    InputLabelProps={{ shrink: true, htmlFor: 'testntagFormAssetIdInput' }}
                                     InputProps={{
                                         ...params.InputProps,
                                         endAdornment: (
@@ -210,7 +209,7 @@ const AssetPanel = ({
                             onChange={(_, newValue) => {
                                 handleChange('asset_type_id')(newValue.asset_type_id);
                             }}
-                            getOptionLabel={option => option.asset_type_name}
+                            getOptionLabel={option => option.asset_type_name ?? ''}
                             getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
                             autoHighlight
                             renderInput={params => (
@@ -223,7 +222,7 @@ const AssetPanel = ({
                                         !isValidAssetTypeId(formValues.asset_type_id)
                                     }
                                     variant="standard"
-                                    InputLabelProps={{ shrink: true, for: 'testntagFormAssetTypeInput' }}
+                                    InputLabelProps={{ shrink: true, htmlFor: 'testntagFormAssetTypeInput' }}
                                     InputProps={{
                                         ...params.InputProps,
                                         endAdornment: (

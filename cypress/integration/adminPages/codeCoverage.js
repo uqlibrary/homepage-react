@@ -1,4 +1,4 @@
-import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
+import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResourceSearchSuggestions';
 /*
  * this section duplcates tests in the homepage and otherpages folders and is needed to provide full coverage in the

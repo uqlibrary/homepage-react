@@ -1,5 +1,5 @@
 import { hasAWorkingHelpButton } from '../../../support/alerts';
-import { clickButton, clickSVGButton } from '../../../support/helpers';
+import { clickButton, clickSVGButton, dateHasValue } from '../../../support/helpers';
 
 const INFO_COLOUR = 'rgb(30, 114, 198)'; // #1e72c6
 const URGENT_COLOUR = 'rgb(251, 184, 0)'; // #fbb800
@@ -375,8 +375,8 @@ describe('Alerts Admin Form Pages', () => {
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');
-            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2021-06-29T15:00:00');
-            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2031-07-02T18:30:00');
+            dateHasValue('[data-testid="admin-alerts-form-start-date-0"] input', '2021-06-29T15:00');
+            dateHasValue('[data-testid="admin-alerts-form-end-date-0"] input', '2031-07-02T18:30');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.checked');
             selectPriorityType('urgent');
@@ -393,8 +393,8 @@ describe('Alerts Admin Form Pages', () => {
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Sample alert 2:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('Has mock data.');
-            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2021-06-06T00:45:00');
-            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2021-06-06T05:00:00');
+            dateHasValue('[data-testid="admin-alerts-form-start-date-0"] input', '2021-06-06T00:45');
+            dateHasValue('[data-testid="admin-alerts-form-end-date-0"] input', '2021-06-06T05:00');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('not.be.checked');
             selectPriorityType('info');

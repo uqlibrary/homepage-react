@@ -82,6 +82,10 @@ const useStyles2 = makeStyles(
         removedChip: {
             textDecoration: 'line-through',
         },
+        screenreader: {
+            position: 'absolute',
+            left: -9999,
+        },
     }),
     { withTheme: true },
 );
@@ -354,7 +358,9 @@ export const AlertsListAsTable = ({
                 <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                     <TableHead>
                         <TableRow md-row="" className="md-row">
-                            <TableCell component="th" scope="row" />
+                            <TableCell component="th" scope="row" align="center">
+                                <span className={classes.screenreader}>Select</span>
+                            </TableCell>
                             <TableCell component="th" scope="row">
                                 Alert
                             </TableCell>
@@ -364,7 +370,9 @@ export const AlertsListAsTable = ({
                             <TableCell component="th" scope="row" align="center">
                                 Unpublish date
                             </TableCell>
-                            <TableCell component="th" scope="row" />
+                            <TableCell component="th" scope="row" align="center">
+                                <span className={classes.screenreader}>Actions</span>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

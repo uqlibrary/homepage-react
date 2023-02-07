@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../learningResources.locale';
-import { _courseLink, _pluralise } from '../learningResourcesHelpers';
-import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
+import locale from '../shared/learningResources.locale';
+import { _courseLink, _pluralise } from '../shared/learningResourcesHelpers';
+import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
