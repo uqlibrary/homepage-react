@@ -47,10 +47,8 @@ const PromoPanel = ({
                             !!!promoPanelActionError &&
                             currentPromoPanel &&
                             currentPromoPanel.active_panel.panel_title}
-                        {!!!useAPI && locale.loggedout.title}
-                        {!!useAPI &&
-                            !!promoPanelActionError &&
-                            (!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title)}
+                        {!!!useAPI && (!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title)}
+                        {!!useAPI && !!promoPanelActionError && locale.apiError.title}
                     </Grid>
                 </Grid>
             }
@@ -61,10 +59,8 @@ const PromoPanel = ({
                         !!!promoPanelActionError &&
                         currentPromoPanel &&
                         parse(currentPromoPanel.active_panel.panel_content)}
-                    {!!!useAPI && locale.loggedout.content}
-                    {!!useAPI &&
-                        !!promoPanelActionError &&
-                        (!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content)}
+                    {!!!useAPI && (!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content)}
+                    {!!useAPI && !!promoPanelActionError && locale.apiError.content}
                 </Grid>
             </Grid>
         </StandardCard>

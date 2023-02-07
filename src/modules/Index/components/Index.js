@@ -233,7 +233,7 @@ export const Index = ({
                     )}
 
                     <Grid item xs={12} md={4}>
-                        <PromoPanel useAPI promoPanelLoading={promoPanelLoading} account={account} accountLoading={accountLoading} promoPanelActionError={promoPanelActionError} currentPromoPanel={currentPromoPanel} />
+                        <PromoPanel promoPanelLoading={promoPanelLoading} account={account} accountLoading={accountLoading} promoPanelActionError={promoPanelActionError} currentPromoPanel={currentPromoPanel} />
                     </Grid>
                 </Grid>
             </StandardPage>
