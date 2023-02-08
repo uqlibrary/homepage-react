@@ -7,7 +7,7 @@
  * @param string selector
  * @param string expectedButtonLabel
  */
-import { default as locale } from '../../src/modules/Pages/LearningResources/learningResources.locale';
+import { default as locale } from '../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 
 export function clickButton(selector, expectedButtonLabel) {
     cy.waitUntil(() => cy.get(selector).should('exist'));
@@ -59,9 +59,10 @@ export function readingListLength(courseReadingList) {
  */
 export const getReadingListHeader = courseReadingList => {
     const readingList = courseReadingList?.reading_lists?.[0];
-    return `${locale.myCourses.readingLists.title} for ${readingList.period} at ${
-        readingList.campus
-    } (${readingListLength(courseReadingList)} items)`;
+    const campusMarker = !!readingList.campus ? ` at ${readingList.campus}` : '';
+    return `${locale.myCourses.readingLists.title} for ${readingList.period}${campusMarker} (${readingListLength(
+        courseReadingList,
+    )} items)`;
 };
 
 export function waitUntilSpotlightListPageHasLoaded() {
@@ -76,4 +77,13 @@ export function waitUntilSpotlightListPageHasLoaded() {
             .its('length')
             .should('eq', numberOfRowsPerPageOptions);
     });
+}
+
+export function dateHasValue(dateField, expectedDate) {
+    // dev uses minutes only, AWS pipelines uses minutes and seconds - check it starts with minutes
+    cy.get(dateField)
+        .should('have.attr', 'value')
+        .then(dateValue => {
+            expect(dateValue.startsWith(expectedDate)).to.be.true;
+        });
 }

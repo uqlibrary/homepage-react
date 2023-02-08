@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../learningResourcesHelpers';
-import { default as locale } from '../learningResources.locale';
-import { SubjectBody } from './SubjectBody';
-import { TabPanel } from './TabPanel';
+import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../shared/learningResourcesHelpers';
+import { default as locale } from '../shared/learningResources.locale';
+import { SubjectBody } from '../shared/SubjectBody';
+import { TabPanel } from '../shared/TabPanel';
 import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
@@ -39,7 +39,7 @@ export const isEnrolledInSubject = (subject, account) => {
     );
 };
 
-export const SearchCourses = ({
+export const CourseSearch = ({
     account,
     loadNewSubject,
     preselectedCourse,
@@ -265,7 +265,7 @@ export const SearchCourses = ({
     );
 };
 
-SearchCourses.propTypes = {
+CourseSearch.propTypes = {
     account: PropTypes.object,
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,

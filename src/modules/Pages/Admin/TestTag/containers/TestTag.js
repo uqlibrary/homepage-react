@@ -11,7 +11,7 @@ const currentRetestList = [
     { value: '60', label: '5 years' },
 ];
 
-const currentAssetOwnersList = [{ value: 'UQL', label: 'UQL-WSS' }];
+const currentAssetOwnersList = [{ value: 'UQL', label: 'UQ Library' }];
 
 const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
 

@@ -75,7 +75,7 @@ export default {
                 status: 401,
             },
             403: {
-                message: 'Your session expired, please login to continue.',
+                message: 'Your session expired, please login again to continue.',
                 status: 403,
             },
             404: {

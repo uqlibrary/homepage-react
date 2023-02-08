@@ -14,7 +14,6 @@ const handlers = {
         assetsListError: false,
     }),
     [actions.TESTTAG_ASSETS_LOADED]: (state, action) => {
-        console.log('SITE ACTION', action);
         return {
             ...initialState,
             ...state,

@@ -1,4 +1,4 @@
-import { clickButton } from '../../../support/helpers';
+import { clickButton, dateHasValue } from '../../../support/helpers';
 
 describe('Alerts Admin View Page', () => {
     beforeEach(() => {
@@ -29,10 +29,10 @@ describe('Alerts Admin View Page', () => {
         );
         cy.get('[data-testid="admin-alerts-view-body"] textarea').should('be.disabled');
 
-        cy.get('[data-testid="admin-alerts-view-start-date"] input').should('have.value', '2021-06-29T15:00:00');
+        dateHasValue('[data-testid="admin-alerts-view-start-date"] input', '2021-06-29T15:00');
         cy.get('[data-testid="admin-alerts-view-start-date"] input').should('be.disabled');
 
-        cy.get('[data-testid="admin-alerts-view-end-date"] input').should('have.value', '2031-07-02T18:30:00');
+        dateHasValue('[data-testid="admin-alerts-view-end-date"] input', '2031-07-02T18:30');
         cy.get('[data-testid="admin-alerts-view-end-date"] input').should('be.disabled');
 
         cy.get('[data-testid="admin-alerts-view-checkbox-linkrequired"] input').should('be.checked');

@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
-import locale from '../learningResources.locale';
-import { a11yProps, reverseA11yProps } from '../learningResourcesHelpers';
+import locale from '../shared/learningResources.locale';
+import { a11yProps, reverseA11yProps } from '../shared/learningResourcesHelpers';
 import { getCampusByCode } from 'helpers/general';
-import { SubjectBody } from './SubjectBody';
-import { TabPanel } from './TabPanel';
+import { SubjectBody } from '../shared/SubjectBody';
+import { TabPanel } from '../shared/TabPanel';
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
