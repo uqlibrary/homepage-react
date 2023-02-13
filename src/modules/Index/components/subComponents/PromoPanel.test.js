@@ -65,8 +65,16 @@ describe('Promo Panel display', () => {
         reportToSentry([new Error('Promo Panel API failed to load panel.')]);
         expect(mockSentryScope).toBeCalled();
     });
-    it('renders panel uses fallback when set to not use API', () => {
+    it('renders panel uses fallback when set to not use API (Logged In)', () => {
         const { getByTestId } = setup({ useAPI: false });
         expect(getByTestId('panel-fallback-content')).toBeInTheDocument();
+    });
+    it('renders panel uses fallback when set to not use API (Logged Out)', () => {
+        const { getByTestId } = setup({ useAPI: false, account: {} });
+        expect(getByTestId('panel-fallback-content')).toBeInTheDocument();
+    });
+    it('renders panel does NOT fallback when set to use API (Logged In)', () => {
+        const { queryByTestId } = setup({ useAPI: true });
+        expect(queryByTestId('panel-fallback-content')).not.toBeInTheDocument();
     });
 });
