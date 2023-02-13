@@ -10,6 +10,7 @@ export { default as examLearningResourceReducer } from './examLearningResourceRe
 export { default as publicFileUploadReducer } from './publicFileUploadReducer';
 export { default as spotlightReducer } from './spotlightReducer';
 export { default as spotlightsReducer } from './spotlightsReducer';
+export { default as promoPanelReducer } from './promoPanelReducer';
 export { default as examSearchReducer } from './examSearchReducer';
 export { default as examSuggestionReducer } from './examSuggestionReducer';
 export { default as testTagOnLoadReducer } from './testTagOnLoadReducer';

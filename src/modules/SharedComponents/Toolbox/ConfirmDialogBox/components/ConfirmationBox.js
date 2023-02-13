@@ -36,6 +36,8 @@ export const ConfirmationBox = ({
     onClose,
     showAlternateActionButton,
     showInputForm,
+    showAdditionalInformation,
+    additionalInformation,
     noMinContentWidth,
 }) => {
     const classes = useStyles();
@@ -54,7 +56,6 @@ export const ConfirmationBox = ({
         onClose();
         !!onAlternateAction && onAlternateAction();
     };
-
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
@@ -62,6 +63,13 @@ export const ConfirmationBox = ({
                 <DialogContentText data-testid="message-content" component="div">
                     {locale.confirmationMessage}
                 </DialogContentText>
+                {!!showAdditionalInformation && !!additionalInformation && (
+                    <DialogContentText data-testid="message-content-additional">
+                        <strong>Info: </strong>
+                        {additionalInformation}
+                    </DialogContentText>
+                )}
+
                 {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
             <DialogActions>
@@ -132,10 +140,13 @@ ConfirmationBox.propTypes = {
     onClose: PropTypes.func,
     showAlternateActionButton: PropTypes.bool,
     showInputForm: PropTypes.bool,
+    additionalInformation: PropTypes.string,
+    showAdditionalInformation: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
 };
 
 ConfirmationBox.defaultProps = {
+    showAdditionalInformation: false,
     hideActionButton: false,
     hideCancelButton: false,
     isOpen: false,
@@ -148,6 +159,7 @@ ConfirmationBox.defaultProps = {
     },
     showAlternateActionButton: false,
     showInputForm: false,
+    additionalInformation: null,
     noMinContentWidth: false,
 };
 

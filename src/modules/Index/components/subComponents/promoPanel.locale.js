@@ -7,22 +7,40 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Summer Semester',
+        title: 'Orientation',
         content: (
             <div>
-                <p>The Library is open during Summer Semester.</p>
-                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
+                <p>Get to know your Library this O-Week (13–17 Feb) and during Connect Week (20–24 Feb)!</p>
+                <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> to your Orientation Plan:</p>
+                <ul>
+                    <li>Join a library tour</li>
+                    <li>Enjoy a Library Meet and Greet</li>
+                    <li>Attend 1-hour info sessions – Introduction to Learn.UQ (Blackboard) or IT essentials for UQ students.</li>
+                </ul>
+                <p>Discover more <a href="https://life.uq.edu.au/orientation">orientation experiences</a> with UQ Life.</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Summer Semester',
+        title: 'Orientation',
         content: (
             <div>
-                <p>The Library is open during Summer Semester.</p>
-                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
+                <p>Get to know your Library this O-Week (13–17 Feb) and during Connect Week (20–24 Feb)!</p>
+                <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> to your Orientation Plan:</p>
+                <ul>
+                    <li>Join a library tour</li>
+                    <li>Enjoy a Library Meet and Greet</li>
+                    <li>Attend 1-hour info sessions – Introduction to Learn.UQ (Blackboard) or IT essentials for UQ students.</li>
+                </ul>
+                <p>Discover more <a href="https://life.uq.edu.au/orientation">orientation experiences</a> with UQ Life.</p>
+            </div>
+        ),
+    },
+    apiError: {
+        title: 'Message not found',
+        content: (
+            <div>
+                <p>We can’t display your library service message right now. Please refresh your browser or try again later.</p>
             </div>
         ),
     },
