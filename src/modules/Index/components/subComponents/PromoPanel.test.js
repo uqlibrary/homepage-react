@@ -69,4 +69,8 @@ describe('Promo Panel display', () => {
         const { getByTestId } = setup({ useAPI: false });
         expect(getByTestId('panel-fallback-content')).toBeInTheDocument();
     });
+    it('renders panel does NOT fallback when set to not use API', () => {
+        const { queryByTestId } = setup({ useAPI: true });
+        expect(queryByTestId('panel-fallback-content')).not.toBeInTheDocument();
+    });
 });
