@@ -2,19 +2,9 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import parse from 'html-react-parser';
 import { promoPanel as locale } from './promoPanel.locale';
-import * as Sentry from '@sentry/browser';
-
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-
 import Grid from '@material-ui/core/Grid';
 import PromoPanelLoader from 'modules/Pages/Admin/PromoPanel/PromoPanelLoader';
-
-export const reportToSentry = ([error, context = {}]) =>
-    Sentry.withScope(scope => {
-        scope.setExtras(context.extra);
-        Sentry.captureException(error);
-    });
-
 const PromoPanel = ({
     useAPI,
     account,
@@ -23,18 +13,6 @@ const PromoPanel = ({
     promoPanelActionError,
     promoPanelLoading,
 }) => {
-    if (!!promoPanelActionError) {
-        reportToSentry([
-            new Error('Promo Panel API failed to load panel.'),
-            {
-                extra: {
-                    message: 'PromoPanel Action load error',
-                    panelError: promoPanelActionError,
-                },
-            },
-        ]);
-    }
-
     return accountLoading === false && promoPanelLoading === false ? (
         <StandardCard
             primaryHeader
