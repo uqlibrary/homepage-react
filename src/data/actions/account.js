@@ -64,9 +64,12 @@ function getLibraryGroupCookie() {
     return Cookies.get(SESSION_USER_GROUP_COOKIE_NAME);
 }
 
-function addAccountToStoredAccount(account, numberOfHoursUntilExpiry = 8) {
+function addAccountToStoredAccount(account, numberOfHoursUntilExpiry = 7) {
     // for improved UX, expire the session storage when the token must surely be expired, for those rare long sessions
     // session lasts 8 hours, per https://auth.uq.edu.au/about/
+    // except we are getting network errors where they are logged out but this session data hasn't expired
+    // I think they turned the value down without updating the docs :(
+    // trying using 7 hours instead of the expected 8
 
     const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
     const storageExpiryDate = {
