@@ -1,7 +1,6 @@
 import React from 'react';
-import PromoPanel, { reportToSentry } from './PromoPanel';
+import PromoPanel from './PromoPanel';
 import { rtlRender } from '../../../../../utils/test-utils';
-import * as Sentry from '@sentry/browser';
 
 function setup(testProps = {}) {
     const props = {
