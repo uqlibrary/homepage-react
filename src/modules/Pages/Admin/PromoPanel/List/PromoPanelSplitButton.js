@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -40,7 +38,6 @@ export const PromoPanelSplitButton = ({
     canUnschedule,
     onPreview,
     deletePanelById,
-    mainButtonLabel,
     navigateToCloneForm,
     navigateToEditForm,
     confirmDeleteLocale,
@@ -82,14 +79,15 @@ export const PromoPanelSplitButton = ({
             />
             <Grid container direction="column" alignItems={!!align ? align : /* istanbul ignore next */ 'center'}>
                 <Grid item xs={12} className={classes.parent}>
-                    <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
+                    {/* <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         <Button
                             children={canEdit ? 'Edit' : 'View'}
                             color="primary"
                             data-testid={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${(group &&
                                 group) ||
-                                /* istanbul ignore next */ 'none'}`}
-                            id={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${group}`}
+                                /* istanbul ignore next  'none'}`}
+                            id={`panel-list-item-${mainButtonLabel.toLowerCase()}-${row.panel_id}-${(group && group) ||
+                                /* istanbul ignore next  'none'}`}
                             onClick={() => (canEdit ? navigateToEditForm(row.panel_id) : handlePreview(row, item))}
                             variant="contained"
                         />
@@ -101,6 +99,32 @@ export const PromoPanelSplitButton = ({
                             aria-label="More actions"
                             aria-haspopup="menu"
                             data-testid={`alert-list-arrowicon-${row.panel_id}-${(group && group) ||
+                                /* istanbul ignore next  'none'}`}
+                            onClick={handleToggle}
+                            title="More actions"
+                        >
+                            <ArrowDropDownIcon />
+                        </Button>
+                    </ButtonGroup> */}
+                    <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
+                        <Button
+                            children={'View'}
+                            color="primary"
+                            data-testid={`panel-list-item-preview-${row.panel_id}-${(group && group) ||
+                                /* istanbul ignore next */ 'none'}`}
+                            id={`panel-list-item-preview-${row.panel_id}-${(group && group) ||
+                                /* istanbul ignore next */ 'none'}`}
+                            onClick={() => handlePreview(row, item)}
+                            variant="contained"
+                        />
+                        <Button
+                            color="primary"
+                            size="small"
+                            aria-controls={open ? 'split-button-menu' : undefined}
+                            aria-expanded={open ? 'true' : undefined}
+                            aria-label="More actions"
+                            aria-haspopup="menu"
+                            data-testid={`panel-list-arrowicon-${row.panel_id}-${(group && group) ||
                                 /* istanbul ignore next */ 'none'}`}
                             onClick={handleToggle}
                             title="More actions"
@@ -121,15 +145,16 @@ export const PromoPanelSplitButton = ({
                                 <Paper className={classes.menuWrapper}>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
-                                            {!!canEdit ? (
+                                            {!!canEdit && (
                                                 <MenuItem
-                                                    data-testid={`${row.panel_id}-preview-button-${group}`}
-                                                    key={`${row.panel_id}-preview-button-${group}`}
-                                                    onClick={() => handlePreview(row, item)}
+                                                    data-testid={`${row.panel_id}-edit-button-${(!!group && group) ||
+                                                        'none'}`}
+                                                    key={`${row.panel_id}-edit-button-${group}`}
+                                                    onClick={() => navigateToEditForm(row.panel_id)}
                                                 >
-                                                    View
+                                                    Edit
                                                 </MenuItem>
-                                            ) : null}
+                                            )}
                                             {!!canClone && (
                                                 <MenuItem
                                                     data-testid={`${row.panel_id}-clone-button-${(group && group) ||
@@ -171,7 +196,6 @@ PromoPanelSplitButton.propTypes = {
     canDelete: PropTypes.bool,
     canUnschedule: PropTypes.bool,
     onPreview: PropTypes.func,
-    mainButtonLabel: PropTypes.string,
     deletePanelById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
     navigateToEditForm: PropTypes.func,

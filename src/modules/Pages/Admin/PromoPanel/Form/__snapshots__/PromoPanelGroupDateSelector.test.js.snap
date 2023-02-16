@@ -62,7 +62,7 @@ Object {
                 <div
                   class="MuiFormControl-root MuiTextField-root"
                   data-testid="admin-promopanel-group-start-date"
-                  format="DD/MM/YYYY HH:mm a"
+                  format="ddd D MMM YYYY h:mma"
                   keyboardbuttonprops="[object Object]"
                 >
                   <label
@@ -75,6 +75,7 @@ Object {
                   </label>
                   <div
                     class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                    style="width: 100%; margin-right: 25px;"
                   >
                     <input
                       aria-invalid="false"
@@ -82,7 +83,7 @@ Object {
                       id="admin-promopanel-group-start-date"
                       readonly=""
                       type="text"
-                      value="01/01/2000 00:00 am"
+                      value="Sat 1 Jan 2000 12:00am"
                     />
                   </div>
                   
@@ -101,7 +102,7 @@ Object {
                 <div
                   class="MuiFormControl-root MuiTextField-root"
                   data-testid="admin-promopanel-group-end-date"
-                  format="DD/MM/YYYY HH:mm a"
+                  format="ddd D MMM YYYY h:mma"
                   keyboardbuttonprops="[object Object]"
                 >
                   <label
@@ -114,6 +115,7 @@ Object {
                   </label>
                   <div
                     class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                    style="width: 100%; margin-right: 25px;"
                   >
                     <input
                       aria-invalid="false"
@@ -121,7 +123,7 @@ Object {
                       id="admin-promopanel-group-end-date"
                       readonly=""
                       type="text"
-                      value="02/01/2000 23:59 pm"
+                      value="Sun 2 Jan 2000 11:59pm"
                     />
                   </div>
                   

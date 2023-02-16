@@ -12,9 +12,7 @@ export const PromoPanelScheduleHeaders = ({}) => {
                 <TableCell component="th" scope="col">
                     <Typography variant="body1">Panel Name</Typography>
                 </TableCell>
-                <TableCell component="th" scope="col">
-                    <Typography variant="body1">Default</Typography>
-                </TableCell>
+
                 <TableCell component="th" scope="col">
                     <Typography variant="body1">From</Typography>
                 </TableCell>

@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import PromoPanelHelpDrawer from '../../PromoPanelHelpDrawer';
+import { default as locale } from 'locale/promopanel.locale';
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
@@ -18,6 +21,10 @@ export const PromoPanelAdd = ({
     promoPanelUserTypesError,
     promoPanelActionError,
 }) => {
+    const [helpLightboxOpen, setHelpLightboxOpen] = React.useState(false);
+
+    const openHelpLightbox = () => setHelpLightboxOpen(true);
+    const closeHelpLightbox = () => setHelpLightboxOpen(false);
     const defaults = {
         id: '',
         startDateDefault: getTimeMondayMidnightNext(),
@@ -61,6 +68,20 @@ export const PromoPanelAdd = ({
 
     return (
         <StandardPage title="Promo panel management">
+            <Button
+                children="Help"
+                style={{ float: 'right', margin: 20 }}
+                color="secondary"
+                data-testid="admin-promoPanel-help-button"
+                id="admin-spotlights-help-button"
+                onClick={openHelpLightbox}
+                variant="contained"
+            />
+            <PromoPanelHelpDrawer
+                helpContent={locale.addPage.help}
+                closeHelpLightbox={closeHelpLightbox}
+                open={helpLightboxOpen}
+            />
             {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
                 <div
                     data-testid="Promopanel-Error"

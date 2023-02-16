@@ -1,10 +1,12 @@
 import React from 'react';
-import PromoPanel from './PromoPanel';
-import { rtlRender, screen } from '../../../../../utils/test-utils';
+import PromoPanel, { reportToSentry } from './PromoPanel';
+import { rtlRender } from '../../../../../utils/test-utils';
+import * as Sentry from '@sentry/browser';
 
 function setup(testProps = {}) {
     const props = {
         account: { id: 1 },
+        useAPI: true,
         accountLoading: false,
         currentPromoPanel: {
             active_panel: {
@@ -46,6 +48,33 @@ describe('Promo Panel display', () => {
 
     it('Renders promopanel loader when account or panel is loading', () => {
         const { queryByTestId } = setup({ promoPanelLoading: true });
+        expect(queryByTestId('panel-fallback-content')).not.toBeInTheDocument();
+    });
+    it('correctly fires an error to sentry if no error loaded', () => {
+        const mockSentryScope = jest.spyOn(Sentry, 'withScope');
+        reportToSentry([
+            new Error('Promo Panel API failed to load panel.'),
+            {
+                extra: {
+                    message: 'PromoPanel Action load error',
+                    panelError: 'Error',
+                },
+            },
+        ]);
+        expect(mockSentryScope).toBeCalled();
+        reportToSentry([new Error('Promo Panel API failed to load panel.')]);
+        expect(mockSentryScope).toBeCalled();
+    });
+    it('renders panel uses fallback when set to not use API (Logged In)', () => {
+        const { getByTestId } = setup({ useAPI: false });
+        expect(getByTestId('panel-fallback-content')).toBeInTheDocument();
+    });
+    it('renders panel uses fallback when set to not use API (Logged Out)', () => {
+        const { getByTestId } = setup({ useAPI: false, account: {} });
+        expect(getByTestId('panel-fallback-content')).toBeInTheDocument();
+    });
+    it('renders panel does NOT fallback when set to use API (Logged In)', () => {
+        const { queryByTestId } = setup({ useAPI: true });
         expect(queryByTestId('panel-fallback-content')).not.toBeInTheDocument();
     });
 });

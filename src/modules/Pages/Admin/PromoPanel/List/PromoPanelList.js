@@ -35,6 +35,7 @@ export const PromoPanelList = ({
             );
             setKnownGroups(known);
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelUserTypeList]);
 

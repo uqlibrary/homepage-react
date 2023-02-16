@@ -103,7 +103,7 @@ export const PromoPanelListActive = ({ panelList, title, isLoading }) => {
                                                 <TableCell>
                                                     {(!!!item.active_panel.is_default_panel &&
                                                         moment(item.active_panel.panel_schedule_end_time).format(
-                                                            'dddd DD/MM/YYYY HH:mm a',
+                                                            'ddd D MMM YYYY h:mma',
                                                         )) ||
                                                         '...'}
                                                 </TableCell>

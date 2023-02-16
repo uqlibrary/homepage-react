@@ -154,8 +154,15 @@ export const PromoPanelFormSchedules = ({
                                 label={locale.form.labels.startDate}
                                 onChange={handleChange('start')}
                                 minDate={defaults.minimumDate}
-                                format="DD/MM/YYYY HH:mm a"
+                                format="ddd D MMM YYYY h:mma"
                                 showTodayButton
+                                InputProps={{
+                                    style: {
+                                        width: '100%',
+                                        marginRight: 25,
+                                    },
+                                    readOnly: true,
+                                }}
                                 todayLabel={locale.form.labels.datePopupNowButton}
                                 InputLabelProps={{ style: { textAlign: 'left' } }}
                                 autoOk
@@ -174,10 +181,18 @@ export const PromoPanelFormSchedules = ({
                                 id="admin-promopanel-form-end-date"
                                 data-testid="admin-promopanel-form-end-date"
                                 label={locale.form.labels.endDate}
+                                // variant="inline"
                                 onChange={handleChange('end')}
                                 value={values.end}
                                 minDate={values.start}
-                                format="DD/MM/YYYY HH:mm a"
+                                InputProps={{
+                                    style: {
+                                        width: '100%',
+                                        marginRight: 25,
+                                    },
+                                    readOnly: true,
+                                }}
+                                format="ddd D MMM YYYY h:mma"
                                 autoOk
                                 InputLabelProps={{ style: { textAlign: 'left' } }}
                                 KeyboardButtonProps={{
@@ -232,12 +247,12 @@ export const PromoPanelFormSchedules = ({
                                             </Grid>
                                             <Grid item xs={3} style={{ padding: '10px 0 10px' }}>
                                                 {(!values.is_default_panel &&
-                                                    moment(item.startDate).format('dddd DD/MM/YYYY HH:mm a')) ||
+                                                    moment(item.startDate).format('ddd D MMM YYYY h:mma')) ||
                                                     'DEFAULT'}
                                             </Grid>
                                             <Grid item xs={3} style={{ padding: '10px 0 10px' }}>
                                                 {!values.is_default_panel &&
-                                                    moment(item.endDate).format('dddd DD/MM/YYYY HH:mm a')}
+                                                    moment(item.endDate).format('ddd D MMM YYYY h:mma')}
                                             </Grid>
                                             <Grid item xs={4} style={{ textAlign: 'right' }}>
                                                 {!!!values.is_default_panel && (
