@@ -58,10 +58,10 @@ describe('Spotlight Admin View page', () => {
             .should('have.value', 'Feedback on library services');
         cy.get('[data-testid="admin-spotlights-form-start-date"] input')
             .should('exist')
-            .should('have.value', '2016-12-17T12:24:00');
+            .should('have.value', '2016-12-17T12:24');
         cy.get('[data-testid="admin-spotlights-form-end-date"] input')
             .should('exist')
-            .should('have.value', '2021-02-28T23:59:00');
+            .should('have.value', '2021-02-28T23:59');
         cy.get('img[data-testid="admin-spotlights-view-img"]')
             .should('exist')
             .and(
