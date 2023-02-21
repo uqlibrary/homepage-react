@@ -25,9 +25,8 @@ describe('Spotlight Admin View page', () => {
     it('view page is accessible', () => {
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('h2').should('be.visible');
+        cy.waitUntil(() => cy.get('h2').should('be.visible'));
         cy.get('h2').contains('View spotlight');
-        cy.wait(1000);
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Spotlights Admin View',
             scopeName: 'Content',
