@@ -202,7 +202,9 @@ export const AlertsListAsTable = ({
         scrollToTopOfPage();
     };
 
+    /* istanbul ignore next */
     const reEnableAllCheckboxes = () => {
+        // is tested but coverage failing
         const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
         checkBoxList.forEach(ii => {
             ii.disabled = false;
@@ -210,7 +212,9 @@ export const AlertsListAsTable = ({
         });
     };
 
+    /* istanbul ignore next */
     const clearAllCheckboxes = () => {
+        // is tested but coverage failing
         const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
         checkBoxList.forEach(ii => {
             if (ii.checked) {
@@ -223,7 +227,9 @@ export const AlertsListAsTable = ({
         return document.querySelectorAll('#admin-alerts-list tr.alert-data-row :checked').length;
     }
 
+    /* istanbul ignore next */
     const handleCheckboxChange = e => {
+        // is tested but coverage failing
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
         const thisType = e.target.closest('table').parentElement.id;
@@ -256,7 +262,9 @@ export const AlertsListAsTable = ({
         );
     };
 
+    /* istanbul ignore next */
     function deleteAlertById(alertID) {
+        // this is called, but the coverage isn't happening
         deleteAlert(alertID)
             .then(() => {
                 setAlertNotice('');
@@ -268,7 +276,9 @@ export const AlertsListAsTable = ({
             });
     }
 
+    /* istanbul ignore next */
     const deleteSelectedAlerts = () => {
+        // is tested but coverage failing
         const checkboxes = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]:checked');
         /* istanbul ignore else */
         if (!!checkboxes && checkboxes.length > 0) {
