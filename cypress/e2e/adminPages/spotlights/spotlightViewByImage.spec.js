@@ -27,6 +27,7 @@ describe('Spotlights Admin: the view-by-image lightbox works', () => {
             .should('have.attr', 'title')
             .then(titleAttribute => {
                 // too hard to test for the complete string with carriage return in the middle
+                expect(titleAttribute.startsWith('Study outdoors xxxx')).to.be.false; // validate the test
                 expect(titleAttribute.startsWith('Study outdoors in Duhig Place - Study space')).to.be.true;
                 expect(titleAttribute.endsWith('Run between 2021-03-01 00:01:00  and  2099-12-07 23:59:00')).to.be.true;
             });
