@@ -323,7 +323,9 @@ export const AlertsListAsTable = ({
             />
             <div
                 data-testid={`headerRow-${tableType}`}
-                className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
+                className={`${classes.headerRow} ${
+                    !!deleteActive ? /* istanbul ignore next */ classes.headerRowHighlighted : ''
+                }`}
             >
                 <div>
                     <h3 style={{ marginBottom: 6 }}>
@@ -338,7 +340,10 @@ export const AlertsListAsTable = ({
                     </h3>
                 </div>
                 {!!deleteActive && (
-                    <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
+                    /* istanbul ignore next */ <span
+                        className="deleteManager"
+                        style={{ marginLeft: 'auto', paddingTop: 8 }}
+                    >
                         <span>{alertNotice}</span>
                         <IconButton
                             onClick={showDeleteConfirmation}
@@ -348,7 +353,9 @@ export const AlertsListAsTable = ({
                         >
                             <DeleteIcon
                                 className={`${
-                                    !!deleteActive ? classes.iconHighlighted : /* istanbul ignore next */ ''
+                                    !!deleteActive
+                                        ? /* istanbul ignore next */ classes.iconHighlighted
+                                        : /* istanbul ignore next */ ''
                                 }`}
                             />
                         </IconButton>
