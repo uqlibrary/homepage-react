@@ -131,6 +131,7 @@ export const App = ({ account, actions }) => {
                     <connect-footer />
                     <uq-footer />
                     <proactive-chat />
+                    <cultural-advice-popup />
                 </div>
             </div>
         </Grid>
