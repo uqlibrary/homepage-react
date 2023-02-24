@@ -19,6 +19,8 @@ function setup(testProps = {}, renderer = rtlRender) {
         onClose: jest.fn(),
         showAlternateActionButton: false,
         confirmationBoxId: 'confirmation-box',
+        showAdditionalInformation: null,
+        additionalInformation: null,
         ...testProps,
     };
 
@@ -31,6 +33,18 @@ describe('ConfirmationBox component', () => {
         expect(getByText('Are you sure?')).toBeInTheDocument();
         expect(getByTestId('confirm-confirmation-box')).toBeInTheDocument();
         expect(getByTestId('cancel-confirmation-box')).toBeInTheDocument();
+    });
+    it('should render confirmation box with additional information', () => {
+        const { getByTestId, getByText } = setup({
+            isOpen: true,
+            showAdditionalInformation: true,
+            additionalInformation: 'test',
+        });
+        expect(getByText('Are you sure?')).toBeInTheDocument();
+        expect(getByTestId('confirm-confirmation-box')).toBeInTheDocument();
+        expect(getByTestId('cancel-confirmation-box')).toBeInTheDocument();
+
+        expect(getByTestId('message-content-additional')).toBeInTheDocument();
     });
 
     it('should render alternate action button', () => {

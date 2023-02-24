@@ -130,6 +130,7 @@ export const App = ({ account, actions }) => {
                 <div id="full-footer-block">
                     <connect-footer />
                     <uq-footer />
+                    <proactive-chat />
                 </div>
             </div>
         </Grid>

@@ -4,7 +4,7 @@ import { lazyRetry } from 'helpers/general';
 
 // lazy loaded components
 export const NotFound = lazy(() => lazyRetry(() => import('modules/Pages/NotFound/containers/NotFound')));
-export const LearningResources = lazy(() => lazyRetry(() => import('modules/Pages/LearningResources/containers/LearningResources')));
+export const LearningResources = lazy(() => lazyRetry(() => import('modules/Pages/LearningResources/LearningResourcesContainer')));
 export const PaymentReceipt = lazy(() => lazyRetry(() => import('modules/Pages/PaymentReceipt/PaymentReceipt')));
 export const BookExamBooth = lazy(() => lazyRetry(() => import('modules/Pages/BookExamBooth/containers/BookExamBooth')));
 export const AlertsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Add/AlertsAddContainer')));
@@ -21,6 +21,13 @@ export const TestTag = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Te
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
+
+export const PromoPanelList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/List/PromoPanelListContainer')));
+export const PromoPanelAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Add/PromoPanelAddContainer')));
+export const PromoPanelEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Edit/PromoPanelEditContainer')));
+// export const PromoPanelView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/View/PromoPanelViewContainer')));
+export const PromoPanelClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Clone/PromoPanelCloneContainer')));
+
 
 // always load components
 export { IndexContainer as Index } from 'modules/Index';

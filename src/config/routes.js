@@ -1,5 +1,11 @@
 import { locale } from 'locale';
-import { isAlertsAdminUser, canSeeLearningResources, isSpotlightsAdminUser, isTestTagAdminUser } from 'helpers/access';
+import {
+    isAlertsAdminUser,
+    canSeeLearningResources,
+    isSpotlightsAdminUser,
+    isTestTagAdminUser,
+    isPromoPanelAdminUser,
+} from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
@@ -16,6 +22,11 @@ export const pathConfig = {
         alertsview: alertid => `/admin/alerts/view/${alertid}`,
         alerts: '/admin/alerts',
         masquerade: '/admin/masquerade',
+        promopaneladd: '/admin/promopanel/add',
+        promopaneledit: promopanelid => `/admin/promopanel/edit/${promopanelid}`,
+        // promopanelview: promopanelid => `/admin/promopanel/view/${promopanelid}`,
+        promopanelclone: promopanelid => `/admin/promopanel/clone/${promopanelid}`,
+        promopanel: '/admin/promopanel',
         spotlightsadd: '/admin/spotlights/add',
         spotlightsedit: spotlightid => `/admin/spotlights/edit/${spotlightid}`,
         spotlightsview: spotlightid => `/admin/spotlights/view/${spotlightid}`,
@@ -40,6 +51,8 @@ export const flattedPathConfigExact = [
     '/admin/masquerade/',
     '/admin/spotlights/add',
     '/admin/spotlights',
+    '/admin/promopanel/add',
+    '/admin/promopanel',
     '/admin/testntag',
     '/book-exam-booth',
     '/exams',
@@ -53,6 +66,9 @@ export const flattedPathConfig = [
     '/admin/spotlights/edit',
     '/admin/spotlights/view',
     '/admin/spotlights/clone',
+    '/admin/promopanel/edit',
+    '/admin/promopanel/view',
+    '/admin/promopanel/clone',
     '/exams/course',
 ];
 
@@ -141,6 +157,39 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const promopanelidRegExp = '.*';
+    const promopanelid = `:promopanelid(${promopanelidRegExp})`;
+    const promoPanelDisplay = [
+        {
+            path: pathConfig.admin.promopanel,
+            component: components.PromoPanelList,
+            exact: true,
+            pageTitle: locale.pages.admin.promopanel.title,
+        },
+        // Is add and Edit the same?
+        {
+            path: pathConfig.admin.promopaneladd,
+            component: components.PromoPanelAdd,
+            exact: true,
+            pageTitle: locale.pages.admin.promopanel.form.add.title,
+        },
+        {
+            path: pathConfig.admin.promopaneledit(promopanelid),
+            component: components.PromoPanelEdit,
+            pageTitle: locale.pages.admin.promopanel.form.edit.title,
+        },
+        {
+            path: pathConfig.admin.promopanelclone(promopanelid),
+            component: components.PromoPanelClone,
+            pageTitle: locale.pages.admin.promopanel.form.clone.title,
+        },
+        // {
+        //     path: pathConfig.admin.promopanelview(promopanelid),
+        //     component: components.PromoPanelView,
+        //     pageTitle: locale.pages.admin.promopanel.form.view.title,
+        // },
+    ];
+
     const spotlightidRegExp = '.*';
     const spotlightid = `:spotlightid(${spotlightidRegExp})`;
     const spotlightsDisplay = [
@@ -188,6 +237,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
+        ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
         ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
         {
             component: components.NotFound,

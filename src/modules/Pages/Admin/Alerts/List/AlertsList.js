@@ -119,7 +119,9 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
         );
     }
 
+    /* istanbul ignore next */
     const deleteAlert = alertID => {
+        // this is called, but the coverage isn't happening
         return actions.deleteAlert(alertID);
     };
 

@@ -10,8 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import { throttle } from 'throttle-debounce';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/learningResourcesHelpers';
-import { default as locale } from 'modules/Pages/LearningResources/learningResources.locale';
+import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
+import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 const useStyles = makeStyles(
     () => ({

@@ -64,9 +64,12 @@ function getLibraryGroupCookie() {
     return Cookies.get(SESSION_USER_GROUP_COOKIE_NAME);
 }
 
-function addAccountToStoredAccount(account, numberOfHoursUntilExpiry = 8) {
+function addAccountToStoredAccount(account, numberOfHoursUntilExpiry = 7) {
     // for improved UX, expire the session storage when the token must surely be expired, for those rare long sessions
     // session lasts 8 hours, per https://auth.uq.edu.au/about/
+    // except we are getting network errors where they are logged out but this session data hasn't expired
+    // I think they turned the value down without updating the docs :(
+    // trying using 7 hours instead of the expected 8
 
     const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
     const storageExpiryDate = {
@@ -88,6 +91,7 @@ function removeAccountStorage() {
 
 export function getAccountFromStorage() {
     const accountDetails = JSON.parse(sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME));
+    console.log('debug for PT 184420186 accountDetails=', accountDetails);
 
     if (accountDetails === null) {
         return null;
@@ -114,6 +118,7 @@ export function getAccountFromStorage() {
     }
 
     const now = new Date().getTime();
+    console.log('debug for PT 184420186 accountDetails.storageExpiryDate=', accountDetails.storageExpiryDate);
     /* istanbul ignore next */
     if (!accountDetails.storageExpiryDate || accountDetails.storageExpiryDate < now) {
         removeAccountStorage();
@@ -192,13 +197,14 @@ export function loadCurrentAccount() {
             return Promise.resolve({});
         }
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-            // no cookie, dont call account api without a cookie
+            // no cookie, don't call account api without a cookie
             removeAccountStorage();
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
 
         const storedAccount = getAccountFromStorage();
+        console.log('debug for PT 184420186 storedAccount=', storedAccount);
 
         if (storedAccount !== null && !!storedAccount.account) {
             // account details stored locally with an expiry date

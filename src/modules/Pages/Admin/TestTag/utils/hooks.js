@@ -22,7 +22,6 @@ export const useForm = (
             propValue = moment(propValue).format(defaultDateFormat);
         }
         setFormValues(prevState => {
-            console.log('handleChange', prop, event, propValue, { ...prevState, [prop]: propValue });
             return { ...prevState, [prop]: propValue };
         });
     };
