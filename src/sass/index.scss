@@ -48,15 +48,19 @@ body {
     padding: 0;
     margin: 0;
     position: relative;
-    height: 100%;
+    // height: 100%;
     width: 100%;
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     background-color: #f7f7f7;
 }
+body {
+    height: 100%;
+    overflow: visible !important;
+}
 html {
-    height: auto;
-    overflow: hidden;
+    height: auto !important;
+    overflow: visible !important;
 }
 a {
     color: #3872a8;
