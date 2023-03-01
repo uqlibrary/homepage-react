@@ -44,7 +44,7 @@ describe('Promopanel Admin Form Pages', () => {
             testId('standard-card-schedule-or-set-a-default-panel-content').should('be.visible');
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="alumni"]').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('admin-promopanel-form-button-addSchedule').click();
             testId('admin-promopanel-form-button-save').click();
             testId('admin-promopanel-group-button-cancel').click();
@@ -127,12 +127,12 @@ describe('Promopanel Admin Form Pages', () => {
             previewIsDisabled(false);
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="hdr"]').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('admin-promopanel-form-button-addSchedule').click();
             testId('admin-promopanel-form-button-removeSchedule-1').click();
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="hdr"]').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('admin-promopanel-form-button-addSchedule').click();
             testId('admin-promopanel-form-button-save').click();
             //     testId('admin-promopanel-group-button-cancel').click();
