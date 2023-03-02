@@ -1,7 +1,5 @@
 // Charts styles from toolbox
 @import "./charts";
-// SVG Icons
-@import "./icons";
 // Import the local modules styles
 @import './components';
 // Print styles
@@ -64,17 +62,6 @@ a {
     }
   }
 }
-
-.smallLogo,
-.largeLogo {
-  color: transparent;
-  background: center center url(../../src/images/uq-logo-white-minimal.svg) no-repeat;
-}
-
-.largeLogo {
-  background-image: url('../../src/images/uq-logo-white-2018.svg');
-}
-
 .layout-fill {
   margin: 0; padding: 0;
   max-height: 100%;
