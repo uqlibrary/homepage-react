@@ -80,7 +80,6 @@ export const App = ({ account, actions }) => {
         actions.loadCurrentAccount();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
     const classes = useStyles();
     const routesConfig = routes.getRoutesConfig({
         components: pages,
@@ -95,6 +94,7 @@ export const App = ({ account, actions }) => {
                     searchlabel="library.uq.edu.au"
                     searchurl="http://library.uq.edu.au"
                 />
+                <cultural-advice-popup />
                 <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu>
                     <span slot="site-utilities">
                         <askus-button />

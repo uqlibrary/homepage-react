@@ -68,7 +68,7 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="student"]').click();
             cy.get('[data-value="alumni"]').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             // testId('standard-card-create-a-promo-header').click();
             testId('admin-promopanel-form-button-addSchedule').click();
             testId('admin-promopanel-form-button-save').click();
@@ -94,7 +94,7 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="hdr"]').click();
             // cy.get('#new-scheduled-panel-for-group').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             // Create first date range
             cy.get(
                 '[data-testid="admin-promopanel-form-start-date"] > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root',
@@ -119,7 +119,7 @@ describe('Promopanel Admin Form Pages', () => {
             // Add new record, overlapping start date.
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="hdr"]').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             // Create second date range
             cy.get(
                 '[data-testid="admin-promopanel-form-start-date"] > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root',
@@ -179,14 +179,14 @@ describe('Promopanel Admin Form Pages', () => {
             // testId('admin-promopanel-form-default-panel').click();
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="student"]').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('admin-promopanel-form-button-addSchedule').click();
             testId('panel-save-or-schedule-title').should('contain', 'Schedule Conflict');
             testId('admin-promopanel-group-button-cancel').click();
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="student"]').click();
             cy.get('[data-value="hdr"]').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('admin-promopanel-form-button-addSchedule').click();
             testId('admin-promopanel-form-button-save').click();
             testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');
