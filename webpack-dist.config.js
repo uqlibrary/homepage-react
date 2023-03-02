@@ -224,7 +224,7 @@ const webpackConfig = {
                         loader: 'file-loader',
                         options: {
                             outputPath: 'assets/',
-                            publicPath: 'assets/',
+                            publicPath: '/assets/',
                         },
                     },
                 ],
