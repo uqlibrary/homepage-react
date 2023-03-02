@@ -80,7 +80,6 @@ export const App = ({ account, actions }) => {
         actions.loadCurrentAccount();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
     const classes = useStyles();
     const routesConfig = routes.getRoutesConfig({
         components: pages,
