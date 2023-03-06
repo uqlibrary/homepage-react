@@ -49,19 +49,19 @@ describe('Promopanel Admin Form Pages', () => {
             testId('block-student').should('exist');
             testId('group-filter').click();
             testId('filter-select-hdr').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('block-student').should('not.exist');
             testId('group-filter').click();
             testId('filter-select-hdr').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('block-student').should('exist');
             testId('group-filter').click();
             testId('filter-select-hdr').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('block-student').should('not.exist');
             testId('group-filter').click();
             testId('filter-clear-all').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('block-student').should('exist');
         });
         it('can preview a past panel', () => {
@@ -121,7 +121,7 @@ describe('Promopanel Admin Form Pages', () => {
             previewIsDisabled(false);
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="alumni"]').click();
-            cy.get('body').click();
+            cy.get('body').type('{esc}');
             testId('admin-promopanel-form-button-addSchedule').click();
             testId('admin-promopanel-form-button-save').click();
             testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');

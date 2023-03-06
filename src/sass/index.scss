@@ -1,9 +1,9 @@
 // Charts styles from toolbox
-@import "./charts";
+@import './charts';
 // Import the local modules styles
 @import './components';
 // Print styles
-@import "./print";
+@import './print';
 // Browser update script styles
 @import './browserUpdate';
 //pure.react.carousel styles
@@ -12,166 +12,180 @@
 // UQ Design System styles
 @import 'UQds';
 
-button.carousel__back-button, button.carousel__next-button, button.carousel__play-button {
-  appearance: none;
-  color: white;
-  background-color: transparent !important;
-  border: none;
-  width: 36px;
-  height: 36px;
-  margin: 0;
-  padding: 0;
-  :focus {
-    outline: -webkit-focus-ring-color auto 1px;
-  }
-  & svg {
-    width: 36px;
-    height: 36px;
-  }
-  &:disabled {
+button.carousel__back-button,
+button.carousel__next-button,
+button.carousel__play-button {
     appearance: none;
     color: white;
     background-color: transparent !important;
     border: none;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    :focus {
+        outline: -webkit-focus-ring-color auto 1px;
+    }
     & svg {
-      opacity: 0.3;
+        width: 36px;
+        height: 36px;
     }
-  }
+    &:disabled {
+        appearance: none;
+        color: white;
+        background-color: transparent !important;
+        border: none;
+        & svg {
+            opacity: 0.3;
+        }
+    }
 }
 
-html, body {
-  padding: 0;
-  margin: 0;
-  position: relative;
-  height: 100%;
-  width: 100%;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 300;
-  background-color: #F7F7F7;
+html,
+body {
+    padding: 0;
+    margin: 0;
+    // position: relative;
+    // height: 100%;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    background-color: #f7f7f7;
 }
-
+body {
+    height: 100%;
+    overflow: visible !important;
+}
+html {
+    height: auto !important;
+    overflow: visible !important;
+}
 a {
-  color: #3872a8;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
-  &.noHover {
+    color: #3872a8;
+    text-decoration: none;
     &:hover {
-      text-decoration: none;
+        text-decoration: underline;
     }
-  }
+    &.noHover {
+        &:hover {
+            text-decoration: none;
+        }
+    }
 }
 .layout-fill {
-  margin: 0; padding: 0;
-  max-height: 100%;
-  height: 100%;
+    margin: 0;
+    padding: 0;
+    max-height: 100%;
+    height: 100%;
 }
 
 .layout-card {
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  @media (min-width: 37.5rem) {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-    margin-left: 3.25rem;
-    margin-right: 3.25rem;
-    max-width: none;
-  }
-  @media (min-width: 69.25rem) {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 61.5rem;
-  }
-  @media (min-width: 80rem) {
-    margin-left: 8.375rem;
-    margin-right: 8.375rem;
-    max-width: none;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  @media (min-width: 90rem) {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 71rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    @media (min-width: 37.5rem) {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        margin-left: 3.25rem;
+        margin-right: 3.25rem;
+        max-width: none;
+    }
+    @media (min-width: 69.25rem) {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 61.5rem;
+    }
+    @media (min-width: 80rem) {
+        margin-left: 8.375rem;
+        margin-right: 8.375rem;
+        max-width: none;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    @media (min-width: 90rem) {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 71rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
 // The container which houses content
 .content-container {
-  display: flex;
-  position: relative;
-  flex: 0 1 auto;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  margin-top: 0;
-  //minHeight: 200px;
-  height: 100% !important;
+    display: flex;
+    position: relative;
+    flex: 0 1 auto;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 0;
+    //minHeight: 200px;
+    height: 100% !important;
 }
 
 .content-header {
-  flex: 0 1 auto;
+    flex: 0 1 auto;
 }
 
 // Citation styles
 .citationContent {
-  .citationJournalName, .citationTitle, .citationNewspaper, .citationVolumeNumber {
-    font-style: italic;
-  }
+    .citationJournalName,
+    .citationTitle,
+    .citationNewspaper,
+    .citationVolumeNumber {
+        font-style: italic;
+    }
 }
 
 .image-gallery-thumbnails-wrapper {
-  position: absolute !important;
-  bottom: 5px !important;
-  right: 10px !important;
-  width: 43% !important;
+    position: absolute !important;
+    bottom: 5px !important;
+    right: 10px !important;
+    width: 43% !important;
 }
 
 abbr {
-  text-decoration: none !important;
+    text-decoration: none !important;
 }
 
 #skipNavigation {
-  position: absolute;
-  transform: translateY(-100%);
-  transition: transform 0.3s;
+    position: absolute;
+    transform: translateY(-100%);
+    transition: transform 0.3s;
 
-  background-color: #000;
-  color: #FFF;
-  left: 300px;
-  margin: 5px;
-  padding: 1rem 0.5rem;
-  top: -50px;
+    background-color: #000;
+    color: #fff;
+    left: 300px;
+    margin: 5px;
+    padding: 1rem 0.5rem;
+    top: -50px;
 }
 
 #skipNavigation:focus {
-  transform: translateY(0%);
-  outline: #73B8F9 auto 5px;
-  outline-offset: -4px;
-  top: auto;
+    transform: translateY(0%);
+    outline: #73b8f9 auto 5px;
+    outline-offset: -4px;
+    top: auto;
 }
 
 // make the mega menu sit nicely on the left margin - until it cant fit the whole thing anymore, and goes left
 .megamenuLayout {
-  margin-left: 1rem;
-  @media (min-width: 58rem) {
-    margin-left: 0.5rem;
-  }
-  @media (min-width: 65rem) {
-    margin-left: 4rem;
-  }
-  @media (min-width: 69.25rem) {
-    margin-left: auto;
-  }
-  @media (min-width: 80rem) {
-    margin-left: 9.4rem;
-  }
-  @media (min-width: 90rem) {
-    margin-left: auto;
-  }
+    margin-left: 1rem;
+    @media (min-width: 58rem) {
+        margin-left: 0.5rem;
+    }
+    @media (min-width: 65rem) {
+        margin-left: 4rem;
+    }
+    @media (min-width: 69.25rem) {
+        margin-left: auto;
+    }
+    @media (min-width: 80rem) {
+        margin-left: 9.4rem;
+    }
+    @media (min-width: 90rem) {
+        margin-left: auto;
+    }
 }
