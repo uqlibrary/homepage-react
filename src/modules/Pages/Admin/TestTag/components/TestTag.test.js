@@ -183,7 +183,7 @@ describe('TestTag', () => {
             },
         });
 
-        screen.debug(undefined, 50000);
+        // screen.debug(undefined, 50000);
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
