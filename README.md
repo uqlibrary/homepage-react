@@ -103,6 +103,10 @@ or
 - APP_ALERT_SHOW
 - APP_ALERT_HIDE
 
+### Auth
+
+The cookie that holds the UQLID token ('SESSION_COOKIE_NAME') is set in _reusable_ repo, because that is where the login button is.
+
 #### Optimisation
 
 to keep initial load to a minimum following optimisation has been added to the project:
