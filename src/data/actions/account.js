@@ -148,6 +148,7 @@ export function loadCurrentAccount() {
                     type: actions.CURRENT_AUTHOR_FAILED,
                     payload: error.message,
                 });
+                return null;
             });
     };
 }
