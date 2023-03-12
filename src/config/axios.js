@@ -10,7 +10,7 @@ import locale from 'locale/global';
 import * as Sentry from '@sentry/browser';
 
 import param from 'can-param';
-import { COMP_AVAIL_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
+import { COMP_AVAIL_API, CURRENT_ACCOUNT_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -77,6 +77,14 @@ api.interceptors.request.use(request => {
 });
 
 const reportToSentry = error => {
+    // the non-logged in user always generates a 403 on the Account call. We dont need to report that to Sentry
+    const isCallToAccountAPI =
+        error?.response?.request?.responseUrl?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`) ||
+        error?.response?.request?.responseURL?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`);
+    if (error?.response?.status === 403 && isCallToAccountAPI) {
+        return false;
+    }
+
     let detailedError = '';
     if (error.response) {
         detailedError = `Data: ${JSON.stringify(error.response.data)}; Status: ${
@@ -114,7 +122,6 @@ api.interceptors.response.use(
     },
     error => {
         let errorMessage = null;
-        let shouldReportToSentry = true;
         if (!!error && !!error.config) {
             if (
                 !!error.response &&
@@ -133,7 +140,6 @@ api.interceptors.response.use(
                 } else {
                     store.dispatch(logout());
                 }
-                shouldReportToSentry = false; // no sentry report needed - they simply are no longer logged in
             }
 
             if (!!error.message && !!error.response && !!error.response.status && error.response.status === 500) {
@@ -170,7 +176,7 @@ api.interceptors.response.use(
             }
         }
 
-        !!shouldReportToSentry && reportToSentry(error);
+        reportToSentry(error);
 
         if (!!errorMessage) {
             return Promise.reject({ ...errorMessage });
