@@ -152,6 +152,7 @@ const canSeeWebContentAdminPages = account => {
     );
 };
 const canSeeTestTagAdminPages = account => {
+    console.log('canSeeTestTagAdminPages account=', account);
     return !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_TestTagUsers'));
 };
 

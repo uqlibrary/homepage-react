@@ -9,6 +9,9 @@ import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { isHdrStudent } from 'helpers/access';
+import { STORAGE_ACCOUNT_KEYNAME } from '../../../config/general';
+import * as actions from '../../../data/actions/actionTypes';
+import { logout } from '../../../data/actions';
 
 browserUpdate({
     required: {
@@ -77,7 +80,27 @@ const useStyles = makeStyles(theme => ({
 
 export const App = ({ account, actions }) => {
     useEffect(() => {
-        actions.loadCurrentAccount();
+        // ideally we would just do window.addEventListener('storage' ...)
+        // but that watcher doesn't work within the same window
+        // so reusable will broadcast when it has written to storage
+        const bc = new BroadcastChannel('account_availability');
+        bc.onmessage = messageEvent => {
+            if (messageEvent.data === 'account_updated') {
+                console.log('bc was account_updated');
+                actions.loadCurrentAccount();
+            } else if (messageEvent.data === 'account_removed') {
+                console.log('bc was account_removed');
+                logout();
+            } else {
+                console.log('bc was not account_updated, skip, messageEvent.data=', messageEvent.data);
+            }
+            return null;
+        };
+        // if the reusable started much quicker than this, homepage won't have been up to receive the message
+        // but the storage will be present
+        if (sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME)) {
+            actions.loadCurrentAccount();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const classes = useStyles();
@@ -86,6 +109,7 @@ export const App = ({ account, actions }) => {
         account: account,
         isHdrStudent: isHdrStudent,
     });
+    console.log('routesConfig=', routesConfig);
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">

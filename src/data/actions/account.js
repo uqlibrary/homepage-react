@@ -76,27 +76,6 @@ function getLibraryGroupCookie() {
     return Cookies.get(SESSION_USER_GROUP_COOKIE_NAME);
 }
 
-function addAccountToStoredAccount(account, numberOfHoursUntilExpiry = 1) {
-    // for improved UX, expire the session storage when the token must surely be expired, for those rare long sessions
-    // session lasts 8 hours, per https://auth.uq.edu.au/about/
-    // because we cant predict what other system the user first logged into we don't actually know
-    // how much more of their session is left
-    // lets make this just 1 hour, purely to minimse the calls to account api just a little
-
-    const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
-    const storageExpiryDate = {
-        storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
-    };
-    let storeableAccount = {
-        account: {
-            ...account,
-        },
-        ...storageExpiryDate,
-    };
-    storeableAccount = JSON.stringify(storeableAccount);
-    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
-}
-
 function removeAccountStorage() {
     sessionStorage.removeItem(STORAGE_ACCOUNT_KEYNAME);
 }
@@ -120,41 +99,7 @@ export function getAccountFromStorage() {
             return null;
         }
     }
-
-    // short term during upgrade - if older structure that doesnt have .account, clear
-    // this clause can be removed a day or so after day golive, written Jan/2022
-    /* istanbul ignore next */
-    if (!accountDetails.account) {
-        this.removeAccountStorage();
-        return null;
-    }
-
-    const now = new Date().getTime();
-    console.log('debug for PT 184420186 accountDetails.storageExpiryDate=', accountDetails.storageExpiryDate);
-    /* istanbul ignore next */
-    if (!accountDetails.storageExpiryDate || accountDetails.storageExpiryDate < now) {
-        removeAccountStorage();
-        return null;
-    }
-
     return accountDetails;
-}
-
-function addCurrentAuthorToStoredAccount(currentAuthor) {
-    const storedAccount = getAccountFromStorage();
-    /* istanbul ignore next */
-    if (storedAccount === null) {
-        return;
-    }
-    let storeableAccount = {
-        ...storedAccount,
-        // 'currentAuthor' name must match reusable ApiAccess.js
-        currentAuthor: {
-            ...currentAuthor,
-        },
-    };
-    storeableAccount = JSON.stringify(storeableAccount);
-    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
 }
 
 function extendAccountDetails(accountResponse) {
@@ -208,6 +153,9 @@ export function loadCurrentAccount() {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
+
+        // refine how this happens
+        // homepage no longer calls account so do this by watching for the account removed broadcast?
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
             // no cookie, don't call account api without a cookie
             removeAccountStorage();
@@ -216,60 +164,62 @@ export function loadCurrentAccount() {
         }
 
         const storedAccount = getAccountFromStorage();
-        console.log('debug for PT 184420186 storedAccount=', storedAccount);
 
         if (storedAccount !== null && !!storedAccount.account) {
             // account details stored locally with an expiry date
             const account = extractAccountFromSession(dispatch, storedAccount);
+            console.log('loadCurrentAccount found account', account);
             return Promise.resolve(account);
         }
+        console.log('loadCurrentAccount no account');
+        return null;
 
-        let currentAuthor = null;
-
-        // load UQL account (based on token)
-        dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-        return get(CURRENT_ACCOUNT_API())
-            .then(account => {
-                if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
-                    if (process.env.ENABLE_LOG) {
-                        Sentry.setUser({
-                            id: account.id,
-                        });
-                    }
-                    addAccountToStoredAccount(account);
-
-                    return Promise.resolve(account);
-                } else {
-                    dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-                    return Promise.reject(new Error('Session expired. User is unauthorized.'));
-                }
-            })
-            .then(accountResponse => {
-                dispatch({
-                    type: actions.CURRENT_ACCOUNT_LOADED,
-                    payload: extendAccountDetails(accountResponse),
-                });
-
-                // load current author details (based on token)
-                dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
-                return get(CURRENT_AUTHOR_API());
-            })
-            .then(currentAuthorResponse => {
-                currentAuthor = currentAuthorResponse.data;
-                addCurrentAuthorToStoredAccount(currentAuthor);
-                dispatch({
-                    type: actions.CURRENT_AUTHOR_LOADED,
-                    payload: currentAuthor,
-                });
-
-                return null;
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.CURRENT_AUTHOR_FAILED,
-                    payload: error.message,
-                });
-            });
+        // let currentAuthor = null;
+        //
+        // // load UQL account (based on token)
+        // dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
+        // return get(CURRENT_ACCOUNT_API())
+        //     .then(account => {
+        //         if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
+        //             if (process.env.ENABLE_LOG) {
+        //                 Sentry.setUser({
+        //                     id: account.id,
+        //                 });
+        //             }
+        //             addAccountToStoredAccount(account);
+        //
+        //             return Promise.resolve(account);
+        //         } else {
+        //             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+        //             return Promise.reject(new Error('Session expired. User is unauthorized.'));
+        //         }
+        //     })
+        //     .then(accountResponse => {
+        //         dispatch({
+        //             type: actions.CURRENT_ACCOUNT_LOADED,
+        //             payload: extendAccountDetails(accountResponse),
+        //         });
+        //
+        //         // load current author details (based on token)
+        //         dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
+        //         return get(CURRENT_AUTHOR_API());
+        //     })
+        //     .then(currentAuthorResponse => {
+        //         currentAuthor = currentAuthorResponse.data;
+        //         addCurrentAuthorToStoredAccount(currentAuthor);
+        //         dispatch({
+        //             type: actions.CURRENT_AUTHOR_LOADED,
+        //             payload: currentAuthor,
+        //         });
+        //
+        //         return null;
+        //     })
+        //     .catch(error => {
+        //         dispatch({
+        //             type: actions.CURRENT_AUTHOR_FAILED,
+        //             payload: error.message,
+        //         });
+        //     });
     };
 }
 

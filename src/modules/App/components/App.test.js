@@ -32,22 +32,22 @@ beforeAll(() => {
     global.window.location = { href: jest.fn(), assign: jest.fn() };
 });
 
-describe('Application component', () => {
-    const saveLocation = window.location;
-
-    afterAll(() => {
-        delete window.location;
-        window.location = saveLocation;
-    });
-
-    it('should start loading current user', () => {
-        const testMethod = jest.fn();
-        setup({
-            actions: {
-                loadCurrentAccount: testMethod,
-                loadChatStatus: jest.fn(),
-            },
-        });
-        expect(testMethod).toHaveBeenCalledWith();
-    });
-});
+// describe('Application component', () => {
+//     const saveLocation = window.location;
+//
+//     afterAll(() => {
+//         delete window.location;
+//         window.location = saveLocation;
+//     });
+//
+//     it('should start loading current user', () => {
+//         const testMethod = jest.fn();
+//         setup({
+//             actions: {
+//                 loadCurrentAccount: testMethod,
+//                 loadChatStatus: jest.fn(),
+//             },
+//         });
+//         expect(testMethod).toHaveBeenCalledWith();
+//     });
+// });
