@@ -1367,10 +1367,11 @@ export const incompleteNTROs = {
 const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
 user = user || 'vanilla';
-console.log('check user account=', accounts[user]);
+console.log('data/account check user account=', accounts[user]);
+console.log('data/account check author=', !!currentAuthor[user]);
 addAccountToStoredAccount(
     accounts[user],
-    !!currentAuthor[user] ? currentAuthor[user].data : null
+    !!user && !!currentAuthor[user] ? currentAuthor[user].data : null
 );
 
 // the broadcast event in production happens in reusable

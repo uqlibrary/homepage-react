@@ -79,7 +79,7 @@ if (user && !mockData.accounts[user]) {
 
 // default user is researcher if user is not defined
 user = user || 'vanilla';
-console.log('check user=', user);
+console.log('index check user=', user);
 
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
