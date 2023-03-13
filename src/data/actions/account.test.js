@@ -490,7 +490,7 @@ describe('Account action creators', () => {
         window.sessionStorage.clear();
     });
 
-    it('SL UPDATE - dispatches expected actions when loading papercut fails on 403', async () => {
+    it('dispatches expected actions when loading papercut fails on 403', async () => {
         mockApi.onGet(repositories.routes.PRINTING_API().apiUrl).reply(403);
 
         const expectedActions = [actions.PRINT_BALANCE_FAILED];
@@ -499,7 +499,7 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('SL UPDATE - dispatches expected actions when loading loans fails on 403', async () => {
+    it('dispatches expected actions when loading loans fails on 403', async () => {
         mockApi.onGet(repositories.routes.PRINTING_API().apiUrl).reply(403);
 
         const expectedActions = [actions.LOANS_FAILED];

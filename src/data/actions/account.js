@@ -12,10 +12,8 @@ import {
     SPOTLIGHTS_API_CURRENT,
     TRAINING_API,
 } from 'repositories/routes';
-// import Raven from 'raven-js';
 
 import * as Sentry from '@sentry/browser';
-// import { BrowserTracing } from '@sentry/tracing';
 
 import { sessionApi } from 'config';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
@@ -39,6 +37,20 @@ export function getClassNumberFromPieces(subject) {
  * Year: 2000 + 6520 - 5000 = 2015
  * Semester: 65"20" - semester 1
  * 6480 - semester 3 year 2014,
+ *
+ * from database IFACE_LIBRARY table STU_SEMESTER_DATES
+ * *90 = SRC Enrolment Year
+ * *80 = Summer Semester (which we call semester 3)
+ * *75 = Research Quarter 4
+ * *60 = Semester 2
+ * *50 = Trimester 3
+ * *45 = Research Quarter 3
+ * *30 = Trimester 2
+ * *25 = Research Quarter 2
+ * *20 = Semester 1
+ * *10 = Trimester 1
+ * *05 = Research Quarter 1
+ * but we only use Semesters 1, 2 and 3
  *
  * @param termNumber
  * @returns {string}
