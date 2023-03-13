@@ -1366,7 +1366,9 @@ export const incompleteNTROs = {
 
 const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
-!!user && addAccountToStoredAccount(
+user = user || 'vanilla';
+console.log('check user account=', accounts[user]);
+addAccountToStoredAccount(
     accounts[user],
     !!currentAuthor[user] ? currentAuthor[user].data : null
 );

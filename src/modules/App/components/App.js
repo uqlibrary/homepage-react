@@ -78,6 +78,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const App = ({ account, actions }) => {
+    console.log('App start, account=', account);
+    // const [routesConfig, setRouteConfig] = React.useState([]);
     useEffect(() => {
         // ideally we would just do window.addEventListener('storage' ...)
         // but that watcher doesn't work within the same window
@@ -85,7 +87,7 @@ export const App = ({ account, actions }) => {
         const bc = new BroadcastChannel('account_availability');
         bc.onmessage = messageEvent => {
             if (messageEvent.data === 'account_updated') {
-                console.log('bc was account_updated');
+                console.log('bc was account_updated - sessionstorage now availAble');
                 actions.loadCurrentAccount();
             } else if (messageEvent.data === 'account_removed') {
                 console.log('bc was account_removed');

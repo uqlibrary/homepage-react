@@ -127,10 +127,9 @@ function extractAccountFromSession(dispatch, storedAccount) {
     dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
     /* istanbul ignore else */
     if (storedAccount.currentAuthor) {
-        const currentAuthorRetrieved = storedAccount.currentAuthor;
         dispatch({
             type: actions.CURRENT_AUTHOR_LOADED,
-            payload: currentAuthorRetrieved,
+            payload: storedAccount.currentAuthor,
         });
     } else {
         /* istanbul ignore next */
@@ -172,53 +171,6 @@ export function loadCurrentAccount() {
         }
         console.log('loadCurrentAccount no account');
         return null;
-
-        // let currentAuthor = null;
-        //
-        // // load UQL account (based on token)
-        // dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-        // return get(CURRENT_ACCOUNT_API())
-        //     .then(account => {
-        //         if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
-        //             if (process.env.ENABLE_LOG) {
-        //                 Sentry.setUser({
-        //                     id: account.id,
-        //                 });
-        //             }
-        //             addAccountToStoredAccount(account);
-        //
-        //             return Promise.resolve(account);
-        //         } else {
-        //             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-        //             return Promise.reject(new Error('Session expired. User is unauthorized.'));
-        //         }
-        //     })
-        //     .then(accountResponse => {
-        //         dispatch({
-        //             type: actions.CURRENT_ACCOUNT_LOADED,
-        //             payload: extendAccountDetails(accountResponse),
-        //         });
-        //
-        //         // load current author details (based on token)
-        //         dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
-        //         return get(CURRENT_AUTHOR_API());
-        //     })
-        //     .then(currentAuthorResponse => {
-        //         currentAuthor = currentAuthorResponse.data;
-        //         addCurrentAuthorToStoredAccount(currentAuthor);
-        //         dispatch({
-        //             type: actions.CURRENT_AUTHOR_LOADED,
-        //             payload: currentAuthor,
-        //         });
-        //
-        //         return null;
-        //     })
-        //     .catch(error => {
-        //         dispatch({
-        //             type: actions.CURRENT_AUTHOR_FAILED,
-        //             payload: error.message,
-        //         });
-        //     });
     };
 }
 

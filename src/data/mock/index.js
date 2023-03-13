@@ -44,7 +44,14 @@ import testTag_roomList from './data/records/test_tag_rooms';
 import testTag_testDevices from './data/records/test_tag_test_devices';
 import testTag_assets from './data/records/test_tag_assets';
 
-import {currentPanels, userListPanels, activePanels, mockScheduleReturn, mockAuthenticatedPanel, mockPublicPanel} from "./data/promoPanels";
+import {
+    currentPanels,
+    userListPanels,
+    activePanels,
+    mockScheduleReturn,
+    mockAuthenticatedPanel,
+    mockPublicPanel,
+} from './data/promoPanels';
 
 const moment = require('moment');
 
@@ -52,7 +59,7 @@ const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
 const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
-const panelRegExp = input =>  input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
+const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 // set session cookie in mock mode
 
 // Get user from query string
@@ -72,6 +79,7 @@ if (user && !mockData.accounts[user]) {
 
 // default user is researcher if user is not defined
 user = user || 'vanilla';
+console.log('check user=', user);
 
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
@@ -82,7 +90,7 @@ const withDelay = response => config => {
         }, randomTime);
     });
 };
-const withSetDelay = (response, seconds=0.1) => config =>{
+const withSetDelay = (response, seconds = 0.1) => config => {
     seconds = seconds > 5 ? 0.1 : seconds;
     const setTime = seconds * 1000; // Change these values to delay mock API
     // const randomTime = 5000;
@@ -773,105 +781,89 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [500, []];
     })
-    .onPost(routes.PROMOPANEL_CREATE_API().apiUrl).reply(
+    .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
+    .reply(withDelay([200, {}]))
+    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(
         withDelay([
             200,
             {
-                
+                status: 'OK',
             },
         ]),
     )
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({id: '.*'}).apiUrl))).reply(
-        withDelay([
-            200, 
-            {
-                status: "OK"
-            }
-        ])
-    )
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({id: '.*', usergroup: '.*'}).apiUrl))).reply(
+    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
+    .reply(
         withDelay([
             201,
             {
-                status: "OK",
-            }
-        ])
+                status: 'OK',
+            },
+        ]),
     )
-    .onGet(routes.PROMOPANEL_LIST_API().apiUrl).reply(
-        () => {
-            return[200, currentPanels]
-        }
-        
-    )
-    .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl).reply(
-        () => {
-            return[200, userListPanels]
-        }
-        
-    )
-    
+    .onGet(routes.PROMOPANEL_LIST_API().apiUrl)
+    .reply(() => {
+        return [200, currentPanels];
+    })
+    .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl)
+    .reply(() => {
+        return [200, userListPanels];
+    })
+
     // Handle Delete of any panel that does NOT start with a 2 (2 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: '[^2]'}).apiUrl))).reply(
-        () => {
-            return [200, {status: 'ok'}]
-        }
-    )
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: '[^2]' }).apiUrl)))
+    .reply(() => {
+        return [200, { status: 'ok' }];
+    })
     // Specific case to throw error for Delete panel 2.
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: 2}).apiUrl))).reply(
-        () => { 
-            return [400, {
-                "status": "error",
-                "message": "2 is not a valid panel id"
-            }]
-        }
-    )
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: 2 }).apiUrl)))
+    .reply(() => {
+        return [
+            400,
+            {
+                status: 'error',
+                message: '2 is not a valid panel id',
+            },
+        ];
+    })
     // Handle Unschedule of any panel that is NOT schedule ID 11 (11 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({id: '(?!11).*'}).apiUrl))).reply(
-        () => {
-            return [200, {status: 'ok'}]
-        }
-    )
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: '(?!11).*' }).apiUrl)))
+    .reply(() => {
+        return [200, { status: 'ok' }];
+    })
     // Specific case to throw error for Delete on schedule 11
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({id: 11}).apiUrl))).reply(
-        () => {
-            return [400, {
-                "status": "error",
-                "message": "11 is not a valid schedule id"
-            }]
-        }
-    )
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_ADD_SCHEDULE_API({id: '.*', usergroup: '.*'}).apiUrl))).reply(
-        () => {
-            return [200, 
-                mockScheduleReturn
-            ]
-        }
-    )
-    .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl).reply(
-        () => {
-            return [200, activePanels]
-        }
-    )
-    .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl).reply(
-        () => {
-            return [200, mockAuthenticatedPanel]
-        }
-    )
-    .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl).reply(
-        () => {
-            return [200, mockPublicPanel]
-        }
-    )
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_USERTYPE_DEFAULT({id: '.*', usergroup: '.*'}).apiUrl)))
-    .reply(
-        () => {
-            return [200, '']
-        }
-    )
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: 11 }).apiUrl)))
+    .reply(() => {
+        return [
+            400,
+            {
+                status: 'error',
+                message: '11 is not a valid schedule id',
+            },
+        ];
+    })
+    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_ADD_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
+    .reply(() => {
+        return [200, mockScheduleReturn];
+    })
+    .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl)
+    .reply(() => {
+        return [200, activePanels];
+    })
+    .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl)
+    .reply(() => {
+        return [200, mockAuthenticatedPanel];
+    })
+    .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl)
+    .reply(() => {
+        return [200, mockPublicPanel];
+    })
+    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_USERTYPE_DEFAULT({ id: '.*', usergroup: '.*' }).apiUrl)))
+    .reply(() => {
+        return [200, ''];
+    })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
-        
     });
-
