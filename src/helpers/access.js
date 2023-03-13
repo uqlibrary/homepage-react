@@ -110,11 +110,15 @@ export const getUserServices = (account, serviceLocale = null) => {
         .filter(i => i !== undefined);
 };
 
-const isLoggedInUser = account => !!account && !!account.id;
+const isLoggedInUser = account => {
+    // console.log('isLoggedInUser account=', account);
+    return !!account && !!account.id;
+};
 
 // define which home page panel items each user type can see
 
 export const canSeeLearningResources = account => {
+    console.log('canSeeLearningResources account=', account);
     return (
         !!account &&
         !!account.id &&
@@ -142,11 +146,12 @@ export const canSeeLibraryServices = account => {
     }
     const userServices = getUserServices(account);
     // if the user has no services (should only be a brand new group we havent configured yet)
-    // then dont display the panel
+    // then don't display the panel
     return !!userServices && userServices.length > 0;
 };
 
 const canSeeWebContentAdminPages = account => {
+    console.log('canSeeWebContentAdminPages account=', account);
     return (
         !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'))
     );
@@ -160,7 +165,10 @@ export const isSpotlightsAdminUser = account => isLoggedInUser(account) && canSe
 
 export const isTestTagAdminUser = account => isLoggedInUser(account) && canSeeTestTagAdminPages(account);
 
-export const isAlertsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isAlertsAdminUser = account => {
+    console.log('isAlertsAdminUser', !!account ? account : 'account null');
+    return isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+};
 
 export const isPromoPanelAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
 

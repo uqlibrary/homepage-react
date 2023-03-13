@@ -98,6 +98,7 @@ export const App = ({ account, actions }) => {
         // if the reusable started much quicker than this, homepage won't have been up to receive the message
         // but the storage will be present
         if (sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME)) {
+            console.log('App.js session storage found, loading account');
             actions.loadCurrentAccount();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

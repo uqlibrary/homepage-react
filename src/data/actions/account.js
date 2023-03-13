@@ -12,7 +12,7 @@ import {
     TRAINING_API,
 } from 'repositories/routes';
 
-import * as Sentry from '@sentry/browser';
+// import * as Sentry from '@sentry/browser';
 
 import { sessionApi } from 'config';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';

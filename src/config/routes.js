@@ -107,7 +107,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const courseResoures = [
+    const courseResourcesDisplay = [
         {
             path: pathConfig.learningresources,
             component: components.LearningResources,
@@ -231,9 +231,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    console.log('routes account=', account);
+
     return [
         ...publicPages,
-        ...(account && canSeeLearningResources(account) ? courseResoures : []),
+        ...(account && canSeeLearningResources(account) ? courseResourcesDisplay : []),
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
