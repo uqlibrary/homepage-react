@@ -88,9 +88,12 @@ export function getAccountFromStorage() {
     }
 
     if (process.env.USE_MOCK && process.env.BRANCH !== 'production') {
-        const user = queryString.parse(
+        let user = queryString.parse(
             location.search || /* istanbul ignore next */ location.hash.substring(location.hash.indexOf('?')),
         ).user;
+        user = user || 'vanilla';
+        console.log('getAccountFromStorage user=', user);
+        console.log('getAccountFromStorage accountDetails=', accountDetails);
 
         if ((!!accountDetails.account.id && accountDetails.account.id !== user) || !accountDetails.account.id) {
             // allow developer to swap between users in the same tab in mock

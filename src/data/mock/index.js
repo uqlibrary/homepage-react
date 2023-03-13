@@ -1,5 +1,7 @@
 /* eslint-disable */
-import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
+console.log('data/mock/index');
+import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi, STORAGE_ACCOUNT_KEYNAME } from 'config';
+// import {STORAGE_ACCOUNT_KEYNAME} from '../../../config/general';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -27,7 +29,7 @@ import {
     incompleteNTROs,
     libHours,
     loans,
-    possibleRecords,
+    possibleRecordsData,
     printBalance,
     training_object,
 } from './data/account';
@@ -37,12 +39,11 @@ import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_onLoad from './data/records/test_tag_onLoad';
-//import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
-//import testTag_assetTypes from './data/records/test_tag_asset_types';
 import testTag_testDevices from './data/records/test_tag_test_devices';
 import testTag_assets from './data/records/test_tag_assets';
+import { accounts, currentAuthor } from './data';
 
 import {
     currentPanels,
@@ -55,16 +56,20 @@ import {
 
 const moment = require('moment');
 
-const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
 const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
-// set session cookie in mock mode
 
-// Get user from query string
+const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
+user = user || 'vanilla';
+console.log('data/account check user account=', accounts[user]);
+console.log('data/account check author=', !!currentAuthor[user]);
+addAccountToStoredAccount(accounts[user], !!user && !!currentAuthor[user] ? currentAuthor[user].data : null);
+console.log('stored is:', sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME));
 
+// set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
     Cookies.set(SESSION_COOKIE_NAME, 'abc123');
     Cookies.set(SESSION_USER_GROUP_COOKIE_NAME, 'LIBRARYSTAFFB');
@@ -80,6 +85,39 @@ if (user && !mockData.accounts[user]) {
 // default user is researcher if user is not defined
 user = user || 'vanilla';
 console.log('index check user=', user);
+
+export function addAccountToStoredAccount(account, currentAuthor) {
+    console.log('addAccountToStoredAccount start');
+    const numberOfHoursUntilExpiry = 1;
+    const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
+    const storageExpiryDate = {
+        storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
+    };
+    let storeableAccount = {
+        account: {
+            ...account,
+        },
+        ...storageExpiryDate,
+    };
+    if (!!currentAuthor) {
+        storeableAccount = {
+            ...storeableAccount,
+            currentAuthor: {
+                ...currentAuthor,
+            },
+        };
+    }
+    storeableAccount = JSON.stringify(storeableAccount);
+    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
+    console.log('account stored');
+
+    // the broadcast event in production happens in reusable
+    if ('BroadcastChannel' in window) {
+        const bc = new BroadcastChannel('account_availability');
+        console.log('mock: broadcast account_updated');
+        bc.postMessage('account_updated');
+    }
+}
 
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
@@ -371,7 +409,7 @@ mock.onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]));
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 // .reply(withDelay([500, {}]));
 
-mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, possibleRecords]));
+mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, possibleRecordsData]));
 
 mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, incompleteNTROs]));
 

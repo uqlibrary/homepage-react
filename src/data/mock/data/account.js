@@ -1,10 +1,10 @@
-import {STORAGE_ACCOUNT_KEYNAME} from 'config/general';
+// import {STORAGE_ACCOUNT_KEYNAME} from '../../../config/general';
 
 export const accounts = {
     // staff, no espace data
     public: null,
     vanilla: {
-        "id": "uqvanill",
+        "id": "vanilla",
         "class": ["IS_CURRENT"],
         "type": 18,
         "homeLib": "St Lucia",
@@ -1330,7 +1330,7 @@ export const printBalance = {
 };
 
 export const loans = {
-    'recordNumber': 'uqvanilla',
+    'recordNumber': 'vanilla',
     'fines': [{
         'title': 'CRITICAL SOCIOLINGUISTIC RESEARCH METHODS',
         'fineAmount': 48.93,
@@ -1356,49 +1356,10 @@ export const loans = {
 };
 
 // 'took' is the number of seconds the response took
-export const possibleRecords = {
+export const possibleRecordsData = {
     'total': 19, 'took': 83, 'per_page': 20, 'current_page': 1, 'from': 1, 'to': 19
 };
 
 export const incompleteNTROs = {
     'total': 18, 'took': 104, 'per_page': 20, 'current_page': 1, 'from': 1, 'to': 18
 };
-
-const queryString = require('query-string');
-let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
-user = user || 'vanilla';
-console.log('data/account check user account=', accounts[user]);
-console.log('data/account check author=', !!currentAuthor[user]);
-addAccountToStoredAccount(
-    accounts[user],
-    !!user && !!currentAuthor[user] ? currentAuthor[user].data : null
-);
-
-// the broadcast event in production happens in reusable
-const bc = new BroadcastChannel('account_availability');
-console.log('mock: broadcast account_updated');
-bc.postMessage('account_updated');
-
-function addAccountToStoredAccount(account, currentAuthor) {
-    const numberOfHoursUntilExpiry = 1;
-    const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
-    const storageExpiryDate = {
-        storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
-    };
-    let storeableAccount = {
-        account: {
-            ...account,
-        },
-        ...storageExpiryDate,
-    };
-    if (!!currentAuthor) {
-        storeableAccount = {
-            ...storeableAccount,
-            currentAuthor: {
-                ...currentAuthor,
-            },
-        }
-    }
-    storeableAccount = JSON.stringify(storeableAccount);
-    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
-}
