@@ -9,9 +9,8 @@ import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { isHdrStudent } from 'helpers/access';
-import { STORAGE_ACCOUNT_KEYNAME } from '../../../config/general';
-import * as actions from '../../../data/actions/actionTypes';
-import { logout } from '../../../data/actions';
+import { STORAGE_ACCOUNT_KEYNAME } from 'config/general';
+import { logout } from 'data/actions';
 
 browserUpdate({
     required: {
@@ -109,7 +108,6 @@ export const App = ({ account, actions }) => {
         account: account,
         isHdrStudent: isHdrStudent,
     });
-    console.log('routesConfig=', routesConfig);
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">

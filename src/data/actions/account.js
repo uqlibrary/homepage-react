@@ -3,7 +3,6 @@ import { get } from 'repositories/generic';
 import {
     COMP_AVAIL_API,
     CURRENT_ACCOUNT_API,
-    CURRENT_AUTHOR_API,
     INCOMPLETE_NTRO_RECORDS_API,
     LIB_HOURS_API,
     LOANS_API,
@@ -82,7 +81,7 @@ function removeAccountStorage() {
 
 export function getAccountFromStorage() {
     const accountDetails = JSON.parse(sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME));
-    console.log('debug for PT 184420186 accountDetails=', accountDetails);
+    console.log('getAccountFromStorage accountDetails=', accountDetails);
 
     if (accountDetails === null) {
         return null;

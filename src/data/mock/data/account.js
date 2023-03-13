@@ -1,4 +1,4 @@
-import {STORAGE_ACCOUNT_KEYNAME} from "../../../config/general";
+import {STORAGE_ACCOUNT_KEYNAME} from 'config/general';
 
 export const accounts = {
     // staff, no espace data
@@ -1366,13 +1366,17 @@ export const incompleteNTROs = {
 
 const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
-!!user && addAccountToStoredAccount(accounts[user]);
+!!user && addAccountToStoredAccount(
+    accounts[user],
+    !!currentAuthor[user] ? currentAuthor[user].data : null
+);
 
 // the broadcast event in production happens in reusable
 const bc = new BroadcastChannel('account_availability');
+console.log('mock: broadcast account_updated');
 bc.postMessage('account_updated');
 
-function addAccountToStoredAccount(account) {
+function addAccountToStoredAccount(account, currentAuthor) {
     const numberOfHoursUntilExpiry = 1;
     const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
     const storageExpiryDate = {
@@ -1384,6 +1388,14 @@ function addAccountToStoredAccount(account) {
         },
         ...storageExpiryDate,
     };
+    if (!!currentAuthor) {
+        storeableAccount = {
+            ...storeableAccount,
+            currentAuthor: {
+                ...currentAuthor,
+            },
+        }
+    }
     storeableAccount = JSON.stringify(storeableAccount);
     sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
 }
