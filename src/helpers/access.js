@@ -1,8 +1,7 @@
 import { default as locale } from 'modules/Index/components/locale';
 
 /**
-    Note: the mylibrary button is setup in reusable-webcomponents
-    User settings also need to be created in that repo
+ Making changes? User settings need to be also created in repo reusable_webcomponents
 
  * (matching ptype in brackets at start, where it is an older type )
  * (1) UG: undergraduate (on campus) - sample users: vanilla, s1111111
@@ -110,15 +109,11 @@ export const getUserServices = (account, serviceLocale = null) => {
         .filter(i => i !== undefined);
 };
 
-const isLoggedInUser = account => {
-    // console.log('isLoggedInUser account=', account);
-    return !!account && !!account.id;
-};
+const isLoggedInUser = account => !!account && !!account.id;
 
 // define which home page panel items each user type can see
 
 export const canSeeLearningResources = account => {
-    console.log('canSeeLearningResources account=', account);
     return (
         !!account &&
         !!account.id &&
@@ -151,13 +146,11 @@ export const canSeeLibraryServices = account => {
 };
 
 const canSeeWebContentAdminPages = account => {
-    console.log('canSeeWebContentAdminPages account=', account);
     return (
         !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'))
     );
 };
 const canSeeTestTagAdminPages = account => {
-    console.log('canSeeTestTagAdminPages account=', account);
     return !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_TestTagUsers'));
 };
 
@@ -165,10 +158,7 @@ export const isSpotlightsAdminUser = account => isLoggedInUser(account) && canSe
 
 export const isTestTagAdminUser = account => isLoggedInUser(account) && canSeeTestTagAdminPages(account);
 
-export const isAlertsAdminUser = account => {
-    console.log('isAlertsAdminUser', !!account ? account : 'account null');
-    return isLoggedInUser(account) && canSeeWebContentAdminPages(account);
-};
+export const isAlertsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
 
 export const isPromoPanelAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
 

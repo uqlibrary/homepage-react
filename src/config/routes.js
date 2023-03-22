@@ -231,8 +231,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    console.log('routes account=', account);
-
     return [
         ...publicPages,
         ...(account && canSeeLearningResources(account) ? courseResourcesDisplay : []),

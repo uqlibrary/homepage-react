@@ -2,7 +2,6 @@ import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
     COMP_AVAIL_API,
-    CURRENT_ACCOUNT_API,
     INCOMPLETE_NTRO_RECORDS_API,
     LIB_HOURS_API,
     LOANS_API,
@@ -14,7 +13,6 @@ import {
 
 // import * as Sentry from '@sentry/browser';
 
-import { sessionApi } from 'config';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, STORAGE_ACCOUNT_KEYNAME } from 'config/general';
 import Cookies from 'js-cookie';
@@ -81,7 +79,6 @@ function removeAccountStorage() {
 
 export function getAccountFromStorage() {
     const accountDetails = JSON.parse(sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME));
-    console.log('getAccountFromStorage accountDetails=', accountDetails);
 
     if (accountDetails === null) {
         return null;
@@ -92,8 +89,6 @@ export function getAccountFromStorage() {
             location.search || /* istanbul ignore next */ location.hash.substring(location.hash.indexOf('?')),
         ).user;
         user = user || 'vanilla';
-        console.log('getAccountFromStorage user=', user);
-        console.log('getAccountFromStorage accountDetails=', accountDetails);
 
         if ((!!accountDetails.account.id && accountDetails.account.id !== user) || !accountDetails.account.id) {
             // allow developer to swap between users in the same tab in mock
@@ -169,11 +164,10 @@ export function loadCurrentAccount() {
         if (storedAccount !== null && !!storedAccount.account) {
             // account details stored locally with an expiry date
             const account = extractAccountFromSession(dispatch, storedAccount);
-            console.log('loadCurrentAccount found account', account);
             return Promise.resolve(account);
         }
-        console.log('loadCurrentAccount no account');
-        return null;
+        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+        return Promise.resolve(null);
     };
 }
 
@@ -404,25 +398,6 @@ export function searcheSpaceIncompleteNTROPublications() {
 export function logout() {
     return dispatch => {
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-    };
-}
-
-/**
- * @param string reducerToSave
- */
-export function checkSession(reducerToSave = 'form') {
-    return dispatch => {
-        return sessionApi
-            .get(CURRENT_ACCOUNT_API().apiUrl)
-            .then(() => {
-                dispatch({ type: actions.CURRENT_ACCOUNT_SESSION_VALID });
-            })
-            .catch(() => {
-                dispatch({
-                    type: actions.CURRENT_ACCOUNT_SESSION_EXPIRED,
-                    payload: reducerToSave,
-                });
-            });
     };
 }
 

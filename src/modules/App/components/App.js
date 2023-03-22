@@ -78,30 +78,32 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const App = ({ account, actions }) => {
-    console.log('App start, account=', account);
-    // const [routesConfig, setRouteConfig] = React.useState([]);
     useEffect(() => {
         // ideally we would just do window.addEventListener('storage' ...)
         // but that watcher doesn't work within the same window
         // so reusable will broadcast when it has written to storage
-        const bc = new BroadcastChannel('account_availability');
-        bc.onmessage = messageEvent => {
-            if (messageEvent.data === 'account_updated') {
-                console.log('bc was account_updated - sessionstorage now availAble');
-                actions.loadCurrentAccount();
-            } else if (messageEvent.data === 'account_removed') {
-                console.log('bc was account_removed');
-                logout();
-            } else {
-                console.log('bc was not account_updated, skip, messageEvent.data=', messageEvent.data);
-            }
-            return null;
-        };
+        /* istanbul ignore else */
+        if ('BroadcastChannel' in window) {
+            const bc = new BroadcastChannel('account_availability');
+            /* istanbul ignore next */
+            bc.onmessage = messageEvent => {
+                if (messageEvent.data === 'account_updated') {
+                    actions.loadCurrentAccount();
+                } else if (messageEvent.data === 'account_removed') {
+                    logout();
+                } else {
+                    console.log('bc unknown message, messageEvent.data=', messageEvent.data);
+                }
+                return null;
+            };
+        }
+
         // if the reusable started much quicker than this, homepage won't have been up to receive the message
         // but the storage will be present
         if (sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME)) {
-            console.log('App.js session storage found, loading account');
             actions.loadCurrentAccount();
+        } else {
+            actions.logout();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

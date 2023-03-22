@@ -70,9 +70,7 @@ export const PromoPanelClone = ({
             setKnownGroups(known);
         }
         if (promoPanelList.length > 0) {
-            // console.log('Length of PromoPanelList is greater than 0', promoPanelList);
             const userlist = [];
-            // const schedule = [];
             setCurrentPanel(...promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`));
             promoPanelList.map(item => {
                 if (`${item.panel_id}` === `${promopanelid}`) {

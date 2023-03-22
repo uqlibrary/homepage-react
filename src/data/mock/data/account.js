@@ -44,7 +44,7 @@ export const accounts = {
         "user_group": "LIBRARYSTAFFB",
     },
     uqtesttag: {
-        "id": "uqstaff",
+        "id": "uqtesttag",
         "class": ["libstaff", "IS_CURRENT"],
         "type": 18,
         "homeLib": "St Lucia",

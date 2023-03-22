@@ -1,7 +1,5 @@
 /* eslint-disable */
-console.log('data/mock/index');
 import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi, STORAGE_ACCOUNT_KEYNAME } from 'config';
-// import {STORAGE_ACCOUNT_KEYNAME} from '../../../config/general';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -41,7 +39,7 @@ import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_onLoad from './data/records/test_tag_onLoad';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
-import testTag_testDevices from './data/records/test_tag_test_devices';
+// import testTag_testDevices from './data/records/test_tag_test_devices';
 import testTag_assets from './data/records/test_tag_assets';
 import { accounts, currentAuthor } from './data';
 
@@ -64,10 +62,11 @@ const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\
 const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
 user = user || 'vanilla';
-console.log('data/account check user account=', accounts[user]);
-console.log('data/account check author=', !!currentAuthor[user]);
-addAccountToStoredAccount(accounts[user], !!user && !!currentAuthor[user] ? currentAuthor[user].data : null);
-console.log('stored is:', sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME));
+
+addMockAccountToStoredAccount(
+    !!accounts[user] && accounts[user],
+    !!user && !!currentAuthor[user] ? currentAuthor[user].data : null,
+);
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -82,13 +81,16 @@ if (user && !mockData.accounts[user]) {
     );
 }
 
-// default user is researcher if user is not defined
-user = user || 'vanilla';
-console.log('index check user=', user);
-
-export function addAccountToStoredAccount(account, currentAuthor) {
-    console.log('addAccountToStoredAccount start');
-    const numberOfHoursUntilExpiry = 1;
+export function addMockAccountToStoredAccount(account, currentAuthor, numberOfHoursUntilExpiry = 1) {
+    let bc;
+    if ('BroadcastChannel' in window) {
+        bc = new BroadcastChannel('account_availability');
+    }
+    if (!(!!account && account.hasOwnProperty('hasSession') && account.hasSession === true)) {
+        // the broadcast event in production happens in reusable
+        !!bc && bc.postMessage('account_removed');
+        return;
+    }
     const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
     const storageExpiryDate = {
         storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
@@ -109,14 +111,9 @@ export function addAccountToStoredAccount(account, currentAuthor) {
     }
     storeableAccount = JSON.stringify(storeableAccount);
     sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
-    console.log('account stored');
 
     // the broadcast event in production happens in reusable
-    if ('BroadcastChannel' in window) {
-        const bc = new BroadcastChannel('account_availability');
-        console.log('mock: broadcast account_updated');
-        bc.postMessage('account_updated');
-    }
+    !!bc && bc.postMessage('account_updated');
 }
 
 const withDelay = response => config => {
@@ -822,14 +819,7 @@ mock.onGet('exams/course/FREN1010/summary')
     .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
     .reply(withDelay([200, {}]))
     .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))
-    .reply(
-        withDelay([
-            200,
-            {
-                status: 'OK',
-            },
-        ]),
-    )
+    .reply(withDelay([200, { status: 'OK' }]))
     .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
     .reply(
         withDelay([
