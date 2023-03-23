@@ -78,6 +78,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const App = ({ account, actions }) => {
+    console.log('App start');
     useEffect(() => {
         // ideally we would just do window.addEventListener('storage' ...)
         // but that watcher doesn't work within the same window
@@ -88,8 +89,10 @@ export const App = ({ account, actions }) => {
             /* istanbul ignore next */
             bc.onmessage = messageEvent => {
                 if (messageEvent.data === 'account_updated') {
+                    console.log('BroadcastChannel message account_updated');
                     actions.loadCurrentAccount();
                 } else if (messageEvent.data === 'account_removed') {
+                    console.log('BroadcastChannel message account_removed');
                     logout();
                 } else {
                     console.log('bc unknown message, messageEvent.data=', messageEvent.data);
@@ -97,12 +100,15 @@ export const App = ({ account, actions }) => {
                 return null;
             };
         }
+        console.log('after BroadcastChannel');
 
         // if the reusable started much quicker than this, homepage won't have been up to receive the message
         // but the storage will be present
         if (sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME)) {
+            console.log('session storage found, load current account');
             actions.loadCurrentAccount();
         } else {
+            console.log('session storage not found, logout');
             actions.logout();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

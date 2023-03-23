@@ -150,8 +150,6 @@ export function loadCurrentAccount() {
             return Promise.resolve({});
         }
 
-        // refine how this happens
-        // homepage no longer calls account so do this by watching for the account removed broadcast?
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
             // no cookie, don't call account api without a cookie
             removeAccountStorage();
