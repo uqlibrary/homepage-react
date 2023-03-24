@@ -10,7 +10,6 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { isHdrStudent } from 'helpers/access';
 import { STORAGE_ACCOUNT_KEYNAME } from 'config/general';
-import { logout } from 'data/actions';
 
 browserUpdate({
     required: {
@@ -93,7 +92,7 @@ export const App = ({ account, actions }) => {
                     actions.loadCurrentAccount();
                 } else if (messageEvent.data === 'account_removed') {
                     console.log('BroadcastChannel message account_removed');
-                    logout();
+                    actions.logout();
                 } else {
                     console.log('bc unknown message, messageEvent.data=', messageEvent.data);
                 }
@@ -107,9 +106,9 @@ export const App = ({ account, actions }) => {
         if (sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME)) {
             console.log('session storage found, load current account');
             actions.loadCurrentAccount();
-        } else {
-            console.log('session storage not found, logout');
-            actions.logout();
+            // } else {
+            //     console.log('session storage not found, logout');
+            //     actions.logout();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
