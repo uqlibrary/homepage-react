@@ -12,6 +12,9 @@ context('not found page accessibility', () => {
     });
 
     it('non-loggedin user on a page that requires login is accessible', () => {
+        cy.visit('/?user=s1111111');
+        cy.wait(10);
+
         cy.visit('/learning-resources?user=public');
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -75,6 +78,8 @@ context('authorisation errors', () => {
 });
 context('authentication errors', () => {
     it('page that requires login returns an authentication error for non-loggedin user', () => {
+        cy.visit('/?user=s1111111');
+        cy.wait(10);
         cy.visit('/learning-resources?user=public');
         cy.viewport(1300, 1000);
         cy.get('[data-testid=user-not-loggedin]').should('exist');

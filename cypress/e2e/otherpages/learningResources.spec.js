@@ -373,6 +373,8 @@ context('Learning Resources Accessibility', () => {
 
 context('Learning Resources Access', () => {
     it('A non-loggedin user cannot access Learning Resources', () => {
+        cy.visit('/?user=s1111111');
+        cy.wait(10);
         cy.visit('/learning-resources?user=public');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authenticated users only.');
