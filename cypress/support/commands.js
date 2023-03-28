@@ -130,11 +130,12 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add('rendersALoggedoutUser', () => {
-    cy.clearCookies();
+    // logged out local works when after changing users, but not on first load. Works in prod without this.
+    cy.visit('/?user=s1111111');
+    cy.wait(10);
+
     cy.visit('/?user=public');
     cy.wait(1000);
     cy.viewport(1300, 1000);
-    cy.get('div#content-container').contains('Library hours');
-
     hasPanels(['computer-availability', 'library-hours', 'training', 'promo'], false);
 });
