@@ -85,6 +85,7 @@ export const App = ({ account, actions }) => {
         /* istanbul ignore else */
         if ('BroadcastChannel' in window) {
             const bc = new BroadcastChannel('account_availability');
+            console.log('now waiting on broadcasts', bc);
             /* istanbul ignore next */
             bc.onmessage = messageEvent => {
                 if (messageEvent.data === 'account_updated') {
@@ -106,9 +107,6 @@ export const App = ({ account, actions }) => {
         if (sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME)) {
             console.log('session storage found, load current account');
             actions.loadCurrentAccount();
-            // } else {
-            //     console.log('session storage not found, logout');
-            //     actions.logout();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

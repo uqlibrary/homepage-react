@@ -75,11 +75,7 @@ if (!!user && user.length > 0 && user !== 'public') {
 }
 mockData.accounts.uqrdav10 = mockData.uqrdav10.account;
 mockData.accounts.uqagrinb = mockData.uqagrinb.account;
-if (user && user === 'public') {
-    console.log(
-        'if user public panels dont load properly, try loading for another user eg s1111111 and then hit the back button',
-    );
-} else if (user && !mockData.accounts[user]) {
+if (user && !mockData.accounts[user]) {
     console.warn(
         `API MOCK DATA: User name ${user} is not found, please use one of the usernames from mock data only...`,
     );

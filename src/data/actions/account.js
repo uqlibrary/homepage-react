@@ -90,6 +90,7 @@ export function getAccountFromStorage() {
 
         if ((!!accountDetails.account.id && accountDetails.account.id !== user) || !accountDetails.account.id) {
             // allow developer to swap between users in the same tab in mock
+            console.log('developer swapping users in localhost (clear session storage)');
             removeAccountStorage();
             return null;
         }
@@ -142,15 +143,18 @@ function extractAccountFromSession(dispatch, storedAccount) {
  * @returns {function(*)}
  */
 export function loadCurrentAccount() {
+    console.log('loadCurrentAccount');
     return dispatch => {
         if (navigator.userAgent.match(/Googlebot|facebookexternalhit|bingbot|Slackbot-LinkExpanding|Twitterbot/)) {
+            console.log('loadCurrentAccount bot');
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
 
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+            console.log('loadCurrentAccount no cookie');
             // no cookie, don't call account api without a cookie
-            removeAccountStorage();
+            // removeAccountStorage();
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
@@ -158,10 +162,12 @@ export function loadCurrentAccount() {
         const storedAccount = getAccountFromStorage();
 
         if (storedAccount !== null && !!storedAccount.account) {
+            console.log('loadCurrentAccount HAS account');
             // account details stored locally with an expiry date
             const account = extractAccountFromSession(dispatch, storedAccount);
             return Promise.resolve(account);
         }
+        console.log('loadCurrentAccount no storage');
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
         return Promise.resolve(null);
     };
