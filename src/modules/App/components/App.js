@@ -118,6 +118,17 @@ export const App = ({ account, actions }) => {
         account: account,
         isHdrStudent: isHdrStudent,
     });
+    let homepagelink = 'http://www.library.uq.edu.au';
+    let homepageLabel = 'Library';
+    /* istanbul ignore next */
+    if (window.location.hostname === 'homepage-development.library.uq.edu.au') {
+        homepagelink = `${window.location.protocol}//${window.location.hostname}${window.location.pathname}#/`;
+        homepageLabel = 'Library Dev Homepage';
+    } else if (window.location.hostname === 'localhost') {
+        const homepagePort = '2020';
+        homepagelink = `${window.location.protocol}//${window.location.hostname}:${homepagePort}/`;
+        homepageLabel = 'Library Local Homepage';
+    }
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
@@ -127,7 +138,7 @@ export const App = ({ account, actions }) => {
                     searchurl="http://library.uq.edu.au"
                 />
                 <cultural-advice-popup />
-                <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu>
+                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
                         <askus-button />
                     </span>

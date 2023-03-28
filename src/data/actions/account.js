@@ -11,8 +11,6 @@ import {
     TRAINING_API,
 } from 'repositories/routes';
 
-// import * as Sentry from '@sentry/browser';
-
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, STORAGE_ACCOUNT_KEYNAME } from 'config/general';
 import Cookies from 'js-cookie';
