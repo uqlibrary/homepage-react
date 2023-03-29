@@ -96,6 +96,7 @@ export function addMockAccountToStoredAccount(account, currentAuthor, numberOfHo
         storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
     };
     let storeableAccount = {
+        status: 'loggedin',
         account: {
             ...account,
         },

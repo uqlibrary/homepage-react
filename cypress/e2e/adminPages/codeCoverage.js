@@ -7,6 +7,7 @@ import { default as learningResourceSearchSuggestions } from '../../../src/data/
 
 context('Personalisation', () => {
     it('Renders a logged out user', () => {
+        // tests ?user=public
         cy.rendersALoggedoutUser();
     });
 });
