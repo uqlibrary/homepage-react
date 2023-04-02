@@ -104,18 +104,31 @@ export const App = ({ account, actions }) => {
 
         // if the reusable started much quicker than this, homepage won't have been up to receive the message
         // but the storage will be present
-        if (sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME)) {
-            console.log('session storage found, load current account');
-            actions.loadCurrentAccount();
-        }
+        const getStoredUserDetails = setInterval(() => {
+            const storedUserDetailsRaw = sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
+            const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
+            if (
+                storedUserDetails?.hasOwnProperty('status') &&
+                (storedUserDetails.status === 'loggedin' || storedUserDetails.status === 'loggedout')
+            ) {
+                clearInterval(getStoredUserDetails);
+
+                console.log('session storage found, load current account');
+                actions.loadCurrentAccount();
+            } else {
+                console.log('looping for account session stirafe');
+            }
+        }, 100);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     const classes = useStyles();
     const routesConfig = routes.getRoutesConfig({
         components: pages,
         account: account,
         isHdrStudent: isHdrStudent,
     });
+
     let homepagelink = 'http://www.library.uq.edu.au';
     let homepageLabel = 'Library';
     /* istanbul ignore next */
@@ -127,6 +140,7 @@ export const App = ({ account, actions }) => {
         homepagelink = `${window.location.protocol}//${window.location.hostname}:${homepagePort}/`;
         homepageLabel = 'Library Local Homepage';
     }
+
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
