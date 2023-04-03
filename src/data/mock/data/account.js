@@ -1356,10 +1356,6 @@ export const loans = {
 };
 
 // 'took' is the number of seconds the response took
-export const possibleRecordsData = {
-    'total': 19, 'took': 83, 'per_page': 20, 'current_page': 1, 'from': 1, 'to': 19
-};
-
-export const incompleteNTROs = {
+export const apiRecordResponse = {
     'total': 18, 'took': 104, 'per_page': 20, 'current_page': 1, 'from': 1, 'to': 18
 };

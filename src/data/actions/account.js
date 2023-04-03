@@ -93,7 +93,7 @@ export function getAccountFromStorage() {
 
         if (!!accountDetails.status && accountDetails.status === 'loggedout' && user === 'public') {
             console.log('no user logged in');
-        } else if ((!!accountDetails.account.id && accountDetails.account.id !== user) || !accountDetails.account.id) {
+        } else if (!accountDetails?.account?.id || accountDetails.account.id !== user) {
             // allow developer to swap between users in the same tab in mock
             console.log(
                 'developer swapping users in localhost (clear session storage)',
@@ -123,9 +123,9 @@ function extendAccountDetails(accountResponse) {
     };
 }
 
-function extractAccountFromSession(dispatch, storedAccount) {
+function dispatchAccount(dispatch, account) {
     dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-    const accountResponse = extendAccountDetails(storedAccount.account || /* istanbul ignore next */ null);
+    const accountResponse = extendAccountDetails(account.account || /* istanbul ignore next */ null);
     dispatch({
         type: actions.CURRENT_ACCOUNT_LOADED,
         payload: accountResponse,
@@ -133,10 +133,10 @@ function extractAccountFromSession(dispatch, storedAccount) {
 
     dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
     /* istanbul ignore else */
-    if (storedAccount.currentAuthor) {
+    if (account.currentAuthor) {
         dispatch({
             type: actions.CURRENT_AUTHOR_LOADED,
-            payload: storedAccount.currentAuthor,
+            payload: account.currentAuthor,
         });
     } else {
         /* istanbul ignore next */
@@ -164,7 +164,6 @@ export function loadCurrentAccount() {
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
             console.log('loadCurrentAccount no cookie');
             // no cookie, don't call account api without a cookie
-            // removeAccountStorage();
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
@@ -176,7 +175,7 @@ export function loadCurrentAccount() {
         if (storedAccount?.status === 'loggedin' && !!storedAccount?.account) {
             console.log('loadCurrentAccount reusable says HAS account');
             // account details stored locally with an expiry date
-            const account = extractAccountFromSession(dispatch, storedAccount);
+            const account = dispatchAccount(dispatch, storedAccount);
             return Promise.resolve(account);
         } else if (storedAccount?.status === 'loggedout') {
             console.log('loadCurrentAccount reusable says loggedout');

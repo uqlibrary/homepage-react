@@ -24,10 +24,9 @@ import learningResourceSearchSuggestions from './data/records/learningResourceSe
 import examSuggestion_FREN from './data/records/examSuggestion_FREN';
 import {
     computerAvailability,
-    incompleteNTROs,
+    apiRecordResponse,
     libHours,
     loans,
-    possibleRecordsData,
     printBalance,
     training_object,
 } from './data/account';
@@ -407,9 +406,9 @@ mock.onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]));
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 // .reply(withDelay([500, {}]));
 
-mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, possibleRecordsData]));
-
-mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, incompleteNTROs]));
+// mock cant tell the difference between 'possible' and 'ntro incomplete' calls :(
+mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, apiRecordResponse]));
+mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, apiRecordResponse]));
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
 mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
