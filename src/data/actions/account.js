@@ -121,14 +121,6 @@ export function getAccountFromStorage() {
         }
     }
 
-    // short term during upgrade - if older structure that doesnt have .account, clear
-    // this clause can be removed a day or so after day golive, written Jan/2022
-    /* istanbul ignore next */
-    if (!accountDetails.account) {
-        this.removeAccountStorage();
-        return null;
-    }
-
     const now = new Date().getTime();
     console.log('debug for PT 184420186 accountDetails.storageExpiryDate=', accountDetails.storageExpiryDate);
     /* istanbul ignore next */
