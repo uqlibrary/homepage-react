@@ -134,11 +134,14 @@ export const App = ({ account, actions }) => {
     /* istanbul ignore next */
     if (window.location.hostname === 'homepage-development.library.uq.edu.au') {
         homepagelink = `${window.location.protocol}//${window.location.hostname}${window.location.pathname}#/`;
-        homepageLabel = 'Library Dev Homepage';
+        homepageLabel = 'Library Dev';
+    } else if (window.location.hostname === 'homepage-staging.library.uq.edu.au') {
+        homepagelink = `${window.location.protocol}//${window.location.hostname}${window.location.pathname}#/`;
+        homepageLabel = 'Library Staging';
     } else if (window.location.hostname === 'localhost') {
         const homepagePort = '2020';
         homepagelink = `${window.location.protocol}//${window.location.hostname}:${homepagePort}/`;
-        homepageLabel = 'Library Local Homepage';
+        homepageLabel = 'Library Local';
     }
 
     return (
