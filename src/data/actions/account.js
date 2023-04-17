@@ -72,11 +72,13 @@ function getLibraryGroupCookie() {
 }
 
 function removeAccountStorage() {
-    sessionStorage.removeItem(STORAGE_ACCOUNT_KEYNAME);
+    /* istanbul ignore else */
+    !!sessionStorage && sessionStorage.removeItem(STORAGE_ACCOUNT_KEYNAME);
 }
 
 export function getAccountFromStorage() {
-    const item = sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
+    /* istanbul ignore else */
+    const item = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
     const accountDetails = item === null ? null : JSON.parse(item);
     console.log('getAccountFromStorage accountDetails=', accountDetails);
 

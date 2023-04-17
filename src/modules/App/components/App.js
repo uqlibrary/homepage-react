@@ -105,7 +105,8 @@ export const App = ({ account, actions }) => {
         // if the reusable started much quicker than this, homepage won't have been up to receive the message
         // but the storage will be present
         const getStoredUserDetails = setInterval(() => {
-            const storedUserDetailsRaw = sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
+            /* istanbul ignore else */
+            const storedUserDetailsRaw = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
             const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
             if (
                 storedUserDetails?.hasOwnProperty('status') &&
