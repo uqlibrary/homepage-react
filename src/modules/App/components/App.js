@@ -9,6 +9,7 @@ import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { isHdrStudent } from 'helpers/access';
+import { STORAGE_ACCOUNT_KEYNAME } from 'config/general';
 
 browserUpdate({
     required: {
@@ -76,16 +77,73 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const App = ({ account, actions }) => {
+    console.log('App start');
     useEffect(() => {
-        actions.loadCurrentAccount();
+        // ideally we would just do window.addEventListener('storage' ...)
+        // but that watcher doesn't work within the same window
+        // so reusable will broadcast when it has written to storage
+        /* istanbul ignore else */
+        if ('BroadcastChannel' in window) {
+            const bc = new BroadcastChannel('account_availability');
+            console.log('now waiting on broadcasts', bc);
+            /* istanbul ignore next */
+            bc.onmessage = messageEvent => {
+                if (messageEvent.data === 'account_updated') {
+                    console.log('BroadcastChannel message account_updated');
+                    actions.loadCurrentAccount();
+                } else if (messageEvent.data === 'account_removed') {
+                    console.log('BroadcastChannel message account_removed');
+                    actions.logout();
+                } else {
+                    console.log('bc unknown message, messageEvent.data=', messageEvent.data);
+                }
+                return null;
+            };
+        }
+        console.log('after BroadcastChannel');
+
+        // if the reusable started much quicker than this, homepage won't have been up to receive the message
+        // but the storage will be present
+        const getStoredUserDetails = setInterval(() => {
+            const storedUserDetailsRaw = sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
+            const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
+            if (
+                storedUserDetails?.hasOwnProperty('status') &&
+                (storedUserDetails.status === 'loggedin' || storedUserDetails.status === 'loggedout')
+            ) {
+                clearInterval(getStoredUserDetails);
+
+                console.log('session storage found, load current account');
+                actions.loadCurrentAccount();
+            } else {
+                console.log('looping for account session stirafe');
+            }
+        }, 100);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     const classes = useStyles();
     const routesConfig = routes.getRoutesConfig({
         components: pages,
         account: account,
         isHdrStudent: isHdrStudent,
     });
+
+    let homepagelink = 'http://www.library.uq.edu.au';
+    let homepageLabel = 'Library';
+    /* istanbul ignore next */
+    if (window.location.hostname === 'homepage-development.library.uq.edu.au') {
+        homepagelink = `${window.location.protocol}//${window.location.hostname}${window.location.pathname}#/`;
+        homepageLabel = 'Library Dev';
+    } else if (window.location.hostname === 'homepage-staging.library.uq.edu.au') {
+        homepagelink = `${window.location.protocol}//${window.location.hostname}${window.location.pathname}#/`;
+        homepageLabel = 'Library Staging';
+    } else if (window.location.hostname === 'localhost') {
+        const homepagePort = '2020';
+        homepagelink = `${window.location.protocol}//${window.location.hostname}:${homepagePort}/`;
+        homepageLabel = 'Library Local';
+    }
+
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
@@ -95,7 +153,7 @@ export const App = ({ account, actions }) => {
                     searchurl="http://library.uq.edu.au"
                 />
                 <cultural-advice-popup />
-                <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu>
+                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
                         <askus-button />
                     </span>

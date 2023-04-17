@@ -23,6 +23,7 @@ context('Personalised Homepage', () => {
     });
 
     it('Renders a logged out user', () => {
+        // tests ?user=public
         cy.rendersALoggedoutUser();
     });
 
