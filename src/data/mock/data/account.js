@@ -1356,6 +1356,6 @@ export const loans = {
 };
 
 // 'took' is the number of seconds the response took
-export const apiRecordResponse = {
+export const espaceSearchResponse = {
     'total': 18, 'took': 104, 'per_page': 20, 'current_page': 1, 'from': 1, 'to': 18
 };
