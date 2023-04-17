@@ -80,9 +80,6 @@ export const PromoPanelEdit = ({
                 if (!known.some(e => e.group === item.usergroup_group)) {
                     known.push({ group: item.usergroup_group, name: item.usergroup_group_name });
                 }
-                // !known.some(e => e.group === item.usergroup_group) &&
-                //     console.log('push') &&
-                //     known.push({ group: item.usergroup_group, name: item.usergroup_group_name });
             });
             setKnownGroups(known);
         }

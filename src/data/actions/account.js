@@ -80,10 +80,8 @@ export function getAccountFromStorage() {
     /* istanbul ignore else */
     const item = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
     const accountDetails = item === null ? null : JSON.parse(item);
-    console.log('getAccountFromStorage accountDetails=', accountDetails);
 
     if (accountDetails === null) {
-        console.log('getAccountFromStorage return null');
         return null;
     }
 
@@ -94,15 +92,8 @@ export function getAccountFromStorage() {
         user = user || 'vanilla';
 
         if (!!accountDetails.status && accountDetails.status === 'loggedout' && user === 'public') {
-            console.log('no user logged in');
         } else if (!accountDetails?.account?.id || accountDetails.account.id !== user) {
             // allow developer to swap between users in the same tab in mock
-            console.log(
-                'developer swapping users in localhost (clear session storage)',
-                accountDetails?.account?.id,
-                ' != ',
-                user,
-            );
             removeAccountStorage();
             return null;
         }
@@ -155,16 +146,13 @@ function dispatchAccount(dispatch, account) {
  * @returns {function(*)}
  */
 export function loadCurrentAccount() {
-    console.log('loadCurrentAccount');
     return dispatch => {
         if (navigator.userAgent.match(/Googlebot|facebookexternalhit|bingbot|Slackbot-LinkExpanding|Twitterbot/)) {
-            console.log('loadCurrentAccount bot');
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
 
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-            console.log('loadCurrentAccount no cookie');
             // no cookie, don't call account api without a cookie
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
@@ -173,20 +161,14 @@ export function loadCurrentAccount() {
         // there can be a mismatch between load time of homepage and load time of reusable
         // wait for the session storage if it isn't there straight away
         const storedAccount = getAccountFromStorage();
-        console.log('storedAccount=', storedAccount);
         if (storedAccount?.status === 'loggedin' && !!storedAccount?.account) {
-            console.log('loadCurrentAccount reusable says HAS account');
             // account details stored locally with an expiry date
             const account = dispatchAccount(dispatch, storedAccount);
             return Promise.resolve(account);
         } else if (storedAccount?.status === 'loggedout') {
-            console.log('loadCurrentAccount reusable says loggedout');
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
-        } else {
-            console.log('loadCurrentAccount reusable says no storage (should never happen)');
         }
-        console.log('loadCurrentAccount no storage');
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
         return Promise.resolve(null);
     };

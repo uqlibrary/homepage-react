@@ -77,7 +77,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const App = ({ account, actions }) => {
-    console.log('App start');
     useEffect(() => {
         // ideally we would just do window.addEventListener('storage' ...)
         // but that watcher doesn't work within the same window
@@ -85,22 +84,16 @@ export const App = ({ account, actions }) => {
         /* istanbul ignore else */
         if ('BroadcastChannel' in window) {
             const bc = new BroadcastChannel('account_availability');
-            console.log('now waiting on broadcasts', bc);
             /* istanbul ignore next */
             bc.onmessage = messageEvent => {
                 if (messageEvent.data === 'account_updated') {
-                    console.log('BroadcastChannel message account_updated');
                     actions.loadCurrentAccount();
                 } else if (messageEvent.data === 'account_removed') {
-                    console.log('BroadcastChannel message account_removed');
                     actions.logout();
-                } else {
-                    console.log('bc unknown message, messageEvent.data=', messageEvent.data);
                 }
                 return null;
             };
         }
-        console.log('after BroadcastChannel');
 
         // if the reusable started much quicker than this, homepage won't have been up to receive the message
         // but the storage will be present
@@ -114,10 +107,7 @@ export const App = ({ account, actions }) => {
             ) {
                 clearInterval(getStoredUserDetails);
 
-                console.log('session storage found, load current account');
                 actions.loadCurrentAccount();
-            } else {
-                console.log('looping for account session stirafe');
             }
         }, 100);
         // eslint-disable-next-line react-hooks/exhaustive-deps
