@@ -35,7 +35,8 @@ const robotsTxtOptions = {
     sitemap: 'https://library.uq.edu.au/sitemap/sitemap-index.xml',
 };
 
-// get branch name for current build, if running build locally CI_BRANCH is not set (it's set in codeship)
+// get branch name for current build, if running build locally CI_BRANCH is not set
+// (it is available when run in AWS codebuild)
 const branch = process && process.env && process.env.CI_BRANCH ? process.env.CI_BRANCH : 'development';
 
 // get configuration for the branch
@@ -229,10 +230,10 @@ const webpackConfig = {
                     },
                 ],
             },
-            {
-                test: /\.js$/,
-                loader: WebpackStrip.loader('console.log'),
-            },
+            // {
+            //     test: /\.js$/,
+            //     loader: WebpackStrip.loader('console.log'),
+            // },
         ],
     },
     resolve: {

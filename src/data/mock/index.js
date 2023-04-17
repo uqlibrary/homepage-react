@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
+import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi, STORAGE_ACCOUNT_KEYNAME } from 'config';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -24,10 +24,9 @@ import learningResourceSearchSuggestions from './data/records/learningResourceSe
 import examSuggestion_FREN from './data/records/examSuggestion_FREN';
 import {
     computerAvailability,
-    incompleteNTROs,
+    espaceSearchResponse,
     libHours,
     loans,
-    possibleRecords,
     printBalance,
     training_object,
 } from './data/account';
@@ -37,27 +36,38 @@ import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_onLoad from './data/records/test_tag_onLoad';
-//import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
-//import testTag_assetTypes from './data/records/test_tag_asset_types';
-import testTag_testDevices from './data/records/test_tag_test_devices';
+// import testTag_testDevices from './data/records/test_tag_test_devices';
 import testTag_assets from './data/records/test_tag_assets';
+import { accounts, currentAuthor } from './data';
 
-import {currentPanels, userListPanels, activePanels, mockScheduleReturn, mockAuthenticatedPanel, mockPublicPanel} from "./data/promoPanels";
+import {
+    currentPanels,
+    userListPanels,
+    activePanels,
+    mockScheduleReturn,
+    mockAuthenticatedPanel,
+    mockPublicPanel,
+} from './data/promoPanels';
 
 const moment = require('moment');
 
-const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
 const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
-const panelRegExp = input =>  input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
-// set session cookie in mock mode
+const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 
-// Get user from query string
+const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
+user = user || 'vanilla';
 
+addMockAccountToStoredAccount(
+    !!accounts[user] && accounts[user],
+    !!user && !!currentAuthor[user] ? currentAuthor[user].data : null,
+);
+
+// set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
     Cookies.set(SESSION_COOKIE_NAME, 'abc123');
     Cookies.set(SESSION_USER_GROUP_COOKIE_NAME, 'LIBRARYSTAFFB');
@@ -70,8 +80,41 @@ if (user && !mockData.accounts[user]) {
     );
 }
 
-// default user is researcher if user is not defined
-user = user || 'vanilla';
+export function addMockAccountToStoredAccount(account, currentAuthor, numberOfHoursUntilExpiry = 1) {
+    let bc;
+    if ('BroadcastChannel' in window) {
+        bc = new BroadcastChannel('account_availability');
+    }
+    if (!(!!account && account.hasOwnProperty('hasSession') && account.hasSession === true)) {
+        // the broadcast event in production happens in reusable
+        !!bc && bc.postMessage('account_removed');
+        return;
+    }
+    const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
+    const storageExpiryDate = {
+        storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
+    };
+    let storeableAccount = {
+        status: 'loggedin',
+        account: {
+            ...account,
+        },
+        ...storageExpiryDate,
+    };
+    if (!!currentAuthor) {
+        storeableAccount = {
+            ...storeableAccount,
+            currentAuthor: {
+                ...currentAuthor,
+            },
+        };
+    }
+    storeableAccount = JSON.stringify(storeableAccount);
+    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
+
+    // the broadcast event in production happens in reusable
+    !!bc && bc.postMessage('account_updated');
+}
 
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
@@ -82,7 +125,7 @@ const withDelay = response => config => {
         }, randomTime);
     });
 };
-const withSetDelay = (response, seconds=0.1) => config =>{
+const withSetDelay = (response, seconds = 0.1) => config => {
     seconds = seconds > 5 ? 0.1 : seconds;
     const setTime = seconds * 1000; // Change these values to delay mock API
     // const randomTime = 5000;
@@ -363,9 +406,9 @@ mock.onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]));
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 // .reply(withDelay([500, {}]));
 
-mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, possibleRecords]));
-
-mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, incompleteNTROs]));
+// mock cant tell the difference between 'possible' and 'ntro incomplete' calls :(
+mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
+mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
 mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
@@ -773,105 +816,82 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [500, []];
     })
-    .onPost(routes.PROMOPANEL_CREATE_API().apiUrl).reply(
-        withDelay([
-            200,
-            {
-                
-            },
-        ]),
-    )
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({id: '.*'}).apiUrl))).reply(
-        withDelay([
-            200, 
-            {
-                status: "OK"
-            }
-        ])
-    )
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({id: '.*', usergroup: '.*'}).apiUrl))).reply(
+    .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
+    .reply(withDelay([200, {}]))
+    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
+    .reply(
         withDelay([
             201,
             {
-                status: "OK",
-            }
-        ])
+                status: 'OK',
+            },
+        ]),
     )
-    .onGet(routes.PROMOPANEL_LIST_API().apiUrl).reply(
-        () => {
-            return[200, currentPanels]
-        }
-        
-    )
-    .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl).reply(
-        () => {
-            return[200, userListPanels]
-        }
-        
-    )
-    
+    .onGet(routes.PROMOPANEL_LIST_API().apiUrl)
+    .reply(() => {
+        return [200, currentPanels];
+    })
+    .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl)
+    .reply(() => {
+        return [200, userListPanels];
+    })
+
     // Handle Delete of any panel that does NOT start with a 2 (2 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: '[^2]'}).apiUrl))).reply(
-        () => {
-            return [200, {status: 'ok'}]
-        }
-    )
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: '[^2]' }).apiUrl)))
+    .reply(() => {
+        return [200, { status: 'ok' }];
+    })
     // Specific case to throw error for Delete panel 2.
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({id: 2}).apiUrl))).reply(
-        () => { 
-            return [400, {
-                "status": "error",
-                "message": "2 is not a valid panel id"
-            }]
-        }
-    )
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: 2 }).apiUrl)))
+    .reply(() => {
+        return [
+            400,
+            {
+                status: 'error',
+                message: '2 is not a valid panel id',
+            },
+        ];
+    })
     // Handle Unschedule of any panel that is NOT schedule ID 11 (11 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({id: '(?!11).*'}).apiUrl))).reply(
-        () => {
-            return [200, {status: 'ok'}]
-        }
-    )
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: '(?!11).*' }).apiUrl)))
+    .reply(() => {
+        return [200, { status: 'ok' }];
+    })
     // Specific case to throw error for Delete on schedule 11
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({id: 11}).apiUrl))).reply(
-        () => {
-            return [400, {
-                "status": "error",
-                "message": "11 is not a valid schedule id"
-            }]
-        }
-    )
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_ADD_SCHEDULE_API({id: '.*', usergroup: '.*'}).apiUrl))).reply(
-        () => {
-            return [200, 
-                mockScheduleReturn
-            ]
-        }
-    )
-    .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl).reply(
-        () => {
-            return [200, activePanels]
-        }
-    )
-    .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl).reply(
-        () => {
-            return [200, mockAuthenticatedPanel]
-        }
-    )
-    .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl).reply(
-        () => {
-            return [200, mockPublicPanel]
-        }
-    )
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_USERTYPE_DEFAULT({id: '.*', usergroup: '.*'}).apiUrl)))
-    .reply(
-        () => {
-            return [200, '']
-        }
-    )
+    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: 11 }).apiUrl)))
+    .reply(() => {
+        return [
+            400,
+            {
+                status: 'error',
+                message: '11 is not a valid schedule id',
+            },
+        ];
+    })
+    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_ADD_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
+    .reply(() => {
+        return [200, mockScheduleReturn];
+    })
+    .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl)
+    .reply(() => {
+        return [200, activePanels];
+    })
+    .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl)
+    .reply(() => {
+        return [200, mockAuthenticatedPanel];
+    })
+    .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl)
+    .reply(() => {
+        return [200, mockPublicPanel];
+    })
+    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_USERTYPE_DEFAULT({ id: '.*', usergroup: '.*' }).apiUrl)))
+    .reply(() => {
+        return [200, ''];
+    })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
-        
     });
-

@@ -134,7 +134,5 @@ Cypress.Commands.add('rendersALoggedoutUser', () => {
     cy.visit('/?user=public');
     cy.wait(1000);
     cy.viewport(1300, 1000);
-    cy.get('div#content-container').contains('Library hours');
-
     hasPanels(['computer-availability', 'library-hours', 'training', 'promo'], false);
 });

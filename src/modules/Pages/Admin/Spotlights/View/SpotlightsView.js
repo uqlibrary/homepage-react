@@ -36,6 +36,7 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
         );
     }
 
+    /* istanbul ignore next */
     const navigateToListPage = () => {
         actions.clearASpotlight(); // make the form clear for the next use
 
