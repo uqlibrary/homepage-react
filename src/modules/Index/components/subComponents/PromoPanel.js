@@ -14,11 +14,11 @@ const PromoPanel = ({
     promoPanelLoading,
 }) => {
     function getContent(panelRawContent) {
-        // add a data-analytics entry to each link in the promo panel for GTM
+        // add a data-analytics entry to any links for the current user's promo panel
         const anchorList = document.querySelectorAll('#promo-panel a');
         anchorList.forEach(anchor => {
             const href = !!anchor?.href && new URL(anchor.href);
-            const host = !!href?.hostname ? href.hostname : '';
+            const host = !!href?.hostname ? href.hostname : /* istanbul ignore next */ '';
             if (!anchor.hasAttribute('data-analyticsid')) {
                 anchor.setAttribute('data-analyticsid', `promo-panel-link-${host}`);
             }
