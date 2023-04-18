@@ -60,6 +60,7 @@ Object {
           >
             <div
               class="MuiPaper-root MuiCard-root Cards-card-4 StandardCard  MuiPaper-elevation1 MuiPaper-rounded"
+              data-analyticsid="promo-panel"
               data-testid="promo-panel"
               id="promo-panel"
               style="height: 100%;"
