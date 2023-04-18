@@ -49,6 +49,7 @@ import {
     mockScheduleReturn,
     mockAuthenticatedPanel,
     mockPublicPanel,
+    promoPanelMocks,
 } from './data/promoPanels';
 
 const moment = require('moment');
@@ -880,7 +881,15 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl)
     .reply(() => {
-        return [200, mockAuthenticatedPanel];
+        if (user === 'uqstaff') {
+            return [200, promoPanelMocks.uqstaff];
+        } else if (user === 's1111111') {
+            return [200, promoPanelMocks.s1111111];
+        } else if (user === 'uqpkopit') {
+            return [200, promoPanelMocks.uqpkopit];
+        } else {
+            return [200, mockAuthenticatedPanel];
+        }
     })
     .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl)
     .reply(() => {
@@ -895,3 +904,15 @@ mock.onGet('exams/course/FREN1010/summary')
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
+/*
+mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
+    // mock current author details from fez
+    if (user === 'anon') {
+        return [403, {}];
+    } else if (mockData.currentAuthor[user]) {
+        return [200, mockData.currentAuthor[user]];
+    }
+    return [404, {}];
+});
+
+ */
