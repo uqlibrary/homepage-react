@@ -216,6 +216,7 @@ const PersonalisedPanel = ({
                 <Tooltip
                     id={getPapercutId('tooltip')}
                     data-testid={getPapercutId('tooltip')}
+                    data-analyticsid={getPapercutId('tooltip')}
                     title={ppLocale.items.papercut.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -275,12 +276,13 @@ const PersonalisedPanel = ({
         );
     };
     const Loans = () => {
-        const id = tag => `pp-loans${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+        const getElementIdentifier = tag => `pp-loans${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
-                    id={id('tooltip')}
-                    data-testid={id('tooltip')}
+                    id={getElementIdentifier('tooltip')}
+                    data-testid={getElementIdentifier('tooltip')}
+                    data-analyticsid={getElementIdentifier('tooltip')}
                     title={ppLocale.items.loans.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -288,8 +290,8 @@ const PersonalisedPanel = ({
                     <a
                         className={classes.menuItemRootAnchor}
                         href={ppLocale.items.loans.url}
-                        id={id('menu-button')}
-                        data-testid={id('menu-button')}
+                        id={getElementIdentifier('menu-button')}
+                        data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
@@ -318,12 +320,13 @@ const PersonalisedPanel = ({
         );
     };
     const Fines = () => {
-        const id = tag => `pp-fines${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+        const getElementIdentifier = tag => `pp-fines${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
-                    id={id('tooltip')}
-                    data-testid={id('tooltip')}
+                    id={getElementIdentifier('tooltip')}
+                    data-testid={getElementIdentifier('tooltip')}
+                    data-analyticsid={getElementIdentifier('tooltip')}
                     title={ppLocale.items.fines.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -331,8 +334,8 @@ const PersonalisedPanel = ({
                     <a
                         className={classes.menuItemRootAnchor}
                         href={ppLocale.items.fines.url}
-                        id={id('menu-button')}
-                        data-testid={id('menu-button')}
+                        id={getElementIdentifier('menu-button')}
+                        data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
@@ -358,12 +361,13 @@ const PersonalisedPanel = ({
         );
     };
     const EspacePossible = () => {
-        const id = tag => `pp-espace-possible${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+        const getElementIdentifier = tag => `pp-espace-possible${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
-                    id={id('tooltip')}
-                    data-testid={id('tooltip')}
+                    id={getElementIdentifier('tooltip')}
+                    data-testid={getElementIdentifier('tooltip')}
+                    data-analyticsid={getElementIdentifier('tooltip')}
                     title={ppLocale.items.eSpacePossible.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -371,8 +375,8 @@ const PersonalisedPanel = ({
                     <a
                         className={classes.menuItemRootAnchor}
                         href={ppLocale.items.eSpacePossible.url}
-                        id={id('menu-button')}
-                        data-testid={id('menu-button')}
+                        id={getElementIdentifier('menu-button')}
+                        data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
@@ -398,12 +402,13 @@ const PersonalisedPanel = ({
         );
     };
     const EspaceOrcid = () => {
-        const id = tag => `pp-espace-orcid${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+        const getElementIdentifier = tag => `pp-espace-orcid${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
-                    id={id('tooltip')}
-                    data-testid={id('tooltip')}
+                    id={getElementIdentifier('tooltip')}
+                    data-testid={getElementIdentifier('tooltip')}
+                    data-analyticsid={getElementIdentifier('tooltip')}
                     title={ppLocale.items.eSpaceOrcid.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -411,8 +416,8 @@ const PersonalisedPanel = ({
                     <a
                         className={classes.menuItemRootAnchor}
                         href={ppLocale.items.eSpaceOrcid.url}
-                        id={id('menu-button')}
-                        data-testid={id('menu-button')}
+                        id={getElementIdentifier('menu-button')}
+                        data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
@@ -438,12 +443,13 @@ const PersonalisedPanel = ({
         );
     };
     const EspaceNTROs = () => {
-        const id = tag => `pp-espace-ntro${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+        const getElementIdentifier = tag => `pp-espace-ntro${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
-                    id={id('tooltip')}
-                    data-testid={id('tooltip')}
+                    id={getElementIdentifier('tooltip')}
+                    data-testid={getElementIdentifier('tooltip')}
+                    data-analyticsid={getElementIdentifier('tooltip')}
                     title={ppLocale.items.eSpaceNTRO.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -451,8 +457,8 @@ const PersonalisedPanel = ({
                     <a
                         className={classes.menuItemRootAnchor}
                         href={ppLocale.items.eSpaceNTRO.url}
-                        id={id('menu-button')}
-                        data-testid={id('menu-button')}
+                        id={getElementIdentifier('menu-button')}
+                        data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>

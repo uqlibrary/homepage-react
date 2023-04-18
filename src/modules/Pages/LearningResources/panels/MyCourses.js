@@ -104,6 +104,7 @@ export const MyCourses = ({
                                     <Tab
                                         {...a11yProps(index, 'classtab')}
                                         data-testid={`classtab-${index}`}
+                                        data-analyticsid={`classtab-${index}`}
                                         key={`classtab-${index}`}
                                         label={subject.classnumber}
                                         value={`${courseTabLabel}-${index}`} // must match 'index' in TabPanel

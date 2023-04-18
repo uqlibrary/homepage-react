@@ -104,6 +104,7 @@ export class Cards extends Component {
         return (
             <Card
                 data-testid={standardCardId}
+                data-analyticsid={standardCardId}
                 id={standardCardId}
                 className={`${classes.card} StandardCard ${className}`}
                 style={{ ...customBG, ...fullHeight, ...style }}

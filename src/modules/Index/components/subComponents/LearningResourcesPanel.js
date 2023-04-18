@@ -105,6 +105,7 @@ export const LearningResourcesPanel = ({ account, history }) => {
                                 item
                                 xs={12}
                                 data-testid={`hcr-${index}`}
+                                data-analyticsid={`hcr-${index}`}
                                 key={`hcr-${index}`}
                                 style={{
                                     whiteSpace: 'nowrap',

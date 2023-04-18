@@ -83,6 +83,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                     aria-label={`UQ Spotlights Slide ${index + 1} of ${totalSlides}`}
                     id={`spotlights-dot-${index}`}
                     data-testid={`spotlights-dot-${index}`}
+                    data-analyticsid={`spotlights-dot-${index}`}
                 />
             ));
         }
@@ -122,6 +123,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 aria-label="Previous slide"
                                 id="spotlights-previous-button"
                                 data-testid="spotlights-previous-button"
+                                data-analyticsid="spotlights-previous-button"
                             >
                                 <ChevronLeftIcon />
                             </ButtonBack>
@@ -142,6 +144,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 aria-label="Next slide"
                                 id="spotlights-next-button"
                                 data-testid="spotlights-next-button"
+                                data-analyticsid="spotlights-next-button"
                             >
                                 <ChevronRightIcon />
                             </ButtonNext>
@@ -163,6 +166,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 aria-label="UQ Spotlights Play/Pause slides"
                                 id="spotlights-play-pause-button"
                                 data-testid="spotlights-play-pause-button"
+                                data-analyticsid="spotlights-play-pause-button"
                             />
                         </div>
                     )}
@@ -194,6 +198,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                     key={index}
                                     id={`spotlights-slide-${index}`}
                                     data-testid={`spotlights-slide-${index}`}
+                                    data-analyticsid={`spotlights-link-${index}`}
                                     onClick={() => (window.location = item.link)}
                                     style={{ cursor: 'pointer' }}
                                 >
@@ -203,6 +208,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                         style={{ width: '100%' }}
                                         id={`spotlights-image-${index}`}
                                         data-testid={`spotlights-image-${index}`}
+                                        data-analyticsid={`spotlights-image-${index}`}
                                     />
                                 </Slide>
                             ))}
