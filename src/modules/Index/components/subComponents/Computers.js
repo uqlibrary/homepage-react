@@ -261,6 +261,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                     PaperProps={{
                         id: 'computers-library-dialog',
                         'data-testid': 'computers-library-dialog',
+                        'data-analyticsid': 'computers-library-dialog',
                         style: {
                             backgroundColor: '#000020',
                             color: '#FFFFFF',
@@ -299,6 +300,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                             <IconButton
                                 id="computers-library-dialog-close-button"
                                 data-testid="computers-library-dialog-close-button"
+                                data-analyticsid="computers-library-dialog-close-button"
                                 onClick={() => closeMap()}
                                 aria-label="Click to close map"
                                 style={{ color: 'white', marginTop: -16 }}
@@ -414,6 +416,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                         aria-label={ariaLabel}
                                                         id={`computers-library-button-${index}`}
                                                         data-testid={`computers-library-button-${index}`}
+                                                        data-analyticsid={`computers-library-button-${index}`}
                                                     >
                                                         {item.library}
                                                     </Button>
@@ -450,6 +453,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                     <Button
                                                                         id={`computers-${item.library}-level-${item.level}-button`}
                                                                         data-testid={`computers-library-${index}-level-${level.level}-button`}
+                                                                        data-analyticsid={`computers-library-${index}-level-${level.level}-button`}
                                                                         aria-label={seatsOnLevelAria(level)}
                                                                         disabled={!level.floorplan}
                                                                         onClick={() =>

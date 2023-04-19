@@ -137,6 +137,7 @@ export const PromoPanelClone = ({
             {(!!promoPanelListError || !!promoPanelUserTypesError || !!promoPanelActionError) && (
                 <div
                     data-testid="promo-panel-error"
+                    data-analyticsid="promo-panel-error"
                     id="promo-panel-error"
                     style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}
                 >

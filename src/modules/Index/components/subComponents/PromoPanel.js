@@ -13,6 +13,19 @@ const PromoPanel = ({
     promoPanelActionError,
     promoPanelLoading,
 }) => {
+    function getContent(panelRawContent) {
+        // add a data-analytics entry to any links for the current user's promo panel
+        const anchorList = document.querySelectorAll('#promo-panel a');
+        anchorList.forEach(anchor => {
+            const href = !!anchor?.href && new URL(anchor.href);
+            const host = !!href?.hostname ? href.hostname : /* istanbul ignore next */ '';
+            if (!anchor.hasAttribute('data-analyticsid')) {
+                anchor.setAttribute('data-analyticsid', `promo-panel-link-${host}`);
+            }
+        });
+        return parse(panelRawContent);
+    }
+
     return accountLoading === false && promoPanelLoading === false ? (
         <StandardCard
             primaryHeader
@@ -22,22 +35,22 @@ const PromoPanel = ({
                 <Grid container>
                     <Grid item xs={10} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {!!useAPI &&
-                            !!!promoPanelActionError &&
+                            !promoPanelActionError &&
                             currentPromoPanel &&
                             currentPromoPanel.active_panel.panel_title}
-                        {!!!useAPI && (!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title)}
+                        {!useAPI && (!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title)}
                         {!!useAPI && !!promoPanelActionError && locale.apiError.title}
                     </Grid>
                 </Grid>
             }
         >
             <Grid container spacing={1}>
-                <Grid item xs data-testid={!!!useAPI || !!promoPanelActionError ? 'panel-fallback-content' : null}>
+                <Grid item xs data-testid={!useAPI || !!promoPanelActionError ? 'panel-fallback-content' : null}>
                     {!!useAPI &&
-                        !!!promoPanelActionError &&
+                        !promoPanelActionError &&
                         currentPromoPanel &&
-                        parse(currentPromoPanel.active_panel.panel_content)}
-                    {!!!useAPI && (!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content)}
+                        getContent(currentPromoPanel.active_panel.panel_content)}
+                    {!useAPI && (!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content)}
                     {!!useAPI && !!promoPanelActionError && locale.apiError.content}
                 </Grid>
             </Grid>

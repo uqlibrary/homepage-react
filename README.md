@@ -41,9 +41,8 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
 
 - make sure to create a .env file based on example.env
-- `nvm use 11.10.1 && npm i -g npm@6 jest webpack-dev-server` - initial setup
-- `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this
-  clears & reinstalls npm packages
+- `nvm use 16.13.2 && npm i -g npm@8 jest webpack-dev-server` - initial setup
+- `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this clears & reinstalls npm packages
 - `npm run start:mock` to use mock data from src/mock
   - runs <http://localhost:2020/>
 - `npm run start:url` to use api
@@ -87,6 +86,8 @@ Mock data is provided for all pages and actions under `src/mock/`.
 - React components and files of components and related files (eg scss) are to be named with upper case (eg
   MenuDrawer.js). Do not add UQ, UQLibrary or similar prefixes to components
 - Other files are to be named with lower case (eg index.js, reducerX.js)
+- data-testid attributes are used for tests
+- data-analyticsid attributes are used for GTM/GA tagging.
 
 ##### Action types naming conventions
 
