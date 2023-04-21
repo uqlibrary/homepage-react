@@ -89,7 +89,7 @@ export const App = ({ account, actions }) => {
                 if (messageEvent.data === 'account_updated') {
                     actions.loadCurrentAccount();
                 } else if (messageEvent.data === 'account_removed') {
-                    actions.logout();
+                    actions.logout(true);
                 }
                 return null;
             };

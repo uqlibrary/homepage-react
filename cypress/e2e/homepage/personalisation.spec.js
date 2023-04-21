@@ -8,7 +8,7 @@ import {
 // Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
 
 // we test that each user type gets the correct elements on the homepage
-// we shouldnt test the mylibrary button here, same, as that is built in reusable-webcomponents
+// we shouldn't test the mylibrary button here, same, as that is built in reusable-webcomponents
 context('Personalised Homepage', () => {
     it("Renders an on-campus undergraduate student's home page correctly", () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
@@ -221,5 +221,12 @@ context('Personalised Homepage', () => {
         promoPanelIsForRightUser('newUserGroup');
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+    });
+
+    it('when session cookie auto expires the user logs out', () => {
+        expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
+
+        cy.clearCookie('UQLID');
+        cy.rendersALoggedoutUser();
     });
 });
