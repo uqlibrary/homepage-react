@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
     isValidEventDate,
     isValidAssetId,
-    isValidOwner,
+    isValidUserDepartment,
     isValidAssetTypeId,
     isValidInspection,
     isValidRepair,
@@ -42,7 +42,7 @@ export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {} }
             formValues.user_id > 0 &&
             isValidEventDate(formValues.action_date) &&
             isValidAssetId(formValues.asset_id_displayed) &&
-            isValidOwner(formValues.asset_department_owned_by) &&
+            isValidUserDepartment(formValues.asset_department_owned_by) &&
             isValidAssetTypeId(formValues.asset_type_id) &&
             isValidInspection(formValues, testStatusEnum) &&
             ((!!!formValues.isRepair && !!!formValues.isDiscarded) ||
