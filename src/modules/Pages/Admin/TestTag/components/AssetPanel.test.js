@@ -15,8 +15,6 @@ const currentRetestList = [
     { value: '60', label: '5 years' },
 ];
 
-const currentAssetOwnersList = [{ value: 'UQL-WSS', label: 'UQL-WSS' }];
-
 const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
 
 const formValues = {
@@ -50,7 +48,6 @@ function setup(testProps = {}) {
             <AssetPanel
                 actions={actions}
                 currentRetestList={currentRetestList}
-                currentAssetOwnersList={currentAssetOwnersList}
                 defaultNextTestDateValue={DEFAULT_NEXT_TEST_DATE_VALUE}
                 focusElementRef={focusElementRef}
                 classes={classes}
@@ -82,8 +79,6 @@ describe('AssetPanel', () => {
         expect(getByText(locale.form.asset.title)).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetId')).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetType')).toBeInTheDocument();
-        expect(getByTestId('testntagFormOwnerid')).toBeInTheDocument();
-        expect(getByText(currentAssetOwnersList[0].label)).toBeInTheDocument();
         expect(getByTestId('testntagFormResetButton')).toBeInTheDocument();
         expect(getByTestId('testntagFormSubmitButton')).toBeInTheDocument();
         expect(getByTestId('testntagFormSubmitButton')).toHaveAttribute('disabled', '');

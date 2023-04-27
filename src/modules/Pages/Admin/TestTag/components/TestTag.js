@@ -187,7 +187,6 @@ const TestTag = ({
     actions,
     defaultFormValues,
     currentRetestList,
-    currentAssetOwnersList,
     defaultNextTestDateValue,
     assetsListError,
     initConfig,
@@ -205,7 +204,6 @@ const TestTag = ({
     const today = moment().format(locale.config.dateFormat);
 
     const [selectedAsset, setSelectedAsset] = useState({});
-    const [formOwnerId] = useState(currentAssetOwnersList[0].value);
     const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
     const [isNetworkErrorOpen, showNetworkError, hideNetworkError] = useConfirmationState();
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
@@ -215,7 +213,7 @@ const TestTag = ({
             return {
                 ...defaultFormValues,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
-                asset_department_owned_by: formOwnerId ?? /* istanbul ignore next */ undefined,
+                asset_department_owned_by: initConfig?.user?.user_department ?? /* istanbul ignore next */ undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
                 user_id: formValues?.user_id ?? undefined,
                 room_id: location?.formRoomId ?? undefined,
@@ -226,7 +224,7 @@ const TestTag = ({
                         : initConfig?.inspection_devices?.[0].device_id ?? /* istanbul ignore next */ undefined,
             };
         },
-        [formOwnerId, initConfig?.inspection_devices, defaultFormValues, today],
+        [initConfig?.user?.user_department, initConfig?.inspection_devices, defaultFormValues, today],
     );
 
     const { formValues, resetFormValues, handleChange } = useForm({
@@ -380,7 +378,6 @@ const TestTag = ({
                 location={location}
                 resetForm={resetForm}
                 currentRetestList={currentRetestList}
-                currentAssetOwnersList={currentAssetOwnersList}
                 formValues={formValues}
                 selectedAsset={selectedAsset}
                 assignCurrentAsset={assignCurrentAsset}
@@ -400,7 +397,6 @@ TestTag.propTypes = {
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
     currentRetestList: PropTypes.array,
-    currentAssetOwnersList: PropTypes.array,
     defaultNextTestDateValue: PropTypes.number,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,

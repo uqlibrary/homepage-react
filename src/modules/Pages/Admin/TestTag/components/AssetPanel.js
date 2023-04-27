@@ -33,7 +33,6 @@ const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
 const AssetPanel = ({
     actions,
     currentRetestList,
-    currentAssetOwnersList,
     formValues,
     selectedAsset,
     resetForm,
@@ -50,7 +49,6 @@ const AssetPanel = ({
     AssetPanel.propTypes = {
         actions: PropTypes.any.isRequired,
         currentRetestList: PropTypes.array.isRequired,
-        currentAssetOwnersList: PropTypes.array.isRequired,
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
         resetForm: PropTypes.func.isRequired,
@@ -251,28 +249,6 @@ const AssetPanel = ({
                             autoSelect
                             loading={!!initConfigLoading}
                         />
-                    </FormControl>
-                </Grid>
-                <Grid xs={12} item sm={6} md={3}>
-                    <FormControl className={classes.formControl} fullWidth>
-                        <InputLabel shrink>{locale.form.asset.ownerLabel}</InputLabel>
-                        <Select
-                            id="testntagFormOwnerid"
-                            data-testid="testntagFormOwnerid"
-                            className={classes.formSelect}
-                            value={formValues.asset_department_owned_by}
-                            disabled={!isValidAssetId(formValues?.asset_id_displayed)}
-                            inputProps={{
-                                id: 'testntagFormOwneridInput',
-                                'data-testid': 'testntagFormOwneridInput',
-                            }}
-                        >
-                            {currentAssetOwnersList.map(owner => (
-                                <MenuItem value={owner.value} key={owner.value}>
-                                    {owner.label}
-                                </MenuItem>
-                            ))}
-                        </Select>
                     </FormControl>
                 </Grid>
             </Grid>
