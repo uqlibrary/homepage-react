@@ -202,7 +202,7 @@ const AssetPanel = ({
                             value={
                                 initConfig?.asset_types?.find(
                                     assetType => assetType.asset_type_id === formValues.asset_type_id,
-                                ) ?? ''
+                                ) ?? null
                             }
                             onChange={(_, newValue) => {
                                 handleChange('asset_type_id')(newValue.asset_type_id);
