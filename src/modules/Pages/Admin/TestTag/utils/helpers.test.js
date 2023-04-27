@@ -25,6 +25,7 @@ const FAIL = testStatusEnum.FAILED.value;
 const checkStandardArguments = (callback, expected) => {
     expect(callback(0)).toEqual(expected);
     expect(callback('')).toEqual(expected);
+    expect(callback(null)).toEqual(expected);
     expect(callback()).toEqual(expected);
     expect(callback([])).toEqual(expected);
     expect(callback({})).toEqual(expected);
