@@ -213,9 +213,7 @@ const TestTag = ({
             return {
                 ...defaultFormValues,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
-                asset_department_owned_by: initConfig?.user?.user_department ?? /* istanbul ignore next */ undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
-                user_id: formValues?.user_id ?? undefined,
                 room_id: location?.formRoomId ?? undefined,
                 action_date: formValues?.action_date ?? today,
                 inspection_device_id:
@@ -224,7 +222,7 @@ const TestTag = ({
                         : initConfig?.inspection_devices?.[0].device_id ?? /* istanbul ignore next */ undefined,
             };
         },
-        [initConfig?.user?.user_department, initConfig?.inspection_devices, defaultFormValues, today],
+        [initConfig?.inspection_devices, defaultFormValues, today],
     );
 
     const { formValues, resetFormValues, handleChange } = useForm({
@@ -240,12 +238,6 @@ const TestTag = ({
             /* istanbul ignore next */ '',
         [initConfig],
     );
-    useEffect(() => {
-        /* istanbul ignore else */ if (!initConfigLoading && !!initConfig) {
-            handleChange('user_id')(initConfig.user.user_id);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initConfig, initConfigLoading]);
 
     useEffect(() => {
         if (!!saveInspectionError) {

@@ -4,7 +4,6 @@ import {
     isValidEventDate,
     isValidNextTestDate,
     isValidAssetId,
-    isValidUserDepartment,
     isValidRoomId,
     isValidAssetTypeId,
     isValidTestingDeviceId,
@@ -83,10 +82,6 @@ describe('Helper functions', () => {
     it('isValidAssetId function validates asset ids', () => {
         expect(isValidAssetId('uql12345')).toBe(true);
         checkStandardArguments(isValidAssetId, false);
-    });
-    it('isValidUserDepartment function validates owners', () => {
-        expect(isValidUserDepartment('username')).toBe(true);
-        checkStandardArguments(isValidUserDepartment, false);
     });
     it('isValidRoomId function validates room ids', () => {
         expect(isValidRoomId(1)).toBe(true);

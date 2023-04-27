@@ -54,8 +54,6 @@ describe('Tests custom hooks', () => {
         act(() => {
             result.current.validateValues({
                 asset_id_displayed: undefined,
-                user_id: undefined,
-                asset_department_owned_by: undefined,
                 room_id: undefined,
                 asset_type_id: undefined,
                 action_date: undefined,
@@ -75,7 +73,6 @@ describe('Tests custom hooks', () => {
         // valid inspection only
         const valid1 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -88,7 +85,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(valid1);
@@ -97,20 +93,18 @@ describe('Tests custom hooks', () => {
         // valid inspection with discard
         const valid5 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
-            discard_reason: 'details',
             inspection_date_next: '2018-12-05 14:22',
             inspection_device_id: 1,
             inspection_fail_reason: undefined,
             inspection_notes: 'notes',
             inspection_status: 'PASSED',
             isDiscarded: true,
+            discard_reason: 'details',
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(valid5);
@@ -120,7 +114,6 @@ describe('Tests custom hooks', () => {
         // invalid repair without inspection
         const invalid0a = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -133,7 +126,6 @@ describe('Tests custom hooks', () => {
             isRepair: true,
             repairer_contact_details: 'details',
             room_id: -1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid0a);
@@ -143,7 +135,6 @@ describe('Tests custom hooks', () => {
         // invalid discard without inspection
         const invalid0b = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: 'details',
@@ -156,7 +147,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: -1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid0b);
@@ -165,7 +155,6 @@ describe('Tests custom hooks', () => {
         // invalid request without date
         const invalid1 = {
             action_date: undefined, // required
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -178,7 +167,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid1);
@@ -188,7 +176,6 @@ describe('Tests custom hooks', () => {
         // invalid request when date is in the future
         const invalid1b = {
             action_date: '2018-12-05 14:22', // required to be current or past date
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -201,40 +188,15 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid1b);
         });
         expect(result.current.isValid).toBe(false);
 
-        // invalid request without owner
-        const invalid2 = {
-            action_date: '2016-12-05 14:22',
-            asset_department_owned_by: undefined, // required
-            asset_id_displayed: 'UQL310000',
-            asset_type_id: 1,
-            discard_reason: undefined,
-            inspection_date_next: '2018-12-05 14:22',
-            inspection_device_id: 1,
-            inspection_fail_reason: undefined,
-            inspection_notes: 'notes',
-            inspection_status: 'PASSED',
-            isDiscarded: false,
-            isRepair: false,
-            repairer_contact_details: undefined,
-            room_id: 1,
-            user_id: 3,
-        };
-        act(() => {
-            result.current.validateValues(invalid2);
-        });
-        expect(result.current.isValid).toBe(false);
-
         // invalid request without asset id
         const invalid3 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: undefined, // required
             asset_type_id: 1,
             discard_reason: undefined,
@@ -247,7 +209,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid3);
@@ -257,7 +218,6 @@ describe('Tests custom hooks', () => {
         // invalid request without asset type id
         const invalid4 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: undefined, // required
             discard_reason: undefined,
@@ -270,40 +230,15 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid4);
         });
         expect(result.current.isValid).toBe(false);
 
-        // invalid request without user id
-        const invalid6 = {
-            action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
-            asset_id_displayed: 'UQL310000',
-            asset_type_id: 1,
-            discard_reason: undefined,
-            inspection_date_next: '2018-12-05 14:22',
-            inspection_device_id: 1,
-            inspection_fail_reason: undefined,
-            inspection_notes: 'notes',
-            inspection_status: 'PASSED',
-            isDiscarded: false,
-            isRepair: false,
-            repairer_contact_details: undefined,
-            room_id: 1,
-            user_id: -1, // required
-        };
-        act(() => {
-            result.current.validateValues(invalid6);
-        });
-        expect(result.current.isValid).toBe(false);
-
         // invalid inspection without room id
         const invalid5 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -316,7 +251,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: -1, // required
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid5);
@@ -326,7 +260,6 @@ describe('Tests custom hooks', () => {
         // invalid inspection with repair
         const invalid7 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -339,7 +272,6 @@ describe('Tests custom hooks', () => {
             isRepair: true,
             repairer_contact_details: undefined, // required when isRepair=true
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid7);
@@ -349,7 +281,6 @@ describe('Tests custom hooks', () => {
         // invalid inspection with discard
         const invalid8 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined, // required when isDiscarded=true
@@ -362,7 +293,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid8);
@@ -372,7 +302,6 @@ describe('Tests custom hooks', () => {
         // invalid inspection with repair and discard when status === PASSED
         const invalid8a = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: 'details',
@@ -385,7 +314,6 @@ describe('Tests custom hooks', () => {
             isRepair: true, // --------^
             repairer_contact_details: 'details',
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid8a);
@@ -395,7 +323,6 @@ describe('Tests custom hooks', () => {
         // invalid inspection with repair and discard when status FAILED (can only supply one)
         const invalid8b = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: 'details',
@@ -408,7 +335,6 @@ describe('Tests custom hooks', () => {
             isRepair: true, // --------^
             repairer_contact_details: 'details',
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid8b);
@@ -418,7 +344,6 @@ describe('Tests custom hooks', () => {
         // invalid PASS inspection without next inspection date
         const invalid9 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -431,7 +356,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid9);
@@ -441,7 +365,6 @@ describe('Tests custom hooks', () => {
         // invalid PASS inspection when next inspection date is in the past
         const invalid10 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -454,7 +377,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid10);
@@ -464,7 +386,6 @@ describe('Tests custom hooks', () => {
         // invalid PASS inspection without device id
         const invalid11 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -477,7 +398,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid11);
@@ -487,7 +407,6 @@ describe('Tests custom hooks', () => {
         // invalid PASS inspection without device id
         const invalid12 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -500,7 +419,6 @@ describe('Tests custom hooks', () => {
             isRepair: false,
             repairer_contact_details: undefined,
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid12);
@@ -510,7 +428,6 @@ describe('Tests custom hooks', () => {
         // invalid inspection with repair and PASS
         const invalid13 = {
             action_date: '2016-12-05 14:22',
-            asset_department_owned_by: 'UQL-WSS',
             asset_id_displayed: 'UQL310000',
             asset_type_id: 1,
             discard_reason: undefined,
@@ -523,7 +440,6 @@ describe('Tests custom hooks', () => {
             isRepair: true,
             repairer_contact_details: 'details',
             room_id: 1,
-            user_id: 3,
         };
         act(() => {
             result.current.validateValues(invalid13);
