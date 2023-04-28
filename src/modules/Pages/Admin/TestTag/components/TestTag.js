@@ -219,7 +219,7 @@ const TestTag = ({
                 inspection_device_id:
                     formValues?.inspection_device_id !== undefined
                         ? formValues?.inspection_device_id
-                        : initConfig?.inspection_devices?.[0].device_id ?? /* istanbul ignore next */ undefined,
+                        : initConfig?.inspection_devices?.[0]?.device_id ?? /* istanbul ignore next */ undefined,
             };
         },
         [initConfig?.inspection_devices, defaultFormValues, today],
