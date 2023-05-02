@@ -36,6 +36,7 @@ import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_onLoad from './data/records/test_tag_onLoad';
+import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
 // import testTag_testDevices from './data/records/test_tag_test_devices';
@@ -70,7 +71,7 @@ addMockAccountToStoredAccount(
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
-    Cookies.set(SESSION_COOKIE_NAME, 'abc123');
+    Cookies.set(SESSION_COOKIE_NAME, user === 'uqpf' ? 'uqpf' : 'abc123');
     Cookies.set(SESSION_USER_GROUP_COOKIE_NAME, 'LIBRARYSTAFFB');
 }
 mockData.accounts.uqrdav10 = mockData.uqrdav10.account;
@@ -760,8 +761,8 @@ mock.onGet('exams/course/FREN1010/summary')
 
     // CONFIG
     .onGet('test_and_tag/onload')
-    .reply(() => {
-        return [200, testTag_onLoad];
+    .reply(config => {
+        return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_onLoad];
     })
 
     // T&T FLOORS
@@ -784,10 +785,11 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet(/test_and_tag\/asset\/search\/current\/*/)
     .reply(config => {
         const pattern = config.url.split('/').pop();
+        console.log("Pattern", pattern);
         // filter array to matching asset id's
         return [
             200,
-            testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase())),
+            testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase() === pattern.toUpperCase()),
         ];
     })
 

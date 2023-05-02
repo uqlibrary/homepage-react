@@ -36,7 +36,9 @@ const AssetPanel = ({
     currentAssetOwnersList,
     formValues,
     selectedAsset,
+    setSelectedAsset,
     resetForm,
+    department,
     location,
     assignCurrentAsset,
     handleChange,
@@ -53,7 +55,9 @@ const AssetPanel = ({
         currentAssetOwnersList: PropTypes.array.isRequired,
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
+        setSelectedAsset: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
+        department: PropTypes.string,
         location: PropTypes.object.isRequired,
         assignCurrentAsset: PropTypes.func.isRequired,
         handleChange: PropTypes.func.isRequired,
@@ -71,9 +75,20 @@ const AssetPanel = ({
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
+    const maskNumber = (number, department) => {
+        const prefix = /^\d+$/.test(number) ? department : '';
+        const paddedNumber = !!prefix ? number.toString().padStart(6, '0') : number;
+        return `${prefix}${paddedNumber}`;
+    };
+
     const debounceAssetsSearch = React.useRef(
-        debounce(500, pattern => {
-            !!pattern && pattern.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH && actions.loadAssets(pattern);
+        debounce(500, (pattern, department) => {
+            setSelectedAsset({});
+            const paddedNumber = maskNumber(pattern, department);
+            console.log('Padded number is', paddedNumber);
+            !!paddedNumber &&
+                paddedNumber.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH &&
+                actions.loadAssets(paddedNumber);
         }),
     ).current;
 
@@ -180,7 +195,7 @@ const AssetPanel = ({
                                     }}
                                     onChange={e => {
                                         !isOpen && setIsOpen(true);
-                                        debounceAssetsSearch(e.target.value);
+                                        debounceAssetsSearch(e.target.value, department);
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
