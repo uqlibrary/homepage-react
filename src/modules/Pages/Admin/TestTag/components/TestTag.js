@@ -190,7 +190,6 @@ const TestTag = ({
     defaultNextTestDateValue,
     assetsListError,
     initConfig,
-    initConfigLoading,
     initConfigError,
     floorListError,
     roomListError,
@@ -234,8 +233,13 @@ const TestTag = ({
 
     const headerDepartmentText = React.useMemo(
         () =>
-            locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? /* istanbul ignore next */ '') ??
-            /* istanbul ignore next */ '',
+            initConfig?.user
+                ? locale?.form?.pageSubtitle?.(
+                      initConfig?.user?.department_display_name ??
+                          /* istanbul ignore next */ initConfig?.user?.user_department ??
+                          /* istanbul ignore next */ '',
+                  )
+                : /* istanbul ignore next */ '',
         [initConfig],
     );
 
@@ -394,7 +398,6 @@ TestTag.propTypes = {
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,
     initConfig: PropTypes.any,
-    initConfigLoading: PropTypes.bool,
     initConfigError: PropTypes.any,
     floorList: PropTypes.any,
     floorListLoading: PropTypes.bool,
