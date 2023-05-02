@@ -49,10 +49,11 @@ export default {
     ],
     "user": {
         "user_id": 3,
-        "user_uid": "uqlsibba",
+        "user_uid": "uqtesttag",
         "user_license_number": "123456",
         "user_name": "Lee Sibbald",
         "user_department": "UQL",
+        "department_display_name": "Library",
         "user_current_flag": 1,
     },
     "sites": [

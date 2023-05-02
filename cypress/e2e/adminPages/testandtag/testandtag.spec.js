@@ -61,7 +61,7 @@ describe('Test and Tag Admin Inspection page', () => {
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains('UQ Asset Test and Tag');
-        cy.get('h2').contains('Managing Assets for UQL');
+        cy.get('h2').contains('Managing Assets for Library');
         cy.waitUntil(() => cy.data('testntag-form-siteid').should('contain', 'St Lucia'));
         cy.wait(1000);
         cy.checkA11y('[data-testid="StandardPage"]', {
