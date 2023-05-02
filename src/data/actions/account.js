@@ -398,9 +398,13 @@ export function searcheSpaceIncompleteNTROPublications() {
     }
 }
 
-export function logout() {
+export function logout(reload = false) {
     return dispatch => {
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+        if (!!reload) {
+            dispatch(loadLibHours());
+            dispatch(loadCompAvail());
+        }
     };
 }
 
