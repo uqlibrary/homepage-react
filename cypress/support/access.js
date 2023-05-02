@@ -1,4 +1,5 @@
 import { promoPanel } from '../../src/modules/Index/components/subComponents/promoPanel.locale';
+import { panelTitleOther, panelTitles } from '../../src/data/mock/data/promoPanels';
 
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
@@ -65,12 +66,17 @@ export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
     }
 
     // if they have Library Services then the box should not be blank
-    // but we dont test per type, because we would just be duplicating the data
+    // but we don't test per type, because we would just be duplicating the data
     if (!!optionsTheUserShouldSee.services) {
         cy.get('div[data-testid=library-services-items]')
             .children()
             .length.to.be.greaterThan(0);
     }
+};
+export const promoPanelIsForRightUser = userId => {
+    const expectedString = !!panelTitles[userId] ? panelTitles[userId] : panelTitleOther;
+    const contentSelector = 'div[data-testid="promo-panel"] h2';
+    cy.get(contentSelector).contains(expectedString);
 };
 export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
     const availableOptions = new Map();

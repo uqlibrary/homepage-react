@@ -335,6 +335,7 @@ export const LearningResources = ({
                     <Grid container>
                         <Grid item xs={12} data-testid="learning-resources" style={{ marginBottom: 24 }}>
                             <AppBar
+                                data-analyticsid="learning-resource-top-menu"
                                 data-testid="learning-resource-top-menu"
                                 id="learning-resource-top-menu"
                                 position="static"

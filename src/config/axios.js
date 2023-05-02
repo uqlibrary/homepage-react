@@ -10,7 +10,14 @@ import locale from 'locale/global';
 import * as Sentry from '@sentry/browser';
 
 import param from 'can-param';
-import { COMP_AVAIL_API, CURRENT_ACCOUNT_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
+import {
+    COMP_AVAIL_API,
+    CURRENT_ACCOUNT_API,
+    LIB_HOURS_API,
+    LOANS_API,
+    PRINTING_API,
+    TRAINING_API,
+} from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -102,8 +109,14 @@ const reportToSentry = error => {
 };
 
 function alertDisplayAllowed(error) {
-    // these APIs don't put a banner on the page because they are reported within the panel
-    const apisThatManageTheirOwn500 = [TRAINING_API().apiUrl, COMP_AVAIL_API().apiUrl, LIB_HOURS_API().apiUrl];
+    // these APIs don't put a banner on the page because they are reported or ignored within the panel
+    const apisThatManageTheirOwn500 = [
+        TRAINING_API().apiUrl,
+        COMP_AVAIL_API().apiUrl,
+        LIB_HOURS_API().apiUrl,
+        PRINTING_API().apiUrl,
+        LOANS_API().apiUrl,
+    ];
     if (
         !!error.response?.request?.responseUrl &&
         apisThatManageTheirOwn500.includes(error.response.request.responseUrl)

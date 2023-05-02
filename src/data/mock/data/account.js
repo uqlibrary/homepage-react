@@ -1,8 +1,10 @@
+// import {STORAGE_ACCOUNT_KEYNAME} from '../../../config/general';
+
 export const accounts = {
     // staff, no espace data
     public: null,
     vanilla: {
-        "id": "uqvanill",
+        "id": "vanilla",
         "class": ["IS_CURRENT"],
         "type": 18,
         "homeLib": "St Lucia",
@@ -42,7 +44,7 @@ export const accounts = {
         "user_group": "LIBRARYSTAFFB",
     },
     uqtesttag: {
-        "id": "uqstaff",
+        "id": "uqtesttag",
         "class": ["libstaff", "IS_CURRENT"],
         "type": 18,
         "homeLib": "St Lucia",
@@ -1328,7 +1330,7 @@ export const printBalance = {
 };
 
 export const loans = {
-    'recordNumber': 'uqvanilla',
+    'recordNumber': 'vanilla',
     'fines': [{
         'title': 'CRITICAL SOCIOLINGUISTIC RESEARCH METHODS',
         'fineAmount': 48.93,
@@ -1354,10 +1356,6 @@ export const loans = {
 };
 
 // 'took' is the number of seconds the response took
-export const possibleRecords = {
-    'total': 19, 'took': 83, 'per_page': 20, 'current_page': 1, 'from': 1, 'to': 19
-};
-
-export const incompleteNTROs = {
+export const espaceSearchResponse = {
     'total': 18, 'took': 104, 'per_page': 20, 'current_page': 1, 'from': 1, 'to': 18
 };

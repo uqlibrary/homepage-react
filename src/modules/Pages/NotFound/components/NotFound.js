@@ -31,14 +31,17 @@ export const NotFound = ({ account, accountLoading }) => {
             </StandardPage>
         );
     }
-    // the page must require admin to land here when they are logged in
+
     const isLoggedIn = accountLoading === false && !!account && !!account.id;
+    const isLoggedOut = accountLoading === false && !account;
+
+    // the page must require admin to land here when they are logged in
     if (isLoggedIn) {
         return <StandardPage standardPageId="permission-denied" {...locale.permissionDenied} />;
     }
 
     // the page must require them to be logged in to land here
-    const isLoggedOut = accountLoading === false && !account;
+    /* istanbul ignore else */
     if (isLoggedOut) {
         /* istanbul ignore next */
         if (
@@ -51,6 +54,7 @@ export const NotFound = ({ account, accountLoading }) => {
         return <StandardPage standardPageId="authentication-required" {...locale.authenticationRequired} />;
     }
 
+    /* istanbul ignore next */
     return <div className="waiting empty" />;
 };
 

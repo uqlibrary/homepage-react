@@ -33,6 +33,7 @@ const PromoPanel = lazy(() => lazyRetry(() => import('modules/Index/components/s
 const Spotlights = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Spotlights')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 
+/* istanbul ignore next */
 const MyLoader = props => (
     <ContentLoader
         uniqueKey="personalisation-panel-or-hours"
@@ -163,6 +164,7 @@ export const Index = ({
                     </Grid>
                     {/* Personalisation panel or hours */}
                     {!!accountLoading && (
+                        /* istanbul ignore next */
                         <Grid item xs={12} md={4}>
                             <MyLoader />
                         </Grid>

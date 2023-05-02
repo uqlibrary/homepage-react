@@ -153,31 +153,6 @@ export const PromoPanelAddSchedule = ({
         // Check if there's a conflict here.
         setShowError(false);
         setErrorMessage('');
-        // if (groupName && groupName !== '') {
-        //     userPanelList.map(user => {
-        //         console.log(user, startDate, value);
-        //         if (user.usergroup_group === groupName) {
-        //             user.scheduled_panels.map(panel => {
-        //                 if (
-        //                     (moment(startDate).isSameOrAfter(moment(panel.panel_schedule_start_time)) &&
-        //                         moment(startDate).isBefore(moment(panel.panel_schedule_end_time))) ||
-        //                     (moment(panel.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
-        //                         moment(panel.panel_schedule_start_time).isBefore(moment(endDate)))
-        //                 ) {
-        //                     setErrorMessage(
-        //                         getConflictErrormsg(
-        //                             panel.panel_title,
-        //                             panel.panel_schedule_start_time,
-        //                             panel.panel_schedule_end_time,
-        //                         ),
-        //                     );
-        //                     console.log('setting show error BACK TO EEEEEK!');
-        //                     setShowError(true);
-        //                 }
-        //             });
-        //         }
-        //     });
-        // }
     };
 
     const handleGroupSchedule = () => {

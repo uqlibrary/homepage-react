@@ -143,6 +143,7 @@ const BookExamBooth = ({
                                                 <FormControlLabel
                                                     control={<Radio color="primary" />}
                                                     data-testid={`display-location-option-${l.value}`}
+                                                    data-analyticsid={`display-location-option-${l.value}`}
                                                     label={
                                                         <React.Fragment>
                                                             {l.label}

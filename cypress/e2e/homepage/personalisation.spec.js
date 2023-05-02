@@ -1,4 +1,9 @@
-import { expectUserToDisplayCorrectFirstName, hasPanels, hasPersonalisedPanelOptions } from '../../support/access';
+import {
+    expectUserToDisplayCorrectFirstName,
+    hasPanels,
+    hasPersonalisedPanelOptions,
+    promoPanelIsForRightUser,
+} from '../../support/access';
 
 // Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
 
@@ -18,11 +23,14 @@ context('Personalised Homepage', () => {
             'training',
         ]);
 
+        promoPanelIsForRightUser('s1111111');
+
         // this type of user will see these lines in the Personalisation Panel
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
 
     it('Renders a logged out user', () => {
+        // tests ?user=public
         cy.rendersALoggedoutUser();
     });
 
@@ -30,6 +38,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
+
+        promoPanelIsForRightUser('s2222222');
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -46,6 +56,8 @@ context('Personalised Homepage', () => {
             'training',
         ]);
 
+        promoPanelIsForRightUser('s3333333');
+
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -60,6 +72,8 @@ context('Personalised Homepage', () => {
             'promo',
             'training',
         ]);
+
+        promoPanelIsForRightUser('uqresearcher');
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-orcid', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -76,6 +90,8 @@ context('Personalised Homepage', () => {
             'training',
         ]);
 
+        promoPanelIsForRightUser('digiteamMember');
+
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
 
@@ -90,6 +106,8 @@ context('Personalised Homepage', () => {
             'promo',
             'training',
         ]);
+
+        promoPanelIsForRightUser('uqstaffnonpriv');
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -106,6 +124,8 @@ context('Personalised Homepage', () => {
             'training',
         ]);
 
+        promoPanelIsForRightUser('uqpkopit');
+
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
 
@@ -113,6 +133,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
+
+        promoPanelIsForRightUser('emcommunity');
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -122,6 +144,8 @@ context('Personalised Homepage', () => {
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
+        promoPanelIsForRightUser('emalumni');
+
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -129,6 +153,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
+
+        promoPanelIsForRightUser('emhospital');
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -138,6 +164,8 @@ context('Personalised Homepage', () => {
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
+        promoPanelIsForRightUser('emassociate');
+
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -145,6 +173,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
+
+        promoPanelIsForRightUser('emfryer');
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -161,6 +191,8 @@ context('Personalised Homepage', () => {
             'training',
         ]);
 
+        promoPanelIsForRightUser('emhonorary');
+
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -176,6 +208,8 @@ context('Personalised Homepage', () => {
             'training',
         ]);
 
+        promoPanelIsForRightUser('uqsfc');
+
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -183,6 +217,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
 
         hasPanels(['computer-availability', 'library-hours', 'promo', 'training']);
+
+        promoPanelIsForRightUser('newUserGroup');
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
