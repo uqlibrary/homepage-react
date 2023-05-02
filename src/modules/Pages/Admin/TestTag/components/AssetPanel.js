@@ -28,7 +28,7 @@ const filter = createFilterOptions();
 
 const testStatusEnum = statusEnum(locale);
 
-const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
+const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
 const AssetPanel = ({
     actions,
@@ -36,7 +36,6 @@ const AssetPanel = ({
     currentAssetOwnersList,
     formValues,
     selectedAsset,
-    setSelectedAsset,
     resetForm,
     department,
     location,
@@ -55,7 +54,6 @@ const AssetPanel = ({
         currentAssetOwnersList: PropTypes.array.isRequired,
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
-        setSelectedAsset: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
         department: PropTypes.string,
         location: PropTypes.object.isRequired,
@@ -83,9 +81,7 @@ const AssetPanel = ({
 
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, department) => {
-            setSelectedAsset({});
             const paddedNumber = maskNumber(pattern, department);
-            console.log('Padded number is', paddedNumber);
             !!paddedNumber &&
                 paddedNumber.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH &&
                 actions.loadAssets(paddedNumber);

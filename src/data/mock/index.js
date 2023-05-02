@@ -785,7 +785,6 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet(/test_and_tag\/asset\/search\/current\/*/)
     .reply(config => {
         const pattern = config.url.split('/').pop();
-        console.log("Pattern", pattern);
         // filter array to matching asset id's
         return [
             200,

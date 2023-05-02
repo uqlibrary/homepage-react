@@ -380,7 +380,6 @@ const TestTag = ({
                 location={location}
                 resetForm={resetForm}
                 department={initConfig?.user?.user_department}
-                setSelectedAsset={setSelectedAsset}
                 currentRetestList={currentRetestList}
                 currentAssetOwnersList={currentAssetOwnersList}
                 formValues={formValues}
