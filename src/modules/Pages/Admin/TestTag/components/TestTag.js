@@ -278,10 +278,10 @@ const TestTag = ({
     };
 
     const assetIdElementRef = React.useRef();
-    const resetForm = () => {
+    const resetForm = (scroll = true) => {
         actions.clearAssets();
         actions.clearSaveInspection();
-        scrollToTopOfPage();
+        !!scroll && scrollToTopOfPage();
         assignCurrentAsset({});
     };
     useEffect(() => {
@@ -388,6 +388,7 @@ const TestTag = ({
                 handleChange={handleChange}
                 focusElementRef={assetIdElementRef}
                 classes={classes}
+                setSelectedAsset={setSelectedAsset}
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 saveInspectionSaving={saveInspectionSaving}
                 isMobileView={isMobileView}

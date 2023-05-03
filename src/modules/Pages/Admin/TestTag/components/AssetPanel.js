@@ -45,6 +45,7 @@ const AssetPanel = ({
     defaultNextTestDateValue,
     classes,
     saveInspectionSaving,
+
     isMobileView,
     isValid,
 }) => {
@@ -79,6 +80,8 @@ const AssetPanel = ({
         return `${prefix}${paddedNumber}`;
     };
 
+    const previousValueRef = React.useRef(null);
+
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, department) => {
             const paddedNumber = maskNumber(pattern, department);
@@ -93,6 +96,8 @@ const AssetPanel = ({
         if (assetsList?.length === 1) {
             assignCurrentAsset(assetsList[0]);
             setIsOpen(false);
+        } else {
+            resetForm(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
@@ -118,7 +123,7 @@ const AssetPanel = ({
                             data-testid="testntagFormAssetId"
                             fullWidth
                             open={isOpen}
-                            value={formValues?.asset_id_displayed ?? null}
+                            value={formValues?.asset_id_displayed ?? previousValueRef.current}
                             onChange={(event, newValue) => {
                                 if (typeof newValue === 'string') {
                                     assignCurrentAsset({ asset_id_displayed: newValue });
@@ -191,6 +196,7 @@ const AssetPanel = ({
                                     }}
                                     onChange={e => {
                                         !isOpen && setIsOpen(true);
+                                        previousValueRef.current = e.target.value;
                                         debounceAssetsSearch(e.target.value, department);
                                     }}
                                     inputProps={{
