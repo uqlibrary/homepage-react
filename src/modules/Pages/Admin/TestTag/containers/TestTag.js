@@ -17,8 +17,6 @@ const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
 
 const DEFAULT_FORM_VALUES = {
     asset_id_displayed: undefined,
-    user_id: undefined,
-    asset_department_owned_by: undefined,
     room_id: undefined,
     asset_type_id: undefined,
     action_date: undefined,

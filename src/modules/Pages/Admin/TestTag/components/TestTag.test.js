@@ -88,7 +88,7 @@ describe('TestTag', () => {
         const { getByText } = setup({ actions: { loadConfig: loadConfigFn } });
 
         expect(getByText(locale.form.pageTitle)).toBeInTheDocument();
-        expect(getByText(locale.form.pageSubtitle?.(configData.user.user_department))).toBeInTheDocument();
+        expect(getByText(locale.form.pageSubtitle?.(configData.user.department_display_name))).toBeInTheDocument();
         expect(getByText(locale.form.event.title)).toBeInTheDocument();
         expect(getByText(locale.form.asset.title)).toBeInTheDocument();
         expect(loadConfigFn).toHaveBeenCalled();

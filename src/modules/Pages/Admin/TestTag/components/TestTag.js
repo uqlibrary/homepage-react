@@ -187,11 +187,9 @@ const TestTag = ({
     actions,
     defaultFormValues,
     currentRetestList,
-    currentAssetOwnersList,
     defaultNextTestDateValue,
     assetsListError,
     initConfig,
-    initConfigLoading,
     initConfigError,
     floorListError,
     roomListError,
@@ -205,7 +203,6 @@ const TestTag = ({
     const today = moment().format(locale.config.dateFormat);
 
     const [selectedAsset, setSelectedAsset] = useState({});
-    const [formOwnerId] = useState(currentAssetOwnersList[0].value);
     const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
     const [isNetworkErrorOpen, showNetworkError, hideNetworkError] = useConfirmationState();
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
@@ -215,18 +212,16 @@ const TestTag = ({
             return {
                 ...defaultFormValues,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
-                asset_department_owned_by: formOwnerId ?? /* istanbul ignore next */ undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
-                user_id: formValues?.user_id ?? undefined,
                 room_id: location?.formRoomId ?? undefined,
                 action_date: formValues?.action_date ?? today,
                 inspection_device_id:
                     formValues?.inspection_device_id !== undefined
                         ? formValues?.inspection_device_id
-                        : initConfig?.inspection_devices?.[0].device_id ?? /* istanbul ignore next */ undefined,
+                        : initConfig?.inspection_devices?.[0]?.device_id ?? /* istanbul ignore next */ undefined,
             };
         },
-        [formOwnerId, initConfig?.inspection_devices, defaultFormValues, today],
+        [initConfig?.inspection_devices, defaultFormValues, today],
     );
 
     const { formValues, resetFormValues, handleChange } = useForm({
@@ -238,16 +233,15 @@ const TestTag = ({
 
     const headerDepartmentText = React.useMemo(
         () =>
-            locale?.form?.pageSubtitle?.(initConfig?.user?.user_department ?? /* istanbul ignore next */ '') ??
-            /* istanbul ignore next */ '',
+            initConfig?.user
+                ? locale?.form?.pageSubtitle?.(
+                      initConfig?.user?.department_display_name ??
+                          /* istanbul ignore next */ initConfig?.user?.user_department ??
+                          /* istanbul ignore next */ '',
+                  )
+                : /* istanbul ignore next */ '',
         [initConfig],
     );
-    useEffect(() => {
-        /* istanbul ignore else */ if (!initConfigLoading && !!initConfig) {
-            handleChange('user_id')(initConfig.user.user_id);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initConfig, initConfigLoading]);
 
     useEffect(() => {
         if (!!saveInspectionError) {
@@ -380,7 +374,6 @@ const TestTag = ({
                 location={location}
                 resetForm={resetForm}
                 currentRetestList={currentRetestList}
-                currentAssetOwnersList={currentAssetOwnersList}
                 formValues={formValues}
                 selectedAsset={selectedAsset}
                 assignCurrentAsset={assignCurrentAsset}
@@ -400,13 +393,11 @@ TestTag.propTypes = {
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
     currentRetestList: PropTypes.array,
-    currentAssetOwnersList: PropTypes.array,
     defaultNextTestDateValue: PropTypes.number,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,
     initConfig: PropTypes.any,
-    initConfigLoading: PropTypes.bool,
     initConfigError: PropTypes.any,
     floorList: PropTypes.any,
     floorListLoading: PropTypes.bool,

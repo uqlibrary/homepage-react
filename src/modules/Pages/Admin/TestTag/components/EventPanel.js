@@ -178,24 +178,20 @@ const EventPanel = ({
                                         ?.find(site => site.site_id === location.formSiteId)
                                         ?.buildings?.find(
                                             building => building.building_id === location.formBuildingId,
-                                        ) ?? ''
+                                        ) ?? null
                                 }
                                 onChange={(_, newValue) => {
-                                    // if (location.formSiteId !== -1 && newValue.building_id !== -1) {
                                     updateLocation({
                                         formBuildingId: newValue.building_id,
                                         formFloorId: -1,
                                         formRoomId: -1,
                                     });
                                     actions.loadFloors(newValue.building_id);
-                                    /* } else {
-                                        updateLocation({ formBuildingId: newValue.building_id });
-                                    }*/
                                 }}
                                 getOptionLabel={option =>
-                                    `${option.building_id_displayed ?? ''}${
-                                        option.building_id_displayed ? ' - ' : ''
-                                    }${option.building_name ?? ''}`
+                                    `${option.building_id_displayed ?? /* istanbul ignore next */ ''}${
+                                        option.building_id_displayed ? ' - ' : /* istanbul ignore next */ ''
+                                    }${option.building_name ?? /* istanbul ignore next */ ''}`
                                 }
                                 renderInput={params => (
                                     <TextField
@@ -248,18 +244,16 @@ const EventPanel = ({
                                 data-testid="testntag-form-floorid"
                                 fullWidth
                                 options={floorList?.floors ?? []}
-                                value={floorList?.floors?.find(floor => floor.floor_id === location.formFloorId) ?? ''}
+                                value={
+                                    floorList?.floors?.find(floor => floor.floor_id === location.formFloorId) ?? null
+                                }
                                 onChange={(_, newValue) => {
-                                    /* if (
-                                        location.formSiteId !== -1 &&
-                                        location.formBuildingId !== -1 &&
-                                        newValue.floor_id !== -1
-                                    ) {*/
                                     updateLocation({ formFloorId: newValue.floor_id, formRoomId: -1 });
                                     actions.loadRooms(newValue.floor_id);
-                                    // } else updateLocation({ formFloorId: newValue.floor_id });
                                 }}
-                                getOptionLabel={option => option.floor_id_displayed ?? option}
+                                getOptionLabel={option =>
+                                    option.floor_id_displayed ?? /* istanbul ignore next */ option
+                                }
                                 renderInput={params => (
                                     <TextField
                                         {...params}
@@ -309,11 +303,11 @@ const EventPanel = ({
                                 data-testid="testntag-form-roomid"
                                 fullWidth
                                 options={roomList?.rooms ?? []}
-                                value={roomList?.rooms?.find(room => room.room_id === location.formRoomId) ?? ''}
+                                value={roomList?.rooms?.find(room => room.room_id === location.formRoomId) ?? null}
                                 onChange={(_, newValue) => {
                                     updateLocation({ formRoomId: newValue.room_id }, true);
                                 }}
-                                getOptionLabel={option => option.room_id_displayed ?? option}
+                                getOptionLabel={option => option.room_id_displayed ?? /* istanbul ignore next */ option}
                                 renderInput={params => (
                                     <TextField
                                         {...params}

@@ -4,7 +4,6 @@ import {
     isValidEventDate,
     isValidNextTestDate,
     isValidAssetId,
-    isValidOwner,
     isValidRoomId,
     isValidAssetTypeId,
     isValidTestingDeviceId,
@@ -26,6 +25,7 @@ const FAIL = testStatusEnum.FAILED.value;
 const checkStandardArguments = (callback, expected) => {
     expect(callback(0)).toEqual(expected);
     expect(callback('')).toEqual(expected);
+    expect(callback(null)).toEqual(expected);
     expect(callback()).toEqual(expected);
     expect(callback([])).toEqual(expected);
     expect(callback({})).toEqual(expected);
@@ -83,10 +83,6 @@ describe('Helper functions', () => {
     it('isValidAssetId function validates asset ids', () => {
         expect(isValidAssetId('uql12345')).toBe(true);
         checkStandardArguments(isValidAssetId, false);
-    });
-    it('isValidOwner function validates owners', () => {
-        expect(isValidOwner('username')).toBe(true);
-        checkStandardArguments(isValidOwner, false);
     });
     it('isValidRoomId function validates room ids', () => {
         expect(isValidRoomId(1)).toBe(true);
