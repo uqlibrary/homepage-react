@@ -373,7 +373,7 @@ const TestTag = ({
             <AssetPanel
                 actions={actions}
                 location={location}
-                resetForm={() => resetForm}
+                resetForm={() => resetForm()}
                 department={initConfig?.user?.user_department}
                 currentRetestList={currentRetestList}
                 formValues={formValues}

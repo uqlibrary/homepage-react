@@ -6,9 +6,6 @@ import { Box, Grid } from '@material-ui/core';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
