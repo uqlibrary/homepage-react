@@ -89,7 +89,7 @@ export const App = ({ account, actions }) => {
                 if (messageEvent.data === 'account_updated') {
                     actions.loadCurrentAccount();
                 } else if (messageEvent.data === 'account_removed') {
-                    actions.logout();
+                    actions.logout(true);
                 }
                 return null;
             };
@@ -101,6 +101,7 @@ export const App = ({ account, actions }) => {
             /* istanbul ignore else */
             const storedUserDetailsRaw = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
             const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
+            /* istanbul ignore else */
             if (
                 storedUserDetails?.hasOwnProperty('status') &&
                 (storedUserDetails.status === 'loggedin' || storedUserDetails.status === 'loggedout')

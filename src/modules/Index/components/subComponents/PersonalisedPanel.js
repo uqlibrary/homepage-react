@@ -257,7 +257,7 @@ const PersonalisedPanel = ({
                     <MenuItem
                         id={getPapercutId('item-button-0')}
                         data-testid={getPapercutId('item-button-0')}
-                        data-analytics={getPapercutId('item-button-0')}
+                        data-analyticsid={getPapercutId('item-button-0')}
                         onClick={() => handleNavigationToManage()}
                     >
                         Log in and manage your print balance

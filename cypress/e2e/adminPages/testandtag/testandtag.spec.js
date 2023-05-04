@@ -164,6 +164,14 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetIdInput').should('have.value', 'AN ASSET ID');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
+            it('should allow auto complete of asset ID as mask', () => {
+                // Enter partial asset ID for mask search
+                cy.data('testntagFormAssetIdInput').click();
+                cy.data('testntagFormAssetIdInput').type('123');
+                cy.wait(3000);
+                // Asset found
+                cy.data('lastInspectionFailChip').should('exist');
+            });
             it('should restrict length of asset IDs', () => {
                 const initialText = 'ABCDEFGHIJKLMNOP'; // not a long enough text
                 const croppedText = 'ABCDEFGHIJKL';

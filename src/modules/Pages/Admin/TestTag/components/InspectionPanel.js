@@ -79,7 +79,7 @@ const InspectionPanel = ({
 
     return (
         <StandardCard
-            title={locale.form.inspection.title}
+            title={`${locale.form.inspection.title}`}
             style={{ marginBottom: 30 }}
             smallTitle
             variant="outlined"
