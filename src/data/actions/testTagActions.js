@@ -6,6 +6,7 @@ import {
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSET_ACTION,
+    TEST_TAG_ASSETTYPE_ADD,
 } from 'repositories/routes';
 
 export function loadConfig() {
@@ -130,5 +131,29 @@ export function saveInspection(request) {
 export function clearSaveInspection() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
+    };
+}
+
+export function saveAssetType(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_SAVING });
+        return post(TEST_TAG_ASSETTYPE_ADD(), request)
+            .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_SAVE_ASSET_TYPE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+export function clearSaveAssetType() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR });
     };
 }

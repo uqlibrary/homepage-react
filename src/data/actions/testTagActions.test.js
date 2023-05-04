@@ -11,6 +11,8 @@ import {
     clearAssets,
     saveInspection,
     clearSaveInspection,
+    saveAssetType,
+    clearSaveAssetType,
 } from './testTagActions';
 
 jest.mock('@sentry/browser');
@@ -152,6 +154,31 @@ describe('Test & Tag actions', () => {
             const expectedActions = [actions.TESTTAG_SAVE_INSPECTION_CLEAR];
 
             await mockActionsStore.dispatch(clearSaveInspection());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+    });
+    describe('Test & Tag Asset Type Actions', () => {
+        it('handles T&T add Asset Type', async () => {
+            mockApi.onPost(repositories.routes.TEST_TAG_ASSETTYPE_ADD().apiUrl).reply(200, []);
+
+            const expectedActions = [actions.TESTTAG_SAVE_ASSET_TYPE_SAVING, actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS];
+
+            await mockActionsStore.dispatch(saveAssetType());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+        it('dispatches expected actions when T&T add Asset Type fails', async () => {
+            mockApi.onPost(repositories.routes.TEST_TAG_ASSETTYPE_ADD()).reply(500);
+
+            const expectedActions = [actions.TESTTAG_SAVE_ASSET_TYPE_SAVING, actions.TESTTAG_SAVE_ASSET_TYPE_FAILED];
+
+            await mockActionsStore.dispatch(saveAssetType());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('should dispatch clear T&T add Asset Type action', async () => {
+            const expectedActions = [actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR];
+
+            await mockActionsStore.dispatch(clearSaveAssetType());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });
