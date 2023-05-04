@@ -93,11 +93,13 @@ const AssetPanel = ({
 
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
-        if (assetsList?.length === 1) {
+        /* istanbul ignore else */ if (assetsList?.length === 1) {
             assignCurrentAsset(assetsList[0]);
             setIsOpen(false);
-        } else {
+        }
+        /* istanbul ignore else */ if (assetsList?.length < 1) {
             resetForm(false);
+            setIsOpen(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
@@ -112,7 +114,6 @@ const AssetPanel = ({
             actions.saveInspection(transformedData);
         }
     };
-
     return (
         <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
             <Grid container spacing={3}>

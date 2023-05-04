@@ -788,7 +788,7 @@ mock.onGet('exams/course/FREN1010/summary')
         // filter array to matching asset id's
         return [
             200,
-            testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase() === pattern.toUpperCase()),
+            testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith( pattern.toUpperCase())),
         ];
     })
 

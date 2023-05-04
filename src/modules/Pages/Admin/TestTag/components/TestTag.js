@@ -278,6 +278,7 @@ const TestTag = ({
     };
 
     const assetIdElementRef = React.useRef();
+
     const resetForm = (scroll = true) => {
         actions.clearAssets();
         actions.clearSaveInspection();
@@ -378,7 +379,7 @@ const TestTag = ({
             <AssetPanel
                 actions={actions}
                 location={location}
-                resetForm={resetForm}
+                resetForm={() => resetForm}
                 department={initConfig?.user?.user_department}
                 currentRetestList={currentRetestList}
                 currentAssetOwnersList={currentAssetOwnersList}
