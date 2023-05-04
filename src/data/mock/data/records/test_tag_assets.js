@@ -58,6 +58,7 @@ export default [
         "user_licence_number": "13962556",
         "user_name": "David de Groot",
         "user_department": "UQL",
+         "department_display_name": "Library",
         "user_current_flag": 1
     }
     },

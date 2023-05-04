@@ -905,15 +905,3 @@ mock.onGet('exams/course/FREN1010/summary')
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
-/*
-mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
-    // mock current author details from fez
-    if (user === 'anon') {
-        return [403, {}];
-    } else if (mockData.currentAuthor[user]) {
-        return [200, mockData.currentAuthor[user]];
-    }
-    return [404, {}];
-});
-
- */

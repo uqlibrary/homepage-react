@@ -14,7 +14,7 @@ const PromoPanel = ({
     promoPanelLoading,
 }) => {
     function getContent(panelRawContent) {
-        // add a data-analytics entry to any links for the current user's promo panel
+        // add a data-analyticsid entry to any links for the current user's promo panel
         const anchorList = document.querySelectorAll('#promo-panel a');
         anchorList.forEach(anchor => {
             const href = !!anchor?.href && new URL(anchor.href);
