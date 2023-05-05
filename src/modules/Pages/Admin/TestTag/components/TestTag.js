@@ -107,6 +107,17 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
+    addNewLabel: {
+        backgroundColor: theme.palette.secondary.light,
+        '&:hover': {
+            backgroundColor: theme.palette.secondary.dark,
+        },
+        borderRadius: 0,
+        color: 'white',
+        display: 'block',
+        textAlign: 'center',
+        width: '100%',
+    },
 }));
 const savedDialogMessages = {
     [testStatusEnum.CURRENT.value]: (data, classes, locale) => (

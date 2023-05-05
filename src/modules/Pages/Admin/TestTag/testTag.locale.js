@@ -49,6 +49,7 @@ export default {
             },
             assetType: {
                 label: 'Asset type',
+                addNewLabel: 'Add new asset type',
             },
             ownerLabel: 'Asset owner',
         },

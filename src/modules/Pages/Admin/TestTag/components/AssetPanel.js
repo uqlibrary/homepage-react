@@ -6,13 +6,16 @@ import { Box, Grid } from '@material-ui/core';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { debounce } from 'throttle-debounce';
 
@@ -43,6 +46,7 @@ const AssetPanel = ({
     defaultNextTestDateValue,
     classes,
     saveInspectionSaving,
+    saveAssetTypeSaving,
     isMobileView,
     isValid,
 }) => {
@@ -59,6 +63,7 @@ const AssetPanel = ({
         defaultNextTestDateValue: PropTypes.number.isRequired,
         classes: PropTypes.object.isRequired,
         saveInspectionSaving: PropTypes.bool,
+        saveAssetTypeSaving: PropTypes.bool,
         isMobileView: PropTypes.bool,
         isValid: PropTypes.bool,
     };
@@ -74,6 +79,8 @@ const AssetPanel = ({
             !!pattern && pattern.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH && actions.loadAssets(pattern);
         }),
     ).current;
+
+    const [isAssetTypeDialogOpen, setAssetTypeDialogOpen] = React.useState(null);
 
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
@@ -95,8 +102,219 @@ const AssetPanel = ({
         }
     };
 
+    const [assetTypeValid, setAssetTypeValid] = React.useState(false);
+    const saveAssetType = () => {
+        console.log('saveAssetType', formValues);
+        /* istanbul ignore else */ if (assetTypeValid && !saveAssetTypeSaving) {
+            // const transformedData = transformer(
+            //     formValues,
+            //     saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
+            //     selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
+            // );
+            actions.saveAssetType(formValues);
+        }
+    };
+
+    const closeAssetTypeDialog = () => {
+        setAssetTypeDialogOpen(false);
+    };
+    const openAssetTypeDialog = () => {
+        console.log('openAssetTypeDialog');
+        setAssetTypeDialogOpen(true);
+    };
+    const AssetTypeDialogPopup = ({}) => {
+        if (!!isAssetTypeDialogOpen) {
+            return (
+                <Dialog
+                    onClose={/* istanbul ignore next */ () => closeAssetTypeDialog()}
+                    aria-label="Asset Type Editor"
+                    role="dialog"
+                    open={!!isAssetTypeDialogOpen}
+                    // maxWidth={'sx'}
+                    PaperProps={{
+                        id: 'asset-type-dialog',
+                        style: {
+                            backgroundColor: '#fff',
+                            color: '#000',
+                            height: '40em',
+                        },
+                        'aria-label': 'Manage asset type',
+                    }}
+                >
+                    <DialogTitle
+                        // id="lightboxTitle"
+                        // data-testid="panel-save-or-schedule-title"
+                        style={{ borderBottom: '1px solid #d7d1cc' }}
+                        children={
+                            <React.Fragment>
+                                <p style={{ paddingLeft: 24, margin: '10px 0 0 0', float: 'left' }}>
+                                    Add an Asset type
+                                </p>{' '}
+                                <IconButton
+                                    style={{ float: 'right' }}
+                                    // id="asset-type-dialog-close-button"
+                                    // data-testid="asset-type-dialog-close-button"
+                                    // data-analyticsid="asset-type-dialog-close-button"
+                                    onClick={() => closeAssetTypeDialog()}
+                                    aria-label="Click to close asset type dialog"
+                                    // style={{ color: 'white', marginTop: -16 }}
+                                >
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                            </React.Fragment>
+                        }
+                    />
+                    <DialogContent>
+                        <Grid
+                            container
+                            spacing={0}
+                            style={{
+                                backgroundColor: '#000020 !important',
+                                color: '#FFFFFF !important',
+                                padding: 20,
+                            }}
+                        >
+                            {/* <Grid item xs={12} style={{ padding: '8px 0' }}>*/}
+                            {/*    asset_type_id*/}
+                            {/* </Grid>*/}
+                            <Grid item xs={12} style={{ padding: '8px 0' }}>
+                                <FormControl className={classes.formControl} fullWidth>
+                                    <TextField
+                                        id="asset_type_name"
+                                        data-testid="asset_type_name"
+                                        variant="standard"
+                                        InputProps={{ fullWidth: true }}
+                                        onChange={() => {
+                                            handleChange();
+                                            setAssetTypeValid(true);
+                                        }}
+                                        // updateKey="asset_type_name"
+                                        label="Asset type name"
+                                        required
+                                        // InputLabelProps={{ htmlFor: 'asset_type_name-input' }}
+                                        // {...locale.form.inspection.inspectionNotes}
+                                        // disabled={disabled}
+                                        // value={formValues?.inspection_notes ?? ''}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} style={{ padding: '8px 0' }}>
+                                <FormControl className={classes.formControl} fullWidth>
+                                    <TextField
+                                        id="asset_type_class"
+                                        data-testid="asset_type_class"
+                                        variant="standard"
+                                        InputProps={{ fullWidth: true }}
+                                        onChange={handleChange}
+                                        // updateKey="asset_type_class"
+                                        label="Asset type class"
+                                        // InputLabelProps={{ htmlFor: `${rest.id ?? ''}-input` }}
+                                        // {...locale.form.inspection.inspectionNotes}
+                                        // disabled={disabled}
+                                        // value={formValues?.inspection_notes ?? ''}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} style={{ padding: '8px 0' }}>
+                                <FormControl className={classes.formControl} fullWidth>
+                                    <TextField
+                                        id="asset_type_power_rating"
+                                        data-testid="asset_type_power_rating"
+                                        variant="standard"
+                                        InputProps={{ fullWidth: true }}
+                                        onChange={handleChange}
+                                        // updateKey="asset_type_power_rating"
+                                        label="Asset type power rating"
+                                        // InputLabelProps={{ htmlFor: `${rest.id ?? ''}-input` }}
+                                        // {...locale.form.inspection.inspectionNotes}
+                                        // disabled={disabled}
+                                        // value={formValues?.inspection_notes ?? ''}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} style={{ padding: '8px 0' }}>
+                                <FormControl className={classes.formControl} fullWidth>
+                                    <TextField
+                                        id="asset_type"
+                                        data-testid="asset_type"
+                                        variant="standard"
+                                        InputProps={{ fullWidth: true }}
+                                        onChange={handleChange}
+                                        // updateKey="asset_type"
+                                        label="Asset type (a longer version of the name, if needed)"
+                                        // InputLabelProps={{ htmlFor: `${rest.id ?? ''}-input` }}
+                                        // {...locale.form.inspection.inspectionNotes}
+                                        // disabled={disabled}
+                                        // value={formValues?.inspection_notes ?? ''}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} style={{ padding: '8px 0' }}>
+                                <FormControl className={classes.formControl} fullWidth>
+                                    <TextField
+                                        id="asset_type_notes"
+                                        data-testid="asset_type_notes"
+                                        variant="standard"
+                                        InputProps={{ fullWidth: true }}
+                                        onChange={handleChange}
+                                        // updateKey="asset_type_notes"
+                                        label="Notes"
+                                        // InputLabelProps={{ htmlFor: `${rest.id ?? ''}-input` }}
+                                        // {...locale.form.inspection.inspectionNotes}
+                                        // disabled={disabled}
+                                        // value={formValues?.inspection_notes ?? ''}
+                                        multiline
+                                        rows={4}
+                                    />
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions style={{ borderTop: '1px solid #d7d1cc' }}>
+                        <Box display={'flex'} justifyContent={'flex-end'} style={{ paddingRight: 24, margin: 0 }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                disabled={!assetTypeValid || saveAssetTypeSaving}
+                                onClick={saveAssetType}
+                                fullWidth={isMobileView}
+                                id="testntagFormSubmitButton"
+                                data-testid="testntagFormSubmitButton"
+                            >
+                                {saveInspectionSaving ? (
+                                    <CircularProgress
+                                        color="inherit"
+                                        size={25}
+                                        id="saveInspectionSpinner"
+                                        data-testid="saveInspectionSpinner"
+                                    />
+                                ) : (
+                                    locale.form.buttons.save
+                                )}
+                            </Button>
+                        </Box>
+                    </DialogActions>
+                </Dialog>
+            );
+        }
+        return null;
+    };
+
+    // we group them all together to place a header at the top of the search results
+    const renderGroup = params => [
+        params.children,
+        <Button
+            className={classes.addNewLabel}
+            onClick={() => openAssetTypeDialog()}
+            key="testntagFormAssetType-option-add"
+        >
+            {locale.form.asset.assetType.addNewLabel}
+        </Button>,
+    ];
+
     return (
         <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
+            <AssetTypeDialogPopup />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
                     <FormControl className={classes.formControl} fullWidth>
@@ -210,10 +428,12 @@ const AssetPanel = ({
                             getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
                             getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
                             autoHighlight
+                            renderGroup={renderGroup}
+                            groupBy={() => false}
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...locale.form.asset.assetType}
+                                    label={locale.form.asset.assetType.label}
                                     required
                                     error={
                                         isValidAssetId(formValues.asset_id_displayed) &&
