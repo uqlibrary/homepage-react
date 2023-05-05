@@ -1,13 +1,15 @@
 import React from 'react';
 import moment from 'moment';
 
-import BookExamBooth from '../components/BookExamBooth';
+import BookExamBooth from './BookExamBooth';
 
 const BookExamBoothContainer = () => {
     /**
      * Return booking url based on whether student needs UQ computer
      *
      * @param bool isBYOD
+     * @param string chosenLocationCode
+     * @param array locations
      * @returns string
      */
     const getBookingUrl = (isBYOD, chosenLocationCode, locations) => {
@@ -42,15 +44,15 @@ const BookExamBoothContainer = () => {
      * @param string startDate
      * @param number startTimeHours
      * @param number startTimeMinutes
-     * @param number sessionLength - Number of minutes
+     * @param number sessionLengthMinutes
      * @returns moment
      */
-    const getEndTime = (startDate, startTimeHours, startTimeMinutes, sessionLength) => {
+    const getEndTime = (startDate, startTimeHours, startTimeMinutes, sessionLengthMinutes) => {
         const startDateTime = moment(startDate)
             .hour(startTimeHours)
             .minute(startTimeMinutes);
-        const vacateAllowance = startDateTime.isBefore('2020-06-22') ? /* istanbul ignore next */ 180 : 90;
-        return startDateTime.add(sessionLength, 'minutes').add(vacateAllowance, 'minutes');
+        const vacateAllowanceMinutes = 30; // client refers to this as the buffer time
+        return startDateTime.add(sessionLengthMinutes, 'minutes').add(vacateAllowanceMinutes, 'minutes');
     };
 
     const getListHours = (firstHour, lastHour) => {

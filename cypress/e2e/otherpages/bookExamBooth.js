@@ -110,7 +110,7 @@ context('Book Exam Booth page', () => {
                 .contains('#/app/booking-types/f30fe4d2-bb58-4426-9c38-843c40b2cd3c')
                 .contains(`firstDay=${selectedDate}`)
                 .contains('fromTime=07%3A45')
-                .contains('toTime=10%3A15');
+                .contains('toTime=09%3A15');
         });
     });
 
@@ -172,7 +172,7 @@ context('Book Exam Booth page', () => {
                 .contains('#/app/booking-types/ae12d42e-faae-4553-8c6a-be2fcddb4b26')
                 .contains(`firstDay=${bookingDate.format('YYYY-MM-DD')}`)
                 .contains('fromTime=10%3A00')
-                .contains('toTime=13%3A30');
+                .contains('toTime=12%3A30');
         });
     });
 });
