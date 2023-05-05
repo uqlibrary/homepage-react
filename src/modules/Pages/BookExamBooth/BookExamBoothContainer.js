@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 
-import BookExamBooth from '../components/BookExamBooth';
+import BookExamBooth from './BookExamBooth';
 
 const BookExamBoothContainer = () => {
     /**
