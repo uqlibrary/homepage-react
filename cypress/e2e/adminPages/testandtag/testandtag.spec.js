@@ -57,21 +57,19 @@ describe('Test and Tag Admin Inspection page', () => {
         }
     };
 
-    it('page is accessible', () => {
-        cy.injectAxe();
-        cy.viewport(1300, 1000);
-        cy.get('h1').contains('UQ Asset Test and Tag');
-        cy.get('h2').contains('Managing Assets for Library');
-        cy.waitUntil(() => cy.data('testntag-form-siteid').should('contain', 'St Lucia'));
-        cy.wait(1000);
-        cy.checkA11y('[data-testid="StandardPage"]', {
-            reportName: 'Test and Tag Inspection Form',
-            scopeName: 'Content',
-            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        });
-    });
-
     const runAllTests = () => {
+        it('page is accessible', () => {
+            cy.injectAxe();
+            cy.get('h1').contains('UQ Asset Test and Tag');
+            cy.get('h2').contains('Managing Assets for Library');
+            cy.waitUntil(() => cy.data('testntag-form-siteid').should('contain', 'St Lucia'));
+            cy.wait(1000);
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'Test and Tag Inspection Form',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
         describe('Event panel functionality', () => {
             const today = moment();
             it('should show correct dates', () => {
