@@ -1,7 +1,7 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
 import {
-    loadConfig,
+    loadTestnTagConfig,
     clearConfig,
     loadFloors,
     clearFloors,
@@ -38,7 +38,7 @@ describe('Test & Tag actions', () => {
 
             const expectedActions = [actions.TESTTAG_CONFIG_LOADING, actions.TESTTAG_CONFIG_LOADED];
 
-            await mockActionsStore.dispatch(loadConfig());
+            await mockActionsStore.dispatch(loadTestnTagConfig());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
         it('dispatches expected actions when  T&T config call fails', async () => {
@@ -46,7 +46,7 @@ describe('Test & Tag actions', () => {
 
             const expectedActions = [actions.TESTTAG_CONFIG_LOADING, actions.TESTTAG_CONFIG_FAILED];
 
-            await mockActionsStore.dispatch(loadConfig());
+            await mockActionsStore.dispatch(loadTestnTagConfig());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
