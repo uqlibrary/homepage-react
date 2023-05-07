@@ -306,7 +306,7 @@ const TestTag = ({
     };
 
     useEffect(() => {
-        actions.loadConfig();
+        actions.loadTestnTagConfig();
     }, [actions]);
 
     useEffect(() => {

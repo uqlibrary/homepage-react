@@ -9,7 +9,7 @@ import {
     TEST_TAG_ASSETTYPE_ADD,
 } from 'repositories/routes';
 
-export function loadConfig() {
+export function loadTestnTagConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_CONFIG_LOADING });
         return get(TEST_TAG_CONFIG_API())
@@ -134,21 +134,42 @@ export function clearSaveInspection() {
     };
 }
 
-export function saveAssetType(request) {
+export function saveAssetTypeAndReload(request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_SAVING });
+        let saveAssetComplete = false;
         return post(TEST_TAG_ASSETTYPE_ADD(), request)
             .then(data => {
                 dispatch({
                     type: actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS,
                     payload: data,
                 });
+                saveAssetComplete = true;
+
+                // reload the onload route after the asset type list would have updated with a new asset
+                // to get the update into the dropdown
+                dispatch({ type: actions.TESTTAG_CONFIG_LOADING });
+                return get(TEST_TAG_CONFIG_API());
+            })
+            .then(data => {
+                console.log('saveAssetTypeAndReload success for ', request);
+                dispatch({
+                    type: actions.TESTTAG_CONFIG_LOADED,
+                    payload: data,
+                });
             })
             .catch(error => {
-                dispatch({
-                    type: actions.TESTTAG_SAVE_ASSET_TYPE_FAILED,
-                    payload: error.message,
-                });
+                if (saveAssetComplete) {
+                    dispatch({
+                        type: actions.TESTTAG_CONFIG_FAILED,
+                        payload: error.message,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_SAVE_ASSET_TYPE_FAILED,
+                        payload: error.message,
+                    });
+                }
             });
     };
 }

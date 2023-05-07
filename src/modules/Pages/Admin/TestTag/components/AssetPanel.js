@@ -98,17 +98,6 @@ const AssetPanel = ({
     };
 
     const [assetTypeValid, setAssetTypeValid] = React.useState(false);
-    const saveAssetType = () => {
-        console.log('saveAssetType', formValues);
-        /* istanbul ignore else */ if (assetTypeValid && !saveAssetTypeSaving) {
-            // const transformedData = transformer(
-            //     formValues,
-            //     saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
-            //     selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
-            // );
-            actions.saveAssetType(formValues);
-        }
-    };
 
     const openAssetTypeDialog = () => {
         setAssetTypeDialogOpen(true);
@@ -117,13 +106,11 @@ const AssetPanel = ({
     // we group them all together to place a header at the top of the search results
     const renderGroup = params => [
         params.children,
-        <Button
-            className={classes.addNewLabel}
-            onClick={() => openAssetTypeDialog()}
-            key="testntagFormAssetType-option-add"
-        >
-            {locale.form.asset.assetType.addNewLabel}
-        </Button>,
+        <li key="testntagFormAssetType-option-add">
+            <Button className={classes.addNewLabel} onClick={() => openAssetTypeDialog()}>
+                {locale.form.asset.assetType.addNewLabel}
+            </Button>
+        </li>,
     ];
 
     return (
@@ -132,12 +119,12 @@ const AssetPanel = ({
                 isAssetTypeDialogOpen={isAssetTypeDialogOpen}
                 assetTypeValid={assetTypeValid}
                 setAssetTypeValid={setAssetTypeValid}
-                saveAssetType={saveAssetType}
+                actions={actions}
                 setAssetTypeDialogOpen={setAssetTypeDialogOpen}
-                handleChange={handleChange}
                 saveAssetTypeSaving={saveAssetTypeSaving}
                 isMobileView={isMobileView}
                 classes={classes}
+                initConfig={initConfig}
             />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
