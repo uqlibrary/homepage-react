@@ -133,7 +133,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         color={disabled ? 'textSecondary' : 'textPrimary'}
                         className={classes.title}
                     >
-                        {formLocale.title(disabled ? formLocale.statusUnavailableLabel : '')}
+                        {asset.asset_id_displayed} {formLocale.title(disabled ? formLocale.statusUnavailableLabel : '')}
                     </Typography>
                     {!!!disabled && (
                         <>

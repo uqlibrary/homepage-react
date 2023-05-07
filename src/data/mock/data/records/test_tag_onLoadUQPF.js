@@ -45,25 +45,14 @@ export default {
         "device_calibrated_by_last": "Test and Tag Supplies Pty Ltd",
         "device_calibration_due_date": "2023-10-17 00:00:00",
         "device_current_flag": 1
-      },
-      {
-        "device_id": 3,
-        "device_model_name": "Visual Inspection",
-        "device_serial_number": "EYEBALLS001",
-        "device_department": "UQL",
-        "device_calibrated_date_last": "2022-10-17 00:00:00",
-        "device_calibrated_by_last": "Spec Savers, Inc",
-        "device_calibration_due_date": "2023-10-17 00:00:00",
-        "device_current_flag": 1
-      },
+      }
     ],
     "user": {
         "user_id": 3,
-        "user_uid": "uqtesttag",
+        "user_uid": "uqlsibba",
         "user_license_number": "123456",
-        "user_name": "Lee Sibbald",
-        "user_department": "UQL",
-        "department_display_name": "Library",
+        "user_name": "Lee Sibbald UQPF",
+        "user_department": "UQPF",
         "user_current_flag": 1,
     },
     "sites": [
