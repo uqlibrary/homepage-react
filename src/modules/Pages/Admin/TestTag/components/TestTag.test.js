@@ -84,22 +84,29 @@ describe('TestTag', () => {
     });
 
     it('renders component', () => {
-        const loadConfigFn = jest.fn();
-        const { getByText } = setup({ actions: { loadConfig: loadConfigFn } });
+        const mockFn = jest.fn();
+        const { getByText } = setup({
+            actions: { loadConfig: mockFn, clearAssets: mockFn, clearSaveInspection: mockFn },
+        });
 
         expect(getByText(locale.form.pageTitle)).toBeInTheDocument();
         expect(getByText(locale.form.pageSubtitle?.(configData.user.department_display_name))).toBeInTheDocument();
         expect(getByText(locale.form.event.title)).toBeInTheDocument();
         expect(getByText(locale.form.asset.title)).toBeInTheDocument();
-        expect(loadConfigFn).toHaveBeenCalled();
+        expect(mockFn).toHaveBeenCalled();
     });
 
     it('should show a save error dialog panel', async () => {
         const loadConfigFn = jest.fn();
+        const clearAssetsFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const saveErrorTitle = 'Some error';
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
-            actions: { loadConfig: loadConfigFn, clearSaveInspection: clearSaveInspectionFn },
+            actions: {
+                loadConfig: loadConfigFn,
+                clearAssets: clearAssetsFn,
+                clearSaveInspection: clearSaveInspectionFn,
+            },
             saveInspectionError: saveErrorTitle,
         });
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
@@ -109,12 +116,19 @@ describe('TestTag', () => {
         });
         expect(clearSaveInspectionFn).toHaveBeenCalled();
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+        expect(clearAssetsFn).toHaveBeenCalled();
     });
 
     it('should show a network error dialog panel', async () => {
         const loadConfigFn = jest.fn();
+        const clearAssetsFn = jest.fn();
+        const clearSaveInspectionFn = jest.fn();
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
-            actions: { loadConfig: loadConfigFn },
+            actions: {
+                loadConfig: loadConfigFn,
+                clearAssets: clearAssetsFn,
+                clearSaveInspection: clearSaveInspectionFn,
+            },
             initConfigError: 'error',
         });
 

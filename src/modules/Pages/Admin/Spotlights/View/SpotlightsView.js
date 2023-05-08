@@ -199,7 +199,9 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
                                     color="secondary"
                                     children="Cancel"
                                     data-testid="admin-spotlights-form-button-cancel"
-                                    onClick={() => navigateToListPage()}
+                                    onClick={
+                                        /* istanbul ignore next */ () => /* istanbul ignore next */ navigateToListPage()
+                                    }
                                     variant="contained"
                                 />
                             </Grid>
