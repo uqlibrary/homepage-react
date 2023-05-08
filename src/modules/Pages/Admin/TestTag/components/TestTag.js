@@ -395,6 +395,7 @@ const TestTag = ({
                 saveInspectionSaving={saveInspectionSaving}
                 isMobileView={isMobileView}
                 isValid={isValid}
+                canAddAssetType
             />
         </StandardPage>
     );

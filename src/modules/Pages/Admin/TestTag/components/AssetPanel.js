@@ -44,6 +44,7 @@ const AssetPanel = ({
     saveAssetTypeSaving,
     isMobileView,
     isValid,
+    canAddAssetType,
 }) => {
     AssetPanel.propTypes = {
         actions: PropTypes.any.isRequired,
@@ -61,6 +62,10 @@ const AssetPanel = ({
         saveAssetTypeSaving: PropTypes.bool,
         isMobileView: PropTypes.bool,
         isValid: PropTypes.bool,
+        canAddAssetType: PropTypes.bool,
+    };
+    AssetPanel.defaultProps = {
+        canAddAssetType: false,
     };
 
     const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
@@ -104,14 +109,18 @@ const AssetPanel = ({
     };
 
     // we group them all together to place a header at the top of the search results
-    const renderGroup = params => [
-        params.children,
-        <li key="testntagFormAssetType-option-add">
-            <Button className={classes.addNewLabel} onClick={() => openAssetTypeDialog()}>
-                {locale.form.asset.assetType.addNewLabel}
-            </Button>
-        </li>,
-    ];
+    const renderGroup = params => {
+        const addButton = (
+            <li key="testntagFormAssetType-option-add">
+                <Button className={classes.addNewLabel} onClick={() => openAssetTypeDialog()}>
+                    {locale.form.asset.assetType.addNewLabel}
+                </Button>
+            </li>
+        );
+        const children = [params.children];
+        !!canAddAssetType && children.push(addButton);
+        return children;
+    };
 
     return (
         <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>

@@ -93,8 +93,7 @@ const AssetTypeDialogPopup = props => {
     }, [saveAssetTypeSuccess, saveAssetTypeError, showSaveSuccessConfirmation, showSaveFailureConfirmation]);
 
     function saveAssetTypeAndReload() {
-        const result = actions.saveAssetTypeAndReload(formValues);
-        console.log('saveAssetTypeAndReload result=', result);
+        actions.saveAssetTypeAndReload(formValues);
         closeAssetTypeDialog();
     }
 

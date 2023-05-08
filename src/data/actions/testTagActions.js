@@ -152,7 +152,6 @@ export function saveAssetTypeAndReload(request) {
                 return get(TEST_TAG_CONFIG_API());
             })
             .then(data => {
-                console.log('saveAssetTypeAndReload success for ', request);
                 dispatch({
                     type: actions.TESTTAG_CONFIG_LOADED,
                     payload: data,
