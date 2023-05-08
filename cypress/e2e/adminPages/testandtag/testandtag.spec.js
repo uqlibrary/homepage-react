@@ -180,6 +180,21 @@ describe('Test and Tag Admin Inspection page', () => {
                 // select asset type
                 selectAssetType('PowerBoard');
             });
+            it('should allow selection of new asset type', () => {
+                cy.data('testntagFormAssetTypeInput').should('be.disabled');
+                cy.data('testntagFormAssetIdInput').click();
+                cy.get('#testntagFormAssetId-option-0').should('exist');
+                cy.get('#testntagFormAssetId-option-0').click();
+                cy.data('testntagFormAssetIdInput').should('have.value', 'NEW ASSET');
+                cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
+
+                cy.data('testntagFormAssetTypeInput')
+                    .should('not.be.disabled')
+                    .click();
+                selectListbox('Add new asset type');
+                cy.get('[data-testid="asset_type_name-panel"] label').should('contain', 'Asset type name'); // popup has loaded as it has header
+                // can't test the save as we cant change the mock data return
+            });
             it('should allow selection of existing asset', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
                 cy.data('testntagFormAssetIdInput').type('UQL3100');

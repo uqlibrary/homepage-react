@@ -108,7 +108,7 @@ const AssetPanel = ({
         setAssetTypeDialogOpen(true);
     };
 
-    // we group them all together to place a header at the top of the search results
+    // we group them all together to place a footer item at the bottom of the list
     const renderGroup = params => {
         const addButton = (
             <li key="testntagFormAssetType-option-add">

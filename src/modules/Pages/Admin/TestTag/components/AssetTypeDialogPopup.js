@@ -150,7 +150,7 @@ const AssetTypeDialogPopup = props => {
                         children={
                             <React.Fragment>
                                 <p style={{ paddingLeft: 24, margin: '10px 0 0 0', float: 'left' }}>
-                                    Add an Asset type
+                                    {locale.form.asset.assetType.addNewLabel}
                                 </p>{' '}
                                 <IconButton
                                     style={{ float: 'right' }}
