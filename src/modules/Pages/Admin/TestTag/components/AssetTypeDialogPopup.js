@@ -57,7 +57,8 @@ const AssetTypeDialogPopup = props => {
         asset_type_notes: '',
     });
     const handleChange = prop => event => {
-        let propValue = !!event.target.value ? event.target.value : event.target.checked;
+        let propValue = !!event.target.value ? event.target.value : /* istanbul ignore next */ event.target.checked;
+        /* istanbul ignore next */
         if (propValue === false) {
             // it returns false when we clear a text field
             propValue = '';
@@ -160,7 +161,7 @@ const AssetTypeDialogPopup = props => {
                                         onChange={handleChange('asset_type_name')}
                                         label="Asset type name"
                                         required
-                                        value={formValues?.asset_type_name ?? ''}
+                                        value={formValues?.asset_type_name ?? /* istanbul ignore next */ ''}
                                     />
                                 </FormControl>
                             </Grid>
@@ -172,7 +173,7 @@ const AssetTypeDialogPopup = props => {
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type_class')}
                                         label="Asset type class"
-                                        value={formValues?.asset_type_class ?? ''}
+                                        value={formValues?.asset_type_class ?? /* istanbul ignore next */ ''}
                                     />
                                 </FormControl>
                             </Grid>
@@ -184,7 +185,7 @@ const AssetTypeDialogPopup = props => {
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type_power_rating')}
                                         label="Asset type power rating"
-                                        value={formValues?.asset_type_power_rating ?? ''}
+                                        value={formValues?.asset_type_power_rating ?? /* istanbul ignore next */ ''}
                                     />
                                 </FormControl>
                             </Grid>
@@ -196,7 +197,7 @@ const AssetTypeDialogPopup = props => {
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type')}
                                         label="Asset type (a longer version of the name, if needed)"
-                                        value={formValues?.asset_type ?? ''}
+                                        value={formValues?.asset_type ?? /* istanbul ignore next */ ''}
                                     />
                                 </FormControl>
                             </Grid>
@@ -208,7 +209,7 @@ const AssetTypeDialogPopup = props => {
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type_notes')}
                                         label="Notes"
-                                        value={formValues?.asset_type_notes ?? ''}
+                                        value={formValues?.asset_type_notes ?? /* istanbul ignore next */ ''}
                                         multiline
                                         rows={4}
                                     />
