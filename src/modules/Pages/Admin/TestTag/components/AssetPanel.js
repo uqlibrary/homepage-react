@@ -26,7 +26,7 @@ const filter = createFilterOptions();
 
 const testStatusEnum = statusEnum(locale);
 
-const MINIMUM_ASSET_ID_PATTERN_LENGTH = 7;
+const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
 const AssetPanel = ({
     actions,
@@ -34,6 +34,7 @@ const AssetPanel = ({
     formValues,
     selectedAsset,
     resetForm,
+    department,
     location,
     assignCurrentAsset,
     handleChange,
@@ -54,6 +55,7 @@ const AssetPanel = ({
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
         resetForm: PropTypes.func.isRequired,
+        department: PropTypes.string,
         location: PropTypes.object.isRequired,
         assignCurrentAsset: PropTypes.func.isRequired,
         handleChange: PropTypes.func.isRequired,
@@ -78,9 +80,20 @@ const AssetPanel = ({
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
+    const maskNumber = (number, department) => {
+        const prefix = /^\d+$/.test(number) ? department : '';
+        const paddedNumber = !!prefix ? number.toString().padStart(6, '0') : number;
+        return `${prefix}${paddedNumber}`;
+    };
+
+    const previousValueRef = React.useRef(null);
+
     const debounceAssetsSearch = React.useRef(
-        debounce(500, pattern => {
-            !!pattern && pattern.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH && actions.loadAssets(pattern);
+        debounce(500, (pattern, department) => {
+            const paddedNumber = maskNumber(pattern, department);
+            !!paddedNumber &&
+                paddedNumber.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH &&
+                actions.loadAssets(paddedNumber);
         }),
     ).current;
 
@@ -88,8 +101,12 @@ const AssetPanel = ({
 
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
-        if (assetsList?.length === 1) {
+        /* istanbul ignore else */ if (assetsList?.length === 1) {
             assignCurrentAsset(assetsList[0]);
+            setIsOpen(false);
+        }
+        /* istanbul ignore else */ if (assetsList?.length < 1) {
+            resetForm(false);
             setIsOpen(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,7 +166,7 @@ const AssetPanel = ({
                             data-testid="testntagFormAssetId"
                             fullWidth
                             open={isOpen}
-                            value={formValues?.asset_id_displayed ?? null}
+                            value={formValues?.asset_id_displayed ?? previousValueRef.current}
                             onChange={(event, newValue) => {
                                 if (typeof newValue === 'string') {
                                     assignCurrentAsset({ asset_id_displayed: newValue });
@@ -222,7 +239,8 @@ const AssetPanel = ({
                                     }}
                                     onChange={e => {
                                         !isOpen && setIsOpen(true);
-                                        debounceAssetsSearch(e.target.value);
+                                        previousValueRef.current = e.target.value;
+                                        debounceAssetsSearch(e.target.value, department);
                                     }}
                                     inputProps={{
                                         ...params.inputProps,

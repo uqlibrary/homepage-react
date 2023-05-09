@@ -101,6 +101,7 @@ export const App = ({ account, actions }) => {
             /* istanbul ignore else */
             const storedUserDetailsRaw = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
             const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
+            /* istanbul ignore else */
             if (
                 storedUserDetails?.hasOwnProperty('status') &&
                 (storedUserDetails.status === 'loggedin' || storedUserDetails.status === 'loggedout')
