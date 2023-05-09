@@ -1,1 +1,1 @@
-export { default as BookExamBooth } from './components/BookExamBooth';
+export { default as BookExamBooth } from './BookExamBooth';
