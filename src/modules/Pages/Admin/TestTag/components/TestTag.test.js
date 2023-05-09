@@ -84,22 +84,29 @@ describe('TestTag', () => {
     });
 
     it('renders component', () => {
-        const loadTestnTagConfigFn = jest.fn();
-        const { getByText } = setup({ actions: { loadTestnTagConfig: loadTestnTagConfigFn } });
+        const mockFn = jest.fn();
+        const { getByText } = setup({
+            actions: { loadConfig: mockFn, clearAssets: mockFn, clearSaveInspection: mockFn },
+        });
 
         expect(getByText(locale.form.pageTitle)).toBeInTheDocument();
         expect(getByText(locale.form.pageSubtitle?.(configData.user.department_display_name))).toBeInTheDocument();
         expect(getByText(locale.form.event.title)).toBeInTheDocument();
         expect(getByText(locale.form.asset.title)).toBeInTheDocument();
-        expect(loadTestnTagConfigFn).toHaveBeenCalled();
+        expect(mockFn).toHaveBeenCalled();
     });
 
     it('should show a save error dialog panel', async () => {
-        const loadTestnTagConfigFn = jest.fn();
+        const loadConfigFn = jest.fn();
+        const clearAssetsFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const saveErrorTitle = 'Some error';
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
-            actions: { loadTestnTagConfig: loadTestnTagConfigFn, clearSaveInspection: clearSaveInspectionFn },
+            actions: {
+                loadConfig: loadConfigFn,
+                clearAssets: clearAssetsFn,
+                clearSaveInspection: clearSaveInspectionFn,
+            },
             saveInspectionError: saveErrorTitle,
         });
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
@@ -109,17 +116,18 @@ describe('TestTag', () => {
         });
         expect(clearSaveInspectionFn).toHaveBeenCalled();
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+        expect(clearAssetsFn).toHaveBeenCalled();
     });
 
     it('should show a network error dialog panel', async () => {
-        const loadTestnTagConfigFn = jest.fn();
-        const clearSaveInspectionFn = jest.fn();
+        const loadConfigFn = jest.fn();
         const clearAssetsFn = jest.fn();
+        const clearSaveInspectionFn = jest.fn();
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
-                loadTestnTagConfig: loadTestnTagConfigFn,
-                clearSaveInspection: clearSaveInspectionFn,
+                loadConfig: loadConfigFn,
                 clearAssets: clearAssetsFn,
+                clearSaveInspection: clearSaveInspectionFn,
             },
             initConfigError: 'error',
         });
@@ -133,13 +141,13 @@ describe('TestTag', () => {
     });
 
     it('should show a save success for PASSED asset dialog panel', async () => {
-        const loadTestnTagConfigFn = jest.fn();
+        const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
-                loadTestnTagConfig: loadTestnTagConfigFn,
+                loadConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
@@ -168,13 +176,13 @@ describe('TestTag', () => {
     });
 
     it('should show a save success for FAILED asset dialog panel', async () => {
-        const loadTestnTagConfigFn = jest.fn();
+        const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
-                loadTestnTagConfig: loadTestnTagConfigFn,
+                loadConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
@@ -206,13 +214,13 @@ describe('TestTag', () => {
     });
 
     it('should show a save success for OUTFORREPAIR asset dialog panel', async () => {
-        const loadTestnTagConfigFn = jest.fn();
+        const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
-                loadTestnTagConfig: loadTestnTagConfigFn,
+                loadConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
@@ -242,13 +250,13 @@ describe('TestTag', () => {
     });
 
     it('should show a save success for DISCARDED asset dialog panel', async () => {
-        const loadTestnTagConfigFn = jest.fn();
+        const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
-                loadTestnTagConfig: loadTestnTagConfigFn,
+                loadConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
@@ -277,14 +285,14 @@ describe('TestTag', () => {
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     });
 
-    it.only('should show defaults (coverage)', async () => {
-        const loadTestnTagConfigFn = jest.fn();
+    it('should show defaults (coverage)', async () => {
+        const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
-                loadTestnTagConfig: loadTestnTagConfigFn,
+                loadConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
