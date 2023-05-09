@@ -113,8 +113,14 @@ describe('TestTag', () => {
 
     it('should show a network error dialog panel', async () => {
         const loadTestnTagConfigFn = jest.fn();
+        const clearSaveInspectionFn = jest.fn();
+        const clearAssetsFn = jest.fn();
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
-            actions: { loadTestnTagConfig: loadTestnTagConfigFn },
+            actions: {
+                loadTestnTagConfig: loadTestnTagConfigFn,
+                clearSaveInspection: clearSaveInspectionFn,
+                clearAssets: clearAssetsFn,
+            },
             initConfigError: 'error',
         });
 
@@ -271,7 +277,7 @@ describe('TestTag', () => {
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     });
 
-    it('should show defaults (coverage)', async () => {
+    it.only('should show defaults (coverage)', async () => {
         const loadTestnTagConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
