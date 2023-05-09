@@ -813,6 +813,9 @@ mock.onGet('exams/course/FREN1010/summary')
         },
     ])
     .onPost(routes.TEST_TAG_ASSETTYPE_ADD().apiUrl)
+    // .reply(() => {
+    //     return [500, []];
+    // })
     .reply(() => [
         200,
         {

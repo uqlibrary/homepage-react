@@ -207,6 +207,9 @@ const TestTag = ({
     saveInspectionSaving,
     saveInspectionSuccess,
     saveInspectionError,
+    saveAssetTypeSaving,
+    saveAssetTypeSuccess,
+    saveAssetTypeError,
 }) => {
     const classes = useStyles();
     const theme = useTheme();
@@ -393,6 +396,9 @@ const TestTag = ({
                 classes={classes}
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 saveInspectionSaving={saveInspectionSaving}
+                saveAssetTypeSaving={saveAssetTypeSaving}
+                saveAssetTypeSuccess={saveAssetTypeSuccess}
+                saveAssetTypeError={saveAssetTypeError}
                 isMobileView={isMobileView}
                 isValid={isValid}
                 canAddAssetType
@@ -420,6 +426,9 @@ TestTag.propTypes = {
     saveInspectionSaving: PropTypes.bool,
     saveInspectionSuccess: PropTypes.any,
     saveInspectionError: PropTypes.any,
+    saveAssetTypeSaving: PropTypes.bool,
+    saveAssetTypeSuccess: PropTypes.any,
+    saveAssetTypeError: PropTypes.any,
 };
 
 export default React.memo(TestTag);

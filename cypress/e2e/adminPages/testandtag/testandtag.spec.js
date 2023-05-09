@@ -209,6 +209,21 @@ describe('Test and Tag Admin Inspection page', () => {
                     .should('not.be.disabled')
                     .should('contain', 'SAVE')
                     .click();
+                // the user is acknowledged that the asset type was saved
+                cy.waitUntil(() =>
+                    cy
+                        .data('dialogbox-tnt-assettype-add-confirmation')
+                        // .find('message-title')
+                        .should('contain', 'The asset type has been added'),
+                );
+
+                // click ok on the notice and both dialogs go away
+                cy.data('tntAssetTypeAddDialog').should('exist');
+                cy.data('confirm-tnt-assettype-add-confirmation')
+                    .should('exist')
+                    .click();
+                cy.data('confirm-tnt-assettype-add-confirmation').should('not.exist');
+                cy.data('tntAssetTypeAddDialog').should('not.exist');
             });
             it('should allow selection of existing asset', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');

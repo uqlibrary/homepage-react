@@ -75,34 +75,18 @@ const AssetTypeDialogPopup = props => {
         setAssetTypeDialogOpen(false);
     };
 
-    const [
-        isSaveSuccessConfirmationOpen,
-        showSaveSuccessConfirmation,
-        hideSaveSuccessConfirmation,
-    ] = useConfirmationState();
-
-    const [
-        isSaveFailureConfirmationOpen,
-        showSaveFailureConfirmation,
-        hideSaveFailureConfirmation,
-    ] = useConfirmationState();
+    const [isAssetTypeSaveConfirmationOpen, showSaveConfirmation, hideSaveConfirmation] = useConfirmationState();
 
     React.useEffect(() => {
-        !!saveAssetTypeSuccess && showSaveSuccessConfirmation();
-        !!saveAssetTypeError && showSaveFailureConfirmation();
-    }, [saveAssetTypeSuccess, saveAssetTypeError, showSaveSuccessConfirmation, showSaveFailureConfirmation]);
+        (!!saveAssetTypeSuccess || !!saveAssetTypeError) && showSaveConfirmation();
+    }, [saveAssetTypeSuccess, saveAssetTypeError, showSaveConfirmation]);
 
     function saveAssetTypeAndReload() {
         actions.saveAssetTypeAndReload(formValues);
     }
 
-    function handleSuccessfulSave() {
-        hideSaveSuccessConfirmation();
-        closeAssetTypeDialog();
-    }
-
-    function handleFailedSave() {
-        hideSaveFailureConfirmation();
+    function handleAssetTypeSaveConfirmationBoxAction() {
+        hideSaveConfirmation();
         closeAssetTypeDialog();
     }
 
@@ -112,22 +96,16 @@ const AssetTypeDialogPopup = props => {
                 <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
-                    confirmationBoxId="tnt-assettype-add-success"
-                    onAction={handleSuccessfulSave}
-                    onClose={handleSuccessfulSave}
+                    confirmationBoxId="tnt-assettype-add-confirmation"
+                    onAction={handleAssetTypeSaveConfirmationBoxAction}
+                    onClose={handleAssetTypeSaveConfirmationBoxAction}
                     hideCancelButton
-                    isOpen={isSaveSuccessConfirmationOpen}
-                    locale={locale.form.asset.assetType.saveSuccess}
-                />
-                <ConfirmationBox
-                    actionButtonColor="primary"
-                    actionButtonVariant="contained"
-                    confirmationBoxId="tnt-assettype-add-failed"
-                    onAction={handleFailedSave}
-                    onClose={handleFailedSave}
-                    hideCancelButton
-                    isOpen={isSaveFailureConfirmationOpen}
-                    locale={locale.form.asset.assetType.saveFailure}
+                    isOpen={isAssetTypeSaveConfirmationOpen}
+                    locale={
+                        !!saveAssetTypeSuccess
+                            ? locale.form.asset.assetType.saveSuccess
+                            : locale.form.asset.assetType.saveFailure
+                    }
                 />
                 <Dialog
                     onClose={/* istanbul ignore next */ () => closeAssetTypeDialog()}
@@ -142,6 +120,7 @@ const AssetTypeDialogPopup = props => {
                             height: '40em',
                         },
                         'aria-label': 'Manage asset type',
+                        'data-testid': 'tntAssetTypeAddDialog',
                     }}
                 >
                     <DialogTitle
@@ -189,7 +168,6 @@ const AssetTypeDialogPopup = props => {
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
                                         id="asset_type_class"
-                                        data-testid="asset_type_class"
                                         variant="standard"
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type_class')}
@@ -202,7 +180,6 @@ const AssetTypeDialogPopup = props => {
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
                                         id="asset_type_power_rating"
-                                        data-testid="asset_type_power_rating"
                                         variant="standard"
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type_power_rating')}
@@ -215,7 +192,6 @@ const AssetTypeDialogPopup = props => {
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
                                         id="asset_type"
-                                        data-testid="asset_type"
                                         variant="standard"
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type')}
@@ -228,7 +204,6 @@ const AssetTypeDialogPopup = props => {
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
                                         id="asset_type_notes"
-                                        data-testid="asset_type_notes"
                                         variant="standard"
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type_notes')}
@@ -252,12 +227,7 @@ const AssetTypeDialogPopup = props => {
                                 data-testid="testntagAssetTypeSubmitButton"
                             >
                                 {saveAssetTypeSaving ? (
-                                    <CircularProgress
-                                        color="inherit"
-                                        size={25}
-                                        id="saveInspectionSpinner"
-                                        data-testid="saveInspectionSpinner"
-                                    />
+                                    <CircularProgress color="inherit" size={25} id="saveInspectionSpinner" />
                                 ) : (
                                     locale.form.buttons.save
                                 )}

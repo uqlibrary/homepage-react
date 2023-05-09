@@ -42,6 +42,8 @@ const AssetPanel = ({
     classes,
     saveInspectionSaving,
     saveAssetTypeSaving,
+    saveAssetTypeSuccess,
+    saveAssetTypeError,
     isMobileView,
     isValid,
     canAddAssetType,
@@ -60,6 +62,8 @@ const AssetPanel = ({
         classes: PropTypes.object.isRequired,
         saveInspectionSaving: PropTypes.bool,
         saveAssetTypeSaving: PropTypes.bool,
+        saveAssetTypeSuccess: PropTypes.any,
+        saveAssetTypeError: PropTypes.any,
         isMobileView: PropTypes.bool,
         isValid: PropTypes.bool,
         canAddAssetType: PropTypes.bool,
@@ -130,10 +134,12 @@ const AssetPanel = ({
                 setAssetTypeValid={setAssetTypeValid}
                 actions={actions}
                 setAssetTypeDialogOpen={setAssetTypeDialogOpen}
-                saveAssetTypeSaving={saveAssetTypeSaving}
                 isMobileView={isMobileView}
                 classes={classes}
                 initConfig={initConfig}
+                saveAssetTypeSaving={saveAssetTypeSaving}
+                saveAssetTypeSuccess={saveAssetTypeSuccess}
+                saveAssetTypeError={saveAssetTypeError}
             />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
