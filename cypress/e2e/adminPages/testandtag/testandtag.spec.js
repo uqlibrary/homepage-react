@@ -180,7 +180,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 // select asset type
                 selectAssetType('PowerBoard');
             });
-            it('should allow selection of new asset type', () => {
+            it('should allow creation of new asset type', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
                 cy.data('testntagFormAssetIdInput').click();
                 cy.get('#testntagFormAssetId-option-0').should('exist');
@@ -192,8 +192,23 @@ describe('Test and Tag Admin Inspection page', () => {
                     .should('not.be.disabled')
                     .click();
                 selectListbox('Add new asset type');
-                cy.get('[data-testid="asset_type_name-panel"] label').should('contain', 'Asset type name'); // popup has loaded as it has header
-                // can't test the save as we cant change the mock data return
+                // popup has loaded as it has header
+                cy.get('[data-testid="asset_type_name_field"] label').should('contain', 'Asset type name');
+                cy.data('testntagAssetTypeSubmitButton').should('be.disabled');
+                cy.get('[data-testid="asset_type_name_field"] input').type('an asset type');
+
+                // the popup is accessible
+                cy.injectAxe();
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'Test and Tag Asset Type Creation Popup',
+                    scopeName: 'Content',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                cy.data('testntagAssetTypeSubmitButton')
+                    .should('not.be.disabled')
+                    .should('contain', 'SAVE')
+                    .click();
             });
             it('should allow selection of existing asset', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');

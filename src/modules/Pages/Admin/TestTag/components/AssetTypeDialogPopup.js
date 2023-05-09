@@ -94,12 +94,11 @@ const AssetTypeDialogPopup = props => {
 
     function saveAssetTypeAndReload() {
         actions.saveAssetTypeAndReload(formValues);
-        closeAssetTypeDialog();
     }
 
     function handleSuccessfulSave() {
         hideSaveSuccessConfirmation();
-        // close dialog
+        closeAssetTypeDialog();
     }
 
     function handleFailedSave() {
@@ -176,7 +175,7 @@ const AssetTypeDialogPopup = props => {
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
                                         id="asset_type_name"
-                                        data-testid="asset_type_name"
+                                        data-testid="asset_type_name_field"
                                         variant="standard"
                                         InputProps={{ fullWidth: true }}
                                         onChange={handleChange('asset_type_name')}
@@ -250,8 +249,7 @@ const AssetTypeDialogPopup = props => {
                                 disabled={!assetTypeValid || saveAssetTypeSaving}
                                 onClick={saveAssetTypeAndReload}
                                 fullWidth={isMobileView}
-                                id="testntagFormSubmitButton"
-                                data-testid="testntagFormSubmitButton"
+                                data-testid="testntagAssetTypeSubmitButton"
                             >
                                 {saveAssetTypeSaving ? (
                                     <CircularProgress
