@@ -10,7 +10,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useTitle } from 'hooks';
 
-import locale from '../bookExamBooth.locale';
+import locale from './bookExamBooth.locale';
 
 const BookExamBooth = ({
     getBookingUrl,
