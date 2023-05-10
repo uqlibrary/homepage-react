@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Box, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import TextField from '@material-ui/core/TextField';
@@ -12,9 +12,6 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { debounce } from 'throttle-debounce';
-
-import { transformer } from '../utils/transformers';
-import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
 import AssetTypeDialogPopup from './AssetTypeDialogPopup';
 import InspectionPanel from './InspectionPanel';
 import LastInspectionPanel from './LastInspectionPanel';
@@ -41,12 +38,10 @@ const AssetPanel = ({
     focusElementRef,
     defaultNextTestDateValue,
     classes,
-    saveInspectionSaving,
     saveAssetTypeSaving,
     saveAssetTypeSuccess,
     saveAssetTypeError,
     isMobileView,
-    isValid,
     canAddAssetType,
 }) => {
     AssetPanel.propTypes = {
@@ -111,17 +106,6 @@ const AssetPanel = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
-
-    const saveForm = () => {
-        /* istanbul ignore else */ if (isValid && !saveInspectionSaving) {
-            const transformedData = transformer(
-                formValues,
-                saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
-                selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
-            );
-            actions.saveInspection(transformedData);
-        }
-    };
 
     const [assetTypeValid, setAssetTypeValid] = React.useState(false);
 
@@ -335,43 +319,6 @@ const AssetPanel = ({
                     isMobileView={isMobileView}
                 />
             )}
-            <Grid container spacing={3}>
-                <Grid xs={12} sm={6} item>
-                    <Button
-                        variant="outlined"
-                        onClick={resetForm}
-                        fullWidth={isMobileView}
-                        id="testntagFormResetButton"
-                        data-testid="testntagFormResetButton"
-                    >
-                        {locale.form.buttons.reset}
-                    </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Box display={'flex'} justifyContent={'flex-end'}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            disabled={!isValid || saveInspectionSaving}
-                            onClick={saveForm}
-                            fullWidth={isMobileView}
-                            id="testntagFormSubmitButton"
-                            data-testid="testntagFormSubmitButton"
-                        >
-                            {saveInspectionSaving ? (
-                                <CircularProgress
-                                    color="inherit"
-                                    size={25}
-                                    id="saveInspectionSpinner"
-                                    data-testid="saveInspectionSpinner"
-                                />
-                            ) : (
-                                locale.form.buttons.save
-                            )}
-                        </Button>
-                    </Box>
-                </Grid>
-            </Grid>
         </StandardCard>
     );
 };
