@@ -1,14 +1,32 @@
 import moment from 'moment';
 import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
+export function checkIfEleExists(ele) {
+    return new Promise((resolve, reject) => {
+        // / here if  ele exists or not
+        cy.get('body')
+            .find(ele)
+            .its('length')
+            .then(res => {
+                if (res > 0) {
+                    resolve();
+                } else {
+                    reject();
+                }
+            });
+    });
+}
+
 describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
         cy.visit('http://localhost:2020/admin/testntag?user=uqtesttag');
         // dismiss the cultural advice, as it's in the way.
-        cy.get('cultural-advice-popup')
-            .shadow()
-            .find('#culturaladvice-container-dismiss')
-            .click();
+        checkIfEleExists('cultural-advice-popup').then(() => {
+            cy.get('cultural-advice-popup')
+                .shadow()
+                .find('#culturaladvice-container-dismiss')
+                .click();
+        });
     });
 
     const selectListbox = pattern => {
