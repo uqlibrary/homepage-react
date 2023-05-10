@@ -107,6 +107,17 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
+    addNewLabel: {
+        backgroundColor: theme.palette.secondary.light,
+        '&:hover': {
+            backgroundColor: theme.palette.secondary.dark,
+        },
+        borderRadius: 0,
+        color: 'white',
+        display: 'block',
+        textAlign: 'center',
+        width: '100%',
+    },
 }));
 const savedDialogMessages = {
     [testStatusEnum.CURRENT.value]: (data, classes, locale) => (
@@ -196,6 +207,9 @@ const TestTag = ({
     saveInspectionSaving,
     saveInspectionSuccess,
     saveInspectionError,
+    saveAssetTypeSaving,
+    saveAssetTypeSuccess,
+    saveAssetTypeError,
 }) => {
     const classes = useStyles();
     const theme = useTheme();
@@ -296,7 +310,7 @@ const TestTag = ({
     };
 
     useEffect(() => {
-        actions.loadConfig();
+        actions.loadTestnTagConfig();
     }, [actions]);
 
     useEffect(() => {
@@ -385,8 +399,12 @@ const TestTag = ({
                 setSelectedAsset={setSelectedAsset}
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 saveInspectionSaving={saveInspectionSaving}
+                saveAssetTypeSaving={saveAssetTypeSaving}
+                saveAssetTypeSuccess={saveAssetTypeSuccess}
+                saveAssetTypeError={saveAssetTypeError}
                 isMobileView={isMobileView}
                 isValid={isValid}
+                canAddAssetType
             />
         </StandardPage>
     );
@@ -411,6 +429,9 @@ TestTag.propTypes = {
     saveInspectionSaving: PropTypes.bool,
     saveInspectionSuccess: PropTypes.any,
     saveInspectionError: PropTypes.any,
+    saveAssetTypeSaving: PropTypes.bool,
+    saveAssetTypeSuccess: PropTypes.any,
+    saveAssetTypeError: PropTypes.any,
 };
 
 export default React.memo(TestTag);

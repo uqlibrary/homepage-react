@@ -52,6 +52,7 @@ function setup(testProps = {}) {
                 focusElementRef={focusElementRef}
                 classes={classes}
                 isMobileView={isMobileView}
+                canAddAssetType
                 {...props}
             />
         </WithReduxStore>,

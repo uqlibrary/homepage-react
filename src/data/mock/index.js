@@ -813,6 +813,24 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         },
     ])
+    .onPost(routes.TEST_TAG_ASSETTYPE_ADD().apiUrl)
+    // .reply(() => {
+    //     return [500, []];
+    // })
+    .reply(() => [
+        200,
+        {
+            status: 'ok',
+            data: {
+                asset_id: 1,
+                asset_type_name: 'PWRC13-10',
+                asset_type_class: 'Cable',
+                asset_type_power_rating: '10',
+                asset_type: 'IEC C13 Power Cable (10 Amp)',
+                asset_type_notes: 'Standard Computer Type Cable',
+            },
+        },
+    ])
 
     .onGet('exams/search/fail')
     .reply(() => {

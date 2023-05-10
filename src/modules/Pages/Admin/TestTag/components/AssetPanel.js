@@ -15,6 +15,7 @@ import { debounce } from 'throttle-debounce';
 
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
+import AssetTypeDialogPopup from './AssetTypeDialogPopup';
 import InspectionPanel from './InspectionPanel';
 import LastInspectionPanel from './LastInspectionPanel';
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
@@ -41,9 +42,12 @@ const AssetPanel = ({
     defaultNextTestDateValue,
     classes,
     saveInspectionSaving,
-
+    saveAssetTypeSaving,
+    saveAssetTypeSuccess,
+    saveAssetTypeError,
     isMobileView,
     isValid,
+    canAddAssetType,
 }) => {
     AssetPanel.propTypes = {
         actions: PropTypes.any.isRequired,
@@ -59,8 +63,15 @@ const AssetPanel = ({
         defaultNextTestDateValue: PropTypes.number.isRequired,
         classes: PropTypes.object.isRequired,
         saveInspectionSaving: PropTypes.bool,
+        saveAssetTypeSaving: PropTypes.bool,
+        saveAssetTypeSuccess: PropTypes.any,
+        saveAssetTypeError: PropTypes.any,
         isMobileView: PropTypes.bool,
         isValid: PropTypes.bool,
+        canAddAssetType: PropTypes.bool,
+    };
+    AssetPanel.defaultProps = {
+        canAddAssetType: false,
     };
 
     const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
@@ -86,6 +97,8 @@ const AssetPanel = ({
         }),
     ).current;
 
+    const [isAssetTypeDialogOpen, setAssetTypeDialogOpen] = React.useState(false);
+
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
         /* istanbul ignore else */ if (assetsList?.length === 1) {
@@ -109,8 +122,42 @@ const AssetPanel = ({
             actions.saveInspection(transformedData);
         }
     };
+
+    const [assetTypeValid, setAssetTypeValid] = React.useState(false);
+
+    const openAssetTypeDialog = () => {
+        setAssetTypeDialogOpen(true);
+    };
+
+    // we group them all together to place a footer item at the bottom of the list
+    const renderGroup = params => {
+        const addButton = (
+            <li key="testntagFormAssetType-option-add">
+                <Button className={classes.addNewLabel} onClick={() => openAssetTypeDialog()}>
+                    {locale.form.asset.assetType.addNewLabel}
+                </Button>
+            </li>
+        );
+        const children = [params.children];
+        !!canAddAssetType && children.push(addButton);
+        return children;
+    };
+
     return (
         <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
+            <AssetTypeDialogPopup
+                isAssetTypeDialogOpen={isAssetTypeDialogOpen}
+                assetTypeValid={assetTypeValid}
+                setAssetTypeValid={setAssetTypeValid}
+                actions={actions}
+                setAssetTypeDialogOpen={setAssetTypeDialogOpen}
+                isMobileView={isMobileView}
+                classes={classes}
+                initConfig={initConfig}
+                saveAssetTypeSaving={saveAssetTypeSaving}
+                saveAssetTypeSuccess={saveAssetTypeSuccess}
+                saveAssetTypeError={saveAssetTypeError}
+            />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
                     <FormControl className={classes.formControl} fullWidth>
@@ -225,10 +272,12 @@ const AssetPanel = ({
                             getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
                             getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
                             autoHighlight
+                            renderGroup={renderGroup}
+                            groupBy={() => false}
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...locale.form.asset.assetType}
+                                    label={locale.form.asset.assetType.label}
                                     required
                                     error={
                                         isValidAssetId(formValues.asset_id_displayed) &&
