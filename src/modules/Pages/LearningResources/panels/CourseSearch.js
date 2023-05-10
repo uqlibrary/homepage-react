@@ -139,6 +139,7 @@ export const CourseSearch = ({
                                 return (
                                     <Tab
                                         data-testid={`classtab-${subjectCode}`}
+                                        data-analyticsid={`classtab-${subjectCode}`}
                                         key={`classtab-${subjectCode}`}
                                         label={subjectCode}
                                         value={`${subjectTabLabel}-${index}`} // must match 'index' in TabPanel

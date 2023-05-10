@@ -261,6 +261,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                     <Button
                                                         id={`training-event-detail-button-${event.entityId}`}
                                                         data-testid={`training-event-detail-button-${index}`}
+                                                        data-analyticsid={`training-event-detail-button-${index}`}
                                                         onClick={() => handleEventDetail(event)}
                                                         classes={{ root: classes.linkButton }}
                                                         fullWidth
@@ -379,6 +380,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                     href="https://web.library.uq.edu.au/library-services/training"
                                     id="training-event-detail-more-training-button"
                                     data-testid="training-event-detail-more-training-button"
+                                    data-analyticsid="training-event-detail-more-training-button"
                                 >
                                     More training events
                                 </a>

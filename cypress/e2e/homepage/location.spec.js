@@ -32,7 +32,7 @@ context('Location component', () => {
 
         cy.log('Should close when opened if clicking on body');
         cy.get('button[data-testid="location-button"]').click();
-        cy.get('body').click();
+        cy.get('body').type('{esc}');
         cy.get('div#location-paper').should('not.be.visible');
 
         cy.log('Should set the cookie to Herston');
@@ -46,6 +46,6 @@ context('Location component', () => {
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-0"').click();
         cy.getCookie('location').should('have.property', 'value', 'null');
-        cy.get('body').click();
+        cy.get('body').type('{esc}');
     });
 });

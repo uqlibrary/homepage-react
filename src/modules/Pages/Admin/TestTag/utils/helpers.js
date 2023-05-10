@@ -33,7 +33,6 @@ export const isValidNextTestDate = (inspection, passedValue, format) => {
 export const isValidAssetId = assetId => {
     return !isEmpty(assetId);
 };
-export const isValidOwner = owner => !isEmpty(owner);
 export const isValidRoomId = roomId => !!roomId && Number.isFinite(roomId) && roomId > 0;
 export const isValidAssetTypeId = assetTypeId => !!assetTypeId && Number.isFinite(assetTypeId) && assetTypeId > 0;
 export const isValidTestingDeviceId = (testingDeviceId, inspectionStatus, enums) =>

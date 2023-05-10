@@ -4,6 +4,11 @@ import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/t
 describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
         cy.visit('http://localhost:2020/admin/testntag?user=uqtesttag');
+        // dismiss the cultural advice, as it's in the way.
+        cy.get('cultural-advice-popup')
+            .shadow()
+            .find('#culturaladvice-container-dismiss')
+            .click();
     });
 
     const selectListbox = pattern => {
@@ -56,7 +61,7 @@ describe('Test and Tag Admin Inspection page', () => {
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains('UQ Asset Test and Tag');
-        cy.get('h2').contains('Managing Assets for UQL');
+        cy.get('h2').contains('Managing Assets for Library');
         cy.waitUntil(() => cy.data('testntag-form-siteid').should('contain', 'St Lucia'));
         cy.wait(1000);
         cy.checkA11y('[data-testid="StandardPage"]', {
@@ -158,6 +163,14 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetIdInput').type('AN ASSET ID{enter}');
                 cy.data('testntagFormAssetIdInput').should('have.value', 'AN ASSET ID');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
+            });
+            it('should allow auto complete of asset ID as mask', () => {
+                // Enter partial asset ID for mask search
+                cy.data('testntagFormAssetIdInput').click();
+                cy.data('testntagFormAssetIdInput').type('123');
+                cy.wait(3000);
+                // Asset found
+                cy.data('lastInspectionFailChip').should('exist');
             });
             it('should restrict length of asset IDs', () => {
                 const initialText = 'ABCDEFGHIJKLMNOP'; // not a long enough text

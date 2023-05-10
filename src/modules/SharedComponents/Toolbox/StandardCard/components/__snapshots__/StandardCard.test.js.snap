@@ -3,6 +3,7 @@
 exports[`Cards component renders given ID for standar card 1`] = `
 <WithStyles(ForwardRef(Card))
   className="testClass StandardCard "
+  data-analyticsid="test-card"
   data-testid="test-card"
   id="test-card"
   style={Object {}}
@@ -42,6 +43,7 @@ exports[`Cards component renders given ID for standar card 1`] = `
 exports[`Cards component renders with custom colours and full height 1`] = `
 <WithStyles(ForwardRef(Card))
   className="undefined StandardCard "
+  data-analyticsid="standard-card-card-title"
   data-testid="standard-card-card-title"
   id="standard-card-card-title"
   style={
@@ -92,6 +94,7 @@ exports[`Cards component renders with custom colours and full height 1`] = `
 exports[`Cards component renders with small title and as a subcard 1`] = `
 <WithStyles(ForwardRef(Card))
   className="testClass StandardCard "
+  data-analyticsid="standard-card-card-title"
   data-testid="standard-card-card-title"
   id="standard-card-card-title"
   style={Object {}}
@@ -131,6 +134,7 @@ exports[`Cards component renders with small title and as a subcard 1`] = `
 exports[`Cards component renders with square top and accent header 1`] = `
 <WithStyles(ForwardRef(Card))
   className="undefined StandardCard "
+  data-analyticsid="standard-card-card-title"
   data-testid="standard-card-card-title"
   id="standard-card-card-title"
   style={Object {}}
@@ -170,6 +174,7 @@ exports[`Cards component renders with square top and accent header 1`] = `
 exports[`Cards component renders with title and help button 1`] = `
 <WithStyles(ForwardRef(Card))
   className="testClass StandardCard "
+  data-analyticsid="standard-card-card-title"
   data-testid="standard-card-card-title"
   id="standard-card-card-title"
   style={Object {}}
@@ -209,6 +214,7 @@ exports[`Cards component renders with title and help button 1`] = `
 exports[`Cards component renders with title and no help icon 1`] = `
 <WithStyles(ForwardRef(Card))
   className="testClass StandardCard "
+  data-analyticsid="standard-card-card-title"
   data-testid="standard-card-card-title"
   id="standard-card-card-title"
   style={Object {}}

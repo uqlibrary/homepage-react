@@ -10,7 +10,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useTitle } from 'hooks';
 
-import locale from '../bookExamBooth.locale';
+import locale from './bookExamBooth.locale';
 
 const BookExamBooth = ({
     getBookingUrl,
@@ -143,6 +143,7 @@ const BookExamBooth = ({
                                                 <FormControlLabel
                                                     control={<Radio color="primary" />}
                                                     data-testid={`display-location-option-${l.value}`}
+                                                    data-analyticsid={`display-location-option-${l.value}`}
                                                     label={
                                                         <React.Fragment>
                                                             {l.label}

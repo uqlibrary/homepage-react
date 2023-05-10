@@ -95,7 +95,7 @@ context('Personalised panel', () => {
             .should('contain', 'No preference');
 
         // click away from popup to close
-        cy.get('body').click();
+        cy.get('body').type('{esc}');
         cy.get('[data-testid="location-option-0"]').should('not.be.visible');
     });
 
@@ -123,7 +123,7 @@ context('Personalised panel', () => {
         cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('Log in and manage your print balance');
 
         // papercut menu closes
-        cy.get('body').click(); // click away
+        cy.get('body').type('{esc}'); // click away
         cy.get('li[data-testid="pp-papercut-item-button-0"]').should('not.exist');
         cy.get('button[data-testid="pp-papercut-menu-button"]').contains('Manage your print balance');
     });

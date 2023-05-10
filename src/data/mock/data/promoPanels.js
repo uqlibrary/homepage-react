@@ -631,3 +631,66 @@ export const mockPublicPanel = {
       "panel_schedule_end_time": null
     }
   }
+
+export const panelTitleOther = "Authenticated Panel";
+export const panelTitles = {
+  uqstaff: "Info for Library staff",
+  uqpkopit: "For staff",
+  s1111111: "Supporting your studies",
+};
+export const promoPanelMocks = {
+    uqstaff: {
+        "usergroup_group_id": 7,
+        "usergroup_group": "librarystaff",
+        "usergroup_group_name": "Library Staff",
+        "active_panel": {
+            "is_default_panel": true,
+            "panel_id": 70,
+            "panel_title": panelTitles.uqstaff,
+            "panel_content": "<p>We use the Library Website to provide information and services to our clients.&nbsp;<\/p><p>Students, HDRs, Alumni, UQ staff and other users will see promotional messages here that change every couple of weeks.<\/p><p>Visit the <a href=\"https:\/\/uq.sharepoint.com\/sites\/org-library\">Library Intranet<\/a> for information for library staff, including:<\/p><ul><li>the <a href=\"https:\/\/uq.sharepoint.com\/sites\/org-library\/SitePages\/Core-Briefs.aspx\">Core Brief<\/a><\/li><li><a href=\"https:\/\/uq.sharepoint.com\/sites\/org-library-news\">News and Events<\/a><\/li><li>our <a href=\"https:\/\/uq.sharepoint.com\/sites\/org-library\/SitePages\/Strategy.aspx\">Vision and Strategy<\/a> (including Beyond the Blueprint).<\/li><\/ul>",
+            "panel_admin_notes": "About promos for clients, link to intranet.",
+            "panel_schedule_start_time": null,
+            "panel_schedule_end_time": null
+        }
+    },
+    uqpkopit: {
+        "usergroup_group_id": 3,
+        "usergroup_group": "staff",
+        "usergroup_group_name": "Non-Library Staff",
+        "active_panel": {
+            "is_default_panel": true,
+            "panel_id": 71,
+            "panel_title": panelTitles.uqpkopit,
+            "panel_content": "<p>The Library is here to support your work. Check out our services for:<\/p><ul><li><a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-teaching-staff\">Teaching staff<\/a><\/li><li><a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-researchers\">Researchers<\/a><\/li><li><a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-professional-staff\">Professional staff<\/a>.<\/li><\/ul><p>Contact:<\/p><ul><li><a href=\"https:\/\/web.library.uq.edu.au\/contact-us\">AskUs<\/a> for general enquiries<\/li><li><a href=\"https:\/\/web.library.uq.edu.au\/library-services\/contact-faculty-services-librarians\">The Librarian Team<\/a><\/li><li><a href=\"https:\/\/web.library.uq.edu.au\/about-us\/organisational-structure\">Organisational contacts<\/a>.<\/li><\/ul><p><a href=\"https:\/\/web.library.uq.edu.au\/blog\">Visit our blog<\/a> for our latest news.<\/p>",
+            "panel_admin_notes": "UQ (non-lib) services, contacts",
+            "panel_schedule_start_time": null,
+            "panel_schedule_end_time": null
+        }
+    }, s1111111: {
+        "usergroup_group_id": 1,
+        "usergroup_group": "student",
+        "usergroup_group_name": "Student",
+        "active_panel": {
+            "is_default_panel": true,
+            "panel_id": 69,
+            "panel_title": panelTitles.s1111111,
+            "panel_content": "<p>Visit <a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-students\">Services for students<\/a> for links to:<\/p><ul><li>Assignment and study resources<\/li><li>In-person and online training including LinkedIn Learning and Digital Essentials modules<\/li><li>Tips and ways to find information<\/li><li>Support resources.<\/li><\/ul><p><a href=\"https:\/\/web.library.uq.edu.au\/blog\">Check our blog<\/a> for the latest news and connect with us on <a href=\"https:\/\/www.instagram.com\/uniofqldlibrary\/\">Instagram<\/a>, <a href=\"https:\/\/www.facebook.com\/uniofqldlibrary\">Facebook<\/a> or <a href=\"https:\/\/twitter.com\/UQ_Library\">Twitter<\/a> for updates, stories and events.&nbsp;<\/p><p><a href=\"https:\/\/web.library.uq.edu.au\/contact-us\">Contact us<\/a> or visit an AskUs service point for help and information.&nbsp;<\/p>",
+            "panel_admin_notes": "Services for students, Connect, Askus",
+            "panel_schedule_start_time": null,
+            "panel_schedule_end_time": null
+        }
+    }, other: {
+        "usergroup_group_id": 5,
+        "usergroup_group": "other",
+        "usergroup_group_name": "Other",
+        "active_panel": {
+            "is_default_panel": true,
+            "panel_id": 82,
+            "panel_title": panelTitleOther,
+            "panel_content": "<p>We hope you enjoy using our spaces and collections.&nbsp;<\/p><p>Find out about:&nbsp;<\/p><ul><li><a href=\"https:\/\/web.library.uq.edu.au\/borrowing-requesting\/how-borrow\">How to borrow<\/a>&nbsp;<\/li><li>Library <a href=\"https:\/\/web.library.uq.edu.au\/locations-hours\/opening-hours\">opening hours<\/a> for library members and visitors.<\/li><\/ul><p><a href=\"https:\/\/web.library.uq.edu.au\/blog\">Check our blog<\/a> for the latest news and connect with us on <a href=\"https:\/\/www.instagram.com\/uniofqldlibrary\/\">Instagram<\/a>, <a href=\"https:\/\/www.facebook.com\/uniofqldlibrary\">Facebook<\/a> or <a href=\"https:\/\/twitter.com\/UQ_Library\">Twitter<\/a> for updates, stories and events.&nbsp;<\/p><p><a href=\"https:\/\/web.library.uq.edu.au\/contact-us\">Contact us<\/a> or visit an AskUs service point for help and information.&nbsp;<\/p>",
+            "panel_admin_notes": "Welcome back, borrwing & hours, connect, contact us",
+            "panel_schedule_start_time": null,
+            "panel_schedule_end_time": null
+        }
+    }
+}

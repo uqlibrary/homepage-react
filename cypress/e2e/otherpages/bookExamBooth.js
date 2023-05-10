@@ -110,7 +110,7 @@ context('Book Exam Booth page', () => {
                 .contains('#/app/booking-types/f30fe4d2-bb58-4426-9c38-843c40b2cd3c')
                 .contains(`firstDay=${selectedDate}`)
                 .contains('fromTime=07%3A45')
-                .contains('toTime=10%3A15');
+                .contains('toTime=09%3A15');
         });
     });
 
@@ -136,9 +136,11 @@ context('Book Exam Booth page', () => {
                 const defaultDate = $input.val();
                 const yesterday = moment().subtract(1, 'day');
                 expect(defaultDate).to.equal(yesterday.format('YYYY-MM-DD'));
-            })
-            .click();
-        cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
+            });
+
+        cy.get('[data-testid="start-date"]').click();
+
+        cy.get('.MuiPickersCalendarHeader-switchHeader button:nth-of-type(2)')
             .as('next-month-button')
             .click();
         if (moment().date() === 1) {
@@ -170,7 +172,7 @@ context('Book Exam Booth page', () => {
                 .contains('#/app/booking-types/ae12d42e-faae-4553-8c6a-be2fcddb4b26')
                 .contains(`firstDay=${bookingDate.format('YYYY-MM-DD')}`)
                 .contains('fromTime=10%3A00')
-                .contains('toTime=13%3A30');
+                .contains('toTime=12%3A30');
         });
     });
 });

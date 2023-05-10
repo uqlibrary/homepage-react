@@ -125,6 +125,7 @@ export const LearningResourceSearch = ({
                 <Grid item xs={12} sm>
                     <Autocomplete
                         data-testid={`${elementId}-autocomplete`}
+                        analyticsid-testid={`${elementId}-autocomplete`}
                         aria-controls={`${elementId}-autocomplete-popup`}
                         blurOnSelect="mouse"
                         id={`${elementId}-autocomplete`}
@@ -153,6 +154,7 @@ export const LearningResourceSearch = ({
                                     inputProps={{
                                         ...params.inputProps,
                                         'data-testid': `${elementId}-autocomplete-input-wrapper`,
+                                        'data-analyticsid': `${elementId}-autocomplete-input-wrapper`,
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
                                     label={locale.search.placeholder}

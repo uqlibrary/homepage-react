@@ -90,6 +90,7 @@ export const Location = ({ idLabel }) => {
                     onClick={handleLocationClick}
                     id={getTagId('button')}
                     data-testid={getTagId('button')}
+                    data-analyticsid={getTagId('button')}
                 >
                     <RoomIcon
                         className={`${classes.icon} ${
@@ -104,6 +105,7 @@ export const Location = ({ idLabel }) => {
                 autoFocus
                 id={getTagId('menu')}
                 data-testid={getTagId('menu')}
+                data-analyticsid={getTagId('menu')}
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
@@ -119,6 +121,7 @@ export const Location = ({ idLabel }) => {
                         disabled={thisLocation === item.value}
                         className={thisLocation === item.value ? classes.selectedItem : ''}
                         data-testid={getTagId(`option-${index}`)}
+                        data-analyticsid={getTagId(`option-${index}`)}
                         id={getTagId(`option-${index}`)}
                     >
                         {(thisLocation === item.location || thisLocation === item.value) && <RoomIcon />}

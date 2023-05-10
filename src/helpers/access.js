@@ -1,8 +1,7 @@
 import { default as locale } from 'modules/Index/components/locale';
 
 /**
-    Note: the mylibrary button is setup in reusable-webcomponents
-    User settings also need to be created in that repo
+ Making changes? User settings need to be also created in repo reusable_webcomponents
 
  * (matching ptype in brackets at start, where it is an older type )
  * (1) UG: undergraduate (on campus) - sample users: vanilla, s1111111
@@ -142,7 +141,7 @@ export const canSeeLibraryServices = account => {
     }
     const userServices = getUserServices(account);
     // if the user has no services (should only be a brand new group we havent configured yet)
-    // then dont display the panel
+    // then don't display the panel
     return !!userServices && userServices.length > 0;
 };
 
