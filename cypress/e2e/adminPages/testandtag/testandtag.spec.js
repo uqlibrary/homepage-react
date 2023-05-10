@@ -5,10 +5,13 @@ describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
         cy.visit('http://localhost:2020/admin/testntag?user=uqtesttag');
         // dismiss the cultural advice, as it's in the way.
-        cy.get('cultural-advice-popup')
-            .shadow()
-            .find('#culturaladvice-container-dismiss')
-            .click();
+
+        if (cy.find('cultural-advice-popup').length > 0) {
+            cy.get('cultural-advice-popup')
+                .shadow()
+                .find('#culturaladvice-container-dismiss')
+                .click();
+        }
     });
 
     const selectListbox = pattern => {
