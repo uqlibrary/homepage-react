@@ -1,6 +1,6 @@
 import React from 'react';
-import TestTag from './TestTag';
-import { rtlRender, act, fireEvent, WithReduxStore, waitFor, screen } from 'test-utils';
+import TestTag from './Inspection';
+import { rtlRender, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
 import configData from '../../../../../data/mock/data/testing/testTagOnLoad';

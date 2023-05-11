@@ -32,7 +32,8 @@ export const pathConfig = {
         spotlightsview: spotlightid => `/admin/spotlights/view/${spotlightid}`,
         spotlightsclone: spotlightid => `/admin/spotlights/clone/${spotlightid}`,
         spotlights: '/admin/spotlights',
-        testntag: '/admin/testntag',
+        testntagdashboard: '/admin/testntag',
+        testntaginspection: '/admin/testntag/inspection',
     },
     bookExamBooth: '/book-exam-booth',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
@@ -224,8 +225,14 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     const testntagDisplay = [
         {
-            path: pathConfig.admin.testntag,
-            component: components.TestTag,
+            path: pathConfig.admin.testntagdashboard,
+            component: components.TestTagDashboard,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntaginspection,
+            component: components.TestTagInspection,
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },

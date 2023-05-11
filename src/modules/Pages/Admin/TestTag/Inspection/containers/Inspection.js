@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import TestTag from '../components/TestTag';
+import Inspection from '../components/Inspection';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
@@ -50,7 +50,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let TestTagContainer = connect(mapStateToProps, mapDispatchToProps)(TestTag);
-TestTagContainer = withRouter(TestTagContainer);
+let InspectionContainer = connect(mapStateToProps, mapDispatchToProps)(Inspection);
+InspectionContainer = withRouter(InspectionContainer);
 
-export default TestTagContainer;
+export default InspectionContainer;

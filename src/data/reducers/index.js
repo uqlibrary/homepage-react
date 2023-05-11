@@ -13,6 +13,7 @@ export { default as spotlightsReducer } from './spotlightsReducer';
 export { default as promoPanelReducer } from './promoPanelReducer';
 export { default as examSearchReducer } from './examSearchReducer';
 export { default as examSuggestionReducer } from './examSuggestionReducer';
+export { default as testTagDashboardReducer } from './testTagDashboardReducer';
 export { default as testTagOnLoadReducer } from './testTagOnLoadReducer';
 export { default as testTagLocationReducer } from './testTagLocationReducer';
 export { default as testTagAssetsReducer } from './testTagAssetsReducer';

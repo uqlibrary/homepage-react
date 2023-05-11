@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { isEmpty } from '../utils/helpers';
-import locale from '../testTag.locale';
+import locale from '../../testTag.locale';
 import { statusEnum } from '../utils/helpers';
 
 const moment = require('moment');

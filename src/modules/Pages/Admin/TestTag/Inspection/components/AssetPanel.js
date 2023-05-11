@@ -19,7 +19,7 @@ import InspectionPanel from './InspectionPanel';
 import LastInspectionPanel from './LastInspectionPanel';
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 
-import locale from '../testTag.locale';
+import locale from '../../testTag.locale';
 
 const filter = createFilterOptions();
 

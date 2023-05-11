@@ -1,12 +1,32 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
 import {
+    TEST_TAG_DASHBOARD_API,
     TEST_TAG_CONFIG_API,
     TEST_TAG_FLOOR_API,
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSET_ACTION,
 } from 'repositories/routes';
+
+export function loadDashboard() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_DASHBOARD_LOADING });
+        return get(TEST_TAG_DASHBOARD_API())
+            .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_DASHBOARD_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_DASHBOARD_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
 
 export function loadConfig() {
     return dispatch => {

@@ -20,7 +20,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ActionPanel from './ActionPanel';
 import DebouncedTextField from './DebouncedTextField';
-import locale from '../testTag.locale';
+import locale from '../../testTag.locale';
 import { isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
 
 const testStatusEnum = statusEnum(locale);

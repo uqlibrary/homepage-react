@@ -12,12 +12,12 @@ import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core';
 import clsx from 'clsx';
 
-import TestTagHeader from './TestTagHeader';
+import TestTagHeader from '../../SharedComponents/TestTagHeader/TestTagHeader';
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
 import { useForm, useValidation, useLocation } from '../utils/hooks';
-import locale from '../testTag.locale';
+import locale from '../../testTag.locale';
 const moment = require('moment');
 const testStatusEnum = statusEnum(locale);
 
@@ -40,9 +40,6 @@ const useStyles = makeStyles(theme => ({
     },
     toggleButtonMobile: {
         flex: 1,
-    },
-    header: {
-        paddingBottom: theme.spacing(2),
     },
     dialogContainer: {
         borderRadius: '6px',
@@ -183,7 +180,7 @@ const getSuccessDialog = (response, classes, locale) => {
     return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
 };
 
-const TestTag = ({
+const Inspection = ({
     actions,
     defaultFormValues,
     currentRetestList,
@@ -356,7 +353,6 @@ const TestTag = ({
             <TestTagHeader
                 departmentText={headerDepartmentText}
                 requiredText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
-                className={classes.header}
             />
 
             <EventPanel
@@ -392,7 +388,7 @@ const TestTag = ({
     );
 };
 
-TestTag.propTypes = {
+Inspection.propTypes = {
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
     currentRetestList: PropTypes.array,
@@ -413,4 +409,4 @@ TestTag.propTypes = {
     saveInspectionError: PropTypes.any,
 };
 
-export default React.memo(TestTag);
+export default React.memo(Inspection);

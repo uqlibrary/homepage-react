@@ -18,7 +18,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import clsx from 'clsx';
 
-import locale from '../testTag.locale';
+import locale from '../../testTag.locale';
 
 const moment = require('moment');
 const inputLabelProps = { shrink: true };

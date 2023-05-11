@@ -178,7 +178,12 @@ export const EXAM_SEARCH_CLEAR = 'EXAM_SEARCH_CLEAR';
 
 // TEST AND TAG
 
-// Initial config lists (sites, asset types, testing devices)
+// Dashboard onload
+export const TESTTAG_DASHBOARD_LOADING = 'TESTTAG_DASHBOARD_LOADING';
+export const TESTTAG_DASHBOARD_LOADED = 'TESTTAG_DASHBOARD_LOADED';
+export const TESTTAG_DASHBOARD_FAILED = 'TESTTAG_DASHBOARD_FAILED';
+
+// INSPECTION Initial config lists (sites, asset types, testing devices)
 export const TESTTAG_CONFIG_LOADING = 'TESTTAG_CONFIG_LOADING';
 export const TESTTAG_CONFIG_LOADED = 'TESTTAG_CONFIG_LOADED';
 export const TESTTAG_CONFIG_FAILED = 'TESTTAG_CONFIG_FAILED';

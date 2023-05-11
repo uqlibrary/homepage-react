@@ -1,1 +1,1 @@
-export { default as TestTag } from './components/TestTag';
+export { default as TestTagInspection } from './Inspection/containers';

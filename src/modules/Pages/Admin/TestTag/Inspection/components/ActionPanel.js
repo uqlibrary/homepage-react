@@ -12,7 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 
-import locale from '../testTag.locale';
+import locale from '../../testTag.locale';
 import TabPanel from './TabPanel';
 import { isValidRepair, isValidDiscard, isEmpty, statusEnum } from '../utils/helpers';
 
