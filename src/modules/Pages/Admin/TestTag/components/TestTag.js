@@ -368,14 +368,15 @@ const TestTag = ({
         }
     };
 
-    const appbarDynamicClasses = React.useMemo(() => {
-        console.log('useMemo');
-        return clsx({
-            [classes.appbarPositionVisible]: inView,
-            [classes.appbarPositionClipped]: !inView,
-            'layout-card': !inView && !isMobileView,
-        });
-    }, [classes.appbarPositionClipped, classes.appbarPositionVisible, inView, isMobileView]);
+    const appbarDynamicClasses = React.useMemo(
+        () =>
+            clsx({
+                [classes.appbarPositionVisible]: inView,
+                [classes.appbarPositionClipped]: !inView,
+                'layout-card': !inView && !isMobileView,
+            }),
+        [classes.appbarPositionClipped, classes.appbarPositionVisible, inView, isMobileView],
+    );
 
     return (
         <StandardPage title={locale.form.pageTitle}>
@@ -445,7 +446,6 @@ const TestTag = ({
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 saveInspectionSaving={saveInspectionSaving}
                 isMobileView={isMobileView}
-                isValid={isValid}
             />
             <InView onChange={setInView} rootMargin="200% 0 0 0" threshold={0}>
                 <AppBar component={'div'} className={appbarDynamicClasses}>

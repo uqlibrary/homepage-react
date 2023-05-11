@@ -53,7 +53,6 @@ const AssetPanel = ({
         classes: PropTypes.object.isRequired,
         saveInspectionSaving: PropTypes.bool,
         isMobileView: PropTypes.bool,
-        isValid: PropTypes.bool,
     };
 
     const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
