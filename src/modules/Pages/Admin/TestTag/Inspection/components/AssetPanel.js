@@ -63,7 +63,9 @@ const AssetPanel = ({
         isValid: PropTypes.bool,
     };
 
-    const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
+    const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
+        state.get?.('testTagOnLoadInspectionReducer'),
+    );
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
     const [formAssetList, setFormAssetList] = useState(assetsList);
@@ -213,9 +215,9 @@ const AssetPanel = ({
                             id="testntagFormAssetType"
                             data-testid="testntagFormAssetType"
                             fullWidth
-                            options={initConfig?.asset_types ?? []}
+                            options={inspectionConfig?.asset_types ?? []}
                             value={
-                                initConfig?.asset_types?.find(
+                                inspectionConfig?.asset_types?.find(
                                     assetType => assetType.asset_type_id === formValues.asset_type_id,
                                 ) ?? null
                             }
@@ -240,7 +242,7 @@ const AssetPanel = ({
                                         ...params.InputProps,
                                         endAdornment: (
                                             <React.Fragment>
-                                                {initConfigLoading ? (
+                                                {inspectionConfigLoading ? (
                                                     <CircularProgress
                                                         color="inherit"
                                                         size={20}
@@ -259,10 +261,10 @@ const AssetPanel = ({
                                     }}
                                 />
                             )}
-                            disabled={initConfigLoading || !isValidAssetId(formValues?.asset_id_displayed)}
+                            disabled={inspectionConfigLoading || !isValidAssetId(formValues?.asset_id_displayed)}
                             disableClearable
                             autoSelect
-                            loading={!!initConfigLoading}
+                            loading={!!inspectionConfigLoading}
                         />
                     </FormControl>
                 </Grid>

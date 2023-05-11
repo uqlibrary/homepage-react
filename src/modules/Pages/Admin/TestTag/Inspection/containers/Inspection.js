@@ -33,7 +33,7 @@ const DEFAULT_FORM_VALUES = {
 
 export const mapStateToProps = state => {
     return {
-        ...state.get('testTagOnLoadReducer'),
+        ...state.get('testTagOnLoadInspectionReducer'),
         ...state.get('testTagLocationReducer'),
         ...state.get('testTagAssetsReducer'),
         ...state.get('testTagSaveInspectionReducer'),

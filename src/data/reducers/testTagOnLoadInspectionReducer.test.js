@@ -1,4 +1,4 @@
-import testTagOnLoadReducer, { initialState } from './testTagOnLoadReducer';
+import testTagOnLoadReducer, { initialState } from './testTagOnLoadInspectionReducer';
 import * as actions from '../actions/actionTypes';
 
 describe('testTagOnLoad reducer', () => {

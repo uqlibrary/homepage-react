@@ -1,8 +1,8 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
 import {
-    TEST_TAG_DASHBOARD_API,
-    TEST_TAG_CONFIG_API,
+    TEST_TAG_ONLOAD_DASHBOARD_API,
+    TEST_TAG_ONLOAD_INSPECTION_API,
     TEST_TAG_FLOOR_API,
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
@@ -11,17 +11,17 @@ import {
 
 export function loadDashboard() {
     return dispatch => {
-        dispatch({ type: actions.TESTTAG_DASHBOARD_LOADING });
-        return get(TEST_TAG_DASHBOARD_API())
+        dispatch({ type: actions.TESTTAG_DASHBOARD_CONFIG_LOADING });
+        return get(TEST_TAG_ONLOAD_DASHBOARD_API())
             .then(data => {
                 dispatch({
-                    type: actions.TESTTAG_DASHBOARD_LOADED,
+                    type: actions.TESTTAG_DASHBOARD_CONFIG_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.TESTTAG_DASHBOARD_FAILED,
+                    type: actions.TESTTAG_DASHBOARD_CONFIG_FAILED,
                     payload: error.message,
                 });
             });
@@ -30,17 +30,17 @@ export function loadDashboard() {
 
 export function loadConfig() {
     return dispatch => {
-        dispatch({ type: actions.TESTTAG_CONFIG_LOADING });
-        return get(TEST_TAG_CONFIG_API())
+        dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
+        return get(TEST_TAG_ONLOAD_INSPECTION_API())
             .then(data => {
                 dispatch({
-                    type: actions.TESTTAG_CONFIG_LOADED,
+                    type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.TESTTAG_CONFIG_FAILED,
+                    type: actions.TESTTAG_INSPECTION_CONFIG_FAILED,
                     payload: error.message,
                 });
             });
@@ -49,7 +49,7 @@ export function loadConfig() {
 
 export function clearConfig() {
     return dispatch => {
-        dispatch({ type: actions.TESTTAG_CONFIG_CLEAR });
+        dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR });
     };
 }
 

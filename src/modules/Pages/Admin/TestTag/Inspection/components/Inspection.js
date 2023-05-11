@@ -186,8 +186,8 @@ const Inspection = ({
     currentRetestList,
     defaultNextTestDateValue,
     assetsListError,
-    initConfig,
-    initConfigError,
+    inspectionConfig,
+    inspectionConfigError,
     floorListError,
     roomListError,
     saveInspectionSaving,
@@ -215,10 +215,10 @@ const Inspection = ({
                 inspection_device_id:
                     formValues?.inspection_device_id !== undefined
                         ? formValues?.inspection_device_id
-                        : initConfig?.inspection_devices?.[0]?.device_id ?? /* istanbul ignore next */ undefined,
+                        : inspectionConfig?.inspection_devices?.[0]?.device_id ?? /* istanbul ignore next */ undefined,
             };
         },
-        [initConfig?.inspection_devices, defaultFormValues, today],
+        [inspectionConfig?.inspection_devices, defaultFormValues, today],
     );
 
     const { formValues, resetFormValues, handleChange } = useForm({
@@ -230,14 +230,14 @@ const Inspection = ({
 
     const headerDepartmentText = React.useMemo(
         () =>
-            initConfig?.user
+            inspectionConfig?.user
                 ? locale?.form?.pageSubtitle?.(
-                      initConfig?.user?.department_display_name ??
-                          /* istanbul ignore next */ initConfig?.user?.user_department ??
+                      inspectionConfig?.user?.department_display_name ??
+                          /* istanbul ignore next */ inspectionConfig?.user?.user_department ??
                           /* istanbul ignore next */ '',
                   )
                 : /* istanbul ignore next */ '',
-        [initConfig],
+        [inspectionConfig],
     );
 
     useEffect(() => {
@@ -247,7 +247,7 @@ const Inspection = ({
         if (!!saveInspectionSuccess) {
             showSaveSuccessConfirmation();
         }
-        if (!!initConfigError || !!floorListError || !!roomListError || !!assetsListError) {
+        if (!!inspectionConfigError || !!floorListError || !!roomListError || !!assetsListError) {
             showNetworkError();
         }
     }, [
@@ -256,7 +256,7 @@ const Inspection = ({
         saveInspectionSuccess,
         showSaveSuccessConfirmation,
         showNetworkError,
-        initConfigError,
+        inspectionConfigError,
         floorListError,
         roomListError,
         assetsListError,
@@ -280,7 +280,7 @@ const Inspection = ({
         /* istanbul ignore else */ if (
             formValues?.asset_id_displayed === undefined &&
             assetIdElementRef.current &&
-            !!initConfig
+            !!inspectionConfig
         ) {
             assetIdElementRef.current.focus();
         }
@@ -297,13 +297,13 @@ const Inspection = ({
     }, [actions]);
 
     useEffect(() => {
-        (!!!initConfigError || /* istanbul ignore next */ initConfigError.length === 0) &&
+        (!!!inspectionConfigError || /* istanbul ignore next */ inspectionConfigError.length === 0) &&
             (!!!floorListError || /* istanbul ignore next */ floorListError.length === 0) &&
             (!!!roomListError || /* istanbul ignore next */ roomListError.length === 0) &&
             (!!!assetsListError || /* istanbul ignore next */ assetsListError.length === 0) &&
             validateValues(formValues, selectedAsset?.last_inspection);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initConfigError, floorListError, roomListError, assetsListError, formValues, selectedAsset]);
+    }, [inspectionConfigError, floorListError, roomListError, assetsListError, formValues, selectedAsset]);
 
     const clearSaveError = () => {
         actions.clearSaveInspection();
@@ -370,7 +370,7 @@ const Inspection = ({
                 actions={actions}
                 location={location}
                 resetForm={() => resetForm()}
-                department={initConfig?.user?.user_department}
+                department={inspectionConfig?.user?.user_department}
                 currentRetestList={currentRetestList}
                 formValues={formValues}
                 selectedAsset={selectedAsset}
@@ -396,8 +396,8 @@ Inspection.propTypes = {
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,
-    initConfig: PropTypes.any,
-    initConfigError: PropTypes.any,
+    inspectionConfig: PropTypes.any,
+    inspectionConfigError: PropTypes.any,
     floorList: PropTypes.any,
     floorListLoading: PropTypes.bool,
     floorListError: PropTypes.any,

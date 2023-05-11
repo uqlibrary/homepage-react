@@ -51,7 +51,9 @@ const EventPanel = ({
         .subtract(5, 'year')
         .format(locale.config.dateFormat);
 
-    const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
+    const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
+        state.get?.('testTagOnLoadInspectionReducer'),
+    );
     const { floorList, floorListLoading, roomList, roomListLoading } = useSelector(state =>
         state.get?.('testTagLocationReducer'),
     );
@@ -62,11 +64,11 @@ const EventPanel = ({
     };
 
     useEffect(() => {
-        if (!initConfigLoading && !!initConfig && initConfig?.sites.length > 0) {
-            setLocation({ formSiteId: initConfig.sites[0].site_id });
+        if (!inspectionConfigLoading && !!inspectionConfig && inspectionConfig?.sites.length > 0) {
+            setLocation({ formSiteId: inspectionConfig.sites[0].site_id });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initConfig, initConfigLoading]);
+    }, [inspectionConfig, inspectionConfigLoading]);
 
     return (
         <StandardCard
@@ -141,14 +143,14 @@ const EventPanel = ({
                                     'data-testid': 'testntag-form-siteid-input',
                                 }}
                             >
-                                {!!initConfigLoading && (
+                                {!!inspectionConfigLoading && (
                                     <MenuItem value={-1} disabled key={'site-loading'} data-testid="tester">
                                         {locale.form.loading}
                                     </MenuItem>
                                 )}
-                                {!!initConfig &&
-                                    initConfig?.sites?.length > 0 &&
-                                    initConfig.sites.map(site => (
+                                {!!inspectionConfig &&
+                                    inspectionConfig?.sites?.length > 0 &&
+                                    inspectionConfig.sites.map(site => (
                                         <MenuItem
                                             value={site.site_id}
                                             key={site.site_id}
@@ -170,11 +172,11 @@ const EventPanel = ({
                                 data-testid="testntag-form-buildingid"
                                 fullWidth
                                 options={
-                                    initConfig?.sites?.find(site => site.site_id === location.formSiteId)?.buildings ??
-                                    []
+                                    inspectionConfig?.sites?.find(site => site.site_id === location.formSiteId)
+                                        ?.buildings ?? []
                                 }
                                 value={
-                                    initConfig?.sites
+                                    inspectionConfig?.sites
                                         ?.find(site => site.site_id === location.formSiteId)
                                         ?.buildings?.find(
                                             building => building.building_id === location.formBuildingId,
@@ -212,7 +214,7 @@ const EventPanel = ({
                                             ...params.InputProps,
                                             endAdornment: (
                                                 <React.Fragment>
-                                                    {!!initConfigLoading ? (
+                                                    {!!inspectionConfigLoading ? (
                                                         <CircularProgress
                                                             color="inherit"
                                                             size={20}
@@ -231,9 +233,9 @@ const EventPanel = ({
                                         }}
                                     />
                                 )}
-                                disabled={location.formSiteId === -1 || !!!initConfig}
+                                disabled={location.formSiteId === -1 || !!!inspectionConfig}
                                 disableClearable
-                                loading={!!!initConfig}
+                                loading={!!!inspectionConfig}
                             />
                         </FormControl>
                     </Grid>

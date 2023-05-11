@@ -7,20 +7,20 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.TESTTAG_DASHBOARD_LOADING]: state => ({
+    [actions.TESTTAG_DASHBOARD_CONFIG_LOADING]: state => ({
         ...initialState,
         ...state,
         initDashboardLoading: true,
         initDashboardError: false,
     }),
-    [actions.TESTTAG_DASHBOARD_LOADED]: (state, action) => ({
+    [actions.TESTTAG_DASHBOARD_CONFIG_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         initDashboardLoading: false,
         initDashboardError: false,
         initDashboard: action.payload,
     }),
-    [actions.TESTTAG_DASHBOARD_FAILED]: (state, action) => ({
+    [actions.TESTTAG_DASHBOARD_CONFIG_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         initDashboardLoading: false,
@@ -28,7 +28,7 @@ const handlers = {
     }),
 };
 
-export default function testTagDashboardReducer(state = initialState, action) {
+export default function testTagOnLoadDashboardReducer(state = initialState, action) {
     const handler = handlers[action.type];
     if (!handler) {
         return state;

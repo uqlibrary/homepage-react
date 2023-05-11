@@ -35,7 +35,8 @@ import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
-import testTag_onLoad from './data/records/test_tag_onLoad';
+import testTag_dashboardOnLoad from './data/records/test_tag_dashboardOnLoad';
+import testTag_inspectionOnLoad from './data/records/test_tag_inspectionOnLoad';
 import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
@@ -52,6 +53,8 @@ import {
     mockPublicPanel,
     promoPanelMocks,
 } from './data/promoPanels';
+
+import { TEST_TAG_ONLOAD_DASHBOARD_API, TEST_TAG_ONLOAD_INSPECTION_API, TEST_TAG_ASSETS_API, TEST_TAG_ASSET_ACTION, TEST_TAG_FLOOR_API, TEST_TAG_ROOM_API, } from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -759,10 +762,16 @@ mock.onGet('exams/course/FREN1010/summary')
 
     /** TEST AND TAG ROUTES **/
 
-    // CONFIG
-    .onGet('test_and_tag/onload')
+    // dashboard CONFIG
+    .onGet('test_and_tag/onload/dashboard')
     .reply(config => {
-        return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_onLoad];
+        return [200, testTag_dashboardOnLoad];
+    })
+
+    // inspection CONFIG
+    .onGet('test_and_tag/onload/inspection')
+    .reply(config => {
+        return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
     })
 
     // T&T FLOORS

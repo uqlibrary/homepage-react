@@ -64,7 +64,9 @@ const InspectionPanel = ({
 
     const classesInternal = useStyles();
 
-    const { initConfig, initConfigLoading } = useSelector(state => state.get?.('testTagOnLoadReducer'));
+    const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
+        state.get?.('testTagOnLoadInspectionReducer'),
+    );
 
     const [formNextTestDate, setFormNextTestDate] = useState(defaultNextTestDateValue);
     useEffect(() => {
@@ -113,16 +115,16 @@ const InspectionPanel = ({
                                 }
                                 disabled={disabled}
                             >
-                                {!!initConfigLoading && (
+                                {!!inspectionConfigLoading && (
                                     <MenuItem value={-1} disabled key={'devicetypes-loading'}>
                                         {locale.form.loading}
                                     </MenuItem>
                                 )}
-                                {!!!initConfigLoading &&
-                                    !!initConfig &&
-                                    !!initConfig?.inspection_devices &&
-                                    initConfig?.inspection_devices?.length > 0 &&
-                                    initConfig.inspection_devices.map(device => (
+                                {!!!inspectionConfigLoading &&
+                                    !!inspectionConfig &&
+                                    !!inspectionConfig?.inspection_devices &&
+                                    inspectionConfig?.inspection_devices?.length > 0 &&
+                                    inspectionConfig.inspection_devices.map(device => (
                                         <MenuItem value={device.device_id} key={device.device_id}>
                                             {device.device_model_name}
                                         </MenuItem>
