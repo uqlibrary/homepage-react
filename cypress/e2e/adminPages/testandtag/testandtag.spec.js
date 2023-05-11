@@ -154,6 +154,7 @@ describe('Test and Tag Admin Inspection page', () => {
 
         describe('Asset panel functionality', () => {
             it('should allow entry of new asset IDs (temporary)', () => {
+                cy.data('testntag-form-siteid').should('contain', 'St Lucia');
                 // this is for code coverage. Will be removed post MVP
                 cy.data('testntagFormAssetIdInput').click();
                 cy.data('testntagFormAssetIdInput').type('AN ASSET ID{enter}');
@@ -161,10 +162,9 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
             it('should allow auto complete of asset ID as mask', () => {
-                cy.data('testntag-form-siteid').should('contain', 'St Lucia');
                 // Enter partial asset ID for mask search
                 cy.data('testntagFormAssetIdInput').click();
-                cy.data('testntagFormAssetIdInput').type('123', { waitForAnimations: true, delay: 100 });
+                cy.data('testntagFormAssetIdInput').type('123');
                 cy.wait(3000);
                 // Asset found
                 cy.data('lastInspectionFailChip').should('exist');
