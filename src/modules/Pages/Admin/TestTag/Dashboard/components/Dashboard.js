@@ -18,8 +18,7 @@ const Dashboard = () => {
         [initConfig],
     );
 
-    return (
-    <StandardPage title={locale.form.pageTitle}>
+    return (<StandardPage title={locale.form.pageTitle}>
          <TestTagHeader
                 departmentText={headerDepartmentText}
                 requiredText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
