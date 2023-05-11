@@ -466,7 +466,7 @@ const TestTag = ({
                 isValid={isValid}
                 canAddAssetType
             />
-            <InView onChange={setInView} rootMargin="200% 0 0 0" threshold={0}>
+            <InView onChange={setInView} rootMargin="200% 0px 0px 0px" threshold={0}>
                 <AppBar component={'div'} className={appbarDynamicClasses}>
                     <Toolbar className={classes.toolbar}>
                         <Button
