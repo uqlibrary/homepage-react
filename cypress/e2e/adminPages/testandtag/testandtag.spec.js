@@ -162,6 +162,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
             it('should allow auto complete of asset ID as mask', () => {
+                cy.data('testntag-form-siteid').should('contain', 'St Lucia');
                 // Enter partial asset ID for mask search
                 cy.data('testntagFormAssetIdInput').click();
                 cy.data('testntagFormAssetIdInput').type('123');
