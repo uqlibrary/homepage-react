@@ -2,6 +2,11 @@ import React from 'react';
 import TestTag from './TestTag';
 import { rtlRender, act, fireEvent, WithReduxStore, waitFor, screen } from 'test-utils';
 import Immutable from 'immutable';
+import {
+    mockAllIsIntersecting,
+    // mockIsIntersecting,
+    // intersectionMockInstance,
+} from 'react-intersection-observer/test-utils';
 
 import configData from '../../../../../data/mock/data/testing/testTagOnLoad';
 import locale from '../testTag.locale.js';
@@ -81,6 +86,9 @@ function setup(testProps = {}, renderer = rtlRender) {
 describe('TestTag', () => {
     beforeAll(() => {
         window.HTMLElement.prototype.scrollIntoView = jest.fn();
+    });
+    beforeEach(() => {
+        mockAllIsIntersecting(true);
     });
 
     it('renders component', () => {
