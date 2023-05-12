@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Box, useTheme } from '@material-ui/core';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
@@ -12,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core';
 import clsx from 'clsx';
 
-import TestTagHeader from '../../SharedComponents/TestTagHeader/TestTagHeader';
+import StandardPage from '../../SharedComponents/StandardPageTnT/StandardPageTnT';
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
@@ -228,18 +227,6 @@ const Inspection = ({
 
     const { location, setLocation } = useLocation();
 
-    const headerDepartmentText = React.useMemo(
-        () =>
-            inspectionConfig?.user
-                ? locale?.form?.pageSubtitle?.(
-                      inspectionConfig?.user?.department_display_name ??
-                          /* istanbul ignore next */ inspectionConfig?.user?.user_department ??
-                          /* istanbul ignore next */ '',
-                  )
-                : /* istanbul ignore next */ '',
-        [inspectionConfig],
-    );
-
     useEffect(() => {
         if (!!saveInspectionError) {
             showSaveError();
@@ -293,7 +280,7 @@ const Inspection = ({
     };
 
     useEffect(() => {
-        actions.loadConfig();
+        actions.loadInspectionConfig();
     }, [actions]);
 
     useEffect(() => {
@@ -316,7 +303,10 @@ const Inspection = ({
     };
 
     return (
-        <StandardPage title={locale.form.pageTitle}>
+        <StandardPage
+            title={locale.form.pageTitle}
+            headerSubText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
+        >
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
@@ -349,10 +339,6 @@ const Inspection = ({
                 locale={saveErrorLocale}
                 hideCancelButton
                 noMinContentWidth
-            />
-            <TestTagHeader
-                departmentText={headerDepartmentText}
-                requiredText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
             />
 
             <EventPanel

@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { Link } from 'react-router-dom';
 import Skeleton from '@material-ui/lab/Skeleton';
 
-import TestTagHeader from '../../SharedComponents/TestTagHeader/TestTagHeader';
+import StandardPage from '../../SharedComponents/StandardPageTnT/StandardPageTnT';
 import locale from '../../testTag.locale';
 
 const useStyles = makeStyles(theme => ({
@@ -20,38 +20,26 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Dashboard = ({ actions, initDashboard, initDashboardLoading, initDashboardError }) => {
+const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDashboardError }) => {
     const classes = useStyles();
 
     useEffect(() => {
         actions.loadDashboard();
     }, [actions]);
 
-    const headerDepartmentText = React.useMemo(
-        () =>
-            initDashboard?.user
-                ? locale?.form?.pageSubtitle?.(
-                      initDashboard?.user?.department_display_name ??
-                          /* istanbul ignore next */ initDashboard?.user?.user_department ??
-                          /* istanbul ignore next */ '',
-                  )
-                : /* istanbul ignore next */ '',
-        [initDashboard],
-    );
-
     return (
         <StandardPage title={locale.form.pageTitle}>
-            <TestTagHeader
-                departmentText={headerDepartmentText}
-                requiredText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
-            />
             <div className={classes.root}>
                 <Grid container spacing={3} padding={3}>
                     <Grid item xs>
                         {initDashboardLoading && !initDashboardError ? (
                             <Skeleton animation="wave" height={150} />
                         ) : (
-                            <Paper className={classes.paper}>xs</Paper>
+                            <Paper className={classes.paper}>
+                                <Link to="/admin/testntag/inspection?user=uqtesttag" data-testid="linkInspection">
+                                    Inspections
+                                </Link>
+                            </Paper>
                         )}
                     </Grid>
                     <Grid item xs>

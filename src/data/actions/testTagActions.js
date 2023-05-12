@@ -15,6 +15,10 @@ export function loadDashboard() {
         return get(TEST_TAG_ONLOAD_DASHBOARD_API())
             .then(data => {
                 dispatch({
+                    type: actions.TESTTAG_USER_LOADED,
+                    payload: data?.user ?? /* istanbul ignore next */ {},
+                });
+                dispatch({
                     type: actions.TESTTAG_DASHBOARD_CONFIG_LOADED,
                     payload: data,
                 });
@@ -28,11 +32,15 @@ export function loadDashboard() {
     };
 }
 
-export function loadConfig() {
+export function loadInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
         return get(TEST_TAG_ONLOAD_INSPECTION_API())
             .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LOADED,
+                    payload: data?.user ?? /* istanbul ignore next */ {},
+                });
                 dispatch({
                     type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
                     payload: data,
@@ -47,7 +55,7 @@ export function loadConfig() {
     };
 }
 
-export function clearConfig() {
+export function clearInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR });
     };

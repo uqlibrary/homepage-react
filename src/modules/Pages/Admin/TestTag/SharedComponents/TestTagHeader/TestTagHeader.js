@@ -22,20 +22,24 @@ const TestTagHeader = (/* istanbul ignore next*/ { departmentText = '', required
     const { className, ...rest } = props;
     return (
         <Box className={clsx([classes.header, className])} data-testid="tntHeader" {...rest}>
-            <Typography component={'h2'} variant={'h5'}>
-                {!!!departmentText ? (
-                    <Skeleton animation="wave" data-testid="tntHeaderSkeletonDepartmentTextLoading" />
-                ) : (
-                    departmentText
-                )}
-            </Typography>
-            <Typography variant={'body1'} component={'p'}>
-                {!!!requiredText ? (
-                    <Skeleton animation="wave" data-testid="tntHeaderSkeletonRequiredTextLoading" />
-                ) : (
-                    requiredText
-                )}
-            </Typography>
+            {!!departmentText && departmentText.length > 0 && (
+                <Typography component={'h2'} variant={'h5'}>
+                    {!!!departmentText ? (
+                        <Skeleton animation="wave" data-testid="tntHeaderSkeletonDepartmentTextLoading" />
+                    ) : (
+                        departmentText
+                    )}
+                </Typography>
+            )}
+            {!!requiredText && requiredText.length > 0 && (
+                <Typography variant={'body1'} component={'p'}>
+                    {!!!requiredText ? (
+                        <Skeleton animation="wave" data-testid="tntHeaderSkeletonRequiredTextLoading" />
+                    ) : (
+                        requiredText
+                    )}
+                </Typography>
+            )}
         </Box>
     );
 };

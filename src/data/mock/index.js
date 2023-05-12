@@ -763,13 +763,13 @@ mock.onGet('exams/course/FREN1010/summary')
     /** TEST AND TAG ROUTES **/
 
     // dashboard CONFIG
-    .onGet('test_and_tag/onload/dashboard')
+    .onGet(routes.TEST_TAG_ONLOAD_DASHBOARD_API().apiUrl)
     .reply(config => {
         return [200, testTag_dashboardOnLoad];
     })
 
     // inspection CONFIG
-    .onGet('test_and_tag/onload/inspection')
+    .onGet(routes.TEST_TAG_ONLOAD_INSPECTION_API().apiUrl)
     .reply(config => {
         return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
     })
