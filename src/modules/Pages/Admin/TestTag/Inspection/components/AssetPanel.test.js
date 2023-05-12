@@ -3,10 +3,9 @@ import AssetPanel from './AssetPanel';
 import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
-import configData from '../../../../../data/mock/data/testing/testTagOnLoad';
-import assetData from '../../../../../data/mock/data/testing/testTagAssets';
-
-import locale from '../testTag.locale.js';
+import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
+import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
+import locale from '../../testTag.locale.js';
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -39,7 +38,7 @@ function setup(testProps = {}) {
     const { state = {}, actions = {}, focusElementRef = {}, classes = {}, isMobileView = false, ...props } = testProps;
 
     const _state = {
-        testTagOnLoadReducer: { initConfig: configData, initConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
         testTagAssetsReducer: { assetsList: assetData, assetsListLoading: false },
         ...state,
     };
@@ -123,7 +122,7 @@ describe('AssetPanel', () => {
             saveInspectionSaving: false,
             isValid: false,
             state: {
-                testTagOnLoadReducer: { initConfig: {}, initConfigLoading: true },
+                testTagOnLoadInspectionReducer: { inspectionConfig: {}, inspectionConfigLoading: true },
                 testTagAssetsReducer: { assetsList: [], assetsListLoading: true },
             },
         });

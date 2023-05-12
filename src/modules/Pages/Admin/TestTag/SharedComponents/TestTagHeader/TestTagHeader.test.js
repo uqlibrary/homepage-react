@@ -12,6 +12,16 @@ function setup(testProps = {}, renderer = rtlRender) {
 }
 
 describe('TestTagHeader Renders component', () => {
+    it('should render skeleton loader', () => {
+        const { getByTestId } = setup({
+            departmentText: undefined,
+            requiredText: undefined,
+            'data-testid': 'boxId',
+        });
+        expect(getByTestId('boxId')).toBeInTheDocument();
+        expect(getByTestId('tntHeaderSkeletonDepartmentTextLoading')).toBeInTheDocument();
+        expect(getByTestId('tntHeaderSkeletonRequiredTextLoading')).toBeInTheDocument();
+    });
     it('should render header text', () => {
         const { getByText, getByTestId } = setup({
             departmentText: 'UQL',

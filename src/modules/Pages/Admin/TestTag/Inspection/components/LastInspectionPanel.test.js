@@ -2,7 +2,7 @@ import React from 'react';
 import LastInspectionPanel from './LastInspectionPanel';
 import { rtlRender, act, fireEvent } from 'test-utils';
 
-import locale from '../testTag.locale.js';
+import locale from '../../testTag.locale.js';
 
 const moment = require('moment');
 

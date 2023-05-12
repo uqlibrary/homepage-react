@@ -3,8 +3,9 @@ import InspectionPanel from './InspectionPanel';
 import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
-import configData from '../../../../../data/mock/data/testing/testTagOnLoad';
-import assetData from '../../../../../data/mock/data/testing/testTagAssets';
+import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
+import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
+import locale from '../../testTag.locale.js';
 
 const formValues = {
     action_date: '2016-12-05 14:22',
@@ -23,7 +24,6 @@ const formValues = {
     room_id: 1,
     user_id: 3,
 };
-import locale from '../testTag.locale.js';
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -45,7 +45,7 @@ function setup(testProps = {}) {
     } = testProps;
 
     const _state = {
-        testTagOnLoadReducer: { initConfig: configData, initConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
         ...state,
     };
     return render(
@@ -161,7 +161,7 @@ describe('InspectionPanel', () => {
             selectedAsset: {},
             handleChange,
             isMobileView: true,
-            state: { testTagOnLoadReducer: { initConfig: [], initConfigLoading: true } },
+            state: { testTagOnLoadInspectionReducer: { inspectionConfig: [], inspectionConfigLoading: true } },
         });
 
         expect(getByText(locale.form.inspection.title)).toBeInTheDocument();

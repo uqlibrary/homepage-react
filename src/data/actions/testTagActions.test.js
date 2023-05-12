@@ -32,24 +32,30 @@ describe('Test & Tag actions', () => {
     // ,,,TEST_TAG_ASSETS_API,TEST_TAG_ASSET_ACTION
     describe('Test & Tag List Config Actions', () => {
         it('handles T&T Config list', async () => {
-            mockApi.onGet(repositories.routes.TEST_TAG_CONFIG_API().apiUrl).reply(200, []);
+            mockApi.onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECTION_API().apiUrl).reply(200, []);
 
-            const expectedActions = [actions.TESTTAG_CONFIG_LOADING, actions.TESTTAG_CONFIG_LOADED];
+            const expectedActions = [
+                actions.TESTTAG_INSPECTION_CONFIG_LOADING,
+                actions.TESTTAG_INSPECTION_CONFIG_LOADED,
+            ];
 
             await mockActionsStore.dispatch(loadConfig());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
         it('dispatches expected actions when  T&T config call fails', async () => {
-            mockApi.onGet(repositories.routes.TEST_TAG_CONFIG_API()).reply(500);
+            mockApi.onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECTION_API()).reply(500);
 
-            const expectedActions = [actions.TESTTAG_CONFIG_LOADING, actions.TESTTAG_CONFIG_FAILED];
+            const expectedActions = [
+                actions.TESTTAG_INSPECTION_CONFIG_LOADING,
+                actions.TESTTAG_INSPECTION_CONFIG_FAILED,
+            ];
 
             await mockActionsStore.dispatch(loadConfig());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
         it('should dispatch clear T&T config action', async () => {
-            const expectedActions = [actions.TESTTAG_CONFIG_CLEAR];
+            const expectedActions = [actions.TESTTAG_INSPECTION_CONFIG_CLEAR];
 
             await mockActionsStore.dispatch(clearConfig());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);

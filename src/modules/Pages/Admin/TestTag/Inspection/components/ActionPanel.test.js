@@ -2,7 +2,7 @@ import React from 'react';
 import ActionPanel from './ActionPanel';
 import { rtlRender, act, fireEvent, waitFor } from 'test-utils';
 
-import locale from '../testTag.locale.js';
+import locale from '../../testTag.locale.js';
 
 function setup(testProps = {}, renderer = rtlRender) {
     return renderer(<ActionPanel {...testProps} />);
