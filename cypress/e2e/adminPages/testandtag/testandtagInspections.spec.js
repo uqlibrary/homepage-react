@@ -4,7 +4,7 @@ import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/t
 describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-        cy.visit('http://localhost:2020/admin/testntag?user=uqtesttag');
+        cy.visit('http://localhost:2020/admin/testntag/inspection?user=uqtesttag');
     });
 
     const selectListbox = pattern => {
@@ -155,6 +155,7 @@ describe('Test and Tag Admin Inspection page', () => {
         describe('Asset panel functionality', () => {
             it('should allow entry of new asset IDs (temporary)', () => {
                 // this is for code coverage. Will be removed post MVP
+                cy.data('testntag-form-siteid').should('contain', 'St Lucia');
                 cy.data('testntagFormAssetIdInput').click();
                 cy.data('testntagFormAssetIdInput').type('AN ASSET ID{enter}');
                 cy.data('testntagFormAssetIdInput').should('have.value', 'AN ASSET ID');
@@ -162,6 +163,7 @@ describe('Test and Tag Admin Inspection page', () => {
             });
             it('should allow auto complete of asset ID as mask', () => {
                 // Enter partial asset ID for mask search
+                cy.data('testntag-form-siteid').should('contain', 'St Lucia');
                 cy.data('testntagFormAssetIdInput').click();
                 cy.data('testntagFormAssetIdInput').type('123');
                 cy.wait(3000);

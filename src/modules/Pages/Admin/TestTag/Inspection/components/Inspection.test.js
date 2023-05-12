@@ -1,10 +1,10 @@
 import React from 'react';
-import TestTag from './Inspection';
+import Inspection from './Inspection';
 import { rtlRender, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
-import configData from '../../../../../data/mock/data/testing/testTagOnLoad';
-import locale from '../testTag.locale.js';
+import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
+import locale from '../../testTag.locale.js';
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -39,9 +39,9 @@ function setup(testProps = {}, renderer = rtlRender) {
         actions = {},
         defaultFormValues = DEFAULT_FORM_VALUES,
         assetsListError = null,
-        initConfig = configData,
-        initConfigLoading = false,
-        initConfigError = null,
+        inspectionConfig = configData,
+        inspectionConfigLoading = false,
+        inspectionConfigError = null,
         floorListError = null,
         roomListError = null,
         saveInspectionSaving = false,
@@ -51,22 +51,22 @@ function setup(testProps = {}, renderer = rtlRender) {
     } = testProps;
 
     const _state = {
-        testTagOnLoadReducer: { initConfig: configData, initConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
         ...state,
     };
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <TestTag
+            <Inspection
                 actions={actions}
                 defaultFormValues={defaultFormValues}
                 currentRetestList={currentRetestList}
                 currentAssetOwnersList={currentAssetOwnersList}
                 defaultNextTestDateValue={DEFAULT_NEXT_TEST_DATE_VALUE}
                 assetsListError={assetsListError}
-                initConfig={initConfig}
-                initConfigLoading={initConfigLoading}
-                initConfigError={initConfigError}
+                inspectionConfig={inspectionConfig}
+                inspectionConfigLoading={inspectionConfigLoading}
+                inspectionConfigError={inspectionConfigError}
                 floorListError={floorListError}
                 roomListError={roomListError}
                 saveInspectionSaving={saveInspectionSaving}
@@ -83,7 +83,7 @@ describe('TestTag', () => {
         window.HTMLElement.prototype.scrollIntoView = jest.fn();
     });
 
-    it('renders component', () => {
+    it('renders component', async () => {
         const mockFn = jest.fn();
         const { getByText } = setup({
             actions: { loadConfig: mockFn, clearAssets: mockFn, clearSaveInspection: mockFn },
@@ -129,7 +129,7 @@ describe('TestTag', () => {
                 clearAssets: clearAssetsFn,
                 clearSaveInspection: clearSaveInspectionFn,
             },
-            initConfigError: 'error',
+            inspectionConfigError: 'error',
         });
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());

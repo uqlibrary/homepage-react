@@ -1,4 +1,4 @@
-import locale from '../testTag.locale.js';
+import locale from '../../testTag.locale.js';
 import {
     isEmpty,
     isValidEventDate,

@@ -3,9 +3,8 @@ import EventPanel from './EventPanel';
 import { render, act, fireEvent, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
-import configData from '../../../../../data/mock/data/testing/testTagOnLoad';
-
-import locale from '../testTag.locale.js';
+import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
+import locale from '../../testTag.locale.js';
 
 function setup(testProps = {}) {
     const { state = {}, actionDate = '2017-12-01 00:00', classes = {}, ...props } = testProps;
@@ -37,7 +36,7 @@ function setup(testProps = {}) {
         },
     ];
     const _state = {
-        testTagOnLoadReducer: { initConfig: configData, initConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
         testTagLocationReducer: { floorList, floorListLoading: false, roomList, roomListLoading: false },
         ...state,
     };
@@ -182,7 +181,7 @@ describe('EventPanel', () => {
             setLocation,
             handleChange,
             state: {
-                testTagOnLoadReducer: { initConfig: {}, initConfigLoading: true },
+                testTagOnLoadInspectionReducer: { inspectionConfig: {}, inspectionConfigLoading: true },
                 testTagLocationReducer: { floorList: [], floorListLoading: true, roomList: [], roomListLoading: true },
             },
         });
@@ -210,7 +209,7 @@ describe('EventPanel', () => {
 
         const { getByText, queryByText } = setup({
             state: {
-                testTagOnLoadReducer: { initConfig: testConfig, initConfigLoading: false },
+                testTagOnLoadInspectionReducer: { inspectionConfig: testConfig, inspectionConfigLoading: false },
             },
             actions,
             location,

@@ -1,7 +1,7 @@
-import testTagOnLoadReducer, { initialState } from './testTagOnLoadInspectionReducer';
+import testTagOnLoadInspectionReducer, { initialState } from './testTagOnLoadInspectionReducer';
 import * as actions from '../actions/actionTypes';
 
-describe('testTagOnLoad reducer', () => {
+describe('testTagOnLoadInspectionReducer reducer', () => {
     let emptyState;
     let mockTestTagList;
 
@@ -13,43 +13,43 @@ describe('testTagOnLoad reducer', () => {
     });
 
     it('should set onLoad status flags to loading when loading config data', () => {
-        const test = testTagOnLoadReducer(emptyState, { type: actions.TESTTAG_CONFIG_LOADING });
+        const test = testTagOnLoadInspectionReducer(emptyState, { type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
         expect(test).toEqual({
             ...emptyState,
-            initConfig: null,
-            initConfigLoading: true,
-            initConfigError: false,
+            inspectionConfig: null,
+            inspectionConfigLoading: true,
+            inspectionConfigError: false,
         });
     });
 
     it('should set onLoad values when successfully loaded', () => {
-        const test = testTagOnLoadReducer(emptyState, {
-            type: actions.TESTTAG_CONFIG_LOADED,
+        const test = testTagOnLoadInspectionReducer(emptyState, {
+            type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
             payload: mockTestTagList,
         });
         expect(test).toEqual({
             ...emptyState,
-            initConfig: mockTestTagList,
-            initConfigLoading: false,
-            initConfigError: false,
+            inspectionConfig: mockTestTagList,
+            inspectionConfigLoading: false,
+            inspectionConfigError: false,
         });
     });
 
     it('should handle a failing onLoad API call', () => {
-        const test = testTagOnLoadReducer(emptyState, {
-            type: actions.TESTTAG_CONFIG_FAILED,
+        const test = testTagOnLoadInspectionReducer(emptyState, {
+            type: actions.TESTTAG_INSPECTION_CONFIG_FAILED,
             payload: 'failed!',
         });
         expect(test).toEqual({
             ...emptyState,
-            initConfig: null,
-            initConfigLoading: false,
-            initConfigError: 'failed!',
+            inspectionConfig: null,
+            inspectionConfigLoading: false,
+            inspectionConfigError: 'failed!',
         });
     });
 
     it('should handle clearing the onLoad', () => {
-        const test = testTagOnLoadReducer(emptyState, { type: actions.TESTTAG_CONFIG_CLEAR });
+        const test = testTagOnLoadInspectionReducer(emptyState, { type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR });
         expect(test).toEqual({
             ...emptyState,
         });
