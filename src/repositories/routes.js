@@ -215,3 +215,6 @@ export const TEST_TAG_ROOM_API = floorId => ({
 });
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });
 export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
+
+/** TEST AND TAG ASSET TYPES **/
+export const TEST_TAG_ASSET_TYPES_LIST_API = () => ({ apiUrl: 'test_and_tag/assetType' });
