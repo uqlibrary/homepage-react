@@ -33,6 +33,7 @@ export const pathConfig = {
         spotlightsclone: spotlightid => `/admin/spotlights/clone/${spotlightid}`,
         spotlights: '/admin/spotlights',
         testntaginspection: '/admin/testntag/inspection',
+        testntagmanageassettypes: '/admin/testntag/manage/assettypes',
     },
     bookExamBooth: '/book-exam-booth',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
@@ -54,6 +55,7 @@ export const flattedPathConfigExact = [
     '/admin/promopanel/add',
     '/admin/promopanel',
     '/admin/testntag',
+    '/admin/testntag/manage/assettypes',
     '/book-exam-booth',
     '/exams',
     '/exams/',
@@ -166,7 +168,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: locale.pages.admin.promopanel.title,
         },
-        // Is add and Edit the same?
         {
             path: pathConfig.admin.promopaneladd,
             component: components.PromoPanelAdd,
@@ -183,11 +184,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.PromoPanelClone,
             pageTitle: locale.pages.admin.promopanel.form.clone.title,
         },
-        // {
-        //     path: pathConfig.admin.promopanelview(promopanelid),
-        //     component: components.PromoPanelView,
-        //     pageTitle: locale.pages.admin.promopanel.form.view.title,
-        // },
     ];
 
     const spotlightidRegExp = '.*';
@@ -230,6 +226,14 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.testntag.title,
         },
     ];
+    const testntagManageAssetTypes = [
+        {
+            path: pathConfig.admin.testntagmanageassettypes,
+            component: components.TestTagManageAssetTypes,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+    ];
 
     return [
         ...publicPages,
@@ -239,6 +243,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
         ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
+        ...(account && isTestTagAdminUser(account) ? testntagManageAssetTypes : []),
         {
             component: components.NotFound,
         },
