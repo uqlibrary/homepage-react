@@ -65,6 +65,12 @@ export default {
         "user_department": "UQL",
         "department_display_name": "Library",
         "user_current_flag": 1,
+          "privileges": {
+            "can_admin": 0,
+            "can_inspect": 1,
+            "can_alter": 1,
+            "can_see_reports": 1
+          },
     },
     "sites": [
       {

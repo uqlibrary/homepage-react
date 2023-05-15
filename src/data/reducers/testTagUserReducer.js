@@ -1,15 +1,20 @@
 import * as actions from 'data/actions/actionTypes';
+import { getUserPermissions } from 'modules/Pages/Admin/TestTag/helpers/auth';
 
 export const initialState = {
     user: null,
 };
 
 const handlers = {
-    [actions.TESTTAG_USER_LOADED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        user: action.payload,
-    }),
+    [actions.TESTTAG_USER_LOADED]: (state, action) => {
+        console.log('TESTTAG_USER_LOADED', action?.payload);
+        return {
+            ...initialState,
+            ...state,
+            user: action.payload,
+            privilege: getUserPermissions(action?.payload?.privileges ?? {}),
+        };
+    },
 };
 
 export default function testTagUserReducer(state = initialState, action) {

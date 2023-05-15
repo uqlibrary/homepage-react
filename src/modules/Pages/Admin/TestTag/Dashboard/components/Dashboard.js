@@ -6,8 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Skeleton from '@material-ui/lab/Skeleton';
 
-import StandardPage from '../../SharedComponents/StandardPageTnT/StandardPageTnT';
+import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import locale from '../../testTag.locale';
+import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
+import { PERMISSIONS, ROLES } from '../../config/auth';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,20 +30,22 @@ const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDas
     }, [actions]);
 
     return (
-        <StandardPage title={locale.form.pageTitle}>
+        <StandardAuthPage title={locale.form.pageTitle} requiredPermissions={ROLES.all} inclusive={false}>
             <div className={classes.root}>
                 <Grid container spacing={3} padding={3}>
-                    <Grid item xs>
-                        {initDashboardLoading && !initDashboardError ? (
-                            <Skeleton animation="wave" height={150} />
-                        ) : (
-                            <Paper className={classes.paper}>
-                                <Link to="/admin/testntag/inspection?user=uqtesttag" data-testid="linkInspection">
-                                    Inspections
-                                </Link>
-                            </Paper>
-                        )}
-                    </Grid>
+                    <AuthWrapper requiredPermissions={[PERMISSIONS.inspect]}>
+                        <Grid item xs>
+                            {initDashboardLoading && !initDashboardError ? (
+                                <Skeleton animation="wave" height={150} />
+                            ) : (
+                                <Paper className={classes.paper}>
+                                    <Link to="/admin/testntag/inspection?user=uqtesttag" data-testid="linkInspection">
+                                        Inspections
+                                    </Link>
+                                </Paper>
+                            )}
+                        </Grid>
+                    </AuthWrapper>
                     <Grid item xs>
                         {initDashboardLoading && !initDashboardError ? (
                             <Skeleton animation="wave" height={150} />
@@ -74,7 +78,7 @@ const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDas
                     </Grid>
                 </Grid>
             </div>
-        </StandardPage>
+        </StandardAuthPage>
     );
 };
 

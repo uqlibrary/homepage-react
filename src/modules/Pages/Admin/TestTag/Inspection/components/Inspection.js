@@ -11,12 +11,13 @@ import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core';
 import clsx from 'clsx';
 
-import StandardPage from '../../SharedComponents/StandardPageTnT/StandardPageTnT';
+import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
 import { useForm, useValidation, useLocation } from '../utils/hooks';
 import locale from '../../testTag.locale';
+import { PERMISSIONS } from '../../config/auth';
 const moment = require('moment');
 const testStatusEnum = statusEnum(locale);
 
@@ -303,9 +304,10 @@ const Inspection = ({
     };
 
     return (
-        <StandardPage
+        <StandardAuthPage
             title={locale.form.pageTitle}
             headerSubText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
+            requiredPermissions={[PERMISSIONS.inspect]}
         >
             <ConfirmationBox
                 actionButtonColor="secondary"
@@ -340,7 +342,6 @@ const Inspection = ({
                 hideCancelButton
                 noMinContentWidth
             />
-
             <EventPanel
                 actions={actions}
                 location={location}
@@ -351,7 +352,6 @@ const Inspection = ({
                 hasInspection={formValues?.inspection_status !== undefined}
                 isMobileView={isMobileView}
             />
-
             <AssetPanel
                 actions={actions}
                 location={location}
@@ -370,7 +370,7 @@ const Inspection = ({
                 isMobileView={isMobileView}
                 isValid={isValid}
             />
-        </StandardPage>
+        </StandardAuthPage>
     );
 };
 
