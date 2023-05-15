@@ -17,3 +17,4 @@ export { default as testTagOnLoadInspectionReducer } from './testTagOnLoadInspec
 export { default as testTagLocationReducer } from './testTagLocationReducer';
 export { default as testTagAssetsReducer } from './testTagAssetsReducer';
 export { default as testTagSaveInspectionReducer } from './testTagSaveInspectionReducer';
+export { default as testTagAssetTypesReducer } from './testTagAssetTypesReducer';

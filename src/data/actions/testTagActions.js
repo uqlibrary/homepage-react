@@ -6,6 +6,7 @@ import {
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSET_ACTION,
+    TEST_TAG_ASSET_TYPES_LIST_API,
 } from 'repositories/routes';
 
 export function loadConfig() {
@@ -130,5 +131,26 @@ export function saveInspection(request) {
 export function clearSaveInspection() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
+    };
+}
+
+/** * ASSET TYPES ACTIONS  ***/
+
+export function loadAssetTypes() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_LOADING });
+        return get(TEST_TAG_ASSET_TYPES_LIST_API())
+            .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_LIST_FAILED,
+                    payload: error.message,
+                });
+            });
     };
 }
