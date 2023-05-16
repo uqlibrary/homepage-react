@@ -183,7 +183,7 @@ export function loadAssetTypes() {
             .then(data => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
-                    payload: data,
+                    payload: data.data,
                 });
             })
             .catch(error => {

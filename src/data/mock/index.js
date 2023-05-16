@@ -44,6 +44,9 @@ import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
 // import testTag_testDevices from './data/records/test_tag_test_devices';
 import testTag_assets from './data/records/test_tag_assets';
+// Test and Tag Asset Types
+import test_tag_asset_types from './data/records/test_tag_asset_types';
+
 import { accounts, currentAuthor } from './data';
 
 import {
@@ -811,14 +814,6 @@ mock.onGet('exams/course/FREN1010/summary')
     })
 
     .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
-    // .reply(() => [200, {data: {
-    //     asset_status: 'FAILED',
-    //     asset_id_displayed:'UQL000298',
-    //     user_licence_number: '13962556',
-    //     action_date: '2022-11-16',
-    //     asset_next_test_due_date: '2023Nov16',
-    //     }}]
-    // )
     .reply(() => [
         200,
         {
@@ -830,6 +825,15 @@ mock.onGet('exams/course/FREN1010/summary')
                 asset_next_test_due_date: '2023Nov16',
             },
         },
+    ])
+    // Test and Tag Asset Types
+    .onGet(routes.TEST_TAG_ASSET_TYPES_LIST_API().apiUrl)
+    .reply(() => [
+        200,
+        {
+            data: test_tag_asset_types
+        }
+       
     ])
 
     .onGet('exams/search/fail')
