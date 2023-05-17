@@ -187,6 +187,8 @@ const Inspection = ({
     defaultNextTestDateValue,
     assetsListError,
     inspectionConfig,
+    // inspectionConfigLoading,
+    inspectionConfigLoaded,
     inspectionConfigError,
     floorListError,
     roomListError,
@@ -281,8 +283,8 @@ const Inspection = ({
     };
 
     useEffect(() => {
-        actions.loadInspectionConfig();
-    }, [actions]);
+        if (!inspectionConfigLoaded) actions.loadInspectionConfig();
+    }, [actions, inspectionConfigLoaded]);
 
     useEffect(() => {
         (!!!inspectionConfigError || /* istanbul ignore next */ inspectionConfigError.length === 0) &&
@@ -308,6 +310,7 @@ const Inspection = ({
             title={locale.form.pageTitle}
             headerSubText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
             requiredPermissions={[PERMISSIONS.can_inspect]}
+            breadcrumbs={[{ ...locale.breadcrumbs.inspection }]}
         >
             <ConfirmationBox
                 actionButtonColor="secondary"
@@ -384,6 +387,8 @@ Inspection.propTypes = {
     assetsListError: PropTypes.any,
     inspectionConfig: PropTypes.any,
     inspectionConfigError: PropTypes.any,
+    inspectionConfigLoading: PropTypes.any,
+    inspectionConfigLoaded: PropTypes.any,
     floorList: PropTypes.any,
     floorListLoading: PropTypes.bool,
     floorListError: PropTypes.any,

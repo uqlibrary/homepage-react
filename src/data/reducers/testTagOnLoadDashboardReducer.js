@@ -3,6 +3,7 @@ import * as actions from 'data/actions/actionTypes';
 export const initialState = {
     initDashboard: null,
     initDashboardLoading: false,
+    initDashboardLoaded: false,
     initDashboardError: null,
 };
 
@@ -11,12 +12,14 @@ const handlers = {
         ...initialState,
         ...state,
         initDashboardLoading: true,
+        initDashboardLoaded: false,
         initDashboardError: false,
     }),
     [actions.TESTTAG_DASHBOARD_CONFIG_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         initDashboardLoading: false,
+        initDashboardLoaded: true,
         initDashboardError: false,
         initDashboard: action.payload,
     }),
@@ -24,6 +27,7 @@ const handlers = {
         ...initialState,
         ...state,
         initDashboardLoading: false,
+        initDashboardLoaded: false,
         initDashboardError: action.payload,
     }),
 };

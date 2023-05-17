@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -16,19 +16,19 @@ const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
     },
-    paper: {
+    Card: {
         padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary,
     },
 }));
 
-const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDashboardError }) => {
+const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDashboardLoaded, initDashboardError }) => {
     const classes = useStyles();
 
     useEffect(() => {
-        actions.loadDashboard();
-    }, [actions]);
+        if (!initDashboardLoaded) actions.loadDashboard();
+    }, [actions, initDashboardLoaded]);
 
     return (
         <StandardAuthPage title={locale.form.pageTitle} requiredPermissions={ROLES.all} inclusive={false}>
@@ -39,14 +39,14 @@ const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDas
                             {initDashboardLoading && !initDashboardError ? (
                                 <Skeleton animation="wave" height={150} />
                             ) : (
-                                <Paper className={classes.paper}>
+                                <Card className={classes.Card}>
                                     <Link
                                         to={`${pathConfig.admin.testntaginspection}?user=uqtesttag`}
                                         data-testid="linkInspection"
                                     >
                                         Inspections
                                     </Link>
-                                </Paper>
+                                </Card>
                             )}
                         </Grid>
                     </AuthWrapper>
@@ -54,14 +54,14 @@ const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDas
                         {initDashboardLoading && !initDashboardError ? (
                             <Skeleton animation="wave" height={150} />
                         ) : (
-                            <Paper className={classes.paper}>xs</Paper>
+                            <Card className={classes.Card}>xs</Card>
                         )}
                     </Grid>
                     <Grid item xs>
                         {initDashboardLoading && !initDashboardError ? (
                             <Skeleton animation="wave" height={150} />
                         ) : (
-                            <Paper className={classes.paper}>xs</Paper>
+                            <Card className={classes.Card}>xs</Card>
                         )}
                     </Grid>
                 </Grid>
@@ -70,14 +70,14 @@ const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDas
                         {initDashboardLoading && !initDashboardError ? (
                             <Skeleton animation="wave" height={150} />
                         ) : (
-                            <Paper className={classes.paper}>xs</Paper>
+                            <Card className={classes.Card}>xs</Card>
                         )}
                     </Grid>
                     <Grid item xs>
                         {initDashboardLoading && !initDashboardError ? (
                             <Skeleton animation="wave" height={150} />
                         ) : (
-                            <Paper className={classes.paper}>xs</Paper>
+                            <Card className={classes.Card}>xs</Card>
                         )}
                     </Grid>
                 </Grid>
@@ -90,6 +90,7 @@ Dashboard.propTypes = {
     actions: PropTypes.object,
     initDashboard: PropTypes.any,
     initDashboardLoading: PropTypes.bool,
+    initDashboardLoaded: PropTypes.bool,
     initDashboardError: PropTypes.bool,
 };
 
