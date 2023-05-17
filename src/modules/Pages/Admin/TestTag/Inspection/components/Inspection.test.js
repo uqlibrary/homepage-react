@@ -86,7 +86,7 @@ describe('TestTag', () => {
     it('renders component', async () => {
         const mockFn = jest.fn();
         const { getByText } = setup({
-            actions: { loadConfig: mockFn, clearAssets: mockFn, clearSaveInspection: mockFn },
+            actions: { loadInspectionConfig: mockFn, clearAssets: mockFn, clearSaveInspection: mockFn },
         });
 
         expect(getByText(locale.form.pageTitle)).toBeInTheDocument();
@@ -103,7 +103,7 @@ describe('TestTag', () => {
         const saveErrorTitle = 'Some error';
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
-                loadConfig: loadConfigFn,
+                loadInspectionConfig: loadConfigFn,
                 clearAssets: clearAssetsFn,
                 clearSaveInspection: clearSaveInspectionFn,
             },
@@ -125,7 +125,7 @@ describe('TestTag', () => {
         const clearSaveInspectionFn = jest.fn();
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
-                loadConfig: loadConfigFn,
+                loadInspectionConfig: loadConfigFn,
                 clearAssets: clearAssetsFn,
                 clearSaveInspection: clearSaveInspectionFn,
             },
@@ -147,7 +147,7 @@ describe('TestTag', () => {
 
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
-                loadConfig: loadConfigFn,
+                loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
@@ -182,7 +182,7 @@ describe('TestTag', () => {
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
-                loadConfig: loadConfigFn,
+                loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
@@ -220,7 +220,7 @@ describe('TestTag', () => {
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
-                loadConfig: loadConfigFn,
+                loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
@@ -256,7 +256,7 @@ describe('TestTag', () => {
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
-                loadConfig: loadConfigFn,
+                loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
@@ -292,7 +292,7 @@ describe('TestTag', () => {
 
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
-                loadConfig: loadConfigFn,
+                loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
             },
