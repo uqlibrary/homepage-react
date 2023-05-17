@@ -1,34 +1,34 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    initDashboard: null,
-    initDashboardLoading: false,
-    initDashboardLoaded: false,
-    initDashboardError: null,
+    dashboardConfig: null,
+    dashboardConfigLoading: false,
+    dashboardConfigLoaded: false,
+    dashboardConfigError: null,
 };
 
 const handlers = {
     [actions.TESTTAG_DASHBOARD_CONFIG_LOADING]: state => ({
         ...initialState,
         ...state,
-        initDashboardLoading: true,
-        initDashboardLoaded: false,
-        initDashboardError: false,
+        dashboardConfigLoading: true,
+        dashboardConfigLoaded: false,
+        dashboardConfigError: false,
     }),
     [actions.TESTTAG_DASHBOARD_CONFIG_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
-        initDashboardLoading: false,
-        initDashboardLoaded: true,
-        initDashboardError: false,
-        initDashboard: action.payload,
+        dashboardConfigLoading: false,
+        dashboardConfigLoaded: true,
+        dashboardConfigError: false,
+        dashboardConfig: action.payload,
     }),
     [actions.TESTTAG_DASHBOARD_CONFIG_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
-        initDashboardLoading: false,
-        initDashboardLoaded: false,
-        initDashboardError: action.payload,
+        dashboardConfigLoading: false,
+        dashboardConfigLoaded: false,
+        dashboardConfigError: action.payload,
     }),
 };
 
