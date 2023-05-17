@@ -14,6 +14,7 @@ const StandardAuthPage = ({
     title = '',
     withHeader = true,
     headerSubText = '',
+    breadcrumbs = [],
     requiredPermissions = [],
     inclusive = true,
     children = null,
@@ -40,7 +41,11 @@ const StandardAuthPage = ({
             {!!!userAllow && <ContentLoader message="Checking" />}
             {!!userAllow && !shouldHaveAccess && <Typography variant={'h6'}>Page is unavailable</Typography>}
             {shouldHaveAccess && withHeader && (
-                <TestTagHeader departmentText={headerDepartmentText} requiredText={headerSubText} />
+                <TestTagHeader
+                    departmentText={headerDepartmentText}
+                    requiredText={headerSubText}
+                    breadcrumbs={breadcrumbs}
+                />
             )}
             {shouldHaveAccess && children}
         </StandardPage>
@@ -52,6 +57,7 @@ StandardAuthPage.propTypes = {
     user: PropTypes.object,
     withHeader: PropTypes.bool,
     headerSubText: PropTypes.string,
+    breadcrumbs: PropTypes.array,
     requiredPermissions: PropTypes.array,
     inclusive: PropTypes.bool,
     children: PropTypes.any,
