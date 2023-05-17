@@ -34,7 +34,7 @@ const StandardAuthPage = ({
                 : /* istanbul ignore next */ '',
         [user],
     );
-    console.log({ defaultAllow, userAllow, shouldHaveAccess });
+
     return (
         <StandardPage title={title} {...props}>
             {!!!userAllow && <ContentLoader message="Checking" />}

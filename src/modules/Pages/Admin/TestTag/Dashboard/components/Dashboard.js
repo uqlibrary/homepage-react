@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Skeleton from '@material-ui/lab/Skeleton';
 
+import { pathConfig } from 'config/routes';
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import locale from '../../testTag.locale';
 import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
@@ -33,13 +34,16 @@ const Dashboard = ({ actions /* , initDashboard*/, initDashboardLoading, initDas
         <StandardAuthPage title={locale.form.pageTitle} requiredPermissions={ROLES.all} inclusive={false}>
             <div className={classes.root}>
                 <Grid container spacing={3} padding={3}>
-                    <AuthWrapper requiredPermissions={[PERMISSIONS.inspect]}>
+                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
                         <Grid item xs>
                             {initDashboardLoading && !initDashboardError ? (
                                 <Skeleton animation="wave" height={150} />
                             ) : (
                                 <Paper className={classes.paper}>
-                                    <Link to="/admin/testntag/inspection?user=uqtesttag" data-testid="linkInspection">
+                                    <Link
+                                        to={`${pathConfig.admin.testntaginspection}?user=uqtesttag`}
+                                        data-testid="linkInspection"
+                                    >
                                         Inspections
                                     </Link>
                                 </Paper>

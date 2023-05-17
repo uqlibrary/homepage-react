@@ -6,15 +6,12 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.TESTTAG_USER_LOADED]: (state, action) => {
-        console.log('TESTTAG_USER_LOADED', action?.payload);
-        return {
-            ...initialState,
-            ...state,
-            user: action.payload,
-            privilege: getUserPermissions(action?.payload?.privileges ?? {}),
-        };
-    },
+    [actions.TESTTAG_USER_LOADED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        user: action.payload,
+        privilege: getUserPermissions(action?.payload?.privileges ?? {}),
+    }),
 };
 
 export default function testTagUserReducer(state = initialState, action) {

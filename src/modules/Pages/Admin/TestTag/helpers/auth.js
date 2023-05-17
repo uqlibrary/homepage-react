@@ -1,20 +1,12 @@
 import { PERMISSIONS } from '../config/auth';
 
-export const translateKeyToPermission = key =>
-    key
-        .split('_')
-        .pop()
-        .toLowerCase();
-
 export const getUserPermissions = (privileges = {}) => {
     if (!!!privileges || typeof privileges !== 'object' || Object.keys(privileges).length === 0) {
         return PERMISSIONS.none;
     }
     const calculatedPermission = Object.keys(privileges).reduce((accumulated, current) => {
-        console.log(privileges, current, privileges[current]);
         if (privileges[current] === 1) {
-            const permissionLabel = translateKeyToPermission(current);
-            return accumulated + PERMISSIONS[permissionLabel];
+            return accumulated + PERMISSIONS[current];
         }
         return null;
     }, PERMISSIONS.none);

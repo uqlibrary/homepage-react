@@ -307,7 +307,7 @@ const Inspection = ({
         <StandardAuthPage
             title={locale.form.pageTitle}
             headerSubText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
-            requiredPermissions={[PERMISSIONS.inspect]}
+            requiredPermissions={[PERMISSIONS.can_inspect]}
         >
             <ConfirmationBox
                 actionButtonColor="secondary"
