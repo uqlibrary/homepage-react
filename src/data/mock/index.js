@@ -54,7 +54,7 @@ import {
     promoPanelMocks,
 } from './data/promoPanels';
 
-import { TEST_TAG_ONLOAD_DASHBOARD_API, TEST_TAG_ONLOAD_INSPECTION_API, TEST_TAG_ASSETS_API, TEST_TAG_ASSET_ACTION, TEST_TAG_FLOOR_API, TEST_TAG_ROOM_API, } from 'repositories/routes';
+import { TEST_TAG_ONLOAD_DASHBOARD_API, TEST_TAG_ONLOAD_INSPECT_API, TEST_TAG_ASSETS_API, TEST_TAG_ASSET_ACTION, TEST_TAG_FLOOR_API, TEST_TAG_ROOM_API, } from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -769,7 +769,7 @@ mock.onGet('exams/course/FREN1010/summary')
     })
 
     // inspection CONFIG
-    .onGet(routes.TEST_TAG_ONLOAD_INSPECTION_API().apiUrl)
+    .onGet(routes.TEST_TAG_ONLOAD_INSPECT_API().apiUrl)
     .reply(config => {
         return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
     })
@@ -779,7 +779,7 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(config => {
         const r = /\d+/;
         const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
-        return [200, testTag_floorList.find(floor => floor.building_id === id)];
+        return [200, {data: testTag_floorList.data.find(floor => floor.building_id === id)}];
     })
 
     // T&T ROOMS
@@ -787,7 +787,7 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(config => {
         const r = /\d+/;
         const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
-        return [200, testTag_roomList.find(room => room.floor_id === id)];
+        return [200, {data: testTag_roomList.data.find(room => room.floor_id === id)}];
     })
 
     // ASSETS (with pattern matching)
@@ -797,7 +797,7 @@ mock.onGet('exams/course/FREN1010/summary')
         // filter array to matching asset id's
         return [
             200,
-            testTag_assets.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith( pattern.toUpperCase())),
+            {data: testTag_assets.data.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith( pattern.toUpperCase()))},
         ];
     })
 

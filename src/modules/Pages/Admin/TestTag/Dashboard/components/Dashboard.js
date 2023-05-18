@@ -71,7 +71,7 @@ const Dashboard = ({
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
                         <Grid item xs={12} sm className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton animation="wave" height={300} />
+                                <Skeleton animation="wave" height={300} width={'100%'} />
                             ) : (
                                 <Panel
                                     title={pageLocale.panel.inspections.title}
@@ -84,7 +84,7 @@ const Dashboard = ({
                                     contentProps={{ className: classes.centreAlign }}
                                 >
                                     <Link
-                                        to={`${pathConfig.admin.testntaginspection}?user=uqtesttag`}
+                                        to={`${pathConfig.admin.testntaginspect}?user=uqtesttag`}
                                         data-testid="linkInspection"
                                     >
                                         {pageLocale.panel.inspections.link}
@@ -95,7 +95,7 @@ const Dashboard = ({
                     </AuthWrapper>
                     <Grid item xs={12} sm className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} />
+                            <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
                             <Panel
                                 title={pageLocale.panel.assets.title}
@@ -118,7 +118,7 @@ const Dashboard = ({
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={pathConfig.admin.testntagreporting}
+                                                to={pathConfig.admin.testntagreport}
                                                 data-testid="dashboardLinkManagement"
                                             >
                                                 {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`}
@@ -131,7 +131,7 @@ const Dashboard = ({
                     </Grid>
                     <Grid item xs={12} sm className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} />
+                            <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
                             <Panel
                                 title={pageLocale.panel.inspectionDevices.title}
@@ -154,7 +154,7 @@ const Dashboard = ({
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={pathConfig.admin.testntagreporting}
+                                                to={pathConfig.admin.testntagreport}
                                                 data-testid="dashboardLinkManagement"
                                             >
                                                 {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`}
@@ -169,7 +169,7 @@ const Dashboard = ({
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} />
+                            <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
                             <Panel
                                 title={pageLocale.panel.management.title}
@@ -206,7 +206,7 @@ const Dashboard = ({
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
                         <Grid item xs={12} sm className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton animation="wave" height={300} />
+                                <Skeleton animation="wave" height={300} width={'100%'} />
                             ) : (
                                 <Panel
                                     title={pageLocale.panel.reporting.title}
