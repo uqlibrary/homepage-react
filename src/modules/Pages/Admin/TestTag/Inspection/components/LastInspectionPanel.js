@@ -19,6 +19,7 @@ import locale from '../../testTag.locale';
 import { statusEnum } from '../utils/helpers';
 
 const moment = require('moment');
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const useTestPanelStyles = makeStyles(theme => ({
     card: {
@@ -77,8 +78,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
         forceOpen: PropTypes.bool,
     };
 
-    const testStatusEnum = statusEnum(locale);
-    const formLocale = locale.form.lastInspectionPanel;
+    const formLocale = locale.pages.inspect.form.lastInspectionPanel;
 
     const {
         asset_status: assetStatus,

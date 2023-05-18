@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Box, useTheme } from '@material-ui/core';
+import { useTheme } from '@material-ui/core';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Typography from '@material-ui/core/Typography';
-import { Grid } from '@material-ui/core';
-import clsx from 'clsx';
 
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import EventPanel from './EventPanel';
@@ -17,9 +14,10 @@ import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
 import { useForm, useValidation, useLocation } from '../utils/hooks';
 import locale from '../../testTag.locale';
+import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
 const moment = require('moment');
-const testStatusEnum = statusEnum(locale);
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -105,80 +103,6 @@ const useStyles = makeStyles(theme => ({
         },
     },
 }));
-const savedDialogMessages = {
-    [testStatusEnum.CURRENT.value]: (data, classes, locale) => (
-        <Grid
-            container
-            item
-            xs={12}
-            sm={6}
-            alignItems="center"
-            className={clsx([classes.dialogContainer, classes.dialogPassedContainer])}
-        >
-            <Grid item xs={12} className={clsx([classes.dialogTitle, classes.dialogSuccessTitle])} variant="subtitle1">
-                <Typography gutterBottom>
-                    {locale.testedBy} {data.user_licence_number}
-                </Typography>
-            </Grid>
-            <Grid item xs={12} className={classes.dialogBarcode}>
-                <Typography gutterBottom variant="h6">
-                    {data.asset_id_displayed}
-                </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                <Typography gutterBottom>{locale.testedDate}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                <Typography gutterBottom>{data.action_date}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                <Typography gutterBottom>{locale.dateNextDue}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.dialogSuccessLineItems} variant="subtitle1">
-                <Typography gutterBottom>{data.asset_next_test_due_date ?? locale.notApplicable}</Typography>
-            </Grid>
-        </Grid>
-    ),
-    other: (data, classes, locale) => (
-        <Grid
-            container
-            item
-            xs={12}
-            sm={6}
-            alignItems="center"
-            className={clsx([classes.dialogContainer, classes.dialogFailedContainer])}
-        >
-            <Grid item xs={12} className={clsx([classes.dialogTitle, classes.dialogFailedTitle])}>
-                <Typography gutterBottom variant="h4">
-                    {locale.outOfService}
-                </Typography>
-            </Grid>
-            <Grid item xs={12} className={classes.dialogBarcode}>
-                <Typography gutterBottom variant="h6">
-                    {data.asset_id_displayed}
-                </Typography>
-            </Grid>
-            <Grid item xs={12} className={classes.dialogFailedLineItems} variant="subtitle1">
-                <Typography gutterBottom data-testid="testTagDialogTaggedBy">
-                    {locale.tagPlacedBy}
-                    <br />
-                    {data.user_licence_number}
-                </Typography>
-            </Grid>
-        </Grid>
-    ),
-};
-const getSuccessDialog = (response, classes, locale) => {
-    if (!!!response || !!!response?.data) return {};
-    const { data } = response;
-    const key = data.asset_status !== testStatusEnum.CURRENT.value ? 'other' : data.asset_status;
-    const messageFragment = (
-        <Box display="flex" alignItems="center" justifyContent="center">
-            {savedDialogMessages[key](data, classes, locale.form.dialogLabels)}
-        </Box>
-    );
-    return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
-};
 
 const Inspection = ({
     actions,
@@ -199,7 +123,8 @@ const Inspection = ({
     const classes = useStyles();
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
-    const today = moment().format(locale.config.dateFormat);
+    const inspectionLocale = locale.pages.inspect;
+    const today = moment().format(inspectionLocale.config.dateFormat);
 
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
@@ -225,7 +150,7 @@ const Inspection = ({
 
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
-        defaultDateFormat: locale.config.dateFormat,
+        defaultDateFormat: inspectionLocale.config.dateFormat,
     });
 
     const { location, setLocation } = useLocation();
@@ -301,16 +226,15 @@ const Inspection = ({
     };
 
     const saveErrorLocale = {
-        ...locale.form.saveError,
-        confirmationTitle: locale.form.saveError.confirmationTitle(saveInspectionError),
+        ...inspectionLocale.form.saveError,
+        confirmationTitle: inspectionLocale.form.saveError.confirmationTitle(saveInspectionError),
     };
 
     return (
         <StandardAuthPage
-            title={locale.form.pageTitle}
-            headerSubText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
+            title={locale.pages.general.pageTitle}
+            locale={inspectionLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
-            breadcrumbs={[{ ...locale.breadcrumbs.inspection }]}
         >
             <ConfirmationBox
                 actionButtonColor="secondary"
@@ -320,7 +244,7 @@ const Inspection = ({
                 onAction={hideNetworkError}
                 onClose={hideNetworkError}
                 isOpen={isNetworkErrorOpen}
-                locale={locale.form.networkError}
+                locale={inspectionLocale.form.networkError}
                 noMinContentWidth
             />
             <ConfirmationBox
@@ -331,7 +255,7 @@ const Inspection = ({
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
-                locale={getSuccessDialog(saveInspectionSuccess, classes, locale)}
+                locale={getSuccessDialog(saveInspectionSuccess, classes, inspectionLocale)}
                 noMinContentWidth
             />
             <ConfirmationBox

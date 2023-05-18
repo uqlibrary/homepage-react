@@ -16,7 +16,7 @@ import locale from '../../testTag.locale';
 import TabPanel from './TabPanel';
 import { isValidRepair, isValidDiscard, isEmpty, statusEnum } from '../utils/helpers';
 
-const testStatusEnum = statusEnum(locale);
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const a11yProps = index => ({
     id: `scrollable-auto-tab-${index}`,
@@ -32,7 +32,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
         isMobileView: PropTypes.bool.isRequired,
         disabled: PropTypes.bool.isRequired,
     };
-
+    const pageLocale = locale.pages.inspect;
     const [selectedTabValue, setSelectedTabValue] = React.useState(0);
 
     React.useEffect(() => {
@@ -81,7 +81,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
             <Grid container spacing={3}>
                 <Grid item sm={12}>
                     <Typography component={'h3'} variant={'h6'}>
-                        {locale.form.action.title}
+                        {pageLocale.form.action.title}
                     </Typography>
                 </Grid>
             </Grid>
@@ -114,7 +114,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                            <InputLabel shrink>{locale.form.action.repair.label}</InputLabel>
+                            <InputLabel shrink>{pageLocale.form.action.repair.label}</InputLabel>
                             <Select
                                 fullWidth
                                 className={classes.formSelect}
@@ -126,7 +126,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 data-testid="selectIsRepair"
                                 inputProps={{ id: 'selectIsRepair-input', 'data-testid': 'selectIsRepair-input' }}
                             >
-                                {locale.form.action.repair.options.map(option => (
+                                {pageLocale.form.action.repair.options.map(option => (
                                     <MenuItem
                                         value={option.value}
                                         key={option.value}
@@ -142,7 +142,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth required>
                             <DebouncedTextField
-                                {...locale.form.action.repair.repairerDetails}
+                                {...pageLocale.form.action.repair.repairerDetails}
                                 required
                                 error={
                                     !!formValues.isRepair &&
@@ -170,13 +170,13 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
             <TabPanel value={selectedTabValue} index={1}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <Alert severity="warning">{locale.form.action.discard.alertMessage}</Alert>
+                        <Alert severity="warning">{pageLocale.form.action.discard.alertMessage}</Alert>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                            <InputLabel shrink>{locale.form.action.discard.label}</InputLabel>
+                            <InputLabel shrink>{pageLocale.form.action.discard.label}</InputLabel>
                             <Select
                                 fullWidth
                                 className={classes.formSelect}
@@ -188,7 +188,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 data-testid="selectIsDiscarded"
                                 inputProps={{ id: 'selectIsDiscarded-input', 'data-testid': 'selectIsDiscarded-input' }}
                             >
-                                {locale.form.action.discard.options.map(option => (
+                                {pageLocale.form.action.discard.options.map(option => (
                                     <MenuItem
                                         value={option.value}
                                         key={option.value}
@@ -204,7 +204,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth required>
                             <DebouncedTextField
-                                {...locale.form.action.discard.discardReason}
+                                {...pageLocale.form.action.discard.discardReason}
                                 required
                                 error={
                                     !!formValues.isDiscarded &&

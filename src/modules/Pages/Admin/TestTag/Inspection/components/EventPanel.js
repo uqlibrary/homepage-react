@@ -45,11 +45,11 @@ const EventPanel = ({
     };
 
     const [eventExpanded, setEventExpanded] = React.useState(true);
-
+    const pageLocale = locale.pages.inspect;
     const startDate = moment()
         .startOf('year')
         .subtract(5, 'year')
-        .format(locale.config.dateFormat);
+        .format(pageLocale.config.dateFormat);
 
     const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
         state.get?.('testTagOnLoadInspectionReducer'),
@@ -72,14 +72,14 @@ const EventPanel = ({
 
     return (
         <StandardCard
-            title={locale.form.event.title}
+            title={pageLocale.form.event.title}
             headerAction={
                 <IconButton
                     className={clsx(classes.expand, {
                         [classes.expandOpen]: eventExpanded,
                     })}
                     aria-expanded={eventExpanded}
-                    aria-label={locale.form.event.aria.collapseButtonLabel}
+                    aria-label={pageLocale.form.event.aria.collapseButtonLabel}
                     onClick={() => setEventExpanded(!eventExpanded)}
                     id="testntagEventPanelExpander"
                     data-testid="testntagEventPanelExpander"
@@ -93,13 +93,13 @@ const EventPanel = ({
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={3}>
                         <KeyboardDatePicker
-                            {...locale.form.event.date}
+                            {...pageLocale.form.event.date}
                             id="testntag-form-event-date"
                             inputProps={{
                                 'data-testid': 'testntag-form-event-date',
                             }}
                             InputLabelProps={inputLabelProps}
-                            format={locale.config.dateFormatNoTime}
+                            format={pageLocale.config.dateFormatNoTime}
                             minDate={startDate}
                             autoOk
                             disableFuture
@@ -118,12 +118,12 @@ const EventPanel = ({
                     </Grid>
                     <Grid item xs={12} sm={12}>
                         <Typography component={'h3'} variant={'h6'}>
-                            {locale.form.event.location.title}
+                            {pageLocale.form.event.location.title}
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <InputLabel shrink>{locale.form.event.location.siteLabel}</InputLabel>
+                            <InputLabel shrink>{pageLocale.form.event.location.siteLabel}</InputLabel>
                             <Select
                                 id="testntag-form-siteid"
                                 data-testid="testntag-form-siteid"
@@ -145,7 +145,7 @@ const EventPanel = ({
                             >
                                 {!!inspectionConfigLoading && (
                                     <MenuItem value={-1} disabled key={'site-loading'} data-testid="tester">
-                                        {locale.form.loading}
+                                        {pageLocale.form.loading}
                                     </MenuItem>
                                 )}
                                 {!!inspectionConfig &&
@@ -198,7 +198,7 @@ const EventPanel = ({
                                 renderInput={params => (
                                     <TextField
                                         {...params}
-                                        {...locale.form.event.location.building}
+                                        {...pageLocale.form.event.location.building}
                                         required={hasInspection}
                                         error={
                                             hasInspection &&
@@ -259,7 +259,7 @@ const EventPanel = ({
                                 renderInput={params => (
                                     <TextField
                                         {...params}
-                                        {...locale.form.event.location.floor}
+                                        {...pageLocale.form.event.location.floor}
                                         required={hasInspection}
                                         error={
                                             hasInspection &&
@@ -313,7 +313,7 @@ const EventPanel = ({
                                 renderInput={params => (
                                     <TextField
                                         {...params}
-                                        {...locale.form.event.location.room}
+                                        {...pageLocale.form.event.location.room}
                                         required={hasInspection}
                                         error={
                                             hasInspection &&

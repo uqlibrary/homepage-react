@@ -71,10 +71,10 @@ export const isValidDiscard = ({ formValues, lastInspection, passed: passValue, 
     isValidDiscardedDetails(formValues.discard_reason);
 
 export const statusEnum = locale => ({
-    CURRENT: { label: locale.config.currentLabel, value: 'CURRENT' },
-    PASSED: { label: locale.config.passLabel, value: 'PASSED' },
-    FAILED: { label: locale.config.failedLabel, value: 'FAILED' },
-    OUTFORREPAIR: { label: locale.config.repairLabel, value: 'OUTFORREPAIR' },
-    DISCARDED: { label: locale.config.discardedLabel, value: 'DISCARDED' },
-    NONE: { label: locale.config.noneLabel, value: 'NONE' },
+    CURRENT: { label: locale.currentLabel, value: 'CURRENT' },
+    PASSED: { label: locale.passLabel, value: 'PASSED' },
+    FAILED: { label: locale.failedLabel, value: 'FAILED' },
+    OUTFORREPAIR: { label: locale.repairLabel, value: 'OUTFORREPAIR' },
+    DISCARDED: { label: locale.discardedLabel, value: 'DISCARDED' },
+    NONE: { label: locale.noneLabel, value: 'NONE' },
 });
