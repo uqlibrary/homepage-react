@@ -23,7 +23,7 @@ import locale from '../../testTag.locale';
 
 const filter = createFilterOptions();
 
-const testStatusEnum = statusEnum(locale);
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
@@ -62,6 +62,7 @@ const AssetPanel = ({
         isMobileView: PropTypes.bool,
         isValid: PropTypes.bool,
     };
+    const pageLocale = locale.pages.inspect;
 
     const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
         state.get?.('testTagOnLoadInspectionReducer'),
@@ -112,7 +113,7 @@ const AssetPanel = ({
         }
     };
     return (
-        <StandardCard title={locale.form.asset.title} style={{ marginTop: '30px' }}>
+        <StandardCard title={pageLocale.form.asset.title} style={{ marginTop: '30px' }}>
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
                     <FormControl className={classes.formControl} fullWidth>
@@ -141,7 +142,7 @@ const AssetPanel = ({
                                 // if (params.inputValue !== '') {
                                 filtered.push({
                                     inputValue: 'NEW ASSET',
-                                    asset_id_displayed: locale.form.asset.addText,
+                                    asset_id_displayed: pageLocale.form.asset.addText,
                                 });
                                 // }
 
@@ -168,7 +169,7 @@ const AssetPanel = ({
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...locale.form.asset.assetId}
+                                    {...pageLocale.form.asset.assetId}
                                     required
                                     error={!isValidAssetId(formValues.asset_id_displayed)}
                                     inputRef={focusElementRef}
@@ -230,7 +231,7 @@ const AssetPanel = ({
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...locale.form.asset.assetType}
+                                    {...pageLocale.form.asset.assetType}
                                     required
                                     error={
                                         isValidAssetId(formValues.asset_id_displayed) &&
@@ -272,7 +273,7 @@ const AssetPanel = ({
             <LastInspectionPanel
                 asset={selectedAsset ?? {}}
                 currentLocation={location}
-                dateFormatPattern={locale.config.dateFormatDisplay}
+                dateFormatPattern={pageLocale.config.dateFormatDisplay}
                 disabled={!!!selectedAsset?.last_inspection?.inspect_status ?? /* istanbul ignore next */ true}
                 forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
             />
@@ -297,7 +298,7 @@ const AssetPanel = ({
                         id="testntagFormResetButton"
                         data-testid="testntagFormResetButton"
                     >
-                        {locale.form.buttons.reset}
+                        {pageLocale.form.buttons.reset}
                     </Button>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -319,7 +320,7 @@ const AssetPanel = ({
                                     data-testid="saveInspectionSpinner"
                                 />
                             ) : (
-                                locale.form.buttons.save
+                                pageLocale.form.buttons.save
                             )}
                         </Button>
                     </Box>

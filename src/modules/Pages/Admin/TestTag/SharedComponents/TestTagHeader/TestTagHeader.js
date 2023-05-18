@@ -105,10 +105,10 @@ const TestTagHeader = (
 };
 
 TestTagHeader.propTypes = {
-    departmentText: PropTypes.string.isRequired,
+    departmentText: PropTypes.string,
     breadcrumbs: PropTypes.array,
     className: PropTypes.string,
-    requiredText: PropTypes.string.isRequired,
+    requiredText: PropTypes.string,
 };
 
 export default React.memo(TestTagHeader);

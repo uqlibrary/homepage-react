@@ -8,13 +8,11 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { hasAccess } from '../../helpers/auth';
 import TestTagHeader from '../TestTagHeader/TestTagHeader';
-import locale from '../../testTag.locale';
 
 const StandardAuthPage = ({
     title = '',
-    withHeader = true,
-    headerSubText = '',
-    breadcrumbs = [],
+    locale = null,
+    withBreadcrumbs = true,
     requiredPermissions = [],
     inclusive = true,
     children = null,
@@ -27,24 +25,24 @@ const StandardAuthPage = ({
     const headerDepartmentText = React.useMemo(
         () =>
             user
-                ? locale?.form?.pageSubtitle?.(
+                ? locale?.header?.pageSubtitle?.(
                       user?.department_display_name ??
                           /* istanbul ignore next */ user?.user_department ??
                           /* istanbul ignore next */ '',
                   )
                 : /* istanbul ignore next */ '',
-        [user],
+        [user, locale],
     );
 
     return (
         <StandardPage title={title} {...props}>
             {!!!userAllow && <ContentLoader message="Checking" />}
             {!!userAllow && !shouldHaveAccess && <Typography variant={'h6'}>Page is unavailable</Typography>}
-            {shouldHaveAccess && withHeader && (
+            {shouldHaveAccess && (
                 <TestTagHeader
                     departmentText={headerDepartmentText}
-                    requiredText={headerSubText}
-                    breadcrumbs={breadcrumbs}
+                    requiredText={locale?.header?.requiredText}
+                    breadcrumbs={withBreadcrumbs ? locale.breadcrumbs : []}
                 />
             )}
             {shouldHaveAccess && children}
@@ -55,9 +53,8 @@ const StandardAuthPage = ({
 StandardAuthPage.propTypes = {
     title: PropTypes.string,
     user: PropTypes.object,
-    withHeader: PropTypes.bool,
-    headerSubText: PropTypes.string,
-    breadcrumbs: PropTypes.array,
+    locale: PropTypes.object,
+    withBreadcrumbs: PropTypes.bool,
     requiredPermissions: PropTypes.array,
     inclusive: PropTypes.bool,
     children: PropTypes.any,

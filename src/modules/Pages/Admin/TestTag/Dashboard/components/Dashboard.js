@@ -12,13 +12,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import Avatar from '@material-ui/core/Avatar';
 import InspectionIcon from '@material-ui/icons/Search';
-import UsersIcon from '@material-ui/icons/People';
-import AssetTypeIcon from '@material-ui/icons/DevicesOther';
-import LocationIcon from '@material-ui/icons/MyLocation';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
-import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
-import OutForRepairIcon from '@material-ui/icons/ExitToApp';
-import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
 
 import { pathConfig } from 'config/routes';
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
@@ -36,63 +30,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const managementLinks = [
-    {
-        title: 'USERS',
-        icon: <UsersIcon />,
-        permissions: [PERMISSIONS.can_admin],
-        path: '#',
-    },
-    {
-        title: 'ASSET TYPES',
-        icon: <AssetTypeIcon />,
-        path: '#',
-    },
-    {
-        title: 'LOCATIONS',
-        icon: <LocationIcon />,
-        permissions: [PERMISSIONS.can_admin],
-        path: '#',
-    },
-    {
-        title: 'INSPECTION DEVICES',
-        icon: <InspectionDeviceIcon />,
-        path: '#',
-    },
-    {
-        title: 'BULK ASSET UPDATE',
-        icon: <BulkUpdateIcon />,
-        path: '#',
-    },
-    {
-        title: 'INSPECTIONS',
-        icon: <InspectionIcon />,
-        path: '#',
-    },
-];
-const reportingLinks = [
-    {
-        title: 'INSPECTION DEVICES DUE RECALIBRATION',
-        icon: <InspectionDeviceIcon />,
-        path: '#',
-    },
-    {
-        title: 'ASSETS DUE NEXT INSPECTION',
-        icon: <InspectionIcon />,
-        path: '#',
-    },
-    {
-        title: 'ASSETS OUT FOR REPAIR',
-        icon: <OutForRepairIcon />,
-        path: '#',
-    },
-    {
-        title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
-        icon: <AssetsInspectedByDateIcon />,
-        path: '#',
-    },
-];
-
 const Dashboard = ({
     actions,
     dashboardConfig,
@@ -100,6 +37,7 @@ const Dashboard = ({
     dashboardConfigLoaded,
     dashboardConfigError,
 }) => {
+    const pageLocale = locale.pages.dashboard;
     const classes = useStyles();
 
     useEffect(() => {
@@ -107,11 +45,17 @@ const Dashboard = ({
     }, [actions, dashboardConfigLoaded]);
 
     return (
-        <StandardAuthPage title={locale.form.pageTitle} requiredPermissions={ROLES.all} inclusive={false}>
+        <StandardAuthPage
+            title={locale.pages.general.pageTitle}
+            locale={pageLocale}
+            requiredPermissions={ROLES.all}
+            inclusive={false}
+            withBreadcrumbs={false}
+        >
             <div className={classes.root}>
                 <Grid container spacing={3} padding={3}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid item xs>
+                        <Grid item xs={12} sm>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton animation="wave" height={300} />
                             ) : (
@@ -134,7 +78,7 @@ const Dashboard = ({
                             )}
                         </Grid>
                     </AuthWrapper>
-                    <Grid item xs>
+                    <Grid item xs={12} sm>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton animation="wave" height={300} />
                         ) : (
@@ -156,7 +100,7 @@ const Dashboard = ({
                             </Panel>
                         )}
                     </Grid>
-                    <Grid item xs>
+                    <Grid item xs={12} sm>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton animation="wave" height={300} />
                         ) : (
@@ -180,7 +124,7 @@ const Dashboard = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item xs>
+                    <Grid item xs md={6}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton animation="wave" height={300} />
                         ) : (
@@ -190,7 +134,7 @@ const Dashboard = ({
                                 headerProps={{ titleTypographyProps: { variant: 'body2' } }}
                             >
                                 <List component="nav" aria-label="management actions">
-                                    {managementLinks.map(link => {
+                                    {pageLocale.config.managementLinks.map(link => {
                                         if (!!link?.permissions) {
                                             return (
                                                 <AuthWrapper
@@ -217,7 +161,7 @@ const Dashboard = ({
                         )}
                     </Grid>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
-                        <Grid item xs>
+                        <Grid item xs md={6}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton animation="wave" height={300} />
                             ) : (
@@ -227,7 +171,7 @@ const Dashboard = ({
                                     headerProps={{ titleTypographyProps: { variant: 'body2' } }}
                                 >
                                     <List component="nav" aria-label="management actions">
-                                        {reportingLinks.map(link => {
+                                        {pageLocale.config.reportingLinks.map(link => {
                                             return (
                                                 <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
                                                     {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}

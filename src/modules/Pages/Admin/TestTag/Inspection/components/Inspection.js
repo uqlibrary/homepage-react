@@ -17,7 +17,7 @@ import locale from '../../testTag.locale';
 import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
 const moment = require('moment');
-const testStatusEnum = statusEnum(locale);
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -123,7 +123,8 @@ const Inspection = ({
     const classes = useStyles();
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
-    const today = moment().format(locale.config.dateFormat);
+    const inspectionLocale = locale.pages.inspect;
+    const today = moment().format(inspectionLocale.config.dateFormat);
 
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
@@ -149,7 +150,7 @@ const Inspection = ({
 
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
-        defaultDateFormat: locale.config.dateFormat,
+        defaultDateFormat: inspectionLocale.config.dateFormat,
     });
 
     const { location, setLocation } = useLocation();
@@ -225,16 +226,15 @@ const Inspection = ({
     };
 
     const saveErrorLocale = {
-        ...locale.form.saveError,
-        confirmationTitle: locale.form.saveError.confirmationTitle(saveInspectionError),
+        ...inspectionLocale.form.saveError,
+        confirmationTitle: inspectionLocale.form.saveError.confirmationTitle(saveInspectionError),
     };
 
     return (
         <StandardAuthPage
-            title={locale.form.pageTitle}
-            headerSubText={locale?.form?.requiredText ?? /* istanbul ignore next */ ''}
+            title={locale.pages.general.pageTitle}
+            locale={inspectionLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
-            breadcrumbs={[{ ...locale.breadcrumbs.inspection }]}
         >
             <ConfirmationBox
                 actionButtonColor="secondary"
@@ -244,7 +244,7 @@ const Inspection = ({
                 onAction={hideNetworkError}
                 onClose={hideNetworkError}
                 isOpen={isNetworkErrorOpen}
-                locale={locale.form.networkError}
+                locale={inspectionLocale.form.networkError}
                 noMinContentWidth
             />
             <ConfirmationBox
@@ -255,7 +255,7 @@ const Inspection = ({
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
-                locale={getSuccessDialog(saveInspectionSuccess, classes, locale)}
+                locale={getSuccessDialog(saveInspectionSuccess, classes, inspectionLocale)}
                 noMinContentWidth
             />
             <ConfirmationBox
