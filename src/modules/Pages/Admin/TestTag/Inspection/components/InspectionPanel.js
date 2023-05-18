@@ -23,7 +23,7 @@ import DebouncedTextField from './DebouncedTextField';
 import locale from '../../testTag.locale';
 import { isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
 
-const testStatusEnum = statusEnum(locale);
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -61,7 +61,7 @@ const InspectionPanel = ({
         disabled: PropTypes.bool.isRequired,
         isMobileView: PropTypes.bool.isRequired,
     };
-
+    const pageLocale = locale.pages.inspect;
     const classesInternal = useStyles();
 
     const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
@@ -72,7 +72,7 @@ const InspectionPanel = ({
     useEffect(() => {
         /* istanbul ignore else */ if (formValues.inspection_status === testStatusEnum.PASSED.value) {
             handleChange('inspection_date_next')(
-                moment(formValues.action_date, locale.config.dateFormat).add(formNextTestDate, 'months'),
+                moment(formValues.action_date, pageLocale.config.dateFormat).add(formNextTestDate, 'months'),
             );
         }
 
@@ -81,7 +81,7 @@ const InspectionPanel = ({
 
     return (
         <StandardCard
-            title={`${locale.form.inspection.title}`}
+            title={`${pageLocale.form.inspection.title}`}
             style={{ marginBottom: 30 }}
             smallTitle
             variant="outlined"
@@ -96,7 +96,7 @@ const InspectionPanel = ({
                     <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
                             <InputLabel required htmlFor="testResultTestingDevice">
-                                {locale.form.inspection.deviceLabel}
+                                {pageLocale.form.inspection.deviceLabel}
                             </InputLabel>
                             <Select
                                 fullWidth
@@ -117,7 +117,7 @@ const InspectionPanel = ({
                             >
                                 {!!inspectionConfigLoading && (
                                     <MenuItem value={-1} disabled key={'devicetypes-loading'}>
-                                        {locale.form.loading}
+                                        {pageLocale.form.loading}
                                     </MenuItem>
                                 )}
                                 {!!!inspectionConfigLoading &&
@@ -135,7 +135,7 @@ const InspectionPanel = ({
                     <Grid item xs={12}>
                         <Box>
                             <InputLabel shrink required htmlFor="testResultToggleButtons">
-                                {locale.form.inspection.testResultLabel}
+                                {pageLocale.form.inspection.testResultLabel}
                             </InputLabel>
                             <ToggleButtonGroup
                                 value={formValues.inspection_status ?? testStatusEnum.NONE.value}
@@ -184,7 +184,7 @@ const InspectionPanel = ({
                         <Grid item xs={12}>
                             <FormControl className={classes.formControl} fullWidth={isMobileView}>
                                 <InputLabel shrink required>
-                                    {locale.form.inspection.nextTestDateLabel}
+                                    {pageLocale.form.inspection.nextTestDateLabel}
                                 </InputLabel>
                                 <Select
                                     id="testResultNextDate"
@@ -208,10 +208,10 @@ const InspectionPanel = ({
                                     ))}
                                 </Select>
                                 <Typography component={'span'} data-testid="testResultNextDate-value">
-                                    {locale.form.inspection.nextTestDateFormatted(
-                                        moment(formValues.action_date, locale.config.dateFormat)
+                                    {pageLocale.form.inspection.nextTestDateFormatted(
+                                        moment(formValues.action_date, pageLocale.config.dateFormat)
                                             .add(formNextTestDate, 'months')
-                                            .format(locale.config.dateFormatDisplay),
+                                            .format(pageLocale.config.dateFormatDisplay),
                                     )}
                                 </Typography>
                             </FormControl>
@@ -221,7 +221,7 @@ const InspectionPanel = ({
                         <Grid item xs={12} sm={12}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <DebouncedTextField
-                                    {...locale.form.inspection.failReason}
+                                    {...pageLocale.form.inspection.failReason}
                                     multiline
                                     rows={4}
                                     variant="standard"
@@ -242,7 +242,7 @@ const InspectionPanel = ({
                     <Grid item xs={12} sm={12}>
                         <FormControl className={classes.formControl} fullWidth>
                             <DebouncedTextField
-                                {...locale.form.inspection.inspectionNotes}
+                                {...pageLocale.form.inspection.inspectionNotes}
                                 multiline
                                 rows={4}
                                 variant="standard"

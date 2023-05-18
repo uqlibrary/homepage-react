@@ -8,7 +8,7 @@ export const getUserPermissions = (privileges = {}) => {
         if (privileges[current] === 1) {
             return accumulated + PERMISSIONS[current];
         }
-        return null;
+        return accumulated;
     }, PERMISSIONS.none);
 
     return calculatedPermission;

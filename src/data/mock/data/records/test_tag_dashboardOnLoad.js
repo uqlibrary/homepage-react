@@ -21,7 +21,7 @@ export default {
       "can_admin": 0,
       "can_inspect": 1,
       "can_alter": 1,
-      "can_see_reports": 1
+      "can_see_reports": 1,
     },
 },
 };
