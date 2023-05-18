@@ -167,42 +167,44 @@ const Dashboard = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm className={classes.flexParent}>
-                        {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} width={'100%'} />
-                        ) : (
-                            <Panel
-                                title={pageLocale.panel.management.title}
-                                className={classes.card}
-                                headerProps={{ titleTypographyProps: { variant: 'body2' } }}
-                            >
-                                <List component="nav" aria-label="management actions">
-                                    {pageLocale.panel.management.links.map(link => {
-                                        if (!!link?.permissions) {
-                                            return (
-                                                <AuthWrapper
-                                                    requiredPermissions={link.permissions}
-                                                    key={`listItem${link.title.replace(' ', '')}`}
-                                                >
-                                                    <ListItem button>
+                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
+                        <Grid item xs={12} sm className={classes.flexParent}>
+                            {dashboardConfigLoading && !dashboardConfigError ? (
+                                <Skeleton animation="wave" height={300} width={'100%'} />
+                            ) : (
+                                <Panel
+                                    title={pageLocale.panel.management.title}
+                                    className={classes.card}
+                                    headerProps={{ titleTypographyProps: { variant: 'body2' } }}
+                                >
+                                    <List component="nav" aria-label="management actions">
+                                        {pageLocale.panel.management.links.map(link => {
+                                            if (!!link?.permissions) {
+                                                return (
+                                                    <AuthWrapper
+                                                        requiredPermissions={link.permissions}
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                    >
+                                                        <ListItem button>
+                                                            {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+                                                            <ListItemText primary={link.title} />
+                                                        </ListItem>
+                                                    </AuthWrapper>
+                                                );
+                                            } else {
+                                                return (
+                                                    <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />
                                                     </ListItem>
-                                                </AuthWrapper>
-                                            );
-                                        } else {
-                                            return (
-                                                <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
-                                                    {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
-                                                    <ListItemText primary={link.title} />
-                                                </ListItem>
-                                            );
-                                        }
-                                    })}
-                                </List>
-                            </Panel>
-                        )}
-                    </Grid>
+                                                );
+                                            }
+                                        })}
+                                    </List>
+                                </Panel>
+                            )}
+                        </Grid>
+                    </AuthWrapper>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
                         <Grid item xs={12} sm className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
