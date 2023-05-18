@@ -34,6 +34,8 @@ export const pathConfig = {
         spotlights: '/admin/spotlights',
         testntagdashboard: '/admin/testntag',
         testntaginspection: '/admin/testntag/inspection',
+        testntagmanagement: '/admin/testntag/management',
+        testntagreporting: '/admin/testntag/reporting',
     },
     bookExamBooth: '/book-exam-booth',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,

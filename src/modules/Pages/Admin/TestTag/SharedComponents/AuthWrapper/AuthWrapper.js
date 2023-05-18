@@ -4,15 +4,16 @@ import { useSelector } from 'react-redux';
 
 import { hasAccess } from '../../helpers/auth';
 
-const AuthWrapper = ({ requiredPermissions = [], inclusive = false, children } = {}) => {
+const AuthWrapper = ({ requiredPermissions = [], inclusive = false, fallback = <></>, children } = {}) => {
     const { privilege } = useSelector(state => state.get('testTagUserReducer'));
     const shouldHaveAccess = hasAccess(privilege, requiredPermissions, inclusive);
 
-    return shouldHaveAccess ? children : <></>;
+    return shouldHaveAccess ? children : fallback ?? <></>;
 };
 
 AuthWrapper.propTypes = {
     requiredPermissions: PropTypes.array,
+    fallback: PropTypes.node,
     inclusive: PropTypes.bool,
     children: PropTypes.any,
 };
