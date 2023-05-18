@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
 
 export default {
     config: {
@@ -13,6 +14,15 @@ export default {
         repairLabel: 'REPAIR',
         discardedLabel: 'DISCARD',
         noneLabel: 'NONE',
+    },
+    breadcrumbs: {
+        dashboard: {
+            title: 'Dashboard',
+        },
+        inspection: {
+            title: 'Inspection',
+            icon: <SearchIcon />,
+        },
     },
     form: {
         loading: 'Loading...',

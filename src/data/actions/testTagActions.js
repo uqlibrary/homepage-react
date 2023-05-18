@@ -1,6 +1,7 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
 import {
+    TEST_TAG_ONLOAD_DASHBOARD_API,
     TEST_TAG_ONLOAD_INSPECTION_API,
     TEST_TAG_FLOOR_API,
     TEST_TAG_ROOM_API,
@@ -9,11 +10,38 @@ import {
     TEST_TAG_ASSET_TYPES_LIST_API,
 } from 'repositories/routes';
 
-export function loadConfig() {
+export function loadDashboard() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_DASHBOARD_CONFIG_LOADING });
+        return get(TEST_TAG_ONLOAD_DASHBOARD_API())
+            .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LOADED,
+                    payload: data?.user ?? /* istanbul ignore next */ {},
+                });
+                dispatch({
+                    type: actions.TESTTAG_DASHBOARD_CONFIG_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_DASHBOARD_CONFIG_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function loadInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
         return get(TEST_TAG_ONLOAD_INSPECTION_API())
             .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LOADED,
+                    payload: data?.user ?? /* istanbul ignore next */ {},
+                });
                 dispatch({
                     type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
                     payload: data,
@@ -28,7 +56,7 @@ export function loadConfig() {
     };
 }
 
-export function clearConfig() {
+export function clearInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR });
     };
