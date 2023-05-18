@@ -50,7 +50,6 @@ const Dashboard = ({
             locale={pageLocale}
             requiredPermissions={ROLES.all}
             inclusive={false}
-            withBreadcrumbs={false}
         >
             <div className={classes.root}>
                 <Grid container spacing={3} padding={3}>
@@ -60,7 +59,7 @@ const Dashboard = ({
                                 <Skeleton animation="wave" height={300} />
                             ) : (
                                 <Panel
-                                    title="INSPECTIONS"
+                                    title={pageLocale.panel.inspections.title}
                                     icon={
                                         <Avatar aria-label="inspections" style={{ backgroundColor: '#388E3C' }}>
                                             <InspectionIcon />
@@ -72,7 +71,7 @@ const Dashboard = ({
                                         to={`${pathConfig.admin.testntaginspection}?user=uqtesttag`}
                                         data-testid="linkInspection"
                                     >
-                                        Begin test and tagging of assets
+                                        {pageLocale.panel.inspections.link}
                                     </Link>
                                 </Panel>
                             )}
@@ -83,7 +82,7 @@ const Dashboard = ({
                             <Skeleton animation="wave" height={300} />
                         ) : (
                             <Panel
-                                title="ASSETS"
+                                title={pageLocale.panel.assets.title}
                                 icon={
                                     <Avatar aria-label="assets" style={{ backgroundColor: '#FFA726' }}>
                                         <InspectionIcon />
@@ -95,7 +94,10 @@ const Dashboard = ({
                                     {dashboardConfig?.retest?.soon}
                                 </Typography>
                                 <Typography variant={'body1'}>
-                                    {`needing a retest in the next ${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}.`}
+                                    {pageLocale.panel.assets.subtext(
+                                        dashboardConfig?.periodLength,
+                                        dashboardConfig?.periodType,
+                                    )}
                                 </Typography>
                             </Panel>
                         )}
@@ -105,7 +107,7 @@ const Dashboard = ({
                             <Skeleton animation="wave" height={300} />
                         ) : (
                             <Panel
-                                title="INSPECTION DEVICES"
+                                title={pageLocale.panel.inspectionDevices.title}
                                 icon={
                                     <Avatar aria-label="inspection devices" style={{ backgroundColor: '#0288D2' }}>
                                         <InspectionDeviceIcon />
@@ -117,7 +119,10 @@ const Dashboard = ({
                                     {dashboardConfig?.recalibration?.soon}
                                 </Typography>
                                 <Typography variant={'body1'}>
-                                    {`needing a recalibration in the next ${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}.`}
+                                    {pageLocale.panel.assets.subtext(
+                                        dashboardConfig?.periodLength,
+                                        dashboardConfig?.periodType,
+                                    )}
                                 </Typography>
                             </Panel>
                         )}
@@ -129,12 +134,12 @@ const Dashboard = ({
                             <Skeleton animation="wave" height={300} />
                         ) : (
                             <Panel
-                                title="MANAGEMENT"
+                                title={pageLocale.panel.management.title}
                                 className={classes.Card}
                                 headerProps={{ titleTypographyProps: { variant: 'body2' } }}
                             >
                                 <List component="nav" aria-label="management actions">
-                                    {pageLocale.config.managementLinks.map(link => {
+                                    {pageLocale.panel.management.links.map(link => {
                                         if (!!link?.permissions) {
                                             return (
                                                 <AuthWrapper
@@ -166,18 +171,32 @@ const Dashboard = ({
                                 <Skeleton animation="wave" height={300} />
                             ) : (
                                 <Panel
-                                    title="REPORTING"
+                                    title={pageLocale.panel.reporting.title}
                                     className={classes.Card}
                                     headerProps={{ titleTypographyProps: { variant: 'body2' } }}
                                 >
-                                    <List component="nav" aria-label="management actions">
-                                        {pageLocale.config.reportingLinks.map(link => {
-                                            return (
-                                                <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
-                                                    {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
-                                                    <ListItemText primary={link.title} />
-                                                </ListItem>
-                                            );
+                                    <List component="nav" aria-label="reporting actions">
+                                        {pageLocale.panel.reporting.links.map(link => {
+                                            if (!!link?.permissions) {
+                                                return (
+                                                    <AuthWrapper
+                                                        requiredPermissions={link.permissions}
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                    >
+                                                        <ListItem button>
+                                                            {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+                                                            <ListItemText primary={link.title} />
+                                                        </ListItem>
+                                                    </AuthWrapper>
+                                                );
+                                            } else {
+                                                return (
+                                                    <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
+                                                        {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+                                                        <ListItemText primary={link.title} />
+                                                    </ListItem>
+                                                );
+                                            }
                                         })}
                                     </List>
                                 </Panel>

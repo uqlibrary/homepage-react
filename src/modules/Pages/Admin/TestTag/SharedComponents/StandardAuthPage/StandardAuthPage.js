@@ -12,7 +12,6 @@ import TestTagHeader from '../TestTagHeader/TestTagHeader';
 const StandardAuthPage = ({
     title = '',
     locale = null,
-    withBreadcrumbs = true,
     requiredPermissions = [],
     inclusive = true,
     children = null,
@@ -42,7 +41,7 @@ const StandardAuthPage = ({
                 <TestTagHeader
                     departmentText={headerDepartmentText}
                     requiredText={locale?.header?.requiredText}
-                    breadcrumbs={withBreadcrumbs ? locale.breadcrumbs : []}
+                    breadcrumbs={locale?.breadcrumbs ?? []}
                 />
             )}
             {shouldHaveAccess && children}
@@ -54,7 +53,6 @@ StandardAuthPage.propTypes = {
     title: PropTypes.string,
     user: PropTypes.object,
     locale: PropTypes.object,
-    withBreadcrumbs: PropTypes.bool,
     requiredPermissions: PropTypes.array,
     inclusive: PropTypes.bool,
     children: PropTypes.any,

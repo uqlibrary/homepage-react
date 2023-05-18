@@ -20,74 +20,88 @@ export default {
             pageTitle: 'UQ Asset Test and Tag',
         },
         dashboard: {
-            config: {
-                managementLinks: [
-                    {
-                        title: 'USERS',
-                        icon: <UsersIcon />,
-                        permissions: [PERMISSIONS.can_admin],
-                        path: '#',
-                    },
-                    {
-                        title: 'ASSET TYPES',
-                        icon: <AssetTypeIcon />,
-                        path: '#',
-                    },
-                    {
-                        title: 'LOCATIONS',
-                        icon: <LocationIcon />,
-                        permissions: [PERMISSIONS.can_admin],
-                        path: '#',
-                    },
-                    {
-                        title: 'INSPECTION DEVICES',
-                        icon: <InspectionDeviceIcon />,
-                        path: '#',
-                    },
-                    {
-                        title: 'BULK ASSET UPDATE',
-                        icon: <BulkUpdateIcon />,
-                        path: '#',
-                    },
-                    {
-                        title: 'INSPECTIONS',
-                        icon: <InspectionIcon />,
-                        path: '#',
-                    },
-                ],
-                reportingLinks: [
-                    {
-                        title: 'INSPECTION DEVICES DUE RECALIBRATION',
-                        icon: <InspectionDeviceIcon />,
-                        path: '#',
-                    },
-                    {
-                        title: 'ASSETS DUE NEXT INSPECTION',
-                        icon: <InspectionIcon />,
-                        path: '#',
-                    },
-                    {
-                        title: 'ASSETS OUT FOR REPAIR',
-                        icon: <OutForRepairIcon />,
-                        path: '#',
-                    },
-                    {
-                        title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
-                        icon: <AssetsInspectedByDateIcon />,
-                        path: '#',
-                    },
-                ],
-            },
-
-            breadcrumbs: [
-                {
-                    title: 'Dashboard',
-                },
-            ],
+            config: {},
             header: {
                 pageSubtitle: dept => `Dashboard for ${dept}`,
             },
-            form: {},
+            panel: {
+                inspections: {
+                    title: 'INSPECTIONS',
+                    link: 'Begin test and tagging of assets',
+                },
+                assets: {
+                    title: 'ASSETS',
+                    subtext: (periodLength, periodType) =>
+                        `needing a retest in the next ${periodLength} ${periodType}.`,
+                },
+                inspectionDevices: {
+                    title: 'INSPECTION DEVICES',
+                    subtext: (periodLength, periodType) =>
+                        `needing a recalibration in the next ${periodLength} ${periodType}.`,
+                },
+                management: {
+                    title: 'MANAGEMENT',
+                    links: [
+                        {
+                            title: 'USERS',
+                            icon: <UsersIcon />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: '#',
+                        },
+                        {
+                            title: 'ASSET TYPES',
+                            icon: <AssetTypeIcon />,
+                            path: '#',
+                        },
+                        {
+                            title: 'LOCATIONS',
+                            icon: <LocationIcon />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: '#',
+                        },
+                        {
+                            title: 'INSPECTION DEVICES',
+                            icon: <InspectionDeviceIcon />,
+                            path: '#',
+                        },
+                        {
+                            title: 'BULK ASSET UPDATE',
+                            icon: <BulkUpdateIcon />,
+                            path: '#',
+                        },
+                        {
+                            title: 'INSPECTIONS',
+                            icon: <InspectionIcon />,
+                            path: '#',
+                        },
+                    ],
+                },
+                reporting: {
+                    title: 'REPORTING',
+                    links: [
+                        {
+                            title: 'INSPECTION DEVICES DUE RECALIBRATION',
+                            icon: <InspectionDeviceIcon />,
+                            path: '#',
+                        },
+                        {
+                            title: 'ASSETS DUE NEXT INSPECTION',
+                            icon: <InspectionIcon />,
+                            path: '#',
+                        },
+                        {
+                            title: 'ASSETS OUT FOR REPAIR',
+                            icon: <OutForRepairIcon />,
+                            path: '#',
+                        },
+                        {
+                            title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
+                            icon: <AssetsInspectedByDateIcon />,
+                            path: '#',
+                        },
+                    ],
+                },
+            },
         },
         inspect: {
             config: {
