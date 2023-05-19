@@ -7,7 +7,7 @@ import {
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSET_ACTION,
-    TEST_TAG_ASSET_TYPES_LIST_API,
+    TEST_TAG_ONLOAD_ASSETTYPE_API,
 } from 'repositories/routes';
 
 export function loadDashboard() {
@@ -167,14 +167,45 @@ export function clearSaveInspection() {
 export function loadAssetTypes() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_LOADING });
-        return get(TEST_TAG_ASSET_TYPES_LIST_API())
-            .then(data => {
+        return get(TEST_TAG_ONLOAD_ASSETTYPE_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LOADED,
+                    payload: response?.data?.user ?? /* istanbul ignore next */ {},
+                });
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
-                    payload: data.data,
+                    payload: response?.data?.asset_types ?? /* istanbul ignore next */ {},
                 });
             })
             .catch(error => {
+                console.log('Calling Error');
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_LIST_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function saveAssetType() {
+    console.log('Calling saveAssetType');
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_SAVING });
+        return get(TEST_TAG_ONLOAD_ASSETTYPE_API())
+            .then(response => {
+                console.log('This is the data', response?.data);
+                dispatch({
+                    type: actions.TESTTAG_USER_LOADED,
+                    payload: response?.data?.user ?? /* istanbul ignore next */ {},
+                });
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
+                    payload: response?.data?.asset_types ?? /* istanbul ignore next */ {},
+                });
+            })
+            .catch(error => {
+                console.log('Calling Error');
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_FAILED,
                     payload: error.message,

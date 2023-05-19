@@ -256,5 +256,17 @@ export default {
                 },
             },
         },
+        assetTypeManagement: {
+            breadcrumbs: [
+                {
+                    title: 'Asset Type Management',
+                    icon: <AssetTypeIcon />,
+                },
+            ],
+            header: {
+                pageSubtitle: dept => `Managing Asset Types for ${dept}`,
+                requiredText: 'All fields are required unless otherwise indicated.',
+            },
+        },
     },
 };

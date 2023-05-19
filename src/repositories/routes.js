@@ -217,4 +217,4 @@ export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
 
 /** TEST AND TAG ASSET TYPES **/
 // List Asset Types
-export const TEST_TAG_ASSET_TYPES_LIST_API = () => ({ apiUrl: 'test_and_tag/assetType' });
+export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/onload/assettype' });

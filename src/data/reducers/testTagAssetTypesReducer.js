@@ -14,6 +14,7 @@ const handlers = {
         assetTypesListError: false,
     }),
     [actions.TESTTAG_ASSET_TYPES_LIST_LOADED]: (state, action) => {
+        console.log('PAYLOAD', action.payload);
         return {
             ...initialState,
             ...state,

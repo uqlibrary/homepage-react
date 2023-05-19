@@ -4,8 +4,9 @@ import AddIcon from '@material-ui/icons/Add';
 import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
 
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import locale from '../../testTag.locale';
+import { PERMISSIONS } from '../../config/auth';
 
 import RowMenuCell from './RowMenuCell';
 
@@ -21,49 +22,6 @@ const convertToProperCase = str => {
 
     return capitalizedSuffix;
 };
-
-const getColumns = data => {
-    const template = {
-        editable: true,
-        sortable: false,
-    };
-    const actions = {
-        field: 'actions',
-        headerName: 'Actions',
-        renderCell: RowMenuCell,
-        sortable: false,
-        width: 100,
-        headerAlign: 'center',
-        filterable: false,
-        align: 'center',
-        disableColumnMenu: true,
-        disableReorder: true,
-    };
-
-    const editableFields = [
-        'asset_type_name',
-        'asset_type_class',
-        'asset_type_power_rating',
-        'asset_type',
-        'asset_type_notes',
-    ];
-
-    const columns = [];
-    const keys = Object.keys(data[0]);
-
-    keys.forEach(key => {
-        const fieldName = convertToProperCase(key);
-        if (!editableFields.includes(key)) {
-            columns.push({ field: key, headerName: fieldName, editable: false, sortable: false });
-        } else {
-            columns.push({ field: key, headerName: fieldName, ...template });
-        }
-    });
-
-    columns && columns.length > 0 && columns.push(actions);
-    return columns;
-};
-
 // const columns = [
 //     { field: 'asset_type_id', headerName: 'ID', editable: false, sortable: false },
 //     { field: 'asset_type_name', headerName: 'Name', editable: true, sortable: false },
@@ -113,9 +71,53 @@ const EditToolbar = () => {
 EditToolbar.propTypes = {};
 
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, assetTypesListError }) => {
-    console.log('These are the props', assetTypesList, assetTypesListLoading, assetTypesListError);
     const [rows, setRows] = React.useState(assetTypesList);
+    const assetTypeManagementLocale = locale.pages.assetTypeManagement;
 
+    const onRowSave = row => {
+        console.log('On Row Save', row);
+    };
+    const getColumns = data => {
+        const template = {
+            editable: true,
+            sortable: false,
+        };
+        const actionsCell = {
+            field: 'actions',
+            headerName: 'Actions',
+            renderCell: params => <RowMenuCell {...params} onRowSave={onRowSave} />,
+            sortable: false,
+            width: 100,
+            headerAlign: 'center',
+            filterable: false,
+            align: 'center',
+            disableColumnMenu: true,
+            disableReorder: true,
+        };
+
+        const editableFields = [
+            'asset_type_name',
+            'asset_type_class',
+            'asset_type_power_rating',
+            'asset_type',
+            'asset_type_notes',
+        ];
+
+        const columns = [];
+        const keys = Object.keys(data[0]);
+
+        keys.forEach(key => {
+            const fieldName = convertToProperCase(key);
+            if (!editableFields.includes(key)) {
+                columns.push({ field: key, headerName: fieldName, editable: false, sortable: false });
+            } else {
+                columns.push({ field: key, headerName: fieldName, ...template });
+            }
+        });
+
+        columns && columns.length > 0 && columns.push(actionsCell);
+        return columns;
+    };
     const columns = assetTypesList.length > 0 ? getColumns(assetTypesList) : [];
 
     React.useEffect(() => {
@@ -127,18 +129,27 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         setRows(assetTypesList);
     }, [assetTypesList]);
 
-    const handleRowEditStart = (params, event) => {
-        event.defaultMuiPrevented = true;
-    };
+    // I believe these are only used when using double-click to edit mode.
+    // In this case, I dont think they are used.
+    // commenting out for now
 
-    const handleRowEditStop = (params, event) => {
-        event.defaultMuiPrevented = true;
-        // Set rows in here
-        console.log(setRows);
-    };
+    // const handleRowEditStart = (params, event) => {
+    //     event.defaultMuiPrevented = true;
+    // };
+
+    // const handleRowEditStop = (params, event) => {
+    //     event.defaultMuiPrevented = true;
+    //     // Set rows in here
+    //     console.log("Here's where I am SAVING");
+    //     console.log(setRows);
+    // };
 
     return (
-        <StandardPage title={locale.form.pageTitle}>
+        <StandardAuthPage
+            title={locale.pages.general.pageTitle}
+            locale={assetTypeManagementLocale}
+            requiredPermissions={[PERMISSIONS.can_inspect]}
+        >
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid
                     rows={rows}
@@ -148,14 +159,14 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                     // disableColumnMenu
                     disableColumnSort
                     getRowId={row => row?.asset_type_id}
-                    onRowEditStart={handleRowEditStart}
-                    onRowEditStop={handleRowEditStop}
+                    // onRowEditStart={handleRowEditStart}
+                    // onRowEditStop={handleRowEditStop}
                     components={{
                         Toolbar: EditToolbar,
                     }}
                 />
             </div>
-        </StandardPage>
+        </StandardAuthPage>
     );
 };
 
