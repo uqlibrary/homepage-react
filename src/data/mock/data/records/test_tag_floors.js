@@ -1,4 +1,5 @@
-export default [
+export default {
+  data: [
   {
     "building_id": 1,
     "building_id_displayed": "0001",
@@ -66,4 +67,5 @@ export default [
       }
     ]
   }
-];
+]
+};

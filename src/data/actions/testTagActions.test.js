@@ -32,7 +32,7 @@ describe('Test & Tag actions', () => {
     // ,,,TEST_TAG_ASSETS_API,TEST_TAG_ASSET_ACTION
     describe('Test & Tag List Config Actions', () => {
         it('handles T&T Config list', async () => {
-            mockApi.onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECTION_API().apiUrl).reply(200, []);
+            mockApi.onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECT_API().apiUrl).reply(200, []);
 
             const expectedActions = [
                 actions.TESTTAG_INSPECTION_CONFIG_LOADING,
@@ -43,7 +43,7 @@ describe('Test & Tag actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
         it('dispatches expected actions when  T&T config call fails', async () => {
-            mockApi.onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECTION_API()).reply(500);
+            mockApi.onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECT_API()).reply(500);
 
             const expectedActions = [
                 actions.TESTTAG_INSPECTION_CONFIG_LOADING,

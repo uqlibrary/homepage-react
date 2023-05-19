@@ -1,4 +1,5 @@
 export default {
+  data:{
     "asset_types": [
       {
         "asset_type_id": 1,
@@ -90,5 +91,6 @@ export default {
           }
         ]
       },
-    ]
+    ],
+  },
   };

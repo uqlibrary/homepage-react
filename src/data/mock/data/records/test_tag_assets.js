@@ -1,4 +1,5 @@
-export default [
+export default {
+    data: [
     {
         "asset_id": 100000,
         "asset_id_displayed": "UQL100000",
@@ -527,5 +528,5 @@ export default [
          "last_discard": {
         }
     },
-    
-];    
+],
+};
