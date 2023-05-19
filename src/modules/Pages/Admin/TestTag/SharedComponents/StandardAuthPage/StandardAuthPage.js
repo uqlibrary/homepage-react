@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 
+import { loadUser } from 'data/actions';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
@@ -17,7 +18,17 @@ const StandardAuthPage = ({
     children = null,
     ...props
 } = {}) => {
-    const { user, privilege } = useSelector(state => state.get('testTagUserReducer'));
+    const dispatch = useDispatch();
+    const { userLoading, userLoaded, userError, user, privilege } = useSelector(state =>
+        state.get('testTagUserReducer'),
+    );
+    React.useEffect(() => {
+        if (!userLoading && !userLoaded && !userError) {
+            dispatch(loadUser());
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userLoading, userLoaded, userError]);
+
     const defaultAllow = (!!user && typeof user === 'object' && Object.keys(user).length > 0) || false;
     const userAllow = !!privilege ? hasAccess(privilege, requiredPermissions, inclusive) : null;
     const shouldHaveAccess = defaultAllow && userAllow;
@@ -32,19 +43,22 @@ const StandardAuthPage = ({
                 : /* istanbul ignore next */ '',
         [user, locale],
     );
-
     return (
         <StandardPage title={title} {...props}>
-            {!!!userAllow && <ContentLoader message="Checking" />}
-            {!!userAllow && !shouldHaveAccess && <Typography variant={'h6'}>Page is unavailable</Typography>}
-            {shouldHaveAccess && (
-                <TestTagHeader
-                    departmentText={headerDepartmentText}
-                    requiredText={locale?.header?.requiredText}
-                    breadcrumbs={locale?.breadcrumbs ?? []}
-                />
+            {userLoading && <ContentLoader message="Checking" />}
+            {!userLoading && (userLoaded || userError) && !shouldHaveAccess && (
+                <Typography variant={'h6'}>Page is unavailable</Typography>
             )}
-            {shouldHaveAccess && children}
+            {userLoaded && !userError && shouldHaveAccess && (
+                <>
+                    <TestTagHeader
+                        departmentText={headerDepartmentText}
+                        requiredText={locale?.header?.requiredText}
+                        breadcrumbs={locale?.breadcrumbs ?? []}
+                    />
+                    {children}
+                </>
+            )}
         </StandardPage>
     );
 };

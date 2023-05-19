@@ -1,6 +1,7 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
 import {
+    TEST_TAG_USER_API,
     TEST_TAG_ONLOAD_DASHBOARD_API,
     TEST_TAG_ONLOAD_INSPECT_API,
     TEST_TAG_FLOOR_API,
@@ -9,15 +10,30 @@ import {
     TEST_TAG_ASSET_ACTION,
 } from 'repositories/routes';
 
+export function loadUser() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LOADING });
+        return get(TEST_TAG_USER_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ {},
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
 export function loadDashboard() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_DASHBOARD_CONFIG_LOADING });
         return get(TEST_TAG_ONLOAD_DASHBOARD_API())
             .then(response => {
-                dispatch({
-                    type: actions.TESTTAG_USER_LOADED,
-                    payload: response?.data?.user ?? /* istanbul ignore next */ {},
-                });
                 dispatch({
                     type: actions.TESTTAG_DASHBOARD_CONFIG_LOADED,
                     payload: response?.data,
@@ -37,10 +53,6 @@ export function loadInspectionConfig() {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
         return get(TEST_TAG_ONLOAD_INSPECT_API())
             .then(response => {
-                dispatch({
-                    type: actions.TESTTAG_USER_LOADED,
-                    payload: response?.data?.user ?? /* istanbul ignore next */ {},
-                });
                 dispatch({
                     type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
                     payload: response?.data,
