@@ -29,6 +29,12 @@ const handlers = {
         assetTypesListLoading: false,
         assetTypesListError: action.payload,
     }),
+    [actions.TESTTAG_ASSET_TYPES_SAVING]: state => ({
+        ...initialState,
+        ...state,
+        assetTypesListLoading: true,
+        assetTypesListError: false,
+    }),
 };
 
 export default function testTagAssetTypesReducer(state = initialState, action) {

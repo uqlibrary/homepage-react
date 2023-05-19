@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { get, post } from 'repositories/generic';
+import { get, post, put } from 'repositories/generic';
 import {
     TEST_TAG_USER_API,
     TEST_TAG_ONLOAD_DASHBOARD_API,
@@ -9,6 +9,7 @@ import {
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSET_ACTION,
     TEST_TAG_ONLOAD_ASSETTYPE_API,
+    TEST_TAG_SAVE_ASSETTYPE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -179,14 +180,12 @@ export function clearSaveInspection() {
 /** * ASSET TYPES ACTIONS  ***/
 
 export function loadAssetTypes() {
+    console.log('Loading Asset Types');
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_LOADING });
         return get(TEST_TAG_ONLOAD_ASSETTYPE_API())
             .then(response => {
-                dispatch({
-                    type: actions.TESTTAG_USER_LOADED,
-                    payload: response?.data?.user ?? /* istanbul ignore next */ {},
-                });
+                console.log('RESPONSE WAS', response);
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
                     payload: response?.data?.asset_types ?? /* istanbul ignore next */ {},
@@ -202,20 +201,16 @@ export function loadAssetTypes() {
     };
 }
 
-export function saveAssetType() {
+export function saveAssetType(request) {
     console.log('Calling saveAssetType');
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_SAVING });
-        return get(TEST_TAG_ONLOAD_ASSETTYPE_API())
+        return put(TEST_TAG_SAVE_ASSETTYPE_API(), request)
             .then(response => {
                 console.log('This is the data', response?.data);
                 dispatch({
-                    type: actions.TESTTAG_USER_LOADED,
-                    payload: response?.data?.user ?? /* istanbul ignore next */ {},
-                });
-                dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
-                    payload: response?.data?.asset_types ?? /* istanbul ignore next */ {},
+                    payload: response?.data ?? /* istanbul ignore next */ {},
                 });
             })
             .catch(error => {
