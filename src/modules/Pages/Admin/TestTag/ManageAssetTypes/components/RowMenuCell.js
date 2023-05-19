@@ -25,8 +25,7 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const RowMenuCell = props => {
-    const { api, id, row } = props;
+const RowMenuCell = ({ api, id, row, onRowSave }) => {
     const classes = useStyles();
     const isInEditMode = api.getRowMode(id) === 'edit';
 
@@ -42,6 +41,7 @@ const RowMenuCell = props => {
 
         const row = api.getRow(id);
         api.updateRows([{ ...row, isNew: false }]);
+        onRowSave(row);
     };
 
     const handleDeleteClick = event => {
@@ -100,6 +100,7 @@ RowMenuCell.propTypes = {
     api: PropTypes.object.isRequired,
     row: PropTypes.any,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    onRowSave: PropTypes.func.isRequired,
 };
 
 export default RowMenuCell;
