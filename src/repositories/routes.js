@@ -203,6 +203,7 @@ export const PROMOPANEL_UNSCHEDULE_API = ({ id }) => ({
     apiUrl: `promo_panel/schedule/${id}`,
 });
 /** TEST AND TAG **/
+export const TEST_TAG_USER_API = () => ({ apiUrl: 'test_and_tag/user' });
 export const TEST_TAG_ONLOAD_DASHBOARD_API = () => ({ apiUrl: 'test_and_tag/onload/dashboard' });
 export const TEST_TAG_ONLOAD_INSPECT_API = () => ({ apiUrl: 'test_and_tag/onload/inspect' });
 // export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
