@@ -1,4 +1,5 @@
-export default [
+export default {
+  data: [
     {
         "floor_id": 1,
         "floor_id_displayed": "2",
@@ -738,4 +739,5 @@ export default [
           }
         ]
       }
-];
+]
+};

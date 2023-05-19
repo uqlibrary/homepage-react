@@ -1,4 +1,5 @@
-export default [
+export default {
+	data: [
 	{
 		asset_type_id: 1,
 		asset_type_name: 'KEW 620-1',
@@ -45,4 +46,5 @@ export default [
         asset_type_notes: "LEW Notes",
         asset_count: 55
 	},
-]
+],
+};

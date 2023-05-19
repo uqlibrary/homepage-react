@@ -1,4 +1,5 @@
 export default {
+  data: {
     "recalibration": {
       "soon": 1,
       "overdue": 1
@@ -23,5 +24,6 @@ export default {
         "can_alter": 1,
         "can_see_reports": 1
       },
+  },
   },
 };

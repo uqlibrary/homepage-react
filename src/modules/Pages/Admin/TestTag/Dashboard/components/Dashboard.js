@@ -9,6 +9,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import clsx from 'clsx';
 
 import Avatar from '@material-ui/core/Avatar';
 import InspectionIcon from '@material-ui/icons/Search';
@@ -25,8 +26,22 @@ const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
     },
-    Card: {
+    flexParent: {
+        display: 'flex',
+    },
+    card: {
+        flex: 1,
         color: theme.palette.text.secondary,
+    },
+    centreAlignParent: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    centreAlign: {
+        display: 'flex',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 }));
 
@@ -54,9 +69,9 @@ const Dashboard = ({
             <div className={classes.root}>
                 <Grid container spacing={3} padding={3}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid item xs={12} sm>
+                        <Grid item xs={12} sm className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton animation="wave" height={300} />
+                                <Skeleton animation="wave" height={300} width={'100%'} />
                             ) : (
                                 <Panel
                                     title={pageLocale.panel.inspections.title}
@@ -65,10 +80,11 @@ const Dashboard = ({
                                             <InspectionIcon />
                                         </Avatar>
                                     }
-                                    className={classes.Card}
+                                    className={clsx([classes.card, classes.centreAlignParent])}
+                                    contentProps={{ className: classes.centreAlign }}
                                 >
                                     <Link
-                                        to={`${pathConfig.admin.testntaginspection}?user=uqtesttag`}
+                                        to={`${pathConfig.admin.testntaginspect}?user=uqtesttag`}
                                         data-testid="linkInspection"
                                     >
                                         {pageLocale.panel.inspections.link}
@@ -77,9 +93,9 @@ const Dashboard = ({
                             )}
                         </Grid>
                     </AuthWrapper>
-                    <Grid item xs={12} sm>
+                    <Grid item xs={12} sm className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} />
+                            <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
                             <Panel
                                 title={pageLocale.panel.assets.title}
@@ -88,23 +104,34 @@ const Dashboard = ({
                                         <InspectionIcon />
                                     </Avatar>
                                 }
-                                className={classes.Card}
+                                className={classes.card}
                             >
                                 <Typography component={'div'} variant={'h4'}>
                                     {dashboardConfig?.retest?.soon}
                                 </Typography>
                                 <Typography variant={'body1'}>
-                                    {pageLocale.panel.assets.subtext(
-                                        dashboardConfig?.periodLength,
-                                        dashboardConfig?.periodType,
-                                    )}
+                                    <AuthWrapper
+                                        requiredPermissions={[PERMISSIONS.can_see_reports]}
+                                        fallback={pageLocale.panel.assets.subtext(
+                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                        )}
+                                    >
+                                        {pageLocale.panel.assets.subtext(
+                                            <Link
+                                                to={pathConfig.admin.testntagreport}
+                                                data-testid="dashboardLinkManagement"
+                                            >
+                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`}
+                                            </Link>,
+                                        )}
+                                    </AuthWrapper>
                                 </Typography>
                             </Panel>
                         )}
                     </Grid>
-                    <Grid item xs={12} sm>
+                    <Grid item xs={12} sm className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} />
+                            <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
                             <Panel
                                 title={pageLocale.panel.inspectionDevices.title}
@@ -113,66 +140,79 @@ const Dashboard = ({
                                         <InspectionDeviceIcon />
                                     </Avatar>
                                 }
-                                className={classes.Card}
+                                className={classes.card}
                             >
                                 <Typography component={'div'} variant={'h4'}>
                                     {dashboardConfig?.recalibration?.soon}
                                 </Typography>
                                 <Typography variant={'body1'}>
-                                    {pageLocale.panel.assets.subtext(
-                                        dashboardConfig?.periodLength,
-                                        dashboardConfig?.periodType,
-                                    )}
+                                    <AuthWrapper
+                                        requiredPermissions={[PERMISSIONS.can_see_reports]}
+                                        fallback={pageLocale.panel.assets.subtext(
+                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                        )}
+                                    >
+                                        {pageLocale.panel.assets.subtext(
+                                            <Link
+                                                to={pathConfig.admin.testntagreport}
+                                                data-testid="dashboardLinkManagement"
+                                            >
+                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`}
+                                            </Link>,
+                                        )}
+                                    </AuthWrapper>
                                 </Typography>
                             </Panel>
                         )}
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item xs md={6}>
-                        {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} />
-                        ) : (
-                            <Panel
-                                title={pageLocale.panel.management.title}
-                                className={classes.Card}
-                                headerProps={{ titleTypographyProps: { variant: 'body2' } }}
-                            >
-                                <List component="nav" aria-label="management actions">
-                                    {pageLocale.panel.management.links.map(link => {
-                                        if (!!link?.permissions) {
-                                            return (
-                                                <AuthWrapper
-                                                    requiredPermissions={link.permissions}
-                                                    key={`listItem${link.title.replace(' ', '')}`}
-                                                >
-                                                    <ListItem button>
+                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
+                        <Grid item xs={12} sm className={classes.flexParent}>
+                            {dashboardConfigLoading && !dashboardConfigError ? (
+                                <Skeleton animation="wave" height={300} width={'100%'} />
+                            ) : (
+                                <Panel
+                                    title={pageLocale.panel.management.title}
+                                    className={classes.card}
+                                    headerProps={{ titleTypographyProps: { variant: 'body2' } }}
+                                >
+                                    <List component="nav" aria-label="management actions">
+                                        {pageLocale.panel.management.links.map(link => {
+                                            if (!!link?.permissions) {
+                                                return (
+                                                    <AuthWrapper
+                                                        requiredPermissions={link.permissions}
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                    >
+                                                        <ListItem button>
+                                                            {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+                                                            <ListItemText primary={link.title} />
+                                                        </ListItem>
+                                                    </AuthWrapper>
+                                                );
+                                            } else {
+                                                return (
+                                                    <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />
                                                     </ListItem>
-                                                </AuthWrapper>
-                                            );
-                                        } else {
-                                            return (
-                                                <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
-                                                    {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
-                                                    <ListItemText primary={link.title} />
-                                                </ListItem>
-                                            );
-                                        }
-                                    })}
-                                </List>
-                            </Panel>
-                        )}
-                    </Grid>
+                                                );
+                                            }
+                                        })}
+                                    </List>
+                                </Panel>
+                            )}
+                        </Grid>
+                    </AuthWrapper>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
-                        <Grid item xs md={6}>
+                        <Grid item xs={12} sm className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton animation="wave" height={300} />
+                                <Skeleton animation="wave" height={300} width={'100%'} />
                             ) : (
                                 <Panel
                                     title={pageLocale.panel.reporting.title}
-                                    className={classes.Card}
+                                    className={classes.card}
                                     headerProps={{ titleTypographyProps: { variant: 'body2' } }}
                                 >
                                     <List component="nav" aria-label="reporting actions">

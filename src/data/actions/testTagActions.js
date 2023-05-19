@@ -1,8 +1,9 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
 import {
+    TEST_TAG_USER_API,
     TEST_TAG_ONLOAD_DASHBOARD_API,
-    TEST_TAG_ONLOAD_INSPECTION_API,
+    TEST_TAG_ONLOAD_INSPECT_API,
     TEST_TAG_FLOOR_API,
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
@@ -10,18 +11,33 @@ import {
     TEST_TAG_ONLOAD_ASSETTYPE_API,
 } from 'repositories/routes';
 
+export function loadUser() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LOADING });
+        return get(TEST_TAG_USER_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ {},
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
 export function loadDashboard() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_DASHBOARD_CONFIG_LOADING });
         return get(TEST_TAG_ONLOAD_DASHBOARD_API())
-            .then(data => {
-                dispatch({
-                    type: actions.TESTTAG_USER_LOADED,
-                    payload: data?.user ?? /* istanbul ignore next */ {},
-                });
+            .then(response => {
                 dispatch({
                     type: actions.TESTTAG_DASHBOARD_CONFIG_LOADED,
-                    payload: data,
+                    payload: response?.data,
                 });
             })
             .catch(error => {
@@ -36,15 +52,11 @@ export function loadDashboard() {
 export function loadInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
-        return get(TEST_TAG_ONLOAD_INSPECTION_API())
-            .then(data => {
-                dispatch({
-                    type: actions.TESTTAG_USER_LOADED,
-                    payload: data?.user ?? /* istanbul ignore next */ {},
-                });
+        return get(TEST_TAG_ONLOAD_INSPECT_API())
+            .then(response => {
                 dispatch({
                     type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
-                    payload: data,
+                    payload: response?.data,
                 });
             })
             .catch(error => {
@@ -66,13 +78,15 @@ export function loadFloors(buildingId) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_FLOOR_LIST_LOADING });
         return get(TEST_TAG_FLOOR_API(buildingId))
-            .then(data => {
+            .then(response => {
+                console.log(response);
                 dispatch({
                     type: actions.TESTTAG_FLOOR_LIST_LOADED,
-                    payload: data,
+                    payload: response?.data,
                 });
             })
             .catch(error => {
+                console.log(error);
                 dispatch({
                     type: actions.TESTTAG_FLOOR_LIST_FAILED,
                     payload: error.message,
@@ -91,10 +105,10 @@ export function loadRooms(floorId) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ROOM_LIST_LOADING });
         return get(TEST_TAG_ROOM_API(floorId))
-            .then(data => {
+            .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ROOM_LIST_LOADED,
-                    payload: data,
+                    payload: response?.data,
                 });
             })
             .catch(error => {
@@ -117,10 +131,10 @@ export function loadAssets(pattern) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_LOADING });
         return get(TEST_TAG_ASSETS_API(pattern))
-            .then(data => {
+            .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSETS_LOADED,
-                    payload: data,
+                    payload: response?.data,
                 });
             })
             .catch(error => {
@@ -142,10 +156,10 @@ export function saveInspection(request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_SAVING });
         return post(TEST_TAG_ASSET_ACTION(), request)
-            .then(data => {
+            .then(response => {
                 dispatch({
                     type: actions.TESTTAG_SAVE_INSPECTION_SUCCESS,
-                    payload: data,
+                    payload: response?.data,
                 });
             })
             .catch(error => {
