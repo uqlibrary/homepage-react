@@ -831,24 +831,19 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [
         200,
         {
+            status: 'OK',
             data: {
-                "asset_types" : [...test_tag_asset_types], 
-                "user": {
-                    "user_id": 3,
-                    "user_uid": "uqtesttag",
-                    "user_license_number": "123456",
-                    "user_name": "Lee Sibbald",
-                    "user_department": "UQL",
-                    "department_display_name": "Library",
-                    "user_current_flag": 1,
-                      "privileges": {
-                        "can_admin": 0,
-                        "can_inspect": 1,
-                        "can_alter": 1,
-                        "can_see_reports": 1
-                      },
-                },
+                "asset_types" : test_tag_asset_types.data, 
             }
+        }
+    ])
+    .onPut(routes.TEST_TAG_SAVE_ASSETTYPE_API().apiUrl)
+    .reply(() => [
+        200,
+        {
+            status: 'OK',
+            data: test_tag_asset_types.data, 
+            
         }
     ])
 

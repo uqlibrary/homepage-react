@@ -76,6 +76,9 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
 
     const onRowSave = row => {
         console.log('On Row Save', row);
+        actions.saveAssetType(row);
+
+        // actions.
     };
     const getColumns = data => {
         const template = {
@@ -118,6 +121,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         columns && columns.length > 0 && columns.push(actionsCell);
         return columns;
     };
+
     const columns = assetTypesList.length > 0 ? getColumns(assetTypesList) : [];
 
     React.useEffect(() => {
@@ -127,6 +131,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
 
     React.useEffect(() => {
         setRows(assetTypesList);
+        console.log('The asset type list is', assetTypesList);
     }, [assetTypesList]);
 
     // I believe these are only used when using double-click to edit mode.
@@ -144,6 +149,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     //     console.log(setRows);
     // };
 
+    console.log('Rows are', rows);
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
