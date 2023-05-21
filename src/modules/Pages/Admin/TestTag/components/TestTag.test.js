@@ -2,8 +2,14 @@ import React from 'react';
 import TestTag from './TestTag';
 import { rtlRender, act, fireEvent, WithReduxStore, waitFor, screen } from 'test-utils';
 import Immutable from 'immutable';
+import {
+    mockAllIsIntersecting,
+    // mockIsIntersecting,
+    // intersectionMockInstance,
+} from 'react-intersection-observer/test-utils';
 
 import configData from '../../../../../data/mock/data/testing/testTagOnLoad';
+import assetData from '../../../../../data/mock/data/testing/testTagAssets';
 import locale from '../testTag.locale.js';
 
 const currentRetestList = [
@@ -82,10 +88,13 @@ describe('TestTag', () => {
     beforeAll(() => {
         window.HTMLElement.prototype.scrollIntoView = jest.fn();
     });
+    beforeEach(() => {
+        mockAllIsIntersecting(true);
+    });
 
     it('renders component', () => {
         const mockFn = jest.fn();
-        const { getByText } = setup({
+        const { getByText, getByTestId } = setup({
             actions: { loadConfig: mockFn, clearAssets: mockFn, clearSaveInspection: mockFn },
         });
 
@@ -93,6 +102,9 @@ describe('TestTag', () => {
         expect(getByText(locale.form.pageSubtitle?.(configData.user.department_display_name))).toBeInTheDocument();
         expect(getByText(locale.form.event.title)).toBeInTheDocument();
         expect(getByText(locale.form.asset.title)).toBeInTheDocument();
+        expect(getByTestId('testntagFormResetButton')).toBeInTheDocument();
+        expect(getByTestId('testntagFormSubmitButton')).toBeInTheDocument();
+        expect(getByTestId('testntagFormSubmitButton')).toHaveAttribute('disabled', '');
         expect(mockFn).toHaveBeenCalled();
     });
 
@@ -318,4 +330,159 @@ describe('TestTag', () => {
         expect(clearAssetsFn).toHaveBeenCalled();
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     });
+
+    /*
+    it('can save inspection', async () => {
+        const mockLoadAssets = jest.fn(() => [...assetData]);
+        const mockFn = jest.fn();
+        const saveActionFn = jest.fn();
+        const { getByText, getByTestId, queryByTestId, getByRole, getAllByRole } = setup({
+            actions: {
+                loadConfig: mockFn,
+                loadAssets: mockLoadAssets,
+                saveInspection: saveActionFn,
+                clearAssets: mockFn,
+                clearSaveInspection: mockFn,
+            },
+        });
+
+        expect(getByText(locale.form.pageTitle)).toBeInTheDocument();
+
+        expect(getByTestId('testntagFormAssetTypeInput')).toHaveAttribute('disabled', '');
+
+        act(() => {
+            fireEvent.change(getByTestId('testntagFormAssetIdInput'), { target: { value: 'UQL310000' } });
+        });
+
+        await waitFor(() =>
+            expect(getByTestId('testntagFormAssetTypeInput')).not.toHaveAttribute('disabled', 'disabled'),
+        );
+
+        expect(queryByTestId('testResultNextDate')).not.toBeInTheDocument();
+
+        act(() => {
+            fireEvent.click(getByTestId('testResultToggleButtons-PASSED'));
+        });
+
+        await waitFor(() => expect(getByTestId('testResultNextDate')).toBeInTheDocument());
+
+        act(() => {
+            fireEvent.change(getByTestId('inspectionNotes-input'), { target: { value: 'notes' } });
+        });
+
+        fireEvent.mouseDown(getByTestId('testntag-form-buildingid'));
+        expect(getByRole('listbox')).not.toEqual(null);
+        act(() => {
+            const options = getAllByRole('option');
+
+            fireEvent.mouseDown(options[0]);
+            options[0].click();
+        });
+
+        const expected = {
+            asset_id_displayed: 'UQL310000',
+            user_id: 3,
+            asset_department_owned_by: 'UQL-WSS',
+            asset_type_id: 1,
+            action_date: '2016-12-05 14:22',
+            room_id: 1,
+            with_inspection: {
+                inspection_status: 'PASSED',
+                inspection_device_id: 1,
+                inspection_fail_reason: undefined,
+                inspection_notes: 'notes',
+                inspection_date_next: '2018-12-05 14:22',
+            },
+            with_repair: undefined,
+            with_discard: undefined,
+        };
+
+        act(() => {
+            fireEvent.click(getByTestId('testntagFormSubmitButton'));
+        });
+        expect(saveActionFn).toHaveBeenCalledWith(expected);
+
+        // const selectedAsset = { ...assetData[0] };
+        // const formValues = {
+        //     action_date: '2016-12-05 14:22',
+        //     asset_department_owned_by: 'UQL-WSS',
+        //     asset_id_displayed: 'UQL310000',
+        //     asset_type_id: 1,
+        //     discard_reason: undefined,
+        //     inspection_date_next: '2018-12-05 14:22',
+        //     inspection_device_id: 1,
+        //     inspection_fail_reason: undefined,
+        //     inspection_notes: 'notes',
+        //     inspection_status: 'PASSED',
+        //     isDiscarded: false,
+        //     isRepair: false,
+        //     repairer_contact_details: undefined,
+        //     room_id: 1,
+        //     user_id: 3,
+        // };
+
+        // // eslint-disable-next-line no-unused-vars
+        // const handleChange = jest.fn(prop => jest.fn(event => {}));
+        // const actionFn = jest.fn();
+        // const expected = {
+        //     asset_id_displayed: 'UQL310000',
+        //     user_id: 3,
+        //     asset_department_owned_by: 'UQL-WSS',
+        //     asset_type_id: 1,
+        //     action_date: '2016-12-05 14:22',
+        //     room_id: 1,
+        //     with_inspection: {
+        //         inspection_status: 'PASSED',
+        //         inspection_device_id: 1,
+        //         inspection_fail_reason: undefined,
+        //         inspection_notes: 'notes',
+        //         inspection_date_next: '2018-12-05 14:22',
+        //     },
+        //     with_repair: undefined,
+        //     with_discard: undefined,
+        // };
+
+        // const { getByTestId } = setup({
+        //     defaultFormValues: formValues,
+        //     actions: { saveInspection: actionFn },
+        //     formValues,
+        //     location,
+        //     resetForm,
+        //     selectedAsset,
+        //     assignCurrentAsset,
+        //     handleChange,
+        //     saveInspectionSaving: false,
+        //     isValid: true,
+        // });
+
+        // // screen.debug(undefined, 100000);
+
+        // expect(getByTestId('testntagFormSubmitButton')).not.toHaveAttribute('disabled', '');
+
+        // act(() => {
+        //     fireEvent.click(getByTestId('testntagFormSubmitButton'));
+        // });
+        // expect(actionFn).toHaveBeenCalledWith(expected);
+    });
+    */
+
+    // it('renders saving spinner', () => {
+    //     const resetForm = jest.fn();
+    //     const assignCurrentAsset = jest.fn();
+    //     const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+    //     // eslint-disable-next-line no-unused-vars
+    //     const handleChange = jest.fn(prop => jest.fn(event => {}));
+
+    //     const { getByTestId } = setup({
+    //         formValues,
+    //         location,
+    //         resetForm,
+    //         assignCurrentAsset,
+    //         handleChange,
+    //         saveInspectionSaving: true,
+    //         isValid: true,
+    //     });
+
+    //     expect(getByTestId('saveInspectionSpinner')).toBeInTheDocument();
+    // });
 });
