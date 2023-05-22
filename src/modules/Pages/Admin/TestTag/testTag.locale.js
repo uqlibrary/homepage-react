@@ -34,13 +34,11 @@ export default {
                 },
                 assets: {
                     title: 'ASSETS',
-                    subtext: (periodLength, periodType) =>
-                        `needing a retest in the next ${periodLength} ${periodType}.`,
+                    subtext: duration => <>needing a retest in the next {duration}.</>,
                 },
                 inspectionDevices: {
                     title: 'INSPECTION DEVICES',
-                    subtext: (periodLength, periodType) =>
-                        `needing a recalibration in the next ${periodLength} ${periodType}.`,
+                    subtext: duration => <>needing a recalibration in the next {duration}.</>,
                 },
                 management: {
                     title: 'MANAGEMENT',
