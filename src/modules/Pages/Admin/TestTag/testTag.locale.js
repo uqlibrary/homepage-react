@@ -10,6 +10,7 @@ import InspectionDeviceIcon from '@material-ui/icons/Build';
 import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
 import OutForRepairIcon from '@material-ui/icons/ExitToApp';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
+import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
 
 import { PERMISSIONS } from './config/auth';
 
@@ -100,6 +101,12 @@ export default {
                             title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: '#',
+                        },
+                        {
+                            title: 'INSPECTIONS BY LICENSED USER',
+                            icon: <InspectionByUserIcon />,
+                            path: '#',
+                            permissions: [PERMISSIONS.can_admin],
                         },
                     ],
                 },
