@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 
+import localeGeneral from '../../testTag.locale';
 import { loadUser } from 'data/actions';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -45,9 +46,9 @@ const StandardAuthPage = ({
     );
     return (
         <StandardPage title={title} {...props}>
-            {userLoading && <ContentLoader message="Checking" />}
+            {userLoading && <ContentLoader message={localeGeneral.pages.general.checkingAuth} />}
             {!userLoading && (userLoaded || userError) && !shouldHaveAccess && (
-                <Typography variant={'h6'}>Page is unavailable</Typography>
+                <Typography variant={'h6'}>{localeGeneral.pages.general.pageUnavailable}</Typography>
             )}
             {userLoaded && !userError && shouldHaveAccess && (
                 <>

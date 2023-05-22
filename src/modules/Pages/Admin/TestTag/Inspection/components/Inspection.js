@@ -291,6 +291,12 @@ const Inspection = ({
         [classes.appbarPositionClipped, classes.appbarPositionVisible, inView, isMobileView],
     );
 
+    const successDialog = React.useMemo(() => getSuccessDialog(saveInspectionSuccess, classes, inspectionLocale), [
+        classes,
+        inspectionLocale,
+        saveInspectionSuccess,
+    ]);
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -316,7 +322,7 @@ const Inspection = ({
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
-                locale={getSuccessDialog(saveInspectionSuccess, classes, inspectionLocale)}
+                locale={successDialog}
                 noMinContentWidth
             />
             <ConfirmationBox
@@ -368,7 +374,7 @@ const Inspection = ({
                             data-testid="testntagFormResetButton"
                             color={inView ? 'default' : 'secondary'}
                         >
-                            {locale.form.buttons.reset}
+                            {inspectionLocale.form.buttons.reset}
                         </Button>
                         <Box style={{ flexGrow: 1 }} />
 
@@ -389,7 +395,7 @@ const Inspection = ({
                                     data-testid="saveInspectionSpinner"
                                 />
                             ) : (
-                                locale.form.buttons.save
+                                inspectionLocale.form.buttons.save
                             )}
                         </Button>
                     </Toolbar>
