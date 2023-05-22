@@ -18,6 +18,8 @@ export default {
         general: {
             loading: 'Loading...',
             pageTitle: 'UQ Asset Test and Tag',
+            checkingAuth: 'Retrieving user details...',
+            pageUnavailable: 'Page unavailable',
         },
         dashboard: {
             config: {},

@@ -78,14 +78,12 @@ export function loadFloors(buildingId) {
         dispatch({ type: actions.TESTTAG_FLOOR_LIST_LOADING });
         return get(TEST_TAG_FLOOR_API(buildingId))
             .then(response => {
-                console.log(response);
                 dispatch({
                     type: actions.TESTTAG_FLOOR_LIST_LOADED,
                     payload: response?.data,
                 });
             })
             .catch(error => {
-                console.log(error);
                 dispatch({
                     type: actions.TESTTAG_FLOOR_LIST_FAILED,
                     payload: error.message,

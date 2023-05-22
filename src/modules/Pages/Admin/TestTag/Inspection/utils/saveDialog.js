@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 import { statusEnum } from '../utils/helpers';
 import locale from '../../testTag.locale';
-const testStatusEnum = statusEnum(locale);
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const savedDialogMessages = {
     [testStatusEnum.CURRENT.value]: (data, classes, locale) => (
@@ -72,12 +72,11 @@ const savedDialogMessages = {
     ),
 };
 export const getSuccessDialog = (response, classes, locale) => {
-    if (!!!response || !!!response?.data) return {};
-    const { data } = response;
-    const key = data.asset_status !== testStatusEnum.CURRENT.value ? 'other' : data.asset_status;
+    if (!!!response) return {};
+    const key = response.asset_status !== testStatusEnum.CURRENT.value ? 'other' : response.asset_status;
     const messageFragment = (
         <Box display="flex" alignItems="center" justifyContent="center">
-            {savedDialogMessages[key](data, classes, locale.form.dialogLabels)}
+            {savedDialogMessages[key](response, classes, locale.form.dialogLabels)}
         </Box>
     );
     return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);

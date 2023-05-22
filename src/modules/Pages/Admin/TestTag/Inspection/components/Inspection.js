@@ -7,6 +7,13 @@ import { useTheme } from '@material-ui/core';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import clsx from 'clsx';
+import { InView } from 'react-intersection-observer';
 
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import EventPanel from './EventPanel';
@@ -14,6 +21,8 @@ import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
 import { useForm, useValidation, useLocation } from '../utils/hooks';
 import locale from '../../testTag.locale';
+import { transformer } from '../utils/transformers';
+import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
 import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
 const moment = require('moment');
@@ -38,6 +47,35 @@ const useStyles = makeStyles(theme => ({
     },
     toggleButtonMobile: {
         flex: 1,
+    },
+    toolbar: {
+        [theme.breakpoints.down('xs')]: {
+            flexDirection: 'column',
+            alignContent: 'space-between',
+            padding: theme.spacing(2),
+            '& > button': {
+                display: 'block',
+                width: '100%',
+                '&:first-child': {
+                    marginBlockEnd: theme.spacing(2),
+                },
+            },
+        },
+    },
+    appbarPositionVisible: {
+        position: 'relative',
+        backgroundColor: 'white',
+        marginTop: theme.spacing(2),
+        boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
+    },
+    appbarPositionClipped: {
+        position: 'fixed',
+        left: '1rem',
+        right: '1rem',
+        top: 'auto',
+        bottom: 0,
+        minHeight: '64px',
+        width: 'auto',
     },
     dialogContainer: {
         borderRadius: '6px',
@@ -177,6 +215,8 @@ const Inspection = ({
         assetsListError,
     ]);
 
+    const [inView, setInView] = React.useState(false);
+
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues, location);
         resetFormValues(newFormValues);
@@ -230,6 +270,33 @@ const Inspection = ({
         confirmationTitle: inspectionLocale.form.saveError.confirmationTitle(saveInspectionError),
     };
 
+    const saveForm = () => {
+        /* istanbul ignore else */ if (isValid && !saveInspectionSaving) {
+            const transformedData = transformer(
+                formValues,
+                saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
+                selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
+            );
+            actions.saveInspection(transformedData);
+        }
+    };
+
+    const appbarDynamicClasses = React.useMemo(
+        () =>
+            clsx({
+                [classes.appbarPositionVisible]: inView,
+                [classes.appbarPositionClipped]: !inView,
+                'layout-card': !inView && !isMobileView,
+            }),
+        [classes.appbarPositionClipped, classes.appbarPositionVisible, inView, isMobileView],
+    );
+
+    const successDialog = React.useMemo(() => getSuccessDialog(saveInspectionSuccess, classes, inspectionLocale), [
+        classes,
+        inspectionLocale,
+        saveInspectionSuccess,
+    ]);
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -255,7 +322,7 @@ const Inspection = ({
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
                 isOpen={isSaveSuccessOpen}
-                locale={getSuccessDialog(saveInspectionSuccess, classes, inspectionLocale)}
+                locale={successDialog}
                 noMinContentWidth
             />
             <ConfirmationBox
@@ -295,8 +362,45 @@ const Inspection = ({
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 saveInspectionSaving={saveInspectionSaving}
                 isMobileView={isMobileView}
-                isValid={isValid}
             />
+            <InView onChange={setInView} rootMargin="200% 0px 0px 0px" threshold={0}>
+                <AppBar component={'div'} className={appbarDynamicClasses}>
+                    <Toolbar className={classes.toolbar}>
+                        <Button
+                            variant="outlined"
+                            onClick={resetForm}
+                            fullWidth={isMobileView}
+                            id="testntagFormResetButton"
+                            data-testid="testntagFormResetButton"
+                            color={inView ? 'default' : 'secondary'}
+                        >
+                            {inspectionLocale.form.buttons.reset}
+                        </Button>
+                        <Box style={{ flexGrow: 1 }} />
+
+                        <Button
+                            variant="contained"
+                            color={inView ? 'primary' : 'secondary'}
+                            disabled={!isValid || saveInspectionSaving}
+                            onClick={saveForm}
+                            fullWidth={isMobileView}
+                            id="testntagFormSubmitButton"
+                            data-testid="testntagFormSubmitButton"
+                        >
+                            {saveInspectionSaving ? (
+                                <CircularProgress
+                                    color="inherit"
+                                    size={25}
+                                    id="saveInspectionSpinner"
+                                    data-testid="saveInspectionSpinner"
+                                />
+                            ) : (
+                                inspectionLocale.form.buttons.save
+                            )}
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+            </InView>
         </StandardAuthPage>
     );
 };
