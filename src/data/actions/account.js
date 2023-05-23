@@ -166,17 +166,6 @@ export function loadCurrentAccount() {
                     }
                 })
                 .then(accountResponse => {
-                    // accountResponse.current_classes =
-                    //     !!accountResponse.current_classes && accountResponse.current_classes.length > 0
-                    //         ? accountResponse.current_classes.map(subject => {
-                    //               subject.classnumber = getClassNumberFromPieces(subject);
-                    //               subject.semester = getSemesterStringByTermNumber(subject.STRM);
-                    //               return subject;
-                    //           })
-                    //         : accountResponse.current_classes;
-                    // accountResponse.trainingfilterId = isHospitalUser(accountResponse)
-                    //     ? TRAINING_FILTER_HOSPITAL
-                    //     : TRAINING_FILTER_GENERAL;
                     dispatch({
                         type: actions.CURRENT_ACCOUNT_LOADED,
                         payload: extendAccountDetails(accountResponse),
@@ -185,6 +174,7 @@ export function loadCurrentAccount() {
                     // if the UQL cookie times out, we want to log the user out
                     const watchforAccountExpiry = setInterval(() => {
                         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+                            console.log('check cookie ', getSessionCookie());
                             logout(true);
                             clearInterval(watchforAccountExpiry);
                         }
