@@ -1,5 +1,3 @@
-// import {STORAGE_ACCOUNT_KEYNAME} from '../../../config/general';
-
 export const accounts = {
     // staff, no espace data
     public: null,
