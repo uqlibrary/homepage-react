@@ -8,8 +8,7 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import { isHdrStudent } from 'helpers/access';
-import { STORAGE_ACCOUNT_KEYNAME } from 'config/general';
+// import { isHdrStudent } from 'helpers/access';
 
 browserUpdate({
     required: {
@@ -78,39 +77,7 @@ const useStyles = makeStyles(theme => ({
 
 export const App = ({ account, actions }) => {
     useEffect(() => {
-        // ideally we would just do window.addEventListener('storage' ...)
-        // but that watcher doesn't work within the same window
-        // so reusable will broadcast when it has written to storage
-        /* istanbul ignore else */
-        if ('BroadcastChannel' in window) {
-            const bc = new BroadcastChannel('account_availability');
-            /* istanbul ignore next */
-            bc.onmessage = messageEvent => {
-                if (messageEvent.data === 'account_updated') {
-                    actions.loadCurrentAccount();
-                } else if (messageEvent.data === 'account_removed') {
-                    actions.logout(true);
-                }
-                return null;
-            };
-        }
-
-        // if the reusable started much quicker than this, homepage won't have been up to receive the message
-        // but the storage will be present
-        const getStoredUserDetails = setInterval(() => {
-            /* istanbul ignore else */
-            const storedUserDetailsRaw = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
-            const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
-            /* istanbul ignore else */
-            if (
-                storedUserDetails?.hasOwnProperty('status') &&
-                (storedUserDetails.status === 'loggedin' || storedUserDetails.status === 'loggedout')
-            ) {
-                clearInterval(getStoredUserDetails);
-
-                actions.loadCurrentAccount();
-            }
-        }, 100);
+        actions.loadCurrentAccount();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -118,7 +85,7 @@ export const App = ({ account, actions }) => {
     const routesConfig = routes.getRoutesConfig({
         components: pages,
         account: account,
-        isHdrStudent: isHdrStudent,
+        // isHdrStudent: isHdrStudent,
     });
 
     let homepagelink = 'http://www.library.uq.edu.au';
