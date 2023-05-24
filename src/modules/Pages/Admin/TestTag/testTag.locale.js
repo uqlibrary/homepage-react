@@ -126,7 +126,7 @@ export default {
             breadcrumbs: [
                 {
                     title: 'Inspection',
-                    icon: <InspectionIcon />,
+                    icon: <InspectionIcon fontSize={'small'} />,
                 },
             ],
             header: {
