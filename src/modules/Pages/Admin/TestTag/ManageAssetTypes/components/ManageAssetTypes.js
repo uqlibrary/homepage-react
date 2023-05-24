@@ -163,7 +163,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             locale={assetTypeManagementLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
-            <ActionDialogue row={deletingRow} isOpen={actionDialogueOpen} />
+            <ActionDialogue data={assetTypesList} row={deletingRow} isOpen={actionDialogueOpen} />
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid
                     rows={rows}
