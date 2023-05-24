@@ -185,7 +185,7 @@ const Dashboard = ({
                                                         requiredPermissions={link.permissions}
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
-                                                        <ListItem button>
+                                                        <ListItem button component={Link} to={link.path}>
                                                             {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                             <ListItemText primary={link.title} />
                                                         </ListItem>
@@ -193,7 +193,12 @@ const Dashboard = ({
                                                 );
                                             } else {
                                                 return (
-                                                    <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
+                                                    <ListItem
+                                                        button
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                        component={Link}
+                                                        to={link.path}
+                                                    >
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />
                                                     </ListItem>
@@ -223,7 +228,7 @@ const Dashboard = ({
                                                         requiredPermissions={link.permissions}
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
-                                                        <ListItem button>
+                                                        <ListItem button component={Link} to={link.path}>
                                                             {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                             <ListItemText primary={link.title} />
                                                         </ListItem>
@@ -231,7 +236,12 @@ const Dashboard = ({
                                                 );
                                             } else {
                                                 return (
-                                                    <ListItem button key={`listItem${link.title.replace(' ', '')}`}>
+                                                    <ListItem
+                                                        button
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                        component={Link}
+                                                        to={link.path}
+                                                    >
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />
                                                     </ListItem>

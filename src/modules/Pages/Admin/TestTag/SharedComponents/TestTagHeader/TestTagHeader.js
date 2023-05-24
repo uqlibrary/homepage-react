@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
         marginRight: theme.spacing(0.5),
         width: 20,
         height: 20,
+        fontSize: '1rem',
     },
 }));
 
@@ -78,13 +79,7 @@ const TestTagHeader = (
                                 key={`breadcrumbLink${breadcrumb.title}`}
                                 data-testid={`breadcrumbLink${breadcrumb.title}`}
                             >
-                                {breadcrumb?.icon ? (
-                                    <Icon fontSize={'small'} className={classes.icon}>
-                                        {breadcrumb.icon}
-                                    </Icon>
-                                ) : (
-                                    <></>
-                                )}
+                                {breadcrumb?.icon ? <Icon className={classes.icon}>{breadcrumb.icon}</Icon> : <></>}
                                 {breadcrumb.title}
                             </Link>
                         ) : (
