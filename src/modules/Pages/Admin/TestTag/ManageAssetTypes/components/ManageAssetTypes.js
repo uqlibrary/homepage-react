@@ -77,6 +77,22 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const [actionDialogueOpen, setActionDialogueOpen] = React.useState(false);
     const assetTypeManagementLocale = locale.pages.assetTypeManagement;
 
+    React.useEffect(() => {
+        setActionDialogueOpen(false);
+    }, [assetTypesList]);
+
+    const onActionDialogueCancel = () => {
+        setActionDialogueOpen(false);
+    };
+    const onActionDialogueProceed = (oldValue, newValue) => {
+        console.log('Old and New', oldValue, newValue);
+        const payload = {
+            old_asset_type_id: oldValue,
+            new_asset_type_id: newValue,
+        };
+        actions.deleteAndReassignAssetType(payload);
+    };
+
     const onRowSave = row => {
         console.log('On Row Save', row);
         actions.saveAssetType(row);
@@ -163,7 +179,13 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             locale={assetTypeManagementLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
-            <ActionDialogue data={assetTypesList} row={deletingRow} isOpen={actionDialogueOpen} />
+            <ActionDialogue
+                data={assetTypesList}
+                row={deletingRow}
+                isOpen={actionDialogueOpen}
+                onCancel={onActionDialogueCancel}
+                onProceed={onActionDialogueProceed}
+            />
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid
                     rows={rows}

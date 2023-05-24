@@ -43,10 +43,18 @@ export const ActionDialogue = ({
     locale,
     noMinContentWidth,
     actionDialogueBoxId,
+    onCancel,
+    onProceed,
 }) => {
     const classes = useStyles();
-    const [selectedAssetType, setSelectedAssetType] = React.useState(null);
-    console.log('IS OPEN', selectedAssetType);
+
+    const [selectedAssetType, setSelectedAssetType] = React.useState('');
+    React.useEffect(() => {
+        setSelectedAssetType('');
+    }, [isOpen]);
+    const onAssetTypeChange = assetID => {
+        setSelectedAssetType(assetID);
+    };
     return (
         <Dialog
             classes={{ paper: classes.dialogPaper }}
@@ -68,7 +76,7 @@ export const ActionDialogue = ({
                     id="actionDialogueTypeSelect"
                     data-testid="actionDialogueTypeSelect"
                     value={selectedAssetType}
-                    onChange={e => setSelectedAssetType(e.target.value)}
+                    onChange={e => onAssetTypeChange(e.target.value)}
                     required
                 >
                     {data.map(item => (
@@ -89,7 +97,7 @@ export const ActionDialogue = ({
                     <Grid item xs={12} sm={6} container justifyContent="flex-start">
                         <Button
                             variant="outlined"
-                            onClick={() => console.log('A')}
+                            onClick={onCancel}
                             id="testntagFormResetButton"
                             data-testid="testntagFormResetButton"
                             color={'default'}
@@ -100,10 +108,11 @@ export const ActionDialogue = ({
                     <Grid item xs={12} sm={6} container justifyContent="flex-end">
                         <Button
                             variant="contained"
-                            onClick={() => console.log('C')}
+                            onClick={() => onProceed(row.asset_type_id, selectedAssetType)}
                             id="testntagFormResetButton"
                             data-testid="testntagFormResetButton"
                             color={'default'}
+                            disabled={!!!selectedAssetType || row?.asset_type_id === selectedAssetType}
                         >
                             Proceed
                         </Button>
@@ -117,11 +126,13 @@ export const ActionDialogue = ({
 ActionDialogue.propTypes = {
     dialogueContent: PropTypes.any,
     data: PropTypes.array,
-    row: PropTypes.array,
+    row: PropTypes.object,
     isOpen: PropTypes.bool,
     locale: PropTypes.object,
     noMinContentWidth: PropTypes.bool,
     actionDialogueBoxId: PropTypes.string,
+    onCancel: PropTypes.func,
+    onProceed: PropTypes.func,
 };
 
 ActionDialogue.defaultProps = {

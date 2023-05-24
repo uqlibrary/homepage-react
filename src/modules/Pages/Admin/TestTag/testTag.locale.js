@@ -11,6 +11,7 @@ import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
 import OutForRepairIcon from '@material-ui/icons/ExitToApp';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
 import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
+import { pathConfig } from 'config/routes';
 
 import { PERMISSIONS } from './config/auth';
 
@@ -52,7 +53,7 @@ export default {
                         {
                             title: 'ASSET TYPES',
                             icon: <AssetTypeIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanageassettypes}?user=uqtesttag`,
                         },
                         {
                             title: 'LOCATIONS',
@@ -267,7 +268,7 @@ export default {
             breadcrumbs: [
                 {
                     title: 'Asset Type Management',
-                    icon: <AssetTypeIcon />,
+                    icon: <AssetTypeIcon fontSize={'small'} />,
                 },
             ],
             header: {
