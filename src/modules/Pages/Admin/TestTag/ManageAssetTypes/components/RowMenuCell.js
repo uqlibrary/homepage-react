@@ -25,7 +25,7 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const RowMenuCell = ({ api, id, row, onRowSave }) => {
+const RowMenuCell = ({ api, id, row, onRowSave, onRowDelete }) => {
     const classes = useStyles();
     const isInEditMode = api.getRowMode(id) === 'edit';
 
@@ -46,7 +46,8 @@ const RowMenuCell = ({ api, id, row, onRowSave }) => {
 
     const handleDeleteClick = event => {
         event.stopPropagation();
-        api.updateRows([{ asset_type_id: row.asset_type_id, _action: 'delete' }]);
+        // api.updateRows([{ asset_type_id: row.asset_type_id, _action: 'delete' }]);
+        onRowDelete(row);
     };
 
     const handleCancelClick = event => {
@@ -101,6 +102,7 @@ RowMenuCell.propTypes = {
     row: PropTypes.any,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     onRowSave: PropTypes.func.isRequired,
+    onRowDelete: PropTypes.func.isRequired,
 };
 
 export default RowMenuCell;

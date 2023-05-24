@@ -10,6 +10,7 @@ import {
     TEST_TAG_ASSET_ACTION,
     TEST_TAG_ONLOAD_ASSETTYPE_API,
     TEST_TAG_SAVE_ASSETTYPE_API,
+    TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -207,14 +208,36 @@ export function saveAssetType(request) {
             .then(response => {
                 console.log('This is the data', response?.data);
                 dispatch({
-                    type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
+                    type: actions.TESTTAG_ASSET_TYPES_SAVED,
                     payload: response?.data ?? /* istanbul ignore next */ {},
                 });
             })
             .catch(error => {
                 console.log('Calling Error');
                 dispatch({
-                    type: actions.TESTTAG_ASSET_TYPES_LIST_FAILED,
+                    type: actions.TESTTAG_ASSET_TYPES_SAVE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function deleteAndReassignAssetType(request) {
+    console.log('Calling deleteAssetType');
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGNING });
+        return post(TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API(), request)
+            .then(response => {
+                console.log('This is the data', response?.data);
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_REASSIGNED,
+                    payload: response?.data ?? /* istanbul ignore next */ {},
+                });
+            })
+            .catch(error => {
+                console.log('Calling Error');
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_REASSIGN_FAILED,
                     payload: error.message,
                 });
             });

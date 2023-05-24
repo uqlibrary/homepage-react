@@ -9,6 +9,7 @@ import locale from '../../testTag.locale';
 import { PERMISSIONS } from '../../config/auth';
 
 import RowMenuCell from './RowMenuCell';
+import ActionDialogue from './ActionDialogue';
 
 const convertToProperCase = str => {
     // Find the index of the last underscore
@@ -72,13 +73,19 @@ EditToolbar.propTypes = {};
 
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, assetTypesListError }) => {
     const [rows, setRows] = React.useState(assetTypesList);
+    const [deletingRow, setDeletingRow] = React.useState(null);
+    const [actionDialogueOpen, setActionDialogueOpen] = React.useState(false);
     const assetTypeManagementLocale = locale.pages.assetTypeManagement;
 
     const onRowSave = row => {
         console.log('On Row Save', row);
         actions.saveAssetType(row);
+    };
 
-        // actions.
+    const onRowDelete = row => {
+        console.log('Firing Row Delete', row);
+        setDeletingRow(row);
+        setActionDialogueOpen(true);
     };
     const getColumns = data => {
         const template = {
@@ -88,7 +95,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         const actionsCell = {
             field: 'actions',
             headerName: 'Actions',
-            renderCell: params => <RowMenuCell {...params} onRowSave={onRowSave} />,
+            renderCell: params => <RowMenuCell {...params} onRowSave={onRowSave} onRowDelete={onRowDelete} />,
             sortable: false,
             width: 100,
             headerAlign: 'center',
@@ -156,6 +163,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             locale={assetTypeManagementLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
+            <ActionDialogue row={deletingRow} isOpen={actionDialogueOpen} />
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid
                     rows={rows}
