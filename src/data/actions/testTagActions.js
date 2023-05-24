@@ -223,7 +223,7 @@ export function saveAssetType(request) {
 }
 
 export function deleteAndReassignAssetType(request) {
-    console.log('Calling deleteAssetType');
+    console.log('Calling deleteAssetType', request);
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGNING });
         return post(TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API(), request)
@@ -231,7 +231,7 @@ export function deleteAndReassignAssetType(request) {
                 console.log('This is the data', response?.data);
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGNED,
-                    payload: response?.data ?? /* istanbul ignore next */ {},
+                    payload: response?.data?.asset_types ?? /* istanbul ignore next */ [],
                 });
             })
             .catch(error => {
