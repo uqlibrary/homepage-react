@@ -7,7 +7,6 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import { STORAGE_ACCOUNT_KEYNAME } from 'config/general';
 
 export default class Masquerade extends PureComponent {
     static propTypes = {
@@ -28,8 +27,6 @@ export default class Masquerade extends PureComponent {
         this.setState({
             loading: true,
         });
-
-        sessionStorage.removeItem(STORAGE_ACCOUNT_KEYNAME);
 
         let redirectUrl = `${window.location.protocol}//${window.location.hostname}`;
         const isDevBranch = window.location.hostname === 'homepage-development.library.uq.edu.au';
