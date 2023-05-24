@@ -78,9 +78,6 @@ describe('AssetPanel', () => {
         expect(getByText(locale.form.asset.title)).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetId')).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetType')).toBeInTheDocument();
-        expect(getByTestId('testntagFormResetButton')).toBeInTheDocument();
-        expect(getByTestId('testntagFormSubmitButton')).toBeInTheDocument();
-        expect(getByTestId('testntagFormSubmitButton')).toHaveAttribute('disabled', '');
     });
 
     it('renders component without certain params', () => {
@@ -191,75 +188,5 @@ describe('AssetPanel', () => {
 
         expect(assignCurrentAsset).toHaveBeenCalledWith({ ...assetData[0] });
         expect(setStateMock).toHaveBeenCalledWith(false); // auto closes the autocomplete popup
-    });
-
-    it('can save inspection', async () => {
-        const resetForm = jest.fn();
-        const assignCurrentAsset = jest.fn();
-        const location = { formSiteId: 1, formBuildingId: 1, formFloorId: 1, formRoomId: 1 };
-
-        const selectedAsset = { ...assetData[0] };
-
-        // eslint-disable-next-line no-unused-vars
-        const handleChange = jest.fn(prop => jest.fn(event => {}));
-        const actionFn = jest.fn();
-        const expected = {
-            asset_id_displayed: 'UQL310000',
-            user_id: 3,
-            asset_department_owned_by: 'UQL-WSS',
-            asset_type_id: 1,
-            action_date: '2016-12-05 14:22',
-            room_id: 1,
-            with_inspection: {
-                inspection_status: 'PASSED',
-                inspection_device_id: 1,
-                inspection_fail_reason: undefined,
-                inspection_notes: 'notes',
-                inspection_date_next: '2018-12-05 14:22',
-            },
-            with_repair: undefined,
-            with_discard: undefined,
-        };
-
-        const { getByTestId } = setup({
-            actions: { saveInspection: actionFn },
-            formValues,
-            location,
-            resetForm,
-            selectedAsset,
-            assignCurrentAsset,
-            handleChange,
-            saveInspectionSaving: false,
-            isValid: true,
-        });
-
-        // screen.debug(undefined, 100000);
-
-        expect(getByTestId('testntagFormSubmitButton')).not.toHaveAttribute('disabled', '');
-
-        act(() => {
-            fireEvent.click(getByTestId('testntagFormSubmitButton'));
-        });
-        expect(actionFn).toHaveBeenCalledWith(expected);
-    });
-
-    it('renders saving spinner', () => {
-        const resetForm = jest.fn();
-        const assignCurrentAsset = jest.fn();
-        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
-        const handleChange = jest.fn(prop => jest.fn(event => {}));
-
-        const { getByTestId } = setup({
-            formValues,
-            location,
-            resetForm,
-            assignCurrentAsset,
-            handleChange,
-            saveInspectionSaving: true,
-            isValid: true,
-        });
-
-        expect(getByTestId('saveInspectionSpinner')).toBeInTheDocument();
     });
 });

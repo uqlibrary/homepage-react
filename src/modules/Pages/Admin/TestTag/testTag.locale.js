@@ -10,6 +10,7 @@ import InspectionDeviceIcon from '@material-ui/icons/Build';
 import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
 import OutForRepairIcon from '@material-ui/icons/ExitToApp';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
+import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
 
 import { PERMISSIONS } from './config/auth';
 
@@ -18,6 +19,8 @@ export default {
         general: {
             loading: 'Loading...',
             pageTitle: 'UQ Asset Test and Tag',
+            checkingAuth: 'Retrieving user details...',
+            pageUnavailable: 'Page unavailable',
         },
         dashboard: {
             config: {},
@@ -31,13 +34,11 @@ export default {
                 },
                 assets: {
                     title: 'ASSETS',
-                    subtext: (periodLength, periodType) =>
-                        `needing a retest in the next ${periodLength} ${periodType}.`,
+                    subtext: duration => <>needing a retest in the next {duration}.</>,
                 },
                 inspectionDevices: {
                     title: 'INSPECTION DEVICES',
-                    subtext: (periodLength, periodType) =>
-                        `needing a recalibration in the next ${periodLength} ${periodType}.`,
+                    subtext: duration => <>needing a recalibration in the next {duration}.</>,
                 },
                 management: {
                     title: 'MANAGEMENT',
@@ -98,6 +99,12 @@ export default {
                             title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: '#',
+                        },
+                        {
+                            title: 'INSPECTIONS BY LICENSED USER',
+                            icon: <InspectionByUserIcon />,
+                            path: '#',
+                            permissions: [PERMISSIONS.can_admin],
                         },
                     ],
                 },
