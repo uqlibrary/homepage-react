@@ -221,3 +221,5 @@ export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
 export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/onload/assettype' });
 // Save an asset type (ID contained in payload)
 export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
+// Delete an Asset type (Reassigning assets to new asset type)
+export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype/reassign' });
