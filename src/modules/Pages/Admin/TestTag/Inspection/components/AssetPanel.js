@@ -8,11 +8,13 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { debounce } from 'throttle-debounce';
 import InspectionPanel from './InspectionPanel';
 import LastInspectionPanel from './LastInspectionPanel';
+import AssetTypeDialogPopup from './AssetTypeDialogPopup';
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 
 import locale from '../../testTag.locale';
@@ -35,7 +37,11 @@ const AssetPanel = ({
     focusElementRef,
     defaultNextTestDateValue,
     classes,
+    saveAssetTypeSaving,
+    saveAssetTypeSuccess,
+    saveAssetTypeError,
     isMobileView,
+    canAddAssetType,
 }) => {
     AssetPanel.propTypes = {
         actions: PropTypes.any.isRequired,
@@ -50,7 +56,11 @@ const AssetPanel = ({
         defaultNextTestDateValue: PropTypes.number.isRequired,
         classes: PropTypes.object.isRequired,
         saveInspectionSaving: PropTypes.bool,
+        saveAssetTypeSaving: PropTypes.bool,
+        saveAssetTypeSuccess: PropTypes.any,
+        saveAssetTypeError: PropTypes.any,
         isMobileView: PropTypes.bool,
+        canAddAssetType: PropTypes.bool,
     };
     const pageLocale = locale.pages.inspect;
 
@@ -82,6 +92,8 @@ const AssetPanel = ({
         }),
     ).current;
 
+    const [isAssetTypeDialogOpen, setAssetTypeDialogOpen] = React.useState(false);
+
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
         /* istanbul ignore else */ if (assetsList?.length === 1) {
@@ -95,8 +107,43 @@ const AssetPanel = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
 
+    const [assetTypeValid, setAssetTypeValid] = React.useState(false);
+
+    const openAssetTypeDialog = () => {
+        setAssetTypeDialogOpen(true);
+    };
+
+    // we group them all together to place a footer item at the bottom of the list
+    const renderGroup = params => {
+        const addButton = (
+            <li key="testntagFormAssetType-option-add">
+                <Button className={classes.addNewLabel} onClick={() => openAssetTypeDialog()}>
+                    {pageLocale.form.asset.assetType.addNewLabel}
+                </Button>
+            </li>
+        );
+        const children = [params.children];
+        !!canAddAssetType && children.push(addButton);
+        return children;
+    };
+
+    console.log(locale);
+    console.log(pageLocale);
     return (
         <StandardCard title={pageLocale.form.asset.title} style={{ marginTop: '30px' }}>
+            <AssetTypeDialogPopup
+                isAssetTypeDialogOpen={isAssetTypeDialogOpen}
+                assetTypeValid={assetTypeValid}
+                setAssetTypeValid={setAssetTypeValid}
+                actions={actions}
+                setAssetTypeDialogOpen={setAssetTypeDialogOpen}
+                isMobileView={isMobileView}
+                classes={classes}
+                // initConfig={inspectionConfig}
+                saveAssetTypeSaving={saveAssetTypeSaving}
+                saveAssetTypeSuccess={saveAssetTypeSuccess}
+                saveAssetTypeError={saveAssetTypeError}
+            />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
                     <FormControl className={classes.formControl} fullWidth>
@@ -211,10 +258,12 @@ const AssetPanel = ({
                             getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
                             getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
                             autoHighlight
+                            renderGroup={renderGroup}
+                            groupBy={() => false}
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...pageLocale.form.asset.assetType}
+                                    label={pageLocale.form.asset.assetType.label}
                                     required
                                     error={
                                         isValidAssetId(formValues.asset_id_displayed) &&

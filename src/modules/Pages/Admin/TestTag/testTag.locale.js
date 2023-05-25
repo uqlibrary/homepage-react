@@ -164,6 +164,23 @@ export default {
                     },
                     assetType: {
                         label: 'Asset type',
+                        addNewLabel: 'Add new asset type',
+                        saveSuccess: {
+                            confirmationTitle: 'The asset type has been added',
+                            confirmationMessage: '',
+                            confirmButtonLabel: 'Close',
+                        },
+                        saveFailure: {
+                            confirmationTitle: (
+                                <span>
+                                    There was a problem saving the Asset type.
+                                    <br />
+                                    Please try again later.
+                                </span>
+                            ),
+                            confirmationMessage: '',
+                            confirmButtonLabel: 'Close',
+                        },
                     },
                     ownerLabel: 'Asset owner',
                 },

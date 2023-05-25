@@ -53,21 +53,19 @@ describe('Test and Tag Admin Inspection page', () => {
         }
     };
 
-    it('page is accessible', () => {
-        cy.injectAxe();
-        cy.viewport(1300, 1000);
-        cy.get('h1').contains('UQ Asset Test and Tag');
-        cy.get('h2').contains('Managing Assets for Library');
-        cy.waitUntil(() => cy.data('testntag-form-siteid').should('contain', 'St Lucia'));
-        cy.wait(1000);
-        cy.checkA11y('[data-testid="StandardPage"]', {
-            reportName: 'Test and Tag Inspection Form',
-            scopeName: 'Content',
-            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        });
-    });
-
     const runAllTests = () => {
+        it('page is accessible', () => {
+            cy.injectAxe();
+            cy.get('h1').contains('UQ Asset Test and Tag');
+            cy.get('h2').contains('Managing Assets for Library');
+            cy.waitUntil(() => cy.data('testntag-form-siteid').should('contain', 'St Lucia'));
+            cy.wait(1000);
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'Test and Tag Inspection Form',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
         describe('Event panel functionality', () => {
             const today = moment();
             it('should show correct dates', () => {
@@ -190,6 +188,51 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
                 // select asset type
                 selectAssetType('PowerBoard');
+            });
+            it('should allow creation of new asset type', () => {
+                cy.data('testntagFormAssetTypeInput').should('be.disabled');
+                cy.data('testntagFormAssetIdInput').click();
+                cy.get('#testntagFormAssetId-option-0').should('exist');
+                cy.get('#testntagFormAssetId-option-0').click();
+                cy.data('testntagFormAssetIdInput').should('have.value', 'NEW ASSET');
+                cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
+
+                cy.data('testntagFormAssetTypeInput')
+                    .should('not.be.disabled')
+                    .click();
+                selectListbox('Add new asset type');
+                // popup has loaded as it has header
+                cy.get('[data-testid="asset_type_name_field"] label').should('contain', 'Asset type name');
+                cy.data('testntagAssetTypeSubmitButton').should('be.disabled');
+                cy.get('[data-testid="asset_type_name_field"] input').type('an asset type');
+
+                // the popup is accessible
+                cy.injectAxe();
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'Test and Tag Asset Type Creation Popup',
+                    scopeName: 'Content',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                cy.data('testntagAssetTypeSubmitButton')
+                    .should('not.be.disabled')
+                    .should('contain', 'SAVE')
+                    .click();
+                // the user is acknowledged that the asset type was saved
+                cy.waitUntil(() =>
+                    cy
+                        .data('dialogbox-tnt-assettype-add-confirmation')
+                        // .find('message-title')
+                        .should('contain', 'The asset type has been added'),
+                );
+
+                // click ok on the notice and both dialogs go away
+                cy.data('tntAssetTypeAddDialog').should('exist');
+                cy.data('confirm-tnt-assettype-add-confirmation')
+                    .should('exist')
+                    .click();
+                cy.data('confirm-tnt-assettype-add-confirmation').should('not.exist');
+                cy.data('tntAssetTypeAddDialog').should('not.exist');
             });
             it('should allow selection of existing asset', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
