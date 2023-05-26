@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import { pathConfig } from 'config/routes';
 
 import InspectionIcon from '@material-ui/icons/Search';
 import UsersIcon from '@material-ui/icons/People';
@@ -58,7 +59,7 @@ export default {
                             title: 'LOCATIONS',
                             icon: <LocationIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanagelocations}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTION DEVICES',
@@ -260,6 +261,22 @@ export default {
                     notApplicable: 'N/A',
                     outOfService: 'OUT OF SERVICE',
                     tagPlacedBy: 'TAG PLACED BY:',
+                },
+            },
+        },
+        manage: {
+            locations: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage Locations',
+                        icon: <LocationIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Locations for ${dept}`,
+                },
+                form: {
+                    locationTypeTitle: 'Location type',
                 },
             },
         },

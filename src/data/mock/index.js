@@ -766,7 +766,6 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        console.log('onget');
         return [200, testTag_user];
     })
 

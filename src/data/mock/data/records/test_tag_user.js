@@ -9,7 +9,7 @@ export default {
         "user_name": "JTest user",
         "user_uid": "uqtest1",
         "privileges": {
-          "can_admin": 0,
+          "can_admin": 1,
           "can_inspect": 1,
           "can_alter": 1,
           "can_see_reports": 1,
