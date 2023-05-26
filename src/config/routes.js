@@ -34,7 +34,7 @@ export const pathConfig = {
         spotlights: '/admin/spotlights',
         testntagdashboard: '/admin/testntag',
         testntaginspect: '/admin/testntag/inspect',
-        testntagmanage: '/admin/testntag/manage',
+        testntagmanagelocations: '/admin/testntag/manage/locations',
         testntagreport: '/admin/testntag/report',
         testntagmanageassettypes: '/admin/testntag/manage/assettypes',
     },
@@ -231,6 +231,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.testntaginspect,
             component: components.TestTagInspection,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagmanagelocations,
+            component: components.TestTagManageLocations,
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
