@@ -1,6 +1,12 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
+    siteList: null,
+    siteListLoading: false,
+    siteListError: null,
+    buildingList: null,
+    buildingListLoading: false,
+    buildingListError: null,
     floorList: null,
     floorListLoading: false,
     floorListError: null,
@@ -10,6 +16,56 @@ export const initialState = {
 };
 
 const handlers = {
+    [actions.TESTTAG_SITE_LIST_LOADING]: state => ({
+        ...initialState,
+        ...state,
+        siteListLoading: true,
+        siteListError: false,
+    }),
+    [actions.TESTTAG_SITE_LIST_LOADED]: (state, action) => {
+        return {
+            ...initialState,
+            ...state,
+            siteListLoading: false,
+            siteListError: false,
+            siteList: action.payload,
+        };
+    },
+    [actions.TESTTAG_SITE_LIST_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        siteListLoading: false,
+        siteListError: action.payload,
+    }),
+    [actions.TESTTAG_SITE_LIST_CLEAR]: () => ({
+        ...initialState,
+    }),
+
+    [actions.TESTTAG_BUILDING_LIST_LOADING]: state => ({
+        ...initialState,
+        ...state,
+        buildingListLoading: true,
+        buildingListError: false,
+    }),
+    [actions.TESTTAG_BUILDING_LIST_LOADED]: (state, action) => {
+        return {
+            ...initialState,
+            ...state,
+            buildingListLoading: false,
+            buildingListError: false,
+            buildingList: action.payload,
+        };
+    },
+    [actions.TESTTAG_BUILDING_LIST_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        buildingListLoading: false,
+        buildingListError: action.payload,
+    }),
+    [actions.TESTTAG_BUILDING_LIST_CLEAR]: () => ({
+        ...initialState,
+    }),
+
     [actions.TESTTAG_FLOOR_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
@@ -34,6 +90,7 @@ const handlers = {
     [actions.TESTTAG_FLOOR_LIST_CLEAR]: () => ({
         ...initialState,
     }),
+
     [actions.TESTTAG_ROOM_LIST_LOADING]: state => ({
         ...initialState,
         ...state,

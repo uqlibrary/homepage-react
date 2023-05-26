@@ -1,6 +1,7 @@
 import React, { useMemo, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import Tabs from '@material-ui/core/Tabs';
@@ -15,6 +16,8 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
+import { useLocation } from '../../../Inspection/utils/hooks';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -117,10 +120,10 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
     return columns;
 };
 
-const ManageLocations = ({}) => {
+const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
-    const [selectedTab, setSelectedTab] = React.useState(0);
+    const [selectedTab, setSelectedTab] = React.useState('site');
     const [therows] = React.useState(rows);
     const emptyActionState = { isAdd: false, isEdit: false, rows: {} };
     const actionReducer = (_, action) => {
@@ -137,9 +140,12 @@ const ManageLocations = ({}) => {
     };
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
+    const { location, setLocation } = useLocation();
+
     // const [editRowsModel, setEditRowsModel] = React.useState({});
 
-    const handleChange = (event, newValue) => {
+    const handleTabChange = (event, newValue) => {
+        console.log(newValue);
         setSelectedTab(newValue);
     };
 
@@ -224,17 +230,22 @@ const ManageLocations = ({}) => {
                     />
                     <Tabs
                         value={selectedTab}
-                        onChange={handleChange}
+                        onChange={handleTabChange}
                         indicatorColor="primary"
                         textColor="primary"
                         variant="scrollable"
                         scrollButtons="auto"
                     >
-                        <Tab label="Sites" />
-                        <Tab label="Buildings" />
-                        <Tab label="Floors" />
-                        <Tab label="Rooms" />
+                        <Tab label="Sites" value="site" />
+                        <Tab label="Buildings" value="building" />
+                        <Tab label="Floors" value="floor" />
+                        <Tab label="Rooms" value="room" />
                     </Tabs>
+                    {selectedTab !== 'site' && (
+                        <Grid container spacing={3} className={classes.tableMarginTop}>
+                            <LocationPicker actions={actions} location={location} setLocation={setLocation} />
+                        </Grid>
+                    )}
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
@@ -257,10 +268,6 @@ const ManageLocations = ({}) => {
 
 ManageLocations.propTypes = {
     actions: PropTypes.object,
-    dashboardConfig: PropTypes.any,
-    dashboardConfigLoading: PropTypes.bool,
-    dashboardConfigLoaded: PropTypes.bool,
-    dashboardConfigError: PropTypes.bool,
 };
 
 export default React.memo(ManageLocations);

@@ -292,4 +292,14 @@ export default {
             },
         },
     },
+    locationPicker: {
+        siteLabel: 'Site',
+        building: {
+            label: 'Building',
+        },
+        floor: {
+            label: 'Floor',
+        },
+        room: { label: 'Room' },
+    },
 };
