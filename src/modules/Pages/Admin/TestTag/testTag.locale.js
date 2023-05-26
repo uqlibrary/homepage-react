@@ -267,7 +267,7 @@ export default {
                 },
                 networkError: {
                     confirmationTitle:
-                        'A network error occurred while loading the requested data. Please try again or contact support if the issue persists.',
+                        'A network error occurred while loading the requested data. You may need to log out and back in. Please try again or contact support if the issue persists.',
                     confirmButtonLabel: 'OK',
                 },
                 dialogLabels: {
