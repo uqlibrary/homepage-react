@@ -49,11 +49,13 @@ export const UpdateDialogue = ({
     row,
 } = {}) => {
     const classes = useStyles();
+    const [dataFields, setDataFields] = React.useState({});
     const [data, setData] = React.useState({});
     const isMobileView = useIsMobileView();
 
     React.useEffect(() => {
         if (isOpen) {
+            setDataFields(fields);
             setData(row);
         }
     }, [isOpen, fields, row]);
@@ -86,32 +88,25 @@ export const UpdateDialogue = ({
                 <Grid container padding={0} spacing={2}>
                     {isOpen &&
                         !!data &&
-                        !!fields &&
-                        Object.keys(fields).map(field => (
+                        !!dataFields &&
+                        Object.keys(dataFields).map(field => (
                             <Grid item xs={12} sm={6} key={field}>
-                                {console.log(
-                                    data,
-                                    field,
-                                    fields[field].label,
-                                    data?.[field],
-                                    fields[field].fieldParams.canEdit,
-                                )}
-                                {!fields[field].fieldParams.canEdit &&
-                                    (fields[field].fieldParams?.shouldRender ?? true) && (
+                                {!dataFields[field].fieldParams.canEdit &&
+                                    (dataFields[field].fieldParams?.shouldRender ?? true) && (
                                         <>
-                                            <Typography variant="body2">{fields[field].label}</Typography>
+                                            <Typography variant="body2">{dataFields[field].label}</Typography>
                                             <Typography variant="body1">{data?.[field]}</Typography>
                                         </>
                                     )}
-                                {fields[field].fieldParams.canEdit && (
+                                {dataFields[field].fieldParams.canEdit && (
                                     <>
-                                        {fields[field]?.component({
+                                        {dataFields[field]?.component({
                                             id: field,
                                             'data-testid': field,
                                             InputLabelProps: { shrink: true },
-                                            label: fields[field].label,
+                                            label: dataFields[field].label,
                                             value: data?.[field],
-                                            fullWidth: isMobileView,
+                                            fullWidth: true,
                                             onChange: handleChange,
                                         })}
                                     </>
