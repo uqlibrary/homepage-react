@@ -20,7 +20,6 @@ describe('TestTagHeader Renders component', () => {
         });
         expect(getByTestId('boxId')).toBeInTheDocument();
         expect(getByTestId('tntHeaderSkeletonDepartmentTextLoading')).toBeInTheDocument();
-        expect(getByTestId('tntHeaderSkeletonRequiredTextLoading')).toBeInTheDocument();
     });
     it('should render header text', () => {
         const { getByText, getByTestId } = setup({

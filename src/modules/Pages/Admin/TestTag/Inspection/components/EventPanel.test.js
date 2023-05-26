@@ -36,7 +36,7 @@ function setup(testProps = {}) {
         },
     ];
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData.data, inspectionConfigLoading: false },
         testTagLocationReducer: { floorList, floorListLoading: false, roomList, roomListLoading: false },
         ...state,
     };
@@ -61,7 +61,7 @@ describe('EventPanel', () => {
 
         const { getByText, getByTestId } = setup({ actions, location, setLocation, handleChange });
 
-        expect(getByText(locale.form.event.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(setLocation).toHaveBeenCalledWith({ formSiteId: 1 });
         expect(getByTestId('testntag-form-event-date')).toBeInTheDocument();
         expect(getByTestId('testntag-form-siteid')).toBeInTheDocument();
@@ -200,7 +200,7 @@ describe('EventPanel', () => {
         const setStateMock = jest.fn();
         const spyState = useState => [useState, setStateMock];
         jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
-        const testConfig = JSON.parse(JSON.stringify(configData)); // deep copy
+        const testConfig = structuredClone(configData.data); // deep copy
 
         testConfig.sites.forEach(site => {
             delete site.site_id_displayed;
@@ -217,9 +217,9 @@ describe('EventPanel', () => {
             handleChange,
         });
 
-        expect(getByText(locale.form.event.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(setLocation).toHaveBeenCalledWith({ formSiteId: 1 });
-        configData.sites.forEach(site => {
+        configData.data.sites.forEach(site => {
             expect(queryByText(site.site_id_displayed)).not.toBeInTheDocument();
             expect(queryByText(site.site_name)).not.toBeInTheDocument();
         });

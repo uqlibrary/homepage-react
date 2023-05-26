@@ -18,7 +18,7 @@ import {
 } from './helpers.js';
 
 const moment = require('moment');
-const testStatusEnum = statusEnum(locale);
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const PASS = testStatusEnum.PASSED.value;
 const FAIL = testStatusEnum.FAILED.value;
