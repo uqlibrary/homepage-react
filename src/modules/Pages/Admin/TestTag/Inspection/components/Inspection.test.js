@@ -9,7 +9,7 @@ import {
 } from 'react-intersection-observer/test-utils';
 
 import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
-import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
+// import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
 import locale from '../../testTag.locale.js';
 
 const currentRetestList = [
