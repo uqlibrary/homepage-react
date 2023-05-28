@@ -192,6 +192,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                     columns={columns}
                     editMode="row"
                     loading={assetTypesListLoading}
+                    onCellDoubleClick={(e, x) => x.preventDefault()}
                     // disableColumnMenu
                     disableColumnSort
                     getRowId={row => row?.asset_type_id}

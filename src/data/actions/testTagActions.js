@@ -228,14 +228,12 @@ export function deleteAndReassignAssetType(request) {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGNING });
         return post(TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API(), request)
             .then(response => {
-                console.log('This is the data', response?.data);
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGNED,
                     payload: response?.data?.asset_types ?? /* istanbul ignore next */ [],
                 });
             })
             .catch(error => {
-                console.log('Calling Error');
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGN_FAILED,
                     payload: error.message,
