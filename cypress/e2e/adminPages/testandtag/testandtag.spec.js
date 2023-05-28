@@ -3,12 +3,8 @@ import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/t
 
 describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
+        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag?user=uqtesttag');
-        // dismiss the cultural advice, as it's in the way.
-        cy.get('cultural-advice-popup')
-            .shadow()
-            .find('#culturaladvice-container-dismiss')
-            .click();
     });
 
     const selectListbox = pattern => {
@@ -158,6 +154,7 @@ describe('Test and Tag Admin Inspection page', () => {
 
         describe('Asset panel functionality', () => {
             it('should allow entry of new asset IDs (temporary)', () => {
+                cy.data('testntag-form-siteid').should('contain', 'St Lucia');
                 // this is for code coverage. Will be removed post MVP
                 cy.data('testntagFormAssetIdInput').click();
                 cy.data('testntagFormAssetIdInput').type('AN ASSET ID{enter}');
@@ -165,6 +162,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
             it('should allow auto complete of asset ID as mask', () => {
+                cy.data('testntag-form-siteid').should('contain', 'St Lucia');
                 // Enter partial asset ID for mask search
                 cy.data('testntagFormAssetIdInput').click();
                 cy.data('testntagFormAssetIdInput').type('123');
