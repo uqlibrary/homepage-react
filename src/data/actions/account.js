@@ -13,7 +13,7 @@ import {
     SPOTLIGHTS_API_CURRENT,
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
-import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
+import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, STORAGE_ACCOUNT_KEYNAME } from 'config/general';
 import Cookies from 'js-cookie';
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
@@ -141,6 +141,32 @@ export function logout(reload = false) {
     };
 }
 
+// we directly get the account in homepage -  sadly, it caused fewer problems than reusing the session storage from
+// reusable - but we do check if reusable has timed out or not
+/* istanbul ignore next */
+function sessionStorageShowsLoggedOut() {
+    const storedUserDetailsRaw = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
+    if (storedUserDetailsRaw === null) {
+        return true;
+    }
+    const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
+    const now = new Date().getTime();
+    if (!storedUserDetails.hasOwnProperty('storageExpiryDate') || storedUserDetails.storageExpiryDate < now) {
+        return true;
+    }
+    if (!storedUserDetails.hasOwnProperty('status') && storedUserDetails.status !== 'loggedin') {
+        return true;
+    }
+    if (
+        !!storedUserDetails.hasOwnProperty('account') ||
+        !storedUserDetails.account.storedUserDetails.hasOwnProperty('id')
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * Loads the user's account and author details into the application
  * @returns {function(*)}
@@ -173,7 +199,11 @@ export function loadCurrentAccount() {
 
                     // if the UQL cookie times out, we want to log the user out
                     const watchforAccountExpiry = setInterval(() => {
-                        if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+                        if (
+                            getSessionCookie() === undefined ||
+                            getLibraryGroupCookie() === undefined ||
+                            sessionStorageShowsLoggedOut()
+                        ) {
                             console.log('check cookie ', getSessionCookie());
                             logout(true);
                             clearInterval(watchforAccountExpiry);
