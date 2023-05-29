@@ -29,7 +29,6 @@ const AssetPanel = ({
     formValues,
     selectedAsset,
     resetForm,
-    department,
     location,
     assignCurrentAsset,
     handleChange,
@@ -44,7 +43,6 @@ const AssetPanel = ({
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
         resetForm: PropTypes.func.isRequired,
-        department: PropTypes.string,
         location: PropTypes.object.isRequired,
         assignCurrentAsset: PropTypes.func.isRequired,
         handleChange: PropTypes.func.isRequired,
@@ -59,6 +57,9 @@ const AssetPanel = ({
     const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
         state.get?.('testTagOnLoadInspectionReducer'),
     );
+
+    const { user } = useSelector(state => state.get('testTagUserReducer'));
+
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
     const [formAssetList, setFormAssetList] = useState(assetsList);
@@ -73,8 +74,8 @@ const AssetPanel = ({
     const previousValueRef = React.useRef(null);
 
     const debounceAssetsSearch = React.useRef(
-        debounce(500, (pattern, department) => {
-            const paddedNumber = maskNumber(pattern, department);
+        debounce(500, (pattern, user) => {
+            const paddedNumber = maskNumber(pattern, user?.user_department);
             !!paddedNumber &&
                 paddedNumber.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH &&
                 actions.loadAssets(paddedNumber);
@@ -178,7 +179,7 @@ const AssetPanel = ({
                                     onChange={e => {
                                         !isOpen && setIsOpen(true);
                                         previousValueRef.current = e.target.value;
-                                        debounceAssetsSearch(e.target.value, department);
+                                        debounceAssetsSearch(e.target.value, user);
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
