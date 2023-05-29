@@ -10,7 +10,7 @@ import Icon from '@material-ui/core/Icon';
 import HomeIcon from '@material-ui/icons/Home';
 import clsx from 'clsx';
 
-import { pathConfig } from 'config/routes';
+import { pathConfig } from '../../../../../../config/pathConfig';
 
 const useStyles = makeStyles(theme => ({
     header: {

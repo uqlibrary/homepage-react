@@ -383,9 +383,9 @@ export const Alert = ({
                 id={alertId}
             >
                 <div className="layout-card">
-                    <Grid container spacing={1} justify="center" alignItems="center" alignContent="center">
+                    <Grid container spacing={1} justifyContent="center" alignItems="center" alignContent="center">
                         <Grid item xs={12} sm className={action && !disableAlertClick && classes.linked}>
-                            <Grid container justify="center" alignItems="center" alignContent="center">
+                            <Grid container justifyContent="center" alignItems="center" alignContent="center">
                                 <Grid
                                     item
                                     className={`${classes.icon} alert-icon ${wiggle ? classes.wiggler : ''}`}
