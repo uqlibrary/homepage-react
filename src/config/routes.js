@@ -203,20 +203,26 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
+            path: pathConfig.admin.testntagmanageassettypes,
+            component: components.TestTagManageAssetTypes,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
             path: pathConfig.admin.testntagmanagelocations,
             component: components.TestTagManageLocations,
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
     ];
-    const testntagManageAssetTypes = [
-        {
-            path: pathConfig.admin.testntagmanageassettypes,
-            component: components.TestTagManageAssetTypes,
-            exact: true,
-            pageTitle: locale.pages.admin.testntag.title,
-        },
-    ];
+    // const testntagManageAssetTypes = [
+    //     {
+    //         path: pathConfig.admin.testntagmanageassettypes,
+    //         component: components.TestTagManageAssetTypes,
+    //         exact: true,
+    //         pageTitle: locale.pages.admin.testntag.title,
+    //     },
+    // ];
 
     return [
         ...publicPages,
@@ -226,7 +232,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
         ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
-        ...(account && isTestTagAdminUser(account) ? testntagManageAssetTypes : []),
+        // ...(account && isTestTagAdminUser(account) ? testntagManageAssetTypes : []),
         {
             component: components.NotFound,
         },

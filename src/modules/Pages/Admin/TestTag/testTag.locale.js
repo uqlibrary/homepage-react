@@ -53,13 +53,13 @@ export default {
                         {
                             title: 'ASSET TYPES',
                             icon: <AssetTypeIcon />,
-                            path: `${pathConfig.admin.testntagmanageassettypes}?user=uqtesttag`,
+                            path: '#',
                         },
                         {
                             title: 'LOCATIONS',
                             icon: <LocationIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: `${pathConfig.admin.testntagmanagelocations}?user=uqtesttag`,
+                            path: '#',
                         },
                         {
                             title: 'INSPECTION DEVICES',

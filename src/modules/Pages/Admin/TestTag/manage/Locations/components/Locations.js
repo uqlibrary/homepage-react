@@ -205,6 +205,7 @@ const ManageLocations = ({ actions }) => {
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <div className={classes.root}>
+                <h2>Here are the bollocks</h2>
                 <StandardCard noHeader>
                     <UpdateDialog
                         updateDialogueBoxId="addRow"
