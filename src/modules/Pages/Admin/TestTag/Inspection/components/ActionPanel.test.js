@@ -36,7 +36,7 @@ describe('ActionPanel', () => {
 
         const { getByText, getByTestId } = setup({ formValues, handleChange, classes, isMobileView, disabled });
 
-        expect(getByText(locale.form.action.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.action.title)).toBeInTheDocument();
         expect(getByTestId('tab-repair')).toBeInTheDocument();
         expect(getByTestId('tab-discard')).toBeInTheDocument();
     });

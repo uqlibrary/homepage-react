@@ -1,6 +1,6 @@
 import React from 'react';
 import Inspection from './Inspection';
-import { rtlRender, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
+import { renderWithRouter, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 import {
     mockAllIsIntersecting,
@@ -9,8 +9,10 @@ import {
 } from 'react-intersection-observer/test-utils';
 
 import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
+import userData from '../../../../../../data/mock/data/testing/testTagUser';
 // import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
 import locale from '../../testTag.locale.js';
+import { getUserPermissions } from '../../helpers/auth';
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -39,13 +41,13 @@ const DEFAULT_FORM_VALUES = {
     discard_reason: undefined,
 };
 
-function setup(testProps = {}, renderer = rtlRender) {
+function setup(testProps = {}, renderer = renderWithRouter) {
     const {
         state = {},
         actions = {},
         defaultFormValues = DEFAULT_FORM_VALUES,
         assetsListError = null,
-        inspectionConfig = configData,
+        inspectionConfig = configData.data,
         inspectionConfigLoading = false,
         inspectionConfigError = null,
         floorListError = null,
@@ -57,7 +59,14 @@ function setup(testProps = {}, renderer = rtlRender) {
     } = testProps;
 
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData.data, inspectionConfigLoading: false },
+        testTagUserReducer: {
+            userLoading: false,
+            userLoaded: true,
+            userError: false,
+            user: userData.data,
+            privilege: getUserPermissions(userData.data.privileges ?? {}),
+        },
         ...state,
     };
 
@@ -98,10 +107,12 @@ describe('TestTag', () => {
             actions: { loadInspectionConfig: mockFn, clearAssets: mockFn, clearSaveInspection: mockFn },
         });
 
-        expect(getByText(locale.form.pageTitle)).toBeInTheDocument();
-        expect(getByText(locale.form.pageSubtitle?.(configData.user.department_display_name))).toBeInTheDocument();
-        expect(getByText(locale.form.event.title)).toBeInTheDocument();
-        expect(getByText(locale.form.asset.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
+        expect(
+            getByText(locale.pages.inspect.header.pageSubtitle?.(configData.data.user.department_display_name)),
+        ).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
         expect(getByTestId('testntagFormResetButton')).toBeInTheDocument();
         expect(getByTestId('testntagFormSubmitButton')).toBeInTheDocument();
         expect(getByTestId('testntagFormSubmitButton')).toHaveAttribute('disabled', '');
@@ -122,7 +133,7 @@ describe('TestTag', () => {
             saveInspectionError: saveErrorTitle,
         });
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
-        expect(getByText(locale.form.saveError.confirmationTitle(saveErrorTitle))).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.saveError.confirmationTitle(saveErrorTitle))).toBeInTheDocument();
         act(() => {
             fireEvent.click(getByTestId('confirm-testTag-save-failed'));
         });
@@ -145,7 +156,7 @@ describe('TestTag', () => {
         });
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
-        expect(getByText(locale.form.networkError.confirmationTitle)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.networkError.confirmationTitle)).toBeInTheDocument();
         act(() => {
             fireEvent.click(getByTestId('confirm-testTag-network-error'));
         });
@@ -164,13 +175,11 @@ describe('TestTag', () => {
                 clearAssets: clearAssetsFn,
             },
             saveInspectionSuccess: {
-                data: {
-                    asset_status: 'CURRENT',
-                    asset_id_displayed: 'UQL000705',
-                    user_licence_number: 'NOT LICENCED',
-                    action_date: '2022-12-12',
-                    asset_next_test_due_date: '2023Dec12',
-                },
+                asset_status: 'CURRENT',
+                asset_id_displayed: 'UQL000705',
+                user_licence_number: 'NOT LICENCED',
+                action_date: '2022-12-12',
+                asset_next_test_due_date: '2023Dec12',
             },
         });
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
@@ -199,13 +208,11 @@ describe('TestTag', () => {
                 clearAssets: clearAssetsFn,
             },
             saveInspectionSuccess: {
-                data: {
-                    asset_status: 'FAILED',
-                    asset_id_displayed: 'UQL000705',
-                    user_licence_number: '1234567890',
-                    action_date: '2022-12-12',
-                    asset_next_test_due_date: '2023Dec12',
-                },
+                asset_status: 'FAILED',
+                asset_id_displayed: 'UQL000705',
+                user_licence_number: '1234567890',
+                action_date: '2022-12-12',
+                asset_next_test_due_date: '2023Dec12',
             },
         });
 
@@ -237,13 +244,11 @@ describe('TestTag', () => {
                 clearAssets: clearAssetsFn,
             },
             saveInspectionSuccess: {
-                data: {
-                    asset_status: 'OUTFORREPAIR',
-                    asset_id_displayed: 'UQL000705',
-                    user_licence_number: '1234567890',
-                    action_date: '2022-12-12',
-                    asset_next_test_due_date: '2023Dec12',
-                },
+                asset_status: 'OUTFORREPAIR',
+                asset_id_displayed: 'UQL000705',
+                user_licence_number: '1234567890',
+                action_date: '2022-12-12',
+                asset_next_test_due_date: '2023Dec12',
             },
         });
 
@@ -273,13 +278,11 @@ describe('TestTag', () => {
                 clearAssets: clearAssetsFn,
             },
             saveInspectionSuccess: {
-                data: {
-                    asset_status: 'DISCARDED',
-                    asset_id_displayed: 'UQL000705',
-                    user_licence_number: '1234567890',
-                    action_date: '2022-12-12',
-                    asset_next_test_due_date: '2023Dec12',
-                },
+                asset_status: 'DISCARDED',
+                asset_id_displayed: 'UQL000705',
+                user_licence_number: '1234567890',
+                action_date: '2022-12-12',
+                asset_next_test_due_date: '2023Dec12',
             },
         });
 
@@ -309,12 +312,10 @@ describe('TestTag', () => {
                 clearAssets: clearAssetsFn,
             },
             saveInspectionSuccess: {
-                data: {
-                    asset_status: 'CURRENT',
-                    asset_id_displayed: 'UQL000705',
-                    user_licence_number: 'NOT LICENCED',
-                    action_date: '2022-12-12',
-                },
+                asset_status: 'CURRENT',
+                asset_id_displayed: 'UQL000705',
+                user_licence_number: 'NOT LICENCED',
+                action_date: '2022-12-12',
             },
         });
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
@@ -346,7 +347,7 @@ describe('TestTag', () => {
             },
         });
 
-        expect(getByText(locale.form.pageTitle)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.pageTitle)).toBeInTheDocument();
 
         expect(getByTestId('testntagFormAssetTypeInput')).toHaveAttribute('disabled', '');
 

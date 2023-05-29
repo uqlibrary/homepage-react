@@ -38,7 +38,7 @@ function setup(testProps = {}) {
     const { state = {}, actions = {}, focusElementRef = {}, classes = {}, isMobileView = false, ...props } = testProps;
 
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData.data, inspectionConfigLoading: false },
         testTagAssetsReducer: { assetsList: assetData, assetsListLoading: false },
         ...state,
     };
@@ -75,7 +75,7 @@ describe('AssetPanel', () => {
             isValid: false,
         });
 
-        expect(getByText(locale.form.asset.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetId')).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetType')).toBeInTheDocument();
     });
@@ -100,7 +100,7 @@ describe('AssetPanel', () => {
             isValid: false,
         });
 
-        expect(getByText(locale.form.asset.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
     });
 
     it('renders loading spinners', () => {

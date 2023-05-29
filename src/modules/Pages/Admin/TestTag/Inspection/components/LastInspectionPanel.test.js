@@ -55,8 +55,8 @@ describe('LastInspectionPanel Renders component', () => {
         };
     });
 
-    const dateFormatPattern = locale.config.dateFormatDisplay;
-    const formLocale = locale.form.lastInspectionPanel;
+    const dateFormatPattern = locale.pages.inspect.config.dateFormatDisplay;
+    const formLocale = locale.pages.inspect.form.lastInspectionPanel;
 
     const assertFormText = ({ getByText, asset, disabled = false }) => {
         const title = formLocale.title(disabled ? formLocale.statusUnavailableLabel : '');
