@@ -274,6 +274,8 @@ export default {
             header: {
                 pageSubtitle: dept => `Managing Asset Types for ${dept}`,
                 requiredText: 'All fields are required unless otherwise indicated.',
+            },
+        },
         manage: {
             locations: {
                 breadcrumbs: [

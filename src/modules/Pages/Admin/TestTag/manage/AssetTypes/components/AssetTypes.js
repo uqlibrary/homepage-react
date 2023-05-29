@@ -119,7 +119,7 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
 };
 
 const ManageAssetTypes = ({ actions }) => {
-    const pageLocale = locale.pages.manage.locations;
+    const pageLocale = locale.pages.assetTypeManagement;
     const classes = useStyles();
     const [therows] = React.useState(rows);
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {} };
