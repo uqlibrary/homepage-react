@@ -12,7 +12,6 @@ import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
 import OutForRepairIcon from '@material-ui/icons/ExitToApp';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
 import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
-import { pathConfig } from 'config/routes';
 
 import { PERMISSIONS } from './config/auth';
 
