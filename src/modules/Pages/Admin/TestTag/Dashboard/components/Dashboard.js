@@ -15,7 +15,7 @@ import Avatar from '@material-ui/core/Avatar';
 import InspectionIcon from '@material-ui/icons/Search';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 
-import { pathConfig } from 'config/routes';
+import { pathConfig } from '../../../../../../config/pathConfig';
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import locale from '../../testTag.locale';
 import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';

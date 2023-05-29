@@ -36,6 +36,7 @@ import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_user from './data/records/test_tag_user';
+import testTag_user_UQPF from './data/records/test_tag_userUQPF';
 import testTag_dashboardOnLoad from './data/records/test_tag_dashboardOnLoad';
 import testTag_inspectionOnLoad from './data/records/test_tag_inspectionOnLoad';
 import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
@@ -766,7 +767,8 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        return [200, testTag_user];
+        console.log('onget');
+        return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_user_UQPF : testTag_user];
     })
 
     // dashboard CONFIG

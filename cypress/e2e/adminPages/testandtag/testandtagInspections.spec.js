@@ -71,12 +71,15 @@ describe('Test and Tag Admin Inspection page', () => {
         describe('Event panel functionality', () => {
             const today = moment();
             it('should show correct dates', () => {
-                cy.data('testntag-form-event-date').should('have.value', today.format(locale.config.dateFormatNoTime));
+                cy.data('testntag-form-event-date').should(
+                    'have.value',
+                    today.format(locale.pages.inspect.config.dateFormatNoTime),
+                );
             });
 
             it('should allow entry of new date', () => {
-                const invalidDate = today.add(1, 'day').format(locale.config.dateFormatNoTime);
-                const validDate = today.subtract(1, 'day').format(locale.config.dateFormatNoTime);
+                const invalidDate = today.add(1, 'day').format(locale.pages.inspect.config.dateFormatNoTime);
+                const validDate = today.subtract(1, 'day').format(locale.pages.inspect.config.dateFormatNoTime);
                 cy.data('testntag-form-event-date-button').click();
                 cy.get('[role="dialog"]').should('exist');
                 cy.get('button')
@@ -292,25 +295,25 @@ describe('Test and Tag Admin Inspection page', () => {
 
                 const today = moment();
 
-                const plus3months = locale.form.inspection.nextTestDateFormatted(
-                    moment(today, locale.config.dateFormat)
+                const plus3months = locale.pages.inspect.form.inspection.nextTestDateFormatted(
+                    moment(today, locale.pages.inspect.config.dateFormat)
                         .add(3, 'months')
-                        .format(locale.config.dateFormatDisplay),
+                        .format(locale.pages.inspect.config.dateFormatDisplay),
                 );
-                const plus6months = locale.form.inspection.nextTestDateFormatted(
-                    moment(today, locale.config.dateFormat)
+                const plus6months = locale.pages.inspect.form.inspection.nextTestDateFormatted(
+                    moment(today, locale.pages.inspect.config.dateFormat)
                         .add(6, 'months')
-                        .format(locale.config.dateFormatDisplay),
+                        .format(locale.pages.inspect.config.dateFormatDisplay),
                 );
-                const plus12months = locale.form.inspection.nextTestDateFormatted(
-                    moment(today, locale.config.dateFormat)
+                const plus12months = locale.pages.inspect.form.inspection.nextTestDateFormatted(
+                    moment(today, locale.pages.inspect.config.dateFormat)
                         .add(12, 'months')
-                        .format(locale.config.dateFormatDisplay),
+                        .format(locale.pages.inspect.config.dateFormatDisplay),
                 );
-                const plus60months = locale.form.inspection.nextTestDateFormatted(
-                    moment(today, locale.config.dateFormat)
+                const plus60months = locale.pages.inspect.form.inspection.nextTestDateFormatted(
+                    moment(today, locale.pages.inspect.config.dateFormat)
                         .add(60, 'months')
-                        .format(locale.config.dateFormatDisplay),
+                        .format(locale.pages.inspect.config.dateFormatDisplay),
                 );
 
                 cy.data('testResultNextDate').should('exist');

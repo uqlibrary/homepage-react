@@ -350,7 +350,6 @@ const Inspection = ({
                 actions={actions}
                 location={location}
                 resetForm={() => resetForm()}
-                department={inspectionConfig?.user?.user_department}
                 currentRetestList={currentRetestList}
                 formValues={formValues}
                 selectedAsset={selectedAsset}
