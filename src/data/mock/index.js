@@ -40,6 +40,7 @@ import testTag_user_UQPF from './data/records/test_tag_userUQPF';
 import testTag_dashboardOnLoad from './data/records/test_tag_dashboardOnLoad';
 import testTag_inspectionOnLoad from './data/records/test_tag_inspectionOnLoad';
 import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
+import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
 // import testTag_testDevices from './data/records/test_tag_test_devices';
@@ -767,7 +768,6 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        console.log('onget');
         return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_user_UQPF : testTag_user];
     })
 
@@ -781,6 +781,12 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet(routes.TEST_TAG_ONLOAD_INSPECT_API().apiUrl)
     .reply(config => {
         return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
+    })
+
+    // T&T SITES
+    .onGet(routes.TEST_TAG_SITE_API().apiUrl)
+    .reply(config => {
+        return [200, testTag_siteList];
     })
 
     // T&T FLOORS

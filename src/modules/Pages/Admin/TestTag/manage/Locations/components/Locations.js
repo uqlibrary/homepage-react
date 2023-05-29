@@ -1,6 +1,7 @@
 import React, { useMemo, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
@@ -31,64 +32,176 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const rows = [
-    {
-        asset_type_id: 1,
-        asset_type_name: 'KEW 620-1',
-        asset_type_class: 'A',
-        asset_type_power_rating: '240V',
-        asset_type: 'KEW',
-        asset_type_notes: 'KEW Notes',
-        asset_count: 10,
-    },
-    {
-        asset_type_id: 2,
-        asset_type_name: 'HEW 20-2',
-        asset_type_class: 'A',
-        asset_type_power_rating: '240V',
-        asset_type: 'HEW',
-        asset_type_notes: 'HEW Notes',
-        asset_count: 22,
-    },
-];
+const createLocationString = (site, building, floor) => [site, building, floor].filter(item => !!item).join(' / ');
 
-const fieldConfig = {
-    asset_type_id: {
-        label: 'Id',
-        fieldParams: { canEdit: false },
+const config = {
+    site: {
+        locations: [],
+        fields: {
+            site_id: {
+                label: 'Site ID',
+                fieldParams: { canEdit: false },
+            },
+            site_name: {
+                label: 'Description',
+                component: props => <TextField {...props} />,
+                fieldParams: { canEdit: true, flex: 1 },
+            },
+            site_id_displayed: {
+                label: 'Display name',
+                component: props => <TextField {...props} />,
+                fieldParams: { canEdit: true, flex: 1 },
+            },
+            asset_count: {
+                label: 'Usage',
+                fieldParams: { canEdit: false, shouldRender: false },
+            },
+        },
     },
-    asset_type_name: {
-        label: 'Asset Type Name',
-        component: props => <TextField {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
+    building: {
+        locations: ['site'],
+        fields: {
+            building_id: {
+                label: 'Building ID',
+                fieldParams: { canEdit: false },
+            },
+            building_name: {
+                label: 'Description',
+                component: props => <TextField {...props} />,
+                fieldParams: { canEdit: true, flex: 1 },
+            },
+            building_id_displayed: {
+                label: 'Display name',
+                component: props => <TextField {...props} />,
+                fieldParams: { canEdit: true, flex: 1 },
+            },
+            building_location: {
+                label: 'Location',
+                computedValue: site => createLocationString(site),
+                fieldParams: { canEdit: false, shouldRender: false },
+            },
+            asset_count: {
+                label: 'Usage',
+                fieldParams: { canEdit: false, shouldRender: false },
+            },
+        },
     },
-    asset_type_class: {
-        label: 'Class',
-        component: props => <TextField {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
+    floor: {
+        locations: ['site', 'building'],
+        fields: {
+            floor_id: {
+                label: 'Floor ID',
+                fieldParams: { canEdit: false },
+            },
+            floor_id_displayed: {
+                label: 'Display name',
+                component: props => <TextField {...props} />,
+                fieldParams: { canEdit: true, flex: 1 },
+            },
+            floor_location: {
+                label: 'Location',
+                computedValue: (site, building) => createLocationString(site, building),
+                fieldParams: { canEdit: false, shouldRender: false },
+            },
+            asset_count: {
+                label: 'Usage',
+                fieldParams: { canEdit: false, shouldRender: false },
+            },
+        },
     },
-    asset_type_power_rating: {
-        label: 'Power Rating',
-        component: props => <TextField {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
-    },
-    asset_type: {
-        label: 'Type',
-        component: props => <TextField {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
-    },
-    asset_type_notes: {
-        label: 'Notes',
-        component: props => <TextField multiline minRows={3} {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
-    },
-    asset_count: {
-        label: 'Usage',
-        fieldParams: { canEdit: false, shouldRender: false, flex: 1 },
+    room: {
+        locations: ['site', 'building', 'floor'],
+        fields: {
+            room_id: {
+                label: 'Room ID',
+                fieldParams: { canEdit: false },
+            },
+            room_description: {
+                label: 'Description',
+                component: props => <TextField {...props} />,
+                fieldParams: { canEdit: true, flex: 1 },
+            },
+            room_id_displayed: {
+                label: 'Display name',
+                component: props => <TextField {...props} />,
+                fieldParams: { canEdit: true, flex: 1 },
+            },
+            room_location: {
+                label: 'Location',
+                computedValue: (site, building, floor) => createLocationString(site, building, floor),
+                fieldParams: { canEdit: false, shouldRender: false },
+            },
+            asset_count: {
+                label: 'Usage',
+                fieldParams: { canEdit: false, shouldRender: false },
+            },
+        },
     },
 };
 
-const getColumns = ({ onRowEdit, onRowDelete }) => {
+/*
+
+//https://api.library.uq.edu.au/staging/test_and_tag/site/current
+
+[
+    {
+        "site_id": 1,
+        "site_id_displayed": "01",
+        "site_name": "St Lucia",
+        "buildings": [
+            {
+                "building_id": 1,
+                "building_name": "Forgan Smith Building",
+                "building_id_displayed": "0001",
+                "asset_count": 10
+            },
+            ...
+        ]
+    },
+    ...
+]
+
+// https://api.library.uq.edu.au/staging/test_and_tag/building/1/current
+{
+    "building_id": 1,
+    "building_id_displayed": "0001",
+    "building_name": "Forgan Smith Building",
+    "site_id": 1,
+    "site_id_displayed": "01",
+    "site_name": "St Lucia",
+    "floors": [
+        {
+            "floor_id": 1,
+            "floor_id_displayed": "2"
+        },
+        ...
+    ]
+}
+
+// https://api.library.uq.edu.au/staging/test_and_tag/floor/1/current
+{
+    "floor_id": 1,
+    "floor_id_displayed": "2",
+    "building_id": 1,
+    "building_id_displayed": "0001",
+    "building_name": "Forgan Smith Building",
+    "site_id": 1,
+    "site_id_displayed": "01",
+    "site_name": "St Lucia",
+    "rooms": [
+        {
+            "room_id": 1,
+            "room_description": "Library Facilities",
+            "room_id_displayed": "W212",
+            "asset_count": 7
+        },
+        ...
+    ]
+}
+
+*/
+
+const getColumns = ({ selectedTab, onRowEdit, onRowDelete }) => {
     const actionsCell = {
         field: 'actions',
         headerName: 'Actions',
@@ -104,15 +217,15 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
     };
 
     const columns = [];
-    const keys = Object.keys(fieldConfig);
+    const keys = Object.keys(config[selectedTab].fields);
 
     keys.forEach(key => {
         columns.push({
             field: key,
-            headerName: fieldConfig[key].label,
+            headerName: config[selectedTab].fields[key].label,
             editable: false,
             sortable: false,
-            ...fieldConfig[key].fieldParams,
+            ...config[selectedTab].fields[key].fieldParams,
         });
     });
 
@@ -120,27 +233,57 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
     return columns;
 };
 
+const emptyActionState = { isAdd: false, isEdit: false, rows: {} };
+const actionReducer = (_, action) => {
+    switch (action.type) {
+        case 'add':
+            return { isAdd: true, isEdit: false, row: { [`${action.selectedTab}_id`]: 'auto' } };
+        case 'edit':
+            return { isAdd: false, isEdit: true, row: action.row };
+        case 'clear':
+            return { ...emptyActionState };
+        default:
+            throw `Unknown action '${action.type}'`;
+    }
+};
+
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = React.useState('site');
-    const [therows] = React.useState(rows);
-    const emptyActionState = { isAdd: false, isEdit: false, rows: {} };
-    const actionReducer = (_, action) => {
-        switch (action.type) {
-            case 'add':
-                return { isAdd: true, isEdit: false, row: { asset_type_id: 'auto' } };
-            case 'edit':
-                return { isAdd: false, isEdit: true, row: action.row };
-            case 'clear':
-                return { ...emptyActionState };
-            default:
-                throw `Unknown action '${action.type}'`;
-        }
-    };
+    const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
+    const {
+        siteList,
+        siteListLoading,
+        siteListLoaded,
+        // siteListError,
+        // buildingList,
+        // buildingListLoading,
+        // buildingListError,
+        floorList,
+        floorListLoading,
+        floorListLoaded,
+        // floorListError,
+        roomList,
+        roomListLoading,
+        roomListLoaded,
+        // roomListError,
+    } = useSelector(state => state.get?.('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
+    const updateLocation = update => {
+        setLocation(update);
+    };
+    React.useEffect(() => {
+        if (roomListLoaded) setRows(roomList);
+        else if (floorListLoaded) setRows(floorList);
+        else if (siteListLoaded) {
+            setRows(siteList);
+            updateLocation({ formSiteId: siteList[0].site_id });
+        } else actions.loadSites();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [siteListLoaded, floorListLoaded, roomListLoaded]);
 
     // const [editRowsModel, setEditRowsModel] = React.useState({});
 
@@ -150,7 +293,7 @@ const ManageLocations = ({ actions }) => {
     };
 
     const handleAddClick = () => {
-        actionDispatch({ type: 'add' });
+        actionDispatch({ type: 'add', selectedTab });
         // const id = 1;
         // apiRef.current.updateRows([{ id, isNew: true }]);
         // apiRef.current.setRowMode(id, 'edit');
@@ -196,7 +339,7 @@ const ManageLocations = ({ actions }) => {
         actionDispatch({ type: 'clear' });
     };
 
-    const columns = useMemo(() => getColumns({ data: rows, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), []);
+    const columns = useMemo(() => getColumns({ selectedTab, onRowEdit, onRowDelete }), [selectedTab]);
 
     return (
         <StandardAuthPage
@@ -212,7 +355,7 @@ const ManageLocations = ({ actions }) => {
                         confirmationTitle="Add New Asset Type"
                         cancelButtonLabel="Cancel"
                         confirmButtonLabel="Add"
-                        fields={fieldConfig}
+                        fields={config[selectedTab].fields}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowAdd}
@@ -223,7 +366,7 @@ const ManageLocations = ({ actions }) => {
                         confirmationTitle="Edit Asset Type"
                         cancelButtonLabel="Cancel"
                         confirmButtonLabel="Update"
-                        fields={fieldConfig}
+                        fields={config[selectedTab].fields}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowUpdate}
@@ -243,19 +386,19 @@ const ManageLocations = ({ actions }) => {
                     </Tabs>
                     {selectedTab !== 'site' && (
                         <Grid container spacing={3} className={classes.tableMarginTop}>
-                            <LocationPicker actions={actions} location={location} setLocation={setLocation} />
+                            <LocationPicker actions={actions} location={location} setLocation={updateLocation} />
                         </Grid>
                     )}
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                rows={therows}
+                                rows={rows}
                                 columns={columns}
-                                rowId="asset_type_id"
+                                rowId={`${selectedTab}_id`}
                                 /* editRowsModel={editRowsModel}*/
                                 components={{ Toolbar: AddToolbar }}
-                                componentsProps={{ toolbar: { label: 'Add it', onClick: handleAddClick } }}
-                                loading={false}
+                                componentsProps={{ toolbar: { label: `Add ${selectedTab}`, onClick: handleAddClick } }}
+                                loading={siteListLoading || floorListLoading || roomListLoading}
                                 classes={{ root: classes.gridRoot }}
                             />
                         </Grid>

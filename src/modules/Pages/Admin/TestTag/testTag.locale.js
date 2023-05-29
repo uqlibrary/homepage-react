@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { pathConfig } from 'config/routes';
+import { pathConfig } from '../../../../config/pathConfig';
 
 import InspectionIcon from '@material-ui/icons/Search';
 import UsersIcon from '@material-ui/icons/People';

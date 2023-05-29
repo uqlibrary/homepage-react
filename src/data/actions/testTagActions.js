@@ -8,6 +8,7 @@ import {
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSET_ACTION,
+    TEST_TAG_SITE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -70,6 +71,31 @@ export function loadInspectionConfig() {
 export function clearInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR });
+    };
+}
+
+export function loadSites() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SITE_LIST_LOADING });
+        return get(TEST_TAG_SITE_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_SITE_LIST_LOADED,
+                    payload: response?.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_SITE_LIST_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function clearSitess() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SITE_LIST_CLEAR });
     };
 }
 
