@@ -127,8 +127,8 @@ const AssetPanel = ({
         return children;
     };
 
-    console.log(locale);
-    console.log(pageLocale);
+    // console.log(locale);
+    // console.log(pageLocale);
     return (
         <StandardCard title={pageLocale.form.asset.title} style={{ marginTop: '30px' }}>
             <AssetTypeDialogPopup

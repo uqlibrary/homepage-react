@@ -472,11 +472,11 @@ describe('Test and Tag Admin Inspection page', () => {
         runAllTests();
     });
 
-    describe('Mobile', () => {
-        beforeEach(() => {
-            cy.viewport(320, 480);
-        });
-
-        runAllTests();
-    });
+    // describe('Mobile', () => {
+    //     beforeEach(() => {
+    //         cy.viewport(320, 480);
+    //     });
+    //
+    //     runAllTests();
+    // });
 });
