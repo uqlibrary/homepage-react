@@ -841,9 +841,7 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [
         200,
         {
-            status: 'OK',
-            data: test_tag_asset_types.data, 
-            
+            status: 'OK', 
         }
     ])
     .onPost(routes.TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API().apiUrl)
@@ -854,7 +852,6 @@ mock.onGet('exams/course/FREN1010/summary')
             data: {
                 effected_assets: 1,
                 effected_asset_types: 1,
-                asset_types: test_tag_asset_types.data, 
             }
             
         }

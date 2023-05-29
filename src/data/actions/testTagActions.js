@@ -229,6 +229,7 @@ export function deleteAndReassignAssetType(request) {
         return post(TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API(), request)
             .then(response => {
                 // Fire function - should then handle the new promise?
+                console.log('The response is here', response);
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGNED,
                     payload: response?.data?.asset_types ?? /* istanbul ignore next */ [],

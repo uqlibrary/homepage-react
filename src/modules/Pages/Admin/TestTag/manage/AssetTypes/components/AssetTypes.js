@@ -118,10 +118,10 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
     return columns;
 };
 
-const ManageAssetTypes = ({ actions }) => {
+const ManageAssetTypes = ({ actions, assetTypesList }) => {
     const pageLocale = locale.pages.assetTypeManagement;
     const classes = useStyles();
-    const [therows] = React.useState(rows);
+    const [therows] = React.useState(assetTypesList);
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {} };
     const actionReducer = (_, action) => {
         console.log('ACTION IS ', action);
@@ -191,6 +191,17 @@ const ManageAssetTypes = ({ actions }) => {
         actionDispatch({ type: 'clear' });
     };
 
+    const onActionDialogueProceed = (oldTypeID, newTypeID) => {
+        const Payload = {
+            old_asset_type_id: oldTypeID,
+            new_asset_type_id: newTypeID,
+        };
+        actions.deleteAndReassignAssetType(Payload).then(() => {
+            actions.loadAssetTypes();
+            actionDispatch({ type: 'clear' });
+        });
+    };
+
     const columns = useMemo(() => getColumns({ data: rows, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), []);
 
     return (
@@ -204,7 +215,7 @@ const ManageAssetTypes = ({ actions }) => {
                 row={actionState.row}
                 isOpen={actionState.isDelete}
                 onCancel={onDeleteCancel}
-                // onProceed={//onActionDialogueProceed}
+                onProceed={onActionDialogueProceed}
             />
             <div className={classes.root}>
                 <StandardCard noHeader>
@@ -253,6 +264,7 @@ const ManageAssetTypes = ({ actions }) => {
 
 ManageAssetTypes.propTypes = {
     actions: PropTypes.object,
+    assetTypesList: PropTypes.array,
 };
 
 export default React.memo(ManageAssetTypes);
