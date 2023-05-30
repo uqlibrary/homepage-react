@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { get, post, put } from 'repositories/generic';
+import { get, post, put, destroy } from 'repositories/generic';
 import {
     TEST_TAG_USER_API,
     TEST_TAG_ONLOAD_DASHBOARD_API,
@@ -12,6 +12,7 @@ import {
     TEST_TAG_SAVE_ASSETTYPE_API,
     TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API,
     TEST_TAG_ADD_ASSET_API,
+    TEST_TAG_DELETE_ASSET_TYPE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -250,6 +251,25 @@ export function deleteAndReassignAssetType(request) {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGN_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function deleteAssetType(id) {
+    return dispatch => {
+        console.log('The ID is ', id);
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_DELETING });
+        return destroy(TEST_TAG_DELETE_ASSET_TYPE_API(id))
+            .then(() => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_DELETED,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_DELETE_FAILED,
                     payload: error.message,
                 });
             });

@@ -12,7 +12,6 @@ const handlers = {
     [actions.TESTTAG_ASSET_TYPES_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
-        assetTypesList: [],
         assetTypesListLoading: true,
         assetTypesListError: false,
     }),
@@ -34,7 +33,6 @@ const handlers = {
     [actions.TESTTAG_ASSET_TYPES_SAVING]: state => ({
         ...initialState,
         ...state,
-        assetTypesList: [],
         assetTypesListLoading: true,
         assetTypesListError: false,
         assetTypesActionError: false,
@@ -60,11 +58,10 @@ const handlers = {
     [actions.TESTTAG_ASSET_TYPES_REASSIGNING]: state => ({
         ...initialState,
         ...state,
-        assetTypesList: [],
         assetTypesListLoading: true,
         assetTypesListError: false,
         assetTypesActionError: false,
-        assetTypesActionType: 'DELETE',
+        assetTypesActionType: 'REASSIGN',
     }),
     [actions.TESTTAG_ASSET_TYPES_REASSIGNED]: (state, action) => ({
         ...initialState,
@@ -81,8 +78,32 @@ const handlers = {
         assetTypesListLoading: false,
         assetTypesListError: false,
         assetTypesActionError: true,
-        assetTypesActionType: 'DELETE',
+        assetTypesActionType: 'REASSIGN',
         assetTypesList: action.payload,
+    }),
+    [actions.TESTTAG_ASSET_TYPES_DELETING]: state => ({
+        ...initialState,
+        ...state,
+        assetTypesListLoading: false,
+        assetTypesListError: false,
+        assetTypesActionError: false,
+        assetTypesActionType: 'DELETE',
+    }),
+    [actions.TESTTAG_ASSET_TYPES_DELETED]: state => ({
+        ...initialState,
+        ...state,
+        assetTypesListLoading: false,
+        assetTypesListError: false,
+        assetTypesActionError: false,
+        assetTypesActionType: '',
+    }),
+    [actions.TESTTAG_ASSET_TYPES_DELETE_FAILED]: state => ({
+        ...initialState,
+        ...state,
+        assetTypesListLoading: false,
+        assetTypesListError: false,
+        assetTypesActionError: true,
+        assetTypesActionType: 'DELETE',
     }),
 };
 

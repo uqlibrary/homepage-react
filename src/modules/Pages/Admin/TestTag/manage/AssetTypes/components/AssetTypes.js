@@ -210,7 +210,14 @@ const ManageAssetTypes = ({
     };
 
     const onDeleteEmptyAssetType = () => {
-        // actions.
+        console.log('Confirming delete of ', confirmID);
+        actions.deleteAssetType(confirmID).then(() => {
+            actions.loadAssetTypes().then(() => {
+                setDialogueBusy(false);
+                openConfirmationAlert('Asset Type Deleted.', 'success');
+                actionDispatch({ type: 'clear' });
+            });
+        });
     };
 
     const columns = useMemo(() => getColumns({ data: assetTypesList, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), [

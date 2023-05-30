@@ -863,7 +863,10 @@ mock.onGet('exams/course/FREN1010/summary')
             
         }
     ])
-
+    .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_DELETE_ASSET_TYPE_API({ id: '.*' }).apiUrl)))
+    .reply(() => {
+        return [200, {status: 'OK'}]
+    })
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

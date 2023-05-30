@@ -225,3 +225,5 @@ export const TEST_TAG_ADD_ASSET_API = () => ({ apiUrl: 'test_and_tag/assettype' 
 export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
 // Delete an Asset type (Reassigning assets to new asset type)
 export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype/reassign' });
+// Delete an Empty Asset Type
+export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/assettype/${id}` });
