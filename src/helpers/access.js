@@ -24,7 +24,7 @@ import { default as locale } from 'modules/Index/components/locale';
  * REMSFC: Remote Short Form Credential course students
  *
  * other types:
- * (?) ATH
+ * (?) ATH - Academic Title Holder (Health)
  * (15) AURION (Staff Awaiting Aurion)
  * (32) PROXY - Academic Proxy
  */
