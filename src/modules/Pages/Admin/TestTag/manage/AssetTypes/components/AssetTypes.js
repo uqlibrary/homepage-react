@@ -17,6 +17,8 @@ import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import ActionDialogue from './ActionDialogue';
 
+import ConfirmationAlert from './ConfirmationAlert';
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -119,17 +121,31 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
         }
     };
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
+
+    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const closeConfirmationAlert = () => {
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+    };
+    const openConfirmationAlert = (message, type) => {
+        console.log('Setting with message', message);
+        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
+    };
+
     const handleAddClick = () => {
+        closeConfirmationAlert();
         actionDispatch({ type: 'add' });
     };
 
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
+        closeConfirmationAlert();
         actionDispatch({ type: 'edit', row });
     };
 
     const onRowDelete = ({ id, api }) => {
         const row = api.getRow(id);
+        closeConfirmationAlert();
         actionDispatch({ type: 'delete', row });
     };
 
@@ -138,18 +154,22 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
         delete Payload.asset_type_id;
         setDialogueBusy(true);
         actions.addAssetType(Payload).then(() => {
-            actions.loadAssetTypes();
-            actionDispatch({ type: 'clear' });
-            setDialogueBusy(false);
+            actions.loadAssetTypes().then(() => {
+                actionDispatch({ type: 'clear' });
+                setDialogueBusy(false);
+                openConfirmationAlert('Asset Type added successfully.', 'success');
+            });
         });
     };
 
     const onRowUpdate = data => {
         setDialogueBusy(true);
         actions.saveAssetType(data).then(() => {
-            actions.loadAssetTypes();
-            setDialogueBusy(false);
-            actionDispatch({ type: 'clear' });
+            actions.loadAssetTypes().then(() => {
+                setDialogueBusy(false);
+                actionDispatch({ type: 'clear' });
+                openConfirmationAlert('Asset Type updated successfully.', 'success');
+            });
         });
     };
 
@@ -166,6 +186,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
         setDialogueBusy(true);
         actions.deleteAndReassignAssetType(Payload).then(() => {
             setDialogueBusy(false);
+            openConfirmationAlert('Asset Type Deleted and reallocated.', 'success');
             actions.loadAssetTypes();
             actionDispatch({ type: 'clear' });
         });
@@ -234,6 +255,12 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
                             />
                         </Grid>
                     </Grid>
+                    <ConfirmationAlert
+                        isOpen={confirmationAlert.visible}
+                        message={confirmationAlert.message}
+                        type={confirmationAlert.type}
+                        closeAlert={closeConfirmationAlert}
+                    />
                 </StandardCard>
             </div>
         </StandardAuthPage>
