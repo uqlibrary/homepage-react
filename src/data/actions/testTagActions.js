@@ -11,6 +11,7 @@ import {
     TEST_TAG_ONLOAD_ASSETTYPE_API,
     TEST_TAG_SAVE_ASSETTYPE_API,
     TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API,
+    TEST_TAG_ADD_ASSET_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -134,7 +135,7 @@ export function loadAssets(pattern) {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSETS_LOADED,
-                    payload: response?.data,
+                    payload: response?.data?.asset_types,
                 });
             })
             .catch(error => {
@@ -179,19 +180,16 @@ export function clearSaveInspection() {
 /** * ASSET TYPES ACTIONS  ***/
 
 export function loadAssetTypes() {
-    console.log('Loading Asset Types');
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_LOADING });
         return get(TEST_TAG_ONLOAD_ASSETTYPE_API())
             .then(response => {
-                console.log('RESPONSE WAS', response);
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
                     payload: response?.data?.asset_types ?? /* istanbul ignore next */ {},
                 });
             })
             .catch(error => {
-                console.log('Calling Error');
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_FAILED,
                     payload: error.message,
@@ -200,20 +198,36 @@ export function loadAssetTypes() {
     };
 }
 
+export function addAssetType(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_ADDING });
+        return post(TEST_TAG_ADD_ASSET_API(), request)
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_ADDED,
+                    payload: response?.data ?? /* istanbul ignore next */ {},
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_ADD_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
 export function saveAssetType(request) {
-    console.log('Calling saveAssetType');
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_SAVING });
         return put(TEST_TAG_SAVE_ASSETTYPE_API(), request)
             .then(response => {
-                console.log('This is the data', response?.data);
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_SAVED,
                     payload: response?.data ?? /* istanbul ignore next */ {},
                 });
             })
             .catch(error => {
-                console.log('Calling Error');
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_SAVE_FAILED,
                     payload: error.message,
@@ -223,13 +237,11 @@ export function saveAssetType(request) {
 }
 
 export function deleteAndReassignAssetType(request) {
-    console.log('Calling deleteAssetType', request);
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGNING });
         return post(TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API(), request)
             .then(response => {
                 // Fire function - should then handle the new promise?
-                console.log('The response is here', response);
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGNED,
                     payload: response?.data?.asset_types ?? /* istanbul ignore next */ [],

@@ -837,6 +837,13 @@ mock.onGet('exams/course/FREN1010/summary')
             }
         }
     ])
+    .onPost(routes.TEST_TAG_ADD_ASSET_API().url)
+    .reply(() => [
+        200,
+        {
+            status: 'OK',
+        } 
+    ])
     .onPut(routes.TEST_TAG_SAVE_ASSETTYPE_API().apiUrl)
     .reply(() => [
         200,

@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { pathConfig } from '../../../../config/pathConfig';
+// import { pathConfig } from '../../../../config/pathConfig';
 
 import InspectionIcon from '@material-ui/icons/Search';
 import UsersIcon from '@material-ui/icons/People';
@@ -274,6 +274,17 @@ export default {
             header: {
                 pageSubtitle: dept => `Managing Asset Types for ${dept}`,
                 requiredText: 'All fields are required unless otherwise indicated.',
+                addButtonLabel: 'Add Asset Type',
+            },
+            addAsset: {
+                title: 'Add New Asset Type',
+                cancelButtonLabel: 'Cancel',
+                confirmButtonLabel: 'Add',
+            },
+            editAsset: {
+                title: 'Edit Asset Type',
+                cancelButtonLabel: 'Cancel',
+                confirmButtonLabel: 'Update',
             },
         },
         manage: {

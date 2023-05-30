@@ -28,28 +28,6 @@ const useStyles = makeStyles(theme => ({
         border: 0,
     },
 }));
-
-const rows = [
-    {
-        asset_type_id: 1,
-        asset_type_name: 'KEW 620-1',
-        asset_type_class: 'A',
-        asset_type_power_rating: '240V',
-        asset_type: 'KEW',
-        asset_type_notes: 'KEW Notes',
-        asset_count: 10,
-    },
-    {
-        asset_type_id: 2,
-        asset_type_name: 'HEW 20-2',
-        asset_type_class: 'A',
-        asset_type_power_rating: '240V',
-        asset_type: 'HEW',
-        asset_type_notes: 'HEW Notes',
-        asset_count: 22,
-    },
-];
-
 const fieldConfig = {
     asset_type_id: {
         label: 'Id',
@@ -118,13 +96,15 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
     return columns;
 };
 
-const ManageAssetTypes = ({ actions, assetTypesList }) => {
+const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, assetTypesActionError }) => {
     const pageLocale = locale.pages.assetTypeManagement;
     const classes = useStyles();
-    const [therows] = React.useState(assetTypesList);
+    const [dialogueBusy, setDialogueBusy] = React.useState(false);
+    React.useEffect(() => {
+        actions.loadAssetTypes();
+    }, []);
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {} };
     const actionReducer = (_, action) => {
-        console.log('ACTION IS ', action);
         switch (action.type) {
             case 'add':
                 return { isAdd: true, isEdit: false, isDelete: false, row: { asset_type_id: 'auto' } };
@@ -141,35 +121,11 @@ const ManageAssetTypes = ({ actions, assetTypesList }) => {
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const handleAddClick = () => {
         actionDispatch({ type: 'add' });
-        // const id = 1;
-        // apiRef.current.updateRows([{ id, isNew: true }]);
-        // apiRef.current.setRowMode(id, 'edit');
-        // // Wait for the grid to render with the new row
-        // setTimeout(() => {
-        //     apiRef.current.scrollToIndexes({
-        //         rowIndex: apiRef.current.getRowsCount() - 1,
-        //     });
-        //     apiRef.current.setCellFocus(id, 'name');
-        // }, 150);
     };
 
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
-        console.log(row);
         actionDispatch({ type: 'edit', row });
-        // const fields = api.getRowParams(id).columns;
-        // console.log('On Row Edit', id, api, fields);
-        // fields
-        //     .filter(field => !!field.shouldRender === true)
-        //     .map(field => {
-        //         const fieldName = field.field;
-        //         console.log(
-        //             fieldName,
-        //             field.canEdit,
-        //             api.getRow(id)[field.field],
-        //             !!fieldConfig[fieldName]?.component ? 'config component' : 'default component',
-        //         );
-        //     });
     };
 
     const onRowDelete = ({ id, api }) => {
@@ -178,16 +134,27 @@ const ManageAssetTypes = ({ actions, assetTypesList }) => {
     };
 
     const onRowAdd = data => {
-        console.log('added', data);
-        actionDispatch({ type: 'clear' });
+        const Payload = data;
+        delete Payload.asset_type_id;
+        setDialogueBusy(true);
+        actions.addAssetType(Payload).then(() => {
+            actions.loadAssetTypes();
+            actionDispatch({ type: 'clear' });
+            setDialogueBusy(false);
+        });
     };
 
     const onRowUpdate = data => {
-        console.log('udpated', data);
-        actionDispatch({ type: 'clear' });
+        setDialogueBusy(true);
+        actions.saveAssetType(data).then(() => {
+            actions.loadAssetTypes();
+            setDialogueBusy(false);
+            actionDispatch({ type: 'clear' });
+        });
     };
 
-    const onDeleteCancel = () => {
+    const onActionDialogueCancel = () => {
+        setDialogueBusy(false);
         actionDispatch({ type: 'clear' });
     };
 
@@ -196,14 +163,17 @@ const ManageAssetTypes = ({ actions, assetTypesList }) => {
             old_asset_type_id: oldTypeID,
             new_asset_type_id: newTypeID,
         };
+        setDialogueBusy(true);
         actions.deleteAndReassignAssetType(Payload).then(() => {
+            setDialogueBusy(false);
             actions.loadAssetTypes();
             actionDispatch({ type: 'clear' });
         });
     };
 
-    const columns = useMemo(() => getColumns({ data: rows, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), []);
-
+    const columns = useMemo(() => getColumns({ data: assetTypesList, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), [
+        assetTypesList,
+    ]);
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -211,46 +181,54 @@ const ManageAssetTypes = ({ actions, assetTypesList }) => {
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <ActionDialogue
-                data={therows}
+                data={assetTypesList}
                 row={actionState.row}
                 isOpen={actionState.isDelete}
-                onCancel={onDeleteCancel}
+                onCancel={onActionDialogueCancel}
                 onProceed={onActionDialogueProceed}
+                isBusy={dialogueBusy}
             />
             <div className={classes.root}>
                 <StandardCard noHeader>
                     <UpdateDialog
                         updateDialogueBoxId="addRow"
-                        isOpen={actionState.isAdd}
-                        confirmationTitle="Add New Asset Type"
-                        cancelButtonLabel="Cancel"
-                        confirmButtonLabel="Add"
+                        isOpen={actionState?.isAdd}
+                        confirmationTitle={locale.pages.assetTypeManagement.addAsset.title}
+                        cancelButtonLabel={locale.pages.assetTypeManagement.addAsset.cancelButtonLabel}
+                        confirmButtonLabel={locale.pages.assetTypeManagement.addAsset.confirmButtonLabel}
                         fields={fieldConfig}
                         row={actionState?.row}
+                        isBusy={dialogueBusy}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowAdd}
                     />
                     <UpdateDialog
                         updateDialogueBoxId="editRow"
-                        isOpen={actionState.isEdit}
-                        confirmationTitle="Edit Asset Type"
-                        cancelButtonLabel="Cancel"
-                        confirmButtonLabel="Update"
+                        isOpen={actionState?.isEdit}
+                        confirmationTitle={locale.pages.assetTypeManagement.editAsset.title}
+                        cancelButtonLabel={locale.pages.assetTypeManagement.editAsset.cancelButtonLabel}
+                        confirmButtonLabel={locale.pages.assetTypeManagement.editAsset.confirmButtonLabel}
                         fields={fieldConfig}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowUpdate}
+                        isBusy={dialogueBusy}
                     />
 
                     <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                rows={therows}
+                                rows={assetTypesList}
                                 columns={columns}
                                 rowId="asset_type_id"
                                 /* editRowsModel={editRowsModel}*/
                                 components={{ Toolbar: AddToolbar }}
-                                componentsProps={{ toolbar: { label: 'Add it', onClick: handleAddClick } }}
+                                componentsProps={{
+                                    toolbar: {
+                                        label: locale.pages.assetTypeManagement.header.addButtonLabel,
+                                        onClick: handleAddClick,
+                                    },
+                                }}
                                 loading={false}
                                 classes={{ root: classes.gridRoot }}
                             />
@@ -265,6 +243,8 @@ const ManageAssetTypes = ({ actions, assetTypesList }) => {
 ManageAssetTypes.propTypes = {
     actions: PropTypes.object,
     assetTypesList: PropTypes.array,
+    assetTypesActionType: PropTypes.string,
+    assetTypesActionError: PropTypes.bool,
 };
 
 export default React.memo(ManageAssetTypes);

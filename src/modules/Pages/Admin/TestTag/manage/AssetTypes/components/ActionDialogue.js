@@ -41,6 +41,7 @@ export const ActionDialogue = ({
     actionDialogueBoxId,
     onCancel,
     onProceed,
+    isBusy,
 }) => {
     const classes = useStyles();
 
@@ -97,6 +98,7 @@ export const ActionDialogue = ({
                             id="testntagFormResetButton"
                             data-testid="testntagFormResetButton"
                             color={'default'}
+                            disabled={!!isBusy}
                         >
                             Cancel
                         </Button>
@@ -108,7 +110,7 @@ export const ActionDialogue = ({
                             id="testntagFormResetButton"
                             data-testid="testntagFormResetButton"
                             color={'default'}
-                            disabled={!!!selectedAssetType || row?.asset_type_id === selectedAssetType}
+                            disabled={!!isBusy || !!!selectedAssetType || row?.asset_type_id === selectedAssetType}
                         >
                             Proceed
                         </Button>
@@ -129,6 +131,7 @@ ActionDialogue.propTypes = {
     actionDialogueBoxId: PropTypes.string,
     onCancel: PropTypes.func,
     onProceed: PropTypes.func,
+    isBusy: PropTypes.bool,
 };
 
 ActionDialogue.defaultProps = {
@@ -139,6 +142,7 @@ ActionDialogue.defaultProps = {
         confirmButtonLabel: 'Yes',
         alternateActionButtonLabel: 'Cancel',
     },
+    isBusy: false,
 };
 
 export default React.memo(ActionDialogue);

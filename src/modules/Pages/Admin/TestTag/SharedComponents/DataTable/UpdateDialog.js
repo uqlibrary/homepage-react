@@ -47,6 +47,7 @@ export const UpdateDialogue = ({
     noMinContentWidth,
     fields,
     row,
+    isBusy,
 } = {}) => {
     const classes = useStyles();
     const [dataFields, setDataFields] = React.useState({});
@@ -71,7 +72,6 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        console.log(event);
         setData({ ...data, [event.target.id]: event.target.value });
     };
 
@@ -127,6 +127,7 @@ export const UpdateDialogue = ({
                                         id="confirm-cancel-action"
                                         data-testid={`cancel-${confirmationBoxId}`}
                                         fullWidth={isMobileView}
+                                        disabled={isBusy}
                                     >
                                         {cancelButtonLabel}
                                     </Button>
@@ -144,6 +145,7 @@ export const UpdateDialogue = ({
                                         id="confirm-action"
                                         data-testid={`confirm-${confirmationBoxId}`}
                                         fullWidth={isMobileView}
+                                        disabled={isBusy}
                                     >
                                         {confirmButtonLabel}
                                     </Button>
@@ -172,6 +174,7 @@ UpdateDialogue.propTypes = {
     onAction: PropTypes.func,
     onCancelAction: PropTypes.func,
     onClose: PropTypes.func,
+    isBusy: PropTypes.bool,
 };
 
 export default React.memo(UpdateDialogue);
