@@ -19,6 +19,9 @@ import ActionDialogue from './ActionDialogue';
 
 import ConfirmationAlert from './ConfirmationAlert';
 
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { useConfirmationState } from 'hooks';
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -98,10 +101,18 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
     return columns;
 };
 
-const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, assetTypesActionError }) => {
+const ManageAssetTypes = ({
+    actions,
+    assetTypesList,
+    assetTypesListLoading,
+    assetTypesActionType,
+    assetTypesActionError,
+}) => {
     const pageLocale = locale.pages.assetTypeManagement;
     const classes = useStyles();
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
+    const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
+    const [confirmID, setConfirmID] = React.useState(null);
     React.useEffect(() => {
         actions.loadAssetTypes();
     }, []);
@@ -146,7 +157,12 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
     const onRowDelete = ({ id, api }) => {
         const row = api.getRow(id);
         closeConfirmationAlert();
-        actionDispatch({ type: 'delete', row });
+        if (row.asset_count > 0) {
+            actionDispatch({ type: 'delete', row });
+        } else {
+            setConfirmID(row.asset_type_id);
+            showDeleteConfirm();
+        }
     };
 
     const onRowAdd = data => {
@@ -185,11 +201,16 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
         };
         setDialogueBusy(true);
         actions.deleteAndReassignAssetType(Payload).then(() => {
-            setDialogueBusy(false);
-            openConfirmationAlert('Asset Type Deleted and reallocated.', 'success');
-            actions.loadAssetTypes();
-            actionDispatch({ type: 'clear' });
+            actions.loadAssetTypes().then(() => {
+                setDialogueBusy(false);
+                openConfirmationAlert('Asset Type Deleted and reallocated.', 'success');
+                actionDispatch({ type: 'clear' });
+            });
         });
+    };
+
+    const onDeleteEmptyAssetType = () => {
+        // actions.
     };
 
     const columns = useMemo(() => getColumns({ data: assetTypesList, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), [
@@ -235,6 +256,17 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
                         onAction={onRowUpdate}
                         isBusy={dialogueBusy}
                     />
+                    <ConfirmationBox
+                        actionButtonColor="primary"
+                        actionButtonVariant="contained"
+                        cancelButtonColor="secondary"
+                        confirmationBoxId="testTag-network-error"
+                        onAction={onDeleteEmptyAssetType}
+                        onClose={hideDeleteConfirm}
+                        isOpen={isDeleteConfirmOpen}
+                        locale={locale.pages.assetTypeManagement.deleteConfirm}
+                        noMinContentWidth
+                    />
 
                     <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
@@ -242,6 +274,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
                                 rows={assetTypesList}
                                 columns={columns}
                                 rowId="asset_type_id"
+                                loading={assetTypesListLoading}
                                 /* editRowsModel={editRowsModel}*/
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
@@ -250,7 +283,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesActionType, asset
                                         onClick: handleAddClick,
                                     },
                                 }}
-                                loading={false}
                                 classes={{ root: classes.gridRoot }}
                             />
                         </Grid>
@@ -271,6 +303,7 @@ ManageAssetTypes.propTypes = {
     actions: PropTypes.object,
     assetTypesList: PropTypes.array,
     assetTypesActionType: PropTypes.string,
+    assetTypesListLoading: PropTypes.bool,
     assetTypesActionError: PropTypes.bool,
 };
 

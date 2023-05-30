@@ -286,6 +286,12 @@ export default {
                 cancelButtonLabel: 'Cancel',
                 confirmButtonLabel: 'Update',
             },
+            deleteConfirm: {
+                confirmButtonLabel: 'Proceed',
+                cancelButtonLabel: 'Cancel',
+                confirmationMessage: 'Are you sure you wish to remove this Asset Type?',
+                confirmationTitle: 'Remove Unused Asset Type',
+            },
         },
         manage: {
             locations: {
