@@ -47,6 +47,7 @@ export const UpdateDialogue = ({
     noMinContentWidth,
     fields,
     row,
+    props,
 } = {}) => {
     const classes = useStyles();
     const [dataFields, setDataFields] = React.useState({});
@@ -92,10 +93,16 @@ export const UpdateDialogue = ({
                         Object.keys(dataFields).map(field => (
                             <Grid item xs={12} sm={6} key={field}>
                                 {!dataFields[field].fieldParams.canEdit &&
-                                    (dataFields[field].fieldParams?.shouldRender ?? true) && (
+                                    (dataFields[field].fieldParams?.renderInUpdate ?? true) && (
                                         <>
                                             <Typography variant="body2">{dataFields[field].label}</Typography>
-                                            <Typography variant="body1">{data?.[field]}</Typography>
+                                            <Typography variant="body1">
+                                                {!!dataFields[field]?.computedValue
+                                                    ? dataFields[field].computedValue(
+                                                          props[dataFields[field].computedValueProp],
+                                                      )
+                                                    : data?.[field]}
+                                            </Typography>
                                         </>
                                     )}
                                 {dataFields[field].fieldParams.canEdit && (
@@ -117,9 +124,9 @@ export const UpdateDialogue = ({
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
                 <DialogActions>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={3}>
                         {!hideCancelButton && (
-                            <Grid item xs={12} sm>
+                            <Grid item xs={12} sm spacing={3}>
                                 <Box justifyContent="flex-start" display={'flex'}>
                                     <Button
                                         variant={'outlined'}
@@ -134,7 +141,7 @@ export const UpdateDialogue = ({
                             </Grid>
                         )}
                         {!hideActionButton && (
-                            <Grid item xs={12} sm>
+                            <Grid item xs={12} sm spacing={3}>
                                 <Box justifyContent="flex-end" display={'flex'}>
                                     <Button
                                         variant="contained"
@@ -172,6 +179,7 @@ UpdateDialogue.propTypes = {
     onAction: PropTypes.func,
     onCancelAction: PropTypes.func,
     onClose: PropTypes.func,
+    props: PropTypes.object,
 };
 
 export default React.memo(UpdateDialogue);

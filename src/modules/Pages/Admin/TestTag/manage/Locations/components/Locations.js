@@ -5,8 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
@@ -32,7 +31,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const createLocationString = (site, building, floor) => [site, building, floor].filter(item => !!item).join(' / ');
+const createLocationString = ({ site, building, floor }) => {
+    console.log(site, building, floor);
+    return [site, building, floor].filter(item => !!item).join(' / ');
+};
 
 const config = {
     site: {
@@ -54,7 +56,7 @@ const config = {
             },
             asset_count: {
                 label: 'Usage',
-                fieldParams: { canEdit: false, shouldRender: false },
+                fieldParams: { canEdit: false, renderInUpdate: false },
             },
         },
     },
@@ -64,6 +66,12 @@ const config = {
             building_id: {
                 label: 'Building ID',
                 fieldParams: { canEdit: false },
+            },
+            building_location: {
+                label: 'Location',
+                computedValue: location => createLocationString(location),
+                computedValueProp: 'location',
+                fieldParams: { canEdit: false, renderInTable: false },
             },
             building_name: {
                 label: 'Description',
@@ -75,14 +83,9 @@ const config = {
                 component: props => <TextField {...props} />,
                 fieldParams: { canEdit: true, flex: 1 },
             },
-            building_location: {
-                label: 'Location',
-                computedValue: site => createLocationString(site),
-                fieldParams: { canEdit: false, shouldRender: false },
-            },
             asset_count: {
                 label: 'Usage',
-                fieldParams: { canEdit: false, shouldRender: false },
+                fieldParams: { canEdit: false, renderInUpdate: false },
             },
         },
     },
@@ -91,21 +94,22 @@ const config = {
         fields: {
             floor_id: {
                 label: 'Floor ID',
-                fieldParams: { canEdit: false },
+                fieldParams: { canEdit: false, flex: 1 },
+            },
+            floor_location: {
+                label: 'Location',
+                computedValue: location => createLocationString(location),
+                computedValueProp: 'location',
+                fieldParams: { canEdit: false, renderInTable: false, flex: 1 },
             },
             floor_id_displayed: {
                 label: 'Display name',
                 component: props => <TextField {...props} />,
                 fieldParams: { canEdit: true, flex: 1 },
             },
-            floor_location: {
-                label: 'Location',
-                computedValue: (site, building) => createLocationString(site, building),
-                fieldParams: { canEdit: false, shouldRender: false },
-            },
             asset_count: {
                 label: 'Usage',
-                fieldParams: { canEdit: false, shouldRender: false },
+                fieldParams: { canEdit: false, renderInUpdate: false },
             },
         },
     },
@@ -115,6 +119,12 @@ const config = {
             room_id: {
                 label: 'Room ID',
                 fieldParams: { canEdit: false },
+            },
+            room_location: {
+                label: 'Location',
+                computedValue: location => createLocationString(location),
+                computedValueProp: 'location',
+                fieldParams: { canEdit: false, renderInTable: false },
             },
             room_description: {
                 label: 'Description',
@@ -126,14 +136,9 @@ const config = {
                 component: props => <TextField {...props} />,
                 fieldParams: { canEdit: true, flex: 1 },
             },
-            room_location: {
-                label: 'Location',
-                computedValue: (site, building, floor) => createLocationString(site, building, floor),
-                fieldParams: { canEdit: false, shouldRender: false },
-            },
             asset_count: {
                 label: 'Usage',
-                fieldParams: { canEdit: false, shouldRender: false },
+                fieldParams: { canEdit: false, renderInUpdate: false },
             },
         },
     },
@@ -201,7 +206,7 @@ const config = {
 
 */
 
-const getColumns = ({ selectedTab, onRowEdit, onRowDelete }) => {
+const getColumns = ({ selectedFilter, onRowEdit, onRowDelete }) => {
     const actionsCell = {
         field: 'actions',
         headerName: 'Actions',
@@ -213,20 +218,21 @@ const getColumns = ({ selectedTab, onRowEdit, onRowDelete }) => {
         align: 'center',
         disableColumnMenu: true,
         disableReorder: true,
-        shouldRender: false,
+        renderInUpdate: false,
     };
 
     const columns = [];
-    const keys = Object.keys(config[selectedTab].fields);
+    const keys = Object.keys(config[selectedFilter].fields);
 
     keys.forEach(key => {
-        columns.push({
-            field: key,
-            headerName: config[selectedTab].fields[key].label,
-            editable: false,
-            sortable: false,
-            ...config[selectedTab].fields[key].fieldParams,
-        });
+        !!(config[selectedFilter].fields[key]?.fieldParams.renderInTable ?? true) &&
+            columns.push({
+                field: key,
+                headerName: config[selectedFilter].fields[key].label,
+                editable: false,
+                sortable: false,
+                ...config[selectedFilter].fields[key].fieldParams,
+            });
     });
 
     columns && columns.length > 0 && columns.push(actionsCell);
@@ -235,22 +241,23 @@ const getColumns = ({ selectedTab, onRowEdit, onRowDelete }) => {
 
 const emptyActionState = { isAdd: false, isEdit: false, rows: {} };
 const actionReducer = (_, action) => {
-    switch (action.type) {
+    const { type, row, selectedFilter, ...props } = action;
+    switch (type) {
         case 'add':
-            return { isAdd: true, isEdit: false, row: { [`${action.selectedTab}_id`]: 'auto' } };
+            return { isAdd: true, isEdit: false, row: { [`${selectedFilter}_id`]: 'auto' }, props: { ...props } };
         case 'edit':
-            return { isAdd: false, isEdit: true, row: action.row };
+            return { isAdd: false, isEdit: true, row, props: { ...props } };
         case 'clear':
             return { ...emptyActionState };
         default:
-            throw `Unknown action '${action.type}'`;
+            throw `Unknown action '${type}'`;
     }
 };
 
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
-    const [selectedTab, setSelectedTab] = React.useState('site');
+    const [selectedFilter, setSelectedFilter] = React.useState('site');
     const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
@@ -276,53 +283,74 @@ const ManageLocations = ({ actions }) => {
         setLocation(update);
     };
     React.useEffect(() => {
-        if (roomListLoaded) setRows(roomList);
-        else if (floorListLoaded) setRows(floorList);
-        else if (siteListLoaded) {
-            setRows(siteList);
-            updateLocation({ formSiteId: siteList[0].site_id });
+        if (roomListLoaded) {
+            if (location.formFloorId !== -1) {
+                setRows(roomList.rooms);
+            } else {
+                actions.clearRooms();
+            }
+            setSelectedFilter('room');
+        } else if (floorListLoaded) {
+            if (location.formBuildingId !== -1) {
+                setRows(floorList.floors);
+            } else {
+                setRows(
+                    siteList
+                        ?.find(site => site.site_id === location.formSiteId)
+                        ?.buildings?.find(building => building.building_id === location.formBuildingId)?.floors ?? [],
+                );
+            }
+            setSelectedFilter('floor');
+        } else if (siteListLoaded) {
+            if (location.formSiteId !== -1) {
+                setRows(siteList.find(site => site.site_id === location.formSiteId).buildings);
+                setSelectedFilter('building');
+            } else {
+                setRows(siteList);
+                updateLocation({ formSiteId: -1 });
+                setSelectedFilter('site');
+            }
         } else actions.loadSites();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [siteListLoaded, floorListLoaded, roomListLoaded]);
-
-    // const [editRowsModel, setEditRowsModel] = React.useState({});
-
-    const handleTabChange = (event, newValue) => {
-        console.log(newValue);
-        setSelectedTab(newValue);
-    };
+    }, [
+        location.formSiteId,
+        location.formBuildingId,
+        location.formFloorId,
+        siteListLoaded,
+        floorListLoaded,
+        roomListLoaded,
+    ]);
 
     const handleAddClick = () => {
-        actionDispatch({ type: 'add', selectedTab });
-        // const id = 1;
-        // apiRef.current.updateRows([{ id, isNew: true }]);
-        // apiRef.current.setRowMode(id, 'edit');
-        // // Wait for the grid to render with the new row
-        // setTimeout(() => {
-        //     apiRef.current.scrollToIndexes({
-        //         rowIndex: apiRef.current.getRowsCount() - 1,
-        //     });
-        //     apiRef.current.setCellFocus(id, 'name');
-        // }, 150);
+        actionDispatch({
+            type: 'add',
+            selectedFilter,
+            location: {
+                site: siteList?.find(site => site.site_id === location.formSiteId)?.site_id_displayed,
+                building: siteList
+                    ?.find(site => site.site_id === location.formSiteId)
+                    ?.buildings?.find(building => building.building_id === location.formBuildingId)
+                    ?.building_id_displayed,
+                floor: floorList?.floors?.find(floor => floor.floor_id === location.formFloorId)?.floor_id_displayed,
+            },
+        });
     };
 
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
         console.log(row);
-        actionDispatch({ type: 'edit', row });
-        // const fields = api.getRowParams(id).columns;
-        // console.log('On Row Edit', id, api, fields);
-        // fields
-        //     .filter(field => !!field.shouldRender === true)
-        //     .map(field => {
-        //         const fieldName = field.field;
-        //         console.log(
-        //             fieldName,
-        //             field.canEdit,
-        //             api.getRow(id)[field.field],
-        //             !!fieldConfig[fieldName]?.component ? 'config component' : 'default component',
-        //         );
-        //     });
+        actionDispatch({
+            type: 'edit',
+            row,
+            location: {
+                site: siteList?.find(site => site.site_id === location.formSiteId)?.site_id_displayed,
+                building: siteList
+                    ?.find(site => site.site_id === location.formSiteId)
+                    ?.buildings?.find(building => building.building_id === location.formBuildingId)
+                    ?.building_id_displayed,
+                floor: floorList?.floors?.find(floor => floor.floor_id === location.formFloorId)?.floor_id_displayed,
+            },
+        });
     };
 
     const onRowDelete = ({ id, api }) => {
@@ -339,7 +367,7 @@ const ManageLocations = ({ actions }) => {
         actionDispatch({ type: 'clear' });
     };
 
-    const columns = useMemo(() => getColumns({ selectedTab, onRowEdit, onRowDelete }), [selectedTab]);
+    const columns = useMemo(() => getColumns({ selectedFilter, onRowEdit, onRowDelete }), [selectedFilter]);
 
     return (
         <StandardAuthPage
@@ -352,52 +380,46 @@ const ManageLocations = ({ actions }) => {
                     <UpdateDialog
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
-                        confirmationTitle="Add New Asset Type"
+                        confirmationTitle={`Add new ${selectedFilter}`}
                         cancelButtonLabel="Cancel"
                         confirmButtonLabel="Add"
-                        fields={config[selectedTab].fields}
+                        fields={config[selectedFilter].fields}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowAdd}
+                        props={actionState?.props}
                     />
                     <UpdateDialog
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
-                        confirmationTitle="Edit Asset Type"
+                        confirmationTitle={`Edit ${selectedFilter}`}
                         cancelButtonLabel="Cancel"
                         confirmButtonLabel="Update"
-                        fields={config[selectedTab].fields}
+                        fields={config[selectedFilter].fields}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowUpdate}
+                        props={actionState?.props}
                     />
-                    <Tabs
-                        value={selectedTab}
-                        onChange={handleTabChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="scrollable"
-                        scrollButtons="auto"
-                    >
-                        <Tab label="Sites" value="site" />
-                        <Tab label="Buildings" value="building" />
-                        <Tab label="Floors" value="floor" />
-                        <Tab label="Rooms" value="room" />
-                    </Tabs>
-                    {selectedTab !== 'site' && (
-                        <Grid container spacing={3} className={classes.tableMarginTop}>
+                    <Grid container spacing={0} className={classes.tableMarginTop}>
+                        <Grid item xs={12} padding={0}>
+                            <Typography variant={'h6'} component={'div'}>
+                                Select location
+                            </Typography>
                             <LocationPicker actions={actions} location={location} setLocation={updateLocation} />
                         </Grid>
-                    )}
+                    </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
                                 rows={rows}
                                 columns={columns}
-                                rowId={`${selectedTab}_id`}
+                                rowId={`${selectedFilter}_id`}
                                 /* editRowsModel={editRowsModel}*/
                                 components={{ Toolbar: AddToolbar }}
-                                componentsProps={{ toolbar: { label: `Add ${selectedTab}`, onClick: handleAddClick } }}
+                                componentsProps={{
+                                    toolbar: { label: `Add ${selectedFilter}`, onClick: handleAddClick },
+                                }}
                                 loading={siteListLoading || floorListLoading || roomListLoading}
                                 classes={{ root: classes.gridRoot }}
                             />
