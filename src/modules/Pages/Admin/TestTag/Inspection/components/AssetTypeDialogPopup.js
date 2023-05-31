@@ -104,8 +104,8 @@ const AssetTypeDialogPopup = props => {
                     isOpen={isAssetTypeSaveConfirmationOpen}
                     locale={
                         !!saveAssetTypeSuccess
-                            ? locale.form.asset.assetType.saveSuccess
-                            : locale.form.asset.assetType.saveFailure
+                            ? locale.pages.inspect.form.asset.assetType.saveSuccess
+                            : locale.pages.inspect.form.asset.assetType.saveFailure
                     }
                 />
                 <Dialog
@@ -129,7 +129,7 @@ const AssetTypeDialogPopup = props => {
                         children={
                             <React.Fragment>
                                 <p style={{ paddingLeft: 24, margin: '10px 0 0 0', float: 'left' }}>
-                                    {locale.form.asset.assetType.addNewLabel}
+                                    {locale.pages.inspect.form.asset.assetType.addNewLabel}
                                 </p>{' '}
                                 <IconButton
                                     style={{ float: 'right' }}
@@ -230,7 +230,7 @@ const AssetTypeDialogPopup = props => {
                                 {saveAssetTypeSaving ? (
                                     <CircularProgress color="inherit" size={25} id="saveInspectionSpinner" />
                                 ) : (
-                                    locale.form.buttons.save
+                                    locale.pages.inspect.form.buttons.save
                                 )}
                             </Button>
                         </Box>
