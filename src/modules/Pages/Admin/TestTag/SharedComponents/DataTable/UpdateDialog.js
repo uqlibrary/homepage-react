@@ -34,10 +34,9 @@ export const useStyles = makeStyles(theme => ({
 
 export const UpdateDialogue = ({
     confirmationBoxId = 'dialogBox',
-    confirmationTitle = '',
-    cancelButtonLabel = '',
-    confirmButtonLabel = '',
+    locale,
     isOpen,
+    title,
     updateDialogueBoxId = 'actionDialogBox',
     hideActionButton = false,
     hideCancelButton = false,
@@ -46,20 +45,23 @@ export const UpdateDialogue = ({
     onClose,
     noMinContentWidth,
     fields,
+    columns,
     row,
     props,
 } = {}) => {
     const classes = useStyles();
+    const [dataColumns, setDataColumns] = React.useState({});
     const [dataFields, setDataFields] = React.useState({});
     const [data, setData] = React.useState({});
     const isMobileView = useIsMobileView();
 
     React.useEffect(() => {
         if (isOpen) {
+            setDataColumns(columns);
             setDataFields(fields);
             setData(row);
         }
-    }, [isOpen, fields, row]);
+    }, [isOpen, fields, row, columns]);
 
     const _onAction = () => {
         onClose?.();
@@ -72,7 +74,6 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        console.log(event);
         setData({ ...data, [event.target.id]: event.target.value });
     };
 
@@ -84,41 +85,49 @@ export const UpdateDialogue = ({
             id={`dialogbox-${updateDialogueBoxId}`}
             data-testid={`dialogbox-${updateDialogueBoxId}`}
         >
-            <DialogTitle data-testid="message-title">{confirmationTitle}</DialogTitle>
+            <DialogTitle data-testid="message-title">{title}</DialogTitle>
             <DialogContent style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}>
                 <Grid container padding={0} spacing={2}>
                     {isOpen &&
                         !!data &&
                         !!dataFields &&
                         Object.keys(dataFields).map(field => (
-                            <Grid item xs={12} sm={6} key={field}>
-                                {!dataFields[field].fieldParams.canEdit &&
-                                    (dataFields[field].fieldParams?.renderInUpdate ?? true) && (
-                                        <>
-                                            <Typography variant="body2">{dataFields[field].label}</Typography>
-                                            <Typography variant="body1">
-                                                {!!dataFields[field]?.computedValue
-                                                    ? dataFields[field].computedValue(
-                                                          props[dataFields[field].computedValueProp],
-                                                      )
-                                                    : data?.[field]}
-                                            </Typography>
-                                        </>
-                                    )}
-                                {dataFields[field].fieldParams.canEdit && (
-                                    <>
-                                        {dataFields[field]?.component({
-                                            id: field,
-                                            'data-testid': field,
-                                            InputLabelProps: { shrink: true },
-                                            label: dataFields[field].label,
-                                            value: data?.[field],
-                                            fullWidth: true,
-                                            onChange: handleChange,
-                                        })}
-                                    </>
+                            <React.Fragment key={field}>
+                                {!!(dataFields[field].fieldParams?.renderInUpdate ?? true) && (
+                                    <Grid item xs={12} sm={6}>
+                                        {console.log(
+                                            'renderInUpdate',
+                                            field,
+                                            !!(dataFields[field].fieldParams?.renderInUpdate ?? true),
+                                        )}
+                                        {!dataFields[field].fieldParams.canEdit && (
+                                            <>
+                                                <Typography variant="body2">{dataColumns[field].label}</Typography>
+                                                <Typography variant="body1">
+                                                    {!!dataFields[field]?.computedValue
+                                                        ? dataFields[field].computedValue(
+                                                              props[dataFields[field].computedValueProp],
+                                                          )
+                                                        : data?.[field]}
+                                                </Typography>
+                                            </>
+                                        )}
+                                        {dataFields[field].fieldParams.canEdit && (
+                                            <>
+                                                {dataFields[field]?.component({
+                                                    id: field,
+                                                    'data-testid': field,
+                                                    InputLabelProps: { shrink: true },
+                                                    label: dataColumns[field].label,
+                                                    value: data?.[field],
+                                                    fullWidth: true,
+                                                    onChange: handleChange,
+                                                })}
+                                            </>
+                                        )}
+                                    </Grid>
                                 )}
-                            </Grid>
+                            </React.Fragment>
                         ))}
                 </Grid>
             </DialogContent>
@@ -135,7 +144,7 @@ export const UpdateDialogue = ({
                                         data-testid={`cancel-${confirmationBoxId}`}
                                         fullWidth={isMobileView}
                                     >
-                                        {cancelButtonLabel}
+                                        {locale.cancelButtonLabel}
                                     </Button>
                                 </Box>
                             </Grid>
@@ -152,7 +161,7 @@ export const UpdateDialogue = ({
                                         data-testid={`confirm-${confirmationBoxId}`}
                                         fullWidth={isMobileView}
                                     >
-                                        {confirmButtonLabel}
+                                        {locale.confirmButtonLabel}
                                     </Button>
                                 </Box>
                             </Grid>
@@ -165,11 +174,12 @@ export const UpdateDialogue = ({
 };
 
 UpdateDialogue.propTypes = {
+    locale: PropTypes.object.isRequired,
+    fields: PropTypes.object.isRequired,
+    columns: PropTypes.object.isRequired,
+    locationType: PropTypes.string.isRequired,
+    title: PropTypes.string,
     confirmationBoxId: PropTypes.string,
-    confirmationTitle: PropTypes.string,
-    cancelButtonLabel: PropTypes.string,
-    confirmButtonLabel: PropTypes.string,
-    fields: PropTypes.object,
     row: PropTypes.object,
     isOpen: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,

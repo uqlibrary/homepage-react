@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { get, post } from 'repositories/generic';
+import { get, post, put, destroy } from 'repositories/generic';
 import {
     TEST_TAG_USER_API,
     TEST_TAG_ONLOAD_DASHBOARD_API,
@@ -9,6 +9,8 @@ import {
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSET_ACTION,
     TEST_TAG_SITE_API,
+    TEST_TAG_ADD_LOCATION_API,
+    TEST_TAG_MODIFY_LOCATION_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -74,6 +76,63 @@ export function clearInspectionConfig() {
     };
 }
 
+export function addLocation({ type, request }) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_LOCATION_ADDING });
+        return post(TEST_TAG_ADD_LOCATION_API(type), request)
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_LOCATION_ADDED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_LOCATION_ADD_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function updateLocation({ type, request }) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_LOCATION_UPDATING });
+        return put(TEST_TAG_MODIFY_LOCATION_API({ type, id: request.id }), request)
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_LOCATION_UPDATED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_LOCATION_UPDATE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function deleteLocation({ type, id }) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_LOCATION_DELETING });
+        return destroy(TEST_TAG_MODIFY_LOCATION_API({ type, id: id }))
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_LOCATION_DELETED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_LOCATION_DELETE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
 export function loadSites() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SITE_LIST_LOADING });
@@ -81,7 +140,7 @@ export function loadSites() {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_SITE_LIST_LOADED,
-                    payload: response?.data,
+                    payload: response,
                 });
             })
             .catch(error => {
@@ -93,7 +152,7 @@ export function loadSites() {
     };
 }
 
-export function clearSitess() {
+export function clearSites() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SITE_LIST_CLEAR });
     };
@@ -106,7 +165,7 @@ export function loadFloors(buildingId) {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_FLOOR_LIST_LOADED,
-                    payload: response?.data,
+                    payload: response,
                 });
             })
             .catch(error => {
@@ -131,7 +190,7 @@ export function loadRooms(floorId) {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ROOM_LIST_LOADED,
-                    payload: response?.data,
+                    payload: response,
                 });
             })
             .catch(error => {
@@ -157,7 +216,7 @@ export function loadAssets(pattern) {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSETS_LOADED,
-                    payload: response?.data,
+                    payload: response,
                 });
             })
             .catch(error => {
@@ -198,3 +257,82 @@ export function clearSaveInspection() {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
     };
 }
+
+/*
+export function addAssetType(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_ADDING });
+        return post(TEST_TAG_ADD_ASSET_API(), request)
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_ADDED,
+                    payload: response?.data ?? {},
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_ADD_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function saveAssetType(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_SAVING });
+        return put(TEST_TAG_SAVE_ASSETTYPE_API(), request)
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_SAVED,
+                    payload: response?.data ?? {},
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_SAVE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function deleteAndReassignAssetType(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGNING });
+        return post(TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API(), request)
+            .then(response => {
+                // Fire function - should then handle the new promise?
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_REASSIGNED,
+                    payload: response?.data?.asset_types ?? [],
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_REASSIGN_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function deleteAssetType(id) {
+    return dispatch => {
+        console.log('The ID is ', id);
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_DELETING });
+        return destroy(TEST_TAG_DELETE_ASSET_TYPE_API(id))
+            .then(() => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_DELETED,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_TYPES_DELETE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+*/

@@ -6,13 +6,11 @@ import { useSelector } from 'react-redux';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
-import RowMenuCell from './../../../SharedComponents/DataTable/RowMenuCell';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import locale from '../../../testTag.locale';
@@ -22,6 +20,8 @@ import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
 import { useLocation } from '../../../Inspection/utils/hooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import config from './config';
+import { getColumns, emptyActionState, actionReducer } from './utils';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -35,240 +35,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const createLocationString = ({ site, building, floor }) => {
-    console.log(site, building, floor);
-    return [site, building, floor].filter(item => !!item).join(' / ');
-};
-
-const config = {
-    site: {
-        fields: {
-            site_id: {
-                label: 'Site ID',
-                fieldParams: { canEdit: false },
-            },
-            site_name: {
-                label: 'Description',
-                component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
-            },
-            site_id_displayed: {
-                label: 'Display name',
-                component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
-            },
-            asset_count: {
-                label: 'Usage',
-                fieldParams: { canEdit: false, renderInUpdate: false },
-            },
-        },
-    },
-    building: {
-        fields: {
-            building_id: {
-                label: 'Building ID',
-                fieldParams: { canEdit: false },
-            },
-            building_location: {
-                label: 'Location',
-                computedValue: location => createLocationString(location),
-                computedValueProp: 'location',
-                fieldParams: { canEdit: false, renderInTable: false },
-            },
-            building_name: {
-                label: 'Description',
-                component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
-            },
-            building_id_displayed: {
-                label: 'Display name',
-                component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
-            },
-            asset_count: {
-                label: 'Usage',
-                fieldParams: { canEdit: false, renderInUpdate: false },
-            },
-        },
-    },
-    floor: {
-        fields: {
-            floor_id: {
-                label: 'Floor ID',
-                fieldParams: { canEdit: false, flex: 1 },
-            },
-            floor_location: {
-                label: 'Location',
-                computedValue: location => createLocationString(location),
-                computedValueProp: 'location',
-                fieldParams: { canEdit: false, renderInTable: false, flex: 1 },
-            },
-            floor_id_displayed: {
-                label: 'Display name',
-                component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
-            },
-            asset_count: {
-                label: 'Usage',
-                fieldParams: { canEdit: false, renderInUpdate: false },
-            },
-        },
-    },
-    room: {
-        fields: {
-            room_id: {
-                label: 'Room ID',
-                fieldParams: { canEdit: false },
-            },
-            room_location: {
-                label: 'Location',
-                computedValue: location => createLocationString(location),
-                computedValueProp: 'location',
-                fieldParams: { canEdit: false, renderInTable: false },
-            },
-            room_description: {
-                label: 'Description',
-                component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
-            },
-            room_id_displayed: {
-                label: 'Display name',
-                component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
-            },
-            asset_count: {
-                label: 'Usage',
-                fieldParams: { canEdit: false, renderInUpdate: false },
-            },
-        },
-    },
-};
-
-/*
-
-//https://api.library.uq.edu.au/staging/test_and_tag/site/current
-
-[
-    {
-        "site_id": 1,
-        "site_id_displayed": "01",
-        "site_name": "St Lucia",
-        "buildings": [
-            {
-                "building_id": 1,
-                "building_name": "Forgan Smith Building",
-                "building_id_displayed": "0001",
-                "asset_count": 10
-            },
-            ...
-        ]
-    },
-    ...
-]
-
-// https://api.library.uq.edu.au/staging/test_and_tag/building/1/current
-{
-    "building_id": 1,
-    "building_id_displayed": "0001",
-    "building_name": "Forgan Smith Building",
-    "site_id": 1,
-    "site_id_displayed": "01",
-    "site_name": "St Lucia",
-    "floors": [
-        {
-            "floor_id": 1,
-            "floor_id_displayed": "2"
-        },
-        ...
-    ]
-}
-
-// https://api.library.uq.edu.au/staging/test_and_tag/floor/1/current
-{
-    "floor_id": 1,
-    "floor_id_displayed": "2",
-    "building_id": 1,
-    "building_id_displayed": "0001",
-    "building_name": "Forgan Smith Building",
-    "site_id": 1,
-    "site_id_displayed": "01",
-    "site_name": "St Lucia",
-    "rooms": [
-        {
-            "room_id": 1,
-            "room_description": "Library Facilities",
-            "room_id_displayed": "W212",
-            "asset_count": 7
-        },
-        ...
-    ]
-}
-
-*/
-
-const getColumns = ({ selectedFilter, onRowEdit, onRowDelete }) => {
-    const actionsCell = {
-        field: 'actions',
-        headerName: 'Actions',
-        renderCell: params => {
-            return (
-                <RowMenuCell
-                    {...params}
-                    onRowEdit={onRowEdit}
-                    {...((params.row?.asset_count ?? 1) === 0 ? { onRowDelete: onRowDelete } : {})}
-                />
-            );
-        },
-        sortable: false,
-        width: 100,
-        headerAlign: 'center',
-        filterable: false,
-        align: 'center',
-        disableColumnMenu: true,
-        disableReorder: true,
-        renderInUpdate: false,
-    };
-
-    const columns = [];
-    const keys = Object.keys(config[selectedFilter].fields);
-
-    keys.forEach(key => {
-        !!(config[selectedFilter].fields[key]?.fieldParams.renderInTable ?? true) &&
-            columns.push({
-                field: key,
-                headerName: config[selectedFilter].fields[key].label,
-                editable: false,
-                sortable: false,
-                ...config[selectedFilter].fields[key].fieldParams,
-            });
-    });
-
-    columns && columns.length > 0 && columns.push(actionsCell);
-    return columns;
-};
-
-const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, row: {} };
-const actionReducer = (_, action) => {
-    const { type, row, selectedFilter, ...props } = action;
-    switch (type) {
-        case 'add':
-            return {
-                isAdd: true,
-                isEdit: false,
-                isDelete: false,
-                row: { [`${selectedFilter}_id`]: 'auto' },
-                props: { ...props },
-            };
-        case 'edit':
-            return { isAdd: false, isEdit: true, isDelete: false, row, props: { ...props } };
-        case 'delete':
-            return { isAdd: false, isEdit: false, isDelete: true, row: action.row };
-        case 'clear':
-            return { ...emptyActionState };
-        default:
-            throw `Unknown action '${type}'`;
-    }
-};
+const capitaliseLeadingChar = text => text.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, match => match.toUpperCase());
 
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
@@ -303,6 +70,7 @@ const ManageLocations = ({ actions }) => {
     React.useEffect(() => {
         if (roomListLoaded) {
             if (location.formFloorId !== -1) {
+                console.log('listing rooms');
                 setRows(roomList.rooms);
             } else {
                 actions.clearRooms();
@@ -310,6 +78,7 @@ const ManageLocations = ({ actions }) => {
             setSelectedFilter('room');
         } else if (floorListLoaded) {
             if (location.formBuildingId !== -1) {
+                console.log('listing floors');
                 setRows(floorList.floors);
             } else {
                 setRows(
@@ -321,9 +90,11 @@ const ManageLocations = ({ actions }) => {
             setSelectedFilter('floor');
         } else if (siteListLoaded) {
             if (location.formSiteId !== -1) {
+                console.log('listing buildings');
                 setRows(siteList.find(site => site.site_id === location.formSiteId).buildings);
                 setSelectedFilter('building');
             } else {
+                console.log('listing sites');
                 setRows(siteList);
                 updateLocation({ formSiteId: -1 });
                 setSelectedFilter('site');
@@ -357,14 +128,52 @@ const ManageLocations = ({ actions }) => {
         floor: floorList?.floors?.find(floor => floor.floor_id === location.formFloorId)?.floor_id_displayed,
     });
 
+    const actionHandler = {
+        site: () => {
+            actions.clearSites();
+            actions.loadSites();
+        },
+        building: () => {
+            actions.clearSites();
+            actions.loadSites();
+        },
+        floor: () => {
+            actions.clearFloors();
+            actions.loadFloors(location.formBuildingId);
+        },
+        room: () => {
+            actions.clearRooms();
+            actions.loadRooms(location.formFloorId);
+        },
+    };
+
     const handleAddClick = () => {
         actionDispatch({
             type: 'add',
             selectedFilter,
-            location: getLocationDisplayedAs(),
+            location,
+            displayLocation: getLocationDisplayedAs(),
         });
     };
 
+    const onRowAdd = data => {
+        console.log('onRowAdd', data);
+        const request = structuredClone(data);
+        delete request[`${selectedFilter}_id`];
+        // setDialogueBusy(true);
+        actions.addLocation({ type: selectedFilter, request }).then(() => {
+            // actions.loadAssetTypes().then(() => {
+            actionDispatch({ type: 'clear' });
+            // setDialogueBusy(false);
+            openConfirmationAlert(`${capitaliseLeadingChar(selectedFilter)} added successfully.`, 'success');
+            actionHandler[selectedFilter]();
+            // });
+        });
+    };
+    const onRowUpdate = data => {
+        console.log('onRowUpdate', data);
+        actionDispatch({ type: 'clear' });
+    };
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
         console.log(row);
@@ -374,7 +183,6 @@ const ManageLocations = ({ actions }) => {
             location: getLocationDisplayedAs(),
         });
     };
-
     const onRowDelete = ({ id, api }) => {
         const row = api.getRow(id);
         console.log('Firing Row Delete', id, api, row);
@@ -387,18 +195,12 @@ const ManageLocations = ({ actions }) => {
         // actions.
     };
 
-    const onRowAdd = data => {
-        console.log('added', data);
-        actionDispatch({ type: 'clear' });
-    };
-
-    const onRowUpdate = data => {
-        console.log('udpated', data);
-        actionDispatch({ type: 'clear' });
-    };
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const columns = useMemo(() => getColumns({ selectedFilter, onRowEdit, onRowDelete }), [selectedFilter]);
+    const columns = useMemo(
+        () => getColumns({ config, locale: pageLocale.form.columns, selectedFilter, onRowEdit, onRowDelete }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [selectedFilter],
+    );
 
     return (
         <StandardAuthPage
@@ -409,24 +211,26 @@ const ManageLocations = ({ actions }) => {
             <div className={classes.root}>
                 <StandardCard noHeader>
                     <UpdateDialog
+                        title={pageLocale.dialogAdd.confirmationTitle(selectedFilter)}
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
-                        confirmationTitle={`Add new ${selectedFilter}`}
-                        cancelButtonLabel="Cancel"
-                        confirmButtonLabel="Add"
+                        locale={pageLocale.dialogAdd}
+                        locationType={selectedFilter}
                         fields={config[selectedFilter].fields}
+                        columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowAdd}
                         props={actionState?.props}
                     />
                     <UpdateDialog
+                        title={pageLocale.dialogEdit.confirmationTitle(selectedFilter)}
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
-                        confirmationTitle={`Edit ${selectedFilter}`}
-                        cancelButtonLabel="Cancel"
-                        confirmButtonLabel="Update"
+                        locale={pageLocale.dialogEdit}
+                        locationType={selectedFilter}
                         fields={config[selectedFilter].fields}
+                        columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowUpdate}
@@ -441,7 +245,7 @@ const ManageLocations = ({ actions }) => {
                         onAction={onDeleteUnusedLocation}
                         onClose={hideDeleteConfirm}
                         isOpen={isDeleteConfirmOpen}
-                        locale={pageLocale.deleteConfirm}
+                        locale={pageLocale.dialogDeleteConfirm}
                         noMinContentWidth
                     />
 

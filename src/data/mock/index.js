@@ -790,6 +790,8 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, testTag_siteList];
     })
 
+    // T&T BUILDINGS
+
     // T&T FLOORS
     .onGet(/test_and_tag\/building\/\d+\/current/)
     .reply(config => {
@@ -805,6 +807,24 @@ mock.onGet('exams/course/FREN1010/summary')
         const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
         return [200, {data: testTag_roomList.data.find(room => room.floor_id === id)}];
     })
+
+    // T&T LOCATIONS
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).url)
+    .reply(() => [200, { status: 'OK' }])
 
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)

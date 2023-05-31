@@ -277,8 +277,83 @@ export default {
                 },
                 form: {
                     locationTypeTitle: 'Location type',
+                    actions: 'Actions',
+                    columns: {
+                        site: {
+                            site_id: {
+                                label: 'Site ID',
+                            },
+                            site_name: {
+                                label: 'Description',
+                            },
+                            site_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        building: {
+                            building_id: {
+                                label: 'Building ID',
+                            },
+                            building_location: {
+                                label: 'Location',
+                            },
+                            building_name: {
+                                label: 'Description',
+                            },
+                            building_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        floor: {
+                            floor_id: {
+                                label: 'Floor ID',
+                            },
+                            floor_location: {
+                                label: 'Location',
+                            },
+                            floor_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        room: {
+                            room_id: {
+                                label: 'Room ID',
+                            },
+                            room_location: {
+                                label: 'Location',
+                            },
+                            room_description: {
+                                label: 'Description',
+                            },
+                            room_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                    },
                 },
-                deleteConfirm: {
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Add new ${type}`,
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Add new ${type}`,
+                },
+                dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
                     confirmationMessage: 'Are you sure you wish to delete this Location?',
