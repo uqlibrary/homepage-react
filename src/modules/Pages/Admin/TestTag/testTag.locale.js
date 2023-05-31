@@ -278,6 +278,12 @@ export default {
                 form: {
                     locationTypeTitle: 'Location type',
                 },
+                deleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to delete this Location?',
+                    confirmationTitle: 'Delete unused Location',
+                },
             },
         },
     },

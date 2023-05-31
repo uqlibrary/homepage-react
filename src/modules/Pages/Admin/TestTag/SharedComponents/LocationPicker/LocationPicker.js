@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const LocationPicker = ({ actions, location, setLocation }) => {
+const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
     const classes = useStyles();
     const {
         siteList,
@@ -42,17 +42,19 @@ const LocationPicker = ({ actions, location, setLocation }) => {
         roomListLoading,
         // roomListError,
     } = useSelector(state => state.get?.('testTagLocationReducer'));
+    const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
 
     const fullSiteList = [{ site_id: -1, site_id_displayed: 'All sites' }, ...(siteList ?? [])];
     const fullBuildingList = [
         { building_id: -1, building_id_displayed: 'All buildings' },
         ...(siteList?.find(site => site.site_id === location.formSiteId)?.buildings ?? []),
     ];
-    const fullfloorList = [{ floor_id: -1, floor_id_displayed: 'All floors' }, ...(floorList?.floors ?? [])];
+    const fullFloorList = [{ floor_id: -1, floor_id_displayed: 'All floors' }, ...(floorList?.floors ?? [])];
+    const fullRoomList = [{ room_id: -1, room_id_displayed: 'All rooms' }, ...(roomList?.rooms ?? [])];
 
     return (
         <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={4}>
                 <FormControl className={classes.formControl} fullWidth>
                     <Autocomplete
                         id="testntag-form-siteid"
@@ -117,183 +119,189 @@ const LocationPicker = ({ actions, location, setLocation }) => {
                     />
                 </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-                <FormControl className={classes.formControl} fullWidth>
-                    <Autocomplete
-                        id="testntag-form-buildingid"
-                        data-testid="testntag-form-buildingid"
-                        fullWidth
-                        options={fullBuildingList}
-                        value={
-                            fullBuildingList?.find(building => building.building_id === location.formBuildingId) ??
-                            fullBuildingList?.[0]
-                        }
-                        onChange={(_, newValue) => {
-                            setLocation({
-                                formBuildingId: newValue.building_id,
-                                formFloorId: -1,
-                                formRoomId: -1,
-                            });
-                            if (newValue.building_id !== -1) actions.loadFloors(newValue.building_id);
-                            else actions.clearFloors();
-                        }}
-                        getOptionLabel={option =>
-                            `${option.building_id_displayed ?? /* istanbul ignore next */ ''}${
-                                option.building_id_displayed ? ' - ' : /* istanbul ignore next */ ''
-                            }${option.building_name ?? /* istanbul ignore next */ ''}`
-                        }
-                        renderInput={params => (
-                            <TextField
-                                {...params}
-                                {...locale.building}
-                                // required={hasInspection}
-                                // error={location.formSiteId !== -1 && location.formBuildingId === -1}
-                                variant="standard"
-                                InputLabelProps={{
-                                    ...inputLabelProps,
-                                    htmlFor: 'testntag-form-buildingid-input',
-                                }}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    endAdornment: (
-                                        <React.Fragment>
-                                            {!!siteListLoading ? (
-                                                <CircularProgress
-                                                    color="inherit"
-                                                    size={20}
-                                                    id="buildingSpinner"
-                                                    data-testid="buildingSpinner"
-                                                />
-                                            ) : null}
-                                            {params.InputProps.endAdornment}
-                                        </React.Fragment>
-                                    ),
-                                }}
-                                inputProps={{
-                                    ...params.inputProps,
-                                    id: 'testntag-form-buildingid-input',
-                                    'data-testid': 'testntag-form-buildingid-input',
-                                }}
-                            />
-                        )}
-                        disabled={location.formSiteId === -1 || !!!siteList}
-                        disableClearable
-                        loading={!!!siteList}
-                    />
-                </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6} md={2}>
-                <FormControl className={classes.formControl} fullWidth>
-                    <Autocomplete
-                        id="testntag-form-floorid"
-                        data-testid="testntag-form-floorid"
-                        fullWidth
-                        options={fullfloorList}
-                        value={
-                            fullfloorList?.find(floor => floor.floor_id === location.formFloorId) ?? fullfloorList?.[0]
-                        }
-                        onChange={(_, newValue) => {
-                            setLocation({ formFloorId: newValue.floor_id, formRoomId: -1 });
+            {!fieldsToHide.includes('building') && (
+                <Grid item xs={12} sm={6} md={5}>
+                    <FormControl className={classes.formControl} fullWidth>
+                        <Autocomplete
+                            id="testntag-form-buildingid"
+                            data-testid="testntag-form-buildingid"
+                            fullWidth
+                            options={fullBuildingList}
+                            value={
+                                fullBuildingList?.find(building => building.building_id === location.formBuildingId) ??
+                                fullBuildingList?.[0]
+                            }
+                            onChange={(_, newValue) => {
+                                setLocation({
+                                    formBuildingId: newValue.building_id,
+                                    formFloorId: -1,
+                                    formRoomId: -1,
+                                });
+                                if (newValue.building_id !== -1) actions.loadFloors(newValue.building_id);
+                                else actions.clearFloors();
+                            }}
+                            getOptionLabel={option =>
+                                `${option.building_id_displayed ?? /* istanbul ignore next */ ''}${
+                                    option.building_id_displayed ? ' - ' : /* istanbul ignore next */ ''
+                                }${option.building_name ?? /* istanbul ignore next */ ''}`
+                            }
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    {...locale.building}
+                                    // required={hasInspection}
+                                    // error={location.formSiteId !== -1 && location.formBuildingId === -1}
+                                    variant="standard"
+                                    InputLabelProps={{
+                                        ...inputLabelProps,
+                                        htmlFor: 'testntag-form-buildingid-input',
+                                    }}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {!!siteListLoading ? (
+                                                    <CircularProgress
+                                                        color="inherit"
+                                                        size={20}
+                                                        id="buildingSpinner"
+                                                        data-testid="buildingSpinner"
+                                                    />
+                                                ) : null}
+                                                {params.InputProps.endAdornment}
+                                            </React.Fragment>
+                                        ),
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        id: 'testntag-form-buildingid-input',
+                                        'data-testid': 'testntag-form-buildingid-input',
+                                    }}
+                                />
+                            )}
+                            disabled={location.formSiteId === -1 || !!!siteList}
+                            disableClearable
+                            loading={!!!siteList}
+                        />
+                    </FormControl>
+                </Grid>
+            )}
+            {!fieldsToHide.includes('floor') && (
+                <Grid item xs={12} sm={6} md={3}>
+                    <FormControl className={classes.formControl} fullWidth>
+                        <Autocomplete
+                            id="testntag-form-floorid"
+                            data-testid="testntag-form-floorid"
+                            fullWidth
+                            options={fullFloorList}
+                            value={
+                                fullFloorList?.find(floor => floor.floor_id === location.formFloorId) ??
+                                fullFloorList?.[0]
+                            }
+                            onChange={(_, newValue) => {
+                                setLocation({ formFloorId: newValue.floor_id, formRoomId: -1 });
 
-                            if (newValue.floor_id !== -1) actions.loadRooms(newValue.floor_id);
-                        }}
-                        getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
-                        renderInput={params => (
-                            <TextField
-                                {...params}
-                                {...locale.floor}
-                                // required={hasInspection}
-                                // error={
-                                //     location.formSiteId !== -1 &&
-                                //     location.formBuildingId !== -1 &&
-                                //     location.formFloorId === -1
-                                // }
-                                variant="standard"
-                                InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-floorid-input' }}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    endAdornment: (
-                                        <React.Fragment>
-                                            {floorListLoading ? (
-                                                <CircularProgress
-                                                    color="inherit"
-                                                    size={20}
-                                                    id="floorSpinner"
-                                                    data-testid="floorSpinner"
-                                                />
-                                            ) : null}
-                                            {params.InputProps.endAdornment}
-                                        </React.Fragment>
-                                    ),
-                                }}
-                                inputProps={{
-                                    ...params.inputProps,
-                                    id: 'testntag-form-floorid-input',
-                                    'data-testid': 'testntag-form-floorid-input',
-                                }}
-                            />
-                        )}
-                        disabled={location.formBuildingId === -1 || floorListLoading}
-                        disableClearable
-                        loading={!!floorListLoading}
-                    />
-                </FormControl>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3}>
-                <FormControl className={classes.formControl} fullWidth>
-                    <Autocomplete
-                        id="testntag-form-roomid"
-                        data-testid="testntag-form-roomid"
-                        fullWidth
-                        options={roomList?.rooms ?? []}
-                        value={roomList?.rooms?.find(room => room.room_id === location.formRoomId) ?? null}
-                        onChange={(_, newValue) => {
-                            setLocation({ formRoomId: newValue.room_id }, true);
-                        }}
-                        getOptionLabel={option => option.room_id_displayed ?? /* istanbul ignore next */ option}
-                        renderInput={params => (
-                            <TextField
-                                {...params}
-                                {...locale.room}
-                                // required={hasInspection}
-                                error={
-                                    location.formSiteId !== -1 &&
-                                    location.formBuildingId !== -1 &&
-                                    location.formFloorId !== -1 &&
-                                    location.formRoomId === -1
-                                }
-                                variant="standard"
-                                InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-roomid-input' }}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    endAdornment: (
-                                        <React.Fragment>
-                                            {roomListLoading ? (
-                                                <CircularProgress
-                                                    color="inherit"
-                                                    size={20}
-                                                    id="roomSpinner"
-                                                    data-testid="roomSpinner"
-                                                />
-                                            ) : null}
-                                            {params.InputProps.endAdornment}
-                                        </React.Fragment>
-                                    ),
-                                }}
-                                inputProps={{
-                                    ...params.inputProps,
-                                    id: 'testntag-form-roomid-input',
-                                    'data-testid': 'testntag-form-roomid-input',
-                                }}
-                            />
-                        )}
-                        disabled={location.formFloorId === -1 || roomListLoading}
-                        disableClearable
-                        loading={!!roomListLoading}
-                    />
-                </FormControl>
-            </Grid>
+                                if (newValue.floor_id !== -1) actions.loadRooms(newValue.floor_id);
+                            }}
+                            getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    {...locale.floor}
+                                    // required={hasInspection}
+                                    // error={
+                                    //     location.formSiteId !== -1 &&
+                                    //     location.formBuildingId !== -1 &&
+                                    //     location.formFloorId === -1
+                                    // }
+                                    variant="standard"
+                                    InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-floorid-input' }}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {floorListLoading ? (
+                                                    <CircularProgress
+                                                        color="inherit"
+                                                        size={20}
+                                                        id="floorSpinner"
+                                                        data-testid="floorSpinner"
+                                                    />
+                                                ) : null}
+                                                {params.InputProps.endAdornment}
+                                            </React.Fragment>
+                                        ),
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        id: 'testntag-form-floorid-input',
+                                        'data-testid': 'testntag-form-floorid-input',
+                                    }}
+                                />
+                            )}
+                            disabled={location.formBuildingId === -1 || floorListLoading}
+                            disableClearable
+                            loading={!!floorListLoading}
+                        />
+                    </FormControl>
+                </Grid>
+            )}
+            {!fieldsToHide.includes('room') && (
+                <Grid item xs={12} sm={6} md={3}>
+                    <FormControl className={classes.formControl} fullWidth>
+                        <Autocomplete
+                            id="testntag-form-roomid"
+                            data-testid="testntag-form-roomid"
+                            fullWidth
+                            options={fullRoomList}
+                            value={fullRoomList?.find(room => room.room_id === location.formRoomId) ?? fullRoomList[0]}
+                            onChange={(_, newValue) => {
+                                setLocation({ formRoomId: newValue.room_id }, true);
+                            }}
+                            getOptionLabel={option => option.room_id_displayed ?? option}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    {...locale.room}
+                                    // required={hasInspection}
+                                    // error={
+                                    //     location.formSiteId !== -1 &&
+                                    //     location.formBuildingId !== -1 &&
+                                    //     location.formFloorId !== -1 &&
+                                    //     location.formRoomId === -1
+                                    // }
+                                    variant="standard"
+                                    InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-roomid-input' }}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {roomListLoading ? (
+                                                    <CircularProgress
+                                                        color="inherit"
+                                                        size={20}
+                                                        id="roomSpinner"
+                                                        data-testid="roomSpinner"
+                                                    />
+                                                ) : null}
+                                                {params.InputProps.endAdornment}
+                                            </React.Fragment>
+                                        ),
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        id: 'testntag-form-roomid-input',
+                                        'data-testid': 'testntag-form-roomid-input',
+                                    }}
+                                />
+                            )}
+                            disabled={location.formFloorId === -1 || roomListLoading}
+                            disableClearable
+                            loading={!!roomListLoading}
+                        />
+                    </FormControl>
+                </Grid>
+            )}
         </Grid>
     );
 };
@@ -302,6 +310,7 @@ LocationPicker.propTypes = {
     actions: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     setLocation: PropTypes.func.isRequired,
+    hide: PropTypes.array,
 };
 
 export default React.memo(LocationPicker);

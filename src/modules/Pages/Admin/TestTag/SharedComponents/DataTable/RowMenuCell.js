@@ -45,11 +45,18 @@ const RowMenuCell = ({ api, id, onRowEdit, onRowDelete }) => {
                 className={classes.textPrimary}
                 size="small"
                 aria-label="edit"
+                disabled={!!!onRowEdit}
                 onClick={handleEditClick}
             >
                 <EditIcon fontSize="small" />
             </IconButton>
-            <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+            <IconButton
+                color="inherit"
+                size="small"
+                aria-label="delete"
+                disabled={!!!onRowDelete}
+                onClick={handleDeleteClick}
+            >
                 <DeleteIcon fontSize="small" />
             </IconButton>
         </div>
@@ -62,7 +69,7 @@ RowMenuCell.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     // setEditRowsModel: PropTypes.func.isRequired,
     onRowEdit: PropTypes.func.isRequired,
-    onRowDelete: PropTypes.func.isRequired,
+    onRowDelete: PropTypes.func,
 };
 
 export default React.memo(RowMenuCell);

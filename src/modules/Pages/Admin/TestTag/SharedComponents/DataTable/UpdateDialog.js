@@ -126,7 +126,7 @@ export const UpdateDialogue = ({
                 <DialogActions>
                     <Grid container spacing={3}>
                         {!hideCancelButton && (
-                            <Grid item xs={12} sm spacing={3}>
+                            <Grid item xs={12} sm>
                                 <Box justifyContent="flex-start" display={'flex'}>
                                     <Button
                                         variant={'outlined'}
@@ -141,7 +141,7 @@ export const UpdateDialogue = ({
                             </Grid>
                         )}
                         {!hideActionButton && (
-                            <Grid item xs={12} sm spacing={3}>
+                            <Grid item xs={12} sm>
                                 <Box justifyContent="flex-end" display={'flex'}>
                                     <Button
                                         variant="contained"

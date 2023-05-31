@@ -24,7 +24,7 @@ export default {
       "site_id": 2,
       "site_id_displayed": "29",
       "site_name": "Gatton",
-      "asset_count": 23,
+      "asset_count": 0,
       "buildings": [
         {
           "building_id": 8,
@@ -36,7 +36,7 @@ export default {
           "building_id": 9,
           "building_name": "Library Warehouse",
           "building_id_displayed": "8248",
-          "asset_count": 1,
+          "asset_count": 0,
         }
       ]
     },

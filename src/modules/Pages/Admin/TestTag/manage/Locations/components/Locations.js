@@ -8,6 +8,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { useConfirmationState } from 'hooks';
+
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import RowMenuCell from './../../../SharedComponents/DataTable/RowMenuCell';
 
@@ -18,6 +21,7 @@ import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
 import { useLocation } from '../../../Inspection/utils/hooks';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -38,7 +42,6 @@ const createLocationString = ({ site, building, floor }) => {
 
 const config = {
     site: {
-        locations: [],
         fields: {
             site_id: {
                 label: 'Site ID',
@@ -61,7 +64,6 @@ const config = {
         },
     },
     building: {
-        locations: ['site'],
         fields: {
             building_id: {
                 label: 'Building ID',
@@ -90,7 +92,6 @@ const config = {
         },
     },
     floor: {
-        locations: ['site', 'building'],
         fields: {
             floor_id: {
                 label: 'Floor ID',
@@ -114,7 +115,6 @@ const config = {
         },
     },
     room: {
-        locations: ['site', 'building', 'floor'],
         fields: {
             room_id: {
                 label: 'Room ID',
@@ -210,7 +210,15 @@ const getColumns = ({ selectedFilter, onRowEdit, onRowDelete }) => {
     const actionsCell = {
         field: 'actions',
         headerName: 'Actions',
-        renderCell: params => <RowMenuCell {...params} onRowEdit={onRowEdit} onRowDelete={onRowDelete} />,
+        renderCell: params => {
+            return (
+                <RowMenuCell
+                    {...params}
+                    onRowEdit={onRowEdit}
+                    {...((params.row?.asset_count ?? 1) === 0 ? { onRowDelete: onRowDelete } : {})}
+                />
+            );
+        },
         sortable: false,
         width: 100,
         headerAlign: 'center',
@@ -239,14 +247,22 @@ const getColumns = ({ selectedFilter, onRowEdit, onRowDelete }) => {
     return columns;
 };
 
-const emptyActionState = { isAdd: false, isEdit: false, rows: {} };
+const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, row: {} };
 const actionReducer = (_, action) => {
     const { type, row, selectedFilter, ...props } = action;
     switch (type) {
         case 'add':
-            return { isAdd: true, isEdit: false, row: { [`${selectedFilter}_id`]: 'auto' }, props: { ...props } };
+            return {
+                isAdd: true,
+                isEdit: false,
+                isDelete: false,
+                row: { [`${selectedFilter}_id`]: 'auto' },
+                props: { ...props },
+            };
         case 'edit':
-            return { isAdd: false, isEdit: true, row, props: { ...props } };
+            return { isAdd: false, isEdit: true, isDelete: false, row, props: { ...props } };
+        case 'delete':
+            return { isAdd: false, isEdit: false, isDelete: true, row: action.row };
         case 'clear':
             return { ...emptyActionState };
         default:
@@ -260,6 +276,8 @@ const ManageLocations = ({ actions }) => {
     const [selectedFilter, setSelectedFilter] = React.useState('site');
     const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
+    const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
+    const [confirmID, setConfirmID] = React.useState(null);
 
     const {
         siteList,
@@ -321,18 +339,29 @@ const ManageLocations = ({ actions }) => {
         roomListLoaded,
     ]);
 
+    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const closeConfirmationAlert = () => {
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+    };
+    const openConfirmationAlert = (message, type) => {
+        console.log('Setting with message', message);
+        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
+    };
+
+    const getLocationDisplayedAs = () => ({
+        site: siteList?.find(site => site.site_id === location.formSiteId)?.site_id_displayed,
+        building: siteList
+            ?.find(site => site.site_id === location.formSiteId)
+            ?.buildings?.find(building => building.building_id === location.formBuildingId)?.building_id_displayed,
+        floor: floorList?.floors?.find(floor => floor.floor_id === location.formFloorId)?.floor_id_displayed,
+    });
+
     const handleAddClick = () => {
         actionDispatch({
             type: 'add',
             selectedFilter,
-            location: {
-                site: siteList?.find(site => site.site_id === location.formSiteId)?.site_id_displayed,
-                building: siteList
-                    ?.find(site => site.site_id === location.formSiteId)
-                    ?.buildings?.find(building => building.building_id === location.formBuildingId)
-                    ?.building_id_displayed,
-                floor: floorList?.floors?.find(floor => floor.floor_id === location.formFloorId)?.floor_id_displayed,
-            },
+            location: getLocationDisplayedAs(),
         });
     };
 
@@ -342,19 +371,20 @@ const ManageLocations = ({ actions }) => {
         actionDispatch({
             type: 'edit',
             row,
-            location: {
-                site: siteList?.find(site => site.site_id === location.formSiteId)?.site_id_displayed,
-                building: siteList
-                    ?.find(site => site.site_id === location.formSiteId)
-                    ?.buildings?.find(building => building.building_id === location.formBuildingId)
-                    ?.building_id_displayed,
-                floor: floorList?.floors?.find(floor => floor.floor_id === location.formFloorId)?.floor_id_displayed,
-            },
+            location: getLocationDisplayedAs(),
         });
     };
 
     const onRowDelete = ({ id, api }) => {
-        console.log('Firing Row Delete', id, api);
+        const row = api.getRow(id);
+        console.log('Firing Row Delete', id, api, row);
+        closeConfirmationAlert();
+        setConfirmID(row[0]);
+        showDeleteConfirm();
+    };
+    const onDeleteUnusedLocation = () => {
+        console.log('do the delete');
+        // actions.
     };
 
     const onRowAdd = data => {
@@ -367,6 +397,7 @@ const ManageLocations = ({ actions }) => {
         actionDispatch({ type: 'clear' });
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const columns = useMemo(() => getColumns({ selectedFilter, onRowEdit, onRowDelete }), [selectedFilter]);
 
     return (
@@ -401,12 +432,30 @@ const ManageLocations = ({ actions }) => {
                         onAction={onRowUpdate}
                         props={actionState?.props}
                     />
+                    <ConfirmationBox
+                        actionButtonColor="primary"
+                        actionButtonVariant="contained"
+                        cancelButtonColor="secondary"
+                        confirmationBoxId="deleteRow"
+                        onCancelAction={hideDeleteConfirm}
+                        onAction={onDeleteUnusedLocation}
+                        onClose={hideDeleteConfirm}
+                        isOpen={isDeleteConfirmOpen}
+                        locale={pageLocale.deleteConfirm}
+                        noMinContentWidth
+                    />
+
                     <Grid container spacing={0} className={classes.tableMarginTop}>
                         <Grid item xs={12} padding={0}>
                             <Typography variant={'h6'} component={'div'}>
                                 Select location
                             </Typography>
-                            <LocationPicker actions={actions} location={location} setLocation={updateLocation} />
+                            <LocationPicker
+                                actions={actions}
+                                location={location}
+                                setLocation={updateLocation}
+                                hide={['room']}
+                            />
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
@@ -415,7 +464,6 @@ const ManageLocations = ({ actions }) => {
                                 rows={rows}
                                 columns={columns}
                                 rowId={`${selectedFilter}_id`}
-                                /* editRowsModel={editRowsModel}*/
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: { label: `Add ${selectedFilter}`, onClick: handleAddClick },
@@ -425,6 +473,12 @@ const ManageLocations = ({ actions }) => {
                             />
                         </Grid>
                     </Grid>
+                    <ConfirmationAlert
+                        isOpen={confirmationAlert.visible}
+                        message={confirmationAlert.message}
+                        type={confirmationAlert.type}
+                        closeAlert={closeConfirmationAlert}
+                    />
                 </StandardCard>
             </div>
         </StandardAuthPage>
