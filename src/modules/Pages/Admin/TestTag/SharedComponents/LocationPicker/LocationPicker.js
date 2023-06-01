@@ -47,7 +47,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
     const fullSiteList = [{ site_id: -1, site_id_displayed: 'All sites' }, ...(siteList ?? [])];
     const fullBuildingList = [
         { building_id: -1, building_id_displayed: 'All buildings' },
-        ...(siteList?.find(site => site.site_id === location.formSiteId)?.buildings ?? []),
+        ...(siteList?.find(site => site.site_id === location.site)?.buildings ?? []),
     ];
     const fullFloorList = [{ floor_id: -1, floor_id_displayed: 'All floors' }, ...(floorList?.floors ?? [])];
     const fullRoomList = [{ room_id: -1, room_id_displayed: 'All rooms' }, ...(roomList?.rooms ?? [])];
@@ -61,13 +61,14 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                         data-testid="testntag-form-siteid"
                         fullWidth
                         options={fullSiteList}
-                        value={fullSiteList?.find(site => site.site_id === location.formSiteId) ?? fullSiteList?.[0]}
+                        value={fullSiteList?.find(site => site.site_id === location.site) ?? fullSiteList?.[0]}
                         onChange={(_, newValue) => {
+                            console.log(newValue);
                             setLocation({
-                                formSiteId: newValue.site_id,
-                                formBuildingId: -1,
-                                formFloorId: -1,
-                                formRoomId: -1,
+                                site: newValue.site_id,
+                                building: -1,
+                                floor: -1,
+                                room: -1,
                             });
                             if (newValue.site_id === -1) {
                                 actions.clearRooms();
@@ -128,14 +129,14 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                             fullWidth
                             options={fullBuildingList}
                             value={
-                                fullBuildingList?.find(building => building.building_id === location.formBuildingId) ??
+                                fullBuildingList?.find(building => building.building_id === location.building) ??
                                 fullBuildingList?.[0]
                             }
                             onChange={(_, newValue) => {
                                 setLocation({
-                                    formBuildingId: newValue.building_id,
-                                    formFloorId: -1,
-                                    formRoomId: -1,
+                                    building: newValue.building_id,
+                                    floor: -1,
+                                    room: -1,
                                 });
                                 if (newValue.building_id !== -1) actions.loadFloors(newValue.building_id);
                                 else actions.clearFloors();
@@ -150,7 +151,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                     {...params}
                                     {...locale.building}
                                     // required={hasInspection}
-                                    // error={location.formSiteId !== -1 && location.formBuildingId === -1}
+                                    // error={location.site !== -1 && location.building === -1}
                                     variant="standard"
                                     InputLabelProps={{
                                         ...inputLabelProps,
@@ -179,7 +180,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                     }}
                                 />
                             )}
-                            disabled={location.formSiteId === -1 || !!!siteList}
+                            disabled={location.site === -1 || !!!siteList}
                             disableClearable
                             loading={!!!siteList}
                         />
@@ -195,11 +196,10 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                             fullWidth
                             options={fullFloorList}
                             value={
-                                fullFloorList?.find(floor => floor.floor_id === location.formFloorId) ??
-                                fullFloorList?.[0]
+                                fullFloorList?.find(floor => floor.floor_id === location.floor) ?? fullFloorList?.[0]
                             }
                             onChange={(_, newValue) => {
-                                setLocation({ formFloorId: newValue.floor_id, formRoomId: -1 });
+                                setLocation({ floor: newValue.floor_id, room: -1 });
 
                                 if (newValue.floor_id !== -1) actions.loadRooms(newValue.floor_id);
                             }}
@@ -210,9 +210,9 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                     {...locale.floor}
                                     // required={hasInspection}
                                     // error={
-                                    //     location.formSiteId !== -1 &&
-                                    //     location.formBuildingId !== -1 &&
-                                    //     location.formFloorId === -1
+                                    //     location.site !== -1 &&
+                                    //     location.building !== -1 &&
+                                    //     location.floor === -1
                                     // }
                                     variant="standard"
                                     InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-floorid-input' }}
@@ -239,7 +239,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                     }}
                                 />
                             )}
-                            disabled={location.formBuildingId === -1 || floorListLoading}
+                            disabled={location.building === -1 || floorListLoading}
                             disableClearable
                             loading={!!floorListLoading}
                         />
@@ -254,9 +254,9 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                             data-testid="testntag-form-roomid"
                             fullWidth
                             options={fullRoomList}
-                            value={fullRoomList?.find(room => room.room_id === location.formRoomId) ?? fullRoomList[0]}
+                            value={fullRoomList?.find(room => room.room_id === location.room) ?? fullRoomList[0]}
                             onChange={(_, newValue) => {
-                                setLocation({ formRoomId: newValue.room_id }, true);
+                                setLocation({ room: newValue.room_id }, true);
                             }}
                             getOptionLabel={option => option.room_id_displayed ?? option}
                             renderInput={params => (
@@ -265,10 +265,10 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                     {...locale.room}
                                     // required={hasInspection}
                                     // error={
-                                    //     location.formSiteId !== -1 &&
-                                    //     location.formBuildingId !== -1 &&
-                                    //     location.formFloorId !== -1 &&
-                                    //     location.formRoomId === -1
+                                    //     location.site !== -1 &&
+                                    //     location.building !== -1 &&
+                                    //     location.floor !== -1 &&
+                                    //     location.room === -1
                                     // }
                                     variant="standard"
                                     InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-roomid-input' }}
@@ -295,7 +295,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                     }}
                                 />
                             )}
-                            disabled={location.formFloorId === -1 || roomListLoading}
+                            disabled={location.floor === -1 || roomListLoading}
                             disableClearable
                             loading={!!roomListLoading}
                         />

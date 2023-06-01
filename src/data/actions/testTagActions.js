@@ -98,7 +98,7 @@ export function addLocation({ type, request }) {
 export function updateLocation({ type, request }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_LOCATION_UPDATING });
-        return put(TEST_TAG_MODIFY_LOCATION_API({ type, id: request.id }), request)
+        return put(TEST_TAG_MODIFY_LOCATION_API({ type, id: request[`${type}_id`] }), request)
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_LOCATION_UPDATED,
@@ -140,7 +140,7 @@ export function loadSites() {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_SITE_LIST_LOADED,
-                    payload: response,
+                    payload: response.data,
                 });
             })
             .catch(error => {
@@ -165,7 +165,7 @@ export function loadFloors(buildingId) {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_FLOOR_LIST_LOADED,
-                    payload: response,
+                    payload: response.data,
                 });
             })
             .catch(error => {
@@ -190,7 +190,7 @@ export function loadRooms(floorId) {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ROOM_LIST_LOADED,
-                    payload: response,
+                    payload: response.data,
                 });
             })
             .catch(error => {

@@ -1,15 +1,18 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { isEmptyStr } from '../../helpers/helpers';
 import { useIsMobileView } from 'hooks';
 
 export const useStyles = makeStyles(theme => ({
@@ -48,20 +51,35 @@ export const UpdateDialogue = ({
     columns,
     row,
     props,
+    isBusy = false,
 } = {}) => {
     const classes = useStyles();
     const [dataColumns, setDataColumns] = React.useState({});
     const [dataFields, setDataFields] = React.useState({});
+    const [editableFields, setEditableFields] = React.useState([]);
     const [data, setData] = React.useState({});
     const isMobileView = useIsMobileView();
+    const [isValid, setIsValid] = React.useState(false);
 
     React.useEffect(() => {
         if (isOpen) {
+            console.log({ columns, fields, row });
             setDataColumns(columns);
             setDataFields(fields);
             setData(row);
+            setEditableFields(
+                Object.keys(fields).filter(
+                    field =>
+                        !!(fields[field].fieldParams?.renderInUpdate ?? true) &&
+                        !!(fields[field].fieldParams?.canEdit ?? false),
+                ),
+            );
         }
     }, [isOpen, fields, row, columns]);
+
+    React.useEffect(() => {
+        setIsValid(!editableFields.some(entry => isEmptyStr(data[entry])));
+    }, [data, editableFields]);
 
     const _onAction = () => {
         onClose?.();
@@ -74,7 +92,7 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        setData({ ...data, [event.target.id]: event.target.value });
+        setData({ ...data, [event.target.dataset.field]: event.target.value });
     };
 
     return (
@@ -95,11 +113,6 @@ export const UpdateDialogue = ({
                             <React.Fragment key={field}>
                                 {!!(dataFields[field].fieldParams?.renderInUpdate ?? true) && (
                                     <Grid item xs={12} sm={6}>
-                                        {console.log(
-                                            'renderInUpdate',
-                                            field,
-                                            !!(dataFields[field].fieldParams?.renderInUpdate ?? true),
-                                        )}
                                         {!dataFields[field].fieldParams.canEdit && (
                                             <>
                                                 <Typography variant="body2">{dataColumns[field].label}</Typography>
@@ -115,13 +128,19 @@ export const UpdateDialogue = ({
                                         {dataFields[field].fieldParams.canEdit && (
                                             <>
                                                 {dataFields[field]?.component({
-                                                    id: field,
-                                                    'data-testid': field,
-                                                    InputLabelProps: { shrink: true },
+                                                    id: `${field}-input`,
                                                     label: dataColumns[field].label,
                                                     value: data?.[field],
-                                                    fullWidth: true,
+                                                    error: isEmptyStr(data?.[field]),
                                                     onChange: handleChange,
+                                                    InputLabelProps: {
+                                                        shrink: true,
+                                                    },
+                                                    inputProps: {
+                                                        ['data-testid']: `${field}-input`,
+                                                        ['data-field']: field,
+                                                    },
+                                                    fullWidth: true,
                                                 })}
                                             </>
                                         )}
@@ -143,6 +162,7 @@ export const UpdateDialogue = ({
                                         id="confirm-cancel-action"
                                         data-testid={`cancel-${confirmationBoxId}`}
                                         fullWidth={isMobileView}
+                                        disabled={isBusy}
                                     >
                                         {locale.cancelButtonLabel}
                                     </Button>
@@ -160,8 +180,18 @@ export const UpdateDialogue = ({
                                         id="confirm-action"
                                         data-testid={`confirm-${confirmationBoxId}`}
                                         fullWidth={isMobileView}
+                                        disabled={isBusy || !isValid}
                                     >
-                                        {locale.confirmButtonLabel}
+                                        {isBusy ? (
+                                            <CircularProgress
+                                                color="inherit"
+                                                size={25}
+                                                id="saveInspectionSpinner"
+                                                data-testid="saveInspectionSpinner"
+                                            />
+                                        ) : (
+                                            locale.confirmButtonLabel
+                                        )}
                                     </Button>
                                 </Box>
                             </Grid>
@@ -190,6 +220,7 @@ UpdateDialogue.propTypes = {
     onCancelAction: PropTypes.func,
     onClose: PropTypes.func,
     props: PropTypes.object,
+    isBusy: PropTypes.bool,
 };
 
 export default React.memo(UpdateDialogue);

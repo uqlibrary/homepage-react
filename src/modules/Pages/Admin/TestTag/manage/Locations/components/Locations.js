@@ -18,10 +18,11 @@ import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
-import { useLocation } from '../../../Inspection/utils/hooks';
+import { useLocation } from '../../../helpers/hooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import config from './config';
-import { getColumns, emptyActionState, actionReducer } from './utils';
+import { getColumns, emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
+import { capitaliseLeadingChar } from '../../../helpers/helpers';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -35,8 +36,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const capitaliseLeadingChar = text => text.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, match => match.toUpperCase());
-
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
@@ -44,7 +43,7 @@ const ManageLocations = ({ actions }) => {
     const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
-    const [confirmID, setConfirmID] = React.useState(null);
+    const [dialogueBusy, setDialogueBusy] = React.useState(false);
 
     const {
         siteList,
@@ -64,51 +63,38 @@ const ManageLocations = ({ actions }) => {
         // roomListError,
     } = useSelector(state => state.get?.('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
-    const updateLocation = update => {
-        setLocation(update);
-    };
+
     React.useEffect(() => {
         if (roomListLoaded) {
-            if (location.formFloorId !== -1) {
-                console.log('listing rooms');
+            if (location.floor !== -1) {
                 setRows(roomList.rooms);
             } else {
                 actions.clearRooms();
             }
             setSelectedFilter('room');
         } else if (floorListLoaded) {
-            if (location.formBuildingId !== -1) {
-                console.log('listing floors');
+            if (location.building !== -1) {
                 setRows(floorList.floors);
             } else {
                 setRows(
                     siteList
-                        ?.find(site => site.site_id === location.formSiteId)
-                        ?.buildings?.find(building => building.building_id === location.formBuildingId)?.floors ?? [],
+                        ?.find(site => site.site_id === location.site)
+                        ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
                 );
             }
             setSelectedFilter('floor');
         } else if (siteListLoaded) {
-            if (location.formSiteId !== -1) {
-                console.log('listing buildings');
-                setRows(siteList.find(site => site.site_id === location.formSiteId).buildings);
+            if (location.site !== -1) {
+                setRows(siteList.find(site => site.site_id === location.site).buildings);
                 setSelectedFilter('building');
             } else {
-                console.log('listing sites');
                 setRows(siteList);
-                updateLocation({ formSiteId: -1 });
+                setLocation({ site: -1 });
                 setSelectedFilter('site');
             }
         } else actions.loadSites();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        location.formSiteId,
-        location.formBuildingId,
-        location.formFloorId,
-        siteListLoaded,
-        floorListLoaded,
-        roomListLoaded,
-    ]);
+    }, [location.site, location.building, location.floor, siteListLoaded, floorListLoaded, roomListLoaded]);
 
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
@@ -116,17 +102,29 @@ const ManageLocations = ({ actions }) => {
         setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
     const openConfirmationAlert = (message, type) => {
-        console.log('Setting with message', message);
         setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
     };
 
-    const getLocationDisplayedAs = () => ({
-        site: siteList?.find(site => site.site_id === location.formSiteId)?.site_id_displayed,
-        building: siteList
-            ?.find(site => site.site_id === location.formSiteId)
-            ?.buildings?.find(building => building.building_id === location.formBuildingId)?.building_id_displayed,
-        floor: floorList?.floors?.find(floor => floor.floor_id === location.formFloorId)?.floor_id_displayed,
-    });
+    const getLocationDisplayedAs = () => {
+        console.log(
+            'getLocationdisplayedas',
+            siteList?.find(site => site.site_id === location.site),
+            {
+                site: siteList?.find(site => site.site_id === location.site)?.site_id_displayed,
+                building: siteList
+                    ?.find(site => site.site_id === location.site)
+                    ?.buildings?.find(building => building.building_id === location.building)?.building_id_displayed,
+                floor: floorList?.floors?.find(floor => floor.floor_id === location.floor)?.floor_id_displayed,
+            },
+        );
+        return {
+            site: siteList?.find(site => site.site_id === location.site)?.site_id_displayed,
+            building: siteList
+                ?.find(site => site.site_id === location.site)
+                ?.buildings?.find(building => building.building_id === location.building)?.building_id_displayed,
+            floor: floorList?.floors?.find(floor => floor.floor_id === location.floor)?.floor_id_displayed,
+        };
+    };
 
     const actionHandler = {
         site: () => {
@@ -139,15 +137,16 @@ const ManageLocations = ({ actions }) => {
         },
         floor: () => {
             actions.clearFloors();
-            actions.loadFloors(location.formBuildingId);
+            actions.loadFloors(location.building);
         },
         room: () => {
             actions.clearRooms();
-            actions.loadRooms(location.formFloorId);
+            actions.loadRooms(location.floor);
         },
     };
 
     const handleAddClick = () => {
+        console.log('displayLocation', getLocationDisplayedAs());
         actionDispatch({
             type: 'add',
             selectedFilter,
@@ -155,49 +154,76 @@ const ManageLocations = ({ actions }) => {
             displayLocation: getLocationDisplayedAs(),
         });
     };
+    const handleEditClick = React.useCallback(
+        ({ id, api }) => {
+            const row = api.getRow(id);
+            console.log('displayLocation', getLocationDisplayedAs());
+            actionDispatch({
+                type: 'edit',
+                row,
+                selectedFilter,
+                location,
+                displayLocation: getLocationDisplayedAs(),
+            });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter],
+    );
+    const handleDeleteClick = ({ id, api }) => {
+        const row = api.getRow(id);
+        console.log('displayLocation', getLocationDisplayedAs());
+        actionDispatch({
+            type: 'delete',
+            row,
+            selectedFilter,
+            location,
+            displayLocation: getLocationDisplayedAs(),
+        });
+    };
 
     const onRowAdd = data => {
-        console.log('onRowAdd', data);
+        setDialogueBusy(true);
         const request = structuredClone(data);
-        delete request[`${selectedFilter}_id`];
-        // setDialogueBusy(true);
-        actions.addLocation({ type: selectedFilter, request }).then(() => {
-            // actions.loadAssetTypes().then(() => {
+        const wrappedRequest = transformAddRequest({ request, selectedFilter, location });
+
+        actions.addLocation({ type: selectedFilter, request: wrappedRequest }).then(() => {
+            setDialogueBusy(false);
             actionDispatch({ type: 'clear' });
-            // setDialogueBusy(false);
             openConfirmationAlert(`${capitaliseLeadingChar(selectedFilter)} added successfully.`, 'success');
             actionHandler[selectedFilter]();
-            // });
         });
     };
-    const onRowUpdate = data => {
-        console.log('onRowUpdate', data);
-        actionDispatch({ type: 'clear' });
-    };
-    const onRowEdit = ({ id, api }) => {
-        const row = api.getRow(id);
-        console.log(row);
-        actionDispatch({
-            type: 'edit',
-            row,
-            location: getLocationDisplayedAs(),
+    const onRowEdit = data => {
+        setDialogueBusy(true);
+        const request = structuredClone(data);
+        const wrappedRequest = transformUpdateRequest({ request, selectedFilter, location });
+
+        actions.updateLocation({ type: selectedFilter, request: wrappedRequest }).then(() => {
+            setDialogueBusy(false);
+            actionDispatch({ type: 'clear' });
+            openConfirmationAlert(`${capitaliseLeadingChar(selectedFilter)} updated successfully.`, 'success');
+            actionHandler[selectedFilter]();
         });
     };
-    const onRowDelete = ({ id, api }) => {
-        const row = api.getRow(id);
-        console.log('Firing Row Delete', id, api, row);
-        closeConfirmationAlert();
-        setConfirmID(row[0]);
-        showDeleteConfirm();
-    };
-    const onDeleteUnusedLocation = () => {
-        console.log('do the delete');
-        // actions.
+
+    const onRowDelete = data => {
+        console.log(data);
+        setDialogueBusy(true);
+        const selectedFilter = data.props.selectedFilter;
+        const id = data.row[`${selectedFilter}_id`];
+
+        actions.deleteLocation({ type: selectedFilter, id }).then(() => {
+            setDialogueBusy(false);
+            actionDispatch({ type: 'clear' });
+            openConfirmationAlert(`${capitaliseLeadingChar(selectedFilter)} deleted successfully.`, 'success');
+            actionHandler[selectedFilter]();
+        });
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const columns = useMemo(
-        () => getColumns({ config, locale: pageLocale.form.columns, selectedFilter, onRowEdit, onRowDelete }),
+        () =>
+            getColumns({ config, locale: pageLocale.form.columns, selectedFilter, handleEditClick, handleDeleteClick }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [selectedFilter],
     );
@@ -222,6 +248,7 @@ const ManageLocations = ({ actions }) => {
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowAdd}
                         props={actionState?.props}
+                        isBusy={dialogueBusy}
                     />
                     <UpdateDialog
                         title={pageLocale.dialogEdit.confirmationTitle(selectedFilter)}
@@ -233,8 +260,9 @@ const ManageLocations = ({ actions }) => {
                         columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
-                        onAction={onRowUpdate}
+                        onAction={onRowEdit}
                         props={actionState?.props}
+                        isBusy={dialogueBusy}
                     />
                     <ConfirmationBox
                         actionButtonColor="primary"
@@ -242,11 +270,12 @@ const ManageLocations = ({ actions }) => {
                         cancelButtonColor="secondary"
                         confirmationBoxId="deleteRow"
                         onCancelAction={hideDeleteConfirm}
-                        onAction={onDeleteUnusedLocation}
+                        onAction={onRowDelete}
                         onClose={hideDeleteConfirm}
-                        isOpen={isDeleteConfirmOpen}
+                        isOpen={actionState.isDelete}
                         locale={pageLocale.dialogDeleteConfirm}
                         noMinContentWidth
+                        actionProps={{ row: actionState?.row, props: actionState?.props }}
                     />
 
                     <Grid container spacing={0} className={classes.tableMarginTop}>
@@ -257,7 +286,7 @@ const ManageLocations = ({ actions }) => {
                             <LocationPicker
                                 actions={actions}
                                 location={location}
-                                setLocation={updateLocation}
+                                setLocation={setLocation}
                                 hide={['room']}
                             />
                         </Grid>

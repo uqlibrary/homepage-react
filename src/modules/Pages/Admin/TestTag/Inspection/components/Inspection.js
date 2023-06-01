@@ -19,12 +19,14 @@ import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAu
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
-import { useForm, useValidation, useLocation } from '../utils/hooks';
+import { useForm, useValidation } from '../utils/hooks';
+import { useLocation } from '../../helpers/hooks';
 import locale from '../../testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
 import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
+
 const moment = require('moment');
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 

@@ -39,22 +39,25 @@ export const ConfirmationBox = ({
     showAdditionalInformation,
     additionalInformation,
     noMinContentWidth,
+    actionProps = {},
+    altActionProps = {},
+    cancelProps = {},
 }) => {
     const classes = useStyles();
 
     const _onAction = () => {
         onClose();
-        onAction();
+        onAction(actionProps);
     };
 
     const _onCancelAction = () => {
         onClose();
-        !!onCancelAction && onCancelAction();
+        !!onCancelAction && onCancelAction(cancelProps);
     };
 
     const _onAlternateAction = () => {
         onClose();
-        !!onAlternateAction && onAlternateAction();
+        !!onAlternateAction && onAlternateAction(altActionProps);
     };
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
@@ -143,6 +146,9 @@ ConfirmationBox.propTypes = {
     additionalInformation: PropTypes.string,
     showAdditionalInformation: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
+    actionProps: PropTypes.object,
+    altActionProps: PropTypes.object,
+    cancelProps: PropTypes.object,
 };
 
 ConfirmationBox.defaultProps = {
