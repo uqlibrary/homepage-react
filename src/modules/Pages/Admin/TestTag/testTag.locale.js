@@ -278,6 +278,7 @@ export default {
                 form: {
                     locationTypeTitle: 'Location type',
                     actions: 'Actions',
+                    addLocationButton: location => `Add ${location}`,
                     columns: {
                         site: {
                             site_id: {
@@ -358,6 +359,14 @@ export default {
                     cancelButtonLabel: 'Cancel',
                     confirmationMessage: 'Are you sure you wish to delete this Location?',
                     confirmationTitle: 'Delete unused Location',
+                },
+                alerts: {
+                    addSuccess: location => `${location} added successfully`,
+                    addFail: location => `${location} could not be saved`,
+                    updateSuccess: location => `${location} updated successfully`,
+                    updateFail: location => `${location} could not be updated`,
+                    deleteSuccess: location => `${location} deleted successfully`,
+                    deleteFail: location => `${location} could not be deleted`,
                 },
             },
         },

@@ -81,16 +81,26 @@ export function addLocation({ type, request }) {
         dispatch({ type: actions.TESTTAG_LOCATION_ADDING });
         return post(TEST_TAG_ADD_LOCATION_API(type), request)
             .then(response => {
-                dispatch({
-                    type: actions.TESTTAG_LOCATION_ADDED,
-                    payload: response,
-                });
+                console.log(response, response.status.toLowerCase());
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_LOCATION_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_LOCATION_ADD_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
             })
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_LOCATION_ADD_FAILED,
                     payload: error.message,
                 });
+                return Promise.reject(error);
             });
     };
 }
@@ -100,16 +110,25 @@ export function updateLocation({ type, request }) {
         dispatch({ type: actions.TESTTAG_LOCATION_UPDATING });
         return put(TEST_TAG_MODIFY_LOCATION_API({ type, id: request[`${type}_id`] }), request)
             .then(response => {
-                dispatch({
-                    type: actions.TESTTAG_LOCATION_UPDATED,
-                    payload: response,
-                });
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_LOCATION_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_LOCATION_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
             })
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_LOCATION_UPDATE_FAILED,
                     payload: error.message,
                 });
+                return Promise.reject(error);
             });
     };
 }
@@ -119,16 +138,25 @@ export function deleteLocation({ type, id }) {
         dispatch({ type: actions.TESTTAG_LOCATION_DELETING });
         return destroy(TEST_TAG_MODIFY_LOCATION_API({ type, id: id }))
             .then(response => {
-                dispatch({
-                    type: actions.TESTTAG_LOCATION_DELETED,
-                    payload: response,
-                });
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_LOCATION_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_LOCATION_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
             })
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_LOCATION_DELETE_FAILED,
                     payload: error.message,
                 });
+                return Promise.reject(error);
             });
     };
 }

@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { useConfirmationState } from 'hooks';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 
@@ -37,13 +36,31 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const actionHandler = {
+    site: actions => {
+        actions.clearSites();
+        actions.loadSites();
+    },
+    building: actions => {
+        actions.clearSites();
+        actions.loadSites();
+    },
+    floor: (actions, location) => {
+        actions.clearFloors();
+        actions.loadFloors(location.building);
+    },
+    room: (actions, location) => {
+        actions.clearRooms();
+        actions.loadRooms(location.floor);
+    },
+};
+
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
     const [selectedFilter, setSelectedFilter] = React.useState('site');
     const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
-    const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
 
     const {
@@ -127,23 +144,10 @@ const ManageLocations = ({ actions }) => {
         };
     };
 
-    const actionHandler = {
-        site: () => {
-            actions.clearSites();
-            actions.loadSites();
-        },
-        building: () => {
-            actions.clearSites();
-            actions.loadSites();
-        },
-        floor: () => {
-            actions.clearFloors();
-            actions.loadFloors(location.building);
-        },
-        room: () => {
-            actions.clearRooms();
-            actions.loadRooms(location.floor);
-        },
+    const closeDialog = () => actionDispatch({ type: 'clear' });
+
+    const handleApiError = response => {
+        openConfirmationAlert(`Request failed: ${response.message}`, 'error');
     };
 
     const handleAddClick = () => {
@@ -182,46 +186,89 @@ const ManageLocations = ({ actions }) => {
         });
     };
 
-    const onRowAdd = data => {
-        setDialogueBusy(true);
-        const request = structuredClone(data);
-        const wrappedRequest = transformAddRequest({ request, selectedFilter, location });
+    const onRowAdd = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const request = structuredClone(data);
+            const wrappedRequest = transformAddRequest({ request, selectedFilter, location });
 
-        actions.addLocation({ type: selectedFilter, request: wrappedRequest }).then(() => {
-            setDialogueBusy(false);
-            actionDispatch({ type: 'clear' });
-            openConfirmationAlert(`${capitaliseLeadingChar(selectedFilter)} added successfully.`, 'success');
-            actionHandler[selectedFilter]();
-        });
-    };
-    const onRowEdit = data => {
-        setDialogueBusy(true);
-        const request = structuredClone(data);
-        const wrappedRequest = transformUpdateRequest({ request, selectedFilter, location });
+            actions
+                .addLocation({ type: selectedFilter, request: wrappedRequest })
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(
+                        pageLocale.alerts.addSuccess(capitaliseLeadingChar(selectedFilter)),
+                        'success',
+                    );
+                    actionHandler[selectedFilter](actions, location);
+                })
+                .catch(error => {
+                    console.log(error);
+                    handleApiError({ message: pageLocale.alerts.addFail(capitaliseLeadingChar(selectedFilter)) });
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter],
+    );
+    const onRowEdit = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const request = structuredClone(data);
+            const wrappedRequest = transformUpdateRequest({ request, selectedFilter, location });
 
-        actions.updateLocation({ type: selectedFilter, request: wrappedRequest }).then(() => {
-            setDialogueBusy(false);
-            actionDispatch({ type: 'clear' });
-            openConfirmationAlert(`${capitaliseLeadingChar(selectedFilter)} updated successfully.`, 'success');
-            actionHandler[selectedFilter]();
-        });
-    };
-    // HERE - FIX ISSUE OF LOCATION DISPLAY NOT UPDATING.
-    // ALSO ADD NEW BUTTON CONTENT FOR CONFIRM PANEL WHEN
-    // SAENDING DELETE REQUEST. MAKE locale.confirmButtonLabel A JSX SPINNER
-    const onRowDelete = data => {
-        console.log(data);
-        setDialogueBusy(true);
-        const selectedFilter = data.props.selectedFilter;
-        const id = data.row[`${selectedFilter}_id`];
+            actions
+                .updateLocation({ type: selectedFilter, request: wrappedRequest })
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(
+                        pageLocale.alerts.updateSuccess(capitaliseLeadingChar(selectedFilter)),
+                        'success',
+                    );
+                    actionHandler[selectedFilter](actions, location);
+                })
+                .catch(error => {
+                    console.log(error);
+                    handleApiError({ message: pageLocale.alerts.updateFail(capitaliseLeadingChar(selectedFilter)) });
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter],
+    );
 
-        actions.deleteLocation({ type: selectedFilter, id }).then(() => {
-            setDialogueBusy(false);
-            actionDispatch({ type: 'clear' });
-            openConfirmationAlert(`${capitaliseLeadingChar(selectedFilter)} deleted successfully.`, 'success');
-            actionHandler[selectedFilter]();
-        });
-    };
+    const onRowDelete = React.useCallback(
+        data => {
+            console.log(data);
+            setDialogueBusy(true);
+            const selectedFilter = data.props.selectedFilter;
+            const id = data.row[`${selectedFilter}_id`];
+
+            actions
+                .deleteLocation({ type: selectedFilter, id })
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(
+                        pageLocale.alerts.deleteSuccess(capitaliseLeadingChar(selectedFilter)),
+                        'success',
+                    );
+                    actionHandler[selectedFilter](actions, location);
+                })
+                .catch(error => {
+                    console.log(error);
+                    handleApiError({ message: pageLocale.alerts.deleteFail(capitaliseLeadingChar(selectedFilter)) });
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter],
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const columns = useMemo(
@@ -248,7 +295,7 @@ const ManageLocations = ({ actions }) => {
                         fields={config[selectedFilter].fields}
                         columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
+                        onCancelAction={closeDialog}
                         onAction={onRowAdd}
                         props={actionState?.props}
                         isBusy={dialogueBusy}
@@ -262,7 +309,7 @@ const ManageLocations = ({ actions }) => {
                         fields={config[selectedFilter].fields}
                         columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
+                        onCancelAction={closeDialog}
                         onAction={onRowEdit}
                         props={actionState?.props}
                         isBusy={dialogueBusy}
@@ -272,9 +319,8 @@ const ManageLocations = ({ actions }) => {
                         actionButtonVariant="contained"
                         cancelButtonColor="secondary"
                         confirmationBoxId="deleteRow"
-                        onCancelAction={hideDeleteConfirm}
+                        onCancelAction={closeDialog}
                         onAction={onRowDelete}
-                        onClose={hideDeleteConfirm}
                         isOpen={actionState.isDelete}
                         locale={
                             !dialogueBusy
@@ -318,7 +364,10 @@ const ManageLocations = ({ actions }) => {
                                 rowId={`${selectedFilter}_id`}
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
-                                    toolbar: { label: `Add ${selectedFilter}`, onClick: handleAddClick },
+                                    toolbar: {
+                                        label: pageLocale.form.addLocationButton(selectedFilter),
+                                        onClick: handleAddClick,
+                                    },
                                 }}
                                 loading={siteListLoading || floorListLoading || roomListLoading}
                                 classes={{ root: classes.gridRoot }}

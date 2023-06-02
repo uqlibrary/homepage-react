@@ -48,18 +48,18 @@ export const ConfirmationBox = ({
     const classes = useStyles();
 
     const _onAction = () => {
-        onClose();
-        onAction(actionProps);
+        onClose?.();
+        onAction?.(actionProps);
     };
 
     const _onCancelAction = () => {
-        onClose();
-        !!onCancelAction && onCancelAction(cancelProps);
+        onClose?.();
+        onCancelAction?.(cancelProps);
     };
 
     const _onAlternateAction = () => {
-        onClose();
-        !!onAlternateAction && onAlternateAction(altActionProps);
+        onClose?.();
+        onAlternateAction?.(altActionProps);
     };
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
