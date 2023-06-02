@@ -68,45 +68,48 @@ export const actionReducer = (_, action) => {
             throw `Unknown action '${type}'`;
     }
 };
+export const getAssociatedCollectionKeyBySelectedFilter = (collection, current, direction = 'next') => {
+    // get collection key names i.e. ['site','building','floor','room']
+    const keys = Object.keys(collection);
+
+    // get current selected collection index
+    const index = keys.findIndex(key => key === current);
+
+    // index 0 (sites) doesnt have a preceding collection, so just return the request
+    if ((direction === 'prev' && index === 0) || (direction === 'next' && index === keys.length - 1)) return null;
+
+    // else grab the name of the previous collection type i.e. if current is 'room', this would return 'building'
+    const key = keys[direction === 'prev' ? index - 1 : index + 1];
+
+    return key;
+};
 
 export const transformAddRequest = ({ request, selectedFilter, location }) => {
     // add requests may have an id field (probably 'auto') that needs to be removed
     delete request[`${selectedFilter}_id`];
 
-    // get location key names i.e. ['site','building','floor','room']
-    const keys = Object.keys(location);
-
-    // get current selected location index
-    const index = keys.findIndex(key => key === selectedFilter);
-
-    // index 0 (sites) doesnt have a preceding location, so just return the request
-    if (index === 0) return request;
-
-    // else grab the name of the previous location type i.e. if selectedFilter is 'room', this would return 'building'
-    const prevKey = keys[index - 1];
+    const prevKey = getAssociatedCollectionKeyBySelectedFilter(location, selectedFilter, 'prev');
+    if (!!!prevKey) return request;
 
     // build a new request by inserting a key:value in format e.g. 'room_floor_id: 1'
     return { ...request, [`${selectedFilter}_${prevKey}_id`]: location[prevKey] };
 };
 
 export const transformUpdateRequest = ({ request, selectedFilter, location }) => {
-    // get location key names i.e. ['site','building','floor','room']
-    const keys = Object.keys(location);
-
-    // get current selected location index
-    const index = keys.findIndex(key => key === selectedFilter);
-
-    // index max (room) doesnt have any superseding locations, so just return the request
-    if (index === keys.length - 1) return request;
-
-    // else grab the name of the next location type i.e. if selectedFilter is 'building', this would return 'room'
-    const nextKey = keys[index + 1];
+    const prevKey = getAssociatedCollectionKeyBySelectedFilter(location, selectedFilter, 'prev');
+    const nextKey = getAssociatedCollectionKeyBySelectedFilter(location, selectedFilter);
 
     // now remove the array of next location data we got from the server e.g.
     // for sites, we also get a buildings:[] array (note plural), for buildings
     // we also get a rooms:[] array etc.
     // We dont need to send all of this stuff back to the server.
     delete request[`${nextKey}s`];
+    // dont need this either
+    delete request.asset_count;
 
-    return request;
+    // if there's no previous key to send, return request as it now is
+    if (!!!prevKey) return request;
+
+    // build a new request by inserting a key:value in format e.g. 'room_floor_id: 1'
+    return { ...request, [`${selectedFilter}_${prevKey}_id`]: location[prevKey] };
 };

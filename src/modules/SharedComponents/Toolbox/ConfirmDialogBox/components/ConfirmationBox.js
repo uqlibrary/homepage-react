@@ -39,6 +39,8 @@ export const ConfirmationBox = ({
     showAdditionalInformation,
     additionalInformation,
     noMinContentWidth,
+    disableButtonsWhenBusy = false,
+    isBusy = false,
     actionProps = {},
     altActionProps = {},
     cancelProps = {},
@@ -91,6 +93,7 @@ export const ConfirmationBox = ({
                                 onClick={_onAction}
                                 id="confirm-action"
                                 data-testid={`confirm-${confirmationBoxId}`}
+                                disabled={disableButtonsWhenBusy && isBusy}
                             />
                         </Grid>
                     )}
@@ -105,6 +108,7 @@ export const ConfirmationBox = ({
                                 onClick={_onAlternateAction}
                                 id="confirm-alternate-action"
                                 data-testid={`confirm-alternate-${confirmationBoxId}`}
+                                disabled={disableButtonsWhenBusy && isBusy}
                             />
                         </Grid>
                     )}
@@ -118,6 +122,7 @@ export const ConfirmationBox = ({
                                 onClick={_onCancelAction}
                                 id="confirm-cancel-action"
                                 data-testid={`cancel-${confirmationBoxId}`}
+                                disabled={disableButtonsWhenBusy && isBusy}
                             />
                         </Grid>
                     )}
@@ -149,6 +154,8 @@ ConfirmationBox.propTypes = {
     actionProps: PropTypes.object,
     altActionProps: PropTypes.object,
     cancelProps: PropTypes.object,
+    disableButtonsWhenBusy: PropTypes.bool,
+    isBusy: PropTypes.bool,
 };
 
 ConfirmationBox.defaultProps = {
@@ -167,6 +174,8 @@ ConfirmationBox.defaultProps = {
     showInputForm: false,
     additionalInformation: null,
     noMinContentWidth: false,
+    disableButtonsWhenBusy: false,
+    isBusy: false,
 };
 
 export default React.memo(ConfirmationBox);

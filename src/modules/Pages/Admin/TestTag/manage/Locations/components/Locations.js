@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
@@ -205,7 +206,9 @@ const ManageLocations = ({ actions }) => {
             actionHandler[selectedFilter]();
         });
     };
-
+    // HERE - FIX ISSUE OF LOCATION DISPLAY NOT UPDATING.
+    // ALSO ADD NEW BUTTON CONTENT FOR CONFIRM PANEL WHEN
+    // SAENDING DELETE REQUEST. MAKE locale.confirmButtonLabel A JSX SPINNER
     const onRowDelete = data => {
         console.log(data);
         setDialogueBusy(true);
@@ -273,7 +276,23 @@ const ManageLocations = ({ actions }) => {
                         onAction={onRowDelete}
                         onClose={hideDeleteConfirm}
                         isOpen={actionState.isDelete}
-                        locale={pageLocale.dialogDeleteConfirm}
+                        locale={
+                            !dialogueBusy
+                                ? pageLocale.dialogDeleteConfirm
+                                : {
+                                      ...pageLocale.dialogDeleteConfirm,
+                                      confirmButtonLabel: (
+                                          <CircularProgress
+                                              color="inherit"
+                                              size={25}
+                                              id="confirmationSpinner"
+                                              data-testid="confirmationSpinner"
+                                          />
+                                      ),
+                                  }
+                        }
+                        disableButtonsWhenBusy
+                        isBusy={dialogueBusy}
                         noMinContentWidth
                         actionProps={{ row: actionState?.row, props: actionState?.props }}
                     />
