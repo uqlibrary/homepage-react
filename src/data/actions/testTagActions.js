@@ -244,7 +244,7 @@ export function loadAssets(pattern) {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSETS_LOADED,
-                    payload: response,
+                    payload: response.data,
                 });
             })
             .catch(error => {
