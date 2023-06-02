@@ -45,9 +45,9 @@ export const getColumns = ({ config, locale, selectedFilter, handleEditClick, ha
     return columns;
 };
 
-export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, row: {} };
+export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 export const actionReducer = (_, action) => {
-    const { type, row, selectedFilter, ...props } = action;
+    const { type, row, selectedFilter, title, ...props } = action;
     console.log('actionReducer', type, props);
     switch (type) {
         case 'add':
@@ -56,12 +56,13 @@ export const actionReducer = (_, action) => {
                 isEdit: false,
                 isDelete: false,
                 row: { [`${selectedFilter}_id`]: 'auto' },
+                title,
                 props: { ...props },
             };
         case 'edit':
-            return { isAdd: false, isEdit: true, isDelete: false, row, props: { ...props } };
+            return { isAdd: false, isEdit: true, isDelete: false, title, row, props: { ...props } };
         case 'delete':
-            return { isAdd: false, isEdit: false, isDelete: true, row, props: { ...props, selectedFilter } };
+            return { isAdd: false, isEdit: false, isDelete: true, title, row, props: { ...props, selectedFilter } };
         case 'clear':
             return { ...emptyActionState };
         default:

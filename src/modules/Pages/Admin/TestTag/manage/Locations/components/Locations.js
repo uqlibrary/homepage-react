@@ -87,6 +87,7 @@ const ManageLocations = ({ actions }) => {
             if (location.floor !== -1) {
                 setRows(roomList.rooms);
             } else {
+                setLocation({ room: -1 });
                 actions.clearRooms();
             }
             setSelectedFilter('room');
@@ -99,6 +100,8 @@ const ManageLocations = ({ actions }) => {
                         ?.find(site => site.site_id === location.site)
                         ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
                 );
+                setLocation({ floor: -1, room: -1 });
+                actions.clearFloors();
             }
             setSelectedFilter('floor');
         } else if (siteListLoaded) {
@@ -107,7 +110,7 @@ const ManageLocations = ({ actions }) => {
                 setSelectedFilter('building');
             } else {
                 setRows(siteList);
-                setLocation({ site: -1 });
+                setLocation({ building: -1, floor: -1, room: -1 });
                 setSelectedFilter('site');
             }
         } else actions.loadSites();
@@ -123,26 +126,20 @@ const ManageLocations = ({ actions }) => {
         setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
     };
 
-    const getLocationDisplayedAs = () => {
-        console.log(
-            'getLocationdisplayedas',
-            siteList?.find(site => site.site_id === location.site),
-            {
+    const getLocationDisplayedAs = React.useMemo(
+        () => {
+            const value = {
                 site: siteList?.find(site => site.site_id === location.site)?.site_id_displayed,
                 building: siteList
                     ?.find(site => site.site_id === location.site)
                     ?.buildings?.find(building => building.building_id === location.building)?.building_id_displayed,
                 floor: floorList?.floors?.find(floor => floor.floor_id === location.floor)?.floor_id_displayed,
-            },
-        );
-        return {
-            site: siteList?.find(site => site.site_id === location.site)?.site_id_displayed,
-            building: siteList
-                ?.find(site => site.site_id === location.site)
-                ?.buildings?.find(building => building.building_id === location.building)?.building_id_displayed,
-            floor: floorList?.floors?.find(floor => floor.floor_id === location.floor)?.floor_id_displayed,
-        };
-    };
+            };
+            return value;
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, siteList, floorList],
+    );
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
 
@@ -150,41 +147,47 @@ const ManageLocations = ({ actions }) => {
         openConfirmationAlert(`Request failed: ${response.message}`, 'error');
     };
 
-    const handleAddClick = () => {
-        console.log('displayLocation', getLocationDisplayedAs());
+    const handleAddClick = React.useCallback(() => {
         actionDispatch({
             type: 'add',
+            title: pageLocale.dialogAdd.confirmationTitle(selectedFilter),
             selectedFilter,
             location,
-            displayLocation: getLocationDisplayedAs(),
+            displayLocation: getLocationDisplayedAs,
         });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location, selectedFilter, getLocationDisplayedAs]);
+
     const handleEditClick = React.useCallback(
         ({ id, api }) => {
             const row = api.getRow(id);
-            console.log('displayLocation', getLocationDisplayedAs());
             actionDispatch({
                 type: 'edit',
+                title: pageLocale.dialogEdit.confirmationTitle(selectedFilter),
                 row,
                 selectedFilter,
                 location,
-                displayLocation: getLocationDisplayedAs(),
+                displayLocation: getLocationDisplayedAs,
             });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [location, selectedFilter],
+        [location, selectedFilter, getLocationDisplayedAs],
     );
-    const handleDeleteClick = ({ id, api }) => {
-        const row = api.getRow(id);
-        console.log('displayLocation', getLocationDisplayedAs());
-        actionDispatch({
-            type: 'delete',
-            row,
-            selectedFilter,
-            location,
-            displayLocation: getLocationDisplayedAs(),
-        });
-    };
+
+    const handleDeleteClick = React.useCallback(
+        ({ id, api }) => {
+            const row = api.getRow(id);
+            actionDispatch({
+                type: 'delete',
+                row,
+                selectedFilter,
+                location,
+                displayLocation: getLocationDisplayedAs,
+            });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter, getLocationDisplayedAs],
+    );
 
     const onRowAdd = React.useCallback(
         data => {
@@ -213,6 +216,7 @@ const ManageLocations = ({ actions }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [location, selectedFilter],
     );
+
     const onRowEdit = React.useCallback(
         data => {
             setDialogueBusy(true);
@@ -243,7 +247,6 @@ const ManageLocations = ({ actions }) => {
 
     const onRowDelete = React.useCallback(
         data => {
-            console.log(data);
             setDialogueBusy(true);
             const selectedFilter = data.props.selectedFilter;
             const id = data.row[`${selectedFilter}_id`];
@@ -273,9 +276,16 @@ const ManageLocations = ({ actions }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const columns = useMemo(
         () =>
-            getColumns({ config, locale: pageLocale.form.columns, selectedFilter, handleEditClick, handleDeleteClick }),
+            getColumns({
+                config,
+                locale: pageLocale.form.columns,
+                selectedFilter,
+                handleEditClick,
+                handleDeleteClick,
+            }),
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [selectedFilter],
+        [handleDeleteClick, handleEditClick, selectedFilter],
     );
 
     return (
@@ -287,12 +297,12 @@ const ManageLocations = ({ actions }) => {
             <div className={classes.root}>
                 <StandardCard noHeader>
                     <UpdateDialog
-                        title={pageLocale.dialogAdd.confirmationTitle(selectedFilter)}
+                        title={actionState.title}
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
                         locationType={selectedFilter}
-                        fields={config[selectedFilter].fields}
+                        fields={config?.[selectedFilter].fields ?? []}
                         columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
@@ -301,12 +311,12 @@ const ManageLocations = ({ actions }) => {
                         isBusy={dialogueBusy}
                     />
                     <UpdateDialog
-                        title={pageLocale.dialogEdit.confirmationTitle(selectedFilter)}
+                        title={actionState.title}
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
                         locationType={selectedFilter}
-                        fields={config[selectedFilter].fields}
+                        fields={config?.[selectedFilter].fields ?? []}
                         columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
                         onCancelAction={closeDialog}

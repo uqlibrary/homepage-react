@@ -352,7 +352,7 @@ export default {
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: type => `Add new ${type}`,
+                    confirmationTitle: type => `Edit ${type}`,
                 },
                 dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',

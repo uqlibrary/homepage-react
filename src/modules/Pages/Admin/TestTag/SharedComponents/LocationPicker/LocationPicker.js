@@ -63,7 +63,6 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                         options={fullSiteList}
                         value={fullSiteList?.find(site => site.site_id === location.site) ?? fullSiteList?.[0]}
                         onChange={(_, newValue) => {
-                            console.log(newValue);
                             setLocation({
                                 site: newValue.site_id,
                                 building: -1,
