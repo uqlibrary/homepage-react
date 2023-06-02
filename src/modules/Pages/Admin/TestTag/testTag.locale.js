@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import { pathConfig } from '../../../../config/pathConfig';
 
 import InspectionIcon from '@material-ui/icons/Search';
 import UsersIcon from '@material-ui/icons/People';
@@ -58,7 +59,7 @@ export default {
                             title: 'LOCATIONS',
                             icon: <LocationIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanagelocations}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTION DEVICES',
@@ -263,5 +264,121 @@ export default {
                 },
             },
         },
+        manage: {
+            locations: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage Locations',
+                        icon: <LocationIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Locations for ${dept}`,
+                },
+                form: {
+                    locationTypeTitle: 'Location type',
+                    actions: 'Actions',
+                    addLocationButton: location => `Add ${location}`,
+                    columns: {
+                        site: {
+                            site_id: {
+                                label: 'Site ID',
+                            },
+                            site_name: {
+                                label: 'Description',
+                            },
+                            site_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        building: {
+                            building_id: {
+                                label: 'Building ID',
+                            },
+                            building_location: {
+                                label: 'Location',
+                            },
+                            building_name: {
+                                label: 'Description',
+                            },
+                            building_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        floor: {
+                            floor_id: {
+                                label: 'Floor ID',
+                            },
+                            floor_location: {
+                                label: 'Location',
+                            },
+                            floor_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        room: {
+                            room_id: {
+                                label: 'Room ID',
+                            },
+                            room_location: {
+                                label: 'Location',
+                            },
+                            room_description: {
+                                label: 'Description',
+                            },
+                            room_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Add new ${type}`,
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Edit ${type}`,
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to delete this Location?',
+                    confirmationTitle: 'Delete unused Location',
+                },
+                alerts: {
+                    addSuccess: location => `${location} added successfully`,
+                    addFail: location => `${location} could not be saved`,
+                    updateSuccess: location => `${location} updated successfully`,
+                    updateFail: location => `${location} could not be updated`,
+                    deleteSuccess: location => `${location} deleted successfully`,
+                    deleteFail: location => `${location} could not be deleted`,
+                },
+            },
+        },
+    },
+    locationPicker: {
+        siteLabel: 'Site',
+        building: {
+            label: 'Building',
+        },
+        floor: {
+            label: 'Floor',
+        },
+        room: { label: 'Room' },
     },
 };

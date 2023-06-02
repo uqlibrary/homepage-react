@@ -60,12 +60,12 @@ const EventPanel = ({
 
     const updateLocation = (update, useRoomId = false) => {
         setLocation(update);
-        handleChange('room_id')(useRoomId ? update.formRoomId : -1);
+        handleChange('room_id')(useRoomId ? update.room : -1);
     };
 
     useEffect(() => {
         if (!inspectionConfigLoading && !!inspectionConfig && inspectionConfig?.sites.length > 0) {
-            setLocation({ formSiteId: inspectionConfig.sites[0].site_id });
+            setLocation({ site: inspectionConfig.sites[0].site_id });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionConfig, inspectionConfigLoading]);
@@ -128,16 +128,16 @@ const EventPanel = ({
                                 id="testntag-form-siteid"
                                 data-testid="testntag-form-siteid"
                                 className={classes.formSelect}
-                                value={location.formSiteId === -1 ? '' : location.formSiteId}
+                                value={location.site === -1 ? '' : location.site}
                                 onChange={e => {
                                     updateLocation({
-                                        formSiteId: e.target.value,
-                                        formBuildingId: -1,
-                                        formFloorId: -1,
-                                        formRoomId: -1,
+                                        site: e.target.value,
+                                        building: -1,
+                                        floor: -1,
+                                        room: -1,
                                     });
                                 }}
-                                error={location.formSiteId === -1}
+                                error={location.site === -1}
                                 inputProps={{
                                     id: 'testntag-form-siteid-input',
                                     'data-testid': 'testntag-form-siteid-input',
@@ -172,21 +172,20 @@ const EventPanel = ({
                                 data-testid="testntag-form-buildingid"
                                 fullWidth
                                 options={
-                                    inspectionConfig?.sites?.find(site => site.site_id === location.formSiteId)
-                                        ?.buildings ?? []
+                                    inspectionConfig?.sites?.find(site => site.site_id === location.site)?.buildings ??
+                                    []
                                 }
                                 value={
                                     inspectionConfig?.sites
-                                        ?.find(site => site.site_id === location.formSiteId)
-                                        ?.buildings?.find(
-                                            building => building.building_id === location.formBuildingId,
-                                        ) ?? null
+                                        ?.find(site => site.site_id === location.site)
+                                        ?.buildings?.find(building => building.building_id === location.building) ??
+                                    null
                                 }
                                 onChange={(_, newValue) => {
                                     updateLocation({
-                                        formBuildingId: newValue.building_id,
-                                        formFloorId: -1,
-                                        formRoomId: -1,
+                                        building: newValue.building_id,
+                                        floor: -1,
+                                        room: -1,
                                     });
                                     actions.loadFloors(newValue.building_id);
                                 }}
@@ -200,11 +199,7 @@ const EventPanel = ({
                                         {...params}
                                         {...pageLocale.form.event.location.building}
                                         required={hasInspection}
-                                        error={
-                                            hasInspection &&
-                                            location.formSiteId !== -1 &&
-                                            location.formBuildingId === -1
-                                        }
+                                        error={hasInspection && location.site !== -1 && location.building === -1}
                                         variant="standard"
                                         InputLabelProps={{
                                             ...inputLabelProps,
@@ -233,7 +228,7 @@ const EventPanel = ({
                                         }}
                                     />
                                 )}
-                                disabled={location.formSiteId === -1 || !!!inspectionConfig}
+                                disabled={location.site === -1 || !!!inspectionConfig}
                                 disableClearable
                                 loading={!!!inspectionConfig}
                             />
@@ -246,11 +241,9 @@ const EventPanel = ({
                                 data-testid="testntag-form-floorid"
                                 fullWidth
                                 options={floorList?.floors ?? []}
-                                value={
-                                    floorList?.floors?.find(floor => floor.floor_id === location.formFloorId) ?? null
-                                }
+                                value={floorList?.floors?.find(floor => floor.floor_id === location.floor) ?? null}
                                 onChange={(_, newValue) => {
-                                    updateLocation({ formFloorId: newValue.floor_id, formRoomId: -1 });
+                                    updateLocation({ floor: newValue.floor_id, room: -1 });
                                     actions.loadRooms(newValue.floor_id);
                                 }}
                                 getOptionLabel={option =>
@@ -263,9 +256,9 @@ const EventPanel = ({
                                         required={hasInspection}
                                         error={
                                             hasInspection &&
-                                            location.formSiteId !== -1 &&
-                                            location.formBuildingId !== -1 &&
-                                            location.formFloorId === -1
+                                            location.site !== -1 &&
+                                            location.building !== -1 &&
+                                            location.floor === -1
                                         }
                                         variant="standard"
                                         InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-floorid-input' }}
@@ -292,7 +285,7 @@ const EventPanel = ({
                                         }}
                                     />
                                 )}
-                                disabled={location.formBuildingId === -1 || floorListLoading}
+                                disabled={location.building === -1 || floorListLoading}
                                 disableClearable
                                 loading={!!floorListLoading}
                             />
@@ -305,9 +298,9 @@ const EventPanel = ({
                                 data-testid="testntag-form-roomid"
                                 fullWidth
                                 options={roomList?.rooms ?? []}
-                                value={roomList?.rooms?.find(room => room.room_id === location.formRoomId) ?? null}
+                                value={roomList?.rooms?.find(room => room.room_id === location.room) ?? null}
                                 onChange={(_, newValue) => {
-                                    updateLocation({ formRoomId: newValue.room_id }, true);
+                                    updateLocation({ room: newValue.room_id }, true);
                                 }}
                                 getOptionLabel={option => option.room_id_displayed ?? /* istanbul ignore next */ option}
                                 renderInput={params => (
@@ -317,10 +310,10 @@ const EventPanel = ({
                                         required={hasInspection}
                                         error={
                                             hasInspection &&
-                                            location.formSiteId !== -1 &&
-                                            location.formBuildingId !== -1 &&
-                                            location.formFloorId !== -1 &&
-                                            location.formRoomId === -1
+                                            location.site !== -1 &&
+                                            location.building !== -1 &&
+                                            location.floor !== -1 &&
+                                            location.room === -1
                                         }
                                         variant="standard"
                                         InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-roomid-input' }}
@@ -347,7 +340,7 @@ const EventPanel = ({
                                         }}
                                     />
                                 )}
-                                disabled={location.formFloorId === -1 || roomListLoading}
+                                disabled={location.floor === -1 || roomListLoading}
                                 disableClearable
                                 loading={!!roomListLoading}
                             />

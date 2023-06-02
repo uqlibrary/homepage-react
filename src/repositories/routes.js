@@ -206,12 +206,17 @@ export const PROMOPANEL_UNSCHEDULE_API = ({ id }) => ({
 export const TEST_TAG_USER_API = () => ({ apiUrl: 'test_and_tag/user' });
 export const TEST_TAG_ONLOAD_DASHBOARD_API = () => ({ apiUrl: 'test_and_tag/onload/dashboard' });
 export const TEST_TAG_ONLOAD_INSPECT_API = () => ({ apiUrl: 'test_and_tag/onload/inspect' });
-// export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
-export const TEST_TAG_FLOOR_API = buildingId => ({
-    apiUrl: `test_and_tag/building/${buildingId}/current`,
+
+export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
+export const TEST_TAG_FLOOR_API = id => ({
+    apiUrl: `test_and_tag/building/${id}/current`,
 });
-export const TEST_TAG_ROOM_API = floorId => ({
-    apiUrl: `test_and_tag/floor/${floorId}/current`,
+export const TEST_TAG_ROOM_API = id => ({
+    apiUrl: `test_and_tag/floor/${id}/current`,
 });
+
+export const TEST_TAG_ADD_LOCATION_API = type => ({ apiUrl: `test_and_tag/${type}` });
+export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test_and_tag/${type}/${id}` });
+
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });
 export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });

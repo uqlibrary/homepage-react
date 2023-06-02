@@ -40,6 +40,7 @@ import testTag_user_UQPF from './data/records/test_tag_userUQPF';
 import testTag_dashboardOnLoad from './data/records/test_tag_dashboardOnLoad';
 import testTag_inspectionOnLoad from './data/records/test_tag_inspectionOnLoad';
 import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
+import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
 // import testTag_testDevices from './data/records/test_tag_test_devices';
@@ -767,7 +768,6 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        console.log('onget');
         return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_user_UQPF : testTag_user];
     })
 
@@ -782,6 +782,15 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(config => {
         return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
     })
+
+    // T&T SITES
+    .onGet(routes.TEST_TAG_SITE_API().apiUrl)
+    .reply(config => {
+        console.log('onget sites', testTag_siteList.data);
+        return [200, testTag_siteList];
+    })
+
+    // T&T BUILDINGS
 
     // T&T FLOORS
     .onGet(/test_and_tag\/building\/\d+\/current/)
@@ -798,6 +807,24 @@ mock.onGet('exams/course/FREN1010/summary')
         const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
         return [200, {data: testTag_roomList.data.find(room => room.floor_id === id)}];
     })
+
+    // T&T LOCATIONS
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').url)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).url)
+    .reply(() => [200, { status: 'OK' }])
 
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)

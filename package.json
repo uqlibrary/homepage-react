@@ -138,6 +138,7 @@
         "@material-ui/pickers": "^3.3.10",
         "@material-ui/styles": "^4.11.4",
         "@material-ui/system": "^4.11.3",
+        "@mui/x-data-grid": "^4.0.2",
         "@sentry/browser": "^7.15.0",
         "@sentry/tracing": "^7.15.0",
         "@webcomponents/webcomponentsjs": "^2.5.0",

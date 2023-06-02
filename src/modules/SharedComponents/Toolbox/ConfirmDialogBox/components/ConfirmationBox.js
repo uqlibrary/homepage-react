@@ -39,22 +39,27 @@ export const ConfirmationBox = ({
     showAdditionalInformation,
     additionalInformation,
     noMinContentWidth,
+    disableButtonsWhenBusy = false,
+    isBusy = false,
+    actionProps = {},
+    altActionProps = {},
+    cancelProps = {},
 }) => {
     const classes = useStyles();
 
     const _onAction = () => {
-        onClose();
-        onAction();
+        onClose?.();
+        onAction?.(actionProps);
     };
 
     const _onCancelAction = () => {
-        onClose();
-        !!onCancelAction && onCancelAction();
+        onClose?.();
+        onCancelAction?.(cancelProps);
     };
 
     const _onAlternateAction = () => {
-        onClose();
-        !!onAlternateAction && onAlternateAction();
+        onClose?.();
+        onAlternateAction?.(altActionProps);
     };
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${confirmationBoxId}`}>
@@ -88,6 +93,7 @@ export const ConfirmationBox = ({
                                 onClick={_onAction}
                                 id="confirm-action"
                                 data-testid={`confirm-${confirmationBoxId}`}
+                                disabled={disableButtonsWhenBusy && isBusy}
                             />
                         </Grid>
                     )}
@@ -102,6 +108,7 @@ export const ConfirmationBox = ({
                                 onClick={_onAlternateAction}
                                 id="confirm-alternate-action"
                                 data-testid={`confirm-alternate-${confirmationBoxId}`}
+                                disabled={disableButtonsWhenBusy && isBusy}
                             />
                         </Grid>
                     )}
@@ -115,6 +122,7 @@ export const ConfirmationBox = ({
                                 onClick={_onCancelAction}
                                 id="confirm-cancel-action"
                                 data-testid={`cancel-${confirmationBoxId}`}
+                                disabled={disableButtonsWhenBusy && isBusy}
                             />
                         </Grid>
                     )}
@@ -143,6 +151,11 @@ ConfirmationBox.propTypes = {
     additionalInformation: PropTypes.string,
     showAdditionalInformation: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
+    actionProps: PropTypes.object,
+    altActionProps: PropTypes.object,
+    cancelProps: PropTypes.object,
+    disableButtonsWhenBusy: PropTypes.bool,
+    isBusy: PropTypes.bool,
 };
 
 ConfirmationBox.defaultProps = {
@@ -161,6 +174,8 @@ ConfirmationBox.defaultProps = {
     showInputForm: false,
     additionalInformation: null,
     noMinContentWidth: false,
+    disableButtonsWhenBusy: false,
+    isBusy: false,
 };
 
 export default React.memo(ConfirmationBox);

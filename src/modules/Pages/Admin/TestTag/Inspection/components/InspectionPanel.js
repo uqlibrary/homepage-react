@@ -223,7 +223,7 @@ const InspectionPanel = ({
                                 <DebouncedTextField
                                     {...pageLocale.form.inspection.failReason}
                                     multiline
-                                    rows={4}
+                                    minRows={4}
                                     variant="standard"
                                     InputProps={{ fullWidth: true }}
                                     required
@@ -244,7 +244,7 @@ const InspectionPanel = ({
                             <DebouncedTextField
                                 {...pageLocale.form.inspection.inspectionNotes}
                                 multiline
-                                rows={4}
+                                minRows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled}

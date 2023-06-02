@@ -99,20 +99,14 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
     useEffect(() => {
         /* istanbul ignore else */ if (!!asset?.asset_id) {
             setMismatchingLocation(
-                currentLocation.formSiteId !== lastLocation?.site_id ||
-                    currentLocation.formBuildingId !== lastLocation?.building_id ||
-                    currentLocation.formFloorId !== lastLocation?.floor_id ||
-                    currentLocation.formRoomId !== lastLocation?.room_id,
+                currentLocation.site !== lastLocation?.site_id ||
+                    currentLocation.building !== lastLocation?.building_id ||
+                    currentLocation.floor !== lastLocation?.floor_id ||
+                    currentLocation.room !== lastLocation?.room_id,
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        asset?.asset_id,
-        currentLocation.formSiteId,
-        currentLocation.formBuildingId,
-        currentLocation.formFloorId,
-        currentLocation.formRoomId,
-    ]);
+    }, [asset?.asset_id, currentLocation.site, currentLocation.building, currentLocation.floor, currentLocation.room]);
 
     useEffect(() => {
         if (disabled) {

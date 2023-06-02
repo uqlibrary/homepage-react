@@ -207,6 +207,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
+        {
+            path: pathConfig.admin.testntagmanagelocations,
+            component: components.TestTagManageLocations,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
     ];
 
     return [
