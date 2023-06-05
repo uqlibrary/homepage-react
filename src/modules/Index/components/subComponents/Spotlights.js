@@ -74,6 +74,9 @@ const useStyles = makeStyles(() => ({
         left: '50%',
         zIndex: 3,
         textAlign: 'center',
+        '& button': {
+            margin: '0 1px',
+        },
     },
 }));
 
