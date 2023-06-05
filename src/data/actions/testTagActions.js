@@ -11,7 +11,7 @@ import {
     TEST_TAG_ONLOAD_ASSETTYPE_API,
     TEST_TAG_SAVE_ASSETTYPE_API,
     TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API,
-    TEST_TAG_ADD_ASSET_API,
+    TEST_TAG_ADD_ASSET_TYPE_API,
     TEST_TAG_DELETE_ASSET_TYPE_API,
 } from 'repositories/routes';
 
@@ -204,7 +204,7 @@ export function loadAssetTypes() {
 export function addAssetType(request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_ADDING });
-        return post(TEST_TAG_ADD_ASSET_API(), request)
+        return post(TEST_TAG_ADD_ASSET_TYPE_API(), request)
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_ADDED,

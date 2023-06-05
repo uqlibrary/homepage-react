@@ -220,7 +220,7 @@ export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
 // List Asset Types
 export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/onload/assettype' });
 // Add an asset type
-export const TEST_TAG_ADD_ASSET_API = () => ({ apiUrl: 'test_and_tag/assettype' });
+export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
 // Save an asset type (ID contained in payload)
 export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
 // Delete an Asset type (Reassigning assets to new asset type)
