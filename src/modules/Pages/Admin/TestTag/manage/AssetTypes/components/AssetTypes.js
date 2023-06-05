@@ -136,13 +136,11 @@ const ManageAssetTypes = ({
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
     const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type, autoHide: true });
     };
-    const openConfirmationAlert = (message, type) => {
-        console.log('Setting with message', message);
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
+    const openConfirmationAlert = (message, type, autoHide) => {
+        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHide: autoHide });
     };
-
     const handleAddClick = () => {
         closeConfirmationAlert();
         actionDispatch({ type: 'add' });
@@ -173,7 +171,11 @@ const ManageAssetTypes = ({
             actions.loadAssetTypes().then(() => {
                 actionDispatch({ type: 'clear' });
                 setDialogueBusy(false);
-                openConfirmationAlert('Asset Type added successfully.', 'success');
+                if (assetTypesActionError) {
+                    openConfirmationAlert(`Error Adding Asset Type. ${assetTypesActionType}`, 'error', false);
+                } else {
+                    openConfirmationAlert('Asset Type added successfully.', 'success', true);
+                }
             });
         });
     };
@@ -184,7 +186,11 @@ const ManageAssetTypes = ({
             actions.loadAssetTypes().then(() => {
                 setDialogueBusy(false);
                 actionDispatch({ type: 'clear' });
-                openConfirmationAlert('Asset Type updated successfully.', 'success');
+                if (assetTypesActionError) {
+                    openConfirmationAlert(`Error Updating Asset Type. ${assetTypesActionType}`, 'error', false);
+                } else {
+                    openConfirmationAlert('Asset Type updated successfully.', 'success', true);
+                }
             });
         });
     };
@@ -194,30 +200,72 @@ const ManageAssetTypes = ({
         actionDispatch({ type: 'clear' });
     };
 
+    // const onActionDialogueProceed = (oldTypeID, newTypeID) => {
+    //     const Payload = {
+    //         old_asset_type_id: oldTypeID,
+    //         new_asset_type_id: newTypeID,
+    //     };
+    //     setDialogueBusy(true);
+    //     actions.deleteAndReassignAssetType(Payload).then(() => {
+    //         actions.loadAssetTypes().then(() => {
+    //             setDialogueBusy(false);
+    //             if (assetTypesActionError) {
+    //                 openConfirmationAlert(`Error Reallocating Asset Type. ${assetTypesActionType}`, 'error', false);
+    //             } else {
+    //                 openConfirmationAlert('Asset Type Deleted and reallocated.', 'success', true);
+    //             }
+    //             actionDispatch({ type: 'clear' });
+    //         });
+    //     });
+    // };
+
     const onActionDialogueProceed = (oldTypeID, newTypeID) => {
         const Payload = {
             old_asset_type_id: oldTypeID,
             new_asset_type_id: newTypeID,
         };
         setDialogueBusy(true);
-        actions.deleteAndReassignAssetType(Payload).then(() => {
-            actions.loadAssetTypes().then(() => {
-                setDialogueBusy(false);
-                openConfirmationAlert('Asset Type Deleted and reallocated.', 'success');
-                actionDispatch({ type: 'clear' });
+        actions
+            .deleteAndReassignAssetType(Payload)
+            .then(() => {
+                actions
+                    .loadAssetTypes()
+                    .then(() => {
+                        setDialogueBusy(false);
+                        openConfirmationAlert('Asset Type Deleted and reallocated.', 'success', true);
+                        actionDispatch({ type: 'clear' });
+                    })
+                    .catch(error => {
+                        openConfirmationAlert(
+                            `Error  loading asset types from reallocate call. ${error}`,
+                            'error',
+                            false,
+                        );
+                    });
+            })
+            .catch(error => {
+                openConfirmationAlert(`Error Reallocating Asset Type. ${error}`, 'error', false);
             });
-        });
     };
 
     const onDeleteEmptyAssetType = () => {
-        console.log('Confirming delete of ', confirmID);
-        actions.deleteAssetType(confirmID).then(() => {
-            actions.loadAssetTypes().then(() => {
-                setDialogueBusy(false);
-                openConfirmationAlert('Asset Type Deleted.', 'success');
-                actionDispatch({ type: 'clear' });
+        actions
+            .deleteAssetType(confirmID)
+            .then(() => {
+                actions
+                    .loadAssetTypes()
+                    .then(() => {
+                        setDialogueBusy(false);
+                        openConfirmationAlert('Asset Type Deleted.', 'success', true);
+                        actionDispatch({ type: 'clear' });
+                    })
+                    .catch(error => {
+                        openConfirmationAlert(`Error loading asset types from delete call. ${error}`, 'error', false);
+                    });
+            })
+            .catch(error => {
+                openConfirmationAlert(`Error Deleting Asset Type. . ${error}`, 'error', false);
             });
-        });
     };
 
     const columns = useMemo(() => getColumns({ data: assetTypesList, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), [
@@ -298,6 +346,7 @@ const ManageAssetTypes = ({
                         isOpen={confirmationAlert.visible}
                         message={confirmationAlert.message}
                         type={confirmationAlert.type}
+                        autoHide={confirmationAlert.autoHide}
                         closeAlert={closeConfirmationAlert}
                     />
                 </StandardCard>

@@ -863,14 +863,25 @@ mock.onGet('exams/course/FREN1010/summary')
             
         }
     ])
-    .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_DELETE_ASSET_TYPE_API({ id: '.*' }).apiUrl)))
+    .onDelete(/test_and_tag\/assettype\/4/)
     .reply(() => {
         return [200, {status: 'OK'}]
+    })
+    .onDelete(/test_and_tag\/assettype\/5/)
+    .reply(() => {
+        return [
+            400,
+            {
+                status: 'error',
+                message: '5 is a test error',
+            },
+        ];
     })
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
     })
+    // PROMO PANEL API
     .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
     .reply(withDelay([200, {}]))
     .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))

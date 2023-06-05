@@ -35,7 +35,7 @@ export default {
 		asset_type_power_rating: "240V",
         asset_type: "FEW",
         asset_type_notes: "FEW Notes",
-        asset_count: 44
+        asset_count: 0
 	},
 	{
 		asset_type_id: 5,
@@ -44,7 +44,7 @@ export default {
 		asset_type_power_rating: "240V",
         asset_type: "LEW",
         asset_type_notes: "LEW Notes",
-        asset_count: 55
+        asset_count: 0
 	},
 ],
 };

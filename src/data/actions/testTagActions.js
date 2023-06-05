@@ -237,41 +237,60 @@ export function saveAssetType(request) {
     };
 }
 
-export function deleteAndReassignAssetType(request) {
-    return dispatch => {
-        dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGNING });
-        return post(TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API(), request)
+export const deleteAndReassignAssetType = request => async dispatch => {
+    dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGNING });
+    return new Promise((resolve, reject) => {
+        post(TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API(), request)
             .then(response => {
-                // Fire function - should then handle the new promise?
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGNED,
                     payload: response?.data?.asset_types ?? /* istanbul ignore next */ [],
                 });
+                resolve();
             })
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGN_FAILED,
                     payload: error.message,
                 });
+                reject(error);
             });
-    };
-}
+    });
+};
 
-export function deleteAssetType(id) {
-    return dispatch => {
-        console.log('The ID is ', id);
-        dispatch({ type: actions.TESTTAG_ASSET_TYPES_DELETING });
-        return destroy(TEST_TAG_DELETE_ASSET_TYPE_API(id))
+// export function deleteAssetType(id) {
+//     return dispatch => {
+//         console.log('The ID is ', id);
+//         dispatch({ type: actions.TESTTAG_ASSET_TYPES_DELETING });
+//         return destroy(TEST_TAG_DELETE_ASSET_TYPE_API(id))
+//             .then(() => {
+//                 dispatch({
+//                     type: actions.TESTTAG_ASSET_TYPES_DELETED,
+//                 });
+//             })
+//             .catch(error => {
+//                 dispatch({
+//                     type: actions.TESTTAG_ASSET_TYPES_DELETE_FAILED,
+//                     payload: error.message,
+//                 });
+//             });
+//     };
+// }
+
+export const deleteAssetType = id => async dispatch => {
+    dispatch({ type: actions.TESTTAG_ASSET_TYPES_DELETING });
+    return new Promise((resolve, reject) => {
+        destroy(TEST_TAG_DELETE_ASSET_TYPE_API(id))
             .then(() => {
-                dispatch({
-                    type: actions.TESTTAG_ASSET_TYPES_DELETED,
-                });
+                dispatch({ type: actions.TESTTAG_ASSET_TYPES_DELETED });
+                resolve();
             })
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_DELETE_FAILED,
                     payload: error.message,
                 });
+                reject(error);
             });
-    };
-}
+    });
+};
