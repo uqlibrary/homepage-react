@@ -64,7 +64,7 @@ export default {
                         {
                             title: 'INSPECTION DEVICES',
                             icon: <InspectionDeviceIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanageinspectiondevices}?user=uqtesttag`,
                         },
                         {
                             title: 'BULK ASSET UPDATE',
@@ -367,6 +367,68 @@ export default {
                     updateFail: location => `${location} could not be updated`,
                     deleteSuccess: location => `${location} deleted successfully`,
                     deleteFail: location => `${location} could not be deleted`,
+                },
+            },
+            inspectiondevices: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage Inspection Devices',
+                        icon: <InspectionIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Inspection Devices for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    addDeviceButton: 'Add new device',
+                    columns: {
+                        device_id: {
+                            label: 'Device ID',
+                        },
+                        device_model_name: {
+                            label: 'Model name',
+                        },
+                        device_serial_number: {
+                            label: 'Serial',
+                        },
+                        device_department: {
+                            label: 'Department',
+                        },
+                        device_calibrated_date_last: {
+                            label: 'Last calibrated',
+                        },
+                        device_calibrated_by_last: {
+                            label: 'Last calibrated by',
+                        },
+                        device_calibration_due_date: {
+                            label: 'Next calibration',
+                        },
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Add new device',
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit device',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to delete this device?',
+                    confirmationTitle: 'Delete device',
+                },
+                alerts: {
+                    addSuccess: 'Device added successfully',
+                    addFail: 'Device could not be saved',
+                    updateSuccess: 'Device updated successfully',
+                    updateFail: 'Device could not be updated',
+                    deleteSuccess: 'Device deleted successfully',
+                    deleteFail: 'Device could not be deleted',
                 },
             },
         },

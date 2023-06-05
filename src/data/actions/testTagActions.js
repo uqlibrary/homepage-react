@@ -11,6 +11,7 @@ import {
     TEST_TAG_SITE_API,
     TEST_TAG_ADD_LOCATION_API,
     TEST_TAG_MODIFY_LOCATION_API,
+    TEST_TAG_INSPECTION_DEVICE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -283,6 +284,33 @@ export function saveInspection(request) {
 export function clearSaveInspection() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
+    };
+}
+
+/** * INSPECTION DEVICE MANAGEMENT  ***/
+export function loadInspectionDevices() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_LOADING });
+        return get(TEST_TAG_INSPECTION_DEVICE_API())
+            .then(response => {
+                console.log(response);
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_DEVICES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_DEVICES_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function clearInspectionDevices() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_CLEAR });
     };
 }
 

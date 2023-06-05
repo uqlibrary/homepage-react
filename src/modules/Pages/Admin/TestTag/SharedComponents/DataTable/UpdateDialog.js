@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import moment from 'moment';
 
 import { isEmptyStr } from '../../helpers/helpers';
 import { useIsMobileView } from 'hooks';
@@ -92,7 +93,11 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        setData({ ...data, [event.target.dataset.field]: event.target.value });
+        console.log(event, event.target.type, moment(event.valueAsDate).format('YYYY-MM-DD'));
+        setData({
+            ...data,
+            [event.target.id]: event.target.value,
+        });
     };
 
     return (
@@ -128,7 +133,8 @@ export const UpdateDialogue = ({
                                         {dataFields[field].fieldParams.canEdit && (
                                             <>
                                                 {dataFields[field]?.component({
-                                                    id: `${field}-input`,
+                                                    id: field,
+                                                    name: field,
                                                     label: dataColumns[field].label,
                                                     value: data?.[field],
                                                     error: isEmptyStr(data?.[field]),
@@ -138,7 +144,6 @@ export const UpdateDialogue = ({
                                                     },
                                                     inputProps: {
                                                         ['data-testid']: `${field}-input`,
-                                                        ['data-field']: field,
                                                     },
                                                     fullWidth: true,
                                                 })}
@@ -207,7 +212,6 @@ UpdateDialogue.propTypes = {
     locale: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     columns: PropTypes.object.isRequired,
-    locationType: PropTypes.string.isRequired,
     title: PropTypes.string,
     confirmationBoxId: PropTypes.string,
     row: PropTypes.object,

@@ -220,3 +220,4 @@ export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test_a
 
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });
 export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
+export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device/current' });
