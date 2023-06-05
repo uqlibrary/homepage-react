@@ -46,14 +46,13 @@ const handlers = {
         assetTypesActionError: false,
         assetTypesActionType: '',
     }),
-    [actions.TESTTAG_ASSET_TYPES_SAVE_FAILED]: (state, action) => ({
+    [actions.TESTTAG_ASSET_TYPES_SAVE_FAILED]: state => ({
         ...initialState,
         ...state,
         assetTypesListLoading: false,
         assetTypesListError: false,
         assetTypesActionError: true,
         assetTypesActionType: 'SAVE',
-        assetTypesList: action.payload,
     }),
     [actions.TESTTAG_ASSET_TYPES_REASSIGNING]: state => ({
         ...initialState,
