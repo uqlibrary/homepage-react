@@ -292,6 +292,18 @@ export default {
                 confirmationMessage: 'Are you sure you wish to remove this Asset Type?',
                 confirmationTitle: 'Remove Unused Asset Type',
             },
+            snackbars: {
+                loadFailed: error => `Error loading Asset Types. ${error}`,
+                addSuccess: 'Asset type added',
+                addFailed: error => `Error adding Asset Type. ${error}`,
+                updateSuccess: 'Asset type updated',
+                updateFail: error => `Error updating Asset Type. ${error}`,
+                reallocateSuccess: response =>
+                    `Asset Type Deleted and reallocated. ${response.effected_assets} asset reallocated, and ${response.effected_asset_types} asset type(s) removed`,
+                reallocateFail: error => `Error Reallocating Asset Type. ${error}`,
+                deleteSuccess: 'Asset Type Deleted',
+                deleteFail: error => `Error deleting asset types. ${error}`,
+            },
         },
         manage: {
             locations: {

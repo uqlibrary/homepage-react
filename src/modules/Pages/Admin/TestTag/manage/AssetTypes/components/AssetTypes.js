@@ -101,13 +101,7 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
     return columns;
 };
 
-const ManageAssetTypes = ({
-    actions,
-    assetTypesList,
-    assetTypesListLoading,
-    assetTypesActionType,
-    assetTypesActionError,
-}) => {
+const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) => {
     const pageLocale = locale.pages.assetTypeManagement;
     const classes = useStyles();
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
@@ -115,6 +109,7 @@ const ManageAssetTypes = ({
     const [confirmID, setConfirmID] = React.useState(null);
     React.useEffect(() => {
         actions.loadAssetTypes();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {} };
     const actionReducer = (_, action) => {
@@ -162,62 +157,54 @@ const ManageAssetTypes = ({
             showDeleteConfirm();
         }
     };
-
     const onRowAdd = data => {
         const Payload = data;
         delete Payload.asset_type_id;
         setDialogueBusy(true);
-        actions.addAssetType(Payload).then(() => {
-            actions.loadAssetTypes().then(() => {
-                actionDispatch({ type: 'clear' });
-                setDialogueBusy(false);
-                if (assetTypesActionError) {
-                    openConfirmationAlert(`Error Adding Asset Type. ${assetTypesActionType}`, 'error', false);
-                } else {
-                    openConfirmationAlert('Asset Type added successfully.', 'success', true);
-                }
+        actions
+            .addAssetType(Payload)
+            .then(() => {
+                actions
+                    .loadAssetTypes()
+                    .then(() => {
+                        setDialogueBusy(false);
+                        actionDispatch({ type: 'clear' });
+                        openConfirmationAlert(pageLocale.snackbars.addSuccess, 'success', true);
+                    })
+                    .catch(error => {
+                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                    });
+            })
+            .catch(error => {
+                openConfirmationAlert(pageLocale.snackbars.addFailed(error), 'error', false);
             });
-        });
     };
 
     const onRowUpdate = data => {
         setDialogueBusy(true);
-        actions.saveAssetType(data).then(() => {
-            actions.loadAssetTypes().then(() => {
-                setDialogueBusy(false);
-                actionDispatch({ type: 'clear' });
-                if (assetTypesActionError) {
-                    openConfirmationAlert(`Error Updating Asset Type. ${assetTypesActionType}`, 'error', false);
-                } else {
-                    openConfirmationAlert('Asset Type updated successfully.', 'success', true);
-                }
+        actions
+            .saveAssetType(data)
+            .then(() => {
+                actions
+                    .loadAssetTypes()
+                    .then(() => {
+                        setDialogueBusy(false);
+                        actionDispatch({ type: 'clear' });
+                        openConfirmationAlert(pageLocale.snackbars.updateSuccess, 'success', true);
+                    })
+                    .catch(error => {
+                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                    });
+            })
+            .catch(error => {
+                openConfirmationAlert(pageLocale.snackbars.updateFail(error), 'error', false);
             });
-        });
     };
 
     const onActionDialogueCancel = () => {
         setDialogueBusy(false);
         actionDispatch({ type: 'clear' });
     };
-
-    // const onActionDialogueProceed = (oldTypeID, newTypeID) => {
-    //     const Payload = {
-    //         old_asset_type_id: oldTypeID,
-    //         new_asset_type_id: newTypeID,
-    //     };
-    //     setDialogueBusy(true);
-    //     actions.deleteAndReassignAssetType(Payload).then(() => {
-    //         actions.loadAssetTypes().then(() => {
-    //             setDialogueBusy(false);
-    //             if (assetTypesActionError) {
-    //                 openConfirmationAlert(`Error Reallocating Asset Type. ${assetTypesActionType}`, 'error', false);
-    //             } else {
-    //                 openConfirmationAlert('Asset Type Deleted and reallocated.', 'success', true);
-    //             }
-    //             actionDispatch({ type: 'clear' });
-    //         });
-    //     });
-    // };
 
     const onActionDialogueProceed = (oldTypeID, newTypeID) => {
         const Payload = {
@@ -227,24 +214,20 @@ const ManageAssetTypes = ({
         setDialogueBusy(true);
         actions
             .deleteAndReassignAssetType(Payload)
-            .then(() => {
+            .then(response => {
+                openConfirmationAlert(pageLocale.snackbars.reallocateSuccess(response), 'success', true);
                 actions
                     .loadAssetTypes()
                     .then(() => {
                         setDialogueBusy(false);
-                        openConfirmationAlert('Asset Type Deleted and reallocated.', 'success', true);
                         actionDispatch({ type: 'clear' });
                     })
                     .catch(error => {
-                        openConfirmationAlert(
-                            `Error  loading asset types from reallocate call. ${error}`,
-                            'error',
-                            false,
-                        );
+                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(`Error Reallocating Asset Type. ${error}`, 'error', false);
+                openConfirmationAlert(pageLocale.snackbars.reallocateFail(error), 'error', false);
             });
     };
 
@@ -256,21 +239,23 @@ const ManageAssetTypes = ({
                     .loadAssetTypes()
                     .then(() => {
                         setDialogueBusy(false);
-                        openConfirmationAlert('Asset Type Deleted.', 'success', true);
+                        openConfirmationAlert(pageLocale.snackbars.deleteSuccess, 'success', true);
                         actionDispatch({ type: 'clear' });
                     })
                     .catch(error => {
-                        openConfirmationAlert(`Error loading asset types from delete call. ${error}`, 'error', false);
+                        openConfirmationAlert(pageLocale.snackbars.deleteFail(error), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(`Error Deleting Asset Type. . ${error}`, 'error', false);
+                openConfirmationAlert(pageLocale.snackbars.deleteFail(error), 'error', false);
             });
     };
 
-    const columns = useMemo(() => getColumns({ data: assetTypesList, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), [
-        assetTypesList,
-    ]);
+    const columns = useMemo(
+        () => getColumns({ data: assetTypesList, onRowEdit, onRowDelete }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [assetTypesList],
+    );
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}

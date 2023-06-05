@@ -63,23 +63,21 @@ const handlers = {
         assetTypesActionError: false,
         assetTypesActionType: 'REASSIGN',
     }),
-    [actions.TESTTAG_ASSET_TYPES_REASSIGNED]: (state, action) => ({
+    [actions.TESTTAG_ASSET_TYPES_REASSIGNED]: state => ({
         ...initialState,
         ...state,
         assetTypesListLoading: false,
         assetTypesListError: false,
         assetTypesActionError: false,
         assetTypesActionType: '',
-        assetTypesList: action.payload,
     }),
-    [actions.TESTTAG_ASSET_TYPES_REASSIGN_FAILED]: (state, action) => ({
+    [actions.TESTTAG_ASSET_TYPES_REASSIGN_FAILED]: state => ({
         ...initialState,
         ...state,
         assetTypesListLoading: false,
         assetTypesListError: false,
         assetTypesActionError: true,
         assetTypesActionType: 'REASSIGN',
-        assetTypesList: action.payload,
     }),
     [actions.TESTTAG_ASSET_TYPES_DELETING]: state => ({
         ...initialState,
