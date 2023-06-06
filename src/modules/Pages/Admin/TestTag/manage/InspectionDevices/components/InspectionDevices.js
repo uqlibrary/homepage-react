@@ -91,51 +91,46 @@ const InspectionDevices = ({
     const onRowAdd = data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
-        const wrappedRequest = transformAddRequest({ request });
+        const wrappedRequest = transformAddRequest(request);
         console.log('add', wrappedRequest);
 
-        // actions
-        //     .addLocation({ type: selectedFilter, request: wrappedRequest })
-        //     .then(() => {
-        //         closeDialog();
-        //         openConfirmationAlert(
-        //             pageLocale.alerts.addSuccess(capitaliseLeadingChar(selectedFilter)),
-        //             'success',
-        //         );
-        //         actionHandler[selectedFilter](actions, location);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //         handleApiError({ message: pageLocale.alerts.addFail(capitaliseLeadingChar(selectedFilter)) });
-        //     })
-        //     .finally(() => {
-        //         setDialogueBusy(false);
-        //     });
+        actions
+            .addInspectionDevice(wrappedRequest)
+            .then(() => {
+                closeDialog();
+                openConfirmationAlert(pageLocale.alerts.addSuccess, 'success');
+                actions.clearInspectionDevices();
+            })
+            .catch(error => {
+                console.log(error);
+                handleApiError({ message: pageLocale.alerts.addFail });
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
     };
 
     const onRowEdit = data => {
         setDialogueBusy(true);
+        const id = data.device_id;
         const request = structuredClone(data);
-        const wrappedRequest = transformUpdateRequest({ request });
+        const wrappedRequest = transformUpdateRequest(request);
         console.log('edit', wrappedRequest);
 
-        // actions
-        //     .updateLocation({ type: selectedFilter, request: wrappedRequest })
-        //     .then(() => {
-        //         closeDialog();
-        //         openConfirmationAlert(
-        //             pageLocale.alerts.updateSuccess(capitaliseLeadingChar(selectedFilter)),
-        //             'success',
-        //         );
-        //         actionHandler[selectedFilter](actions, location);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //         handleApiError({ message: pageLocale.alerts.updateFail(capitaliseLeadingChar(selectedFilter)) });
-        //     })
-        //     .finally(() => {
-        //         setDialogueBusy(false);
-        //     });
+        actions
+            .updateInspectionDevice(id, wrappedRequest)
+            .then(() => {
+                closeDialog();
+                openConfirmationAlert(pageLocale.alerts.updateSuccess, 'success');
+                actions.clearInspectionDevices();
+            })
+            .catch(error => {
+                console.log(error);
+                handleApiError({ message: pageLocale.alerts.updateFail });
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
     };
 
     const onRowDelete = data => {
@@ -144,23 +139,20 @@ const InspectionDevices = ({
 
         console.log('delete', id);
 
-        // actions
-        //     .deleteLocation({ type: selectedFilter, id })
-        //     .then(() => {
-        //         closeDialog();
-        //         openConfirmationAlert(
-        //             pageLocale.alerts.deleteSuccess(capitaliseLeadingChar(selectedFilter)),
-        //             'success',
-        //         );
-        //         actionHandler[selectedFilter](actions, location);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //         handleApiError({ message: pageLocale.alerts.deleteFail(capitaliseLeadingChar(selectedFilter)) });
-        //     })
-        //     .finally(() => {
-        //         setDialogueBusy(false);
-        //     });
+        actions
+            .deleteInspectionDevice(id)
+            .then(() => {
+                closeDialog();
+                openConfirmationAlert(pageLocale.alerts.deleteSuccess, 'success');
+                actions.clearInspectionDevices();
+            })
+            .catch(error => {
+                console.log(error);
+                handleApiError({ message: pageLocale.alerts.deleteFail });
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
     };
 
     const columns = useMemo(

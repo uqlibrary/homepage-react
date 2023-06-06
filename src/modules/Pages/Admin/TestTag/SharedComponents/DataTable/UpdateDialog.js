@@ -11,7 +11,6 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import moment from 'moment';
 
 import { isEmptyStr } from '../../helpers/helpers';
 import { useIsMobileView } from 'hooks';
@@ -93,7 +92,6 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        console.log(event, event.target.type, moment(event.valueAsDate).format('YYYY-MM-DD'));
         setData({
             ...data,
             [event.target.id]: event.target.value,
@@ -136,7 +134,9 @@ export const UpdateDialogue = ({
                                                     id: field,
                                                     name: field,
                                                     label: dataColumns[field].label,
-                                                    value: data?.[field],
+                                                    value:
+                                                        dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                        data?.[field],
                                                     error: isEmptyStr(data?.[field]),
                                                     onChange: handleChange,
                                                     InputLabelProps: {

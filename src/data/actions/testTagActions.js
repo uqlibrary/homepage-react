@@ -12,6 +12,8 @@ import {
     TEST_TAG_ADD_LOCATION_API,
     TEST_TAG_MODIFY_LOCATION_API,
     TEST_TAG_INSPECTION_DEVICE_API,
+    TEST_TAG_ADD_INSPECTION_DEVICE_API,
+    TEST_TAG_MODIFY_INSPECTION_DEVICE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -311,6 +313,91 @@ export function loadInspectionDevices() {
 export function clearInspectionDevices() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_CLEAR });
+    };
+}
+
+export function addInspectionDevice(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_ADDING });
+        return post(TEST_TAG_ADD_INSPECTION_DEVICE_API(), request)
+            .then(response => {
+                console.log(response, response.status.toLowerCase());
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DEVICES_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DEVICES_ADD_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_DEVICES_ADD_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function updateInspectionDevice(id, request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_UPDATING });
+        return put(TEST_TAG_MODIFY_INSPECTION_DEVICE_API(id), request)
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DEVICES_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteInspectionDevice(id) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_DELETING });
+        return destroy(TEST_TAG_MODIFY_INSPECTION_DEVICE_API(id))
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DEVICES_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DEVICES_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_DEVICES_DELETE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
     };
 }
 

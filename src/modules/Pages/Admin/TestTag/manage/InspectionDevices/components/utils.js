@@ -60,15 +60,29 @@ export const actionReducer = (_, action) => {
     }
 };
 
-export const transformAddRequest = ({ request }) => {
+export const formatDateStrings = (row, suffix) => {
+    const dateLastParts = row.device_calibrated_date_last.split(' ');
+    const dateNextParts = row.device_calibration_due_date.split(' ');
+    return {
+        ...row,
+        device_calibrated_date_last:
+            dateLastParts.length > 1 ? row.device_calibrated_date_last : `${row.device_calibrated_date_last} ${suffix}`,
+        device_calibration_due_date:
+            dateNextParts.length > 1 ? row.device_calibration_due_date : `${row.device_calibration_due_date} ${suffix}`,
+    };
+};
+
+export const transformAddRequest = request => {
     delete request.device_id;
     delete request.device_current_flag;
 
-    return request;
+    const newResponse = formatDateStrings(request, '00:00');
+    return newResponse;
 };
 
-export const transformUpdateRequest = ({ request }) => {
+export const transformUpdateRequest = request => {
     delete request.device_current_flag;
 
-    return request;
+    const newResponse = formatDateStrings(request, '00:00');
+    return newResponse;
 };

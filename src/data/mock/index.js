@@ -829,6 +829,12 @@ mock.onGet('exams/course/FREN1010/summary')
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().url)
     .reply(() => [200, testTag_inspectionDevices])
+    .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().url)
+    .reply(() => [200, {status: 'OK'}])
+    .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').url)
+    .reply(() => [200, {status: 'OK'}])
+    .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').url)
+    .reply(() => [200, {status: 'OK'}])
 
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)

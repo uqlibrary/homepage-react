@@ -31,6 +31,7 @@ export default {
                     inputProps={{ ...props.inputProps, max: moment().format(dateFormat) }}
                 />
             ),
+            valueFormatter: date => date?.split(' ')?.[0] ?? date,
             fieldParams: { canEdit: true, flex: 1 },
         },
         device_calibrated_by_last: {
@@ -46,6 +47,7 @@ export default {
                     inputProps={{ ...props.inputProps, min: moment().format(dateFormat) }}
                 />
             ),
+            valueFormatter: date => date?.split(' ')?.[0] ?? date,
             fieldParams: { canEdit: true, flex: 1 },
         },
     },
