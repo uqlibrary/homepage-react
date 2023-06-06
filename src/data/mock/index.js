@@ -43,7 +43,7 @@ import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
 import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
-// import testTag_testDevices from './data/records/test_tag_test_devices';
+import testTag_inspectionDevices from './data/records/test_tag_inspection_devices';
 import testTag_assets from './data/records/test_tag_assets';
 // Test and Tag Asset Types
 import test_tag_asset_types from './data/records/test_tag_asset_types';
@@ -828,6 +828,16 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).url)
     .reply(() => [200, { status: 'OK' }])
+
+    // T&T MANAGE INSPECTION DEVICES
+    .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().url)
+    .reply(() => [200, testTag_inspectionDevices])
+    .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().url)
+    .reply(() => [200, {status: 'OK'}])
+    .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').url)
+    .reply(() => [200, {status: 'OK'}])
+    .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').url)
+    .reply(() => [200, {status: 'OK'}])
 
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)

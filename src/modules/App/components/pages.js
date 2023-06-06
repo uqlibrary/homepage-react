@@ -22,6 +22,7 @@ export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));
 export const TestTagManageAssetTypes = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/AssetTypes/containers/AssetTypes')));
 export const TestTagManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/Locations/containers/Locations')));
+export const TestTagManageInspectionDevices = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/InspectionDevices/containers/InspectionDevices')));
 
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
