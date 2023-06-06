@@ -123,7 +123,7 @@ const ManageLocations = ({ actions }) => {
         setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
     const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
+        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
     };
 
     const getLocationDisplayedAs = React.useMemo(
@@ -297,6 +297,7 @@ const ManageLocations = ({ actions }) => {
                 <StandardCard noHeader>
                     <UpdateDialog
                         title={actionState.title}
+                        action="add"
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
@@ -311,6 +312,7 @@ const ManageLocations = ({ actions }) => {
                     />
                     <UpdateDialog
                         title={actionState.title}
+                        action="edit"
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
@@ -387,6 +389,7 @@ const ManageLocations = ({ actions }) => {
                         isOpen={confirmationAlert.visible}
                         message={confirmationAlert.message}
                         type={confirmationAlert.type}
+                        autoHideDuration={confirmationAlert.autoHideDuration}
                         closeAlert={closeConfirmationAlert}
                     />
                 </StandardCard>

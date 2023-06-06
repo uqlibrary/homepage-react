@@ -1,5 +1,10 @@
 import React from 'react';
+
+import moment from 'moment';
+
 import RowMenuCell from './../../../SharedComponents/DataTable/RowMenuCell';
+import locale from '../../../testTag.locale';
+const dateFormat = locale.pages.manage.config.dateFormat;
 
 export const getColumns = ({ config, locale, handleEditClick, handleDeleteClick }) => {
     const actionsCell = {
@@ -45,7 +50,13 @@ export const actionReducer = (_, action) => {
                 isAdd: true,
                 isEdit: false,
                 isDelete: false,
-                row: { device_id: 'auto' },
+                row: {
+                    device_id: 'auto',
+                    device_calibrated_date_last: moment().format(dateFormat),
+                    device_calibration_due_date: moment()
+                        .add(1, 'd')
+                        .format(dateFormat),
+                },
                 title,
                 props: { ...props },
             };

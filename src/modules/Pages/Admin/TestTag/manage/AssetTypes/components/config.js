@@ -35,7 +35,7 @@ export default {
         },
         asset_count: {
             label: 'Usage',
-            fieldParams: { canEdit: false, renderInUpdate: false, flex: 1 },
+            fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, flex: 1 },
         },
     },
 };

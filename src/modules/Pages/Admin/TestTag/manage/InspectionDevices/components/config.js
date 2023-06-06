@@ -3,7 +3,8 @@ import React from 'react';
 import moment from 'moment';
 import TextField from '@material-ui/core/TextField';
 
-const dateFormat = 'YYYY-MM-DD';
+import locale from '../../../testTag.locale';
+const dateFormat = locale.pages.manage.config.dateFormat;
 
 export default {
     fields: {
@@ -44,7 +45,12 @@ export default {
                     format={dateFormat}
                     type="date"
                     {...props}
-                    inputProps={{ ...props.inputProps, min: moment().format(dateFormat) }}
+                    inputProps={{
+                        ...props.inputProps,
+                        min: moment()
+                            .add(1, 'd')
+                            .format(dateFormat),
+                    }}
                 />
             ),
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
