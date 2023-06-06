@@ -1,15 +1,16 @@
 import React, { useMemo, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
-import RowMenuCell from './../../../SharedComponents/DataTable/RowMenuCell';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import locale from '../../../testTag.locale';
@@ -17,7 +18,11 @@ import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
-import { useLocation } from '../../../Inspection/utils/hooks';
+import { useLocation } from '../../../helpers/hooks';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import config from './config';
+import { getColumns, emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
+import { capitaliseLeadingChar } from '../../../helpers/helpers';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -31,172 +36,257 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const rows = [
-    {
-        asset_type_id: 1,
-        asset_type_name: 'KEW 620-1',
-        asset_type_class: 'A',
-        asset_type_power_rating: '240V',
-        asset_type: 'KEW',
-        asset_type_notes: 'KEW Notes',
-        asset_count: 10,
+const actionHandler = {
+    site: actions => {
+        actions.clearSites();
+        actions.loadSites();
     },
-    {
-        asset_type_id: 2,
-        asset_type_name: 'HEW 20-2',
-        asset_type_class: 'A',
-        asset_type_power_rating: '240V',
-        asset_type: 'HEW',
-        asset_type_notes: 'HEW Notes',
-        asset_count: 22,
+    building: actions => {
+        actions.clearSites();
+        actions.loadSites();
     },
-];
-
-const fieldConfig = {
-    asset_type_id: {
-        label: 'Id',
-        fieldParams: { canEdit: false },
+    floor: (actions, location) => {
+        actions.clearFloors();
+        actions.loadFloors(location.building);
     },
-    asset_type_name: {
-        label: 'Asset Type Name',
-        component: props => <TextField {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
+    room: (actions, location) => {
+        actions.clearRooms();
+        actions.loadRooms(location.floor);
     },
-    asset_type_class: {
-        label: 'Class',
-        component: props => <TextField {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
-    },
-    asset_type_power_rating: {
-        label: 'Power Rating',
-        component: props => <TextField {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
-    },
-    asset_type: {
-        label: 'Type',
-        component: props => <TextField {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
-    },
-    asset_type_notes: {
-        label: 'Notes',
-        component: props => <TextField multiline minRows={3} {...props} />,
-        fieldParams: { canEdit: true, flex: 1 },
-    },
-    asset_count: {
-        label: 'Usage',
-        fieldParams: { canEdit: false, shouldRender: false, flex: 1 },
-    },
-};
-
-const getColumns = ({ onRowEdit, onRowDelete }) => {
-    const actionsCell = {
-        field: 'actions',
-        headerName: 'Actions',
-        renderCell: params => <RowMenuCell {...params} onRowEdit={onRowEdit} onRowDelete={onRowDelete} />,
-        sortable: false,
-        width: 100,
-        headerAlign: 'center',
-        filterable: false,
-        align: 'center',
-        disableColumnMenu: true,
-        disableReorder: true,
-        shouldRender: false,
-    };
-
-    const columns = [];
-    const keys = Object.keys(fieldConfig);
-
-    keys.forEach(key => {
-        columns.push({
-            field: key,
-            headerName: fieldConfig[key].label,
-            editable: false,
-            sortable: false,
-            ...fieldConfig[key].fieldParams,
-        });
-    });
-
-    columns && columns.length > 0 && columns.push(actionsCell);
-    return columns;
 };
 
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
-    const [selectedTab, setSelectedTab] = React.useState('site');
-    const [therows] = React.useState(rows);
-    const emptyActionState = { isAdd: false, isEdit: false, rows: {} };
-    const actionReducer = (_, action) => {
-        switch (action.type) {
-            case 'add':
-                return { isAdd: true, isEdit: false, row: { asset_type_id: 'auto' } };
-            case 'edit':
-                return { isAdd: false, isEdit: true, row: action.row };
-            case 'clear':
-                return { ...emptyActionState };
-            default:
-                throw `Unknown action '${action.type}'`;
-        }
-    };
+    const [selectedFilter, setSelectedFilter] = React.useState('site');
+    const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
+    const [dialogueBusy, setDialogueBusy] = React.useState(false);
 
+    const {
+        siteList,
+        siteListLoading,
+        siteListLoaded,
+        // siteListError,
+        // buildingList,
+        // buildingListLoading,
+        // buildingListError,
+        floorList,
+        floorListLoading,
+        floorListLoaded,
+        // floorListError,
+        roomList,
+        roomListLoading,
+        roomListLoaded,
+        // roomListError,
+    } = useSelector(state => state.get?.('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
 
-    // const [editRowsModel, setEditRowsModel] = React.useState({});
+    React.useEffect(() => {
+        if (roomListLoaded) {
+            if (location.floor !== -1) {
+                setRows(roomList.rooms);
+            } else {
+                setLocation({ room: -1 });
+                actions.clearRooms();
+            }
+            setSelectedFilter('room');
+        } else if (floorListLoaded) {
+            if (location.building !== -1) {
+                setRows(floorList.floors);
+            } else {
+                setRows(
+                    siteList
+                        ?.find(site => site.site_id === location.site)
+                        ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
+                );
+                setLocation({ floor: -1, room: -1 });
+                actions.clearFloors();
+            }
+            setSelectedFilter('floor');
+        } else if (siteListLoaded) {
+            if (location.site !== -1) {
+                setRows(siteList.find(site => site.site_id === location.site).buildings);
+                setSelectedFilter('building');
+            } else {
+                setRows(siteList);
+                setLocation({ building: -1, floor: -1, room: -1 });
+                setSelectedFilter('site');
+            }
+        } else actions.loadSites();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.site, location.building, location.floor, siteListLoaded, floorListLoaded, roomListLoaded]);
 
-    const handleTabChange = (event, newValue) => {
-        console.log(newValue);
-        setSelectedTab(newValue);
+    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const closeConfirmationAlert = () => {
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+    };
+    const openConfirmationAlert = (message, type) => {
+        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
     };
 
-    const handleAddClick = () => {
-        actionDispatch({ type: 'add' });
-        // const id = 1;
-        // apiRef.current.updateRows([{ id, isNew: true }]);
-        // apiRef.current.setRowMode(id, 'edit');
-        // // Wait for the grid to render with the new row
-        // setTimeout(() => {
-        //     apiRef.current.scrollToIndexes({
-        //         rowIndex: apiRef.current.getRowsCount() - 1,
-        //     });
-        //     apiRef.current.setCellFocus(id, 'name');
-        // }, 150);
+    const getLocationDisplayedAs = React.useMemo(
+        () => {
+            const value = {
+                site: siteList?.find(site => site.site_id === location.site)?.site_id_displayed,
+                building: siteList
+                    ?.find(site => site.site_id === location.site)
+                    ?.buildings?.find(building => building.building_id === location.building)?.building_id_displayed,
+                floor: floorList?.floors?.find(floor => floor.floor_id === location.floor)?.floor_id_displayed,
+            };
+            return value;
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, siteList, floorList],
+    );
+
+    const closeDialog = () => actionDispatch({ type: 'clear' });
+
+    const handleApiError = response => {
+        openConfirmationAlert(`Request failed: ${response.message}`, 'error');
     };
 
-    const onRowEdit = ({ id, api }) => {
-        const row = api.getRow(id);
-        console.log(row);
-        actionDispatch({ type: 'edit', row });
-        // const fields = api.getRowParams(id).columns;
-        // console.log('On Row Edit', id, api, fields);
-        // fields
-        //     .filter(field => !!field.shouldRender === true)
-        //     .map(field => {
-        //         const fieldName = field.field;
-        //         console.log(
-        //             fieldName,
-        //             field.canEdit,
-        //             api.getRow(id)[field.field],
-        //             !!fieldConfig[fieldName]?.component ? 'config component' : 'default component',
-        //         );
-        //     });
-    };
+    const handleAddClick = React.useCallback(() => {
+        actionDispatch({
+            type: 'add',
+            title: pageLocale.dialogAdd.confirmationTitle(selectedFilter),
+            selectedFilter,
+            location,
+            displayLocation: getLocationDisplayedAs,
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location, selectedFilter, getLocationDisplayedAs]);
 
-    const onRowDelete = ({ id, api }) => {
-        console.log('Firing Row Delete', id, api);
-    };
+    const handleEditClick = React.useCallback(
+        ({ id, api }) => {
+            const row = api.getRow(id);
+            actionDispatch({
+                type: 'edit',
+                title: pageLocale.dialogEdit.confirmationTitle(selectedFilter),
+                row,
+                selectedFilter,
+                location,
+                displayLocation: getLocationDisplayedAs,
+            });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter, getLocationDisplayedAs],
+    );
 
-    const onRowAdd = data => {
-        console.log('added', data);
-        actionDispatch({ type: 'clear' });
-    };
+    const handleDeleteClick = React.useCallback(
+        ({ id, api }) => {
+            const row = api.getRow(id);
+            actionDispatch({
+                type: 'delete',
+                row,
+                selectedFilter,
+                location,
+                displayLocation: getLocationDisplayedAs,
+            });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter, getLocationDisplayedAs],
+    );
 
-    const onRowUpdate = data => {
-        console.log('udpated', data);
-        actionDispatch({ type: 'clear' });
-    };
+    const onRowAdd = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const request = structuredClone(data);
+            const wrappedRequest = transformAddRequest({ request, selectedFilter, location });
 
-    const columns = useMemo(() => getColumns({ data: rows, /* setEditRowsModel,*/ onRowEdit, onRowDelete }), []);
+            actions
+                .addLocation({ type: selectedFilter, request: wrappedRequest })
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(
+                        pageLocale.alerts.addSuccess(capitaliseLeadingChar(selectedFilter)),
+                        'success',
+                    );
+                    actionHandler[selectedFilter](actions, location);
+                })
+                .catch(error => {
+                    console.log(error);
+                    handleApiError({ message: pageLocale.alerts.addFail(capitaliseLeadingChar(selectedFilter)) });
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter],
+    );
+
+    const onRowEdit = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const request = structuredClone(data);
+            const wrappedRequest = transformUpdateRequest({ request, selectedFilter, location });
+
+            actions
+                .updateLocation({ type: selectedFilter, request: wrappedRequest })
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(
+                        pageLocale.alerts.updateSuccess(capitaliseLeadingChar(selectedFilter)),
+                        'success',
+                    );
+                    actionHandler[selectedFilter](actions, location);
+                })
+                .catch(error => {
+                    console.log(error);
+                    handleApiError({ message: pageLocale.alerts.updateFail(capitaliseLeadingChar(selectedFilter)) });
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter],
+    );
+
+    const onRowDelete = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const selectedFilter = data.props.selectedFilter;
+            const id = data.row[`${selectedFilter}_id`];
+
+            actions
+                .deleteLocation({ type: selectedFilter, id })
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(
+                        pageLocale.alerts.deleteSuccess(capitaliseLeadingChar(selectedFilter)),
+                        'success',
+                    );
+                    actionHandler[selectedFilter](actions, location);
+                })
+                .catch(error => {
+                    console.log(error);
+                    handleApiError({ message: pageLocale.alerts.deleteFail(capitaliseLeadingChar(selectedFilter)) });
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [location, selectedFilter],
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const columns = useMemo(
+        () =>
+            getColumns({
+                config,
+                locale: pageLocale.form.columns,
+                selectedFilter,
+                handleEditClick,
+                handleDeleteClick,
+            }),
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [handleDeleteClick, handleEditClick, selectedFilter],
+    );
 
     return (
         <StandardAuthPage
@@ -207,59 +297,99 @@ const ManageLocations = ({ actions }) => {
             <div className={classes.root}>
                 <StandardCard noHeader>
                     <UpdateDialog
+                        title={actionState.title}
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
-                        confirmationTitle="Add New Asset Type"
-                        cancelButtonLabel="Cancel"
-                        confirmButtonLabel="Add"
-                        fields={fieldConfig}
+                        locale={pageLocale.dialogAdd}
+                        locationType={selectedFilter}
+                        fields={config?.[selectedFilter].fields ?? []}
+                        columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
+                        onCancelAction={closeDialog}
                         onAction={onRowAdd}
+                        props={actionState?.props}
+                        isBusy={dialogueBusy}
                     />
                     <UpdateDialog
+                        title={actionState.title}
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
-                        confirmationTitle="Edit Asset Type"
-                        cancelButtonLabel="Cancel"
-                        confirmButtonLabel="Update"
-                        fields={fieldConfig}
+                        locale={pageLocale.dialogEdit}
+                        locationType={selectedFilter}
+                        fields={config?.[selectedFilter].fields ?? []}
+                        columns={pageLocale.form.columns[selectedFilter]}
                         row={actionState?.row}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
-                        onAction={onRowUpdate}
+                        onCancelAction={closeDialog}
+                        onAction={onRowEdit}
+                        props={actionState?.props}
+                        isBusy={dialogueBusy}
                     />
-                    <Tabs
-                        value={selectedTab}
-                        onChange={handleTabChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="scrollable"
-                        scrollButtons="auto"
-                    >
-                        <Tab label="Sites" value="site" />
-                        <Tab label="Buildings" value="building" />
-                        <Tab label="Floors" value="floor" />
-                        <Tab label="Rooms" value="room" />
-                    </Tabs>
-                    {selectedTab !== 'site' && (
-                        <Grid container spacing={3} className={classes.tableMarginTop}>
-                            <LocationPicker actions={actions} location={location} setLocation={setLocation} />
+                    <ConfirmationBox
+                        actionButtonColor="primary"
+                        actionButtonVariant="contained"
+                        cancelButtonColor="secondary"
+                        confirmationBoxId="deleteRow"
+                        onCancelAction={closeDialog}
+                        onAction={onRowDelete}
+                        isOpen={actionState.isDelete}
+                        locale={
+                            !dialogueBusy
+                                ? pageLocale.dialogDeleteConfirm
+                                : {
+                                      ...pageLocale.dialogDeleteConfirm,
+                                      confirmButtonLabel: (
+                                          <CircularProgress
+                                              color="inherit"
+                                              size={25}
+                                              id="confirmationSpinner"
+                                              data-testid="confirmationSpinner"
+                                          />
+                                      ),
+                                  }
+                        }
+                        disableButtonsWhenBusy
+                        isBusy={dialogueBusy}
+                        noMinContentWidth
+                        actionProps={{ row: actionState?.row, props: actionState?.props }}
+                    />
+
+                    <Grid container spacing={0} className={classes.tableMarginTop}>
+                        <Grid item xs={12} padding={0}>
+                            <Typography variant={'h6'} component={'div'}>
+                                Select location
+                            </Typography>
+                            <LocationPicker
+                                actions={actions}
+                                location={location}
+                                setLocation={setLocation}
+                                hide={['room']}
+                            />
                         </Grid>
-                    )}
+                    </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                rows={therows}
+                                rows={rows}
                                 columns={columns}
-                                rowId="asset_type_id"
-                                /* editRowsModel={editRowsModel}*/
+                                rowId={`${selectedFilter}_id`}
                                 components={{ Toolbar: AddToolbar }}
-                                componentsProps={{ toolbar: { label: 'Add it', onClick: handleAddClick } }}
-                                loading={false}
+                                componentsProps={{
+                                    toolbar: {
+                                        label: pageLocale.form.addLocationButton(selectedFilter),
+                                        onClick: handleAddClick,
+                                    },
+                                }}
+                                loading={siteListLoading || floorListLoading || roomListLoading}
                                 classes={{ root: classes.gridRoot }}
                             />
                         </Grid>
                     </Grid>
+                    <ConfirmationAlert
+                        isOpen={confirmationAlert.visible}
+                        message={confirmationAlert.message}
+                        type={confirmationAlert.type}
+                        closeAlert={closeConfirmationAlert}
+                    />
                 </StandardCard>
             </div>
         </StandardAuthPage>

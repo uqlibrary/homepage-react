@@ -1,15 +1,18 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { isEmptyStr } from '../../helpers/helpers';
 import { useIsMobileView } from 'hooks';
 
 export const useStyles = makeStyles(theme => ({
@@ -34,10 +37,9 @@ export const useStyles = makeStyles(theme => ({
 
 export const UpdateDialogue = ({
     confirmationBoxId = 'dialogBox',
-    confirmationTitle = '',
-    cancelButtonLabel = '',
-    confirmButtonLabel = '',
+    locale,
     isOpen,
+    title,
     updateDialogueBoxId = 'actionDialogBox',
     hideActionButton = false,
     hideCancelButton = false,
@@ -46,20 +48,38 @@ export const UpdateDialogue = ({
     onClose,
     noMinContentWidth,
     fields,
+    columns,
     row,
-    isBusy,
+    props,
+    isBusy = false,
 } = {}) => {
     const classes = useStyles();
+    const [dataColumns, setDataColumns] = React.useState({});
     const [dataFields, setDataFields] = React.useState({});
+    const [editableFields, setEditableFields] = React.useState([]);
     const [data, setData] = React.useState({});
     const isMobileView = useIsMobileView();
+    const [isValid, setIsValid] = React.useState(false);
 
     React.useEffect(() => {
         if (isOpen) {
+            console.log({ columns, fields, row });
+            setDataColumns(columns);
             setDataFields(fields);
             setData(row);
+            setEditableFields(
+                Object.keys(fields).filter(
+                    field =>
+                        !!(fields[field].fieldParams?.renderInUpdate ?? true) &&
+                        !!(fields[field].fieldParams?.canEdit ?? false),
+                ),
+            );
         }
-    }, [isOpen, fields, row]);
+    }, [isOpen, fields, row, columns]);
+
+    React.useEffect(() => {
+        setIsValid(!editableFields.some(entry => isEmptyStr(data[entry])));
+    }, [data, editableFields]);
 
     const _onAction = () => {
         onClose?.();
@@ -72,7 +92,7 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        setData({ ...data, [event.target.id]: event.target.value });
+        setData({ ...data, [event.target.dataset.field]: event.target.value });
     };
 
     return (
@@ -83,41 +103,56 @@ export const UpdateDialogue = ({
             id={`dialogbox-${updateDialogueBoxId}`}
             data-testid={`dialogbox-${updateDialogueBoxId}`}
         >
-            <DialogTitle data-testid="message-title">{confirmationTitle}</DialogTitle>
+            <DialogTitle data-testid="message-title">{title}</DialogTitle>
             <DialogContent style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}>
                 <Grid container padding={0} spacing={2}>
                     {isOpen &&
                         !!data &&
                         !!dataFields &&
                         Object.keys(dataFields).map(field => (
-                            <Grid item xs={12} sm={6} key={field}>
-                                {!dataFields[field].fieldParams.canEdit &&
-                                    (dataFields[field].fieldParams?.shouldRender ?? true) && (
-                                        <>
-                                            <Typography variant="body2">{dataFields[field].label}</Typography>
-                                            <Typography variant="body1">{data?.[field]}</Typography>
-                                        </>
-                                    )}
-                                {dataFields[field].fieldParams.canEdit && (
-                                    <>
-                                        {dataFields[field]?.component({
-                                            id: field,
-                                            'data-testid': field,
-                                            InputLabelProps: { shrink: true },
-                                            label: dataFields[field].label,
-                                            value: data?.[field],
-                                            fullWidth: true,
-                                            onChange: handleChange,
-                                        })}
-                                    </>
+                            <React.Fragment key={field}>
+                                {!!(dataFields[field].fieldParams?.renderInUpdate ?? true) && (
+                                    <Grid item xs={12} sm={6}>
+                                        {!dataFields[field].fieldParams.canEdit && (
+                                            <>
+                                                <Typography variant="body2">{dataColumns[field].label}</Typography>
+                                                <Typography variant="body1">
+                                                    {!!dataFields[field]?.computedValue
+                                                        ? dataFields[field].computedValue(
+                                                              props[dataFields[field].computedValueProp],
+                                                          )
+                                                        : data?.[field]}
+                                                </Typography>
+                                            </>
+                                        )}
+                                        {dataFields[field].fieldParams.canEdit && (
+                                            <>
+                                                {dataFields[field]?.component({
+                                                    id: `${field}-input`,
+                                                    label: dataColumns[field].label,
+                                                    value: data?.[field],
+                                                    error: isEmptyStr(data?.[field]),
+                                                    onChange: handleChange,
+                                                    InputLabelProps: {
+                                                        shrink: true,
+                                                    },
+                                                    inputProps: {
+                                                        ['data-testid']: `${field}-input`,
+                                                        ['data-field']: field,
+                                                    },
+                                                    fullWidth: true,
+                                                })}
+                                            </>
+                                        )}
+                                    </Grid>
                                 )}
-                            </Grid>
+                            </React.Fragment>
                         ))}
                 </Grid>
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
                 <DialogActions>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={3}>
                         {!hideCancelButton && (
                             <Grid item xs={12} sm>
                                 <Box justifyContent="flex-start" display={'flex'}>
@@ -129,7 +164,7 @@ export const UpdateDialogue = ({
                                         fullWidth={isMobileView}
                                         disabled={isBusy}
                                     >
-                                        {cancelButtonLabel}
+                                        {locale.cancelButtonLabel}
                                     </Button>
                                 </Box>
                             </Grid>
@@ -145,9 +180,18 @@ export const UpdateDialogue = ({
                                         id="confirm-action"
                                         data-testid={`confirm-${confirmationBoxId}`}
                                         fullWidth={isMobileView}
-                                        disabled={isBusy}
+                                        disabled={isBusy || !isValid}
                                     >
-                                        {confirmButtonLabel}
+                                        {isBusy ? (
+                                            <CircularProgress
+                                                color="inherit"
+                                                size={25}
+                                                id="saveInspectionSpinner"
+                                                data-testid="saveInspectionSpinner"
+                                            />
+                                        ) : (
+                                            locale.confirmButtonLabel
+                                        )}
                                     </Button>
                                 </Box>
                             </Grid>
@@ -160,11 +204,12 @@ export const UpdateDialogue = ({
 };
 
 UpdateDialogue.propTypes = {
+    locale: PropTypes.object.isRequired,
+    fields: PropTypes.object.isRequired,
+    columns: PropTypes.object.isRequired,
+    locationType: PropTypes.string.isRequired,
+    title: PropTypes.string,
     confirmationBoxId: PropTypes.string,
-    confirmationTitle: PropTypes.string,
-    cancelButtonLabel: PropTypes.string,
-    confirmButtonLabel: PropTypes.string,
-    fields: PropTypes.object,
     row: PropTypes.object,
     isOpen: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
@@ -174,6 +219,7 @@ UpdateDialogue.propTypes = {
     onAction: PropTypes.func,
     onCancelAction: PropTypes.func,
     onClose: PropTypes.func,
+    props: PropTypes.object,
     isBusy: PropTypes.bool,
 };
 

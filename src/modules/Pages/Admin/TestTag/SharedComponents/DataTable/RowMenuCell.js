@@ -25,17 +25,17 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const RowMenuCell = ({ api, id, onRowEdit, onRowDelete }) => {
+const RowMenuCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
     const classes = useStyles();
 
-    const handleEditClick = event => {
+    const onEditClick = event => {
         event.stopPropagation();
-        onRowEdit({ id, api });
+        handleEditClick({ id, api });
     };
 
-    const handleDeleteClick = event => {
+    const onDeleteClick = event => {
         event.stopPropagation();
-        onRowDelete({ id, api });
+        handleDeleteClick({ id, api });
     };
 
     return (
@@ -45,11 +45,18 @@ const RowMenuCell = ({ api, id, onRowEdit, onRowDelete }) => {
                 className={classes.textPrimary}
                 size="small"
                 aria-label="edit"
-                onClick={handleEditClick}
+                disabled={!!!handleEditClick}
+                onClick={onEditClick}
             >
                 <EditIcon fontSize="small" />
             </IconButton>
-            <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+            <IconButton
+                color="inherit"
+                size="small"
+                aria-label="delete"
+                disabled={!!!handleDeleteClick}
+                onClick={onDeleteClick}
+            >
                 <DeleteIcon fontSize="small" />
             </IconButton>
         </div>
@@ -61,8 +68,8 @@ RowMenuCell.propTypes = {
     row: PropTypes.any,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     // setEditRowsModel: PropTypes.func.isRequired,
-    onRowEdit: PropTypes.func.isRequired,
-    onRowDelete: PropTypes.func.isRequired,
+    handleEditClick: PropTypes.func.isRequired,
+    handleDeleteClick: PropTypes.func,
 };
 
 export default React.memo(RowMenuCell);

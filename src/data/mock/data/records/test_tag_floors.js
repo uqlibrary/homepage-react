@@ -10,11 +10,13 @@ export default {
     "floors": [
       {
         "floor_id": 1,
-        "floor_id_displayed": "2"
+        "floor_id_displayed": "2",
+        "asset_count": 1,
       },
       {
         "floor_id": 2,
-        "floor_id_displayed": "3"
+        "floor_id_displayed": "3",
+        "asset_count": 0,
       },
     ]
   },
@@ -28,11 +30,13 @@ export default {
     "floors": [
       {
         "floor_id": 4,
-        "floor_id_displayed": "1"
+        "floor_id_displayed": "1",
+        "asset_count": 1,
       },
       {
         "floor_id": 5,
-        "floor_id_displayed": "2"
+        "floor_id_displayed": "2",
+        "asset_count": 0,
       },
     ]
   },
@@ -46,11 +50,13 @@ export default {
     "floors": [
       {
         "floor_id": 29,
-        "floor_id_displayed": "1"
+        "floor_id_displayed": "1",
+        "asset_count": 1,
       },
       {
         "floor_id": 30,
-        "floor_id_displayed": "2"
+        "floor_id_displayed": "2",
+        "asset_count": 0,
       }
     ]
   },{
@@ -63,8 +69,14 @@ export default {
     "floors": [
       {
         "floor_id": 31,
-        "floor_id_displayed": "1"
-      }
+        "floor_id_displayed": "1",
+        "asset_count": 1,
+      },
+      {
+        "floor_id": 32,
+        "floor_id_displayed": "2",
+        "asset_count": 0,
+      },
     ]
   }
 ]

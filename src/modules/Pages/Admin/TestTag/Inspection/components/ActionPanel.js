@@ -153,7 +153,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                     })
                                 }
                                 multiline
-                                rows={4}
+                                minRows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
@@ -216,7 +216,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                     })
                                 }
                                 multiline
-                                rows={4}
+                                minRows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled || isDiscardDisabled || !!!formValues.isDiscarded}

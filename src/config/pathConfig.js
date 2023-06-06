@@ -21,7 +21,7 @@ export const pathConfig = {
         spotlights: '/admin/spotlights',
         testntagdashboard: '/admin/testntag',
         testntaginspect: '/admin/testntag/inspect',
-        testntagmanage: '/admin/testntag/manage',
+        testntagmanagelocations: '/admin/testntag/manage/locations',
         testntagreport: '/admin/testntag/report',
         testntagmanageassettypes: '/admin/testntag/manage/assettypes',
     },

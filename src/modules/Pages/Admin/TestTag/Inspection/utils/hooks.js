@@ -62,17 +62,3 @@ export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {} }
 
     return { isValid, validateValues };
 };
-
-export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultFloorId = -1, defaultRoomId = -1) => {
-    const [location, _setLocation] = useState({
-        formSiteId: defaultSiteId,
-        formBuildingId: defaultBuildingId,
-        formFloorId: defaultFloorId,
-        formRoomId: defaultRoomId,
-    });
-
-    const setLocation = update => {
-        _setLocation({ ...location, ...update });
-    };
-    return { location, setLocation };
-};
