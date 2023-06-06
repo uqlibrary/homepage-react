@@ -22,6 +22,8 @@ import ConfirmationAlert from './ConfirmationAlert';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
+import config from './config';
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -73,7 +75,7 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
     const actionsCell = {
         field: 'actions',
         headerName: 'Actions',
-        renderCell: params => <RowMenuCell {...params} onRowEdit={onRowEdit} onRowDelete={onRowDelete} />,
+        renderCell: params => <RowMenuCell {...params} handleEditClick={onRowEdit} handleDeleteClick={onRowDelete} />,
         sortable: false,
         width: 100,
         headerAlign: 'center',
@@ -111,13 +113,19 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
         actions.loadAssetTypes();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {} };
+    const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
     const actionReducer = (_, action) => {
         switch (action.type) {
             case 'add':
-                return { isAdd: true, isEdit: false, isDelete: false, row: { asset_type_id: 'auto' } };
+                return {
+                    title: 'Add Asset Type',
+                    isAdd: true,
+                    isEdit: false,
+                    isDelete: false,
+                    row: { asset_type_id: 'auto' },
+                };
             case 'edit':
-                return { isAdd: false, isEdit: true, isDelete: false, row: action.row };
+                return { title: 'Edit Asset Type', isAdd: false, isEdit: true, isDelete: false, row: action.row };
             case 'clear':
                 return { ...emptyActionState };
             case 'delete':
@@ -272,7 +280,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
             />
             <div className={classes.root}>
                 <StandardCard noHeader>
-                    <UpdateDialog
+                    {/* <UpdateDialog
                         updateDialogueBoxId="addRow"
                         isOpen={actionState?.isAdd}
                         confirmationTitle={locale.pages.assetTypeManagement.addAsset.title}
@@ -283,19 +291,36 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         isBusy={dialogueBusy}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowAdd}
+                    /> */}
+                    <UpdateDialog
+                        title={actionState.title}
+                        updateDialogueBoxId="addRow"
+                        isOpen={actionState.isAdd}
+                        locale={pageLocale.dialogAdd}
+                        locationType={'Asset Type'}
+                        fields={config?.assettypes ?? []}
+                        columns={pageLocale.form.columns.assettype}
+                        row={actionState?.row}
+                        onCancelAction={() => actionDispatch({ type: 'clear' })}
+                        onAction={onRowAdd}
+                        props={actionState?.props}
+                        isBusy={dialogueBusy}
                     />
                     <UpdateDialog
+                        title={actionState.title}
                         updateDialogueBoxId="editRow"
-                        isOpen={actionState?.isEdit}
-                        confirmationTitle={locale.pages.assetTypeManagement.editAsset.title}
-                        cancelButtonLabel={locale.pages.assetTypeManagement.editAsset.cancelButtonLabel}
-                        confirmButtonLabel={locale.pages.assetTypeManagement.editAsset.confirmButtonLabel}
-                        fields={fieldConfig}
+                        isOpen={actionState.isEdit}
+                        locale={pageLocale.dialogEdit}
+                        locationType={'Asset Type'}
+                        fields={config?.assettypes ?? []}
+                        columns={pageLocale.form.columns.assettype}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowUpdate}
+                        props={actionState?.props}
                         isBusy={dialogueBusy}
                     />
+
                     <ConfirmationBox
                         actionButtonColor="primary"
                         actionButtonVariant="contained"

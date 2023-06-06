@@ -53,7 +53,7 @@ export default {
                         {
                             title: 'ASSET TYPES',
                             icon: <AssetTypeIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanageassettypes}?user=uqtesttag`,
                         },
                         {
                             title: 'LOCATIONS',
@@ -303,6 +303,46 @@ export default {
                 reallocateFail: error => `Error Reallocating Asset Type. ${error}`,
                 deleteSuccess: 'Asset Type Deleted',
                 deleteFail: error => `Error deleting asset types. ${error}`,
+            },
+            form: {
+                locationTypeTitle: 'Asset type',
+                actions: 'Actions',
+                addLocationButton: 'Add Asset type',
+                columns: {
+                    assettype: {
+                        asset_type_id: {
+                            label: 'Id',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type Name',
+                        },
+                        asset_type_class: {
+                            label: 'Class',
+                        },
+                        asset_type_power_rating: {
+                            label: 'Power Rating',
+                        },
+                        asset_type: {
+                            label: 'Type',
+                        },
+                        asset_type_notes: {
+                            label: 'Notes',
+                        },
+                        asset_count: {
+                            label: 'Usage',
+                        },
+                    },
+                },
+            },
+            dialogAdd: {
+                confirmButtonLabel: 'Add',
+                cancelButtonLabel: 'Cancel',
+                confirmationTitle: type => `Add new ${type}`,
+            },
+            dialogEdit: {
+                confirmButtonLabel: 'Update',
+                cancelButtonLabel: 'Cancel',
+                confirmationTitle: type => `Edit ${type}`,
             },
         },
         manage: {
