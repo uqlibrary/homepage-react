@@ -32,6 +32,9 @@ const handlers = {
         inspectionDevicesLoaded: false,
         inspectionDevicesError: action.payload,
     }),
+    [actions.TESTTAG_INSPECTION_DEVICES_CLEAR]: () => ({
+        ...initialState,
+    }),
 };
 
 export default function testTagInspectionDevicesReducer(state = initialState, action) {

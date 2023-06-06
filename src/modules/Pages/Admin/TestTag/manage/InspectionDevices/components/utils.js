@@ -72,17 +72,17 @@ export const formatDateStrings = (row, suffix) => {
     };
 };
 
-export const transformAddRequest = request => {
+export const transformAddRequest = (request, user) => {
     delete request.device_id;
     delete request.device_current_flag;
 
-    const newResponse = formatDateStrings(request, '00:00');
+    const newResponse = { ...formatDateStrings(request, '00:00:00'), device_department: user.user_department };
     return newResponse;
 };
 
 export const transformUpdateRequest = request => {
     delete request.device_current_flag;
 
-    const newResponse = formatDateStrings(request, '00:00');
+    const newResponse = formatDateStrings(request, '00:00:00');
     return newResponse;
 };

@@ -36,6 +36,7 @@ export const useStyles = makeStyles(theme => ({
 }));
 
 export const UpdateDialogue = ({
+    action,
     confirmationBoxId = 'dialogBox',
     locale,
     isOpen,
@@ -63,15 +64,14 @@ export const UpdateDialogue = ({
 
     React.useEffect(() => {
         if (isOpen) {
-            console.log({ columns, fields, row });
             setDataColumns(columns);
             setDataFields(fields);
             setData(row);
             setEditableFields(
                 Object.keys(fields).filter(
                     field =>
-                        !!(fields[field].fieldParams?.renderInUpdate ?? true) &&
-                        !!(fields[field].fieldParams?.canEdit ?? false),
+                        !!(fields[field]?.fieldParams?.renderInUpdate ?? true) &&
+                        !!(fields[field]?.fieldParams?.canEdit ?? false),
                 ),
             );
         }
@@ -114,9 +114,10 @@ export const UpdateDialogue = ({
                         !!dataFields &&
                         Object.keys(dataFields).map(field => (
                             <React.Fragment key={field}>
-                                {!!(dataFields[field].fieldParams?.renderInUpdate ?? true) && (
+                                {((action === 'edit' && !!(dataFields[field]?.fieldParams?.renderInUpdate ?? true)) ||
+                                    (action === 'add' && !!(dataFields[field]?.fieldParams?.renderInAdd ?? true))) && (
                                     <Grid item xs={12} sm={6}>
-                                        {!dataFields[field].fieldParams.canEdit && (
+                                        {!!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
                                                 <Typography variant="body2">{dataColumns[field].label}</Typography>
                                                 <Typography variant="body1">
@@ -128,7 +129,7 @@ export const UpdateDialogue = ({
                                                 </Typography>
                                             </>
                                         )}
-                                        {dataFields[field].fieldParams.canEdit && (
+                                        {!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
                                                 {dataFields[field]?.component({
                                                     id: field,
@@ -209,6 +210,7 @@ export const UpdateDialogue = ({
 };
 
 UpdateDialogue.propTypes = {
+    action: PropTypes.oneOf(['add', 'edit']),
     locale: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     columns: PropTypes.object.isRequired,

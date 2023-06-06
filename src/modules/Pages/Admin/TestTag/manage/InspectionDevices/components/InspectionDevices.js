@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
@@ -43,6 +44,7 @@ const InspectionDevices = ({
     const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
+    const { user } = useSelector(state => state.get('testTagUserReducer'));
 
     useEffect(() => {
         if (!inspectionDevicesLoaded) actions.loadInspectionDevices();
@@ -91,7 +93,7 @@ const InspectionDevices = ({
     const onRowAdd = data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
-        const wrappedRequest = transformAddRequest(request);
+        const wrappedRequest = transformAddRequest(request, user);
         console.log('add', wrappedRequest);
 
         actions
@@ -178,6 +180,7 @@ const InspectionDevices = ({
                 <StandardCard noHeader>
                     <UpdateDialog
                         title={actionState.title}
+                        action="add"
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
@@ -191,6 +194,7 @@ const InspectionDevices = ({
                     />
                     <UpdateDialog
                         title={actionState.title}
+                        action="edit"
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}

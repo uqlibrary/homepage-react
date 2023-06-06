@@ -10,15 +10,15 @@ export default {
         device_id: {
             fieldParams: { canEdit: false },
         },
+        device_department: {
+            component: props => <TextField {...props} />,
+            fieldParams: { canEdit: false, renderInAdd: false, renderInTable: false, flex: 1 },
+        },
         device_model_name: {
             component: props => <TextField {...props} />,
             fieldParams: { canEdit: true, flex: 1 },
         },
         device_serial_number: {
-            component: props => <TextField {...props} />,
-            fieldParams: { canEdit: true, flex: 1 },
-        },
-        device_department: {
             component: props => <TextField {...props} />,
             fieldParams: { canEdit: true, flex: 1 },
         },
