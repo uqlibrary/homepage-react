@@ -210,7 +210,7 @@ export const UpdateDialogue = ({
 };
 
 UpdateDialogue.propTypes = {
-    action: PropTypes.oneOf(['add', 'edit']),
+    action: PropTypes.oneOf(['add', 'edit']).isRequired,
     locale: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     columns: PropTypes.object.isRequired,

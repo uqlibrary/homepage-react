@@ -264,88 +264,91 @@ export default {
                 },
             },
         },
-        assetTypeManagement: {
-            breadcrumbs: [
-                {
-                    title: 'Asset Type Management',
-                    icon: <AssetTypeIcon fontSize={'small'} />,
+        manage: {
+            config: {
+                dateFormat: 'YYYY-MM-DD',
+            },
+            assetTypes: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Type Management',
+                        icon: <AssetTypeIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Asset Types for ${dept}`,
+                    requiredText: 'All fields are required unless otherwise indicated.',
+                    addButtonLabel: 'Add Asset Type',
                 },
-            ],
-            header: {
-                pageSubtitle: dept => `Managing Asset Types for ${dept}`,
-                requiredText: 'All fields are required unless otherwise indicated.',
-                addButtonLabel: 'Add Asset Type',
-            },
-            addAsset: {
-                title: 'Add New Asset Type',
-                cancelButtonLabel: 'Cancel',
-                confirmButtonLabel: 'Add',
-            },
-            editAsset: {
-                title: 'Edit Asset Type',
-                cancelButtonLabel: 'Cancel',
-                confirmButtonLabel: 'Update',
-            },
-            deleteConfirm: {
-                confirmButtonLabel: 'Proceed',
-                cancelButtonLabel: 'Cancel',
-                confirmationMessage: 'Are you sure you wish to remove this Asset Type?',
-                confirmationTitle: 'Remove Unused Asset Type',
-            },
-            snackbars: {
-                loadFailed: error => `Error loading Asset Types. ${error}`,
-                addSuccess: 'Asset type added',
-                addFailed: error => `Error adding Asset Type. ${error}`,
-                updateSuccess: 'Asset type updated',
-                updateFail: error => `Error updating Asset Type. ${error}`,
-                reallocateSuccess: response =>
-                    `Asset Type Deleted and reallocated. ${response.effected_assets} asset reallocated, and ${response.effected_asset_types} asset type(s) removed`,
-                reallocateFail: error => `Error Reallocating Asset Type. ${error}`,
-                deleteSuccess: 'Asset Type Deleted',
-                deleteFail: error => `Error deleting asset types. ${error}`,
-            },
-            form: {
-                locationTypeTitle: 'Asset type',
-                actions: 'Actions',
-                addLocationButton: 'Add Asset type',
-                columns: {
-                    assettype: {
-                        asset_type_id: {
-                            label: 'Id',
-                        },
-                        asset_type_name: {
-                            label: 'Asset Type Name',
-                        },
-                        asset_type_class: {
-                            label: 'Class',
-                        },
-                        asset_type_power_rating: {
-                            label: 'Power Rating',
-                        },
-                        asset_type: {
-                            label: 'Type',
-                        },
-                        asset_type_notes: {
-                            label: 'Notes',
-                        },
-                        asset_count: {
-                            label: 'Usage',
+                addAsset: {
+                    title: 'Add New Asset Type',
+                    cancelButtonLabel: 'Cancel',
+                    confirmButtonLabel: 'Add',
+                },
+                editAsset: {
+                    title: 'Edit Asset Type',
+                    cancelButtonLabel: 'Cancel',
+                    confirmButtonLabel: 'Update',
+                },
+                deleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to remove this Asset Type?',
+                    confirmationTitle: 'Remove Unused Asset Type',
+                },
+                snackbars: {
+                    loadFailed: error => `Error loading Asset Types. ${error}`,
+                    addSuccess: 'Asset type added',
+                    addFailed: error => `Error adding Asset Type. ${error}`,
+                    updateSuccess: 'Asset type updated',
+                    updateFail: error => `Error updating Asset Type. ${error}`,
+                    reallocateSuccess: response =>
+                        `Asset Type Deleted and reallocated. ${response.effected_assets} asset reallocated, and ${response.effected_asset_types} asset type(s) removed`,
+                    reallocateFail: error => `Error Reallocating Asset Type. ${error}`,
+                    deleteSuccess: 'Asset Type Deleted',
+                    deleteFail: error => `Error deleting asset types. ${error}`,
+                },
+                form: {
+                    locationTypeTitle: 'Asset type',
+                    actions: 'Actions',
+                    addLocationButton: 'Add Asset type',
+                    columns: {
+                        assettype: {
+                            asset_type_id: {
+                                label: 'Id',
+                            },
+                            asset_type_name: {
+                                label: 'Asset Type Name',
+                            },
+                            asset_type_class: {
+                                label: 'Class',
+                            },
+                            asset_type_power_rating: {
+                                label: 'Power Rating',
+                            },
+                            asset_type: {
+                                label: 'Type',
+                            },
+                            asset_type_notes: {
+                                label: 'Notes',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
                         },
                     },
                 },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Add new ${type}`,
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Edit ${type}`,
+                },
             },
-            dialogAdd: {
-                confirmButtonLabel: 'Add',
-                cancelButtonLabel: 'Cancel',
-                confirmationTitle: type => `Add new ${type}`,
-            },
-            dialogEdit: {
-                confirmButtonLabel: 'Update',
-                cancelButtonLabel: 'Cancel',
-                confirmationTitle: type => `Edit ${type}`,
-            },
-        },
-        manage: {
             locations: {
                 breadcrumbs: [
                     {
@@ -454,7 +457,7 @@ export default {
                 breadcrumbs: [
                     {
                         title: 'Manage Inspection Devices',
-                        icon: <InspectionIcon fontSize={'small'} />,
+                        icon: <InspectionDeviceIcon fontSize={'small'} />,
                     },
                 ],
                 header: {

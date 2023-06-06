@@ -17,7 +17,7 @@ import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import ActionDialogue from './ActionDialogue';
 
-import ConfirmationAlert from './ConfirmationAlert';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
@@ -104,7 +104,7 @@ const getColumns = ({ onRowEdit, onRowDelete }) => {
 };
 
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) => {
-    const pageLocale = locale.pages.assetTypeManagement;
+    const pageLocale = locale.pages.manage.assetTypes;
     const classes = useStyles();
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
@@ -139,10 +139,15 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
     const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type, autoHide: true });
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
     const openConfirmationAlert = (message, type, autoHide) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHide: autoHide });
+        setConfirmationAlert({
+            message: message,
+            visible: true,
+            type: !!type ? type : 'info',
+            autoHideDuration: !!autoHide ? 6000 : null,
+        });
     };
     const handleAddClick = () => {
         closeConfirmationAlert();
@@ -280,24 +285,12 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
             />
             <div className={classes.root}>
                 <StandardCard noHeader>
-                    {/* <UpdateDialog
-                        updateDialogueBoxId="addRow"
-                        isOpen={actionState?.isAdd}
-                        confirmationTitle={locale.pages.assetTypeManagement.addAsset.title}
-                        cancelButtonLabel={locale.pages.assetTypeManagement.addAsset.cancelButtonLabel}
-                        confirmButtonLabel={locale.pages.assetTypeManagement.addAsset.confirmButtonLabel}
-                        fields={fieldConfig}
-                        row={actionState?.row}
-                        isBusy={dialogueBusy}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
-                        onAction={onRowAdd}
-                    /> */}
                     <UpdateDialog
                         title={actionState.title}
+                        action="add"
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
-                        locationType={'Asset Type'}
                         fields={config?.assettypes ?? []}
                         columns={pageLocale.form.columns.assettype}
                         row={actionState?.row}
@@ -308,10 +301,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     />
                     <UpdateDialog
                         title={actionState.title}
+                        action="edit"
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
-                        locationType={'Asset Type'}
                         fields={config?.assettypes ?? []}
                         columns={pageLocale.form.columns.assettype}
                         row={actionState?.row}
@@ -329,7 +322,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         onAction={onDeleteEmptyAssetType}
                         onClose={hideDeleteConfirm}
                         isOpen={isDeleteConfirmOpen}
-                        locale={locale.pages.assetTypeManagement.deleteConfirm}
+                        locale={pageLocale.deleteConfirm}
                         noMinContentWidth
                     />
 
@@ -344,7 +337,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {
-                                        label: locale.pages.assetTypeManagement.header.addButtonLabel,
+                                        label: pageLocale.header.addButtonLabel,
                                         onClick: handleAddClick,
                                     },
                                 }}
@@ -356,7 +349,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         isOpen={confirmationAlert.visible}
                         message={confirmationAlert.message}
                         type={confirmationAlert.type}
-                        autoHide={confirmationAlert.autoHide}
+                        autoHideDuration={confirmationAlert.autoHideDuration}
                         closeAlert={closeConfirmationAlert}
                     />
                 </StandardCard>

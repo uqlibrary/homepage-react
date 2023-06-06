@@ -57,7 +57,7 @@ const InspectionDevices = ({
         setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
     const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
+        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
     };
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
@@ -258,6 +258,7 @@ const InspectionDevices = ({
                         message={confirmationAlert.message}
                         type={confirmationAlert.type}
                         closeAlert={closeConfirmationAlert}
+                        autoHideDuration={confirmationAlert.autoHideDuration}
                     />
                 </StandardCard>
             </div>
