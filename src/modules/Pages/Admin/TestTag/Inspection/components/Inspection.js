@@ -177,7 +177,7 @@ const Inspection = ({
                 ...defaultFormValues,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
-                room_id: location?.formRoomId ?? undefined,
+                room_id: location?.room ?? undefined,
                 action_date: formValues?.action_date ?? today,
                 inspection_device_id:
                     formValues?.inspection_device_id !== undefined
