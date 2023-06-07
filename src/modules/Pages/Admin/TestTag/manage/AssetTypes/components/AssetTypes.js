@@ -113,6 +113,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
         actions.loadAssetTypes();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
     const actionReducer = (_, action) => {
         switch (action.type) {
