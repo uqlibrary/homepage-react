@@ -12,7 +12,6 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { isEmptyStr } from '../../helpers/helpers';
 import { useIsMobileView } from 'hooks';
 
 export const useStyles = makeStyles(theme => ({
@@ -78,8 +77,8 @@ export const UpdateDialogue = ({
     }, [isOpen, fields, row, columns]);
 
     React.useEffect(() => {
-        setIsValid(!editableFields.some(entry => isEmptyStr(data[entry])));
-    }, [data, editableFields]);
+        setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field]) ?? true));
+    }, [data, dataFields, editableFields]);
 
     const _onAction = () => {
         onClose?.();
@@ -138,7 +137,7 @@ export const UpdateDialogue = ({
                                                     value:
                                                         dataFields[field]?.valueFormatter?.(data?.[field]) ??
                                                         data?.[field],
-                                                    error: isEmptyStr(data?.[field]),
+                                                    error: dataFields[field]?.validate?.(data?.[field]) ?? false,
                                                     onChange: handleChange,
                                                     InputLabelProps: {
                                                         shrink: true,

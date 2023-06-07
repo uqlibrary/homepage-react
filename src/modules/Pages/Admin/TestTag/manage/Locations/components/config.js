@@ -3,6 +3,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
 import { createLocationString } from './utils';
+import { isEmpty } from '../../../Inspection/utils/helpers';
 
 export default {
     site: {
@@ -11,11 +12,15 @@ export default {
                 fieldParams: { canEdit: false },
             },
             site_name: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField {...props} required />,
+                validate: value => isEmpty(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             site_id_displayed: {
-                component: props => <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} />,
+                component: props => (
+                    <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />
+                ),
+                validate: value => isEmpty(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             asset_count: {
@@ -34,11 +39,15 @@ export default {
                 fieldParams: { canEdit: false, renderInTable: false },
             },
             building_name: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField {...props} required />,
+                validate: value => isEmpty(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             building_id_displayed: {
-                component: props => <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} />,
+                component: props => (
+                    <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />
+                ),
+                validate: value => isEmpty(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             asset_count: {
@@ -57,7 +66,10 @@ export default {
                 fieldParams: { canEdit: false, renderInTable: false, flex: 1 },
             },
             floor_id_displayed: {
-                component: props => <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} />,
+                component: props => (
+                    <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />
+                ),
+                validate: value => isEmpty(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             asset_count: {
@@ -80,7 +92,10 @@ export default {
                 fieldParams: { canEdit: true, flex: 1 },
             },
             room_id_displayed: {
-                component: props => <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} />,
+                component: props => (
+                    <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />
+                ),
+                validate: value => isEmpty(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             asset_count: {
