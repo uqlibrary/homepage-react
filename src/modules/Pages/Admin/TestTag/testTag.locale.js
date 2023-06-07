@@ -145,14 +145,6 @@ export default {
                     },
                     location: {
                         title: 'Location',
-                        siteLabel: 'Site',
-                        building: {
-                            label: 'Building',
-                        },
-                        floor: {
-                            label: 'Floor',
-                        },
-                        room: { label: 'Room' },
                     },
                 },
                 asset: {
@@ -360,7 +352,7 @@ export default {
                     pageSubtitle: dept => `Managing Locations for ${dept}`,
                 },
                 form: {
-                    locationTypeTitle: 'Location type',
+                    title: 'Filter',
                     actions: 'Actions',
                     addLocationButton: location => `Add ${location}`,
                     columns: {
@@ -516,15 +508,5 @@ export default {
                 },
             },
         },
-    },
-    locationPicker: {
-        siteLabel: 'Site',
-        building: {
-            label: 'Building',
-        },
-        floor: {
-            label: 'Floor',
-        },
-        room: { label: 'Room' },
     },
 };

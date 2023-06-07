@@ -6,19 +6,13 @@ import { Grid } from '@material-ui/core';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import Collapse from '@material-ui/core/Collapse';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import clsx from 'clsx';
 
 import locale from '../../testTag.locale';
+import LocationPicker from '../../SharedComponents/LocationPicker/LocationPicker';
 
 const moment = require('moment');
 const inputLabelProps = { shrink: true };
@@ -121,7 +115,49 @@ const EventPanel = ({
                             {pageLocale.form.event.location.title}
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+
+                    <LocationPicker
+                        siteList={inspectionConfig?.sites ?? []}
+                        siteListLoading={inspectionConfigLoading}
+                        buildingList={
+                            inspectionConfig?.sites?.find(site => site.site_id === location.site)?.buildings ?? []
+                        }
+                        buildingListLoading={inspectionConfigLoading}
+                        floorList={floorList?.floors ?? []}
+                        floorListLoading={floorListLoading}
+                        roomList={roomList?.rooms ?? []}
+                        roomListLoading={roomListLoading}
+                        actions={actions}
+                        location={location}
+                        setLocation={updateLocation}
+                        inputProps={{
+                            site: {
+                                error: location.site === -1,
+                            },
+                            building: {
+                                required: hasInspection,
+                                error: hasInspection && location.site !== -1 && location.building === -1,
+                            },
+                            floor: {
+                                required: hasInspection,
+                                error:
+                                    hasInspection &&
+                                    location.site !== -1 &&
+                                    location.building !== -1 &&
+                                    location.floor === -1,
+                            },
+                            room: {
+                                required: hasInspection,
+                                error:
+                                    hasInspection &&
+                                    location.site !== -1 &&
+                                    location.building !== -1 &&
+                                    location.floor !== -1 &&
+                                    location.room === -1,
+                            },
+                        }}
+                    />
+                    {/* <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
                             <InputLabel shrink>{pageLocale.form.event.location.siteLabel}</InputLabel>
                             <Select
@@ -190,9 +226,9 @@ const EventPanel = ({
                                     actions.loadFloors(newValue.building_id);
                                 }}
                                 getOptionLabel={option =>
-                                    `${option.building_id_displayed ?? /* istanbul ignore next */ ''}${
-                                        option.building_id_displayed ? ' - ' : /* istanbul ignore next */ ''
-                                    }${option.building_name ?? /* istanbul ignore next */ ''}`
+                                    `${option.building_id_displayed ??  ''}${
+                                        option.building_id_displayed ? ' - ' :  ''
+                                    }${option.building_name ??  ''}`
                                 }
                                 renderInput={params => (
                                     <TextField
@@ -247,7 +283,7 @@ const EventPanel = ({
                                     actions.loadRooms(newValue.floor_id);
                                 }}
                                 getOptionLabel={option =>
-                                    option.floor_id_displayed ?? /* istanbul ignore next */ option
+                                    option.floor_id_displayed ??  option
                                 }
                                 renderInput={params => (
                                     <TextField
@@ -302,7 +338,7 @@ const EventPanel = ({
                                 onChange={(_, newValue) => {
                                     updateLocation({ room: newValue.room_id }, true);
                                 }}
-                                getOptionLabel={option => option.room_id_displayed ?? /* istanbul ignore next */ option}
+                                getOptionLabel={option => option.room_id_displayed ??  option}
                                 renderInput={params => (
                                     <TextField
                                         {...params}
@@ -345,7 +381,7 @@ const EventPanel = ({
                                 loading={!!roomListLoading}
                             />
                         </FormControl>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Collapse>
         </StandardCard>

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector } from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -10,7 +9,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // import clsx from 'clsx';
 
-import locale from '../../testTag.locale';
+import locale from './location.locale';
 
 const inputLabelProps = { shrink: true };
 
@@ -26,42 +25,53 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
+const LocationPicker = ({
+    siteList,
+    siteListLoading,
+    buildingList,
+    buildingListLoading,
+    floorList,
+    floorListLoading,
+    // floorListError,
+    roomList,
+    roomListLoading,
+    actions,
+    location,
+    setLocation,
+    hide = [],
+    inputProps = {},
+}) => {
+    // console.log({
+    //     siteList,
+    //     siteListLoading,
+    //     buildingList,
+    //     buildingListLoading,
+    //     floorList,
+    //     floorListLoading,
+    //     // floorListError,
+    //     roomList,
+    //     roomListLoading,
+    //     actions,
+    //     location,
+    //     setLocation,
+    //     hide,
+    //     inputProps,
+    // });
     const classes = useStyles();
-    const {
-        siteList,
-        siteListLoading,
-        // siteListError,
-        // buildingList,
-        // buildingListLoading,
-        // buildingListError,
-        floorList,
-        floorListLoading,
-        // floorListError,
-        roomList,
-        roomListLoading,
-        // roomListError,
-    } = useSelector(state => state.get?.('testTagLocationReducer'));
+    const divisor = 4 - hide.length;
+
     const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
 
-    const fullSiteList = [{ site_id: -1, site_id_displayed: 'All sites' }, ...(siteList ?? [])];
-    const fullBuildingList = [
-        { building_id: -1, building_id_displayed: 'All buildings' },
-        ...(siteList?.find(site => site.site_id === location.site)?.buildings ?? []),
-    ];
-    const fullFloorList = [{ floor_id: -1, floor_id_displayed: 'All floors' }, ...(floorList?.floors ?? [])];
-    const fullRoomList = [{ room_id: -1, room_id_displayed: 'All rooms' }, ...(roomList?.rooms ?? [])];
-
     return (
-        <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={4}>
+        <>
+            <Grid item xs={12} sm={6} md={12 / divisor}>
                 <FormControl className={classes.formControl} fullWidth>
                     <Autocomplete
                         id="testntag-form-siteid"
                         data-testid="testntag-form-siteid"
                         fullWidth
-                        options={fullSiteList}
-                        value={fullSiteList?.find(site => site.site_id === location.site) ?? fullSiteList?.[0]}
+                        options={siteList}
+                        value={siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]}
                         onChange={(_, newValue) => {
                             setLocation({
                                 site: newValue.site_id,
@@ -82,9 +92,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                         renderInput={params => (
                             <TextField
                                 {...params}
-                                {...locale.site}
-                                // required={hasInspection}
-
+                                label={locale.site.label}
                                 variant="standard"
                                 InputLabelProps={{
                                     ...inputLabelProps,
@@ -111,6 +119,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                     id: 'testntag-form-siteid-input',
                                     'data-testid': 'testntag-form-siteid-input',
                                 }}
+                                {...(inputProps?.site ?? {})}
                             />
                         )}
                         disabled={!!!siteList}
@@ -120,16 +129,16 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                 </FormControl>
             </Grid>
             {!fieldsToHide.includes('building') && (
-                <Grid item xs={12} sm={6} md={5}>
+                <Grid item xs={12} sm={6} md={12 / divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id="testntag-form-buildingid"
                             data-testid="testntag-form-buildingid"
                             fullWidth
-                            options={fullBuildingList}
+                            options={buildingList}
                             value={
-                                fullBuildingList?.find(building => building.building_id === location.building) ??
-                                fullBuildingList?.[0]
+                                buildingList?.find(building => building.building_id === location.building) ??
+                                buildingList?.[0]
                             }
                             onChange={(_, newValue) => {
                                 setLocation({
@@ -137,8 +146,11 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                     floor: -1,
                                     room: -1,
                                 });
-                                if (newValue.building_id !== -1) actions.loadFloors(newValue.building_id);
-                                else actions.clearFloors();
+                                actions.clearFloors();
+                                if (newValue.building_id !== -1) {
+                                    actions.clearRooms();
+                                    actions.loadFloors(newValue.building_id);
+                                }
                             }}
                             getOptionLabel={option =>
                                 `${option.building_id_displayed ?? /* istanbul ignore next */ ''}${
@@ -148,9 +160,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...locale.building}
-                                    // required={hasInspection}
-                                    // error={location.site !== -1 && location.building === -1}
+                                    label={locale.building.label}
                                     variant="standard"
                                     InputLabelProps={{
                                         ...inputLabelProps,
@@ -160,7 +170,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                         ...params.InputProps,
                                         endAdornment: (
                                             <React.Fragment>
-                                                {!!siteListLoading ? (
+                                                {!!buildingListLoading ? (
                                                     <CircularProgress
                                                         color="inherit"
                                                         size={20}
@@ -177,6 +187,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                         id: 'testntag-form-buildingid-input',
                                         'data-testid': 'testntag-form-buildingid-input',
                                     }}
+                                    {...(inputProps?.building ?? {})}
                                 />
                             )}
                             disabled={location.site === -1 || !!!siteList}
@@ -186,33 +197,27 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                     </FormControl>
                 </Grid>
             )}
+
             {!fieldsToHide.includes('floor') && (
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item xs={12} sm={6} md={12 / divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id="testntag-form-floorid"
                             data-testid="testntag-form-floorid"
                             fullWidth
-                            options={fullFloorList}
-                            value={
-                                fullFloorList?.find(floor => floor.floor_id === location.floor) ?? fullFloorList?.[0]
-                            }
+                            options={floorList}
+                            value={floorList?.find(floor => floor.floor_id === location.floor) ?? floorList?.[0]}
                             onChange={(_, newValue) => {
                                 setLocation({ floor: newValue.floor_id, room: -1 });
 
                                 if (newValue.floor_id !== -1) actions.loadRooms(newValue.floor_id);
+                                else actions.clearRooms();
                             }}
                             getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...locale.floor}
-                                    // required={hasInspection}
-                                    // error={
-                                    //     location.site !== -1 &&
-                                    //     location.building !== -1 &&
-                                    //     location.floor === -1
-                                    // }
+                                    label={locale.floor.label}
                                     variant="standard"
                                     InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-floorid-input' }}
                                     InputProps={{
@@ -236,6 +241,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                         id: 'testntag-form-floorid-input',
                                         'data-testid': 'testntag-form-floorid-input',
                                     }}
+                                    {...(inputProps?.floor ?? {})}
                                 />
                             )}
                             disabled={location.building === -1 || floorListLoading}
@@ -246,14 +252,14 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                 </Grid>
             )}
             {!fieldsToHide.includes('room') && (
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item xs={12} sm={6} md={12 / divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id="testntag-form-roomid"
                             data-testid="testntag-form-roomid"
                             fullWidth
-                            options={fullRoomList}
-                            value={fullRoomList?.find(room => room.room_id === location.room) ?? fullRoomList[0]}
+                            options={roomList}
+                            value={roomList?.find(room => room.room_id === location.room) ?? roomList?.[0]}
                             onChange={(_, newValue) => {
                                 setLocation({ room: newValue.room_id }, true);
                             }}
@@ -261,14 +267,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...locale.room}
-                                    // required={hasInspection}
-                                    // error={
-                                    //     location.site !== -1 &&
-                                    //     location.building !== -1 &&
-                                    //     location.floor !== -1 &&
-                                    //     location.room === -1
-                                    // }
+                                    label={locale.room.label}
                                     variant="standard"
                                     InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-roomid-input' }}
                                     InputProps={{
@@ -292,6 +291,7 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                                         id: 'testntag-form-roomid-input',
                                         'data-testid': 'testntag-form-roomid-input',
                                     }}
+                                    {...(inputProps?.room ?? {})}
                                 />
                             )}
                             disabled={location.floor === -1 || roomListLoading}
@@ -301,15 +301,27 @@ const LocationPicker = ({ actions, location, setLocation, hide = [] }) => {
                     </FormControl>
                 </Grid>
             )}
-        </Grid>
+        </>
     );
 };
 
 LocationPicker.propTypes = {
-    actions: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    setLocation: PropTypes.func.isRequired,
+    siteList: PropTypes.array,
+    siteListLoading: PropTypes.bool,
+    buildingList: PropTypes.array,
+    buildingListLoading: PropTypes.bool,
+    floorList: PropTypes.array,
+    floorListLoading: PropTypes.bool,
+    // floorListError,
+    roomList: PropTypes.array,
+    roomListLoading: PropTypes.bool,
+    // roomListError,
+    actions: PropTypes.object,
+    location: PropTypes.object,
+    setLocation: PropTypes.func,
     hide: PropTypes.array,
+    withAllOption: PropTypes.bool,
+    inputProps: PropTypes.object,
 };
 
 export default React.memo(LocationPicker);

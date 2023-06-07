@@ -17,7 +17,7 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
-import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
+import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import { useLocation } from '../../../helpers/hooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import config from './config';
@@ -79,12 +79,13 @@ const ManageLocations = ({ actions }) => {
         roomListLoading,
         roomListLoaded,
         // roomListError,
-    } = useSelector(state => state.get?.('testTagLocationReducer'));
+    } = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
 
     React.useEffect(() => {
         if (roomListLoaded) {
             if (location.floor !== -1) {
+                console.log(roomList);
                 setRows(roomList.rooms);
             } else {
                 setLocation({ room: -1 });
@@ -357,14 +358,18 @@ const ManageLocations = ({ actions }) => {
                     <Grid container spacing={0} className={classes.tableMarginTop}>
                         <Grid item xs={12} padding={0}>
                             <Typography variant={'h6'} component={'div'}>
-                                Select location
+                                {pageLocale.form.title}
                             </Typography>
-                            <LocationPicker
-                                actions={actions}
-                                location={location}
-                                setLocation={setLocation}
-                                hide={['room']}
-                            />
+
+                            <Grid container spacing={3}>
+                                <AutoLocationPicker
+                                    actions={actions}
+                                    location={location}
+                                    setLocation={setLocation}
+                                    hide={['room']}
+                                    hasAllOption
+                                />
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>

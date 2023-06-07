@@ -27,16 +27,14 @@ const handlers = {
         siteListLoaded: false,
         siteListError: false,
     }),
-    [actions.TESTTAG_SITE_LIST_LOADED]: (state, action) => {
-        return {
-            ...initialState,
-            ...state,
-            siteListLoading: false,
-            siteListLoaded: true,
-            siteListError: false,
-            siteList: action.payload,
-        };
-    },
+    [actions.TESTTAG_SITE_LIST_LOADED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        siteListLoading: false,
+        siteListLoaded: true,
+        siteListError: false,
+        siteList: action.payload,
+    }),
     [actions.TESTTAG_SITE_LIST_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
