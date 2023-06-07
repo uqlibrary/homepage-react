@@ -812,31 +812,31 @@ mock.onGet('exams/course/FREN1010/summary')
     })
 
     // T&T LOCATIONS
-    .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').url)
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).url)
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').url)
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).url)
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').url)
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).url)
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').url)
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).url)
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)
     .reply(() => [200, { status: 'OK' }])
 
     // T&T MANAGE INSPECTION DEVICES
-    .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().url)
-    .reply(() => [200, testTag_inspectionDevices])
-    .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().url)
+    .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
+    .reply(() => {return [200, testTag_inspectionDevices]})
+    .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => [200, {status: 'OK'}])
-    .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').url)
+    .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
     .reply(() => [200, {status: 'OK'}])
-    .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').url)
+    .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
     .reply(() => [200, {status: 'OK'}])
 
     // ASSETS (with pattern matching)
@@ -864,16 +864,18 @@ mock.onGet('exams/course/FREN1010/summary')
         },
     ])
     // Test and Tag Asset Types
-    .onGet(routes.TEST_TAG_ONLOAD_ASSETTYPE_API().apiUrl)
-    .reply(() => [
-        200,
-        {
-            status: 'OK',
-            data: {
-                "asset_types" : test_tag_asset_types.data, 
+    .onGet(/test_and_tag\/onload\/assettype/)
+    .reply(() => 
+        [
+            200,
+            {
+                status: 'OK',
+                data: {
+                    "asset_types" : test_tag_asset_types.data, 
+                }
             }
-        }
-    ])
+        ]
+    )
     .onPost(routes.TEST_TAG_ADD_ASSET_TYPE_API().apiUrl)
     .reply(() => [
         200,
