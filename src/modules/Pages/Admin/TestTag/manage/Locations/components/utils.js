@@ -48,7 +48,6 @@ export const getColumns = ({ config, locale, selectedFilter, handleEditClick, ha
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 export const actionReducer = (_, action) => {
     const { type, row, selectedFilter, title, ...props } = action;
-    console.log('actionReducer', type, props);
     switch (type) {
         case 'add':
             return {

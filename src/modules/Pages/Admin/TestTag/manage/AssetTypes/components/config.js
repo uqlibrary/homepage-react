@@ -2,6 +2,8 @@ import React from 'react';
 
 import TextField from '@material-ui/core/TextField';
 
+import { isEmpty } from '../../../Inspection/utils/helpers';
+
 export default {
     assettypes: {
         asset_type_id: {
@@ -10,7 +12,8 @@ export default {
         },
         asset_type_name: {
             label: 'Asset Type Name',
-            component: props => <TextField {...props} />,
+            component: props => <TextField {...props} required />,
+            validate: value => isEmpty(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, flex: 1 },
         },
         asset_type_class: {
