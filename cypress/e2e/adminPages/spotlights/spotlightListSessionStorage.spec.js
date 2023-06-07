@@ -37,15 +37,13 @@ describe('Spotlight Admin: past list filter session storage', () => {
 
         // we load the view page, then click the cancel button to come back to the list page
         clickButton('[data-testid="spotlight-list-past"] tbody tr:first-child button:first-child', 'View');
-        cy.location('href').should(
-            'eq',
-            'http://localhost:2020/admin/spotlights/view/1e1b0e10-c400-11e6-a8f0-47525a49f469',
-        );
+        cy.url().should('eq', 'http://localhost:2020/admin/spotlights/view/1e1b0e10-c400-11e6-a8f0-47525a49f469');
         cy.get('h2')
             .should('be.visible')
             .contains('View spotlight');
         clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
-        cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
+        // cy.wait(1000);
+        cy.url().should('eq', 'http://localhost:2020/admin/spotlights');
 
         // the filter text field still has the previously typed word and only 3 rows are present
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
@@ -108,15 +106,12 @@ describe('Spotlight Admin: past list filter session storage', () => {
             .should('exist')
             .should('contain', 'Clone')
             .click();
-        cy.location('href').should(
-            'eq',
-            'http://localhost:2020/admin/spotlights/clone/1e1b0e10-c400-11e6-a8f0-47525a49f469',
-        );
+        cy.url().should('eq', 'http://localhost:2020/admin/spotlights/clone/1e1b0e10-c400-11e6-a8f0-47525a49f469');
         cy.waitUntil(() => cy.get('[data-testid="admin-spotlights-form-button-cancel"]').should('exist'));
         cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
             .should('exist')
             .click();
-        cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
+        cy.url().should('eq', 'http://localhost:2020/admin/spotlights');
 
         // the filter text field still has the previously typed word and only 4 rows are present
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
