@@ -23,7 +23,7 @@ export const pathConfig = {
         testntaginspect: '/admin/testntag/inspect',
         testntagmanagelocations: '/admin/testntag/manage/locations',
         testntagmanageinspectiondevices: '/admin/testntag/manage/inspectiondevices',
-        testntagreport: '/admin/testntag/report',
+        testntagreportinspectionsdue: '/admin/testntag/report/inspectionsdue',
         testntagmanageassettypes: '/admin/testntag/manage/assettypes',
     },
     bookExamBooth: '/book-exam-booth',

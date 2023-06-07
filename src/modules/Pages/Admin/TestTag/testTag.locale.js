@@ -89,7 +89,8 @@ export default {
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
                             icon: <InspectionIcon />,
-                            path: '#',
+                            permissions: [PERMISSIONS.can_see_reports],
+                            path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
                         },
                         {
                             title: 'ASSETS OUT FOR REPAIR',
@@ -513,6 +514,19 @@ export default {
                     updateFail: 'Device could not be updated',
                     deleteSuccess: 'Device deleted successfully',
                     deleteFail: 'Device could not be deleted',
+                },
+            },
+        },
+        report: {
+            inspectionsDue: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Inspections Due',
+                        icon: <InspectionIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Asset Inspections Due report for ${dept}`,
                 },
             },
         },
