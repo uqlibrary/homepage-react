@@ -8,7 +8,7 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-// import { isHdrStudent } from 'helpers/access';
+import { getHomepageLink } from 'helpers/access';
 
 browserUpdate({
     required: {
@@ -85,21 +85,16 @@ export const App = ({ account, actions }) => {
     const routesConfig = routes.getRoutesConfig({
         components: pages,
         account: account,
-        // isHdrStudent: isHdrStudent,
     });
 
-    let homepagelink = 'http://www.library.uq.edu.au';
+    const homepagelink = getHomepageLink();
     let homepageLabel = 'Library';
     /* istanbul ignore next */
     if (window.location.hostname === 'homepage-development.library.uq.edu.au') {
-        homepagelink = `${window.location.protocol}//${window.location.hostname}${window.location.pathname}#/`;
         homepageLabel = 'Library Dev';
     } else if (window.location.hostname === 'homepage-staging.library.uq.edu.au') {
-        homepagelink = `${window.location.protocol}//${window.location.hostname}${window.location.pathname}#/`;
         homepageLabel = 'Library Staging';
     } else if (window.location.hostname === 'localhost') {
-        const homepagePort = '2020';
-        homepagelink = `${window.location.protocol}//${window.location.hostname}:${homepagePort}/`;
         homepageLabel = 'Library Local';
     }
 

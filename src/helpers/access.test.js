@@ -3,6 +3,7 @@ import {
     canSeeLibraryServices,
     canSeeLoans,
     canSeePrintBalance,
+    getHomepageLink,
     getUserServices,
     isAlertsAdminUser,
     isEspaceAuthor,
@@ -128,5 +129,56 @@ describe('access', () => {
                 user_group: 'LIBRARYSTAFFB',
             }),
         ).toEqual(false);
+    });
+    function expectHomePageOfLinkIs(currentUrl, expectedHomepage) {
+        const currentUrlParts = new URL(currentUrl);
+        const loggedoutHomepageLink = getHomepageLink(
+            currentUrlParts.hostname,
+            currentUrlParts.protocol,
+            currentUrlParts.port,
+            currentUrlParts.pathname,
+        );
+        expect(loggedoutHomepageLink).toEqual(expectedHomepage);
+    }
+
+    it('should generate the correct homepage links', () => {
+        expectHomePageOfLinkIs('https://www.library.uq.edu.au/', 'https://www.library.uq.edu.au');
+
+        expectHomePageOfLinkIs(
+            'https://www.library.uq.edu.au/learning-resources?coursecode=PHYS1001&campus=St%20Lucia&semester=Semester%201%202023',
+            'https://www.library.uq.edu.au',
+        );
+
+        expectHomePageOfLinkIs(
+            'https://homepage-development.library.uq.edu.au/reusable-staging/#/',
+            'https://homepage-development.library.uq.edu.au/reusable-staging/#/',
+        );
+
+        expectHomePageOfLinkIs(
+            'https://homepage-development.library.uq.edu.au/reusable-staging/#/admin/masquerade',
+            'https://homepage-development.library.uq.edu.au/reusable-staging/#/',
+        );
+
+        expectHomePageOfLinkIs(
+            'https://homepage-staging.library.uq.edu.au/learning-resources?coursecode=FREN1020&campus=St%20Lucia&semester=Semester%202%202023',
+            'https://homepage-staging.library.uq.edu.au',
+        );
+
+        expectHomePageOfLinkIs(
+            'https://homepage-staging.library.uq.edu.au/',
+            'https://homepage-staging.library.uq.edu.au',
+        );
+
+        expectHomePageOfLinkIs('https://app.library.uq.edu.au/#/', 'https://app.library.uq.edu.au');
+
+        expectHomePageOfLinkIs('https://app.library.uq.edu.au/#/membership/admin', 'https://app.library.uq.edu.au');
+
+        expectHomePageOfLinkIs(
+            'http://localhost:8080/#keyword=;campus=;weekstart=',
+            'http://localhost:8080/?user=public',
+        );
+
+        // and do a test without param, for completeness (jest thinks its on staging with no https, that's so cute! ;) )
+        expect(getHomepageLink()).toEqual('http://homepage-staging.library.uq.edu.au');
     });
 });
