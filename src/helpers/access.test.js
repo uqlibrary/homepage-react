@@ -137,6 +137,7 @@ describe('access', () => {
             currentUrlParts.protocol,
             currentUrlParts.port,
             currentUrlParts.pathname,
+            currentUrlParts.search,
         );
         expect(loggedoutHomepageLink).toEqual(expectedHomepage);
     }
@@ -174,8 +175,8 @@ describe('access', () => {
         expectHomePageOfLinkIs('https://app.library.uq.edu.au/#/membership/admin', 'https://app.library.uq.edu.au');
 
         expectHomePageOfLinkIs(
-            'http://localhost:8080/#keyword=;campus=;weekstart=',
-            'http://localhost:8080/?user=public',
+            'http://localhost:2020/admin/spotlights?user=uqstaff',
+            'http://localhost:2020/?user=uqstaff',
         );
 
         // and do a test without param, for completeness (jest thinks its on staging with no https, that's so cute! ;) )
