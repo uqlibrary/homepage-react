@@ -85,7 +85,6 @@ const ManageLocations = ({ actions }) => {
     React.useEffect(() => {
         if (roomListLoaded) {
             if (location.floor !== -1) {
-                console.log(roomList);
                 setRows(roomList.rooms);
             } else {
                 setLocation({ room: -1 });
@@ -115,6 +114,7 @@ const ManageLocations = ({ actions }) => {
                 setSelectedFilter('site');
             }
         } else actions.loadSites();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.site, location.building, location.floor, siteListLoaded, floorListLoaded, roomListLoaded]);
 
@@ -207,7 +207,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedFilter](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     handleApiError({ message: pageLocale.alerts.addFail(capitaliseLeadingChar(selectedFilter)) });
                 })
                 .finally(() => {
@@ -235,7 +235,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedFilter](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     handleApiError({ message: pageLocale.alerts.updateFail(capitaliseLeadingChar(selectedFilter)) });
                 })
                 .finally(() => {
@@ -263,7 +263,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedFilter](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     handleApiError({ message: pageLocale.alerts.deleteFail(capitaliseLeadingChar(selectedFilter)) });
                 })
                 .finally(() => {
@@ -368,6 +368,7 @@ const ManageLocations = ({ actions }) => {
                                     setLocation={setLocation}
                                     hide={['room']}
                                     hasAllOption
+                                    locale={locale.pages.general.locationPicker}
                                 />
                             </Grid>
                         </Grid>

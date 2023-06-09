@@ -70,8 +70,13 @@ const handlers = {
         buildingListLoaded: false,
         buildingListError: action.payload,
     }),
-    [actions.TESTTAG_BUILDING_LIST_CLEAR]: () => ({
+    [actions.TESTTAG_BUILDING_LIST_CLEAR]: state => ({
         ...initialState,
+        ...state,
+        buildingListLoading: false,
+        buildingListLoaded: false,
+        buildingListError: false,
+        buildingList: null,
     }),
 
     [actions.TESTTAG_FLOOR_LIST_LOADING]: state => ({
@@ -98,8 +103,18 @@ const handlers = {
         floorListLoaded: false,
         floorListError: action.payload,
     }),
-    [actions.TESTTAG_FLOOR_LIST_CLEAR]: () => ({
+    [actions.TESTTAG_FLOOR_LIST_CLEAR]: state => ({
         ...initialState,
+        ...state,
+
+        floorList: null,
+        floorListLoading: false,
+        floorListLoaded: false,
+        floorListError: null,
+        roomList: null,
+        roomListLoading: false,
+        roomListLoaded: false,
+        roomListError: null,
     }),
 
     [actions.TESTTAG_ROOM_LIST_LOADING]: state => ({
@@ -126,8 +141,14 @@ const handlers = {
         roomListLoaded: false,
         roomListError: action.payload,
     }),
-    [actions.TESTTAG_ROOM_LIST_CLEAR]: () => ({
+    [actions.TESTTAG_ROOM_LIST_CLEAR]: state => ({
         ...initialState,
+        ...state,
+
+        roomList: null,
+        roomListLoading: false,
+        roomListLoaded: false,
+        roomListError: null,
     }),
 };
 

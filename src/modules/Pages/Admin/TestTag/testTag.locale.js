@@ -22,6 +22,21 @@ export default {
             pageTitle: 'UQ Asset Test and Tag',
             checkingAuth: 'Retrieving user details...',
             pageUnavailable: 'Page unavailable',
+            locationPicker: {
+                site: {
+                    label: 'Site',
+                    labelAll: 'All sites',
+                },
+                building: {
+                    label: 'Building',
+                    labelAll: 'All buildings',
+                },
+                floor: {
+                    label: 'Floor',
+                    labelAll: 'All floors',
+                },
+                room: { label: 'Room', labelAll: 'All rooms' },
+            },
         },
         dashboard: {
             config: {},

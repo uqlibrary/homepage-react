@@ -9,8 +9,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // import clsx from 'clsx';
 
-import locale from './location.locale';
-
 const inputLabelProps = { shrink: true };
 
 const useStyles = makeStyles(theme => ({
@@ -35,33 +33,24 @@ const LocationPicker = ({
     // floorListError,
     roomList,
     roomListLoading,
+    locale,
     actions,
     location,
     setLocation,
     hide = [],
     inputProps = {},
 }) => {
-    // console.log({
-    //     siteList,
-    //     siteListLoading,
-    //     buildingList,
-    //     buildingListLoading,
-    //     floorList,
-    //     floorListLoading,
-    //     // floorListError,
-    //     roomList,
-    //     roomListLoading,
-    //     actions,
-    //     location,
-    //     setLocation,
-    //     hide,
-    //     inputProps,
-    // });
     const classes = useStyles();
     const divisor = 4 - hide.length;
+    const hasAllOption = React.useRef(false);
+
+    React.useEffect(() => {
+        // check if site has an entry with a value of -1, implying an "all sites" option.
+        // logic assumes if sites has this present then all locations will too.
+        hasAllOption.current = siteList?.some(site => site.site_id === -1) ?? false;
+    }, [siteList]);
 
     const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
-
     return (
         <>
             <Grid item xs={12} sm={6} md={12 / divisor}>
@@ -71,7 +60,11 @@ const LocationPicker = ({
                         data-testid="testntag-form-siteid"
                         fullWidth
                         options={siteList}
-                        value={siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]}
+                        value={
+                            !hasAllOption.current && location.site === -1
+                                ? ''
+                                : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
+                        }
                         onChange={(_, newValue) => {
                             setLocation({
                                 site: newValue.site_id,
@@ -79,10 +72,7 @@ const LocationPicker = ({
                                 floor: -1,
                                 room: -1,
                             });
-                            if (newValue.site_id === -1) {
-                                actions.clearRooms();
-                                actions.clearFloors();
-                            }
+                            actions.clearFloors();
                         }}
                         getOptionLabel={option =>
                             `${option.site_id_displayed ?? /* istanbul ignore next */ ''}${
@@ -124,7 +114,7 @@ const LocationPicker = ({
                         )}
                         disabled={!!!siteList}
                         disableClearable
-                        loading={!!!siteList}
+                        loading={siteListLoading}
                     />
                 </FormControl>
             </Grid>
@@ -137,8 +127,9 @@ const LocationPicker = ({
                             fullWidth
                             options={buildingList}
                             value={
-                                buildingList?.find(building => building.building_id === location.building) ??
-                                buildingList?.[0]
+                                !hasAllOption.current && location.building === -1
+                                    ? ''
+                                    : buildingList?.find(building => building.building_id === location.building)
                             }
                             onChange={(_, newValue) => {
                                 setLocation({
@@ -146,9 +137,9 @@ const LocationPicker = ({
                                     floor: -1,
                                     room: -1,
                                 });
+
                                 actions.clearFloors();
                                 if (newValue.building_id !== -1) {
-                                    actions.clearRooms();
                                     actions.loadFloors(newValue.building_id);
                                 }
                             }}
@@ -192,7 +183,7 @@ const LocationPicker = ({
                             )}
                             disabled={location.site === -1 || !!!siteList}
                             disableClearable
-                            loading={!!!siteList}
+                            loading={siteListLoading}
                         />
                     </FormControl>
                 </Grid>
@@ -206,12 +197,16 @@ const LocationPicker = ({
                             data-testid="testntag-form-floorid"
                             fullWidth
                             options={floorList}
-                            value={floorList?.find(floor => floor.floor_id === location.floor) ?? floorList?.[0]}
+                            value={
+                                !hasAllOption.current && location.floor === -1
+                                    ? ''
+                                    : floorList?.find(floor => floor.floor_id === location.floor)
+                            }
                             onChange={(_, newValue) => {
                                 setLocation({ floor: newValue.floor_id, room: -1 });
 
+                                actions.clearRooms();
                                 if (newValue.floor_id !== -1) actions.loadRooms(newValue.floor_id);
-                                else actions.clearRooms();
                             }}
                             getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
                             renderInput={params => (
@@ -259,7 +254,11 @@ const LocationPicker = ({
                             data-testid="testntag-form-roomid"
                             fullWidth
                             options={roomList}
-                            value={roomList?.find(room => room.room_id === location.room) ?? roomList?.[0]}
+                            value={
+                                !hasAllOption.current && location.room === -1
+                                    ? ''
+                                    : roomList?.find(room => room.room_id === location.room)
+                            }
                             onChange={(_, newValue) => {
                                 setLocation({ room: newValue.room_id }, true);
                             }}
@@ -316,12 +315,14 @@ LocationPicker.propTypes = {
     roomList: PropTypes.array,
     roomListLoading: PropTypes.bool,
     // roomListError,
+    locale: PropTypes.object.isRequired,
     actions: PropTypes.object,
     location: PropTypes.object,
     setLocation: PropTypes.func,
     hide: PropTypes.array,
     withAllOption: PropTypes.bool,
     inputProps: PropTypes.object,
+    hasAllOption: PropTypes.bool,
 };
 
 export default React.memo(LocationPicker);

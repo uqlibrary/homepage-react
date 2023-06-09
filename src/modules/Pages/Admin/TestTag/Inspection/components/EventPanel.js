@@ -129,6 +129,7 @@ const EventPanel = ({
                         roomListLoading={roomListLoading}
                         actions={actions}
                         location={location}
+                        locale={locale.pages.general.locationPicker}
                         setLocation={updateLocation}
                         inputProps={{
                             site: {
