@@ -17,7 +17,7 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
-import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
+import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import { useLocation } from '../../../helpers/hooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import config from './config';
@@ -79,7 +79,7 @@ const ManageLocations = ({ actions }) => {
         roomListLoading,
         roomListLoaded,
         // roomListError,
-    } = useSelector(state => state.get?.('testTagLocationReducer'));
+    } = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
 
     React.useEffect(() => {
@@ -114,6 +114,7 @@ const ManageLocations = ({ actions }) => {
                 setSelectedFilter('site');
             }
         } else actions.loadSites();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.site, location.building, location.floor, siteListLoaded, floorListLoaded, roomListLoaded]);
 
@@ -206,7 +207,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedFilter](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     handleApiError({ message: pageLocale.alerts.addFail(capitaliseLeadingChar(selectedFilter)) });
                 })
                 .finally(() => {
@@ -234,7 +235,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedFilter](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     handleApiError({ message: pageLocale.alerts.updateFail(capitaliseLeadingChar(selectedFilter)) });
                 })
                 .finally(() => {
@@ -262,7 +263,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedFilter](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     handleApiError({ message: pageLocale.alerts.deleteFail(capitaliseLeadingChar(selectedFilter)) });
                 })
                 .finally(() => {
@@ -357,14 +358,19 @@ const ManageLocations = ({ actions }) => {
                     <Grid container spacing={0} className={classes.tableMarginTop}>
                         <Grid item xs={12} padding={0}>
                             <Typography variant={'h6'} component={'div'}>
-                                Select location
+                                {pageLocale.form.title}
                             </Typography>
-                            <LocationPicker
-                                actions={actions}
-                                location={location}
-                                setLocation={setLocation}
-                                hide={['room']}
-                            />
+
+                            <Grid container spacing={3}>
+                                <AutoLocationPicker
+                                    actions={actions}
+                                    location={location}
+                                    setLocation={setLocation}
+                                    hide={['room']}
+                                    hasAllOption
+                                    locale={locale.pages.general.locationPicker}
+                                />
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>

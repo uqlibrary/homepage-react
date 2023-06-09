@@ -22,6 +22,21 @@ export default {
             pageTitle: 'UQ Asset Test and Tag',
             checkingAuth: 'Retrieving user details...',
             pageUnavailable: 'Page unavailable',
+            locationPicker: {
+                site: {
+                    label: 'Site',
+                    labelAll: 'All sites',
+                },
+                building: {
+                    label: 'Building',
+                    labelAll: 'All buildings',
+                },
+                floor: {
+                    label: 'Floor',
+                    labelAll: 'All floors',
+                },
+                room: { label: 'Room', labelAll: 'All rooms' },
+            },
         },
         dashboard: {
             config: {},
@@ -145,14 +160,6 @@ export default {
                     },
                     location: {
                         title: 'Location',
-                        siteLabel: 'Site',
-                        building: {
-                            label: 'Building',
-                        },
-                        floor: {
-                            label: 'Floor',
-                        },
-                        room: { label: 'Room' },
                     },
                 },
                 asset: {
@@ -360,7 +367,7 @@ export default {
                     pageSubtitle: dept => `Managing Locations for ${dept}`,
                 },
                 form: {
-                    locationTypeTitle: 'Location type',
+                    title: 'Filter',
                     actions: 'Actions',
                     addLocationButton: location => `Add ${location}`,
                     columns: {
@@ -516,15 +523,5 @@ export default {
                 },
             },
         },
-    },
-    locationPicker: {
-        siteLabel: 'Site',
-        building: {
-            label: 'Building',
-        },
-        floor: {
-            label: 'Floor',
-        },
-        room: { label: 'Room' },
     },
 };
