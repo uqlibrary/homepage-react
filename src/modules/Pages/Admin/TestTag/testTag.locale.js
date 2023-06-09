@@ -535,6 +535,23 @@ export default {
                 header: {
                     pageSubtitle: dept => `Asset Inspections Due report for ${dept}`,
                 },
+                form: {
+                    title: 'Filter',
+                    columns: {
+                        site_id: {
+                            label: 'Site ID',
+                        },
+                        site_name: {
+                            label: 'Description',
+                        },
+                        site_id_displayed: {
+                            label: 'Display name',
+                        },
+                        asset_count: {
+                            label: 'Usage',
+                        },
+                    },
+                },
             },
         },
     },
