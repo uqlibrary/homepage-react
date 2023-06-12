@@ -147,7 +147,6 @@ const useStyles = makeStyles(theme => ({
 const Inspection = ({
     actions,
     defaultFormValues,
-    currentRetestList,
     defaultNextTestDateValue,
     assetsListError,
     inspectionConfig,
@@ -352,7 +351,6 @@ const Inspection = ({
                 actions={actions}
                 location={location}
                 resetForm={() => resetForm()}
-                currentRetestList={currentRetestList}
                 formValues={formValues}
                 selectedAsset={selectedAsset}
                 assignCurrentAsset={assignCurrentAsset}
@@ -409,7 +407,6 @@ const Inspection = ({
 Inspection.propTypes = {
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
-    currentRetestList: PropTypes.array,
     defaultNextTestDateValue: PropTypes.number,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,

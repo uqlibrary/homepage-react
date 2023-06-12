@@ -2,7 +2,7 @@ import React from 'react';
 
 import TextField from '@material-ui/core/TextField';
 
-import { isEmpty } from '../../../Inspection/utils/helpers';
+import { isEmptyStr } from '../../../helpers/helpers';
 
 export default {
     fields: {
@@ -11,12 +11,12 @@ export default {
         },
         site_name: {
             component: props => <TextField {...props} required />,
-            validate: value => isEmpty(value), // should return true if a validation error exists
+            validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, flex: 1 },
         },
         site_id_displayed: {
             component: props => <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />,
-            validate: value => isEmpty(value), // should return true if a validation error exists
+            validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, flex: 1 },
         },
         asset_count: {

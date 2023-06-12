@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
@@ -14,8 +14,11 @@ import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
+import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
+
+const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,8 +32,12 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+/*
+HERE - NEED TO FINISH THE REST OF THIS REPORT. SENDING REQUESTS TO THE API. THEN UPDATING THE TABLE
+*/
 const InspectionsDue = ({ actions }) => {
     const pageLocale = locale.pages.report.inspectionsDue;
+    const monthsOptions = locale.config.monthsOptions;
     const classes = useStyles();
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
@@ -39,7 +46,6 @@ const InspectionsDue = ({ actions }) => {
     const { selectedLocation } = useSelectLocation({
         location,
         setLocation,
-        setRow,
         actions,
         store,
     });
@@ -48,6 +54,17 @@ const InspectionsDue = ({ actions }) => {
         locale: pageLocale.form.columns,
         withActions: false,
     });
+    const [monthRange, setMonthRange] = useState('3');
+    const today = moment().format();
+
+    const onMonthRangeChange = value => {
+        setMonthRange(value);
+    };
+
+    React.useEffect(() => {
+        console.log(selectedLocation, location);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedLocation, location.site, location.building, location.floor, location.room]);
 
     return (
         <StandardAuthPage
@@ -65,6 +82,22 @@ const InspectionsDue = ({ actions }) => {
                             hasAllOption
                             locale={locale.pages.general.locationPicker}
                         />
+                        <Grid item>
+                            <MonthsSelector
+                                id="testResultNextDate"
+                                label={pageLocale.form.filterToDateLabel}
+                                options={monthsOptions}
+                                currentValue={monthRange}
+                                onChange={onMonthRangeChange}
+                                required={false}
+                                responsive
+                                nextDateTextFormatter={pageLocale.form.filterToDateFormatted}
+                                fromDate={today}
+                                fromDateFormat={locale.pages.report.config.dateFormat}
+                                dateDisplayFormat={locale.pages.report.config.dateFormatDisplay}
+                                classNames={{ formControl: classes.formControl, select: classes.formSelect }}
+                            />
+                        </Grid>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>

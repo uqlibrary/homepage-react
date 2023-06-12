@@ -235,3 +235,8 @@ export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assett
 export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype/reassign' });
 // Delete an Empty Asset Type
 export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/assettype/${id}` });
+
+/** TEST AND TAG INSPECTIONS REPORT */
+export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ site, building, floor, room, date }) => ({
+    apiUrl: 'test_and_tag/report/inspectionsdue',
+});

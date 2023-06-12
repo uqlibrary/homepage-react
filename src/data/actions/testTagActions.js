@@ -19,6 +19,7 @@ import {
     TEST_TAG_INSPECTION_DEVICE_API,
     TEST_TAG_ADD_INSPECTION_DEVICE_API,
     TEST_TAG_MODIFY_INSPECTION_DEVICE_API,
+    TEST_TAG_REPORT_INSPECTIONS_DUE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -505,6 +506,29 @@ export function deleteAssetType(id) {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_DELETE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+/* REPORT INSPECTIONS DUE */
+
+export function getInspectionsDue() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_LOADING });
+        return get(TEST_TAG_REPORT_INSPECTIONS_DUE_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTIONS_DUE_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTIONS_DUE_FAILED,
                     payload: error.message,
                 });
                 return Promise.reject(error);

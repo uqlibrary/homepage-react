@@ -16,6 +16,14 @@ import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
 import { PERMISSIONS } from './config/auth';
 
 export default {
+    config: {
+        monthsOptions: [
+            { value: '3', label: '3 months' },
+            { value: '6', label: '6 months' },
+            { value: '12', label: '1 year' },
+            { value: '60', label: '5 years' },
+        ],
+    },
     pages: {
         general: {
             loading: 'Loading...',
@@ -525,6 +533,11 @@ export default {
             },
         },
         report: {
+            config: {
+                dateFormat: 'YYYY-MM-DD HH:mm',
+                dateFormatNoTime: 'YYYY-MM-DD',
+                dateFormatDisplay: 'Do MMMM, YYYY',
+            },
             inspectionsDue: {
                 breadcrumbs: [
                     {
@@ -551,6 +564,8 @@ export default {
                             label: 'Usage',
                         },
                     },
+                    filterToDateLabel: 'Within date range',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
                 },
             },
         },
