@@ -13,14 +13,14 @@ const handlers = {
         ...state,
         inspectionsDueLoading: true,
         inspectionsDueLoaded: false,
-        inspectionsDueError: false,
+        inspectionsDueError: null,
     }),
     [actions.TESTTAG_INSPECTIONS_DUE_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         inspectionsDueLoading: false,
         inspectionsDueLoaded: true,
-        inspectionsDueError: false,
+        inspectionsDueError: null,
         inspectionsDue: action.payload,
     }),
     [actions.TESTTAG_INSPECTIONS_DUE_FAILED]: (state, action) => ({
@@ -29,6 +29,9 @@ const handlers = {
         inspectionsDueLoading: false,
         inspectionsDueLoaded: false,
         inspectionsDueError: action.payload,
+    }),
+    [actions.TESTTAG_INSPECTIONS_DUE_CLEAR]: () => ({
+        ...initialState,
     }),
 };
 

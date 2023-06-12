@@ -49,7 +49,7 @@ export const useDataTableColumns = ({
             const keys = Object.keys(configFiltered.fields);
 
             keys.forEach(key => {
-                !!(configFiltered.fields[key]?.fieldParams.renderInTable ?? true) &&
+                !!(configFiltered?.fields?.[key]?.fieldParams?.renderInTable ?? true) &&
                     columns.push({
                         field: key,
                         headerName: localeFiltered[key].label,

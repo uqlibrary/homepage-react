@@ -47,6 +47,7 @@ import testTag_inspectionDevices from './data/records/test_tag_inspection_device
 import testTag_assets from './data/records/test_tag_assets';
 // Test and Tag Asset Types
 import test_tag_asset_types from './data/records/test_tag_asset_types';
+import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
 
 import { accounts, currentAuthor } from './data';
 
@@ -916,6 +917,8 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

@@ -6,7 +6,7 @@ import * as actions from 'data/actions';
 
 export const mapStateToProps = state => {
     return {
-        ...state.get('testTagInspectionDevicesReducer'),
+        ...state.get('testTagInspectionsDueReducer'),
     };
 };
 

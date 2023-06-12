@@ -551,17 +551,17 @@ export default {
                 form: {
                     title: 'Filter',
                     columns: {
-                        site_id: {
-                            label: 'Site ID',
+                        asset_barcode: {
+                            label: 'Barcode',
                         },
-                        site_name: {
-                            label: 'Description',
+                        asset_type_name: {
+                            label: 'Asset Type',
                         },
-                        site_id_displayed: {
-                            label: 'Display name',
+                        asset_test_date: {
+                            label: 'Last test date',
                         },
-                        asset_count: {
-                            label: 'Usage',
+                        asset_next_test_due_date: {
+                            label: 'Next test due',
                         },
                     },
                     filterToDateLabel: 'Within date range',
