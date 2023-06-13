@@ -9,7 +9,6 @@ import AssetTypeIcon from '@material-ui/icons/DevicesOther';
 import LocationIcon from '@material-ui/icons/MyLocation';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
-import OutForRepairIcon from '@material-ui/icons/ExitToApp';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
 import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
 
@@ -116,12 +115,7 @@ export default {
                             path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
                         },
                         {
-                            title: 'ASSETS OUT FOR REPAIR',
-                            icon: <OutForRepairIcon />,
-                            path: '#',
-                        },
-                        {
-                            title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
+                            title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: '#',
                         },

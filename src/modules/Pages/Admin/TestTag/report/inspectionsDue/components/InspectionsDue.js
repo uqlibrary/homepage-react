@@ -73,7 +73,8 @@ const InspectionsDue = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const [monthRange, setMonthRange] = useState(config.defaults.monthsPeriod);
+    const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
+    const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
     const [apiError, setApiError] = useState(inspectionsDueError);
 
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });

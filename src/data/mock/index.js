@@ -917,7 +917,7 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
-    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({}).apiUrl)
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
     .onGet('exams/search/fail')
     .reply(() => {
