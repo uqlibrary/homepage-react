@@ -18,7 +18,7 @@ import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelec
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-
+import { createLocationString } from '../../../helpers/helpers';
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -31,11 +31,23 @@ const useStyles = makeStyles(theme => ({
     gridRoot: {
         border: 0,
     },
+    inspectionOverdue: {
+        backgroundColor: theme.palette.error.light,
+    },
 }));
 
-/*
-HERE - NEED TO FINISH THE REST OF THIS REPORT. SENDING REQUESTS TO THE API. THEN UPDATING THE TABLE
-*/
+export const transformRow = row => {
+    return row.map(line => ({
+        ...line,
+        asset_location: createLocationString({
+            site: line.site_name,
+            building: line.building_name,
+            floor: line.floor_id_displayed,
+            room: line.room_id_displayed,
+        }),
+    }));
+};
+
 const InspectionsDue = ({
     actions,
     inspectionsDue,
@@ -85,7 +97,7 @@ const InspectionsDue = ({
     useEffect(() => {
         if (!!apiError) openConfirmationAlert(apiError, 'error');
         else {
-            if (inspectionsDueLoaded) setRow(inspectionsDue);
+            if (inspectionsDueLoaded) setRow(transformRow(inspectionsDue));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionsDue, inspectionsDueLoaded, apiError]);
@@ -98,13 +110,13 @@ const InspectionsDue = ({
         actions.getInspectionsDue({
             period: monthRange,
             periodType: 'month',
-            ...(locationId !== -1 ? { locationId, locationType: lastSelectedLocation } : {}),
+            ...(!!locationId && locationId !== -1 ? { locationId, locationType: lastSelectedLocation } : {}),
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lastSelectedLocation, location, monthRange]);
 
-    const today = moment().format();
+    const today = moment().format(locale.pages.report.config.dateFormatNoTime);
 
     const onMonthRangeChange = value => {
         setMonthRange(value);
@@ -153,6 +165,11 @@ const InspectionsDue = ({
                                 classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
                                 disableColumnMenu
+                                getCellClassName={params =>
+                                    params.field === 'asset_next_test_due_date' && params.value <= today
+                                        ? classes.inspectionOverdue
+                                        : ''
+                                }
                             />
                         </Grid>
                     </Grid>

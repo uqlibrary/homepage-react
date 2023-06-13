@@ -553,15 +553,19 @@ export default {
                     columns: {
                         asset_barcode: {
                             label: 'Barcode',
+                            minWidth: '200px',
                         },
                         asset_type_name: {
                             label: 'Asset Type',
                         },
                         asset_test_date: {
-                            label: 'Last test date',
+                            label: 'Last test',
                         },
                         asset_next_test_due_date: {
-                            label: 'Next test due',
+                            label: 'Next test',
+                        },
+                        asset_location: {
+                            label: 'Location',
                         },
                     },
                     filterToDateLabel: 'Within date range',

@@ -518,9 +518,6 @@ export function deleteAssetType(id) {
 export function getInspectionsDue({ locationId, locationType, period, periodType }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_LOADING });
-        console.log(
-            `test_and_tag/report/pending_inspections?period_length=${period}&period_type=${periodType}&${locationType}_id=${locationId}`,
-        );
         return get(TEST_TAG_REPORT_INSPECTIONS_DUE_API({ locationId, locationType, period, periodType }))
             .then(response => {
                 dispatch({

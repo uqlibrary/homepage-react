@@ -1,6 +1,3 @@
-export const createLocationString = ({ site, building, floor }) =>
-    [site, building, floor].filter(item => !!item).join(' / ');
-
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 export const actionReducer = (_, action) => {
     const { type, row, selectedLocation, title, ...props } = action;
