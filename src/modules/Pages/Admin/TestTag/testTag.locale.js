@@ -553,7 +553,6 @@ export default {
                     columns: {
                         asset_barcode: {
                             label: 'Barcode',
-                            minWidth: '200px',
                         },
                         asset_type_name: {
                             label: 'Asset Type',

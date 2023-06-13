@@ -40,8 +40,8 @@ export const transformRow = row => {
     return row.map(line => ({
         ...line,
         asset_location: createLocationString({
-            site: line.site_name,
-            building: line.building_name,
+            site: line.site_id_displayed,
+            building: line.building_id_displayed,
             floor: line.floor_id_displayed,
             room: line.room_id_displayed,
         }),
@@ -87,10 +87,7 @@ const InspectionsDue = ({
             visible: true,
             type: !!type ? type : 'info',
             autoHideDuration: 2000,
-            onClose: reason => {
-                console.log(reason);
-                setApiError(null);
-            },
+            onClose: () => setApiError(null),
         });
     };
 
