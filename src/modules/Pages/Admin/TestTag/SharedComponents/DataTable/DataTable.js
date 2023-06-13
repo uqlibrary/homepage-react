@@ -15,6 +15,8 @@ const DataTable = props => {
                     rows={rows}
                     columns={columns}
                     editMode="row"
+                    disableColumnMenu
+                    disableColumnFilter
                     disableColumnSort
                     getRowId={row => row?.[rowId]}
                     {...rest}

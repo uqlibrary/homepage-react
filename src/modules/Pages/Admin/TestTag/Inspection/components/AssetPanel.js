@@ -25,7 +25,6 @@ const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
 const AssetPanel = ({
     actions,
-    currentRetestList,
     formValues,
     selectedAsset,
     resetForm,
@@ -39,7 +38,6 @@ const AssetPanel = ({
 }) => {
     AssetPanel.propTypes = {
         actions: PropTypes.any.isRequired,
-        currentRetestList: PropTypes.array.isRequired,
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
         resetForm: PropTypes.func.isRequired,
@@ -265,7 +263,6 @@ const AssetPanel = ({
                     formValues={formValues}
                     selectedAsset={selectedAsset}
                     handleChange={handleChange}
-                    currentRetestList={currentRetestList}
                     defaultNextTestDateValue={defaultNextTestDateValue}
                     classes={classes}
                     disabled={!isValidAssetId(formValues?.asset_id_displayed)}

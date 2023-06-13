@@ -1,74 +1,27 @@
-import React from 'react';
-import RowMenuCell from './../../../SharedComponents/DataTable/RowMenuCell';
-
-export const createLocationString = ({ site, building, floor }) =>
-    [site, building, floor].filter(item => !!item).join(' / ');
-
-export const getColumns = ({ config, locale, selectedFilter, handleEditClick, handleDeleteClick }) => {
-    const actionsCell = {
-        field: 'actions',
-        headerName: locale?.actions,
-        renderCell: params => {
-            return (
-                <RowMenuCell
-                    {...params}
-                    handleEditClick={handleEditClick}
-                    {...((params.row?.asset_count ?? 1) === 0 ? { handleDeleteClick: handleDeleteClick } : {})}
-                />
-            );
-        },
-        sortable: false,
-        width: 100,
-        headerAlign: 'center',
-        filterable: false,
-        align: 'center',
-        disableColumnMenu: true,
-        disableReorder: true,
-        renderInUpdate: false,
-    };
-
-    const columns = [];
-    const keys = Object.keys(config[selectedFilter].fields);
-
-    keys.forEach(key => {
-        !!(config[selectedFilter].fields[key]?.fieldParams.renderInTable ?? true) &&
-            columns.push({
-                field: key,
-                headerName: locale?.[selectedFilter]?.[key].label,
-                editable: false,
-                sortable: false,
-                ...config[selectedFilter].fields[key].fieldParams,
-            });
-    });
-
-    columns && columns.length > 0 && columns.push(actionsCell);
-    return columns;
-};
-
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 export const actionReducer = (_, action) => {
-    const { type, row, selectedFilter, title, ...props } = action;
+    const { type, row, selectedLocation, title, ...props } = action;
     switch (type) {
         case 'add':
             return {
                 isAdd: true,
                 isEdit: false,
                 isDelete: false,
-                row: { [`${selectedFilter}_id`]: 'auto' },
+                row: { [`${selectedLocation}_id`]: 'auto' },
                 title,
                 props: { ...props },
             };
         case 'edit':
             return { isAdd: false, isEdit: true, isDelete: false, title, row, props: { ...props } };
         case 'delete':
-            return { isAdd: false, isEdit: false, isDelete: true, title, row, props: { ...props, selectedFilter } };
+            return { isAdd: false, isEdit: false, isDelete: true, title, row, props: { ...props, selectedLocation } };
         case 'clear':
             return { ...emptyActionState };
         default:
             throw `Unknown action '${type}'`;
     }
 };
-export const getAssociatedCollectionKeyBySelectedFilter = (collection, current, direction = 'next') => {
+export const getAssociatedCollectionKeyBySelectedLocation = (collection, current, direction = 'next') => {
     // get collection key names i.e. ['site','building','floor','room']
     const keys = Object.keys(collection);
 
@@ -84,20 +37,20 @@ export const getAssociatedCollectionKeyBySelectedFilter = (collection, current, 
     return key;
 };
 
-export const transformAddRequest = ({ request, selectedFilter, location }) => {
+export const transformAddRequest = ({ request, selectedLocation, location }) => {
     // add requests may have an id field (probably 'auto') that needs to be removed
-    delete request[`${selectedFilter}_id`];
+    delete request[`${selectedLocation}_id`];
 
-    const prevKey = getAssociatedCollectionKeyBySelectedFilter(location, selectedFilter, 'prev');
+    const prevKey = getAssociatedCollectionKeyBySelectedLocation(location, selectedLocation, 'prev');
     if (!!!prevKey) return request;
 
     // build a new request by inserting a key:value in format e.g. 'room_floor_id: 1'
-    return { ...request, [`${selectedFilter}_${prevKey}_id`]: location[prevKey] };
+    return { ...request, [`${selectedLocation}_${prevKey}_id`]: location[prevKey] };
 };
 
-export const transformUpdateRequest = ({ request, selectedFilter, location }) => {
-    const prevKey = getAssociatedCollectionKeyBySelectedFilter(location, selectedFilter, 'prev');
-    const nextKey = getAssociatedCollectionKeyBySelectedFilter(location, selectedFilter);
+export const transformUpdateRequest = ({ request, selectedLocation, location }) => {
+    const prevKey = getAssociatedCollectionKeyBySelectedLocation(location, selectedLocation, 'prev');
+    const nextKey = getAssociatedCollectionKeyBySelectedLocation(location, selectedLocation);
 
     // now remove the array of next location data we got from the server e.g.
     // for sites, we also get a buildings:[] array (note plural), for buildings
@@ -111,5 +64,5 @@ export const transformUpdateRequest = ({ request, selectedFilter, location }) =>
     if (!!!prevKey) return request;
 
     // build a new request by inserting a key:value in format e.g. 'room_floor_id: 1'
-    return { ...request, [`${selectedFilter}_${prevKey}_id`]: location[prevKey] };
+    return { ...request, [`${selectedLocation}_${prevKey}_id`]: location[prevKey] };
 };

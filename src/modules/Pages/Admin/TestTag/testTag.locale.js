@@ -9,13 +9,20 @@ import AssetTypeIcon from '@material-ui/icons/DevicesOther';
 import LocationIcon from '@material-ui/icons/MyLocation';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
-import OutForRepairIcon from '@material-ui/icons/ExitToApp';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
 import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
 
 import { PERMISSIONS } from './config/auth';
 
 export default {
+    config: {
+        monthsOptions: [
+            { value: '3', label: '3 months' },
+            { value: '6', label: '6 months' },
+            { value: '12', label: '1 year' },
+            { value: '60', label: '5 years' },
+        ],
+    },
     pages: {
         general: {
             loading: 'Loading...',
@@ -104,15 +111,11 @@ export default {
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
                             icon: <InspectionIcon />,
-                            path: '#',
+                            permissions: [PERMISSIONS.can_see_reports],
+                            path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
                         },
                         {
-                            title: 'ASSETS OUT FOR REPAIR',
-                            icon: <OutForRepairIcon />,
-                            path: '#',
-                        },
-                        {
-                            title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
+                            title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: '#',
                         },
@@ -520,6 +523,46 @@ export default {
                     updateFail: 'Device could not be updated',
                     deleteSuccess: 'Device deleted successfully',
                     deleteFail: 'Device could not be deleted',
+                },
+            },
+        },
+        report: {
+            config: {
+                dateFormat: 'YYYY-MM-DD HH:mm',
+                dateFormatNoTime: 'YYYY-MM-DD',
+                dateFormatDisplay: 'Do MMMM, YYYY',
+            },
+            inspectionsDue: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Inspections Due',
+                        icon: <InspectionIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Asset Inspections Due report for ${dept}`,
+                },
+                form: {
+                    title: 'Filter',
+                    columns: {
+                        asset_barcode: {
+                            label: 'Barcode',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type',
+                        },
+                        asset_test_date: {
+                            label: 'Last test',
+                        },
+                        asset_next_test_due_date: {
+                            label: 'Next test',
+                        },
+                        asset_location: {
+                            label: 'Location',
+                        },
+                    },
+                    filterToDateLabel: 'Within date range',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
                 },
             },
         },

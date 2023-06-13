@@ -12,7 +12,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Collapse from '@material-ui/core/Collapse';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
@@ -20,6 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ActionPanel from './ActionPanel';
 import DebouncedTextField from './DebouncedTextField';
+import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
 import locale from '../../testTag.locale';
 import { isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
 
@@ -45,7 +45,6 @@ const InspectionPanel = ({
     formValues,
     selectedAsset,
     handleChange,
-    currentRetestList,
     defaultNextTestDateValue,
     classes,
     disabled,
@@ -55,13 +54,13 @@ const InspectionPanel = ({
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
         handleChange: PropTypes.func.isRequired,
-        currentRetestList: PropTypes.array.isRequired,
         defaultNextTestDateValue: PropTypes.number.isRequired,
         classes: PropTypes.any.isRequired,
         disabled: PropTypes.bool.isRequired,
         isMobileView: PropTypes.bool.isRequired,
     };
     const pageLocale = locale.pages.inspect;
+    const monthsOptions = locale.config.monthsOptions;
     const classesInternal = useStyles();
 
     const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
@@ -78,6 +77,10 @@ const InspectionPanel = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formValues.inspection_status, formNextTestDate]);
+
+    const onNextDateChange = value => {
+        setFormNextTestDate(value);
+    };
 
     return (
         <StandardCard
@@ -182,39 +185,21 @@ const InspectionPanel = ({
                     </Grid>
                     {formValues.inspection_status === testStatusEnum.PASSED.value && (
                         <Grid item xs={12}>
-                            <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                                <InputLabel shrink required>
-                                    {pageLocale.form.inspection.nextTestDateLabel}
-                                </InputLabel>
-                                <Select
-                                    id="testResultNextDate"
-                                    data-testid="testResultNextDate"
-                                    fullWidth
-                                    className={classes.formSelect}
-                                    value={formNextTestDate}
-                                    onChange={e => setFormNextTestDate(e.target.value)}
-                                    required
-                                    disabled={disabled}
-                                >
-                                    {currentRetestList.map(retestPeriod => (
-                                        <MenuItem
-                                            value={retestPeriod.value}
-                                            key={retestPeriod.value}
-                                            id={`testResultNextDate-${retestPeriod.value}`}
-                                            data-testid={`testResultNextDate-${retestPeriod.value}`}
-                                        >
-                                            {retestPeriod.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                <Typography component={'span'} data-testid="testResultNextDate-value">
-                                    {pageLocale.form.inspection.nextTestDateFormatted(
-                                        moment(formValues.action_date, pageLocale.config.dateFormat)
-                                            .add(formNextTestDate, 'months')
-                                            .format(pageLocale.config.dateFormatDisplay),
-                                    )}
-                                </Typography>
-                            </FormControl>
+                            <MonthsSelector
+                                id="testResultNextDate"
+                                label={pageLocale.form.inspection.nextTestDateLabel}
+                                options={monthsOptions}
+                                currentValue={formNextTestDate}
+                                onChange={onNextDateChange}
+                                required
+                                responsive
+                                disabled={disabled}
+                                nextDateTextFormatter={pageLocale.form.inspection.nextTestDateFormatted}
+                                fromDate={formValues.action_date}
+                                fromDateFormat={pageLocale.config.dateFormat}
+                                dateDisplayFormat={pageLocale.config.dateFormatDisplay}
+                                classNames={{ formControl: classes.formControl, select: classes.formSelect }}
+                            />
                         </Grid>
                     )}
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
