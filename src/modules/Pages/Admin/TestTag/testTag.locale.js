@@ -91,7 +91,7 @@ export default {
                         {
                             title: 'BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanagebulkassetupdate}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTIONS',
@@ -523,6 +523,23 @@ export default {
                     updateFail: 'Device could not be updated',
                     deleteSuccess: 'Device deleted successfully',
                     deleteFail: 'Device could not be deleted',
+                },
+            },
+            bulkassetupdate: {
+                config: {},
+                breadcrumbs: [
+                    {
+                        title: 'Managing Bulk Asset Update',
+                        icon: <InspectionDeviceIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Assets in bulk for ${dept}`,
+                },
+                form: {
+                    step1: {
+                        title: 'Step 1: Choose assets to update in bulk',
+                    },
                 },
             },
         },
