@@ -50,7 +50,7 @@ const InspectionsDue = ({
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { row, setRow } = useDataTableRow();
     const { location, setLocation } = useLocation();
-    const { selectedLocation } = useSelectLocation({
+    const { lastSelectedLocation } = useSelectLocation({
         location,
         setLocation,
         actions,
@@ -62,10 +62,7 @@ const InspectionsDue = ({
         withActions: false,
     });
     const [monthRange, setMonthRange] = useState(config.defaults.monthsPeriod);
-
-    React.useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedLocation, location.site, location.building, location.floor, location.room]);
+    const [apiError, setApiError] = useState(inspectionsDueError);
 
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
@@ -73,26 +70,39 @@ const InspectionsDue = ({
         setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
     const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
+        setConfirmationAlert({
+            message: message,
+            visible: true,
+            type: !!type ? type : 'info',
+            autoHideDuration: 2000,
+            onClose: reason => {
+                console.log(reason);
+                setApiError(null);
+            },
+        });
     };
 
     useEffect(() => {
-        if (!!inspectionsDueError) openConfirmationAlert(inspectionsDueError, 'error');
+        if (!!apiError) openConfirmationAlert(apiError, 'error');
         else {
             if (inspectionsDueLoaded) setRow(inspectionsDue);
-            else {
-                actions.clearInspectionsDue();
-                // locationId = '', locationType = '', period = '', periodType = ''
-                const locationId = location[selectedLocation];
-                actions.getInspectionsDue({
-                    period: monthRange,
-                    periodType: 'month',
-                    ...(locationId !== -1 ? { locationId, locationType: selectedLocation } : {}),
-                });
-            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inspectionsDue, inspectionsDueLoaded, inspectionsDueError, selectedLocation, location, monthRange]);
+    }, [inspectionsDue, inspectionsDueLoaded, apiError]);
+
+    useEffect(() => {
+        const locationId = location[lastSelectedLocation];
+
+        actions.clearInspectionsDue();
+
+        actions.getInspectionsDue({
+            period: monthRange,
+            periodType: 'month',
+            ...(locationId !== -1 ? { locationId, locationType: lastSelectedLocation } : {}),
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lastSelectedLocation, location, monthRange]);
 
     const today = moment().format();
 

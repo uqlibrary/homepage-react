@@ -237,14 +237,15 @@ export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and
 export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/assettype/${id}` });
 
 /** TEST AND TAG INSPECTIONS REPORT */
-export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({
-    locationId = '',
-    locationType = '',
-    period = '',
-    periodType = '',
-}) => {
-    const qs = new URLSearchParams; // <----- finish this bit then get it working with actual api once steve has fixed
+export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType }) => {
+    const urlParams = {
+        ...(!!locationId && !!locationType ? { [`${locationType}_id`]: locationId } : {}),
+        ...(!!period && !!periodType ? { period_length: period, period_type: periodType } : {}),
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = [...qs].length > 0;
+    const apiUrl = `test_and_tag/report/pending_inspections${hasParams ? `?${qs.toString()}` : ''}`;
     return {
-        apiUrl: `test_and_tag/report/pending_inspections?period_length=${period}&period_type=${periodType}&${locationType}_id=${locationId}`;
-    }
+        apiUrl,
+    };
 };

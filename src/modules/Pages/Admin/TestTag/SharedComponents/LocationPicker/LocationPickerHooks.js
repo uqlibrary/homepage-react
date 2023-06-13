@@ -18,15 +18,22 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
 
 export const useSelectLocation = ({ initial = locationType.site, location, setLocation, setRow, actions, store }) => {
     const [selectedLocation, setSelectedLocation] = useState(initial ?? locationType.site);
+    const [lastSelectedLocation, setLastSelectedLocation] = useState(initial ?? locationType.site);
     const { siteList, siteListLoaded, floorList, floorListLoaded, roomList, roomListLoaded } = store;
 
     useEffect(() => {
         if (roomListLoaded) {
-            if (location.floor !== -1) {
-                setRow?.(roomList.rooms);
+            if (location.room !== -1) {
+                setLastSelectedLocation(locationType.room);
             } else {
-                setLocation?.({ room: -1 });
-                actions?.clearRooms();
+                if (location.floor !== -1) {
+                    setRow?.(roomList.rooms);
+                    setLastSelectedLocation(locationType.floor);
+                } else {
+                    setLocation?.({ room: -1 });
+                    actions?.clearRooms();
+                    setLastSelectedLocation(locationType.building);
+                }
             }
             setSelectedLocation(locationType.room);
         } else if (floorListLoaded) {
@@ -42,10 +49,12 @@ export const useSelectLocation = ({ initial = locationType.site, location, setLo
                 actions?.clearFloors();
             }
             setSelectedLocation(locationType.floor);
+            setLastSelectedLocation(locationType.building);
         } else if (siteListLoaded) {
             if (location.site !== -1) {
                 setRow?.(siteList.find(site => site.site_id === location.site).buildings);
                 setSelectedLocation(locationType.building);
+                setLastSelectedLocation(locationType.site);
             } else {
                 setRow?.(siteList);
                 setLocation?.({ building: -1, floor: -1, room: -1 });
@@ -54,7 +63,15 @@ export const useSelectLocation = ({ initial = locationType.site, location, setLo
         } else actions?.loadSites();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.site, location.building, location.floor, siteListLoaded, floorListLoaded, roomListLoaded]);
+    }, [
+        location.site,
+        location.building,
+        location.floor,
+        location.room,
+        siteListLoaded,
+        floorListLoaded,
+        roomListLoaded,
+    ]);
 
-    return { selectedLocation, setSelectedLocation };
+    return { selectedLocation, lastSelectedLocation, setSelectedLocation, setLastSelectedLocation };
 };

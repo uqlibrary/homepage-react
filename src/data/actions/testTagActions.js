@@ -515,7 +515,7 @@ export function deleteAssetType(id) {
 
 /* REPORT INSPECTIONS DUE */
 
-export function getInspectionsDue({ locationId = '', locationType = '', period = '', periodType = '' } = {}) {
+export function getInspectionsDue({ locationId, locationType, period, periodType }) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_LOADING });
         console.log(
@@ -527,14 +527,14 @@ export function getInspectionsDue({ locationId = '', locationType = '', period =
                     type: actions.TESTTAG_INSPECTIONS_DUE_LOADED,
                     payload: response?.data ?? /* istanbul ignore next */ [],
                 });
-                return Promise.resolve(response);
+                // return Promise.resolve(response);
             })
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_INSPECTIONS_DUE_FAILED,
                     payload: error.message,
                 });
-                return Promise.reject(error);
+                // return Promise.reject(error);
             });
     };
 }
