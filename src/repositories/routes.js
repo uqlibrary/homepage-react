@@ -249,3 +249,22 @@ export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, 
         apiUrl,
     };
 };
+/* TEST AND TAG INSPECTIONS BY LICENCED USER */
+export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({
+    startDate = null,
+    endDate = null,
+    userRange = null,
+}) => {
+    const urlParams = {
+        ...(!!startDate && !!endDate ? { start_date: startDate, end_date: endDate } : {}),
+        ...(!!userRange ? { user_range: userRange } : {}),
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = [...qs].length > 0;
+    const apiUrl = `test_and_tag/report/user_inspections${hasParams ? `?${qs.toString()}` : ''}`;
+    return {
+        apiUrl,
+    };
+};
+/* UTILITY API USED FOR LICENCED USER INSPECTIONS REPORT - GET LICENCED USERS FOR DROPDOWN */
+export const TEST_TAG_REPORT_UTILITY_LICENCED_USERS = () => ({ apiUrl: 'test_and_tag/report/licenced_inspectors' });

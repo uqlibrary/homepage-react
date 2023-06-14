@@ -122,7 +122,7 @@ export default {
                         {
                             title: 'INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagreportinspectionsbylicenceduser}?user=uqtesttag`,
                             permissions: [PERMISSIONS.can_admin],
                         },
                     ],
@@ -559,6 +559,36 @@ export default {
                         },
                         asset_location: {
                             label: 'Location',
+                        },
+                    },
+                    filterToDateLabel: 'Within date range',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
+                },
+            },
+            inspectionsByLicencedUser: {
+                breadcrumbs: [
+                    {
+                        title: 'Inspections by Licenced Users',
+                        icon: <InspectionByUserIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Inspections by Licenced Users for ${dept}`,
+                },
+                form: {
+                    title: 'Filter',
+                    columns: {
+                        user_id: {
+                            label: 'UserID',
+                        },
+                        start_date: {
+                            label: 'Start Date',
+                        },
+                        end_date: {
+                            label: 'End Date',
+                        },
+                        total_for_user: {
+                            label: 'Total Inspections',
                         },
                     },
                     filterToDateLabel: 'Within date range',

@@ -38,7 +38,7 @@ const InspectionsByLicencedUser = ({
     inspectionsDueLoaded,
     inspectionsDueError,
 }) => {
-    const pageLocale = locale.pages.report.inspectionsDue;
+    const pageLocale = locale.pages.report.inspectionsByLicencedUser;
     const monthsOptions = locale.config.monthsOptions;
     const classes = useStyles();
 
