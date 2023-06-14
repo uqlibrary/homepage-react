@@ -5,7 +5,7 @@ import { Grid } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Alert from '@material-ui/lab/Alert';
-import DebouncedTextField from './DebouncedTextField';
+import DebouncedTextField from '../../SharedComponents/DebouncedTextField/DebouncedTextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';

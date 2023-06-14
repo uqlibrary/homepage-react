@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -11,8 +12,11 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
+import { useForm, useLocation } from '../../../helpers/hooks';
+import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
+import { isValidAssetId } from '../../../Inspection/utils/helpers';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -26,9 +30,24 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ManageLocations = ({ actions }) => {
+const BulkAssetUpdate = ({ defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const classes = useStyles();
+    const { user } = useSelector(state => state.get('testTagUserReducer'));
+    const assignAssetDefaults = () => ({ ...defaultFormValues });
+
+    const { formValues, resetFormValues, handleChange } = useForm({
+        defaultValues: { ...assignAssetDefaults() },
+    });
+
+    const handleSearchAssetIdChange = newValue => console.log(newValue);
+
+    const resetForm = () => {
+        const newFormValues = assignAssetDefaults();
+        resetFormValues(newFormValues);
+    };
+
+    // const { location, setLocation } = useLocation();
 
     return (
         <StandardAuthPage
@@ -37,11 +56,23 @@ const ManageLocations = ({ actions }) => {
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
             <div className={classes.root}>
-                <StandardCard title={pageLocale.form.step1.title}>
+                <StandardCard title={pageLocale.form.step.one.title}>
                     <Grid container spacing={3}>
-                        <Grid item>
-                            <div>Content to come</div>
+                        <Grid item xs={12} sm={4}>
+                            <AssetSelector
+                                id="assetId"
+                                locale={pageLocale.form.step.one}
+                                user={user}
+                                classNames={{ formControl: classes.formControl }}
+                                onChange={handleSearchAssetIdChange}
+                                onReset={resetForm}
+                                validateAssetId={isValidAssetId}
+                            />
                         </Grid>
+                        <Grid item xs={12} sm={2}>
+                            or
+                        </Grid>
+                        <Grid item xs={12} sm={6} />
                     </Grid>
                 </StandardCard>
             </div>
@@ -49,8 +80,8 @@ const ManageLocations = ({ actions }) => {
     );
 };
 
-ManageLocations.propTypes = {
-    actions: PropTypes.object,
+BulkAssetUpdate.propTypes = {
+    defaultFormValues: PropTypes.object,
 };
 
-export default React.memo(ManageLocations);
+export default React.memo(BulkAssetUpdate);

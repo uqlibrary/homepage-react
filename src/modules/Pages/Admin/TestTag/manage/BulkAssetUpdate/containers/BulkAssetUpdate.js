@@ -1,22 +1,22 @@
 import { connect } from 'react-redux';
 import BulkAssetUpdate from '../components/BulkAssetUpdate';
-import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
-import * as actions from 'data/actions';
 
-export const mapStateToProps = state => {
+const DEFAULT_FORM_VALUES = {
+    asset_list: [],
+    location_id: undefined,
+    location_type: undefined,
+    asset_type_id: undefined,
+    status: undefined,
+};
+
+export const mapStateToProps = () => {
     return {
-        ...state.get('testTagOnLoadLocationsReducer'),
+        defaultFormValues: DEFAULT_FORM_VALUES,
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        actions: bindActionCreators(actions, dispatch),
-    };
-};
-
-let BulkAssetUpdateContainer = connect(mapStateToProps, mapDispatchToProps)(BulkAssetUpdate);
+let BulkAssetUpdateContainer = connect(mapStateToProps)(BulkAssetUpdate);
 BulkAssetUpdateContainer = withRouter(BulkAssetUpdateContainer);
 
 export default BulkAssetUpdateContainer;

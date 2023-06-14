@@ -168,10 +168,11 @@ export default {
                 asset: {
                     title: 'Asset',
                     addText: 'ADD NEW ASSET',
-                    assetId: {
+                    newAssetText: 'NEW ASSET',
+                    assetSelector: {
                         label: 'Asset ID',
                         helperText: 'Enter a new ID to add',
-                        placeholder: 'Enter at least 7 characters',
+                        placeholder: 'Enter at least 3 characters',
                     },
                     assetType: {
                         label: 'Asset type',
@@ -537,8 +538,17 @@ export default {
                     pageSubtitle: dept => `Managing Assets in bulk for ${dept}`,
                 },
                 form: {
-                    step1: {
-                        title: 'Step 1: Choose assets to update in bulk',
+                    step: {
+                        one: {
+                            title: 'Step 1: Choose assets to update in bulk',
+                            addText: 'ADD NEW ASSET',
+                            newAssetText: 'NEW ASSET',
+                            assetSelector: {
+                                label: 'Asset ID',
+                                helperText: 'Scan or enter a new ID to add',
+                                placeholder: 'Enter at least 3 characters',
+                            },
+                        },
                     },
                 },
             },
