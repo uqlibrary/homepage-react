@@ -48,7 +48,8 @@ import testTag_assets from './data/records/test_tag_assets';
 // Test and Tag Asset Types
 import test_tag_asset_types from './data/records/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
-
+import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspections_by_licenced_user';
+import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors'; 
 import { accounts, currentAuthor } from './data';
 
 import {
@@ -919,6 +920,10 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({startDate: '', endDate: '', userRange: ''}).apiUrl)
+    .reply(() => [200, test_tag_inspections_by_licenced_user])
+    .onGet(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS().apiUrl)
+    .reply(() => [200, test_tag_licenced_inspectors])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

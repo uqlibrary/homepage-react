@@ -544,11 +544,13 @@ export function clearInspectionsDue() {
 }
 
 /* REPORT INSPECTIONS BY LICENCED USER */
-export function getInspectionsByLicencedUser({ startDate = null, endDate = null, userRange = null }) {
+export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) {
+    console.log('Getting Inspections By Licenced Users');
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADING });
         return get(TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({ startDate, endDate, userRange }))
             .then(response => {
+                console.log('RESPONSE:', response);
                 dispatch({
                     type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADED,
                     payload: response?.data ?? /* istanbul ignore next */ [],
@@ -566,6 +568,7 @@ export function getInspectionsByLicencedUser({ startDate = null, endDate = null,
 }
 export function getLicencedUsers() {
     return dispatch => {
+        console.log('Getting Licenced Users');
         dispatch({ type: actions.TESTTAG_LICENCED_INSPECTORS_LOADING });
         return get(TEST_TAG_REPORT_UTILITY_LICENCED_USERS())
             .then(response => {

@@ -581,6 +581,18 @@ export default {
                         user_id: {
                             label: 'UserID',
                         },
+                        user_uid: {
+                            label: 'UUID',
+                        },
+                        user_name: {
+                            label: 'Username',
+                        },
+                        user_licence_number: {
+                            label: 'Licence #',
+                        },
+                        user_department: {
+                            label: 'Dept.',
+                        },
                         start_date: {
                             label: 'Start Date',
                         },
@@ -588,7 +600,7 @@ export default {
                             label: 'End Date',
                         },
                         total_for_user: {
-                            label: 'Total Inspections',
+                            label: 'Total',
                         },
                     },
                     filterToDateLabel: 'Within date range',

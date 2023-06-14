@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import { KeyboardDatePicker } from '@material-ui/pickers';
+import Input from '@material-ui/core/Input';
+import Typography from '@material-ui/core/Typography';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -29,17 +36,44 @@ const useStyles = makeStyles(theme => ({
     inspectionOverdue: {
         backgroundColor: theme.palette.error.light,
     },
+    datePickerRoot: {
+        marginTop: 0,
+    },
 }));
 
 const InspectionsByLicencedUser = ({
     actions,
-    inspectionsDue,
-    inspectionsDueLoading,
-    inspectionsDueLoaded,
-    inspectionsDueError,
+    userInspections,
+    totalInspections,
+    licencedUsers,
+    userInspectionsLoading,
+    userInspectionsLoaded,
+    userInspectionsError,
+    licencedUsersLoading,
+    licencedUsersLoaded,
+    licencedUsersError,
 }) => {
+    const theme = useTheme();
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                width: 250,
+            },
+        },
+    };
+    const [inspectorName, setInspectorName] = React.useState([]);
+    const [selectedStartDate, setSelectedStartDate] = React.useState(null);
+    const [selectedEndDate, setSelectedEndDate] = React.useState(null);
+    const handleStartDateChange = date => {
+        setSelectedStartDate(date);
+    };
+    const handleEndDateChange = date => {
+        setSelectedEndDate(date);
+    };
     const pageLocale = locale.pages.report.inspectionsByLicencedUser;
-    const monthsOptions = locale.config.monthsOptions;
     const classes = useStyles();
 
     const { row, setRow } = useDataTableRow();
@@ -49,9 +83,8 @@ const InspectionsByLicencedUser = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
-    const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
-    const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
-    const [apiError, setApiError] = useState(inspectionsDueError);
+
+    const [apiError, setApiError] = useState(licencedUsersError || userInspectionsError);
 
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
@@ -68,16 +101,41 @@ const InspectionsByLicencedUser = ({
         });
     };
 
-    useEffect(() => {
-        if (!!apiError) openConfirmationAlert(apiError, 'error');
+    const handleInspectorChange = event => {
+        setInspectorName(event.target.value);
+    };
 
+    // Action for firing should be on a different method (and same with the dates).
+    const handleInspectorClose = event => {
+        console.log('Close', event);
+    };
+    function getNameStyles(name, inspectorName, theme) {
+        return {
+            fontWeight:
+                inspectorName.indexOf(name) === -1
+                    ? theme.typography.fontWeightRegular
+                    : theme.typography.fontWeightMedium,
+        };
+    }
+
+    useEffect(() => {
+        if (!!apiError) {
+            openConfirmationAlert(apiError, 'error');
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [apiError]);
 
     useEffect(() => {
-        // Do what's needed here when triggering the monthRange.
+        if (!!!licencedUsers || licencedUsers.length < 1) {
+            actions.getLicencedUsers();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [monthRange]);
+    }, [licencedUsers]);
+
+    useEffect(() => {
+        actions.getInspectionsByLicencedUser({ startDate: null, endDate: null, userRange: null });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const today = moment().format(locale.pages.report.config.dateFormatNoTime);
 
@@ -90,23 +148,103 @@ const InspectionsByLicencedUser = ({
             <div className={classes.root}>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
-                        <Grid item>{/* Date Pickers go here */}</Grid>
+                        <Grid item xs={12} md={4}>
+                            {/* Date Pickers go here */}
+                            <FormControl fullWidth className={classes.formControl}>
+                                <InputLabel id="inspector-name-selector-label">Inspector Name</InputLabel>
+                                <Select
+                                    fullWidth
+                                    labelId="inspector-name-selector-label"
+                                    id="inspector-name-selector"
+                                    multiple
+                                    disabled={!!userInspectionsLoading}
+                                    value={inspectorName}
+                                    onChange={handleInspectorChange}
+                                    onClose={handleInspectorClose}
+                                    input={<Input id="inspector-selector-input" />}
+                                    renderValue={selected => {
+                                        return (
+                                            <div className={classes.chips}>
+                                                {!!selected &&
+                                                    licencedUsers
+                                                        .filter(user => selected.includes(user.user_id))
+                                                        .slice(0, 2) // Extract the first two users
+                                                        .map(value => value.user_name)
+                                                        .concat(
+                                                            selected.length > 2
+                                                                ? ` (and ${selected.length - 2} more)`
+                                                                : [],
+                                                        )
+                                                        .join(', ')}
+                                            </div>
+                                        );
+                                    }}
+                                    MenuProps={MenuProps}
+                                >
+                                    {licencedUsers.map(user => (
+                                        <MenuItem
+                                            key={user.user_id}
+                                            value={user.user_id}
+                                            style={getNameStyles(user, inspectorName, theme)}
+                                        >
+                                            {user.user_name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            {/* Start Date */}
+                            <KeyboardDatePicker
+                                fullWidth
+                                disabled={!!userInspectionsLoading}
+                                classes={{ root: classes.datePickerRoot }}
+                                disableToolbar
+                                variant="inline"
+                                format="DD/MM/yyyy"
+                                margin="normal"
+                                id="inspections-start-date"
+                                label="Inspection Start Date"
+                                value={selectedStartDate}
+                                onChange={handleStartDateChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change start date',
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            {/* End Date */}
+                            <KeyboardDatePicker
+                                fullWidth
+                                disabled={!!userInspectionsLoading}
+                                classes={{ root: classes.datePickerRoot }}
+                                disableToolbar
+                                variant="inline"
+                                format="DD/MM/yyyy"
+                                margin="normal"
+                                id="inspections-end-date"
+                                label="Inspection End Date"
+                                value={selectedEndDate}
+                                onChange={handleEndDateChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change end date',
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={0}>
+                        <Typography component={'p'}>{totalInspections} Total Inspections.</Typography>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                rows={row}
+                                rows={userInspections}
                                 columns={columns}
-                                rowId={'asset_barcode'}
-                                loading={inspectionsDueLoading}
+                                rowId={'user_uid'}
+                                loading={userInspectionsLoading}
                                 classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
                                 disableColumnMenu
-                                getCellClassName={params =>
-                                    params.field === 'asset_next_test_due_date' && params.value <= today
-                                        ? classes.inspectionOverdue
-                                        : ''
-                                }
                             />
                         </Grid>
                     </Grid>
@@ -125,10 +263,15 @@ const InspectionsByLicencedUser = ({
 
 InspectionsByLicencedUser.propTypes = {
     actions: PropTypes.object,
-    inspectionsDue: PropTypes.array,
-    inspectionsDueLoading: PropTypes.bool,
-    inspectionsDueLoaded: PropTypes.bool,
-    inspectionsDueError: PropTypes.string,
+    userInspections: PropTypes.array,
+    totalInspections: PropTypes.number,
+    licencedUsers: PropTypes.array,
+    userInspectionsLoading: PropTypes.bool,
+    userInspectionsLoaded: PropTypes.bool,
+    userInspectionsError: PropTypes.string,
+    licencedUsersLoading: PropTypes.bool,
+    licencedUsersLoaded: PropTypes.bool,
+    licencedUsersError: PropTypes.string,
 };
 
 export default React.memo(InspectionsByLicencedUser);

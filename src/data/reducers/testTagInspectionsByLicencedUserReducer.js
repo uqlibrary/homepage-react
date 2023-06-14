@@ -1,14 +1,15 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    userInspections: null,
-    licencedUsers: null,
+    userInspections: [],
+    totalInspections: 0,
+    licencedUsers: [],
     userInspectionsLoading: false,
     userInspectionsLoaded: false,
     userInspectionsError: null,
     licencedUsersLoading: false,
     licencedUsersLoaded: false,
-    licencedUsersError: false,
+    licencedUsersError: null,
 };
 
 const handlers = {
@@ -25,7 +26,8 @@ const handlers = {
         userInspectionsLoading: false,
         userInspectionsLoaded: true,
         userInspectionsError: null,
-        UserInspections: action.payload,
+        userInspections: action.payload.user_inspections,
+        totalInspections: action.payload.total_inspections,
     }),
     [actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_FAILED]: (state, action) => ({
         ...initialState,
@@ -39,14 +41,14 @@ const handlers = {
         ...state,
         licencedUsersLoading: true,
         licencedUsersLoaded: false,
-        licencedUsersError: false,
+        licencedUsersError: null,
     }),
     [actions.TESTTAG_LICENCED_INSPECTORS_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         licencedUsersLoading: false,
         licencedUsersLoaded: true,
-        licencedUsersError: false,
+        licencedUsersError: null,
         licencedUsers: action.payload,
     }),
     [actions.TESTTAG_LICENCED_INSPECTORS_FAILED]: (state, action) => ({

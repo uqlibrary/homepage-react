@@ -250,11 +250,7 @@ export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, 
     };
 };
 /* TEST AND TAG INSPECTIONS BY LICENCED USER */
-export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({
-    startDate = null,
-    endDate = null,
-    userRange = null,
-}) => {
+export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, endDate, userRange }) => {
     const urlParams = {
         ...(!!startDate && !!endDate ? { start_date: startDate, end_date: endDate } : {}),
         ...(!!userRange ? { user_range: userRange } : {}),
