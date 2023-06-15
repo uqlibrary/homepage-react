@@ -22,7 +22,10 @@ export const maskNumber = (number, department) => {
 const AssetSelector = ({
     id,
     locale,
-    isMasked = true,
+    masked = true,
+    required = true,
+    canAddNew = true,
+    clearOnSelect = false,
     minAssetIdLength = MINIMUM_ASSET_ID_PATTERN_LENGTH,
     user,
     classNames,
@@ -41,11 +44,18 @@ const AssetSelector = ({
 
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, user) => {
-            const assetPartial = isMasked ? maskNumber(pattern, user?.user_department) : pattern;
+            const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
             setCurrentValue(assetPartial);
             !!assetPartial && assetPartial.length >= minAssetIdLength && dispatch(actions.loadAssets(assetPartial));
         }),
     ).current;
+
+    const clearInput = () => {
+        if (clearOnSelect) {
+            setCurrentValue(null);
+            previousValueRef.current = null;
+        }
+    };
 
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
@@ -53,6 +63,7 @@ const AssetSelector = ({
             onChange?.(assetsList[0]);
             setCurrentValue(assetsList[0]);
             setIsOpen(false);
+            clearInput();
         }
         /* istanbul ignore else */ if (assetsList?.length < 1) {
             onReset?.(false);
@@ -63,7 +74,9 @@ const AssetSelector = ({
 
     const handleOnChange = (event, newValue) => {
         if (typeof newValue === 'string') {
-            onChange?.({ asset_id_displayed: newValue });
+            onChange?.(
+                assetsList?.find(asset => asset.asset_id_displayed === newValue) ?? { asset_id_displayed: newValue },
+            );
         } else if (newValue && newValue.inputValue) {
             // Create a new value from the user input
             onChange?.({
@@ -73,6 +86,7 @@ const AssetSelector = ({
             onChange?.(newValue);
         }
         setIsOpen(false);
+        clearInput();
     };
 
     return (
@@ -89,10 +103,11 @@ const AssetSelector = ({
                     const filtered = filter(options, params);
                     // Suggest the creation of a new value
                     // if (params.inputValue !== '') {
-                    filtered.push({
-                        inputValue: locale.newAssetText,
-                        asset_id_displayed: locale.addText,
-                    });
+                    canAddNew &&
+                        filtered.push({
+                            inputValue: locale.newAssetText,
+                            asset_id_displayed: locale.addText,
+                        });
                     // }
 
                     return filtered;
@@ -119,7 +134,7 @@ const AssetSelector = ({
                     <TextField
                         {...params}
                         {...locale.assetSelector}
-                        required
+                        required={required}
                         error={!validateAssetId?.(currentValue) ?? false}
                         inputRef={inputRef}
                         variant="standard"
@@ -166,7 +181,10 @@ AssetSelector.propTypes = {
     locale: PropTypes.object.isRequired,
     label: PropTypes.string,
     minAssetIdLength: PropTypes.number,
-    isMasked: PropTypes.bool,
+    masked: PropTypes.bool,
+    required: PropTypes.bool,
+    canAddNew: PropTypes.bool,
+    clearOnSelect: PropTypes.bool,
     user: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
     inputRef: PropTypes.any,

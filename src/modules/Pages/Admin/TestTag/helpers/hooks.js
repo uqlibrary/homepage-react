@@ -37,3 +37,35 @@ export const useForm = (
 
     return { formValues, resetFormValues, handleChange };
 };
+
+export const useObjectList = list => {
+    const [data, setData] = useState(list ?? []);
+
+    const addAt = (index, item) => {
+        if (!Array.isArray(item) && typeof item !== 'object') return;
+        setData([...data.slice(0, index), ...item, ...data.slice(index)].flat());
+    };
+
+    const addStart = item => {
+        addAt(0, item);
+    };
+
+    const addEnd = item => {
+        addAt(data.length, item);
+    };
+
+    const deleteAt = index => {
+        setData([...data.slice(0, index), ...(index >= data.length - 1 ? data.slice(index + 1) : [])]);
+    };
+
+    const deleteWith = (key, value) => {
+        const index = data.findIndex(item => item[key] === value);
+        index > -1 && deleteAt(index);
+    };
+
+    const clear = () => {
+        setData([]);
+    };
+
+    return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear };
+};
