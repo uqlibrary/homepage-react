@@ -256,7 +256,7 @@ export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, en
         ...(!!userRange ? { user_range: userRange } : {}),
     };
     const qs = new URLSearchParams(urlParams);
-    const hasParams = [...qs].length > 0;
+    const hasParams = Object.keys(urlParams).length > 0;
     const apiUrl = `test_and_tag/report/user_inspections${hasParams ? `?${qs.toString()}` : ''}`;
     return {
         apiUrl,

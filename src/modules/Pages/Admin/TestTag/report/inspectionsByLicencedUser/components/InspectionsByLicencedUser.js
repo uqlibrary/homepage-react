@@ -10,6 +10,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import Input from '@material-ui/core/Input';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+
+import ClearIcon from '@material-ui/icons/Clear';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -65,13 +68,19 @@ const InspectionsByLicencedUser = ({
         },
     };
     const [inspectorName, setInspectorName] = React.useState([]);
-    const [selectedStartDate, setSelectedStartDate] = React.useState(null);
-    const [selectedEndDate, setSelectedEndDate] = React.useState(null);
+    const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, dateFormatted: null });
+    const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, dateFormatted: null });
     const handleStartDateChange = date => {
-        setSelectedStartDate(date);
+        setSelectedStartDate({
+            date: date,
+            dateFormatted: !!date ? date.format('yyyy-MM-DD') : null,
+        });
     };
     const handleEndDateChange = date => {
-        setSelectedEndDate(date);
+        setSelectedEndDate({
+            date: date,
+            dateFormatted: !!date ? date.format('yyyy-MM-DD') : null,
+        });
     };
     const pageLocale = locale.pages.report.inspectionsByLicencedUser;
     const classes = useStyles();
@@ -83,6 +92,16 @@ const InspectionsByLicencedUser = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
+
+    const reportSearch = () => {
+        actions
+            .getInspectionsByLicencedUser({
+                startDate: selectedStartDate.dateFormatted,
+                endDate: selectedEndDate.dateFormatted,
+                userRange: inspectorName.toString(),
+            })
+            .catch(e => console.log('ERROR!', e));
+    };
 
     const [apiError, setApiError] = useState(licencedUsersError || userInspectionsError);
 
@@ -108,7 +127,25 @@ const InspectionsByLicencedUser = ({
     // Action for firing should be on a different method (and same with the dates).
     const handleInspectorClose = event => {
         console.log('Close', event);
+        console.log('InspectorName', inspectorName.toString());
+        reportSearch();
     };
+    const handleStartClearClick = () => {
+        setSelectedStartDate({ date: null, dateFormatted: null });
+    };
+    const handleDateClose = () => {
+        if (!!selectedStartDate.date && !!selectedEndDate.date) {
+            if (selectedEndDate.date >= selectedStartDate.date) {
+                reportSearch();
+            } else {
+                console.log('Date range is impossible');
+            }
+        } else {
+            console.log('Both dates must be present');
+        }
+        // console.log(selectedStartDate.format('yyyy-MM-DD'));
+    };
+
     function getNameStyles(name, inspectorName, theme) {
         return {
             fontWeight:
@@ -136,8 +173,6 @@ const InspectionsByLicencedUser = ({
         actions.getInspectionsByLicencedUser({ startDate: null, endDate: null, userRange: null });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const today = moment().format(locale.pages.report.config.dateFormatNoTime);
 
     return (
         <StandardAuthPage
@@ -196,6 +231,13 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
                             <KeyboardDatePicker
+                                InputProps={{
+                                    endAdornment: selectedStartDate.date && (
+                                        <IconButton aria-label="clear date" onClick={handleStartClearClick} edge="end">
+                                            <ClearIcon />
+                                        </IconButton>
+                                    ),
+                                }}
                                 fullWidth
                                 disabled={!!userInspectionsLoading}
                                 classes={{ root: classes.datePickerRoot }}
@@ -205,8 +247,9 @@ const InspectionsByLicencedUser = ({
                                 margin="normal"
                                 id="inspections-start-date"
                                 label="Inspection Start Date"
-                                value={selectedStartDate}
+                                value={selectedStartDate.date}
                                 onChange={handleStartDateChange}
+                                onClose={handleDateClose}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change start date',
                                 }}
@@ -224,8 +267,9 @@ const InspectionsByLicencedUser = ({
                                 margin="normal"
                                 id="inspections-end-date"
                                 label="Inspection End Date"
-                                value={selectedEndDate}
+                                value={selectedEndDate.date}
                                 onChange={handleEndDateChange}
+                                onClose={handleDateClose}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change end date',
                                 }}

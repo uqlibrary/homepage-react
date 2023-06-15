@@ -32,9 +32,9 @@ const handlers = {
     [actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
-        inspectionsDueLoading: false,
-        inspectionsDueLoaded: false,
-        inspectionsDueError: action.payload,
+        userInspectionsLoading: false,
+        userInspectionsLoaded: false,
+        userInspectionsError: action.payload,
     }),
     [actions.TESTTAG_LICENCED_INSPECTORS_LOADING]: state => ({
         ...initialState,
