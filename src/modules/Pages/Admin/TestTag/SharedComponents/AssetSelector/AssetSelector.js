@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -50,12 +50,14 @@ const AssetSelector = ({
         }),
     ).current;
 
-    const clearInput = () => {
+    const clearInput = useCallback(() => {
         if (clearOnSelect) {
             setCurrentValue(null);
             previousValueRef.current = null;
+            dispatch(actions.clearAssets());
         }
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
@@ -72,22 +74,28 @@ const AssetSelector = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
 
-    const handleOnChange = (event, newValue) => {
-        if (typeof newValue === 'string') {
-            onChange?.(
-                assetsList?.find(asset => asset.asset_id_displayed === newValue) ?? { asset_id_displayed: newValue },
-            );
-        } else if (newValue && newValue.inputValue) {
-            // Create a new value from the user input
-            onChange?.({
-                asset_id_displayed: newValue.inputValue,
-            });
-        } else {
-            onChange?.(newValue);
-        }
-        setIsOpen(false);
-        clearInput();
-    };
+    const handleOnChange = useCallback(
+        (event, newValue) => {
+            if (typeof newValue === 'string') {
+                onChange?.(
+                    assetsList?.find(asset => asset.asset_id_displayed === newValue) ?? {
+                        asset_id_displayed: newValue,
+                    },
+                );
+            } else if (newValue && newValue.inputValue) {
+                // Create a new value from the user input
+                onChange?.({
+                    asset_id_displayed: newValue.inputValue,
+                });
+            } else {
+                onChange?.(newValue);
+            }
+            setIsOpen(false);
+            clearInput();
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [assetsList],
+    );
 
     return (
         <FormControl className={classNames.formControl} fullWidth>

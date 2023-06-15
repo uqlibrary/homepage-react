@@ -38,8 +38,10 @@ export const useForm = (
     return { formValues, resetFormValues, handleChange };
 };
 
-export const useObjectList = list => {
-    const [data, setData] = useState(list ?? []);
+export const useObjectList = (list = [], transform) => {
+    const [data, _setData] = useState(!!transform ? transform(list) : list);
+
+    const setData = data => _setData(!!transform ? transform(data) : data);
 
     const addAt = (index, item) => {
         if (!Array.isArray(item) && typeof item !== 'object') return;
@@ -55,7 +57,7 @@ export const useObjectList = list => {
     };
 
     const deleteAt = index => {
-        setData([...data.slice(0, index), ...(index >= data.length - 1 ? data.slice(index + 1) : [])]);
+        _setData([...data.slice(0, index), ...(index <= data.length - 1 ? data.slice(index + 1) : [])]);
     };
 
     const deleteWith = (key, value) => {
@@ -64,7 +66,7 @@ export const useObjectList = list => {
     };
 
     const clear = () => {
-        setData([]);
+        _setData([]);
     };
 
     return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear };

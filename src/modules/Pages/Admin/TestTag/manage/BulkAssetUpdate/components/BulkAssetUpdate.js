@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { isValidAssetId } from '../../../Inspection/utils/helpers';
+import { createLocationString } from '../../../helpers/helpers';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -33,12 +34,30 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+export const transformRow = row => {
+    return row.map(line => {
+        if (!!line?.asset_location) return line;
+        return {
+            ...line,
+            asset_type_name: line?.asset_type?.asset_type_name ?? '',
+            asset_location: !!line?.last_location
+                ? createLocationString({
+                      site: line.last_location.site_id_displayed,
+                      building: line.last_location.building_id_displayed,
+                      floor: line.last_location.floor_id_displayed,
+                      room: line.last_location.room_id_displayed,
+                  })
+                : '',
+        };
+    });
+};
+
 const BulkAssetUpdate = ({ defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
     const classes = useStyles();
     const { user } = useSelector(state => state.get('testTagUserReducer'));
-    const list = useObjectList([]);
+    const list = useObjectList([], transformRow);
 
     const assignAssetDefaults = () => ({ ...defaultFormValues });
 
@@ -46,20 +65,26 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
         defaultValues: { ...assignAssetDefaults() },
     });
 
-    const handleSearchAssetIdChange = newValue => {
-        console.log(newValue);
-        list.addStart(newValue);
-    };
+    const handleSearchAssetIdChange = useCallback(
+        newValue => {
+            console.log(newValue);
+            list.addStart(newValue);
+        },
+        [list],
+    );
 
     const resetForm = () => {
         const newFormValues = assignAssetDefaults();
         resetFormValues(newFormValues);
     };
 
-    const handleDeleteClick = ({ id, api }) => {
-        const row = api.getRow(id);
-        list.deleteWith('asset_id', row.asset_id);
-    };
+    const handleDeleteClick = useCallback(
+        ({ id, api }) => {
+            const row = api.getRow(id);
+            list.deleteWith('asset_id', row.asset_id);
+        },
+        [list],
+    );
 
     const { columns } = useDataTableColumns({
         config,
@@ -81,7 +106,7 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                             <AssetSelector
                                 id="assetId"
                                 locale={stepOneLocale}
-                                user={user}
+                                user={user?.department}
                                 classNames={{ formControl: classes.formControl }}
                                 onChange={handleSearchAssetIdChange}
                                 validateAssetId={isValidAssetId}
