@@ -585,7 +585,7 @@ export default {
                             label: 'UUID',
                         },
                         user_name: {
-                            label: 'Username',
+                            label: 'Name',
                         },
                         user_licence_number: {
                             label: 'Licence #',
@@ -595,9 +595,11 @@ export default {
                         },
                         start_date: {
                             label: 'Start Date',
+                            type: 'dateTime',
                         },
                         end_date: {
                             label: 'End Date',
+                            type: 'dateTime',
                         },
                         total_for_user: {
                             label: 'Total',

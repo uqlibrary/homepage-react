@@ -10,9 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import Input from '@material-ui/core/Input';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-
-import ClearIcon from '@material-ui/icons/Clear';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -44,6 +41,21 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+function getNameStyles(name, inspectorName, theme) {
+    return {
+        fontWeight:
+            inspectorName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
+    };
+}
+
+export const transformRow = row => {
+    return row.map(line => ({
+        ...line,
+        start_date: moment(line.start_date).format('DD/MM/YYYY'),
+        end_date: moment(line.end_date).format('DD/MM/YYYY'),
+    }));
+};
+
 const InspectionsByLicencedUser = ({
     actions,
     userInspections,
@@ -67,9 +79,45 @@ const InspectionsByLicencedUser = ({
             },
         },
     };
+    /* locale and styles */
+    const pageLocale = locale.pages.report.inspectionsByLicencedUser;
+    const classes = useStyles();
+    /* State */
     const [inspectorName, setInspectorName] = React.useState([]);
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, dateFormatted: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, dateFormatted: null });
+    const [apiError, setApiError] = useState(licencedUsersError || userInspectionsError);
+    const [startDateError, setStartDateError] = useState({ error: false, message: '' });
+    const [endDateError, setEndDateError] = useState({ error: false, message: '' });
+    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+    const { row, setRow } = useDataTableRow();
+    const { columns } = useDataTableColumns({
+        config,
+        locale: pageLocale.form.columns,
+        withActions: false,
+    });
+    /* HELPERS */
+    const reportSearch = () => {
+        actions
+            .getInspectionsByLicencedUser({
+                startDate: selectedStartDate.dateFormatted,
+                endDate: selectedEndDate.dateFormatted,
+                userRange: inspectorName.toString(),
+            })
+            .catch(e => console.log('ERROR!', e));
+    };
+    const clearDateErrors = () => {
+        setStartDateError({
+            error: false,
+            message: '',
+        });
+        setEndDateError({
+            error: false,
+            message: '',
+        });
+    };
+
+    /* UI HANDLERS */
     const handleStartDateChange = date => {
         setSelectedStartDate({
             date: date,
@@ -82,31 +130,12 @@ const InspectionsByLicencedUser = ({
             dateFormatted: !!date ? date.format('yyyy-MM-DD') : null,
         });
     };
-    const pageLocale = locale.pages.report.inspectionsByLicencedUser;
-    const classes = useStyles();
-
-    const { row, setRow } = useDataTableRow();
-
-    const { columns } = useDataTableColumns({
-        config,
-        locale: pageLocale.form.columns,
-        withActions: false,
-    });
-
-    const reportSearch = () => {
-        actions
-            .getInspectionsByLicencedUser({
-                startDate: selectedStartDate.dateFormatted,
-                endDate: selectedEndDate.dateFormatted,
-                userRange: inspectorName.toString(),
-            })
-            .catch(e => console.log('ERROR!', e));
+    const handleInspectorChange = event => {
+        setInspectorName(event.target.value);
     };
-
-    const [apiError, setApiError] = useState(licencedUsersError || userInspectionsError);
-
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
+    const handleInspectorClose = () => {
+        reportSearch();
+    };
     const closeConfirmationAlert = () => {
         setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
@@ -119,60 +148,61 @@ const InspectionsByLicencedUser = ({
             onClose: () => setApiError(null),
         });
     };
-
-    const handleInspectorChange = event => {
-        setInspectorName(event.target.value);
-    };
-
-    // Action for firing should be on a different method (and same with the dates).
-    const handleInspectorClose = event => {
-        console.log('Close', event);
-        console.log('InspectorName', inspectorName.toString());
-        reportSearch();
-    };
-    const handleStartClearClick = () => {
-        setSelectedStartDate({ date: null, dateFormatted: null });
-    };
     const handleDateClose = () => {
-        if (!!selectedStartDate.date && !!selectedEndDate.date) {
-            if (selectedEndDate.date >= selectedStartDate.date) {
-                reportSearch();
-            } else {
-                console.log('Date range is impossible');
-            }
+        if (!!!selectedStartDate.date && !!!selectedEndDate.date) {
+            clearDateErrors();
+            reportSearch();
         } else {
-            console.log('Both dates must be present');
+            if (!!selectedStartDate.date && !!selectedEndDate.date) {
+                if (selectedEndDate.date >= selectedStartDate.date) {
+                    clearDateErrors();
+                    reportSearch();
+                } else {
+                    setStartDateError({
+                        error: true,
+                        message: 'Start date must be before End Date',
+                    });
+                    setEndDateError({
+                        error: true,
+                        message: 'End date must be after Start Date',
+                    });
+                }
+            } else {
+                !!!selectedStartDate.date &&
+                    setStartDateError({
+                        error: true,
+                        message: 'A start date is required to search by date',
+                    });
+                !!!selectedEndDate.date &&
+                    setEndDateError({
+                        error: true,
+                        message: 'An end date is required to search by date',
+                    });
+            }
         }
-        // console.log(selectedStartDate.format('yyyy-MM-DD'));
     };
-
-    function getNameStyles(name, inspectorName, theme) {
-        return {
-            fontWeight:
-                inspectorName.indexOf(name) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
-    }
-
+    /* EFFECTS */
     useEffect(() => {
-        if (!!apiError) {
-            openConfirmationAlert(apiError, 'error');
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [apiError]);
-
-    useEffect(() => {
-        if (!!!licencedUsers || licencedUsers.length < 1) {
+        if (licencedUsersLoaded && (!!!licencedUsers || licencedUsers.length < 1)) {
             actions.getLicencedUsers();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [licencedUsers]);
+    }, [licencedUsers, licencedUsersLoaded]);
 
     useEffect(() => {
         actions.getInspectionsByLicencedUser({ startDate: null, endDate: null, userRange: null });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (!!apiError) openConfirmationAlert(apiError, 'error');
+        else {
+            if (userInspectionsLoaded) {
+                setRow(transformRow(userInspections));
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userInspections, userInspectionsLoaded, apiError]);
 
     return (
         <StandardAuthPage
@@ -192,7 +222,7 @@ const InspectionsByLicencedUser = ({
                                     labelId="inspector-name-selector-label"
                                     id="inspector-name-selector"
                                     multiple
-                                    disabled={!!userInspectionsLoading}
+                                    disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                     value={inspectorName}
                                     onChange={handleInspectorChange}
                                     onClose={handleInspectorClose}
@@ -231,25 +261,21 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
                             <KeyboardDatePicker
-                                InputProps={{
-                                    endAdornment: selectedStartDate.date && (
-                                        <IconButton aria-label="clear date" onClick={handleStartClearClick} edge="end">
-                                            <ClearIcon />
-                                        </IconButton>
-                                    ),
-                                }}
                                 fullWidth
-                                disabled={!!userInspectionsLoading}
+                                disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
                                 format="DD/MM/yyyy"
                                 margin="normal"
                                 id="inspections-start-date"
-                                label="Inspection Start Date"
+                                label="Period Start Date"
                                 value={selectedStartDate.date}
                                 onChange={handleStartDateChange}
+                                onBlur={handleDateClose}
                                 onClose={handleDateClose}
+                                error={startDateError.error}
+                                helperText={startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change start date',
                                 }}
@@ -259,17 +285,20 @@ const InspectionsByLicencedUser = ({
                             {/* End Date */}
                             <KeyboardDatePicker
                                 fullWidth
-                                disabled={!!userInspectionsLoading}
+                                disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
                                 format="DD/MM/yyyy"
                                 margin="normal"
                                 id="inspections-end-date"
-                                label="Inspection End Date"
+                                label="Period End Date"
                                 value={selectedEndDate.date}
                                 onChange={handleEndDateChange}
                                 onClose={handleDateClose}
+                                onBlur={handleDateClose}
+                                helperText={endDateError.error && endDateError.message}
+                                error={endDateError.error}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change end date',
                                 }}
@@ -282,7 +311,7 @@ const InspectionsByLicencedUser = ({
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                rows={userInspections}
+                                rows={row}
                                 columns={columns}
                                 rowId={'user_uid'}
                                 loading={userInspectionsLoading}
