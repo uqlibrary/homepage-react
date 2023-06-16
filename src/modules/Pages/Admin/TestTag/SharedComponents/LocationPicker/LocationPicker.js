@@ -33,6 +33,7 @@ const LocationPicker = ({
     // floorListError,
     roomList,
     roomListLoading,
+    hasAllOption = false,
     locale,
     actions,
     location,
@@ -42,14 +43,6 @@ const LocationPicker = ({
 }) => {
     const classes = useStyles();
     const divisor = 4 - hide.length;
-    const hasAllOption = React.useRef(false);
-
-    React.useEffect(() => {
-        // check if site has an entry with a value of -1, implying an "all sites" option.
-        // logic assumes if sites has this present then all locations will too.
-        hasAllOption.current = siteList?.some(site => site.site_id === -1) ?? false;
-    }, [siteList]);
-
     const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
     return (
         <>
@@ -61,7 +54,7 @@ const LocationPicker = ({
                         fullWidth
                         options={siteList}
                         value={
-                            !hasAllOption.current && location.site === -1
+                            !hasAllOption && location.site === -1
                                 ? ''
                                 : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
                         }
@@ -127,7 +120,7 @@ const LocationPicker = ({
                             fullWidth
                             options={buildingList}
                             value={
-                                !hasAllOption.current && location.building === -1
+                                !hasAllOption && location.building === -1
                                     ? ''
                                     : buildingList?.find(building => building.building_id === location.building)
                             }
@@ -198,7 +191,7 @@ const LocationPicker = ({
                             fullWidth
                             options={floorList}
                             value={
-                                !hasAllOption.current && location.floor === -1
+                                !hasAllOption && location.floor === -1
                                     ? ''
                                     : floorList?.find(floor => floor.floor_id === location.floor)
                             }
@@ -255,7 +248,7 @@ const LocationPicker = ({
                             fullWidth
                             options={roomList}
                             value={
-                                !hasAllOption.current && location.room === -1
+                                !hasAllOption && location.room === -1
                                     ? ''
                                     : roomList?.find(room => room.room_id === location.room)
                             }

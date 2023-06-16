@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import DataTable from '../../../SharedComponents/DataTable/DataTable';
 
 import locale from '../../../testTag.locale';
 import config from './config';

@@ -556,11 +556,13 @@ export default {
                             cancel: 'Cancel',
                             submit: 'Add selected',
                         },
-                        columns: {
-                            asset_id_displayed: { label: 'Asset ID' },
-                            asset_type_name: { label: 'Type' },
-                            asset_location: { label: 'Location' },
-                            asset_status: { label: 'Status' },
+                        form: {
+                            columns: {
+                                asset_id_displayed: { label: 'Asset ID' },
+                                asset_type_name: { label: 'Type' },
+                                asset_location: { label: 'Location' },
+                                asset_status: { label: 'Status' },
+                            },
                         },
                     },
                     step: {

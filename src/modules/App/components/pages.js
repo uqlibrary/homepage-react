@@ -24,7 +24,7 @@ export const TestTagManageAssetTypes = lazy(() => lazyRetry(() => import('module
 export const TestTagManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/Locations/containers/Locations')));
 export const TestTagManageInspectionDevices = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/InspectionDevices/containers/InspectionDevices')));
 export const TestTagManageBulkAssetUpdate = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/BulkAssetUpdate/containers/BulkAssetUpdate')));
-export const TestTagReportInspectionsDue = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/InspectionsDue/containers/InspectionsDue')));
+export const TestTagReportInspectionsDue = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/inspectionsDue/containers/InspectionsDue')));
 
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));

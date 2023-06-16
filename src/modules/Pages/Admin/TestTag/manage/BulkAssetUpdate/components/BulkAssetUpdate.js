@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { GridFooterContainer } from '@mui/x-data-grid';
+import * as actions from 'data/actions';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -16,7 +17,7 @@ import FilterDialog from './FilterDialog';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import { useForm, useLocation, useObjectList } from '../../../helpers/hooks';
+import { useForm, useObjectList } from '../../../helpers/hooks';
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
 import locale from '../../../testTag.locale';
 import config from './config';
@@ -129,7 +130,7 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
     );
 
     const { columns } = useDataTableColumns({
-        config,
+        config: config.form,
         locale: pageLocale.form.columns,
         handleDeleteClick,
     });
@@ -138,7 +139,6 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
         console.log('handleStepButton', e);
     };
 
-    // const { location, setLocation } = useLocation();
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -203,7 +203,13 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                         </Grid>
                     </Grid>
                 </StandardCard>
-                <FilterDialog locale={pageLocale.form.filterDialog} isOpen />
+                <FilterDialog
+                    locale={pageLocale.form.filterDialog}
+                    locationLocale={locale.pages.general.locationPicker}
+                    minContentWidth={'100%'}
+                    config={config.filterDialog}
+                    isOpen
+                />
             </div>
         </StandardAuthPage>
     );
