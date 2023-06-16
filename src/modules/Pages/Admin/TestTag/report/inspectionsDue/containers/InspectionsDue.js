@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import InspectionsDue from '../components/InspectionsDue';
-import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 
 export const mapStateToProps = state => {
