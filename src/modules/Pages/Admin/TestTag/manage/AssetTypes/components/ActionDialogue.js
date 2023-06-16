@@ -11,6 +11,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Alert from '@material-ui/lab/Alert';
+import locale from '../../../testTag.locale';
 
 export const useStyles = makeStyles(theme => ({
     alternateActionButtonClass: {
@@ -36,7 +37,6 @@ export const ActionDialogue = ({
     data,
     row,
     isOpen,
-    locale,
     noMinContentWidth,
     actionDialogueBoxId,
     onCancel,
@@ -44,6 +44,7 @@ export const ActionDialogue = ({
     isBusy,
 }) => {
     const classes = useStyles();
+    const pageLocale = locale.pages.manage.assetTypes.actionDialogue;
 
     const [selectedAssetType, setSelectedAssetType] = React.useState('');
     React.useEffect(() => {
@@ -59,13 +60,13 @@ export const ActionDialogue = ({
             open={isOpen}
             data-testid={`dialogbox-${actionDialogueBoxId}`}
         >
-            <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
+            <DialogTitle data-testid="message-title">{pageLocale.confirmationTitle}</DialogTitle>
             <DialogContent style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }}>
                 <Typography component={'p'} data-testid="deleteReassign-target-prompt">
-                    Delete <b>{row?.asset_type_name ?? 'NONE'}</b> and reassign all assets to:
+                    {pageLocale.deleteReassignTargetPrompt(row?.asset_type_name)}
                 </Typography>
                 <InputLabel shrink required>
-                    New Asset Type
+                    {pageLocale.newAssetTypePrompt}
                 </InputLabel>
                 <Select
                     fullWidth
@@ -88,31 +89,31 @@ export const ActionDialogue = ({
                     ))}
                 </Select>
                 <Alert className={classes.alertPanel} severity="warning">
-                    This will effect {row?.asset_count ?? 0} assets
+                    {pageLocale.deleteReassignWarningPrompt(row?.asset_count)}
                 </Alert>
                 <Grid container spacing={4} className={classes.actionButtons}>
                     <Grid item xs={12} sm={6} container justifyContent="flex-start">
                         <Button
                             variant="outlined"
                             onClick={onCancel}
-                            id="testntagFormResetButton"
-                            data-testid="testntagFormResetButton"
+                            id="actionDialogueCancelButton"
+                            data-testid={`actionDialogueCancel-${row.asset_type_id}`}
                             color={'default'}
                             disabled={!!isBusy}
                         >
-                            Cancel
+                            {pageLocale.cancelButtonLabel}
                         </Button>
                     </Grid>
                     <Grid item xs={12} sm={6} container justifyContent="flex-end">
                         <Button
                             variant="contained"
                             onClick={() => onProceed(row.asset_type_id, selectedAssetType)}
-                            id="testntagFormResetButton"
-                            data-testid="testntagFormResetButton"
+                            id="actionDialogueConfirmButton"
+                            data-testid={`actionDialogueConfirm-${row.asset_type_id}`}
                             color={'default'}
                             disabled={!!isBusy || !!!selectedAssetType || row?.asset_type_id === selectedAssetType}
                         >
-                            Proceed
+                            {pageLocale.confirmButtonLabel}
                         </Button>
                     </Grid>
                 </Grid>
@@ -132,17 +133,6 @@ ActionDialogue.propTypes = {
     onCancel: PropTypes.func,
     onProceed: PropTypes.func,
     isBusy: PropTypes.bool,
-};
-
-ActionDialogue.defaultProps = {
-    locale: {
-        confirmationTitle: 'Delete and Reassign',
-        confirmationMessage: 'Are you sure?',
-        cancelButtonLabel: 'No',
-        confirmButtonLabel: 'Yes',
-        alternateActionButtonLabel: 'Cancel',
-    },
-    isBusy: false,
 };
 
 export default React.memo(ActionDialogue);

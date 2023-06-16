@@ -358,6 +358,14 @@ export default {
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: type => `Edit ${type}`,
                 },
+                actionDialogue: {
+                    confirmationTitle: 'Delete and Reassign',
+                    deleteReassignTargetPrompt: target => `Delete ${target ?? 'NONE'} and reassign all assets to:`,
+                    newAssetTypePrompt: 'New Asset Type',
+                    deleteReassignWarningPrompt: count => `This will effect ${count ?? 0} assets`,
+                    cancelButtonLabel: 'Cancel',
+                    confirmButtonLabel: 'Proceed',
+                },
             },
             locations: {
                 breadcrumbs: [
