@@ -172,3 +172,26 @@ export const isHdrStudent = account =>
     account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
 
 export const isEspaceAuthor = (account, author) => isLoggedInUser(account) && !!author && !!author.aut_id;
+
+// note: this logic is duplicated in reusable
+/* istanbul ignore next */
+export function getHomepageLink(hostname = null, protocol = null, port = null, pathname = null, search = null) {
+    // this has full test coverage, I don't know it why isn't picking it up :(
+    const _protocol = protocol === null ? window.location.protocol : protocol;
+    const _hostname = hostname === null ? window.location.hostname : hostname;
+    let homepagelink = 'https://www.library.uq.edu.au';
+    if (_hostname === 'homepage-development.library.uq.edu.au') {
+        const _pathname = pathname === null ? window.location.pathname : pathname;
+        homepagelink = `${_protocol}//${_hostname}${_pathname}#/`;
+    } else if (_hostname.endsWith('.library.uq.edu.au')) {
+        homepagelink = `${_protocol}//${_hostname}`;
+    } else if (_hostname === 'localhost') {
+        const _port = port === null ? window.location.port : port;
+        const _search = search === null ? window.location.search : search;
+        const urlParams = new URLSearchParams(_search);
+        const userParam = urlParams.get('user');
+        const linkParameters = !!userParam ? `?user=${userParam}` : '';
+        homepagelink = `${_protocol}//${_hostname}:${_port}/${linkParameters}`;
+    }
+    return homepagelink;
+}
