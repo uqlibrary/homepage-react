@@ -2,20 +2,19 @@ import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
     COMP_AVAIL_API,
+    CURRENT_ACCOUNT_API,
+    CURRENT_AUTHOR_API,
     INCOMPLETE_NTRO_RECORDS_API,
     LIB_HOURS_API,
     LOANS_API,
     POSSIBLE_RECORDS_API,
     PRINTING_API,
-    SPOTLIGHTS_API_CURRENT,
     TRAINING_API,
+    SPOTLIGHTS_API_CURRENT,
 } from 'repositories/routes';
-
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, STORAGE_ACCOUNT_KEYNAME } from 'config/general';
 import Cookies from 'js-cookie';
-
-const queryString = require('query-string');
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
 export function getClassNumberFromPieces(subject) {
@@ -71,36 +70,6 @@ function getLibraryGroupCookie() {
     return Cookies.get(SESSION_USER_GROUP_COOKIE_NAME);
 }
 
-function removeAccountStorage() {
-    /* istanbul ignore else */
-    !!sessionStorage && sessionStorage.removeItem(STORAGE_ACCOUNT_KEYNAME);
-}
-
-export function getAccountFromStorage() {
-    /* istanbul ignore else */
-    const item = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
-    const accountDetails = item === null ? null : JSON.parse(item);
-
-    if (accountDetails === null) {
-        return null;
-    }
-
-    if (process.env.USE_MOCK && process.env.BRANCH !== 'production') {
-        let user = queryString.parse(
-            location.search || /* istanbul ignore next */ location.hash.substring(location.hash.indexOf('?')),
-        ).user;
-        user = user || 'vanilla';
-
-        if (!!accountDetails.status && accountDetails.status === 'loggedout' && user === 'public') {
-        } else if (!accountDetails?.account?.id || accountDetails.account.id !== user) {
-            // allow developer to swap between users in the same tab in mock
-            removeAccountStorage();
-            return null;
-        }
-    }
-    return accountDetails;
-}
-
 function extendAccountDetails(accountResponse) {
     return {
         ...accountResponse,
@@ -113,87 +82,6 @@ function extendAccountDetails(accountResponse) {
                   })
                 : accountResponse.current_classes,
         trainingfilterId: isHospitalUser(accountResponse) ? TRAINING_FILTER_HOSPITAL : TRAINING_FILTER_GENERAL,
-    };
-}
-
-function dispatchAccount(dispatch, account) {
-    dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-    const accountResponse = extendAccountDetails(account.account || /* istanbul ignore next */ null);
-    dispatch({
-        type: actions.CURRENT_ACCOUNT_LOADED,
-        payload: accountResponse,
-    });
-
-    dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
-    /* istanbul ignore else */
-    if (account.currentAuthor) {
-        dispatch({
-            type: actions.CURRENT_AUTHOR_LOADED,
-            payload: account.currentAuthor,
-        });
-    } else {
-        /* istanbul ignore next */
-        dispatch({
-            type: actions.CURRENT_AUTHOR_FAILED,
-            payload: 'author unexpectedly not available',
-        });
-    }
-    return accountResponse;
-}
-
-/**
- * Loads the user's account and author details into the application
- * @returns {function(*)}
- */
-export function loadCurrentAccount() {
-    return dispatch => {
-        if (navigator.userAgent.match(/Googlebot|facebookexternalhit|bingbot|Slackbot-LinkExpanding|Twitterbot/)) {
-            dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-            return Promise.resolve({});
-        }
-
-        if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-            // no cookie, don't call account api without a cookie
-            dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-            return Promise.resolve({});
-        }
-
-        // there can be a mismatch between load time of homepage and load time of reusable
-        // wait for the session storage if it isn't there straight away
-        const storedAccount = getAccountFromStorage();
-        if (storedAccount?.status === 'loggedin' && !!storedAccount?.account) {
-            // account details stored locally with an expiry date
-            const account = dispatchAccount(dispatch, storedAccount);
-            return Promise.resolve(account);
-        } else if (storedAccount?.status === 'loggedout') {
-            dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-            return Promise.resolve({});
-        }
-        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-        return Promise.resolve(null);
-    };
-}
-
-/**
- * Loads the spotlight data
- * @returns {function(*)}
- */
-export function loadCurrentSpotlights() {
-    return dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_HOMEPAGE_LOADING });
-        return get(SPOTLIGHTS_API_CURRENT())
-            .then(spotlightsResponse => {
-                dispatch({
-                    type: actions.SPOTLIGHTS_HOMEPAGE_LOADED,
-                    payload: spotlightsResponse,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
-                    payload: error.message,
-                });
-            });
     };
 }
 
@@ -214,6 +102,155 @@ export function loadLibHours() {
             .catch(error => {
                 dispatch({
                     type: actions.LIB_HOURS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Loads the computer availability data
+ * @returns {function(*)}
+ */
+export function loadCompAvail() {
+    return dispatch => {
+        dispatch({ type: actions.COMP_AVAIL_LOADING });
+        return get(COMP_AVAIL_API())
+            .then(availResponse => {
+                dispatch({
+                    type: actions.COMP_AVAIL_LOADED,
+                    payload: availResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.COMP_AVAIL_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function logout(reload = false) {
+    return dispatch => {
+        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+        if (!!reload) {
+            dispatch(loadLibHours());
+            dispatch(loadCompAvail());
+        }
+    };
+}
+
+// we directly get the account in homepage -  sadly, it caused fewer problems than reusing the session storage from
+// reusable - but we do check if reusable has timed out or not
+/* istanbul ignore next */
+function sessionStorageShowsLoggedOut() {
+    const storedUserDetailsRaw = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
+    if (storedUserDetailsRaw === null) {
+        return true;
+    }
+    const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
+    const now = new Date().getTime();
+    if (!storedUserDetails.hasOwnProperty('storageExpiryDate') || storedUserDetails.storageExpiryDate < now) {
+        return true;
+    }
+    if (!storedUserDetails.hasOwnProperty('status') && storedUserDetails.status !== 'loggedin') {
+        return true;
+    }
+    if (
+        !!storedUserDetails.hasOwnProperty('account') ||
+        !storedUserDetails.account.storedUserDetails.hasOwnProperty('id')
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Loads the user's account and author details into the application
+ * @returns {function(*)}
+ */
+export function loadCurrentAccount() {
+    return dispatch => {
+        if (navigator.userAgent.match(/Googlebot|facebookexternalhit|bingbot|Slackbot-LinkExpanding|Twitterbot/)) {
+            dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+            return Promise.resolve({});
+        } else {
+            dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
+
+            let currentAuthor = null;
+
+            // load UQL account (based on token)
+            return get(CURRENT_ACCOUNT_API())
+                .then(account => {
+                    if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
+                        return Promise.resolve(account);
+                    } else {
+                        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+                        return Promise.reject(new Error('Session expired. User is unauthorized.'));
+                    }
+                })
+                .then(accountResponse => {
+                    dispatch({
+                        type: actions.CURRENT_ACCOUNT_LOADED,
+                        payload: extendAccountDetails(accountResponse),
+                    });
+
+                    // if the UQL cookie times out, we want to log the user out
+                    const watchforAccountExpiry = setInterval(() => {
+                        if (
+                            getSessionCookie() === undefined ||
+                            getLibraryGroupCookie() === undefined ||
+                            sessionStorageShowsLoggedOut()
+                        ) {
+                            console.log('check cookie ', getSessionCookie());
+                            logout(true);
+                            clearInterval(watchforAccountExpiry);
+                        }
+                    }, 1000);
+
+                    // load current author details (based on token)
+                    dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
+                    return get(CURRENT_AUTHOR_API());
+                })
+                .then(currentAuthorResponse => {
+                    currentAuthor = currentAuthorResponse.data;
+                    dispatch({
+                        type: actions.CURRENT_AUTHOR_LOADED,
+                        payload: currentAuthor,
+                    });
+                    return null;
+                })
+                .catch(error => {
+                    if (!currentAuthor) {
+                        dispatch({
+                            type: actions.CURRENT_AUTHOR_FAILED,
+                            payload: error.message,
+                        });
+                    }
+                });
+        }
+    };
+}
+
+/**
+ * Loads the spotlight data
+ * @returns {function(*)}
+ */
+export function loadCurrentSpotlights() {
+    return dispatch => {
+        dispatch({ type: actions.SPOTLIGHTS_HOMEPAGE_LOADING });
+        return get(SPOTLIGHTS_API_CURRENT())
+            .then(spotlightsResponse => {
+                dispatch({
+                    type: actions.SPOTLIGHTS_HOMEPAGE_LOADED,
+                    payload: spotlightsResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
                     payload: error.message,
                 });
             });
@@ -282,29 +319,6 @@ export function loadLoans() {
             });
         };
     }
-}
-
-/**
- * Loads the computer availability data
- * @returns {function(*)}
- */
-export function loadCompAvail() {
-    return dispatch => {
-        dispatch({ type: actions.COMP_AVAIL_LOADING });
-        return get(COMP_AVAIL_API())
-            .then(availResponse => {
-                dispatch({
-                    type: actions.COMP_AVAIL_LOADED,
-                    payload: availResponse,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.COMP_AVAIL_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
 }
 
 /**
@@ -396,16 +410,6 @@ export function searcheSpaceIncompleteNTROPublications() {
             });
         };
     }
-}
-
-export function logout(reload = false) {
-    return dispatch => {
-        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-        if (!!reload) {
-            dispatch(loadLibHours());
-            dispatch(loadCompAvail());
-        }
-    };
 }
 
 export function clearSessionExpiredFlag() {
