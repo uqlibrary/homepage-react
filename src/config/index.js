@@ -5,7 +5,6 @@ export {
     AUTH_URL_LOGOUT,
     SESSION_COOKIE_NAME,
     SESSION_USER_GROUP_COOKIE_NAME,
-    STORAGE_ACCOUNT_KEYNAME,
     TOKEN_NAME,
 } from './general';
 
