@@ -4,13 +4,6 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
-const currentRetestList = [
-    { value: '3', label: '3 months' },
-    { value: '6', label: '6 months' },
-    { value: '12', label: '1 year' },
-    { value: '60', label: '5 years' },
-];
-
 const currentAssetOwnersList = [{ value: 'UQL', label: 'UQ Library' }];
 
 const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
@@ -45,7 +38,6 @@ const mapDispatchToProps = dispatch => {
     return {
         actions: bindActionCreators(actions, dispatch),
         defaultFormValues: DEFAULT_FORM_VALUES,
-        currentRetestList,
         currentAssetOwnersList,
         defaultNextTestDateValue: DEFAULT_NEXT_TEST_DATE_VALUE,
     };

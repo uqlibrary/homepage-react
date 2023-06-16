@@ -40,10 +40,15 @@ import testTag_user_UQPF from './data/records/test_tag_userUQPF';
 import testTag_dashboardOnLoad from './data/records/test_tag_dashboardOnLoad';
 import testTag_inspectionOnLoad from './data/records/test_tag_inspectionOnLoad';
 import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
+import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
-// import testTag_testDevices from './data/records/test_tag_test_devices';
+import testTag_inspectionDevices from './data/records/test_tag_inspection_devices';
 import testTag_assets from './data/records/test_tag_assets';
+// Test and Tag Asset Types
+import test_tag_asset_types from './data/records/test_tag_asset_types';
+import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
+
 import { accounts, currentAuthor } from './data';
 
 import {
@@ -774,7 +779,6 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        console.log('onget');
         return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_user_UQPF : testTag_user];
     })
 
@@ -789,6 +793,15 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(config => {
         return [200, config?.headers['X-Uql-Token'] === 'uqpf' ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
     })
+
+    // T&T SITES
+    .onGet(routes.TEST_TAG_SITE_API().apiUrl)
+    .reply(config => {
+        console.log('onget sites', testTag_siteList.data);
+        return [200, testTag_siteList];
+    })
+
+    // T&T BUILDINGS
 
     // T&T FLOORS
     .onGet(/test_and_tag\/building\/\d+\/current/)
@@ -806,6 +819,34 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, { data: testTag_roomList.data.find(room => room.floor_id === id) }];
     })
 
+    // T&T LOCATIONS
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+
+    // T&T MANAGE INSPECTION DEVICES
+    .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
+    .reply(() => {return [200, testTag_inspectionDevices]})
+    .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().apiUrl)
+    .reply(() => [200, {status: 'OK'}])
+    .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
+    .reply(() => [200, {status: 'OK'}])
+    .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
+    .reply(() => [200, {status: 'OK'}])
+
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)
     .reply(config => {
@@ -822,14 +863,6 @@ mock.onGet('exams/course/FREN1010/summary')
     })
 
     .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
-    // .reply(() => [200, {data: {
-    //     asset_status: 'FAILED',
-    //     asset_id_displayed:'UQL000298',
-    //     user_licence_number: '13962556',
-    //     action_date: '2022-11-16',
-    //     asset_next_test_due_date: '2023Nov16',
-    //     }}]
-    // )
     .reply(() => [
         200,
         {
@@ -861,10 +894,66 @@ mock.onGet('exams/course/FREN1010/summary')
         },
     ])
 
+    // Test and Tag Asset Types
+    .onGet(/test_and_tag\/onload\/assettype/)
+    .reply(() =>
+        [
+            200,
+            {
+                status: 'OK',
+                data: {
+                    "asset_types" : test_tag_asset_types.data,
+                }
+            }
+        ]
+    )
+    .onPost(routes.TEST_TAG_ADD_ASSET_TYPE_API().apiUrl)
+    .reply(() => [
+        200,
+        {
+            status: 'OK',
+        }
+    ])
+    .onPut(routes.TEST_TAG_SAVE_ASSETTYPE_API().apiUrl)
+    .reply(() => [
+        200,
+        {
+            status: 'OK',
+        }
+    ])
+    .onPost(routes.TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API().apiUrl)
+    .reply(() => [
+        200,
+        {
+            status: 'OK',
+            data: {
+                effected_assets: 1,
+                effected_asset_types: 1,
+            }
+
+        }
+    ])
+    .onDelete(/test_and_tag\/assettype\/4/)
+    .reply(() => {
+        return [200, {status: 'OK'}]
+    })
+    .onDelete(/test_and_tag\/assettype\/5/)
+    .reply(() => {
+        return [
+            400,
+            {
+                status: 'error',
+                message: '5 is a test error',
+            },
+        ];
+    })
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
     })
+    // PROMO PANEL API
     .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
     .reply(withDelay([200, {}]))
     .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))

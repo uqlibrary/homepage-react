@@ -206,13 +206,47 @@ export const PROMOPANEL_UNSCHEDULE_API = ({ id }) => ({
 export const TEST_TAG_USER_API = () => ({ apiUrl: 'test_and_tag/user' });
 export const TEST_TAG_ONLOAD_DASHBOARD_API = () => ({ apiUrl: 'test_and_tag/onload/dashboard' });
 export const TEST_TAG_ONLOAD_INSPECT_API = () => ({ apiUrl: 'test_and_tag/onload/inspect' });
-// export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
-export const TEST_TAG_FLOOR_API = buildingId => ({
-    apiUrl: `test_and_tag/building/${buildingId}/current`,
+
+export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
+export const TEST_TAG_FLOOR_API = id => ({
+    apiUrl: `test_and_tag/building/${id}/current`,
 });
-export const TEST_TAG_ROOM_API = floorId => ({
-    apiUrl: `test_and_tag/floor/${floorId}/current`,
+export const TEST_TAG_ROOM_API = id => ({
+    apiUrl: `test_and_tag/floor/${id}/current`,
 });
+
+export const TEST_TAG_ADD_LOCATION_API = type => ({ apiUrl: `test_and_tag/${type}` });
+export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test_and_tag/${type}/${id}` });
+
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });
 export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
 export const TEST_TAG_ASSETTYPE_ADD = () => ({ apiUrl: '/test_and_tag/assetType' });
+export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device/current' });
+export const TEST_TAG_ADD_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device' });
+export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test_and_tag/inspection_device/${id}` });
+
+/** TEST AND TAG ASSET TYPES **/
+// List Asset Types
+export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/onload/assettype' });
+// Add an asset type
+export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
+// Save an asset type (ID contained in payload)
+export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
+// Delete an Asset type (Reassigning assets to new asset type)
+export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype/reassign' });
+// Delete an Empty Asset Type
+export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/assettype/${id}` });
+
+/** TEST AND TAG INSPECTIONS REPORT */
+export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType }) => {
+    const urlParams = {
+        ...(!!locationId && !!locationType ? { [`${locationType}_id`]: locationId } : {}),
+        ...(!!period && !!periodType ? { period_length: period, period_type: periodType } : {}),
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = [...qs].length > 0;
+    const apiUrl = `test_and_tag/report/pending_inspections${hasParams ? `?${qs.toString()}` : ''}`;
+    return {
+        apiUrl,
+    };
+};

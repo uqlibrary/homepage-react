@@ -19,12 +19,14 @@ import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAu
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
-import { useForm, useValidation, useLocation } from '../utils/hooks';
+import { useForm, useValidation } from '../utils/hooks';
+import { useLocation } from '../../helpers/hooks';
 import locale from '../../testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
 import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
+
 const moment = require('moment');
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
@@ -145,7 +147,6 @@ const useStyles = makeStyles(theme => ({
 const Inspection = ({
     actions,
     defaultFormValues,
-    currentRetestList,
     defaultNextTestDateValue,
     assetsListError,
     inspectionConfig,
@@ -178,7 +179,7 @@ const Inspection = ({
                 ...defaultFormValues,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
-                room_id: location?.formRoomId ?? undefined,
+                room_id: location?.room ?? undefined,
                 action_date: formValues?.action_date ?? today,
                 inspection_device_id:
                     formValues?.inspection_device_id !== undefined
@@ -353,7 +354,6 @@ const Inspection = ({
                 actions={actions}
                 location={location}
                 resetForm={() => resetForm()}
-                currentRetestList={currentRetestList}
                 formValues={formValues}
                 selectedAsset={selectedAsset}
                 assignCurrentAsset={assignCurrentAsset}
@@ -414,7 +414,6 @@ const Inspection = ({
 Inspection.propTypes = {
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
-    currentRetestList: PropTypes.array,
     defaultNextTestDateValue: PropTypes.number,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,

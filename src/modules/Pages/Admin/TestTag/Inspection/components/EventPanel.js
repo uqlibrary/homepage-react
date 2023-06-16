@@ -6,19 +6,13 @@ import { Grid } from '@material-ui/core';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import Collapse from '@material-ui/core/Collapse';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import clsx from 'clsx';
 
 import locale from '../../testTag.locale';
+import LocationPicker from '../../SharedComponents/LocationPicker/LocationPicker';
 
 const moment = require('moment');
 const inputLabelProps = { shrink: true };
@@ -60,12 +54,12 @@ const EventPanel = ({
 
     const updateLocation = (update, useRoomId = false) => {
         setLocation(update);
-        handleChange('room_id')(useRoomId ? update.formRoomId : -1);
+        handleChange('room_id')(useRoomId ? update.room : -1);
     };
 
     useEffect(() => {
         if (!inspectionConfigLoading && !!inspectionConfig && inspectionConfig?.sites.length > 0) {
-            setLocation({ formSiteId: inspectionConfig.sites[0].site_id });
+            setLocation({ site: inspectionConfig.sites[0].site_id });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionConfig, inspectionConfigLoading]);
@@ -121,23 +115,66 @@ const EventPanel = ({
                             {pageLocale.form.event.location.title}
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+
+                    <LocationPicker
+                        siteList={inspectionConfig?.sites ?? []}
+                        siteListLoading={inspectionConfigLoading}
+                        buildingList={
+                            inspectionConfig?.sites?.find(site => site.site_id === location.site)?.buildings ?? []
+                        }
+                        buildingListLoading={inspectionConfigLoading}
+                        floorList={floorList?.floors ?? []}
+                        floorListLoading={floorListLoading}
+                        roomList={roomList?.rooms ?? []}
+                        roomListLoading={roomListLoading}
+                        actions={actions}
+                        location={location}
+                        locale={locale.pages.general.locationPicker}
+                        setLocation={updateLocation}
+                        inputProps={{
+                            site: {
+                                error: location.site === -1,
+                            },
+                            building: {
+                                required: hasInspection,
+                                error: hasInspection && location.site !== -1 && location.building === -1,
+                            },
+                            floor: {
+                                required: hasInspection,
+                                error:
+                                    hasInspection &&
+                                    location.site !== -1 &&
+                                    location.building !== -1 &&
+                                    location.floor === -1,
+                            },
+                            room: {
+                                required: hasInspection,
+                                error:
+                                    hasInspection &&
+                                    location.site !== -1 &&
+                                    location.building !== -1 &&
+                                    location.floor !== -1 &&
+                                    location.room === -1,
+                            },
+                        }}
+                    />
+                    {/* <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
                             <InputLabel shrink>{pageLocale.form.event.location.siteLabel}</InputLabel>
                             <Select
                                 id="testntag-form-siteid"
                                 data-testid="testntag-form-siteid"
                                 className={classes.formSelect}
-                                value={location.formSiteId === -1 ? '' : location.formSiteId}
+                                value={location.site === -1 ? '' : location.site}
                                 onChange={e => {
                                     updateLocation({
-                                        formSiteId: e.target.value,
-                                        formBuildingId: -1,
-                                        formFloorId: -1,
-                                        formRoomId: -1,
+                                        site: e.target.value,
+                                        building: -1,
+                                        floor: -1,
+                                        room: -1,
                                     });
                                 }}
-                                error={location.formSiteId === -1}
+                                error={location.site === -1}
                                 inputProps={{
                                     id: 'testntag-form-siteid-input',
                                     'data-testid': 'testntag-form-siteid-input',
@@ -172,39 +209,34 @@ const EventPanel = ({
                                 data-testid="testntag-form-buildingid"
                                 fullWidth
                                 options={
-                                    inspectionConfig?.sites?.find(site => site.site_id === location.formSiteId)
-                                        ?.buildings ?? []
+                                    inspectionConfig?.sites?.find(site => site.site_id === location.site)?.buildings ??
+                                    []
                                 }
                                 value={
                                     inspectionConfig?.sites
-                                        ?.find(site => site.site_id === location.formSiteId)
-                                        ?.buildings?.find(
-                                            building => building.building_id === location.formBuildingId,
-                                        ) ?? null
+                                        ?.find(site => site.site_id === location.site)
+                                        ?.buildings?.find(building => building.building_id === location.building) ??
+                                    null
                                 }
                                 onChange={(_, newValue) => {
                                     updateLocation({
-                                        formBuildingId: newValue.building_id,
-                                        formFloorId: -1,
-                                        formRoomId: -1,
+                                        building: newValue.building_id,
+                                        floor: -1,
+                                        room: -1,
                                     });
                                     actions.loadFloors(newValue.building_id);
                                 }}
                                 getOptionLabel={option =>
-                                    `${option.building_id_displayed ?? /* istanbul ignore next */ ''}${
-                                        option.building_id_displayed ? ' - ' : /* istanbul ignore next */ ''
-                                    }${option.building_name ?? /* istanbul ignore next */ ''}`
+                                    `${option.building_id_displayed ??  ''}${
+                                        option.building_id_displayed ? ' - ' :  ''
+                                    }${option.building_name ??  ''}`
                                 }
                                 renderInput={params => (
                                     <TextField
                                         {...params}
                                         {...pageLocale.form.event.location.building}
                                         required={hasInspection}
-                                        error={
-                                            hasInspection &&
-                                            location.formSiteId !== -1 &&
-                                            location.formBuildingId === -1
-                                        }
+                                        error={hasInspection && location.site !== -1 && location.building === -1}
                                         variant="standard"
                                         InputLabelProps={{
                                             ...inputLabelProps,
@@ -233,7 +265,7 @@ const EventPanel = ({
                                         }}
                                     />
                                 )}
-                                disabled={location.formSiteId === -1 || !!!inspectionConfig}
+                                disabled={location.site === -1 || !!!inspectionConfig}
                                 disableClearable
                                 loading={!!!inspectionConfig}
                             />
@@ -246,15 +278,13 @@ const EventPanel = ({
                                 data-testid="testntag-form-floorid"
                                 fullWidth
                                 options={floorList?.floors ?? []}
-                                value={
-                                    floorList?.floors?.find(floor => floor.floor_id === location.formFloorId) ?? null
-                                }
+                                value={floorList?.floors?.find(floor => floor.floor_id === location.floor) ?? null}
                                 onChange={(_, newValue) => {
-                                    updateLocation({ formFloorId: newValue.floor_id, formRoomId: -1 });
+                                    updateLocation({ floor: newValue.floor_id, room: -1 });
                                     actions.loadRooms(newValue.floor_id);
                                 }}
                                 getOptionLabel={option =>
-                                    option.floor_id_displayed ?? /* istanbul ignore next */ option
+                                    option.floor_id_displayed ??  option
                                 }
                                 renderInput={params => (
                                     <TextField
@@ -263,9 +293,9 @@ const EventPanel = ({
                                         required={hasInspection}
                                         error={
                                             hasInspection &&
-                                            location.formSiteId !== -1 &&
-                                            location.formBuildingId !== -1 &&
-                                            location.formFloorId === -1
+                                            location.site !== -1 &&
+                                            location.building !== -1 &&
+                                            location.floor === -1
                                         }
                                         variant="standard"
                                         InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-floorid-input' }}
@@ -292,7 +322,7 @@ const EventPanel = ({
                                         }}
                                     />
                                 )}
-                                disabled={location.formBuildingId === -1 || floorListLoading}
+                                disabled={location.building === -1 || floorListLoading}
                                 disableClearable
                                 loading={!!floorListLoading}
                             />
@@ -305,11 +335,11 @@ const EventPanel = ({
                                 data-testid="testntag-form-roomid"
                                 fullWidth
                                 options={roomList?.rooms ?? []}
-                                value={roomList?.rooms?.find(room => room.room_id === location.formRoomId) ?? null}
+                                value={roomList?.rooms?.find(room => room.room_id === location.room) ?? null}
                                 onChange={(_, newValue) => {
-                                    updateLocation({ formRoomId: newValue.room_id }, true);
+                                    updateLocation({ room: newValue.room_id }, true);
                                 }}
-                                getOptionLabel={option => option.room_id_displayed ?? /* istanbul ignore next */ option}
+                                getOptionLabel={option => option.room_id_displayed ??  option}
                                 renderInput={params => (
                                     <TextField
                                         {...params}
@@ -317,10 +347,10 @@ const EventPanel = ({
                                         required={hasInspection}
                                         error={
                                             hasInspection &&
-                                            location.formSiteId !== -1 &&
-                                            location.formBuildingId !== -1 &&
-                                            location.formFloorId !== -1 &&
-                                            location.formRoomId === -1
+                                            location.site !== -1 &&
+                                            location.building !== -1 &&
+                                            location.floor !== -1 &&
+                                            location.room === -1
                                         }
                                         variant="standard"
                                         InputLabelProps={{ ...inputLabelProps, htmlFor: 'testntag-form-roomid-input' }}
@@ -347,12 +377,12 @@ const EventPanel = ({
                                         }}
                                     />
                                 )}
-                                disabled={location.formFloorId === -1 || roomListLoading}
+                                disabled={location.floor === -1 || roomListLoading}
                                 disableClearable
                                 loading={!!roomListLoading}
                             />
                         </FormControl>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Collapse>
         </StandardCard>

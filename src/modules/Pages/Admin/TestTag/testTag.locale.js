@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import { pathConfig } from '../../../../config/pathConfig';
 
 import InspectionIcon from '@material-ui/icons/Search';
 import UsersIcon from '@material-ui/icons/People';
@@ -8,19 +9,41 @@ import AssetTypeIcon from '@material-ui/icons/DevicesOther';
 import LocationIcon from '@material-ui/icons/MyLocation';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
-import OutForRepairIcon from '@material-ui/icons/ExitToApp';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
 import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
 
 import { PERMISSIONS } from './config/auth';
 
 export default {
+    config: {
+        monthsOptions: [
+            { value: '3', label: '3 months' },
+            { value: '6', label: '6 months' },
+            { value: '12', label: '1 year' },
+            { value: '60', label: '5 years' },
+        ],
+    },
     pages: {
         general: {
             loading: 'Loading...',
             pageTitle: 'UQ Asset Test and Tag',
             checkingAuth: 'Retrieving user details...',
             pageUnavailable: 'Page unavailable',
+            locationPicker: {
+                site: {
+                    label: 'Site',
+                    labelAll: 'All sites',
+                },
+                building: {
+                    label: 'Building',
+                    labelAll: 'All buildings',
+                },
+                floor: {
+                    label: 'Floor',
+                    labelAll: 'All floors',
+                },
+                room: { label: 'Room', labelAll: 'All rooms' },
+            },
         },
         dashboard: {
             config: {},
@@ -52,18 +75,18 @@ export default {
                         {
                             title: 'ASSET TYPES',
                             icon: <AssetTypeIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanageassettypes}?user=uqtesttag`,
                         },
                         {
                             title: 'LOCATIONS',
                             icon: <LocationIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanagelocations}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTION DEVICES',
                             icon: <InspectionDeviceIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanageinspectiondevices}?user=uqtesttag`,
                         },
                         {
                             title: 'BULK ASSET UPDATE',
@@ -88,15 +111,11 @@ export default {
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
                             icon: <InspectionIcon />,
-                            path: '#',
+                            permissions: [PERMISSIONS.can_see_reports],
+                            path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
                         },
                         {
-                            title: 'ASSETS OUT FOR REPAIR',
-                            icon: <OutForRepairIcon />,
-                            path: '#',
-                        },
-                        {
-                            title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
+                            title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: '#',
                         },
@@ -144,14 +163,6 @@ export default {
                     },
                     location: {
                         title: 'Location',
-                        siteLabel: 'Site',
-                        building: {
-                            label: 'Building',
-                        },
-                        floor: {
-                            label: 'Floor',
-                        },
-                        room: { label: 'Room' },
                     },
                 },
                 asset: {
@@ -277,6 +288,306 @@ export default {
                     notApplicable: 'N/A',
                     outOfService: 'OUT OF SERVICE',
                     tagPlacedBy: 'TAG PLACED BY:',
+                },
+            },
+        },
+        manage: {
+            config: {
+                dateFormat: 'YYYY-MM-DD',
+            },
+            assetTypes: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Type Management',
+                        icon: <AssetTypeIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Asset Types for ${dept}`,
+                    requiredText: 'All fields are required unless otherwise indicated.',
+                    addButtonLabel: 'Add Asset Type',
+                },
+                addAsset: {
+                    title: 'Add New Asset Type',
+                    cancelButtonLabel: 'Cancel',
+                    confirmButtonLabel: 'Add',
+                },
+                editAsset: {
+                    title: 'Edit Asset Type',
+                    cancelButtonLabel: 'Cancel',
+                    confirmButtonLabel: 'Update',
+                },
+                deleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to remove this Asset Type?',
+                    confirmationTitle: 'Remove Unused Asset Type',
+                },
+                snackbars: {
+                    loadFailed: error => `Error loading Asset Types. ${error}`,
+                    addSuccess: 'Asset type added',
+                    addFailed: error => `Error adding Asset Type. ${error}`,
+                    updateSuccess: 'Asset type updated',
+                    updateFail: error => `Error updating Asset Type. ${error}`,
+                    reallocateSuccess: response =>
+                        `Asset Type Deleted and reallocated. ${response.effected_assets} asset reallocated, and ${response.effected_asset_types} asset type(s) removed`,
+                    reallocateFail: error => `Error Reallocating Asset Type. ${error}`,
+                    deleteSuccess: 'Asset Type Deleted',
+                    deleteFail: error => `Error deleting asset types. ${error}`,
+                },
+                form: {
+                    locationTypeTitle: 'Asset type',
+                    actions: 'Actions',
+                    addLocationButton: 'Add Asset type',
+                    columns: {
+                        assettype: {
+                            asset_type_id: {
+                                label: 'Id',
+                            },
+                            asset_type_name: {
+                                label: 'Asset Type Name',
+                            },
+                            asset_type_class: {
+                                label: 'Class',
+                            },
+                            asset_type_power_rating: {
+                                label: 'Power Rating',
+                            },
+                            asset_type: {
+                                label: 'Type',
+                            },
+                            asset_type_notes: {
+                                label: 'Notes',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Add new ${type}`,
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Edit ${type}`,
+                },
+                actionDialogue: {
+                    confirmationTitle: 'Delete and Reassign',
+                    deleteReassignTargetPrompt: target => `Delete ${target ?? 'NONE'} and reassign all assets to:`,
+                    newAssetTypePrompt: 'New Asset Type',
+                    deleteReassignWarningPrompt: count => `This will effect ${count ?? 0} assets`,
+                    cancelButtonLabel: 'Cancel',
+                    confirmButtonLabel: 'Proceed',
+                },
+            },
+            locations: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage Locations',
+                        icon: <LocationIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Locations for ${dept}`,
+                },
+                form: {
+                    title: 'Filter',
+                    actions: 'Actions',
+                    addLocationButton: location => `Add ${location}`,
+                    columns: {
+                        site: {
+                            site_id: {
+                                label: 'Site ID',
+                            },
+                            site_name: {
+                                label: 'Description',
+                            },
+                            site_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        building: {
+                            building_id: {
+                                label: 'Building ID',
+                            },
+                            building_location: {
+                                label: 'Location',
+                            },
+                            building_name: {
+                                label: 'Description',
+                            },
+                            building_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        floor: {
+                            floor_id: {
+                                label: 'Floor ID',
+                            },
+                            floor_location: {
+                                label: 'Location',
+                            },
+                            floor_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                        room: {
+                            room_id: {
+                                label: 'Room ID',
+                            },
+                            room_location: {
+                                label: 'Location',
+                            },
+                            room_description: {
+                                label: 'Description',
+                            },
+                            room_id_displayed: {
+                                label: 'Display name',
+                            },
+                            asset_count: {
+                                label: 'Usage',
+                            },
+                        },
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Add new ${type}`,
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: type => `Edit ${type}`,
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to delete this Location?',
+                    confirmationTitle: 'Delete unused Location',
+                },
+                alerts: {
+                    addSuccess: location => `${location} added successfully`,
+                    addFail: location => `${location} could not be saved`,
+                    updateSuccess: location => `${location} updated successfully`,
+                    updateFail: location => `${location} could not be updated`,
+                    deleteSuccess: location => `${location} deleted successfully`,
+                    deleteFail: location => `${location} could not be deleted`,
+                },
+            },
+            inspectiondevices: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage Inspection Devices',
+                        icon: <InspectionDeviceIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Inspection Devices for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    addDeviceButton: 'Add new device',
+                    columns: {
+                        device_id: {
+                            label: 'Device ID',
+                        },
+                        device_model_name: {
+                            label: 'Model name',
+                        },
+                        device_serial_number: {
+                            label: 'Serial',
+                        },
+                        device_department: {
+                            label: 'Department',
+                        },
+                        device_calibrated_date_last: {
+                            label: 'Last calibrated',
+                        },
+                        device_calibrated_by_last: {
+                            label: 'Last calibrated by',
+                        },
+                        device_calibration_due_date: {
+                            label: 'Next calibration',
+                        },
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Add new device',
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit device',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to delete this device?',
+                    confirmationTitle: 'Delete device',
+                },
+                alerts: {
+                    addSuccess: 'Device added successfully',
+                    addFail: 'Device could not be saved',
+                    updateSuccess: 'Device updated successfully',
+                    updateFail: 'Device could not be updated',
+                    deleteSuccess: 'Device deleted successfully',
+                    deleteFail: 'Device could not be deleted',
+                },
+            },
+        },
+        report: {
+            config: {
+                dateFormat: 'YYYY-MM-DD HH:mm',
+                dateFormatNoTime: 'YYYY-MM-DD',
+                dateFormatDisplay: 'Do MMMM, YYYY',
+            },
+            inspectionsDue: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Inspections Due',
+                        icon: <InspectionIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Asset Inspections Due report for ${dept}`,
+                },
+                form: {
+                    title: 'Filter',
+                    columns: {
+                        asset_barcode: {
+                            label: 'Barcode',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type',
+                        },
+                        asset_test_date: {
+                            label: 'Last test',
+                        },
+                        asset_next_test_due_date: {
+                            label: 'Next test',
+                        },
+                        asset_location: {
+                            label: 'Location',
+                        },
+                    },
+                    filterToDateLabel: 'Within date range',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
                 },
             },
         },
