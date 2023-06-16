@@ -26,7 +26,6 @@ const useStyles = makeStyles(
 );
 
 const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClick, handleDeleteClick }) => {
-    console.log('Row', api, id, withActions, handleEditClick, handleDeleteClick);
     const classes = useStyles();
 
     const onEditClick = event => {

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
@@ -7,10 +7,12 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { GridFooterContainer } from '@mui/x-data-grid';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import FilterDialog from './FilterDialog';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
@@ -35,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const transformRow = row => {
+    console.log('>>ROW', row);
     return row.map(line => {
         if (!!line?.asset_location) return line;
         return {
@@ -52,11 +55,42 @@ export const transformRow = row => {
     });
 };
 
+const FooterBar = ({ nextLabel, clearLabel, onClearClick, onNextClick }) => {
+    FooterBar.propTypes = {
+        nextLabel: PropTypes.string.isRequired,
+        clearLabel: PropTypes.string.isRequired,
+        onClearClick: PropTypes.func.isRequired,
+        onNextClick: PropTypes.func.isRequired,
+    };
+
+    return (
+        <GridFooterContainer>
+            <Button
+                color="primary"
+                onClick={onClearClick}
+                variant="outlined"
+                id="gridFooterClearBtn"
+                data-testid="gridFooterClearBtn"
+            >
+                {clearLabel}
+            </Button>
+            <Button
+                color="primary"
+                onClick={onNextClick}
+                variant="contained"
+                id="gridFooterNextBtn"
+                data-testid="gridFooterNextBtn"
+            >
+                {nextLabel}
+            </Button>
+        </GridFooterContainer>
+    );
+};
+
 const BulkAssetUpdate = ({ defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
     const classes = useStyles();
-    const { user } = useSelector(state => state.get('testTagUserReducer'));
     const list = useObjectList([], transformRow);
 
     const assignAssetDefaults = () => ({ ...defaultFormValues });
@@ -64,6 +98,12 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
     });
+
+    useEffect(() => {
+        console.log('effect', list.data);
+        handleChange('asset_list')(list.data);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [list.data]);
 
     const handleSearchAssetIdChange = useCallback(
         newValue => {
@@ -76,11 +116,13 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
     const resetForm = () => {
         const newFormValues = assignAssetDefaults();
         resetFormValues(newFormValues);
+        list.clear();
     };
 
     const handleDeleteClick = useCallback(
         ({ id, api }) => {
             const row = api.getRow(id);
+            console.log(row, list);
             list.deleteWith('asset_id', row.asset_id);
         },
         [list],
@@ -91,6 +133,10 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
         locale: pageLocale.form.columns,
         handleDeleteClick,
     });
+
+    const handleStepButton = e => {
+        console.log('handleStepButton', e);
+    };
 
     // const { location, setLocation } = useLocation();
     return (
@@ -106,7 +152,7 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                             <AssetSelector
                                 id="assetId"
                                 locale={stepOneLocale}
-                                user={user?.department}
+                                masked={false}
                                 classNames={{ formControl: classes.formControl }}
                                 onChange={handleSearchAssetIdChange}
                                 validateAssetId={isValidAssetId}
@@ -144,10 +190,20 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                                 rowId={'asset_id'}
                                 classes={{ root: classes.gridRoot }}
                                 handleDeleteClick={handleDeleteClick}
+                                components={{ Footer: FooterBar }}
+                                componentsProps={{
+                                    footer: {
+                                        nextLabel: pageLocale.form.buttonBar.next,
+                                        clearLabel: pageLocale.form.buttonBar.clear,
+                                        onClearClick: resetForm,
+                                        onNextClick: handleStepButton,
+                                    },
+                                }}
                             />
                         </Grid>
                     </Grid>
                 </StandardCard>
+                <FilterDialog locale={pageLocale.form.filterDialog} isOpen />
             </div>
         </StandardAuthPage>
     );

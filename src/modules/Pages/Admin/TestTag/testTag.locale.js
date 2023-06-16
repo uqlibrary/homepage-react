@@ -544,6 +544,25 @@ export default {
                         asset_location: { label: 'Location' },
                         asset_status: { label: 'Status' },
                     },
+                    buttonBar: {
+                        clear: 'Clear',
+                        next: 'Next',
+                        previous: 'Back',
+                        submit: 'Bulk Update',
+                    },
+                    filterDialog: {
+                        title: 'Select assets by feature',
+                        button: {
+                            cancel: 'Cancel',
+                            submit: 'Add selected',
+                        },
+                        columns: {
+                            asset_id_displayed: { label: 'Asset ID' },
+                            asset_type_name: { label: 'Type' },
+                            asset_location: { label: 'Location' },
+                            asset_status: { label: 'Status' },
+                        },
+                    },
                     step: {
                         one: {
                             title: 'Step 1: Choose assets to update in bulk',
@@ -552,7 +571,7 @@ export default {
                             assetSelector: {
                                 label: 'Asset ID',
                                 helperText: 'Scan or enter a new ID to add',
-                                placeholder: 'Enter at least 3 characters',
+                                placeholder: 'Enter at least 5 characters',
                             },
                             button: {
                                 findAndAdd: 'Find and add by feature',

@@ -21,6 +21,7 @@ export const useForm = (
     const [formValues, setFormValues] = useState({ ...defaultValues });
 
     const handleChange = prop => event => {
+        console.log({ prop, event });
         let propValue = event?.target?.value ?? event;
         if (prop.indexOf('date') > -1) {
             propValue = moment(propValue).format(defaultDateFormat);
@@ -41,6 +42,7 @@ export const useForm = (
 export const useObjectList = (list = [], transform) => {
     const [data, _setData] = useState(!!transform ? transform(list) : list);
 
+    console.log('useObjectlist', data);
     const setData = data => _setData(!!transform ? transform(data) : data);
 
     const addAt = (index, item) => {
