@@ -558,10 +558,13 @@ export default {
                         },
                         form: {
                             columns: {
-                                asset_id_displayed: { label: 'Asset ID' },
+                                asset_barcode: { label: 'Barcode' },
                                 asset_type_name: { label: 'Type' },
-                                asset_location: { label: 'Location' },
+                                asset_location: { label: 'Last Room ID' },
                                 asset_status: { label: 'Status' },
+                            },
+                            assetType: {
+                                label: 'Asset type',
                             },
                         },
                     },

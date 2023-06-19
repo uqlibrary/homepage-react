@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -42,6 +43,7 @@ const LocationPicker = ({
     inputProps = {},
 }) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const divisor = 4 - hide.length;
     const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
     return (
@@ -65,7 +67,7 @@ const LocationPicker = ({
                                 floor: -1,
                                 room: -1,
                             });
-                            actions.clearFloors();
+                            dispatch(actions.clearFloors());
                         }}
                         getOptionLabel={option =>
                             `${option.site_id_displayed ?? /* istanbul ignore next */ ''}${
@@ -131,9 +133,9 @@ const LocationPicker = ({
                                     room: -1,
                                 });
 
-                                actions.clearFloors();
+                                dispatch(actions.clearFloors());
                                 if (newValue.building_id !== -1) {
-                                    actions.loadFloors(newValue.building_id);
+                                    dispatch(actions.loadFloors(newValue.building_id));
                                 }
                             }}
                             getOptionLabel={option =>
@@ -198,8 +200,8 @@ const LocationPicker = ({
                             onChange={(_, newValue) => {
                                 setLocation({ floor: newValue.floor_id, room: -1 });
 
-                                actions.clearRooms();
-                                if (newValue.floor_id !== -1) actions.loadRooms(newValue.floor_id);
+                                dispatch(actions.clearRooms());
+                                if (newValue.floor_id !== -1) dispatch(actions.loadRooms(newValue.floor_id));
                             }}
                             getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
                             renderInput={params => (

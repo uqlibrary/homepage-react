@@ -7,8 +7,9 @@ import {
     TEST_TAG_FLOOR_API,
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
+    TEST_TAG_ASSETS_MINE_API,
     TEST_TAG_ASSET_ACTION,
-    TEST_TAG_ONLOAD_ASSETTYPE_API,
+    TEST_TAG_ASSETTYPE_API,
     TEST_TAG_SAVE_ASSETTYPE_API,
     TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API,
     TEST_TAG_ADD_ASSET_TYPE_API,
@@ -270,6 +271,31 @@ export function clearAssets() {
         dispatch({ type: actions.TESTTAG_ASSETS_CLEAR });
     };
 }
+export function loadAssetsMine(filters) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_MINE_LOADING });
+        return get(TEST_TAG_ASSETS_MINE_API(filters))
+            .then(response => {
+                console.log('>>>>>', response.data?.list);
+                dispatch({
+                    type: actions.TESTTAG_ASSETS_MINE_LOADED,
+                    payload: response.data?.list ?? [],
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSETS_MINE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function clearCurrentAssets() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_MINE_CLEAR });
+    };
+}
 
 export function saveInspection(request) {
     return dispatch => {
@@ -412,7 +438,7 @@ export function deleteInspectionDevice(id) {
 export function loadAssetTypes() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_LOADING });
-        return get(TEST_TAG_ONLOAD_ASSETTYPE_API())
+        return get(TEST_TAG_ASSETTYPE_API())
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,

@@ -48,6 +48,7 @@ import testTag_assets from './data/records/test_tag_assets';
 // Test and Tag Asset Types
 import test_tag_asset_types from './data/records/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
+import test_tag_assets_mine from './data/records/test_tag_assets_mine';
 
 import { accounts, currentAuthor } from './data';
 
@@ -865,7 +866,7 @@ mock.onGet('exams/course/FREN1010/summary')
         },
     ])
     // Test and Tag Asset Types
-    .onGet(/test_and_tag\/onload\/assettype/)
+    .onGet(routes.TEST_TAG_ASSETTYPE_API().apiUrl)
     .reply(() => 
         [
             200,
@@ -877,6 +878,19 @@ mock.onGet('exams/course/FREN1010/summary')
             }
         ]
     )
+    // Test and Tag Asset Types OLD
+    // .onGet(routes.TEST_TAG_ONLOAD_ASSETTYPE_API().apiUrl)
+    // .reply(() => 
+    //     [
+    //         200,
+    //         {
+    //             status: 'OK',
+    //             data: {
+    //                 "asset_types" : test_tag_asset_types.data, 
+    //             }
+    //         }
+    //     ]
+    // )
     .onPost(routes.TEST_TAG_ADD_ASSET_TYPE_API().apiUrl)
     .reply(() => [
         200,
@@ -919,6 +933,8 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
+    .onGet(routes.TEST_TAG_ASSETS_MINE_API({}).apiUrl)
+    .reply(() => [200, test_tag_assets_mine])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

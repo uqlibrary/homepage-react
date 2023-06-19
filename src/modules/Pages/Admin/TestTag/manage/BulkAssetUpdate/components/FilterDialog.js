@@ -1,72 +1,109 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 
 import * as actions from 'data/actions';
 
+import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
+import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 
 export const useStyles = makeStyles(theme => ({
-    alternateActionButtonClass: {
-        color: theme.palette.white.main,
-        backgroundColor: theme.palette.warning.main,
-        '&:hover': {
-            backgroundColor: theme.palette.warning.dark,
-        },
-    },
-    alertPanel: {
-        marginTop: 10,
-    },
-    actionButtons: {
-        marginTop: 10,
-    },
     dialogPaper: {
         minHeight: '30vh',
         maxHeight: '50vh',
     },
+    gridRoot: {
+        border: 0,
+    },
 }));
 
-export const FilterDialog = ({
-    id,
-    isOpen = false,
-    isBusy = false,
-    locationLocale,
-    locale,
-    config,
-    onCancel,
-    onProceed,
-}) => {
-    const classes = useStyles();
-    const { row, setRow } = useDataTableRow();
+export const transformRow = row => {
+    return row.map(line => {
+        if (!!line?.asset_location) return line;
+        return {
+            ...line,
+            asset_id_displayed: line?.asset_barcode ?? '',
+            asset_location: line?.asset_room_id_last_seen ?? '',
+        };
+    });
+};
 
-    const store = useSelector(state => state.get('testTagLocationReducer'));
+const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, locale, config, onCancel, onAction }) => {
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    const { row, setRow } = useDataTableRow([], transformRow);
+    const [assetTypeId, setAssetTypeId] = useState('');
+    const [selectedAssets, setSelectedAssets] = useState([]);
+    const { assetsMineList, assetsMineListLoading } = useSelector(state => state.get('testTagAssetsReducer'));
+    const locationStore = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
     const { selectedLocation } = useSelectLocation({
         location,
         setLocation,
-        setRow,
         actions,
-        store,
+        store: locationStore,
     });
     const { columns } = useDataTableColumns({
         config,
         locale: locale.form.columns,
     });
+    useEffect(() => {
+        console.log('effect setrow', assetsMineList, assetsMineListLoading);
+        if (!assetsMineListLoading) setRow(assetsMineList);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assetsMineList, assetsMineListLoading]);
+
+    useEffect(() => {
+        // locationId, locationType, assetTypeId
+        if (isOpen && !isBusy) {
+            dispatch(
+                actions.loadAssetsMine({
+                    ...(selectedLocation === 'floor' || selectedLocation === 'room'
+                        ? {
+                              locationType: selectedLocation,
+                              locationId: selectedLocation === 'room' ? location.room : location.floor,
+                          }
+                        : {}),
+                    ...(!!assetTypeId ? { assetTypeId } : {}),
+                }),
+            );
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedLocation, location.floor, location.room, assetTypeId, isOpen, isBusy]);
 
     useEffect(() => {
         console.log(location, selectedLocation);
-    }, [location, selectedLocation]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location]);
+
+    const handleCancelAction = () => {
+        console.log('cancel');
+        onCancel?.();
+    };
+    const handleAddAction = () => {
+        console.log('add');
+        onAction?.(selectedAssets);
+    };
+    const handleAssetTypeChange = id => {
+        console.log('handleAssetTypeChange', id);
+        setAssetTypeId(id);
+    };
+    const handleAssetSelectionChange = selectedRowIds => {
+        console.log('handleAssetSelectionChange', selectedRowIds);
+        const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_id));
+        setSelectedAssets(assets);
+    };
 
     return (
         <Dialog
@@ -86,35 +123,39 @@ export const FilterDialog = ({
                         locale={locationLocale}
                     />
                 </Grid>
-                <Grid container spacing={4} className={classes.actionButtons}>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-start">
-                        <Button
-                            variant="outlined"
-                            onClick={onCancel}
-                            id="actionDialog-cancelButton"
-                            data-testid="actionDialog-cancelButton"
-                            color={'default'}
-                            disabled={!!isBusy}
-                        >
-                            {locale.button.cancel}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-end">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={onProceed}
-                            id="actionDialog-proceedButton"
-                            data-testid="actionDialog-proceedButton"
-                            disabled={!!isBusy}
-                        >
-                            {locale.button.submit}
-                        </Button>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} padding={3} style={{ flex: 1 }}>
+                        <AssetTypeSelector
+                            id="bulkAssetUpdateFilterDialog"
+                            locale={locale.form.assetType}
+                            actions={actions}
+                            onChange={handleAssetTypeChange}
+                            validateAssetTypeId={isValidAssetTypeId}
+                            required={false}
+                        />
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item padding={3} style={{ flex: 1 }}>
-                        <DataTable rows={row} columns={columns} rowId={'asset_id'} />
+                        <DataTable
+                            rows={row}
+                            columns={columns}
+                            rowId={'asset_id'}
+                            classes={{ root: classes.gridRoot }}
+                            components={{ Footer: FooterBar }}
+                            componentsProps={{
+                                footer: {
+                                    id: 'bulkAssetUpdateFilterDialog',
+                                    actionLabel: locale.button.submit,
+                                    altLabel: locale.button.cancel,
+                                    onAltClick: handleCancelAction,
+                                    onActionClick: handleAddAction,
+                                },
+                            }}
+                            checkboxSelection
+                            disableRowSelectionOnClick
+                            onSelectionModelChange={handleAssetSelectionChange}
+                        />
                     </Grid>
                 </Grid>
             </DialogContent>
@@ -130,7 +171,7 @@ FilterDialog.propTypes = {
     config: PropTypes.object.isRequired,
     id: PropTypes.string,
     onCancel: PropTypes.func,
-    onProceed: PropTypes.func,
+    onAction: PropTypes.func,
     isBusy: PropTypes.bool,
 };
 

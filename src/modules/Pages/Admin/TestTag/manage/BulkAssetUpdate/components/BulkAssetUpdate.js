@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { GridFooterContainer } from '@mui/x-data-grid';
 import * as actions from 'data/actions';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -19,6 +18,7 @@ import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import { useForm, useObjectList } from '../../../helpers/hooks';
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
+import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
@@ -56,38 +56,6 @@ export const transformRow = row => {
     });
 };
 
-const FooterBar = ({ nextLabel, clearLabel, onClearClick, onNextClick }) => {
-    FooterBar.propTypes = {
-        nextLabel: PropTypes.string.isRequired,
-        clearLabel: PropTypes.string.isRequired,
-        onClearClick: PropTypes.func.isRequired,
-        onNextClick: PropTypes.func.isRequired,
-    };
-
-    return (
-        <GridFooterContainer>
-            <Button
-                color="primary"
-                onClick={onClearClick}
-                variant="outlined"
-                id="gridFooterClearBtn"
-                data-testid="gridFooterClearBtn"
-            >
-                {clearLabel}
-            </Button>
-            <Button
-                color="primary"
-                onClick={onNextClick}
-                variant="contained"
-                id="gridFooterNextBtn"
-                data-testid="gridFooterNextBtn"
-            >
-                {nextLabel}
-            </Button>
-        </GridFooterContainer>
-    );
-};
-
 const BulkAssetUpdate = ({ defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
@@ -95,7 +63,7 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
     const list = useObjectList([], transformRow);
 
     const assignAssetDefaults = () => ({ ...defaultFormValues });
-
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
     });
@@ -139,6 +107,15 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
         console.log('handleStepButton', e);
     };
 
+    const openDialog = () => setIsDialogOpen(true);
+    const closeDialog = () => setIsDialogOpen(false);
+    const handleDialogClose = () => closeDialog();
+    const handleDialogAction = data => {
+        closeDialog();
+        console.log('handleDialogAction', data);
+        list.addStart(data);
+    };
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -177,6 +154,7 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                                 id="addByFeatureButton"
                                 data-testid="addByFeatureButton"
                                 color="primary"
+                                onClick={openDialog}
                             >
                                 {stepOneLocale.button.findAndAdd}
                             </Button>
@@ -193,10 +171,11 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                                 components={{ Footer: FooterBar }}
                                 componentsProps={{
                                     footer: {
-                                        nextLabel: pageLocale.form.buttonBar.next,
-                                        clearLabel: pageLocale.form.buttonBar.clear,
-                                        onClearClick: resetForm,
-                                        onNextClick: handleStepButton,
+                                        id: 'bulkAssetUpdate',
+                                        actionLabel: pageLocale.form.buttonBar.next,
+                                        altLabel: pageLocale.form.buttonBar.clear,
+                                        onAltClick: resetForm,
+                                        onActionClick: handleStepButton,
                                     },
                                 }}
                             />
@@ -208,7 +187,9 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                     locationLocale={locale.pages.general.locationPicker}
                     minContentWidth={'100%'}
                     config={config.filterDialog}
-                    isOpen
+                    isOpen={isDialogOpen}
+                    onCancel={handleDialogClose}
+                    onAction={handleDialogAction}
                 />
             </div>
         </StandardAuthPage>
