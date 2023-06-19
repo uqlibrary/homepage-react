@@ -183,7 +183,7 @@ const InspectionsByLicencedUser = ({
     };
     /* EFFECTS */
     useEffect(() => {
-        if (licencedUsersLoaded && (!!!licencedUsers || licencedUsers.length < 1)) {
+        if (!!!licencedUsers || licencedUsers.length < 1) {
             actions.getLicencedUsers();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
