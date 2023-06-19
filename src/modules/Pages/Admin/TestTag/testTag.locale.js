@@ -67,7 +67,7 @@ export default {
                     title: 'MANAGEMENT',
                     links: [
                         {
-                            title: 'USERS',
+                            title: 'X USERS',
                             icon: <UsersIcon />,
                             permissions: [PERMISSIONS.can_admin],
                             path: '#',
@@ -89,12 +89,12 @@ export default {
                             path: `${pathConfig.admin.testntagmanageinspectiondevices}?user=uqtesttag`,
                         },
                         {
-                            title: 'BULK ASSET UPDATE',
+                            title: 'X BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
                             path: '#',
                         },
                         {
-                            title: 'INSPECTIONS',
+                            title: 'X INSPECTIONS',
                             icon: <InspectionIcon />,
                             path: '#',
                         },
@@ -104,7 +104,7 @@ export default {
                     title: 'REPORTING',
                     links: [
                         {
-                            title: 'INSPECTION DEVICES DUE RECALIBRATION',
+                            title: 'X INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
                             path: '#',
                         },
@@ -115,12 +115,12 @@ export default {
                             path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
                         },
                         {
-                            title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
+                            title: 'X ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: '#',
                         },
                         {
-                            title: 'INSPECTIONS BY LICENSED USER',
+                            title: 'X INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
                             path: '#',
                             permissions: [PERMISSIONS.can_admin],
