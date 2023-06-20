@@ -5,9 +5,6 @@ import { useSelector } from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import * as actions from 'data/actions';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 

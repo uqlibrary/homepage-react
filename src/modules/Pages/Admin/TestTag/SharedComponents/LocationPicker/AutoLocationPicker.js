@@ -27,7 +27,7 @@ const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [hasAllOption, siteList],
     );
-    // HERE - try to fix the issue of getting the location picker to render.
+
     const buildingList = siteList?.find(site => site.site_id === location.site)?.buildings ?? [];
     const fullBuildingList = !!hasAllOption
         ? [{ building_id: -1, building_id_displayed: locale.building.labelAll }, ...buildingList]
@@ -50,8 +50,6 @@ const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [roomList, hasAllOption],
     );
-
-    console.log({ fullSiteList, fullBuildingList, fullFloorList, fullRoomList });
 
     return (
         <LocationPicker

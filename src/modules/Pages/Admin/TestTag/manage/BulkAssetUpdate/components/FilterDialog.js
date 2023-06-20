@@ -48,7 +48,7 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
     const { assetsMineList, assetsMineListLoading } = useSelector(state => state.get('testTagAssetsReducer'));
     const locationStore = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
-    const { selectedLocation } = useSelectLocation({
+    const { lastSelectedLocation } = useSelectLocation({
         location,
         setLocation,
         actions,
@@ -69,10 +69,10 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
         if (isOpen && !isBusy) {
             dispatch(
                 actions.loadAssetsMine({
-                    ...(selectedLocation === 'floor' || selectedLocation === 'room'
+                    ...(lastSelectedLocation === 'floor' || lastSelectedLocation === 'room'
                         ? {
-                              locationType: selectedLocation,
-                              locationId: selectedLocation === 'room' ? location.room : location.floor,
+                              locationType: lastSelectedLocation,
+                              locationId: lastSelectedLocation === 'room' ? location.room : location.floor,
                           }
                         : {}),
                     ...(!!assetTypeId ? { assetTypeId } : {}),
@@ -80,12 +80,12 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedLocation, location.floor, location.room, assetTypeId, isOpen, isBusy]);
+    }, [lastSelectedLocation, location.floor, location.room, assetTypeId, isOpen, isBusy]);
 
-    useEffect(() => {
-        console.log(location, selectedLocation);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location]);
+    // useEffect(() => {
+    //     console.log(location, lastSelectedLocation);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [location]);
 
     const handleCancelAction = () => {
         console.log('cancel');
@@ -95,9 +95,9 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
         console.log('add');
         onAction?.(selectedAssets);
     };
-    const handleAssetTypeChange = id => {
-        console.log('handleAssetTypeChange', id);
-        setAssetTypeId(id);
+    const handleAssetTypeChange = row => {
+        console.log('handleAssetTypeChange', row);
+        setAssetTypeId(row.asset_type_id);
     };
     const handleAssetSelectionChange = selectedRowIds => {
         console.log('handleAssetSelectionChange', selectedRowIds);
@@ -141,6 +141,7 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
                             rows={row}
                             columns={columns}
                             rowId={'asset_id'}
+                            loading={assetsMineListLoading}
                             classes={{ root: classes.gridRoot }}
                             components={{ Footer: FooterBar }}
                             componentsProps={{
