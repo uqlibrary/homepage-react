@@ -226,7 +226,7 @@ export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test_and
 
 /** TEST AND TAG ASSET TYPES **/
 // List Asset Types
-export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/onload/assettype' });
+export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/current' });
 // Add an asset type
 export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
 // Save an asset type (ID contained in payload)
