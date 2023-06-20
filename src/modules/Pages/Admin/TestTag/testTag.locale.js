@@ -120,7 +120,7 @@ export default {
                             path: '#',
                         },
                         {
-                            title: 'X INSPECTIONS BY LICENSED USER',
+                            title: 'INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
                             path: `${pathConfig.admin.testntagreportinspectionsbylicenceduser}?user=uqtesttag`,
                             permissions: [PERMISSIONS.can_admin],
