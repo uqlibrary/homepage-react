@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -53,9 +54,10 @@ export const transformRow = row => {
     });
 };
 
-const BulkAssetUpdate = ({ defaultFormValues }) => {
+const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
+    const stepTwoLocale = pageLocale.form.step.two;
     const classes = useStyles();
     const list = useObjectList([], transformRow);
 
@@ -101,7 +103,7 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
     });
 
     const handleStepButton = e => {
-        console.log('handleStepButton', e);
+        console.log('handleStepButton', e, formValues);
     };
 
     const openDialog = () => setIsDialogOpen(true);
@@ -169,8 +171,8 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                                 componentsProps={{
                                     footer: {
                                         id: 'bulkAssetUpdate',
-                                        actionLabel: pageLocale.form.buttonBar.next,
-                                        altLabel: pageLocale.form.buttonBar.clear,
+                                        actionLabel: stepOneLocale.button.next,
+                                        altLabel: stepOneLocale.button.clear,
                                         onAltClick: resetForm,
                                         onActionClick: handleStepButton,
                                     },
@@ -178,22 +180,31 @@ const BulkAssetUpdate = ({ defaultFormValues }) => {
                             />
                         </Grid>
                     </Grid>
+                    <FilterDialog
+                        locale={pageLocale.form.filterDialog}
+                        locationLocale={locale.pages.general.locationPicker}
+                        minContentWidth={'100%'}
+                        config={config.filterDialog}
+                        isOpen={isDialogOpen}
+                        onCancel={handleDialogClose}
+                        onAction={handleDialogAction}
+                        actions={actions}
+                    />
                 </StandardCard>
-                <FilterDialog
-                    locale={pageLocale.form.filterDialog}
-                    locationLocale={locale.pages.general.locationPicker}
-                    minContentWidth={'100%'}
-                    config={config.filterDialog}
-                    isOpen={isDialogOpen}
-                    onCancel={handleDialogClose}
-                    onAction={handleDialogAction}
-                />
+                <StandardCard title={stepTwoLocale.title}>
+                    <Grid container spacing={3}>
+                        <Grid item>
+                            <Typography variant="body2">{stepTwoLocale.subtext(0)}</Typography>
+                        </Grid>
+                    </Grid>
+                </StandardCard>
             </div>
         </StandardAuthPage>
     );
 };
 
 BulkAssetUpdate.propTypes = {
+    actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
 };
 

@@ -531,7 +531,7 @@ export default {
                 breadcrumbs: [
                     {
                         title: 'Managing Bulk Asset Update',
-                        icon: <InspectionDeviceIcon fontSize={'small'} />,
+                        icon: <BulkUpdateIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
@@ -543,12 +543,6 @@ export default {
                         asset_type_name: { label: 'Type' },
                         asset_location: { label: 'Location' },
                         asset_status: { label: 'Status' },
-                    },
-                    buttonBar: {
-                        clear: 'Clear',
-                        next: 'Next',
-                        previous: 'Back',
-                        submit: 'Bulk Update',
                     },
                     filterDialog: {
                         title: 'Select assets by feature',
@@ -579,7 +573,17 @@ export default {
                                 placeholder: 'Enter at least 5 characters',
                             },
                             button: {
+                                clear: 'Clear',
+                                next: 'Next',
                                 findAndAdd: 'Find and add by feature',
+                            },
+                        },
+                        two: {
+                            title: 'Step 2: Choose bulk update action',
+                            subtext: count => `You have selected ${count} assets to bulk update.`,
+                            button: {
+                                previous: 'Back',
+                                submit: 'Bulk Update',
                             },
                         },
                     },

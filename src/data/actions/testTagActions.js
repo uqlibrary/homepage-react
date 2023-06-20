@@ -276,10 +276,10 @@ export function loadAssetsMine(filters) {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_LOADING });
         return get(TEST_TAG_ASSETS_MINE_API(filters))
             .then(response => {
-                console.log('>>>>>', response.data?.list);
+                console.log('>>>>>', response.data);
                 dispatch({
                     type: actions.TESTTAG_ASSETS_MINE_LOADED,
-                    payload: response.data?.list ?? [],
+                    payload: response.data,
                 });
             })
             .catch(error => {

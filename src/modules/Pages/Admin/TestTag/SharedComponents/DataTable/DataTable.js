@@ -9,7 +9,7 @@ const DataTable = props => {
     delete rest.getRowId;
 
     return (
-        <Box display={'flex'} height={400} width={'100%'}>
+        <Box display={'flex'} width={'100%'}>
             <Box flexGrow={1}>
                 <DataGrid
                     rows={rows}
@@ -19,6 +19,8 @@ const DataTable = props => {
                     disableColumnFilter
                     disableColumnSort
                     getRowId={row => row?.[rowId]}
+                    autoHeight
+                    pageSize={25}
                     {...rest}
                 />
             </Box>

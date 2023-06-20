@@ -226,7 +226,7 @@ export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test_and
 
 /** TEST AND TAG ASSET TYPES **/
 // List Asset Types
-export const TEST_TAG_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/all' });
+export const TEST_TAG_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/current' });
 export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/onload/assettype' }); // old
 // Add an asset type
 export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
@@ -253,7 +253,7 @@ export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, 
 
 export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId }) => {
     const urlParams = {
-        ...(!!locationId && !!locationType ? { [`${locationType}_id`]: locationId } : {}),
+        ...(!!locationId && !!locationType ? { location_id: locationId, location_type: locationType } : {}),
         ...(!!assetTypeId ? { asset_type_id: assetTypeId } : {}),
     };
     const qs = new URLSearchParams(urlParams);

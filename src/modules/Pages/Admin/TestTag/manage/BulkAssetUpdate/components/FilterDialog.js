@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-
-import * as actions from 'data/actions';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
@@ -18,10 +16,11 @@ import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLoc
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 
+// eslint-disable-next-line no-unused-vars
 export const useStyles = makeStyles(theme => ({
     dialogPaper: {
         minHeight: '30vh',
-        maxHeight: '50vh',
+        maxWidth: '100%',
     },
     gridRoot: {
         border: 0,
@@ -30,7 +29,7 @@ export const useStyles = makeStyles(theme => ({
 
 export const transformRow = row => {
     return row.map(line => {
-        if (!!line?.asset_location) return line;
+        if (!!line?.asset_id_displayed) return line;
         return {
             ...line,
             asset_id_displayed: line?.asset_barcode ?? '',
@@ -39,9 +38,18 @@ export const transformRow = row => {
     });
 };
 
-const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, locale, config, onCancel, onAction }) => {
+const FilterDialog = ({
+    id,
+    actions,
+    isOpen = false,
+    isBusy = false,
+    locationLocale,
+    locale,
+    config,
+    onCancel,
+    onAction,
+}) => {
     const classes = useStyles();
-    const dispatch = useDispatch();
     const { row, setRow } = useDataTableRow([], transformRow);
     const [assetTypeId, setAssetTypeId] = useState('');
     const [selectedAssets, setSelectedAssets] = useState([]);
@@ -57,6 +65,7 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
     const { columns } = useDataTableColumns({
         config,
         locale: locale.form.columns,
+        withActions: false,
     });
     useEffect(() => {
         console.log('effect setrow', assetsMineList, assetsMineListLoading);
@@ -67,17 +76,16 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
     useEffect(() => {
         // locationId, locationType, assetTypeId
         if (isOpen && !isBusy) {
-            dispatch(
-                actions.loadAssetsMine({
-                    ...(lastSelectedLocation === 'floor' || lastSelectedLocation === 'room'
-                        ? {
-                              locationType: lastSelectedLocation,
-                              locationId: lastSelectedLocation === 'room' ? location.room : location.floor,
-                          }
-                        : {}),
-                    ...(!!assetTypeId ? { assetTypeId } : {}),
-                }),
-            );
+            actions.loadAssetsMine({
+                ...((lastSelectedLocation === 'floor' && location.floor !== -1) ||
+                (lastSelectedLocation === 'room' && location.room !== -1)
+                    ? {
+                          locationType: lastSelectedLocation,
+                          locationId: lastSelectedLocation === 'room' ? location.room : location.floor,
+                      }
+                    : {}),
+                ...(!!assetTypeId ? { assetTypeId } : {}),
+            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lastSelectedLocation, location.floor, location.room, assetTypeId, isOpen, isBusy]);
@@ -97,7 +105,7 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
     };
     const handleAssetTypeChange = row => {
         console.log('handleAssetTypeChange', row);
-        setAssetTypeId(row.asset_type_id);
+        setAssetTypeId(row?.asset_type_id ?? '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
         console.log('handleAssetSelectionChange', selectedRowIds);
@@ -112,8 +120,11 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
             open={isOpen}
             data-testid={`dialogbox-${id}`}
             fullWidth
+            aria-describedby="messageTitle"
         >
-            <DialogTitle data-testid="message-title">{locale?.title}</DialogTitle>
+            <DialogTitle id="messageTitle" data-testid="messageTitle">
+                {locale?.title}
+            </DialogTitle>
             <DialogContent>
                 <Grid container spacing={3}>
                     <AutoLocationPicker
@@ -121,6 +132,7 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
                         location={location}
                         setLocation={setLocation}
                         locale={locationLocale}
+                        hasAllOption
                     />
                 </Grid>
                 <Grid container spacing={3}>
@@ -132,6 +144,10 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
                             onChange={handleAssetTypeChange}
                             validateAssetTypeId={isValidAssetTypeId}
                             required={false}
+                            autoSelect={false}
+                            autoHighlight={false}
+                            selectOnFocus
+                            disableClearable={false}
                         />
                     </Grid>
                 </Grid>
@@ -165,6 +181,7 @@ const FilterDialog = ({ id, isOpen = false, isBusy = false, locationLocale, loca
 };
 
 FilterDialog.propTypes = {
+    actions: PropTypes.object.isRequired,
     dialogueContent: PropTypes.any,
     isOpen: PropTypes.bool,
     locale: PropTypes.object.isRequired,

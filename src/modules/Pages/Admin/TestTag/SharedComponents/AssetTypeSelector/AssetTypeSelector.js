@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import TextField from '@material-ui/core/TextField';
@@ -16,13 +16,13 @@ const AssetTypeSelector = ({
     onChange,
     validateAssetTypeId,
     classNames = {},
+    ...rest
 }) => {
-    const dispatch = useDispatch();
     const [value, setValue] = useState(initValue);
     const { assetTypesList, assetTypesListLoading } = useSelector(state => state.get('testTagAssetTypesReducer'));
 
     React.useEffect(() => {
-        dispatch(actions.loadAssetTypes());
+        actions.loadAssetTypes();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -33,7 +33,6 @@ const AssetTypeSelector = ({
 
     return (
         <FormControl className={classNames.formControl} fullWidth>
-            {console.log('assetTypesList', assetTypesList)}
             <Autocomplete
                 id={`testntagFormAssetType-${id}`}
                 data-testid={`testntagFormAssetType-${id}`}
@@ -80,6 +79,7 @@ const AssetTypeSelector = ({
                 disableClearable
                 autoSelect
                 loading={!!assetTypesListLoading}
+                {...rest}
             />
         </FormControl>
     );

@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import BulkAssetUpdate from '../components/BulkAssetUpdate';
 import { withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import * as actions from 'data/actions';
 
 const DEFAULT_FORM_VALUES = {
     asset_list: [],
@@ -16,7 +18,13 @@ export const mapStateToProps = () => {
     };
 };
 
-let BulkAssetUpdateContainer = connect(mapStateToProps)(BulkAssetUpdate);
+const mapDispatchToProps = dispatch => {
+    return {
+        actions: bindActionCreators(actions, dispatch),
+    };
+};
+
+let BulkAssetUpdateContainer = connect(mapStateToProps, mapDispatchToProps)(BulkAssetUpdate);
 BulkAssetUpdateContainer = withRouter(BulkAssetUpdateContainer);
 
 export default BulkAssetUpdateContainer;

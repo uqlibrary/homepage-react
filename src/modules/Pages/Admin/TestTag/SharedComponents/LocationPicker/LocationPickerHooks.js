@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 
-import { useDispatch } from 'react-redux';
-
 import { locationType } from './utils';
 
 export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultFloorId = -1, defaultRoomId = -1) => {
@@ -19,10 +17,10 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
     return { location, setLocation };
 };
 
-export const useSelectLocation = ({ initial = locationType.site, location, setLocation, setRow, actions, store }) => {
+export const useSelectLocation = ({ initial = locationType.site, location, setLocation, actions, setRow, store }) => {
     const [selectedLocation, setSelectedLocation] = useState(initial ?? locationType.site);
     const [lastSelectedLocation, setLastSelectedLocation] = useState(initial ?? locationType.site);
-    const dispatch = useDispatch();
+
     const { siteList, siteListLoaded, floorList, floorListLoaded, roomList, roomListLoaded } = store;
 
     useEffect(() => {
@@ -35,7 +33,7 @@ export const useSelectLocation = ({ initial = locationType.site, location, setLo
                     setLastSelectedLocation(locationType.floor);
                 } else {
                     setLocation?.({ room: -1 });
-                    dispatch?.(actions?.clearRooms());
+                    actions?.clearRooms();
                     setLastSelectedLocation(locationType.building);
                 }
             }
@@ -50,7 +48,7 @@ export const useSelectLocation = ({ initial = locationType.site, location, setLo
                         ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
                 );
                 setLocation?.({ floor: -1, room: -1 });
-                dispatch?.(actions?.clearFloors());
+                actions?.clearFloors();
             }
             setSelectedLocation(locationType.floor);
             setLastSelectedLocation(locationType.building);
@@ -64,7 +62,7 @@ export const useSelectLocation = ({ initial = locationType.site, location, setLo
                 setLocation?.({ building: -1, floor: -1, room: -1 });
                 setSelectedLocation(locationType.site);
             }
-        } else dispatch?.(actions?.loadSites());
+        } else actions?.loadSites();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
