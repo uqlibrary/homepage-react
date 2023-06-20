@@ -11,10 +11,10 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import FilterDialog from './FilterDialog';
-import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import { useForm, useObjectList } from '../../../helpers/hooks';
+import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
 import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 import locale from '../../../testTag.locale';
@@ -22,6 +22,8 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { isValidAssetId } from '../../../Inspection/utils/helpers';
 import { createLocationString } from '../../../helpers/helpers';
+import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
+import { useForm, useObjectList } from '../../../helpers/hooks';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -60,11 +62,19 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const stepTwoLocale = pageLocale.form.step.two;
     const classes = useStyles();
     const list = useObjectList([], transformRow);
-
+    const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
+    });
+    const locationStore = useSelector(state => state.get('testTagLocationReducer'));
+    const { location, setLocation } = useLocation();
+    const { lastSelectedLocation } = useSelectLocation({
+        location,
+        setLocation,
+        actions,
+        store: locationStore,
     });
 
     useEffect(() => {
@@ -102,8 +112,13 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         handleDeleteClick,
     });
 
-    const handleStepButton = e => {
-        console.log('handleStepButton', e, formValues);
+    const handleNextStepButton = e => {
+        console.log('handleNextStepButton', e, formValues);
+        setStep(2);
+    };
+    const handlePrevStepButton = e => {
+        console.log('handlePrevStepButton', e, formValues);
+        setStep(1);
     };
 
     const openDialog = () => setIsDialogOpen(true);
@@ -115,6 +130,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         list.addStart(data);
     };
 
+    const handleOnSubmit = e => {
+        console.log('submit');
+    };
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -122,82 +141,141 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
             <div className={classes.root}>
-                <StandardCard title={stepOneLocale.title}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} sm={4}>
-                            <AssetSelector
-                                id="assetId"
-                                locale={stepOneLocale}
-                                masked={false}
-                                classNames={{ formControl: classes.formControl }}
-                                onChange={handleSearchAssetIdChange}
-                                validateAssetId={isValidAssetId}
-                                canAddNew={false}
-                                required={false}
-                                clearOnSelect
-                            />
-                        </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={2}
-                            alignItems="center"
-                            style={{ display: 'flex' }}
-                            justifyContent="center"
-                        >
-                            or
-                        </Grid>
-                        <Grid item xs={12} sm={6} alignItems="center" style={{ display: 'flex' }}>
-                            <Button
-                                variant="outlined"
-                                id="addByFeatureButton"
-                                data-testid="addByFeatureButton"
-                                color="primary"
-                                onClick={openDialog}
+                {step === 1 && (
+                    <StandardCard title={stepOneLocale.title}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={4}>
+                                <AssetSelector
+                                    id="assetId"
+                                    locale={stepOneLocale}
+                                    masked={false}
+                                    classNames={{ formControl: classes.formControl }}
+                                    onChange={handleSearchAssetIdChange}
+                                    validateAssetId={isValidAssetId}
+                                    canAddNew={false}
+                                    required={false}
+                                    clearOnSelect
+                                />
+                            </Grid>
+                            <Grid
+                                item
+                                xs={12}
+                                sm={2}
+                                alignItems="center"
+                                style={{ display: 'flex' }}
+                                justifyContent="center"
                             >
-                                {stepOneLocale.button.findAndAdd}
-                            </Button>
+                                or
+                            </Grid>
+                            <Grid item xs={12} sm={6} alignItems="center" style={{ display: 'flex' }}>
+                                <Button
+                                    variant="outlined"
+                                    id="addByFeatureButton"
+                                    data-testid="addByFeatureButton"
+                                    color="primary"
+                                    onClick={openDialog}
+                                >
+                                    {stepOneLocale.button.findAndAdd}
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid container spacing={3}>
-                        <Grid item padding={3} style={{ flex: 1 }}>
-                            <DataTable
-                                rows={list.data}
-                                columns={columns}
-                                rowId={'asset_id'}
-                                classes={{ root: classes.gridRoot }}
-                                handleDeleteClick={handleDeleteClick}
-                                components={{ Footer: FooterBar }}
-                                componentsProps={{
-                                    footer: {
-                                        id: 'bulkAssetUpdate',
-                                        actionLabel: stepOneLocale.button.next,
-                                        altLabel: stepOneLocale.button.clear,
-                                        onAltClick: resetForm,
-                                        onActionClick: handleStepButton,
+                        <Grid container spacing={3}>
+                            <Grid item padding={3} style={{ flex: 1 }}>
+                                <DataTable
+                                    rows={list.data}
+                                    columns={columns}
+                                    rowId={'asset_id'}
+                                    classes={{ root: classes.gridRoot }}
+                                    handleDeleteClick={handleDeleteClick}
+                                    components={{ Footer: FooterBar }}
+                                    componentsProps={{
+                                        footer: {
+                                            id: 'bulkAssetUpdate',
+                                            actionLabel: stepOneLocale.button.next,
+                                            altLabel: stepOneLocale.button.clear,
+                                            onAltClick: resetForm,
+                                            onActionClick: handleNextStepButton,
+                                            nextButtonProps: { disabled: list.data.length === 0 },
+                                        },
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
+                        <FilterDialog
+                            locale={pageLocale.form.filterDialog}
+                            locationLocale={locale.pages.general.locationPicker}
+                            minContentWidth={'100%'}
+                            config={config.filterDialog}
+                            isOpen={isDialogOpen}
+                            onCancel={handleDialogClose}
+                            onAction={handleDialogAction}
+                            actions={actions}
+                        />
+                    </StandardCard>
+                )}
+                {step === 2 && (
+                    <StandardCard title={stepTwoLocale.title}>
+                        <Grid container spacing={3}>
+                            <Grid item>
+                                <Typography variant="body2">{stepTwoLocale.subtext(list.data.length)}</Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={3}>
+                            <AutoLocationPicker
+                                actions={actions}
+                                location={location}
+                                setLocation={setLocation}
+                                locale={locale.pages.general.locationPicker}
+                                inputProps={{
+                                    site: {
+                                        error: location.site === -1,
+                                    },
+                                    building: {
+                                        required: location.site !== -1,
+                                        error: location.site !== -1 && location.building === -1,
+                                    },
+                                    floor: {
+                                        required: location.building !== -1,
+                                        error:
+                                            location.site !== -1 && location.building !== -1 && location.floor === -1,
+                                    },
+                                    room: {
+                                        required: location.floor !== -1,
+                                        error:
+                                            location.site !== -1 &&
+                                            location.building !== -1 &&
+                                            location.floor !== -1 &&
+                                            location.room === -1,
                                     },
                                 }}
                             />
                         </Grid>
-                    </Grid>
-                    <FilterDialog
-                        locale={pageLocale.form.filterDialog}
-                        locationLocale={locale.pages.general.locationPicker}
-                        minContentWidth={'100%'}
-                        config={config.filterDialog}
-                        isOpen={isDialogOpen}
-                        onCancel={handleDialogClose}
-                        onAction={handleDialogAction}
-                        actions={actions}
-                    />
-                </StandardCard>
-                <StandardCard title={stepTwoLocale.title}>
-                    <Grid container spacing={3}>
-                        <Grid item>
-                            <Typography variant="body2">{stepTwoLocale.subtext(0)}</Typography>
+                        <Grid container spacing={4} className={classes.actionButtons}>
+                            <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                                <Button
+                                    variant="outlined"
+                                    onClick={handlePrevStepButton}
+                                    id="bulkUpdateBackButton"
+                                    data-testid="bulkUpdateBackButton"
+                                    color={'default'}
+                                >
+                                    {stepTwoLocale.button.previous}
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={6} container justifyContent="flex-end">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleOnSubmit}
+                                    id="bulkUpdateSubmitButton"
+                                    data-testid="bulkUpdateSubmitButton"
+                                >
+                                    {stepTwoLocale.button.submit}
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </StandardCard>
+                    </StandardCard>
+                )}
             </div>
         </StandardAuthPage>
     );
