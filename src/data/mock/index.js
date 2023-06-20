@@ -866,7 +866,7 @@ mock.onGet('exams/course/FREN1010/summary')
         },
     ])
     // Test and Tag Asset Types
-    .onGet(/test_and_tag\/onload\/assettype/)
+    .onGet(/test_and_tag\/asset_type\/current/)
     .reply(() => 
         [
             200,
