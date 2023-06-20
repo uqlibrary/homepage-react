@@ -20,6 +20,8 @@ import {
     TEST_TAG_ADD_INSPECTION_DEVICE_API,
     TEST_TAG_MODIFY_INSPECTION_DEVICE_API,
     TEST_TAG_REPORT_INSPECTIONS_DUE_API,
+    TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API,
+    TEST_TAG_REPORT_UTILITY_LICENCED_USERS,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -538,5 +540,48 @@ export function getInspectionsDue({ locationId, locationType, period, periodType
 export function clearInspectionsDue() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_CLEAR });
+    };
+}
+
+/* REPORT INSPECTIONS BY LICENCED USER */
+export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADING });
+        return get(TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({ startDate, endDate, userRange }))
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+export function getLicencedUsers() {
+    return dispatch => {
+        console.log('Getting Licenced Users');
+        dispatch({ type: actions.TESTTAG_LICENCED_INSPECTORS_LOADING });
+        return get(TEST_TAG_REPORT_UTILITY_LICENCED_USERS())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_LICENCED_INSPECTORS_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_LICENCED_INSPECTORS_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
     };
 }

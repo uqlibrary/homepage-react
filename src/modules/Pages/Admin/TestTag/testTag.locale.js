@@ -122,7 +122,7 @@ export default {
                         {
                             title: 'X INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagreportinspectionsbylicenceduser}?user=uqtesttag`,
                             permissions: [PERMISSIONS.can_admin],
                         },
                     ],
@@ -567,6 +567,50 @@ export default {
                         },
                         asset_location: {
                             label: 'Location',
+                        },
+                    },
+                    filterToDateLabel: 'Within date range',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
+                },
+            },
+            inspectionsByLicencedUser: {
+                breadcrumbs: [
+                    {
+                        title: 'Inspections by Licenced Users',
+                        icon: <InspectionByUserIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Inspections by Licenced Users for ${dept}`,
+                },
+                form: {
+                    title: 'Filter',
+                    columns: {
+                        user_id: {
+                            label: 'UserID',
+                        },
+                        user_uid: {
+                            label: 'UUID',
+                        },
+                        user_name: {
+                            label: 'Name',
+                        },
+                        user_licence_number: {
+                            label: 'Licence #',
+                        },
+                        user_department: {
+                            label: 'Dept.',
+                        },
+                        start_date: {
+                            label: 'Start Date',
+                            type: 'dateTime',
+                        },
+                        end_date: {
+                            label: 'End Date',
+                            type: 'dateTime',
+                        },
+                        total_for_user: {
+                            label: 'Total',
                         },
                     },
                     filterToDateLabel: 'Within date range',
