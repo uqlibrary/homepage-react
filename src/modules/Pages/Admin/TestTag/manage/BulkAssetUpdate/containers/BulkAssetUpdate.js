@@ -6,10 +6,12 @@ import * as actions from 'data/actions';
 
 const DEFAULT_FORM_VALUES = {
     asset_list: [],
-    location_id: undefined,
-    location_type: undefined,
-    asset_type_id: undefined,
-    status: undefined,
+    hasLocation: false,
+    hasStatus: false,
+    hasAssetType: false,
+    location: undefined,
+    asset_type: undefined,
+    asset_status: undefined,
 };
 
 export const mapStateToProps = () => {

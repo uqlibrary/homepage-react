@@ -6,16 +6,18 @@ import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import FilterDialog from './FilterDialog';
 import { useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
-
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
+import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
 import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 import locale from '../../../testTag.locale';
 import config from './config';
@@ -70,7 +72,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     });
     const locationStore = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
-    const { lastSelectedLocation } = useSelectLocation({
+    const { selectedLocation } = useSelectLocation({
         location,
         setLocation,
         actions,
@@ -83,6 +85,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [list.data]);
 
+    useEffect(() => {
+        console.log('formValues', formValues);
+    }, [formValues]);
     const handleSearchAssetIdChange = useCallback(
         newValue => {
             console.log(newValue);
@@ -131,7 +136,31 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     };
 
     const handleOnSubmit = e => {
-        console.log('submit');
+        console.log('submit', e);
+    };
+
+    const handleLocationUpdate = location => {
+        // because location relies on useSelectLocation to fire
+        // the various API calls, we need to handle updates
+        // to this component separate from the useFormValues handleChange
+        setLocation(location);
+        // and we only want to update when a room has been selected, as
+        // that's all we're allowing the user to bulk change
+        if (location.room !== -1) {
+            handleChange('location')(location);
+        } else if (formValues.location !== undefined) {
+            handleChange('location')(undefined);
+        }
+    };
+
+    const handleCheckboxChange = e => {
+        // checkboxes use 'checked' value on the target to set t/f values,
+        // so the standard formValues handleChange wont work without
+        // a bit of help sending through the actual value.
+        // This relies on the checkbox having the same name as the
+        // formvalue variable being set (hasLocation etc)
+        const checked = e.target.checked;
+        handleChange(e.target.name)(checked);
     };
 
     return (
@@ -203,6 +232,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         </Grid>
                         <FilterDialog
                             locale={pageLocale.form.filterDialog}
+                            assetTypeLocale={pageLocale.form.assetType}
                             locationLocale={locale.pages.general.locationPicker}
                             minContentWidth={'100%'}
                             config={config.filterDialog}
@@ -221,10 +251,26 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={formValues.hasLocation}
+                                            onChange={handleCheckboxChange}
+                                            name="hasLocation"
+                                            id="bulkAssetUpdateLocationCheckbox"
+                                            data-testid="bulkAssetUpdateLocationCheckbox"
+                                            color="primary"
+                                        />
+                                    }
+                                    label={stepTwoLocale.checkbox.location}
+                                />
+                            </Grid>
                             <AutoLocationPicker
+                                disabled={!formValues.hasLocation}
                                 actions={actions}
                                 location={location}
-                                setLocation={setLocation}
+                                setLocation={handleLocationUpdate}
                                 locale={locale.pages.general.locationPicker}
                                 inputProps={{
                                     site: {
@@ -249,6 +295,71 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     },
                                 }}
                             />
+                        </Grid>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={3} padding={3} style={{ flex: 1 }}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={formValues.hasStatus}
+                                                    onChange={handleCheckboxChange}
+                                                    name="hasStatus"
+                                                    id="bulkAssetUpdateStatusCheckbox"
+                                                    data-testid="bulkAssetUpdateStatusCheckbox"
+                                                    color="primary"
+                                                />
+                                            }
+                                            label={stepTwoLocale.checkbox.status}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <AssetStatusSelector
+                                            id="bulkUpdate"
+                                            label="Asset status"
+                                            onChange={handleChange('asset_status')}
+                                            options={locale.config.assetStatusOptions.filter(
+                                                option => option.value === 'DISCARDED',
+                                            )}
+                                            disabled={!formValues.hasStatus}
+                                            required={formValues.hasStatus}
+                                            error={formValues.hasStatus && formValues.asset_status === undefined}
+                                            classNames={{ formControl: classes.formControl }}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12} sm={4} padding={3} style={{ flex: 1 }}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={formValues.hasAssetType}
+                                                    onChange={handleCheckboxChange}
+                                                    name="hasAssetType"
+                                                    id="bulkAssetUpdateAssetTypeCheckbox"
+                                                    data-testid="bulkAssetUpdateAssetTypeCheckbox"
+                                                    color="primary"
+                                                />
+                                            }
+                                            label={stepTwoLocale.checkbox.assetType}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <AssetTypeSelector
+                                            id="bulkUpdate"
+                                            locale={pageLocale.form.assetType}
+                                            actions={actions}
+                                            onChange={handleChange('asset_type')}
+                                            disabled={!formValues.hasAssetType}
+                                            required={formValues.hasAssetType}
+                                            error={formValues.hasAssetType && formValues.asset_type === undefined}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid container spacing={4} className={classes.actionButtons}>
                             <Grid item xs={12} sm={6} container justifyContent="flex-start">

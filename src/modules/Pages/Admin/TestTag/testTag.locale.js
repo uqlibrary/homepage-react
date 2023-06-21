@@ -22,6 +22,13 @@ export default {
             { value: '12', label: '1 year' },
             { value: '60', label: '5 years' },
         ],
+        assetStatusOptions: [
+            { value: 'CURRENT', label: 'Current' },
+            { value: 'REMOVED', label: 'Removed' },
+            { value: 'DISCARDED', label: 'Discarded' },
+            { value: 'FAILED', label: 'Failed' },
+            { value: 'OUTFORREPAIR', label: 'Out for Repair' },
+        ],
     },
     pages: {
         general: {
@@ -544,6 +551,10 @@ export default {
                         asset_location: { label: 'Location' },
                         asset_status: { label: 'Status' },
                     },
+
+                    assetType: {
+                        label: 'Asset type',
+                    },
                     filterDialog: {
                         title: 'Select assets by feature',
                         button: {
@@ -556,9 +567,6 @@ export default {
                                 asset_type_name: { label: 'Type' },
                                 asset_location: { label: 'Last Room ID' },
                                 asset_status: { label: 'Status' },
-                            },
-                            assetType: {
-                                label: 'Asset type',
                             },
                         },
                     },
@@ -584,6 +592,11 @@ export default {
                             button: {
                                 previous: 'Back',
                                 submit: 'Bulk Update',
+                            },
+                            checkbox: {
+                                location: 'Update Location',
+                                status: 'Update Status',
+                                assetType: 'Update Asset Type',
                             },
                         },
                     },

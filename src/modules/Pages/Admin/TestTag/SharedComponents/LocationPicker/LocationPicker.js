@@ -39,6 +39,7 @@ const LocationPicker = ({
     location,
     setLocation,
     hide = [],
+    disabled = false,
     inputProps = {},
 }) => {
     const classes = useStyles();
@@ -47,7 +48,7 @@ const LocationPicker = ({
     return (
         <>
             <Grid item xs={12} sm={6} md={12 / divisor}>
-                <FormControl className={classes.formControl} fullWidth>
+                <FormControl className={classes.formControl} fullWidth disabled={disabled}>
                     <Autocomplete
                         id="testntag-form-siteid"
                         data-testid="testntag-form-siteid"
@@ -113,7 +114,7 @@ const LocationPicker = ({
             </Grid>
             {!fieldsToHide.includes('building') && (
                 <Grid item xs={12} sm={6} md={12 / divisor}>
-                    <FormControl className={classes.formControl} fullWidth>
+                    <FormControl className={classes.formControl} fullWidth disabled={disabled}>
                         <Autocomplete
                             id="testntag-form-buildingid"
                             data-testid="testntag-form-buildingid"
@@ -184,7 +185,7 @@ const LocationPicker = ({
 
             {!fieldsToHide.includes('floor') && (
                 <Grid item xs={12} sm={6} md={12 / divisor}>
-                    <FormControl className={classes.formControl} fullWidth>
+                    <FormControl className={classes.formControl} fullWidth disabled={disabled}>
                         <Autocomplete
                             id="testntag-form-floorid"
                             data-testid="testntag-form-floorid"
@@ -241,7 +242,7 @@ const LocationPicker = ({
             )}
             {!fieldsToHide.includes('room') && (
                 <Grid item xs={12} sm={6} md={12 / divisor}>
-                    <FormControl className={classes.formControl} fullWidth>
+                    <FormControl className={classes.formControl} fullWidth disabled={disabled}>
                         <Autocomplete
                             id="testntag-form-roomid"
                             data-testid="testntag-form-roomid"
@@ -316,6 +317,7 @@ LocationPicker.propTypes = {
     withAllOption: PropTypes.bool,
     inputProps: PropTypes.object,
     hasAllOption: PropTypes.bool,
+    disabled: PropTypes.bool,
 };
 
 export default React.memo(LocationPicker);

@@ -44,6 +44,7 @@ const FilterDialog = ({
     isOpen = false,
     isBusy = false,
     locationLocale,
+    assetTypeLocale,
     locale,
     config,
     onCancel,
@@ -136,10 +137,10 @@ const FilterDialog = ({
                     />
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6} padding={3} style={{ flex: 1 }}>
+                    <Grid item xs={12} sm={4} padding={3} style={{ flex: 1 }}>
                         <AssetTypeSelector
                             id="bulkAssetUpdateFilterDialog"
-                            locale={locale.form.assetType}
+                            locale={assetTypeLocale}
                             actions={actions}
                             onChange={handleAssetTypeChange}
                             validateAssetTypeId={isValidAssetTypeId}
@@ -172,6 +173,7 @@ const FilterDialog = ({
                             checkboxSelection
                             disableRowSelectionOnClick
                             onSelectionModelChange={handleAssetSelectionChange}
+                            autoHeight={false}
                         />
                     </Grid>
                 </Grid>
@@ -186,6 +188,7 @@ FilterDialog.propTypes = {
     isOpen: PropTypes.bool,
     locale: PropTypes.object.isRequired,
     locationLocale: PropTypes.object.isRequired,
+    assetTypeLocale: PropTypes.object,
     config: PropTypes.object.isRequired,
     id: PropTypes.string,
     onCancel: PropTypes.func,
