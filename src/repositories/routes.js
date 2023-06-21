@@ -263,3 +263,20 @@ export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId
         apiUrl,
     };
 };
+
+export const TEST_TAG_BULK_UPDATE_API = () => ({ apiUrl: 'test_and_tag/asset/bulk' });
+
+// export const TEST_TAG_BULK_UPDATE_API = ({ assets, roomId, assetTypeId, status }) => {
+//     const urlParams = {
+//         assets,
+//         ...(!!roomId ? { asset_room_id_last_seen: roomId } : {}),
+//         ...(!!assetTypeId ? { asset_type_id_id: assetTypeId } : {}),
+//         ...(!!status ? { is_discarding: 1 } : {}),
+//     };
+//     const qs = new URLSearchParams(urlParams);
+//     const hasParams = [...qs].length > 0;
+//     const apiUrl = `/test_and_tag/asset/bulk${hasParams ? `?${qs.toString()}` : ''}`;
+//     return {
+//         apiUrl,
+//     };
+// };

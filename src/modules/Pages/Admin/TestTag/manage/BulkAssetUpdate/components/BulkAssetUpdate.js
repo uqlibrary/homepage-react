@@ -8,10 +8,11 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
-import FilterDialog from './FilterDialog';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
@@ -19,12 +20,15 @@ import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
 import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
+import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import FilterDialog from './FilterDialog';
+
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
-import { isValidAssetId } from '../../../Inspection/utils/helpers';
-import { createLocationString } from '../../../helpers/helpers';
-import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
+import { isValidRoomId, isValidAssetId, isValidAssetTypeId } from '../../../Inspection/utils/helpers';
+import { createLocationString, isEmptyObject, isEmptyStr } from '../../../helpers/helpers';
 import { useForm, useObjectList } from '../../../helpers/hooks';
 
 const useStyles = makeStyles(theme => ({
@@ -36,6 +40,11 @@ const useStyles = makeStyles(theme => ({
     },
     gridRoot: {
         border: 0,
+    },
+    centredGrid: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    centredGridNoJustify: {
+        display: 'flex',
+        alignItems: 'center',
     },
 }));
 
@@ -58,6 +67,15 @@ export const transformRow = row => {
     });
 };
 
+export const transformRequest = formValues => {
+    return {
+        assets: formValues.asset_list.reduce((cumulative, current) => [...cumulative, current.asset_id], []),
+        ...(!!formValues.hasLocation ? { asset_room_id_last_seen: formValues.location.room } : {}),
+        ...(!!formValues.hasAssetType ? { asset_type_id: formValues.asset_type.asset_type_id } : {}),
+        ...(!!formValues.hasStatus ? { is_discarding: 1 } : {}),
+    };
+};
+
 const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
@@ -66,7 +84,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const list = useObjectList([], transformRow);
     const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [confirmDialogueBusy, setConfirmDialogueBusy] = React.useState(false);
+    const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
     });
@@ -95,6 +115,15 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         },
         [list],
     );
+
+    const [snackbarAlert, setSnackbarAlert] = React.useState({ message: '', visible: false });
+
+    const closeSnackbarAlert = () => {
+        setSnackbarAlert({ message: '', visible: false, type: snackbarAlert.type });
+    };
+    const openSnackbarAlert = (message, type) => {
+        setSnackbarAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
+    };
 
     const resetForm = () => {
         const newFormValues = assignAssetDefaults();
@@ -126,17 +155,42 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setStep(1);
     };
 
-    const openDialog = () => setIsDialogOpen(true);
-    const closeDialog = () => setIsDialogOpen(false);
-    const handleDialogClose = () => closeDialog();
-    const handleDialogAction = data => {
-        closeDialog();
-        console.log('handleDialogAction', data);
+    const openFilterDialog = () => setIsFilterDialogOpen(true);
+    const closeFilterDialog = () => setIsFilterDialogOpen(false);
+    const handleFilterDialogClose = () => closeFilterDialog();
+    const handleFilterDialogAction = data => {
+        closeFilterDialog();
+        console.log('handleFilterDialogAction', data);
         list.addStart(data);
     };
 
+    const openConfirmDialog = () => setConfirmDialogOpen(true);
+    const closeConfirmDialog = () => setConfirmDialogOpen(false);
+
     const handleOnSubmit = e => {
         console.log('submit', e);
+        openConfirmDialog();
+    };
+
+    const handleConfirmDialogClose = () => closeConfirmDialog();
+    const handleConfirmDialogAction = () => {
+        setConfirmDialogueBusy(true);
+        const request = transformRequest(formValues);
+        console.log('handleConfirmDialogAction', { request });
+        actions
+            .bulkAssetUpdate(request)
+            .then(() => {
+                openSnackbarAlert(stepTwoLocale.snackbars.success, 'success');
+                setConfirmDialogueBusy(false);
+                setConfirmDialogOpen(false);
+                setStep(1);
+                resetForm();
+            })
+            .catch(error => {
+                openSnackbarAlert(stepTwoLocale.snackbars.failed(error), 'error', false);
+                setConfirmDialogueBusy(false);
+            });
+        // TEST_TAG_BULK_UPDATE_API = ({ assets, roomId, assetTypeId, status }) => {
     };
 
     const handleLocationUpdate = location => {
@@ -163,6 +217,38 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         handleChange(e.target.name)(checked);
     };
 
+    const validFormValues = React.useMemo(() => {
+        const validLocation =
+            !formValues.hasLocation ||
+            (!isEmptyObject(formValues.location) && isValidRoomId(formValues.location?.room ?? 0));
+
+        const validStatus =
+            !formValues.hasStatus ||
+            (!isEmptyObject(formValues.asset_status) && !isEmptyStr(formValues.asset_status.value));
+        // formValues.hasAssetType ||  || !formValues.hasStatus &
+
+        const validAssetType =
+            !formValues.hasAssetType ||
+            (!isEmptyObject(formValues.asset_type) && isValidAssetTypeId(formValues.asset_type?.asset_type_id ?? 0));
+
+        const isValid =
+            (formValues.hasLocation || formValues.hasStatus || formValues.hasAssetType) &&
+            validLocation &&
+            validStatus &&
+            validAssetType;
+
+        console.log('validateFormValues', isValid);
+
+        return isValid;
+    }, [
+        formValues.asset_status,
+        formValues.asset_type,
+        formValues.hasAssetType,
+        formValues.hasLocation,
+        formValues.hasStatus,
+        formValues.location,
+    ]);
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -170,6 +256,33 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
             <div className={classes.root}>
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    cancelButtonColor="secondary"
+                    confirmationBoxId="confirmBulkUpdate"
+                    onCancelAction={handleConfirmDialogClose}
+                    onAction={handleConfirmDialogAction}
+                    isOpen={confirmDialogOpen}
+                    locale={
+                        !confirmDialogueBusy
+                            ? stepTwoLocale.dialogBulkUpdateConfirm
+                            : {
+                                  ...stepTwoLocale.dialogBulkUpdateConfirm,
+                                  confirmButtonLabel: (
+                                      <CircularProgress
+                                          color="inherit"
+                                          size={25}
+                                          id="confirmationSpinner"
+                                          data-testid="confirmationSpinner"
+                                      />
+                                  ),
+                              }
+                    }
+                    disableButtonsWhenBusy
+                    isBusy={confirmDialogueBusy}
+                    noMinContentWidth
+                />
                 {step === 1 && (
                     <StandardCard title={stepOneLocale.title}>
                         <Grid container spacing={3}>
@@ -186,23 +299,16 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     clearOnSelect
                                 />
                             </Grid>
-                            <Grid
-                                item
-                                xs={12}
-                                sm={2}
-                                alignItems="center"
-                                style={{ display: 'flex' }}
-                                justifyContent="center"
-                            >
+                            <Grid item xs={12} sm={2} className={classes.centredGrid}>
                                 or
                             </Grid>
-                            <Grid item xs={12} sm={6} alignItems="center" style={{ display: 'flex' }}>
+                            <Grid item xs={12} sm={6} className={classes.centredGridNoJustify}>
                                 <Button
                                     variant="outlined"
                                     id="addByFeatureButton"
                                     data-testid="addByFeatureButton"
                                     color="primary"
-                                    onClick={openDialog}
+                                    onClick={openFilterDialog}
                                 >
                                     {stepOneLocale.button.findAndAdd}
                                 </Button>
@@ -236,9 +342,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             locationLocale={locale.pages.general.locationPicker}
                             minContentWidth={'100%'}
                             config={config.filterDialog}
-                            isOpen={isDialogOpen}
-                            onCancel={handleDialogClose}
-                            onAction={handleDialogAction}
+                            isOpen={isFilterDialogOpen}
+                            onCancel={handleFilterDialogClose}
+                            onAction={handleFilterDialogAction}
                             actions={actions}
                         />
                     </StandardCard>
@@ -324,7 +430,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             )}
                                             disabled={!formValues.hasStatus}
                                             required={formValues.hasStatus}
-                                            error={formValues.hasStatus && formValues.asset_status === undefined}
                                             classNames={{ formControl: classes.formControl }}
                                         />
                                     </Grid>
@@ -355,7 +460,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             onChange={handleChange('asset_type')}
                                             disabled={!formValues.hasAssetType}
                                             required={formValues.hasAssetType}
-                                            error={formValues.hasAssetType && formValues.asset_type === undefined}
                                         />
                                     </Grid>
                                 </Grid>
@@ -380,6 +484,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     onClick={handleOnSubmit}
                                     id="bulkUpdateSubmitButton"
                                     data-testid="bulkUpdateSubmitButton"
+                                    disabled={!validFormValues}
                                 >
                                     {stepTwoLocale.button.submit}
                                 </Button>
@@ -388,6 +493,13 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                     </StandardCard>
                 )}
             </div>
+            <ConfirmationAlert
+                isOpen={snackbarAlert.visible}
+                message={snackbarAlert.message}
+                type={snackbarAlert.type}
+                autoHideDuration={snackbarAlert.autoHideDuration}
+                closeAlert={closeSnackbarAlert}
+            />
         </StandardAuthPage>
     );
 };

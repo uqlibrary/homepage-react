@@ -598,6 +598,17 @@ export default {
                                 status: 'Update Status',
                                 assetType: 'Update Asset Type',
                             },
+                            dialogBulkUpdateConfirm: {
+                                confirmButtonLabel: 'Proceed',
+                                cancelButtonLabel: 'Cancel',
+                                confirmationMessage:
+                                    'Are you sure you wish to proceed with this bulk update of selected assets?',
+                                confirmationTitle: 'Bulk Update Selected Assets',
+                            },
+                            snackbars: {
+                                success: 'Bulk Asset update successful',
+                                failed: error => `Error attempting to bulk update assets. ${error}`,
+                            },
                         },
                     },
                 },

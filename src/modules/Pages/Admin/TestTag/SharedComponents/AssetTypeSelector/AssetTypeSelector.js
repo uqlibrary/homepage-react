@@ -16,6 +16,7 @@ const AssetTypeSelector = ({
     onChange,
     validateAssetTypeId,
     classNames = {},
+    disabled = false,
     ...rest
 }) => {
     const [value, setValue] = useState(initValue);
@@ -49,7 +50,7 @@ const AssetTypeSelector = ({
                         {...params}
                         {...locale}
                         required={required}
-                        error={!validateAssetTypeId?.(value) ?? false}
+                        error={(!disabled && required && !validateAssetTypeId?.(value)) ?? false}
                         variant="standard"
                         InputLabelProps={{ shrink: true, htmlFor: `testntagFormAssetTypeInput-${id}` }}
                         InputProps={{
@@ -75,7 +76,7 @@ const AssetTypeSelector = ({
                         }}
                     />
                 )}
-                disabled={assetTypesListLoading}
+                disabled={disabled || assetTypesListLoading}
                 disableClearable
                 autoSelect
                 loading={!!assetTypesListLoading}
@@ -93,6 +94,7 @@ AssetTypeSelector.propTypes = {
     onChange: PropTypes.func,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
     validateAssetTypeId: PropTypes.func,
+    disabled: PropTypes.bool,
 };
 
 export default React.memo(AssetTypeSelector);

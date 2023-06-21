@@ -21,6 +21,7 @@ import {
     TEST_TAG_ADD_INSPECTION_DEVICE_API,
     TEST_TAG_MODIFY_INSPECTION_DEVICE_API,
     TEST_TAG_REPORT_INSPECTIONS_DUE_API,
+    TEST_TAG_BULK_UPDATE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -564,5 +565,31 @@ export function getInspectionsDue({ locationId, locationType, period, periodType
 export function clearInspectionsDue() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_CLEAR });
+    };
+}
+
+export function bulkAssetUpdate(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_BULK_ASSET_UPDATE_SAVING });
+        return put(TEST_TAG_BULK_UPDATE_API(), request)
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_BULK_ASSET_UPDATE_SUCCESS,
+                    payload: response?.data,
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_BULK_ASSET_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+export function clearBulkAssetUpdate() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_BULK_ASSET_UPDATE_CLEAR });
     };
 }

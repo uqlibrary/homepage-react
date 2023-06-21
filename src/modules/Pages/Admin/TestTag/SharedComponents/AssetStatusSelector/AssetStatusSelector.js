@@ -5,8 +5,10 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-const AssetStatusSelector = ({ id, label, options, required = false, onChange, classNames, ...rest }) => {
-    const [currentValue, setCurrentValue] = useState('');
+import { isEmptyObject } from '../../helpers/helpers';
+
+const AssetStatusSelector = ({ id, label, options, required = false, onChange, classNames, disabled, ...rest }) => {
+    const [currentValue, setCurrentValue] = useState({});
     const handleOnChange = (event, newValue) => {
         console.log('handleOnChange', event, newValue);
         setCurrentValue(newValue);
@@ -30,6 +32,7 @@ const AssetStatusSelector = ({ id, label, options, required = false, onChange, c
                         label={label}
                         required={required}
                         variant="standard"
+                        error={(!disabled && required && isEmptyObject(currentValue)) ?? false}
                         InputLabelProps={{ shrink: true, htmlFor: `testntagFormAssetStatusInput-${id}` }}
                         InputProps={{
                             ...params.InputProps,
@@ -53,6 +56,7 @@ AssetStatusSelector.propTypes = {
     label: PropTypes.string,
     options: PropTypes.object.required,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
     onChange: PropTypes.func,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
 };

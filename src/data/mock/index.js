@@ -935,6 +935,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_pending_inspections])
     .onGet(routes.TEST_TAG_ASSETS_MINE_API({}).apiUrl)
     .reply(() => [200, test_tag_assets_mine])
+    .onGet(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)
+    .reply(() => [200, {status: 'OK'}])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

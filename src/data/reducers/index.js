@@ -22,3 +22,4 @@ export { default as testTagSaveInspectionReducer } from './testTagSaveInspection
 export { default as testTagAssetTypesReducer } from './testTagAssetTypesReducer';
 export { default as testTagInspectionDevicesReducer } from './testTagInspectionDevicesReducer';
 export { default as testTagInspectionsDueReducer } from './testTagInspectionsDueReducer';
+export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpdateReducer';
