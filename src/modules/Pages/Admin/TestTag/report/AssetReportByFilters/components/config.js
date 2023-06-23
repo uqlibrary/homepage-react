@@ -1,7 +1,10 @@
 export default {
     defaults: {
-        status: null,
-        building_id: null,
+        assetStatus: null,
+        locationType: 'building',
+        locationId: null,
+        inspectionDateFrom: null,
+        inspectionDateTo: null,
     },
     fields: {
         asset_barcode: { fieldParams: { minWidth: 120, flex: 1 } },

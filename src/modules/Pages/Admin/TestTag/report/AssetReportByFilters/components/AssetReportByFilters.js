@@ -108,6 +108,7 @@ const AssetReportByFilters = ({
     useEffect(() => {
         actions.loadTaggedBuildingList();
     }, []);
+
     useEffect(() => {
         setBuildingList([
             {
@@ -120,6 +121,13 @@ const AssetReportByFilters = ({
             ...taggedBuildingList,
         ]);
     }, [taggedBuildingList]);
+
+    useEffect(() => {
+        if (taggedBuildingList.length > 0) {
+            console.log('config', config.defaults);
+            actions.loadAssetReportByFilters(config.defaults);
+        }
+    }, [actions, taggedBuildingList]);
 
     return (
         <StandardAuthPage

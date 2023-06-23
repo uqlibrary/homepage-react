@@ -267,3 +267,24 @@ export const TEST_TAG_REPORT_UTILITY_LICENCED_USERS = () => ({ apiUrl: 'test_and
 
 /* Asset Report for DEPT */
 export const TEST_TAG_TAGGED_BUILDING_LIST = () => ({ apiUrl: 'test_and_tag/building/mine' });
+export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
+    assetStatus,
+    locationType,
+    locationId,
+    inspectionDateFrom,
+    inspectionDateTo,
+}) => {
+    const urlParams = {
+        ...(!!assetStatus ? { asset_status: assetStatus } : {}),
+        ...(!!locationType ? { location_type: locationType } : {}),
+        ...(!!locationId ? { location_id: locationId } : {}),
+        ...(!!inspectionDateFrom ? { inspection_date_from: inspectionDateFrom } : {}),
+        ...(!!inspectionDateTo ? { inspection_date_to: inspectionDateTo } : {}),
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = Object.keys(urlParams).length > 0;
+    const apiUrl = `test_and_tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+    return {
+        apiUrl,
+    };
+};

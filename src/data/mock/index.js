@@ -51,6 +51,7 @@ import test_tag_pending_inspections from './data/records/test_tag_pending_inspec
 import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspections_by_licenced_user';
 import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors'; 
 import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
+import test_tag_assets_report_assets from './data/records/test_tag_assets_report_assets';
 import { accounts, currentAuthor } from './data';
 
 import {
@@ -927,6 +928,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_licenced_inspectors])
     .onGet(routes.TEST_TAG_TAGGED_BUILDING_LIST().apiUrl)
     .reply(() => [200, test_tag_tagged_building_list])
+    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: null, locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .reply(() => [200, test_tag_assets_report_assets])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

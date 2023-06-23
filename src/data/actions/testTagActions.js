@@ -23,6 +23,7 @@ import {
     TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API,
     TEST_TAG_REPORT_UTILITY_LICENCED_USERS,
     TEST_TAG_TAGGED_BUILDING_LIST,
+    TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -603,6 +604,42 @@ export function loadTaggedBuildingList() {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_TAGGED_BUILDING_LIST_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function loadAssetReportByFilters({
+    assetStatus,
+    locationType,
+    locationId,
+    inspectionDateFrom,
+    inspectionDateTo,
+}) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_REPORT_LOADING });
+        return get(
+            TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({
+                assetStatus,
+                locationType,
+                locationId,
+                inspectionDateFrom,
+                inspectionDateTo,
+            }),
+        )
+            .then(response => {
+                console.log('Data', response);
+                dispatch({
+                    type: actions.TESTTAG_ASSET_REPORT_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_REPORT_FAILED,
                     payload: error.message,
                 });
                 return Promise.reject(error);
