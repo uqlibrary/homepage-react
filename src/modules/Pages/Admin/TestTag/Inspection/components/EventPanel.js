@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import Collapse from '@material-ui/core/Collapse';

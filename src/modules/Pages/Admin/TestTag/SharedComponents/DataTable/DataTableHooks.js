@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import RowMenuCell from './RowMenuCell';
 
-export const useDataTableRow = data => {
-    const [row, setRow] = useState(data ?? []);
+export const useDataTableRow = (data = [], transform) => {
+    const [row, _setRow] = useState(!!transform ? transform(data) : data);
+    const setRow = data => _setRow(!!transform ? transform(data) : data);
     return { row, setRow };
 };
 
@@ -13,6 +14,8 @@ export const useDataTableColumns = ({
     handleDeleteClick,
     filterKey = null,
     withActions = true,
+    shouldDisableEdit,
+    shouldDisableDelete,
 }) => {
     const columns = useMemo(
         () => {
@@ -24,8 +27,13 @@ export const useDataTableColumns = ({
                           return (
                               <RowMenuCell
                                   {...params}
-                                  {...(!!handleEditClick ? { handleEditClick: handleEditClick } : {})}
-                                  {...((params.row?.asset_count ?? 1) === 0 && !!handleDeleteClick
+                                  withActions={[!!handleEditClick ? 'edit' : '', !!handleDeleteClick ? 'delete' : '']}
+                                  {...((!!shouldDisableEdit ? !shouldDisableEdit(params.row) : true) &&
+                                  !!handleEditClick
+                                      ? { handleEditClick: handleEditClick }
+                                      : {})}
+                                  {...((!!shouldDisableDelete ? !shouldDisableDelete(params.row) : true) &&
+                                  !!handleDeleteClick
                                       ? { handleDeleteClick: handleDeleteClick }
                                       : {})}
                               />

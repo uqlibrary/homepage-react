@@ -22,6 +22,13 @@ export default {
             { value: '12', label: '1 year' },
             { value: '60', label: '5 years' },
         ],
+        assetStatusOptions: [
+            { value: 'CURRENT', label: 'Current' },
+            { value: 'REMOVED', label: 'Removed' },
+            { value: 'DISCARDED', label: 'Discarded' },
+            { value: 'FAILED', label: 'Failed' },
+            { value: 'OUTFORREPAIR', label: 'Out for Repair' },
+        ],
     },
     pages: {
         general: {
@@ -91,7 +98,7 @@ export default {
                         {
                             title: 'BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanagebulkassetupdate}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTIONS',
@@ -168,10 +175,11 @@ export default {
                 asset: {
                     title: 'Asset',
                     addText: 'ADD NEW ASSET',
-                    assetId: {
+                    newAssetText: 'NEW ASSET',
+                    assetSelector: {
                         label: 'Asset ID',
                         helperText: 'Enter a new ID to add',
-                        placeholder: 'Enter at least 7 characters',
+                        placeholder: 'Enter at least 3 characters',
                     },
                     assetType: {
                         label: 'Asset type',
@@ -548,6 +556,88 @@ export default {
                     updateFail: 'Device could not be updated',
                     deleteSuccess: 'Device deleted successfully',
                     deleteFail: 'Device could not be deleted',
+                },
+            },
+            bulkassetupdate: {
+                config: {},
+                breadcrumbs: [
+                    {
+                        title: 'Managing Bulk Asset Update',
+                        icon: <BulkUpdateIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Assets in bulk for ${dept}`,
+                },
+                form: {
+                    columns: {
+                        asset_id_displayed: { label: 'Asset ID' },
+                        asset_type_name: { label: 'Type' },
+                        asset_location: { label: 'Location' },
+                        asset_status: { label: 'Status' },
+                    },
+
+                    assetType: {
+                        label: 'Asset type',
+                    },
+                    filterDialog: {
+                        title: 'Select assets by feature',
+                        button: {
+                            cancel: 'Cancel',
+                            submit: 'Add selected',
+                        },
+                        form: {
+                            columns: {
+                                asset_barcode: { label: 'Barcode' },
+                                asset_type_name: { label: 'Type' },
+                                asset_location: { label: 'Last Room ID' },
+                                asset_status: { label: 'Status' },
+                            },
+                            locationTitle: 'Location',
+                            assetTypeTitle: 'Asset Type',
+                        },
+                    },
+                    step: {
+                        one: {
+                            title: 'Step 1: Choose assets to update in bulk',
+                            addText: 'ADD NEW ASSET',
+                            newAssetText: 'NEW ASSET',
+                            assetSelector: {
+                                label: 'Asset ID',
+                                helperText: 'Scan or enter a new ID to add',
+                                placeholder: 'Enter at least 5 characters',
+                            },
+                            button: {
+                                clear: 'Clear',
+                                next: 'Next',
+                                findAndAdd: 'Find and add by feature',
+                            },
+                        },
+                        two: {
+                            title: 'Step 2: Choose bulk update action',
+                            subtext: count => `You have selected ${count} assets to bulk update.`,
+                            button: {
+                                previous: 'Back',
+                                submit: 'Bulk Update',
+                            },
+                            checkbox: {
+                                location: 'Update Location',
+                                status: 'Update Status',
+                                assetType: 'Update Asset Type',
+                            },
+                            dialogBulkUpdateConfirm: {
+                                confirmButtonLabel: 'Proceed',
+                                cancelButtonLabel: 'Cancel',
+                                confirmationMessage:
+                                    'Are you sure you wish to proceed with this bulk update of selected assets?',
+                                confirmationTitle: 'Bulk Update Selected Assets',
+                            },
+                            snackbars: {
+                                success: 'Bulk Asset update successful',
+                                failed: error => `Error attempting to bulk update assets. ${error}`,
+                            },
+                        },
+                    },
                 },
             },
         },

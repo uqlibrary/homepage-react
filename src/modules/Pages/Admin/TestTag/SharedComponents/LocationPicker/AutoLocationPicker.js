@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+
 import LocationPicker from './LocationPicker';
 
-const AutoLocationPicker = ({ hasAllOption, locale, location, ...props }) => {
+const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }) => {
     const {
         siteList,
         siteListLoading,
@@ -21,7 +22,9 @@ const AutoLocationPicker = ({ hasAllOption, locale, location, ...props }) => {
 
     const fullSiteList = React.useMemo(
         () =>
-            !!hasAllOption ? [{ site_id: -1, site_id_displayed: locale.site.labelAll }, ...(siteList ?? [])] : siteList,
+            !!hasAllOption
+                ? [{ site_id: -1, site_id_displayed: locale.site.labelAll }, ...(siteList ?? [])]
+                : siteList ?? [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [hasAllOption, siteList],
     );
@@ -35,7 +38,7 @@ const AutoLocationPicker = ({ hasAllOption, locale, location, ...props }) => {
         () =>
             !!hasAllOption
                 ? [{ floor_id: -1, floor_id_displayed: locale.floor.labelAll }, ...(floorList?.floors ?? [])]
-                : floorList,
+                : floorList?.floors ?? [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [floorList, hasAllOption],
     );
@@ -44,7 +47,7 @@ const AutoLocationPicker = ({ hasAllOption, locale, location, ...props }) => {
         () =>
             !!hasAllOption
                 ? [{ room_id: -1, room_id_displayed: locale.room.labelAll }, ...(roomList?.rooms ?? [])]
-                : roomList,
+                : roomList?.rooms ?? [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [roomList, hasAllOption],
     );

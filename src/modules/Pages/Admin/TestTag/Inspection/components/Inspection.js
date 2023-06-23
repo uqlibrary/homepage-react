@@ -19,8 +19,8 @@ import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAu
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
-import { useForm, useValidation } from '../utils/hooks';
-import { useLocation } from '../../helpers/hooks';
+import { useValidation } from '../utils/hooks';
+import { useLocation, useForm } from '../../helpers/hooks';
 import locale from '../../testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
@@ -414,7 +414,7 @@ const Inspection = ({
 Inspection.propTypes = {
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
-    defaultNextTestDateValue: PropTypes.number,
+    defaultNextTestDateValue: PropTypes.string,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,
