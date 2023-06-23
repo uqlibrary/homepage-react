@@ -63,7 +63,7 @@ const EventPanel = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionConfig, inspectionConfigLoading]);
-
+    // console.log('pageLocale=', pageLocale);
     return (
         <StandardCard
             title={pageLocale.form.event.title}

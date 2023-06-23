@@ -8,6 +8,7 @@ import {
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSET_ACTION,
+    TEST_TAG_ASSETTYPE_ADD,
     TEST_TAG_ONLOAD_ASSETTYPE_API,
     TEST_TAG_SAVE_ASSETTYPE_API,
     TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API,
@@ -294,6 +295,50 @@ export function saveInspection(request) {
 export function clearSaveInspection() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
+    };
+}
+
+export function saveAssetTypeAndReload(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_SAVING });
+        let saveAssetComplete = false;
+        return post(TEST_TAG_ASSETTYPE_ADD(), request)
+            .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS,
+                    payload: data,
+                });
+                saveAssetComplete = true;
+
+                // reload the onload route after the asset type list would have updated with a new asset
+                // to get the update into the dropdown
+                dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
+                return get(TEST_TAG_ONLOAD_INSPECT_API());
+            })
+            .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                if (saveAssetComplete) {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_CONFIG_FAILED,
+                        payload: error.message,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_SAVE_ASSET_TYPE_FAILED,
+                        payload: error.message,
+                    });
+                }
+            });
+    };
+}
+export function clearSaveAssetType() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR });
     };
 }
 
