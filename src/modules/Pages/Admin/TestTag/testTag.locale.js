@@ -617,6 +617,54 @@ export default {
                     filterToDateFormatted: value => `Including assets up to ${value}`,
                 },
             },
+            assetReportByFilters: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Report',
+                        icon: <InspectionByUserIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Asset report for ${dept}`,
+                },
+                form: {
+                    title: 'Filters',
+                    columns: {
+                        asset_barcode: {
+                            label: 'Barcode',
+                        },
+                        building_name: {
+                            label: 'Building Name',
+                        },
+                        asset_type: {
+                            label: 'Asset Type',
+                        },
+                        asset_test_date: {
+                            label: 'Last Inspection',
+                        },
+                        asset_next_test_due_date: {
+                            label: 'Next Inspection',
+                        },
+                        asset_status: {
+                            label: 'Status',
+                        },
+                    },
+                    filterToDateLabel: 'Within date range',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
+                    statusTypes: [
+                        {
+                            status_type_id: 0,
+                            status_type_rendered: 'All',
+                            status_type: null,
+                        },
+                        {
+                            status_type_id: 1,
+                            status_type_rendered: 'Out for repair',
+                            status_type: 'OUTFORREPAIR',
+                        },
+                    ],
+                },
+            },
         },
     },
 };

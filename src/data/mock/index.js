@@ -930,6 +930,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_tagged_building_list])
     .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: null, locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
     .reply(() => [200, test_tag_assets_report_assets])
+    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .reply(() => [200, test_tag_assets_report_assets])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

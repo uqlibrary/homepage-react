@@ -89,17 +89,61 @@ const AssetReportByFilters = ({
         },
     };
     /* locale and styles */
-    const pageLocale = locale.pages.report.inspectionsByLicencedUser;
+    const pageLocale = locale.pages.report.assetReportByFilters;
+    const statusTypes = pageLocale.form.statusTypes;
+
     const classes = useStyles();
     /* State */
     const [taggedBuildingName, setTaggedBuildingName] = React.useState(-1);
-    const [buildingList, setBuildingList] = React.useState([{}]);
+    const [buildingList, setBuildingList] = React.useState([]);
+    const [selectedStartDate, setselectedStartDate] = React.useState({ date: null, error: null });
+    const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
+    const [statusType, setStatusType] = React.useState(0);
+
+    const { row, setRow } = useDataTableRow();
+    const { columns } = useDataTableColumns({
+        config,
+        locale: pageLocale.form.columns,
+        withActions: false,
+    });
     /* HELPERS */
+    const buildPayload = () => {
+        return {
+            ...config.defaults,
+            assetStatus: statusType > 0 ? statusTypes[statusType].status_type : null,
+            locationType: 'building',
+            locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
+            inspectionDateFrom: !!selectedStartDate.date ? selectedStartDate.date : null,
+            inspectionDateTo: !!selectedEndDate.date ? selectedEndDate.date : null,
+        };
+    };
+
+    const fetchReport = () => {
+        console.log('Building Report Payload', buildPayload());
+        actions.loadAssetReportByFilters(buildPayload());
+    };
+
     const handleTaggedBuildingChange = event => {
         setTaggedBuildingName(event.target.value);
+        // console.log('BuildPayload', buildPayload());
     };
     const handleTaggedBuildingClose = () => {
         console.log('handle tagged building close');
+        console.log('BuildPayload', buildPayload());
+    };
+    const handleStatusTypeChange = event => {
+        setStatusType(event.target.value);
+        // buildPayload();
+    };
+    const handleStatusTypeClose = () => {
+        console.log('handle status type close');
+    };
+
+    const handleStartDateChange = () => {
+        console.log('start date');
+    };
+    const handleStartDateClose = () => {
+        console.log('start date close');
     };
 
     /* UI HANDLERS */
@@ -108,6 +152,11 @@ const AssetReportByFilters = ({
     useEffect(() => {
         actions.loadTaggedBuildingList();
     }, []);
+
+    useEffect(() => {
+        console.log('Fetching Report');
+        fetchReport();
+    }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate]);
 
     useEffect(() => {
         setBuildingList([
@@ -124,10 +173,19 @@ const AssetReportByFilters = ({
 
     useEffect(() => {
         if (taggedBuildingList.length > 0) {
-            console.log('config', config.defaults);
-            actions.loadAssetReportByFilters(config.defaults);
+            // console.log('config', config.defaults);
+            buildPayload();
         }
-    }, [actions, taggedBuildingList]);
+    }, [taggedBuildingList]);
+
+    useEffect(() => {
+        if (!!assetList && assetList.length > 0) {
+            setRow(assetList);
+        }
+    }, [assetList]);
+
+    console.log('Asset List', assetList);
+    console.log('Status Types', statusTypes);
 
     return (
         <StandardAuthPage
@@ -137,9 +195,33 @@ const AssetReportByFilters = ({
         >
             <div className={classes.root}>
                 <StandardCard title={pageLocale.form.title}>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={1}>
                         <Grid item xs={12} md={4}>
-                            {/* Date Pickers go here */}
+                            {/* Status Picker */}
+                            <FormControl fullWidth className={classes.formControl}>
+                                <InputLabel id="asset-tagged-status-list">With Status</InputLabel>
+                                <Select
+                                    fullWidth
+                                    labelId="status-type-selector-label"
+                                    id="status-type-selector"
+                                    disabled={!!taggedBuildingListLoading || !!assetListLoading}
+                                    value={statusType}
+                                    onChange={handleStatusTypeChange}
+                                    onClose={handleStatusTypeClose}
+                                    input={<Input id="status-type-input" />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {!!statusTypes &&
+                                        statusTypes.map(type => (
+                                            <MenuItem key={type.status_type_id} value={type.status_type_id}>
+                                                {type.status_type_rendered}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            {/* Building Picker */}
                             <FormControl fullWidth className={classes.formControl}>
                                 <InputLabel id="asset-tagged-building-list">Building Name</InputLabel>
                                 <Select
@@ -154,27 +236,75 @@ const AssetReportByFilters = ({
                                     MenuProps={MenuProps}
                                 >
                                     {!!buildingList &&
+                                        buildingList.length > 0 &&
                                         buildingList.map(building => (
-                                            <MenuItem key={building.building_id} value={building.building_id}>
+                                            <MenuItem
+                                                key={building.building_id < 0 ? 9999999999 : building.building_id}
+                                                value={building.building_id}
+                                            >
                                                 {building.building_name}
                                             </MenuItem>
                                         ))}
                                 </Select>
                             </FormControl>
                         </Grid>
+                        <Grid item xs={12} md={4}>
+                            {/* Start Date */}
+                            <KeyboardDatePicker
+                                fullWidth
+                                disabled={!!taggedBuildingListLoading || !!assetListLoading}
+                                classes={{ root: classes.datePickerRoot }}
+                                disableToolbar
+                                variant="inline"
+                                format="DD/MM/yyyy"
+                                margin="normal"
+                                id="inspections-start-date"
+                                label="Tagged date from"
+                                value={selectedStartDate.date}
+                                onChange={handleStartDateChange}
+                                onBlur={handleStartDateClose}
+                                onClose={handleStartDateClose}
+                                error={!!selectedStartDate.error}
+                                helperText={!!selectedStartDate.error && selectedStartDate.error}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change start date',
+                                }}
+                            />
+                            <KeyboardDatePicker
+                                fullWidth
+                                disabled={!!taggedBuildingListLoading || !!assetListLoading}
+                                classes={{ root: classes.datePickerRoot }}
+                                disableToolbar
+                                variant="inline"
+                                format="DD/MM/yyyy"
+                                margin="normal"
+                                id="inspections-start-date"
+                                label="Tagged date to"
+                                value={selectedStartDate.date}
+                                onChange={handleStartDateChange}
+                                onBlur={handleStartDateClose}
+                                onClose={handleStartDateClose}
+                                error={!!selectedStartDate.error}
+                                helperText={!!selectedStartDate.error && selectedStartDate.error}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change start date',
+                                }}
+                            />
+                        </Grid>
                     </Grid>
 
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
-                            {/* <DataTable
+                            <DataTable
                                 rows={row}
                                 columns={columns}
-                                rowId={'user_uid'}
-                                loading={userInspectionsLoading}
+                                rowId={'asset_id'}
+                                rowKey={'asset_id'}
+                                loading={!!assetListLoading}
                                 classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
                                 disableColumnMenu
-                            /> */}
+                            />
                         </Grid>
                     </Grid>
                     {/* <ConfirmationAlert
