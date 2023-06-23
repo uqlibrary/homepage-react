@@ -6,9 +6,11 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 
 const AssetTypeSelector = ({
     id,
+    title,
     locale,
     actions,
     initValue,
@@ -23,9 +25,11 @@ const AssetTypeSelector = ({
     const { assetTypesList, assetTypesListLoading } = useSelector(state => state.get('testTagAssetTypesReducer'));
 
     React.useEffect(() => {
-        actions.loadAssetTypes();
+        if (assetTypesList.length === 0) {
+            actions.loadAssetTypes();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [assetTypesList]);
 
     const handleChange = (_event, assetType) => {
         setValue(assetType);
@@ -34,6 +38,11 @@ const AssetTypeSelector = ({
 
     return (
         <FormControl className={classNames.formControl} fullWidth>
+            {!!title && (
+                <Typography variant="h6" component={'h3'}>
+                    {title}
+                </Typography>
+            )}
             <Autocomplete
                 id={`testntagFormAssetType-${id}`}
                 data-testid={`testntagFormAssetType-${id}`}
@@ -95,6 +104,7 @@ AssetTypeSelector.propTypes = {
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
     validateAssetTypeId: PropTypes.func,
     disabled: PropTypes.bool,
+    title: PropTypes.string,
 };
 
 export default React.memo(AssetTypeSelector);

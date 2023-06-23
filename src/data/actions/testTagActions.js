@@ -292,7 +292,7 @@ export function loadAssetsMine(filters) {
     };
 }
 
-export function clearCurrentAssets() {
+export function clearAssetsMine() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_CLEAR });
     };

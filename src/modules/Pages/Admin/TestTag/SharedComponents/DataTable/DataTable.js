@@ -19,7 +19,7 @@ const DataTable = ({ rows = [], columns = [], rowId, autoHeight = true, height, 
                     disableColumnSort
                     getRowId={row => row?.[rowId]}
                     autoHeight={autoHeight}
-                    pageSize={25}
+                    rowsPerPageOptions={[10, 25, 50, 100]}
                     {...rest}
                 />
             </Box>

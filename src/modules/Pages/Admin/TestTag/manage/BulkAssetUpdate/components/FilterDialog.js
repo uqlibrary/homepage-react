@@ -7,6 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
@@ -14,7 +15,6 @@ import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
-import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 
 // eslint-disable-next-line no-unused-vars
 export const useStyles = makeStyles(theme => ({
@@ -62,6 +62,7 @@ const FilterDialog = ({
         setLocation,
         actions,
         store: locationStore,
+        condition: () => isOpen,
     });
     const { columns } = useDataTableColumns({
         config,
@@ -69,8 +70,10 @@ const FilterDialog = ({
         withActions: false,
     });
     useEffect(() => {
-        console.log('effect setrow', assetsMineList, assetsMineListLoading);
-        if (!assetsMineListLoading) setRow(assetsMineList);
+        if (!assetsMineListLoading) {
+            console.log('effect setrow', assetsMineList, assetsMineListLoading);
+            setRow(assetsMineList);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsMineList, assetsMineListLoading]);
 
@@ -160,21 +163,36 @@ const FilterDialog = ({
                             rowId={'asset_id'}
                             loading={assetsMineListLoading}
                             classes={{ root: classes.gridRoot }}
-                            components={{ Footer: FooterBar }}
-                            componentsProps={{
-                                footer: {
-                                    id: 'bulkAssetUpdateFilterDialog',
-                                    actionLabel: locale.button.submit,
-                                    altLabel: locale.button.cancel,
-                                    onAltClick: handleCancelAction,
-                                    onActionClick: handleAddAction,
-                                },
-                            }}
                             checkboxSelection
                             disableRowSelectionOnClick
                             onSelectionModelChange={handleAssetSelectionChange}
                             autoHeight={false}
                         />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={4} className={classes.actionButtons}>
+                    <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                        <Button
+                            variant="outlined"
+                            onClick={handleCancelAction}
+                            id="bulkUpdateCancelButton"
+                            data-testid="bulkUpdateBackButton"
+                            color={'default'}
+                        >
+                            {locale.button.cancel}
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={6} container justifyContent="flex-end">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleAddAction}
+                            id="bulkUpdateSubmitButton"
+                            data-testid="bulkUpdateAddButton"
+                            disabled={row.length === 0}
+                        >
+                            {locale.button.submit}
+                        </Button>
                     </Grid>
                 </Grid>
             </DialogContent>

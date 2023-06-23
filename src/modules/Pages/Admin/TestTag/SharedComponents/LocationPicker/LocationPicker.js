@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 // import clsx from 'clsx';
 
 const inputLabelProps = { shrink: true };
@@ -24,6 +25,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const LocationPicker = ({
+    title,
     siteList,
     siteListLoading,
     buildingList,
@@ -47,8 +49,16 @@ const LocationPicker = ({
     const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
     return (
         <>
+            {!!title && (
+                <Grid item xs={12}>
+                    <Typography variant="h6" component={'h3'}>
+                        {title}
+                    </Typography>
+                </Grid>
+            )}
+
             <Grid item xs={12} sm={6} md={12 / divisor}>
-                <FormControl className={classes.formControl} fullWidth disabled={disabled}>
+                <FormControl className={classes.formControl} fullWidth>
                     <Autocomplete
                         id="testntag-form-siteid"
                         data-testid="testntag-form-siteid"
@@ -106,7 +116,7 @@ const LocationPicker = ({
                                 {...(inputProps?.site ?? {})}
                             />
                         )}
-                        disabled={!!!siteList}
+                        disabled={disabled || !!!siteList}
                         disableClearable
                         loading={siteListLoading}
                     />
@@ -114,7 +124,7 @@ const LocationPicker = ({
             </Grid>
             {!fieldsToHide.includes('building') && (
                 <Grid item xs={12} sm={6} md={12 / divisor}>
-                    <FormControl className={classes.formControl} fullWidth disabled={disabled}>
+                    <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id="testntag-form-buildingid"
                             data-testid="testntag-form-buildingid"
@@ -175,7 +185,7 @@ const LocationPicker = ({
                                     {...(inputProps?.building ?? {})}
                                 />
                             )}
-                            disabled={location.site === -1 || !!!siteList}
+                            disabled={disabled || location.site === -1 || !!!siteList}
                             disableClearable
                             loading={siteListLoading}
                         />
@@ -185,7 +195,7 @@ const LocationPicker = ({
 
             {!fieldsToHide.includes('floor') && (
                 <Grid item xs={12} sm={6} md={12 / divisor}>
-                    <FormControl className={classes.formControl} fullWidth disabled={disabled}>
+                    <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id="testntag-form-floorid"
                             data-testid="testntag-form-floorid"
@@ -233,7 +243,7 @@ const LocationPicker = ({
                                     {...(inputProps?.floor ?? {})}
                                 />
                             )}
-                            disabled={location.building === -1 || floorListLoading}
+                            disabled={disabled || location.building === -1 || floorListLoading}
                             disableClearable
                             loading={!!floorListLoading}
                         />
@@ -242,7 +252,7 @@ const LocationPicker = ({
             )}
             {!fieldsToHide.includes('room') && (
                 <Grid item xs={12} sm={6} md={12 / divisor}>
-                    <FormControl className={classes.formControl} fullWidth disabled={disabled}>
+                    <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id="testntag-form-roomid"
                             data-testid="testntag-form-roomid"
@@ -287,7 +297,7 @@ const LocationPicker = ({
                                     {...(inputProps?.room ?? {})}
                                 />
                             )}
-                            disabled={location.floor === -1 || roomListLoading}
+                            disabled={disabled || location.floor === -1 || roomListLoading}
                             disableClearable
                             loading={!!roomListLoading}
                         />
@@ -318,6 +328,7 @@ LocationPicker.propTypes = {
     inputProps: PropTypes.object,
     hasAllOption: PropTypes.bool,
     disabled: PropTypes.bool,
+    title: PropTypes.string,
 };
 
 export default React.memo(LocationPicker);

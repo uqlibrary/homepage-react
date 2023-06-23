@@ -14,55 +14,74 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
         _setLocation({ ...location, ...update });
     };
 
-    return { location, setLocation };
+    const resetLocation = () => {
+        _setLocation({
+            [locationType.site]: defaultSiteId,
+            [locationType.building]: defaultBuildingId,
+            [locationType.floor]: defaultFloorId,
+            [locationType.room]: defaultRoomId,
+        });
+    };
+
+    return { location, setLocation, resetLocation };
 };
 
-export const useSelectLocation = ({ initial = locationType.site, location, setLocation, actions, setRow, store }) => {
+export const useSelectLocation = ({
+    initial = locationType.site,
+    location,
+    setLocation,
+    actions,
+    setRow,
+    store,
+    condition,
+}) => {
     const [selectedLocation, setSelectedLocation] = useState(initial ?? locationType.site);
     const [lastSelectedLocation, setLastSelectedLocation] = useState(initial ?? locationType.site);
 
     const { siteList, siteListLoaded, floorList, floorListLoaded, roomList, roomListLoaded } = store;
 
     useEffect(() => {
-        if (roomListLoaded) {
-            if (location.room !== -1) {
-                setLastSelectedLocation(locationType.room);
-            } else {
-                if (location.floor !== -1) {
-                    setRow?.(roomList.rooms);
-                    setLastSelectedLocation(locationType.floor);
+        if (condition?.() ?? true) {
+            if (roomListLoaded) {
+                if (location.room !== -1) {
+                    setLastSelectedLocation(locationType.room);
                 } else {
-                    setLocation?.({ room: -1 });
-                    actions?.clearRooms();
-                    setLastSelectedLocation(locationType.building);
+                    if (location.floor !== -1) {
+                        setRow?.(roomList.rooms);
+                        setLastSelectedLocation(locationType.floor);
+                    } else {
+                        setLocation?.({ room: -1 });
+                        actions?.clearRooms();
+                        setLastSelectedLocation(locationType.building);
+                    }
                 }
-            }
-            setSelectedLocation(locationType.room);
-        } else if (floorListLoaded) {
-            if (location.building !== -1) {
-                setRow?.(floorList.floors);
-            } else {
-                setRow?.(
-                    siteList
-                        ?.find(site => site.site_id === location.site)
-                        ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
-                );
-                setLocation?.({ floor: -1, room: -1 });
-                actions?.clearFloors();
-            }
-            setSelectedLocation(locationType.floor);
-            setLastSelectedLocation(locationType.building);
-        } else if (siteListLoaded) {
-            if (location.site !== -1) {
-                setRow?.(siteList.find(site => site.site_id === location.site).buildings);
-                setSelectedLocation(locationType.building);
-                setLastSelectedLocation(locationType.site);
-            } else {
-                setRow?.(siteList);
-                setLocation?.({ building: -1, floor: -1, room: -1 });
-                setSelectedLocation(locationType.site);
-            }
-        } else actions?.loadSites();
+                setSelectedLocation(locationType.room);
+            } else if (floorListLoaded) {
+                if (location.building !== -1) {
+                    setRow?.(floorList.floors);
+                } else {
+                    setRow?.(
+                        siteList
+                            ?.find(site => site.site_id === location.site)
+                            ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
+                    );
+                    setLocation?.({ floor: -1, room: -1 });
+                    actions?.clearFloors();
+                }
+                setSelectedLocation(locationType.floor);
+                setLastSelectedLocation(locationType.building);
+            } else if (siteListLoaded) {
+                if (location.site !== -1) {
+                    setRow?.(siteList.find(site => site.site_id === location.site).buildings);
+                    setSelectedLocation(locationType.building);
+                    setLastSelectedLocation(locationType.site);
+                } else {
+                    setRow?.(siteList);
+                    setLocation?.({ building: -1, floor: -1, room: -1 });
+                    setSelectedLocation(locationType.site);
+                }
+            } else actions?.loadSites();
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [

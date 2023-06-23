@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+
 import LocationPicker from './LocationPicker';
 
 const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }) => {

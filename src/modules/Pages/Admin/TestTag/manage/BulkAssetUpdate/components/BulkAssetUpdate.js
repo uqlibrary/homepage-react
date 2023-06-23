@@ -69,7 +69,7 @@ export const transformRow = row => {
 
 export const transformRequest = formValues => {
     return {
-        assets: formValues.asset_list.reduce((cumulative, current) => [...cumulative, current.asset_id], []),
+        asset: formValues.asset_list.reduce((cumulative, current) => [...cumulative, current.asset_id], []),
         ...(!!formValues.hasLocation ? { asset_room_id_last_seen: formValues.location.room } : {}),
         ...(!!formValues.hasAssetType ? { asset_type_id: formValues.asset_type.asset_type_id } : {}),
         ...(!!formValues.hasStatus ? { is_discarding: 1 } : {}),
@@ -91,12 +91,13 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         defaultValues: { ...assignAssetDefaults() },
     });
     const locationStore = useSelector(state => state.get('testTagLocationReducer'));
-    const { location, setLocation } = useLocation();
-    const { selectedLocation } = useSelectLocation({
+    const { location, setLocation, resetLocation } = useLocation();
+    useSelectLocation({
         location,
         setLocation,
         actions,
         store: locationStore,
+        condition: () => !isFilterDialogOpen,
     });
 
     useEffect(() => {
@@ -127,8 +128,13 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
 
     const resetForm = () => {
         const newFormValues = assignAssetDefaults();
+        setConfirmDialogueBusy(false);
+        setConfirmDialogOpen(false);
         resetFormValues(newFormValues);
+        resetLocation();
+        actions.clearAssetsMine();
         list.clear();
+        setStep(1);
     };
 
     const handleDeleteClick = useCallback(
@@ -174,6 +180,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
 
     const handleConfirmDialogClose = () => closeConfirmDialog();
     const handleConfirmDialogAction = () => {
+        // Send data to the server and save update
         setConfirmDialogueBusy(true);
         const request = transformRequest(formValues);
         console.log('handleConfirmDialogAction', { request });
@@ -181,16 +188,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             .bulkAssetUpdate(request)
             .then(() => {
                 openSnackbarAlert(stepTwoLocale.snackbars.success, 'success');
-                setConfirmDialogueBusy(false);
-                setConfirmDialogOpen(false);
-                setStep(1);
                 resetForm();
             })
             .catch(error => {
                 openSnackbarAlert(stepTwoLocale.snackbars.failed(error), 'error', false);
                 setConfirmDialogueBusy(false);
             });
-        // TEST_TAG_BULK_UPDATE_API = ({ assets, roomId, assetTypeId, status }) => {
     };
 
     const handleLocationUpdate = location => {
@@ -331,6 +334,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             onAltClick: resetForm,
                                             onActionClick: handleNextStepButton,
                                             nextButtonProps: { disabled: list.data.length === 0 },
+                                            withPagination: false,
                                         },
                                     }}
                                 />
@@ -380,20 +384,25 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 locale={locale.pages.general.locationPicker}
                                 inputProps={{
                                     site: {
-                                        error: location.site === -1,
+                                        error: formValues.hasLocation && location.site === -1,
                                     },
                                     building: {
-                                        required: location.site !== -1,
-                                        error: location.site !== -1 && location.building === -1,
+                                        required: formValues.hasLocation && location.site !== -1,
+                                        error:
+                                            formValues.hasLocation && location.site !== -1 && location.building === -1,
                                     },
                                     floor: {
-                                        required: location.building !== -1,
+                                        required: formValues.hasLocation && location.building !== -1,
                                         error:
-                                            location.site !== -1 && location.building !== -1 && location.floor === -1,
+                                            formValues.hasLocation &&
+                                            location.site !== -1 &&
+                                            location.building !== -1 &&
+                                            location.floor === -1,
                                     },
                                     room: {
-                                        required: location.floor !== -1,
+                                        required: formValues.hasLocation && location.floor !== -1,
                                         error:
+                                            formValues.hasLocation &&
                                             location.site !== -1 &&
                                             location.building !== -1 &&
                                             location.floor !== -1 &&

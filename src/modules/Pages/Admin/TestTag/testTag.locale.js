@@ -568,6 +568,8 @@ export default {
                                 asset_location: { label: 'Last Room ID' },
                                 asset_status: { label: 'Status' },
                             },
+                            locationTitle: 'Location',
+                            assetTypeTitle: 'Asset Type',
                         },
                     },
                     step: {
