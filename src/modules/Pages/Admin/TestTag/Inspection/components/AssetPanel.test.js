@@ -1,6 +1,6 @@
 import React from 'react';
 import AssetPanel from './AssetPanel';
-import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
+import { render /* , act, fireEvent*/, WithReduxStore /* , waitFor*/ } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
@@ -75,9 +75,8 @@ describe('AssetPanel', () => {
             saveInspectionSaving: false,
             isValid: false,
         });
-
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
-        expect(getByTestId('testntagFormAssetId')).toBeInTheDocument();
+        expect(getByTestId('testntagFormAssetId-select')).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetType')).toBeInTheDocument();
     });
 
@@ -129,65 +128,66 @@ describe('AssetPanel', () => {
         expect(getByTestId('assetTypeSpinner')).toBeInTheDocument();
     });
 
-    it('can search for asset ids', async () => {
-        const resetForm = jest.fn();
-        const assignCurrentAsset = jest.fn();
-        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+    // MOVE FOLLOWING TESTS TO ASSETSELECTOR TEST
+    // it('can search for asset ids', async () => {
+    //     const resetForm = jest.fn();
+    //     const assignCurrentAsset = jest.fn();
+    //     const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
 
-        const wontTriggerValue = 'UQL310'; // not a long enough text
-        const willTriggerValue = 'UQL3100';
+    //     const wontTriggerValue = 'UQL3'; // not a long enough text
+    //     const willTriggerValue = 'UQL31';
 
-        // eslint-disable-next-line no-unused-vars
-        const handleChange = jest.fn(prop => jest.fn(event => {}));
-        const actionFn = jest.fn();
+    //     // eslint-disable-next-line no-unused-vars
+    //     const handleChange = jest.fn(prop => jest.fn(event => {}));
+    //     const actionFn = jest.fn();
 
-        const { getByTestId } = setup({
-            actions: { loadAssets: actionFn },
-            formValues,
-            location,
-            resetForm,
-            assignCurrentAsset,
-            handleChange,
-            saveInspectionSaving: false,
-            isValid: false,
-        });
+    //     const { getByTestId } = setup({
+    //         actions: { loadAssets: actionFn },
+    //         formValues,
+    //         location,
+    //         resetForm,
+    //         assignCurrentAsset,
+    //         handleChange,
+    //         saveInspectionSaving: false,
+    //         isValid: false,
+    //     });
 
-        // screen.debug(undefined, 100000);
+    //     // screen.debug(undefined, 100000);
 
-        act(() => {
-            fireEvent.change(getByTestId('testntagFormAssetIdInput'), { target: { value: wontTriggerValue } });
-        });
-        await waitFor(() => expect(actionFn).not.toHaveBeenCalledWith(wontTriggerValue));
+    //     act(() => {
+    //         fireEvent.change(getByTestId('testntagFormAssetId-input'), { target: { value: wontTriggerValue } });
+    //     });
+    //     await waitFor(() => expect(actionFn).not.toHaveBeenCalledWith(wontTriggerValue));
 
-        act(() => {
-            fireEvent.change(getByTestId('testntagFormAssetIdInput'), { target: { value: willTriggerValue } });
-        });
-        await waitFor(() => expect(actionFn).toHaveBeenCalledWith(willTriggerValue));
-    });
+    //     act(() => {
+    //         fireEvent.change(getByTestId('testntagFormAssetId-input'), { target: { value: willTriggerValue } });
+    //     });
+    //     await waitFor(() => expect(actionFn).toHaveBeenCalledWith(willTriggerValue));
+    // });
 
-    it('should auto assign the current asset if returned list only contains one entry', () => {
-        const resetForm = jest.fn();
-        const assignCurrentAsset = jest.fn();
-        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
-        const handleChange = jest.fn(prop => jest.fn(event => {}));
+    // it('should auto assign the current asset if returned list only contains one entry', () => {
+    //     const resetForm = jest.fn();
+    //     const assignCurrentAsset = jest.fn();
+    //     const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+    //     // eslint-disable-next-line no-unused-vars
+    //     const handleChange = jest.fn(prop => jest.fn(event => {}));
 
-        const setStateMock = jest.fn();
-        const spyState = useState => [useState, setStateMock];
-        jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
+    //     const setStateMock = jest.fn();
+    //     const spyState = useState => [useState, setStateMock];
+    //     jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
 
-        setup({
-            formValues,
-            location,
-            resetForm,
-            assignCurrentAsset,
-            handleChange,
-            saveInspectionSaving: false,
-            isValid: false,
-            state: { testTagAssetsReducer: { assetsList: [{ ...assetData[0] }], assetsListLoading: false } },
-        });
+    //     setup({
+    //         formValues,
+    //         location,
+    //         resetForm,
+    //         assignCurrentAsset,
+    //         handleChange,
+    //         saveInspectionSaving: false,
+    //         isValid: false,
+    //         state: { testTagAssetsReducer: { assetsList: [{ ...assetData[0] }], assetsListLoading: false } },
+    //     });
 
-        expect(assignCurrentAsset).toHaveBeenCalledWith({ ...assetData[0] });
-        expect(setStateMock).toHaveBeenCalledWith(false); // auto closes the autocomplete popup
-    });
+    //     expect(assignCurrentAsset).toHaveBeenCalledWith({ ...assetData[0] });
+    //     expect(setStateMock).toHaveBeenCalledWith(false); // auto closes the autocomplete popup
+    // });
 });

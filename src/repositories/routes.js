@@ -222,7 +222,6 @@ export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/se
 export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
 export const TEST_TAG_ASSETTYPE_ADD = () => ({ apiUrl: '/test_and_tag/asset_type' });
 export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device/current/mine' });
-export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device/current/mine' });
 export const TEST_TAG_ADD_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device' });
 export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test_and_tag/inspection_device/${id}` });
 
@@ -281,4 +280,3 @@ export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId
 };
 
 export const TEST_TAG_BULK_UPDATE_API = () => ({ apiUrl: 'test_and_tag/asset' });
-
