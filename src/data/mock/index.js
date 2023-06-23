@@ -933,11 +933,11 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         },
     ])
-    .onDelete(/test_and_tag\/assettype\/4/)
+    .onDelete(/test_and_tag\/asset_type\/4/)
     .reply(() => {
         return [200, { status: 'OK' }];
     })
-    .onDelete(/test_and_tag\/assettype\/5/)
+    .onDelete(/test_and_tag\/asset_type\/5/)
     .reply(() => {
         return [
             400,

@@ -220,7 +220,7 @@ export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test_a
 
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });
 export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
-export const TEST_TAG_ASSETTYPE_ADD = () => ({ apiUrl: '/test_and_tag/assetType' });
+export const TEST_TAG_ASSETTYPE_ADD = () => ({ apiUrl: '/test_and_tag/asset_type' });
 export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device/current/mine' });
 export const TEST_TAG_ADD_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device' });
 export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test_and_tag/inspection_device/${id}` });
@@ -229,13 +229,13 @@ export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test_and
 // List Asset Types
 export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/current' });
 // Add an asset type
-export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
+export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type' });
 // Save an asset type (ID contained in payload)
-export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
+export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type' });
 // Delete an Asset type (Reassigning assets to new asset type)
-export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype/reassign' });
+export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/reassign' });
 // Delete an Empty Asset Type
-export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/assettype/${id}` });
+export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/asset_type/${id}` });
 
 /** TEST AND TAG INSPECTIONS REPORT */
 export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType }) => {
