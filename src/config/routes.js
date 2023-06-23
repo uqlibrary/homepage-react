@@ -232,6 +232,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
+        {
+            path: pathConfig.admin.testntagreportassetsbyfilters,
+            component: components.TestTagAssetReportByFilters,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
     ];
     // const testntagManageAssetTypes = [
     //     {

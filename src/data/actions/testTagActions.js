@@ -22,6 +22,7 @@ import {
     TEST_TAG_REPORT_INSPECTIONS_DUE_API,
     TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API,
     TEST_TAG_REPORT_UTILITY_LICENCED_USERS,
+    TEST_TAG_TAGGED_BUILDING_LIST,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -579,6 +580,29 @@ export function getLicencedUsers() {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_LICENCED_INSPECTORS_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+/* Asset report for DEPT */
+export function loadTaggedBuildingList() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TAGGED_BUILDING_LIST_LOADING });
+        return get(TEST_TAG_TAGGED_BUILDING_LIST())
+            .then(response => {
+                console.log('Data', response);
+                dispatch({
+                    type: actions.TESTTAG_TAGGED_BUILDING_LIST_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_TAGGED_BUILDING_LIST_FAILED,
                     payload: error.message,
                 });
                 return Promise.reject(error);

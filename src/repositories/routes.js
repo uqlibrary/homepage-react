@@ -264,3 +264,6 @@ export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, en
 };
 /* UTILITY API USED FOR LICENCED USER INSPECTIONS REPORT - GET LICENCED USERS FOR DROPDOWN */
 export const TEST_TAG_REPORT_UTILITY_LICENCED_USERS = () => ({ apiUrl: 'test_and_tag/report/licenced_inspectors' });
+
+/* Asset Report for DEPT */
+export const TEST_TAG_TAGGED_BUILDING_LIST = () => ({ apiUrl: 'test_and_tag/building/mine' });

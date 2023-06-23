@@ -26,6 +26,7 @@ export const pathConfig = {
         testntagreportinspectionsdue: '/admin/testntag/report/inspectionsdue',
         testntagreportinspectionsbylicenceduser: '/admin/testntag/report/inspectionsbylicenceduser',
         testntagmanageassettypes: '/admin/testntag/manage/assettypes',
+        testntagreportassetsbyfilters: '/admin/testntag/report/assetsbyfilter',
     },
     bookExamBooth: '/book-exam-booth',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
