@@ -780,7 +780,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_user_UQPF : testTag_user];
+        return [200, config?.headers['X-Uql-Token'] === 'uqpf' ? testTag_user_UQPF : testTag_user];
     })
 
     // dashboard CONFIG
@@ -823,30 +823,32 @@ mock.onGet('exams/course/FREN1010/summary')
     // T&T LOCATIONS
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).apiUrl)
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).apiUrl)
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).apiUrl)
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({ type: 'room', id: '.*' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
 
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
-    .reply(() => {return [200, testTag_inspectionDevices]})
+    .reply(() => {
+        return [200, testTag_inspectionDevices];
+    })
     .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().apiUrl)
-    .reply(() => [200, {status: 'OK'}])
+    .reply(() => [200, { status: 'OK' }])
     .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
-    .reply(() => [200, {status: 'OK'}])
+    .reply(() => [200, { status: 'OK' }])
     .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
-    .reply(() => [200, {status: 'OK'}])
+    .reply(() => [200, { status: 'OK' }])
 
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)
@@ -897,30 +899,28 @@ mock.onGet('exams/course/FREN1010/summary')
 
     // Test and Tag Asset Types
     .onGet(/test_and_tag\/asset_type\/current/)
-    .reply(() => 
-        [
-            200,
-            {
-                status: 'OK',
-                data: {
-                    "asset_types" : test_tag_asset_types.data,
-                }
-            }
-        ]
-    )
+    .reply(() => [
+        200,
+        {
+            status: 'OK',
+            data: {
+                asset_types: test_tag_asset_types.data,
+            },
+        },
+    ])
     .onPost(routes.TEST_TAG_ADD_ASSET_TYPE_API().apiUrl)
     .reply(() => [
         200,
         {
             status: 'OK',
-        }
+        },
     ])
     .onPut(routes.TEST_TAG_SAVE_ASSETTYPE_API().apiUrl)
     .reply(() => [
         200,
         {
             status: 'OK',
-        }
+        },
     ])
     .onPost(routes.TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API().apiUrl)
     .reply(() => [
@@ -930,13 +930,12 @@ mock.onGet('exams/course/FREN1010/summary')
             data: {
                 effected_assets: 1,
                 effected_asset_types: 1,
-            }
-
-        }
+            },
+        },
     ])
     .onDelete(/test_and_tag\/assettype\/4/)
     .reply(() => {
-        return [200, {status: 'OK'}]
+        return [200, { status: 'OK' }];
     })
     .onDelete(/test_and_tag\/assettype\/5/)
     .reply(() => {
@@ -948,9 +947,19 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
-    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({ period: '3', periodType: 'month' }).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
-    .onGet(new RegExp(panelRegExp(routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({startDate: null, endDate: null, userRange: null}).apiUrl)))
+    .onGet(
+        new RegExp(
+            panelRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    startDate: null,
+                    endDate: null,
+                    userRange: null,
+                }).apiUrl,
+            ),
+        ),
+    )
     .reply(() => [200, test_tag_inspections_by_licenced_user])
     .onGet(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS().apiUrl)
     .reply(() => [200, test_tag_licenced_inspectors])
