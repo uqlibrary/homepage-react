@@ -16,7 +16,6 @@ import {
     getClassNumberFromPieces,
 } from './account';
 import Cookies from 'js-cookie';
-import { addMockAccountToStoredAccount } from '../mock';
 
 jest.mock('@sentry/browser');
 
@@ -66,7 +65,6 @@ describe('Account action creators', () => {
     });
 
     it('should dispatch expected actions on successful fetch of user details', async () => {
-        addMockAccountToStoredAccount(accounts.uqresearcher, currentAuthor.uqresearcher);
         mockApi
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqresearcher)
@@ -85,7 +83,6 @@ describe('Account action creators', () => {
     });
 
     it('should use student username to get author details when org username not set', async () => {
-        addMockAccountToStoredAccount(accounts.uqresearcher, currentAuthor.s2222222);
         mockApi
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqresearcher)
@@ -104,7 +101,6 @@ describe('Account action creators', () => {
     });
 
     it('should return expected actions for a student with an account', async () => {
-        addMockAccountToStoredAccount(accounts.s1111111, currentAuthor.s3333333);
         mockApi
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.s1111111)
@@ -123,7 +119,6 @@ describe('Account action creators', () => {
     });
 
     it('should return expected actions for a hospital em user', async () => {
-        addMockAccountToStoredAccount(accounts.emhospital, currentAuthor.s3333333);
         mockApi
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.emhospital)
@@ -142,7 +137,6 @@ describe('Account action creators', () => {
     });
 
     it('should return expected actions for a student with an account but no author account', async () => {
-        addMockAccountToStoredAccount(accounts.s3333333, currentAuthor.s3333333);
         mockApi
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.s3333333)
@@ -161,7 +155,6 @@ describe('Account action creators', () => {
     });
 
     it('should dispatch expected actions if author returns 404', async () => {
-        addMockAccountToStoredAccount(accounts.uqstaff, null);
         mockApi
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqstaff)
@@ -180,7 +173,6 @@ describe('Account action creators', () => {
     });
 
     it('should dispatch expected actions if author returns 403', async () => {
-        addMockAccountToStoredAccount(accounts.uqstaff, null);
         mockApi
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqstaff)
@@ -199,7 +191,6 @@ describe('Account action creators', () => {
     });
 
     it('should dispatch expected actions if account, author loaded, but author details failed via loadCurrentAccount()', async () => {
-        addMockAccountToStoredAccount(accounts.uqresearcher, currentAuthor.uqresearcher);
         process.env = {
             ENABLE_LOG: true,
         };
@@ -224,7 +215,6 @@ describe('Account action creators', () => {
     });
 
     it('should dispatch expected actions for a student without an author account', async () => {
-        addMockAccountToStoredAccount(accounts.s3333333, currentAuthor.s3333333);
         process.env = {
             ENABLE_LOG: true,
         };
@@ -418,7 +408,7 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('dispatches expected actions when possible espace publications call succeeds', async () => {
+    it('dispatches expected actions when possible ntro call succeeds', async () => {
         mockApi.onGet(repositories.routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(200);
 
         const expectedActions = [

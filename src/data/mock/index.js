@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi, STORAGE_ACCOUNT_KEYNAME } from 'config';
+import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -82,11 +82,6 @@ const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
 user = user || 'vanilla';
 
-addMockAccountToStoredAccount(
-    !!accounts[user] && accounts[user],
-    !!user && !!currentAuthor[user] ? currentAuthor[user].data : null,
-);
-
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
     Cookies.set(SESSION_COOKIE_NAME, user === 'uqpf' ? 'uqpf' : 'abc123');
@@ -100,42 +95,6 @@ if (user && !mockData.accounts[user]) {
     );
 }
 
-export function addMockAccountToStoredAccount(account, currentAuthor, numberOfHoursUntilExpiry = 1) {
-    let bc;
-    if ('BroadcastChannel' in window) {
-        bc = new BroadcastChannel('account_availability');
-    }
-    if (!(!!account && account.hasOwnProperty('hasSession') && account.hasSession === true)) {
-        // the broadcast event in production happens in reusable
-        !!bc && bc.postMessage('account_removed');
-        return;
-    }
-    const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
-    const storageExpiryDate = {
-        storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
-    };
-    let storeableAccount = {
-        status: 'loggedin',
-        account: {
-            ...account,
-        },
-        ...storageExpiryDate,
-    };
-    if (!!currentAuthor) {
-        storeableAccount = {
-            ...storeableAccount,
-            currentAuthor: {
-                ...currentAuthor,
-            },
-        };
-    }
-    storeableAccount = JSON.stringify(storeableAccount);
-    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
-
-    // the broadcast event in production happens in reusable
-    !!bc && bc.postMessage('account_updated');
-}
-
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
     // const randomTime = 5000;
@@ -143,16 +102,6 @@ const withDelay = response => config => {
         setTimeout(function() {
             resolve(response);
         }, randomTime);
-    });
-};
-const withSetDelay = (response, seconds = 0.1) => config => {
-    seconds = seconds > 5 ? 0.1 : seconds;
-    const setTime = seconds * 1000; // Change these values to delay mock API
-    // const randomTime = 5000;
-    return new Promise(function(resolve, reject) {
-        setTimeout(function() {
-            resolve(response);
-        }, setTime);
     });
 };
 
