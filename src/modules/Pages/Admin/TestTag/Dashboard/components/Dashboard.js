@@ -106,9 +106,32 @@ const Dashboard = ({
                                 }
                                 className={classes.card}
                             >
-                                <Typography component={'div'} variant={'h4'}>
-                                    {dashboardConfig?.retest?.soon}
-                                </Typography>
+                                {/* <Typography component={'div'} variant={'h4'}>
+                                    {parseInt(dashboardConfig?.retest?.soon, 10) +
+                                        parseInt(dashboardConfig?.retest?.overdue, 10)}
+                                </Typography> */}
+                                {/* <Typography component={'div'} variant={'h6'}>
+                                    {`(${dashboardConfig?.retest?.soon} upcoming,
+                                        ${dashboardConfig?.retest?.overdue} overdue)`}
+                                </Typography> */}
+                                <Grid container>
+                                    <Grid item xs={6}>
+                                        <Typography component={'div'} variant={'h4'} style={{ textAlign: 'center' }}>
+                                            {`${dashboardConfig?.retest?.soon}`}
+                                        </Typography>
+                                        <Typography component={'div'} variant={'h6'} style={{ textAlign: 'center' }}>
+                                            {'Upcoming'}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Typography component={'div'} variant={'h4'} style={{ textAlign: 'center' }}>
+                                            {`${dashboardConfig?.retest?.overdue}`}
+                                        </Typography>
+                                        <Typography component={'div'} variant={'h6'} style={{ textAlign: 'center' }}>
+                                            {'*Overdue'}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
                                 <Typography variant={'body1'}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
