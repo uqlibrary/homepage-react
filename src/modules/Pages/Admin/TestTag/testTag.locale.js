@@ -649,7 +649,11 @@ export default {
                             label: 'Status',
                         },
                     },
+                    filterStatusLabel: 'With Status',
+                    filterBuildingLabel: 'Tagged Building',
                     filterToDateLabel: 'Within date range',
+                    filterTaggedDateFrom: 'Tagged Date From',
+                    filterTaggedDateTo: 'Tagged Date To',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
                     statusTypes: [
                         {
@@ -663,6 +667,10 @@ export default {
                             status_type: 'OUTFORREPAIR',
                         },
                     ],
+                },
+                errors: {
+                    startDate: 'Start date must be before End Date',
+                    endDate: 'End date must be after Start Date',
                 },
             },
         },

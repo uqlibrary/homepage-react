@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
@@ -9,7 +9,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import Input from '@material-ui/core/Input';
-import Typography from '@material-ui/core/Typography';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -40,14 +39,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: 0,
     },
 }));
-
-function getNameStyles(name, inspectorName, theme) {
-    return {
-        fontWeight:
-            inspectorName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
-    };
-}
-
 export const transformRow = row => {
     return row.map(line => ({
         ...line,
@@ -57,16 +48,6 @@ export const transformRow = row => {
 };
 
 const AssetReportByFilters = ({
-    // actions,
-    // userInspections,
-    // totalInspections,
-    // licencedUsers,
-    // userInspectionsLoading,
-    // userInspectionsLoaded,
-    // userInspectionsError,
-    // licencedUsersLoading,
-    // licencedUsersLoaded,
-    // licencedUsersError,
     actions,
     taggedBuildingList,
     assetList,
@@ -77,7 +58,6 @@ const AssetReportByFilters = ({
     assetListLoaded,
     assetListError,
 }) => {
-    const theme = useTheme();
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -96,9 +76,13 @@ const AssetReportByFilters = ({
     /* State */
     const [taggedBuildingName, setTaggedBuildingName] = React.useState(-1);
     const [buildingList, setBuildingList] = React.useState([]);
-    const [selectedStartDate, setselectedStartDate] = React.useState({ date: null, error: null });
+    const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, error: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
+    const [apiError, setApiError] = useState(taggedBuildingListError || assetListError);
+    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+    const [startDateError, setStartDateError] = useState({ error: false, message: '' });
+    const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
     const { row, setRow } = useDataTableRow();
     const { columns } = useDataTableColumns({
@@ -113,49 +97,77 @@ const AssetReportByFilters = ({
             assetStatus: statusType > 0 ? statusTypes[statusType].status_type : null,
             locationType: 'building',
             locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
-            inspectionDateFrom: !!selectedStartDate.date ? selectedStartDate.date : null,
-            inspectionDateTo: !!selectedEndDate.date ? selectedEndDate.date : null,
+            inspectionDateFrom: !!selectedStartDate.dateFormatted ? selectedStartDate.dateFormatted : null,
+            inspectionDateTo: !!selectedEndDate.dateFormatted ? selectedEndDate.dateFormatted : null,
         };
+    };
+    const clearDateErrors = () => {
+        setStartDateError({
+            error: false,
+            message: '',
+        });
+        setEndDateError({
+            error: false,
+            message: '',
+        });
     };
 
     const fetchReport = () => {
-        console.log('Building Report Payload', buildPayload());
-        actions.loadAssetReportByFilters(buildPayload());
+        if (!!selectedStartDate.date && !!selectedEndDate.date) {
+            if (selectedEndDate.date >= selectedStartDate.date) {
+                clearDateErrors();
+                actions.loadAssetReportByFilters(buildPayload());
+            } else {
+                setStartDateError({
+                    error: true,
+                    message: pageLocale.errors.startDate,
+                });
+                setEndDateError({
+                    error: true,
+                    message: pageLocale.errors.endDate,
+                });
+            }
+        } else {
+            clearDateErrors();
+            actions.loadAssetReportByFilters(buildPayload());
+        }
     };
-
+    /* UI HANDLERS */
     const handleTaggedBuildingChange = event => {
         setTaggedBuildingName(event.target.value);
-        // console.log('BuildPayload', buildPayload());
-    };
-    const handleTaggedBuildingClose = () => {
-        console.log('handle tagged building close');
-        console.log('BuildPayload', buildPayload());
     };
     const handleStatusTypeChange = event => {
         setStatusType(event.target.value);
         // buildPayload();
     };
-    const handleStatusTypeClose = () => {
-        console.log('handle status type close');
+    const handleStartDateChange = date => {
+        console.log('start date', date);
+        setSelectedStartDate({ date: date, dateFormatted: !!date ? date.format('yyyy-MM-DD') : null });
     };
-
-    const handleStartDateChange = () => {
-        console.log('start date');
+    const handleEndDateChange = date => {
+        setSelectedEndDate({ date: date, dateFormatted: !!date ? date.format('yyyy-MM-DD') : null });
     };
-    const handleStartDateClose = () => {
-        console.log('start date close');
+    const closeConfirmationAlert = () => {
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
-
-    /* UI HANDLERS */
-
+    const openConfirmationAlert = (message, type) => {
+        setConfirmationAlert({
+            message: message,
+            visible: true,
+            type: !!type ? type : 'info',
+            autoHideDuration: 2000,
+            onClose: () => setApiError(null),
+        });
+    };
     /* EFFECTS */
     useEffect(() => {
         actions.loadTaggedBuildingList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        console.log('Fetching Report');
         fetchReport();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate]);
 
     useEffect(() => {
@@ -172,20 +184,23 @@ const AssetReportByFilters = ({
     }, [taggedBuildingList]);
 
     useEffect(() => {
-        if (taggedBuildingList.length > 0) {
-            // console.log('config', config.defaults);
+        if (taggedBuildingList.length > 0 && taggedBuildingListLoaded) {
             buildPayload();
         }
-    }, [taggedBuildingList]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [taggedBuildingList, taggedBuildingListLoaded]);
 
     useEffect(() => {
-        if (!!assetList && assetList.length > 0) {
+        if (assetListLoaded) {
             setRow(assetList);
         }
-    }, [assetList]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assetList, assetListLoaded]);
 
-    console.log('Asset List', assetList);
-    console.log('Status Types', statusTypes);
+    useEffect(() => {
+        if (!!apiError) openConfirmationAlert(apiError, 'error');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [apiError]);
 
     return (
         <StandardAuthPage
@@ -199,7 +214,9 @@ const AssetReportByFilters = ({
                         <Grid item xs={12} md={4}>
                             {/* Status Picker */}
                             <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel id="asset-tagged-status-list">With Status</InputLabel>
+                                <InputLabel id="asset-tagged-status-list">
+                                    {pageLocale.form.filterStatusLabel}
+                                </InputLabel>
                                 <Select
                                     fullWidth
                                     labelId="status-type-selector-label"
@@ -207,7 +224,7 @@ const AssetReportByFilters = ({
                                     disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                     value={statusType}
                                     onChange={handleStatusTypeChange}
-                                    onClose={handleStatusTypeClose}
+                                    // onClose={handleStatusTypeClose}
                                     input={<Input id="status-type-input" />}
                                     MenuProps={MenuProps}
                                 >
@@ -223,7 +240,9 @@ const AssetReportByFilters = ({
                         <Grid item xs={12} md={4}>
                             {/* Building Picker */}
                             <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel id="asset-tagged-building-list">Building Name</InputLabel>
+                                <InputLabel id="asset-tagged-building-list">
+                                    {pageLocale.form.filterBuildingLabel}
+                                </InputLabel>
                                 <Select
                                     fullWidth
                                     labelId="building-name-selector-label"
@@ -231,7 +250,7 @@ const AssetReportByFilters = ({
                                     disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                     value={taggedBuildingName}
                                     onChange={handleTaggedBuildingChange}
-                                    onClose={handleTaggedBuildingClose}
+                                    // onClose={handleTaggedBuildingClose}
                                     input={<Input id="building-selector-input" />}
                                     MenuProps={MenuProps}
                                 >
@@ -259,13 +278,11 @@ const AssetReportByFilters = ({
                                 format="DD/MM/yyyy"
                                 margin="normal"
                                 id="inspections-start-date"
-                                label="Tagged date from"
+                                label={pageLocale.form.filterTaggedDateFrom}
                                 value={selectedStartDate.date}
                                 onChange={handleStartDateChange}
-                                onBlur={handleStartDateClose}
-                                onClose={handleStartDateClose}
-                                error={!!selectedStartDate.error}
-                                helperText={!!selectedStartDate.error && selectedStartDate.error}
+                                error={!!startDateError.error}
+                                helperText={!!startDateError.error && startDateError.error}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change start date',
                                 }}
@@ -278,16 +295,14 @@ const AssetReportByFilters = ({
                                 variant="inline"
                                 format="DD/MM/yyyy"
                                 margin="normal"
-                                id="inspections-start-date"
-                                label="Tagged date to"
-                                value={selectedStartDate.date}
-                                onChange={handleStartDateChange}
-                                onBlur={handleStartDateClose}
-                                onClose={handleStartDateClose}
-                                error={!!selectedStartDate.error}
-                                helperText={!!selectedStartDate.error && selectedStartDate.error}
+                                id="inspections-end-date"
+                                label={pageLocale.form.filterTaggedDateTo}
+                                value={selectedEndDate.date}
+                                onChange={handleEndDateChange}
+                                error={!!endDateError.error}
+                                helperText={!!endDateError.error && endDateError.error}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change start date',
+                                    'aria-label': 'change end date',
                                 }}
                             />
                         </Grid>
@@ -307,13 +322,13 @@ const AssetReportByFilters = ({
                             />
                         </Grid>
                     </Grid>
-                    {/* <ConfirmationAlert
+                    <ConfirmationAlert
                         isOpen={confirmationAlert.visible}
                         message={confirmationAlert.message}
                         type={confirmationAlert.type}
                         closeAlert={closeConfirmationAlert}
                         autoHideDuration={confirmationAlert.autoHideDuration}
-                    /> */}
+                    />
                 </StandardCard>
             </div>
         </StandardAuthPage>
