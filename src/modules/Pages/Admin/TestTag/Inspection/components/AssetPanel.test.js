@@ -76,7 +76,7 @@ describe('AssetPanel', () => {
         });
 
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
-        expect(getByTestId('testntagFormAssetId')).toBeInTheDocument();
+        expect(getByTestId('testntagFormAssetId-select')).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetType')).toBeInTheDocument();
     });
 
@@ -128,65 +128,67 @@ describe('AssetPanel', () => {
         expect(getByTestId('assetTypeSpinner')).toBeInTheDocument();
     });
 
-    it('can search for asset ids', async () => {
-        const resetForm = jest.fn();
-        const assignCurrentAsset = jest.fn();
-        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+    // MOVE THESE TWO TO ASSETSELECTOR TESTS
 
-        const wontTriggerValue = 'UQL310'; // not a long enough text
-        const willTriggerValue = 'UQL3100';
+    // it('can search for asset ids', async () => {
+    //     const resetForm = jest.fn();
+    //     const assignCurrentAsset = jest.fn();
+    //     const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
 
-        // eslint-disable-next-line no-unused-vars
-        const handleChange = jest.fn(prop => jest.fn(event => {}));
-        const actionFn = jest.fn();
+    //     const wontTriggerValue = 'UQL3'; // not a long enough text
+    //     const willTriggerValue = 'UQL31';
 
-        const { getByTestId } = setup({
-            actions: { loadAssets: actionFn },
-            formValues,
-            location,
-            resetForm,
-            assignCurrentAsset,
-            handleChange,
-            saveInspectionSaving: false,
-            isValid: false,
-        });
+    //     // eslint-disable-next-line no-unused-vars
+    //     const handleChange = jest.fn(prop => jest.fn(event => {}));
+    //     const actionFn = jest.fn();
 
-        // screen.debug(undefined, 100000);
+    //     const { getByTestId } = setup({
+    //         actions: { loadAssets: actionFn },
+    //         formValues,
+    //         location,
+    //         resetForm,
+    //         assignCurrentAsset,
+    //         handleChange,
+    //         saveInspectionSaving: false,
+    //         isValid: false,
+    //     });
 
-        act(() => {
-            fireEvent.change(getByTestId('testntagFormAssetIdInput'), { target: { value: wontTriggerValue } });
-        });
-        await waitFor(() => expect(actionFn).not.toHaveBeenCalledWith(wontTriggerValue));
+    //     // screen.debug(undefined, 100000);
 
-        act(() => {
-            fireEvent.change(getByTestId('testntagFormAssetIdInput'), { target: { value: willTriggerValue } });
-        });
-        await waitFor(() => expect(actionFn).toHaveBeenCalledWith(willTriggerValue));
-    });
+    //     act(() => {
+    //         fireEvent.change(getByTestId('testntagFormAssetIdInput'), { target: { value: wontTriggerValue } });
+    //     });
+    //     await waitFor(() => expect(actionFn).not.toHaveBeenCalledWith(wontTriggerValue));
 
-    it('should auto assign the current asset if returned list only contains one entry', () => {
-        const resetForm = jest.fn();
-        const assignCurrentAsset = jest.fn();
-        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
-        const handleChange = jest.fn(prop => jest.fn(event => {}));
+    //     act(() => {
+    //         fireEvent.change(getByTestId('testntagFormAssetIdInput'), { target: { value: willTriggerValue } });
+    //     });
+    //     await waitFor(() => expect(actionFn).toHaveBeenCalledWith(willTriggerValue));
+    // });
 
-        const setStateMock = jest.fn();
-        const spyState = useState => [useState, setStateMock];
-        jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
+    // it('should auto assign the current asset if returned list only contains one entry', () => {
+    //     const resetForm = jest.fn();
+    //     const assignCurrentAsset = jest.fn();
+    //     const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+    //     // eslint-disable-next-line no-unused-vars
+    //     const handleChange = jest.fn(prop => jest.fn(event => {}));
 
-        setup({
-            formValues,
-            location,
-            resetForm,
-            assignCurrentAsset,
-            handleChange,
-            saveInspectionSaving: false,
-            isValid: false,
-            state: { testTagAssetsReducer: { assetsList: [{ ...assetData[0] }], assetsListLoading: false } },
-        });
+    //     const setStateMock = jest.fn();
+    //     const spyState = useState => [useState, setStateMock];
+    //     jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
 
-        expect(assignCurrentAsset).toHaveBeenCalledWith({ ...assetData[0] });
-        expect(setStateMock).toHaveBeenCalledWith(false); // auto closes the autocomplete popup
-    });
+    //     setup({
+    //         formValues,
+    //         location,
+    //         resetForm,
+    //         assignCurrentAsset,
+    //         handleChange,
+    //         saveInspectionSaving: false,
+    //         isValid: false,
+    //         state: { testTagAssetsReducer: { assetsList: [{ ...assetData[0] }], assetsListLoading: false } },
+    //     });
+
+    //     expect(assignCurrentAsset).toHaveBeenCalledWith({ ...assetData[0] });
+    //     expect(setStateMock).toHaveBeenCalledWith(false); // auto closes the autocomplete popup
+    // });
 });

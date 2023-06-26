@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useForm, useValidation } from './hooks';
+import { useForm } from '../../helpers/hooks';
+import { useValidation } from './hooks';
 import { useLocation } from '../../helpers/hooks';
 
 describe('Tests custom hooks', () => {
