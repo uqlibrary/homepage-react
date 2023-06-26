@@ -6,7 +6,7 @@ import RowMenuCell from './../../../SharedComponents/DataTable/RowMenuCell';
 import locale from '../../../testTag.locale';
 const dateFormat = locale.pages.manage.config.dateFormat;
 
-export const getColumns = ({ config, locale, handleEditClick, handleDeleteClick }) => {
+export const getColumns = ({ config, locale, canManage = true, handleEditClick, handleDeleteClick }) => {
     const actionsCell = {
         field: 'actions',
         headerName: locale?.actions,
@@ -37,7 +37,7 @@ export const getColumns = ({ config, locale, handleEditClick, handleDeleteClick 
             });
     });
 
-    columns && columns.length > 0 && columns.push(actionsCell);
+    columns && columns.length > 0 && canManage && columns.push(actionsCell);
     return columns;
 };
 
