@@ -1,51 +1,51 @@
 import { act, renderHook } from '@testing-library/react-hooks';
+import { useForm } from '../../helpers/hooks';
 import { useValidation } from './hooks';
 import { useLocation } from '../../helpers/hooks';
 
 describe('Tests custom hooks', () => {
-    // MOVE TO GENERAL TnT HOOKS TEST FILE
-    // it('useForm manages setting and returning of form value state', () => {
-    //     const defaultValues = { a: -1, b: -1, c: -1 };
-    //     const { result } = renderHook(({ defaultValues }) => useForm({ defaultValues }), {
-    //         initialProps: { defaultValues: defaultValues },
-    //     });
+    it('useForm manages setting and returning of form value state', () => {
+        const defaultValues = { a: -1, b: -1, c: -1 };
+        const { result } = renderHook(({ defaultValues }) => useForm({ defaultValues }), {
+            initialProps: { defaultValues: defaultValues },
+        });
 
-    //     expect(result.current.formValues).toEqual(defaultValues);
+        expect(result.current.formValues).toEqual(defaultValues);
 
-    //     // change state values one by one
-    //     act(() => {
-    //         result.current.handleChange('a')(100);
-    //     });
-    //     expect(result.current.formValues).toEqual({ a: 100, b: -1, c: -1 });
+        // change state values one by one
+        act(() => {
+            result.current.handleChange('a')(100);
+        });
+        expect(result.current.formValues).toEqual({ a: 100, b: -1, c: -1 });
 
-    //     act(() => {
-    //         result.current.handleChange('b')(100);
-    //     });
-    //     expect(result.current.formValues).toEqual({ a: 100, b: 100, c: -1 });
+        act(() => {
+            result.current.handleChange('b')(100);
+        });
+        expect(result.current.formValues).toEqual({ a: 100, b: 100, c: -1 });
 
-    //     act(() => {
-    //         result.current.handleChange('c')(100);
-    //     });
-    //     expect(result.current.formValues).toEqual({ a: 100, b: 100, c: 100 });
+        act(() => {
+            result.current.handleChange('c')(100);
+        });
+        expect(result.current.formValues).toEqual({ a: 100, b: 100, c: 100 });
 
-    //     // reset the state
-    //     act(() => {
-    //         result.current.resetFormValues(defaultValues);
-    //     });
-    //     expect(result.current.formValues).toEqual(defaultValues);
+        // reset the state
+        act(() => {
+            result.current.resetFormValues(defaultValues);
+        });
+        expect(result.current.formValues).toEqual(defaultValues);
 
-    //     // test the value passed can come from an event object
-    //     act(() => {
-    //         result.current.handleChange('a')({ target: { value: 200 } });
-    //     });
-    //     expect(result.current.formValues).toEqual({ a: 200, b: -1, c: -1 });
+        // test the value passed can come from an event object
+        act(() => {
+            result.current.handleChange('a')({ target: { value: 200 } });
+        });
+        expect(result.current.formValues).toEqual({ a: 200, b: -1, c: -1 });
 
-    //     // test date values are handled
-    //     act(() => {
-    //         result.current.handleChange('a_date')('2022-12-14 13:00');
-    //     });
-    //     expect(result.current.formValues).toEqual({ a: 200, b: -1, c: -1, a_date: '2022-12-14 13:00' });
-    // });
+        // test date values are handled
+        act(() => {
+            result.current.handleChange('a_date')('2022-12-14 13:00');
+        });
+        expect(result.current.formValues).toEqual({ a: 200, b: -1, c: -1, a_date: '2022-12-14 13:00' });
+    });
 
     it('useValidation validates form values', () => {
         const testStatusEnum = { PASSED: { value: 'PASSED' }, FAILED: { value: 'FAILED' } };

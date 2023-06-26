@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -223,6 +223,9 @@ const Inspection = ({
 
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues, location);
+
+        console.log('assignCurrentAsset', { asset, location, formValues, newFormValues });
+
         resetFormValues(newFormValues);
         setSelectedAsset(asset);
     };
@@ -235,7 +238,7 @@ const Inspection = ({
         !!scroll && scrollToTopOfPage();
         assignCurrentAsset({});
     };
-    useEffect(() => {
+    useLayoutEffect(() => {
         /* istanbul ignore else */ if (
             formValues?.asset_id_displayed === undefined &&
             assetIdElementRef.current &&

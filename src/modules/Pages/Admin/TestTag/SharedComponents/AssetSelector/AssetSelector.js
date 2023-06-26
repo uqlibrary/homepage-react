@@ -22,6 +22,7 @@ export const maskNumber = (number, department) => {
 const AssetSelector = ({
     id,
     locale,
+    selectedAsset,
     masked = true,
     required = true,
     canAddNew = true,
@@ -38,7 +39,7 @@ const AssetSelector = ({
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
-    const [currentValue, setCurrentValue] = useState(null);
+    const [currentValue, setCurrentValue] = useState(selectedAsset ?? null);
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -74,29 +75,6 @@ const AssetSelector = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
 
-    const handleOnChange = useCallback(
-        (event, newValue) => {
-            if (typeof newValue === 'string') {
-                onChange?.(
-                    assetsList?.find(asset => asset.asset_id_displayed === newValue) ?? {
-                        asset_id_displayed: newValue,
-                    },
-                );
-            } else if (newValue && newValue.inputValue) {
-                // Create a new value from the user input
-                onChange?.({
-                    asset_id_displayed: newValue.inputValue,
-                });
-            } else {
-                onChange?.(newValue);
-            }
-            setIsOpen(false);
-            clearInput();
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [assetsList],
-    );
-
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
@@ -105,8 +83,25 @@ const AssetSelector = ({
                 className={classNames.autocomplete}
                 fullWidth
                 open={isOpen}
-                value={currentValue ?? previousValueRef.current}
-                onChange={handleOnChange}
+                value={selectedAsset ?? currentValue ?? previousValueRef.current}
+                onChange={(event, newValue) => {
+                    if (typeof newValue === 'string') {
+                        onChange?.(
+                            assetsList?.find(asset => asset.asset_id_displayed === newValue) ?? {
+                                asset_id_displayed: newValue,
+                            },
+                        );
+                    } else if (newValue && newValue.inputValue) {
+                        // Create a new value from the user input
+                        onChange?.({
+                            asset_id_displayed: newValue.inputValue,
+                        });
+                    } else {
+                        onChange?.(newValue);
+                    }
+                    setIsOpen(false);
+                    clearInput();
+                }}
                 filterOptions={(options, params) => {
                     const filtered = filter(options, params);
                     // Suggest the creation of a new value
@@ -143,7 +138,7 @@ const AssetSelector = ({
                         {...params}
                         {...locale.assetSelector}
                         required={required}
-                        error={!validateAssetId?.(currentValue) ?? false}
+                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? false}
                         inputRef={inputRef}
                         variant="standard"
                         onFocus={() => setIsOpen(true)}
@@ -187,6 +182,7 @@ const AssetSelector = ({
 AssetSelector.propTypes = {
     id: PropTypes.string.isRequired,
     locale: PropTypes.object.isRequired,
+    selectedAsset: PropTypes.string,
     label: PropTypes.string,
     minAssetIdLength: PropTypes.number,
     masked: PropTypes.bool,

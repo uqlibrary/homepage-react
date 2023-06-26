@@ -111,6 +111,7 @@ const AssetPanel = ({
                         onChange={assignCurrentAsset}
                         onReset={resetForm}
                         validateAssetId={isValidAssetId}
+                        selectedAsset={formValues?.asset_id_displayed}
                     />
                 </Grid>
                 <Grid xs={12} item sm={6}>

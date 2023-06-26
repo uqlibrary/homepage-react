@@ -179,7 +179,7 @@ export default {
                     assetSelector: {
                         label: 'Asset ID',
                         helperText: 'Enter a new ID to add',
-                        placeholder: 'Enter at least 3 characters',
+                        placeholder: 'Enter at least 5 characters',
                     },
                     assetType: {
                         label: 'Asset type',
