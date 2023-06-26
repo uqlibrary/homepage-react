@@ -65,6 +65,7 @@ const AssetPanel = ({
                         onChange={assignCurrentAsset}
                         onReset={resetForm}
                         validateAssetId={isValidAssetId}
+                        selectedAsset={formValues?.asset_id_displayed}
                     />
                 </Grid>
                 <Grid xs={12} item sm={6}>
@@ -79,7 +80,9 @@ const AssetPanel = ({
                                     assetType => assetType.asset_type_id === formValues.asset_type_id,
                                 ) ?? null
                             }
-                            onChange={handleChange}
+                            onChange={(_, newValue) => {
+                                handleChange('asset_type_id')(newValue.asset_type_id);
+                            }}
                             getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
                             getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
                             autoHighlight
