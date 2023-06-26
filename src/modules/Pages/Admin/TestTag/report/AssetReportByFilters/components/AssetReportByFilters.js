@@ -223,7 +223,6 @@ const AssetReportByFilters = ({
                                     disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                     value={statusType}
                                     onChange={handleStatusTypeChange}
-                                    // onClose={handleStatusTypeClose}
                                     input={<Input id="status-type-input" />}
                                     MenuProps={MenuProps}
                                 >
@@ -249,7 +248,6 @@ const AssetReportByFilters = ({
                                     disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                     value={taggedBuildingName}
                                     onChange={handleTaggedBuildingChange}
-                                    // onClose={handleTaggedBuildingClose}
                                     input={<Input id="building-selector-input" />}
                                     MenuProps={MenuProps}
                                 >
