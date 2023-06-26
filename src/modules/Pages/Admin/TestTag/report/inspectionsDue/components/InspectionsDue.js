@@ -60,7 +60,7 @@ const InspectionsDue = ({
     const classes = useStyles();
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
-    const { row, setRow } = useDataTableRow();
+    const { row, setRow } = useDataTableRow([], transformRow);
     const { location, setLocation } = useLocation();
     const { lastSelectedLocation } = useSelectLocation({
         location,
@@ -95,7 +95,7 @@ const InspectionsDue = ({
     useEffect(() => {
         if (!!apiError) openConfirmationAlert(apiError, 'error');
         else {
-            if (inspectionsDueLoaded) setRow(transformRow(inspectionsDue));
+            if (inspectionsDueLoaded) setRow(inspectionsDue);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionsDue, inspectionsDueLoaded, apiError]);

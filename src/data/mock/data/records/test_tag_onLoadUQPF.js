@@ -28,7 +28,7 @@ export default {
     ],
     "inspection_devices": [
       {
-        "device_id": 1,
+        "device_id": 100,
         "device_model_name": "ITS-PAT-06",
         "device_serial_number": "W0396196",
         "device_department": "UQL",
@@ -38,7 +38,7 @@ export default {
         "device_current_flag": 1
       },
       {
-        "device_id": 2,
+        "device_id": 101,
         "device_model_name": "AV 025",
         "device_serial_number": "1499928",
         "device_department": "UQL",

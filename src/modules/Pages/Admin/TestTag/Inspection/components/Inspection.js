@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -19,8 +19,8 @@ import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAu
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
-import { useForm, useValidation } from '../utils/hooks';
-import { useLocation } from '../../helpers/hooks';
+import { useValidation } from '../utils/hooks';
+import { useLocation, useForm } from '../../helpers/hooks';
 import locale from '../../testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
@@ -158,6 +158,9 @@ const Inspection = ({
     saveInspectionSaving,
     saveInspectionSuccess,
     saveInspectionError,
+    saveAssetTypeSaving,
+    saveAssetTypeSuccess,
+    saveAssetTypeError,
 }) => {
     const classes = useStyles();
     const theme = useTheme();
@@ -220,6 +223,9 @@ const Inspection = ({
 
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues, location);
+
+        console.log('assignCurrentAsset', { asset, location, formValues, newFormValues });
+
         resetFormValues(newFormValues);
         setSelectedAsset(asset);
     };
@@ -232,7 +238,7 @@ const Inspection = ({
         !!scroll && scrollToTopOfPage();
         assignCurrentAsset({});
     };
-    useEffect(() => {
+    useLayoutEffect(() => {
         /* istanbul ignore else */ if (
             formValues?.asset_id_displayed === undefined &&
             assetIdElementRef.current &&
@@ -360,7 +366,11 @@ const Inspection = ({
                 setSelectedAsset={setSelectedAsset}
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 saveInspectionSaving={saveInspectionSaving}
+                saveAssetTypeSaving={saveAssetTypeSaving}
+                saveAssetTypeSuccess={saveAssetTypeSuccess}
+                saveAssetTypeError={saveAssetTypeError}
                 isMobileView={isMobileView}
+                canAddAssetType
             />
             <InView onChange={setInView} rootMargin="200% 0px 0px 0px" threshold={0}>
                 <AppBar component={'div'} className={appbarDynamicClasses}>
@@ -407,7 +417,7 @@ const Inspection = ({
 Inspection.propTypes = {
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
-    defaultNextTestDateValue: PropTypes.number,
+    defaultNextTestDateValue: PropTypes.string,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,
@@ -424,6 +434,9 @@ Inspection.propTypes = {
     saveInspectionSaving: PropTypes.bool,
     saveInspectionSuccess: PropTypes.any,
     saveInspectionError: PropTypes.any,
+    saveAssetTypeSaving: PropTypes.bool,
+    saveAssetTypeSuccess: PropTypes.any,
+    saveAssetTypeError: PropTypes.any,
 };
 
 export default React.memo(Inspection);

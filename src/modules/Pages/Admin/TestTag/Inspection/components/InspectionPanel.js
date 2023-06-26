@@ -18,7 +18,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ActionPanel from './ActionPanel';
-import DebouncedTextField from './DebouncedTextField';
+import DebouncedTextField from '../../SharedComponents/DebouncedTextField/DebouncedTextField';
 import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
 import locale from '../../testTag.locale';
 import { isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
@@ -54,7 +54,7 @@ const InspectionPanel = ({
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
         handleChange: PropTypes.func.isRequired,
-        defaultNextTestDateValue: PropTypes.number.isRequired,
+        defaultNextTestDateValue: PropTypes.string.isRequired,
         classes: PropTypes.any.isRequired,
         disabled: PropTypes.bool.isRequired,
         isMobileView: PropTypes.bool.isRequired,

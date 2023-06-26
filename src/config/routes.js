@@ -221,6 +221,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
+            path: pathConfig.admin.testntagmanagebulkassetupdate,
+            component: components.TestTagManageBulkAssetUpdate,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
             path: pathConfig.admin.testntagreportinspectionsdue,
             component: components.TestTagReportInspectionsDue,
             exact: true,

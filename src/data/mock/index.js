@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi, STORAGE_ACCOUNT_KEYNAME } from 'config';
+import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -52,6 +52,8 @@ import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspe
 import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors'; 
 import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
 import test_tag_assets_report_assets from './data/records/test_tag_assets_report_assets';
+import test_tag_assets_mine from './data/records/test_tag_assets_mine';
+
 import { accounts, currentAuthor } from './data';
 
 import {
@@ -64,7 +66,14 @@ import {
     promoPanelMocks,
 } from './data/promoPanels';
 
-import { TEST_TAG_ONLOAD_DASHBOARD_API, TEST_TAG_ONLOAD_INSPECT_API, TEST_TAG_ASSETS_API, TEST_TAG_ASSET_ACTION, TEST_TAG_FLOOR_API, TEST_TAG_ROOM_API, } from 'repositories/routes';
+import {
+    TEST_TAG_ONLOAD_DASHBOARD_API,
+    TEST_TAG_ONLOAD_INSPECT_API,
+    TEST_TAG_ASSETS_API,
+    TEST_TAG_ASSET_ACTION,
+    TEST_TAG_FLOOR_API,
+    TEST_TAG_ROOM_API,
+} from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -76,11 +85,6 @@ const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\
 const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
 user = user || 'vanilla';
-
-addMockAccountToStoredAccount(
-    !!accounts[user] && accounts[user],
-    !!user && !!currentAuthor[user] ? currentAuthor[user].data : null,
-);
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -95,42 +99,6 @@ if (user && !mockData.accounts[user]) {
     );
 }
 
-export function addMockAccountToStoredAccount(account, currentAuthor, numberOfHoursUntilExpiry = 1) {
-    let bc;
-    if ('BroadcastChannel' in window) {
-        bc = new BroadcastChannel('account_availability');
-    }
-    if (!(!!account && account.hasOwnProperty('hasSession') && account.hasSession === true)) {
-        // the broadcast event in production happens in reusable
-        !!bc && bc.postMessage('account_removed');
-        return;
-    }
-    const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
-    const storageExpiryDate = {
-        storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
-    };
-    let storeableAccount = {
-        status: 'loggedin',
-        account: {
-            ...account,
-        },
-        ...storageExpiryDate,
-    };
-    if (!!currentAuthor) {
-        storeableAccount = {
-            ...storeableAccount,
-            currentAuthor: {
-                ...currentAuthor,
-            },
-        };
-    }
-    storeableAccount = JSON.stringify(storeableAccount);
-    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
-
-    // the broadcast event in production happens in reusable
-    !!bc && bc.postMessage('account_updated');
-}
-
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
     // const randomTime = 5000;
@@ -138,16 +106,6 @@ const withDelay = response => config => {
         setTimeout(function() {
             resolve(response);
         }, randomTime);
-    });
-};
-const withSetDelay = (response, seconds = 0.1) => config => {
-    seconds = seconds > 5 ? 0.1 : seconds;
-    const setTime = seconds * 1000; // Change these values to delay mock API
-    // const randomTime = 5000;
-    return new Promise(function(resolve, reject) {
-        setTimeout(function() {
-            resolve(response);
-        }, setTime);
     });
 };
 
@@ -775,7 +733,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_user_UQPF : testTag_user];
+        return [200, config?.headers['X-Uql-Token'] === 'uqpf' ? testTag_user_UQPF : testTag_user];
     })
 
     // dashboard CONFIG
@@ -787,7 +745,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // inspection CONFIG
     .onGet(routes.TEST_TAG_ONLOAD_INSPECT_API().apiUrl)
     .reply(config => {
-        return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
+        return [200, config?.headers['X-Uql-Token'] === 'uqpf' ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
     })
 
     // T&T SITES
@@ -835,7 +793,9 @@ mock.onGet('exams/course/FREN1010/summary')
 
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
-    .reply(() => {return [200, testTag_inspectionDevices]})
+    .reply(() => {
+        return [200, testTag_inspectionDevices];
+    })
     .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => [200, {status: 'OK'}])
     .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
@@ -850,7 +810,11 @@ mock.onGet('exams/course/FREN1010/summary')
         // filter array to matching asset id's
         return [
             200,
-            {data: testTag_assets.data.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith( pattern.toUpperCase()))},
+            {
+                data: testTag_assets.data.filter(asset =>
+                    asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()),
+                ),
+            },
         ];
     })
 
@@ -867,15 +831,34 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         },
     ])
+    .onPost(routes.TEST_TAG_ASSETTYPE_ADD().apiUrl)
+    // .reply(() => {
+    //     return [500, []];
+    // })
+    .reply(() => [
+        200,
+        {
+            status: 'ok',
+            data: {
+                asset_id: 1,
+                asset_type_name: 'PWRC13-10',
+                asset_type_class: 'Cable',
+                asset_type_power_rating: '10',
+                asset_type: 'IEC C13 Power Cable (10 Amp)',
+                asset_type_notes: 'Standard Computer Type Cable',
+            },
+        },
+    ])
+
     // Test and Tag Asset Types
-    .onGet(/test_and_tag\/asset_type\/current/)
+    .onGet(routes.TEST_TAG_ASSETTYPE_API().apiUrl)
     .reply(() => 
         [
             200,
             {
                 status: 'OK',
                 data: {
-                    "asset_types" : test_tag_asset_types.data, 
+                    asset_types: test_tag_asset_types.data,
                 }
             }
         ]
@@ -885,14 +868,14 @@ mock.onGet('exams/course/FREN1010/summary')
         200,
         {
             status: 'OK',
-        } 
+        },
     ])
     .onPut(routes.TEST_TAG_SAVE_ASSETTYPE_API().apiUrl)
     .reply(() => [
         200,
         {
             status: 'OK', 
-        }
+        },
     ])
     .onPost(routes.TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API().apiUrl)
     .reply(() => [
@@ -902,15 +885,14 @@ mock.onGet('exams/course/FREN1010/summary')
             data: {
                 effected_assets: 1,
                 effected_asset_types: 1,
-            }
-            
-        }
+            },
+        },
     ])
-    .onDelete(/test_and_tag\/assettype\/4/)
+    .onDelete(/test_and_tag\/asset_type\/4/)
     .reply(() => {
-        return [200, {status: 'OK'}]
+        return [200, { status: 'OK' }];
     })
-    .onDelete(/test_and_tag\/assettype\/5/)
+    .onDelete(/test_and_tag\/asset_type\/5/)
     .reply(() => {
         return [
             400,
@@ -922,7 +904,17 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
-    .onGet(new RegExp(panelRegExp(routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({startDate: null, endDate: null, userRange: null}).apiUrl)))
+    .onGet(
+        new RegExp(
+            panelRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    startDate: null,
+                    endDate: null,
+                    userRange: null,
+                }).apiUrl,
+            ),
+        ),
+    )
     .reply(() => [200, test_tag_inspections_by_licenced_user])
     .onGet(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS().apiUrl)
     .reply(() => [200, test_tag_licenced_inspectors])
@@ -932,6 +924,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_assets_report_assets])
     .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
     .reply(() => [200, test_tag_assets_report_assets])
+    .onGet(routes.TEST_TAG_ASSETS_MINE_API({}).apiUrl)
+    .reply(() => [200, test_tag_assets_mine])
+    .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)
+    .reply(() => [200, {status: 'OK'}])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

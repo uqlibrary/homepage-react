@@ -6,7 +6,7 @@ import * as actions from 'data/actions';
 
 const currentAssetOwnersList = [{ value: 'UQL', label: 'UQ Library' }];
 
-const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
+const DEFAULT_NEXT_TEST_DATE_VALUE = '12';
 
 const DEFAULT_FORM_VALUES = {
     asset_id_displayed: undefined,
@@ -30,6 +30,7 @@ export const mapStateToProps = state => {
         ...state.get('testTagLocationReducer'),
         ...state.get('testTagAssetsReducer'),
         ...state.get('testTagSaveInspectionReducer'),
+        ...state.get('testTagSaveAssetTypeReducer'),
     };
 };
 
