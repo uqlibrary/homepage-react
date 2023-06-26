@@ -411,6 +411,9 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('tab-discard').should('not.be.disabled');
 
                 cy.data('testntagFormAssetId-input')
+                    // need 2 clears because the first only clears the asset lists returned
+                    // by the last search. second clear actually empties the input
+                    .clear()
                     .clear()
                     .type('UQL20000'); // last inspection = failed
                 cy.wait(2000);
