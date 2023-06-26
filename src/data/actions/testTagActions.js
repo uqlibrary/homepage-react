@@ -594,7 +594,6 @@ export function loadTaggedBuildingList() {
         dispatch({ type: actions.TESTTAG_TAGGED_BUILDING_LIST_LOADING });
         return get(TEST_TAG_TAGGED_BUILDING_LIST())
             .then(response => {
-                console.log('Data', response);
                 dispatch({
                     type: actions.TESTTAG_TAGGED_BUILDING_LIST_LOADED,
                     payload: response?.data ?? /* istanbul ignore next */ [],
@@ -630,7 +629,6 @@ export function loadAssetReportByFilters({
             }),
         )
             .then(response => {
-                console.log('Data', response);
                 dispatch({
                     type: actions.TESTTAG_ASSET_REPORT_LOADED,
                     payload: response?.data ?? /* istanbul ignore next */ [],

@@ -141,7 +141,6 @@ const AssetReportByFilters = ({
         // buildPayload();
     };
     const handleStartDateChange = date => {
-        console.log('start date', date);
         setSelectedStartDate({ date: date, dateFormatted: !!date ? date.format('yyyy-MM-DD') : null });
     };
     const handleEndDateChange = date => {

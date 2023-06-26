@@ -117,7 +117,7 @@ export default {
                         {
                             title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagreportassetsbyfilters}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTIONS BY LICENSED USER',
@@ -621,7 +621,7 @@ export default {
                 breadcrumbs: [
                     {
                         title: 'Asset Report',
-                        icon: <InspectionByUserIcon fontSize={'small'} />,
+                        icon: <AssetsInspectedByDateIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
