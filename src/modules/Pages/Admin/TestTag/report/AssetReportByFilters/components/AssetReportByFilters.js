@@ -165,7 +165,7 @@ const AssetReportByFilters = ({
     }, []);
 
     useEffect(() => {
-        fetchReport();
+        !!!assetListLoading && fetchReport();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate]);
 
