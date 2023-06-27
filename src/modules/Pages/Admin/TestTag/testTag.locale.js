@@ -64,7 +64,7 @@ export default {
                 },
                 assets: {
                     title: 'ASSETS',
-                    subtext: duration => <>due in the next {duration}.</>,
+                    subtext: duration => <>*due in the next {duration}.</>,
                 },
                 inspectionDevices: {
                     title: 'INSPECTION DEVICES',
