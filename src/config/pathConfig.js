@@ -28,6 +28,7 @@ export const pathConfig = {
         testntagreportinspectionsbylicenceduser: '/admin/testntag/report/inspectionsbylicenceduser',
         testntagmanagebulkassetupdate: '/admin/testntag/manage/bulkassetupdate',
         testntagreportinspectionsdue: '/admin/testntag/report/inspectionsdue',
+        testntagreportrecalibrationssdue: '/admin/testntag/report/recalibrationsdue',
     },
     bookExamBooth: '/book-exam-booth',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
