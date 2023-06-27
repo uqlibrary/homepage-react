@@ -177,62 +177,62 @@ const InspectionDevices = ({
                 <StandardCard noHeader>
                     {canManage && (
                         <>
-                    <UpdateDialog
-                        title={actionState.title}
-                        action="add"
-                        updateDialogueBoxId="addRow"
-                        isOpen={actionState.isAdd}
+                            <UpdateDialog
+                                title={actionState.title}
+                                action="add"
+                                updateDialogueBoxId="addRow"
+                                isOpen={actionState.isAdd}
                                 locale={pageLocale?.dialogAdd}
-                        fields={config.fields ?? []}
-                        columns={pageLocale.form.columns}
-                        row={actionState?.row}
-                        onCancelAction={closeDialog}
-                        onAction={onRowAdd}
-                        props={actionState?.props}
-                        isBusy={dialogueBusy}
-                    />
-                    <UpdateDialog
-                        title={actionState.title}
-                        action="edit"
-                        updateDialogueBoxId="editRow"
-                        isOpen={actionState.isEdit}
+                                fields={config.fields ?? []}
+                                columns={pageLocale.form.columns}
+                                row={actionState?.row}
+                                onCancelAction={closeDialog}
+                                onAction={onRowAdd}
+                                props={actionState?.props}
+                                isBusy={dialogueBusy}
+                            />
+                            <UpdateDialog
+                                title={actionState.title}
+                                action="edit"
+                                updateDialogueBoxId="editRow"
+                                isOpen={actionState.isEdit}
                                 locale={pageLocale?.dialogEdit}
-                        fields={config?.fields ?? []}
-                        columns={pageLocale.form.columns}
-                        row={actionState?.row}
-                        onCancelAction={closeDialog}
-                        onAction={onRowEdit}
-                        props={actionState?.props}
-                        isBusy={dialogueBusy}
-                    />
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        cancelButtonColor="secondary"
-                        confirmationBoxId="deleteRow"
-                        onCancelAction={closeDialog}
-                        onAction={onRowDelete}
-                        isOpen={actionState.isDelete}
-                        locale={
-                            !dialogueBusy
+                                fields={config?.fields ?? []}
+                                columns={pageLocale.form.columns}
+                                row={actionState?.row}
+                                onCancelAction={closeDialog}
+                                onAction={onRowEdit}
+                                props={actionState?.props}
+                                isBusy={dialogueBusy}
+                            />
+                            <ConfirmationBox
+                                actionButtonColor="primary"
+                                actionButtonVariant="contained"
+                                cancelButtonColor="secondary"
+                                confirmationBoxId="deleteRow"
+                                onCancelAction={closeDialog}
+                                onAction={onRowDelete}
+                                isOpen={actionState.isDelete}
+                                locale={
+                                    !dialogueBusy
                                         ? pageLocale?.dialogDeleteConfirm
-                                : {
+                                        : {
                                               ...pageLocale?.dialogDeleteConfirm,
-                                      confirmButtonLabel: (
-                                          <CircularProgress
-                                              color="inherit"
-                                              size={25}
-                                              id="confirmationSpinner"
-                                              data-testid="confirmationSpinner"
-                                          />
-                                      ),
-                                  }
-                        }
-                        disableButtonsWhenBusy
-                        isBusy={dialogueBusy}
-                        noMinContentWidth
-                        actionProps={{ row: actionState?.row, props: actionState?.props }}
-                    />
+                                              confirmButtonLabel: (
+                                                  <CircularProgress
+                                                      color="inherit"
+                                                      size={25}
+                                                      id="confirmationSpinner"
+                                                      data-testid="confirmationSpinner"
+                                                  />
+                                              ),
+                                          }
+                                }
+                                disableButtonsWhenBusy
+                                isBusy={dialogueBusy}
+                                noMinContentWidth
+                                actionProps={{ row: actionState?.row, props: actionState?.props }}
+                            />
                         </>
                     )}
                     <Grid container spacing={3} className={classes.tableMarginTop}>
@@ -245,10 +245,10 @@ const InspectionDevices = ({
                                 componentsProps={{
                                     ...(canManage
                                         ? {
-                                    toolbar: {
+                                              toolbar: {
                                                   label: pageLocale.form?.addDeviceButton,
-                                        onClick: handleAddClick,
-                                    },
+                                                  onClick: handleAddClick,
+                                              },
                                           }
                                         : {}),
                                 }}
