@@ -55,7 +55,7 @@ const AssetReportByFilters = ({
     taggedBuildingListLoaded,
     taggedBuildingListError,
     assetListLoading,
-    assetListLoaded,
+    // assetListLoaded,
     assetListError,
 }) => {
     const ITEM_HEIGHT = 48;
@@ -84,7 +84,7 @@ const AssetReportByFilters = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { row, setRow } = useDataTableRow();
+    const { row } = useDataTableRow(assetList);
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -188,13 +188,6 @@ const AssetReportByFilters = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taggedBuildingList, taggedBuildingListLoaded]);
-
-    useEffect(() => {
-        if (assetListLoaded) {
-            setRow(assetList);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assetList, assetListLoaded]);
 
     useEffect(() => {
         if (!!apiError) openConfirmationAlert(apiError, 'error');

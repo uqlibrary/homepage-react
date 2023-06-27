@@ -785,7 +785,7 @@ export default {
                         building_name: {
                             label: 'Building Name',
                         },
-                        asset_type: {
+                        asset_type_name: {
                             label: 'Asset Type',
                         },
                         asset_test_date: {
