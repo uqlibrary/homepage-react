@@ -42,6 +42,7 @@ const InspectionDevices = ({
     inspectionDevicesError,
 }) => {
     const classes = useStyles();
+    const pagePermissions = [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports];
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { user } = useSelector(state => state.get('testTagUserReducer'));
@@ -154,7 +155,7 @@ const InspectionDevices = ({
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
-        canManage,
+        withActions: canManage,
         handleEditClick,
         handleDeleteClick,
     });
@@ -171,7 +172,8 @@ const InspectionDevices = ({
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
-            requiredPermissions={[PERMISSIONS.can_inspect]}
+            inclusive={false}
+            requiredPermissions={pagePermissions}
         >
             <div className={classes.root}>
                 <StandardCard noHeader>
