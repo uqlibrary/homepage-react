@@ -49,7 +49,9 @@ import testTag_assets from './data/records/test_tag_assets';
 import test_tag_asset_types from './data/records/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
 import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspections_by_licenced_user';
-import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors';
+import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors'; 
+import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
+import test_tag_assets_report_assets from './data/records/test_tag_assets_report_assets';
 import test_tag_assets_mine from './data/records/test_tag_assets_mine';
 
 import { accounts, currentAuthor } from './data';
@@ -916,6 +918,12 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_inspections_by_licenced_user])
     .onGet(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS().apiUrl)
     .reply(() => [200, test_tag_licenced_inspectors])
+    .onGet(routes.TEST_TAG_TAGGED_BUILDING_LIST().apiUrl)
+    .reply(() => [200, test_tag_tagged_building_list])
+    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: null, locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .reply(() => [200, test_tag_assets_report_assets])
+    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .reply(() => [200, test_tag_assets_report_assets])
     .onGet(routes.TEST_TAG_ASSETS_MINE_API({}).apiUrl)
     .reply(() => [200, test_tag_assets_mine])
     .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)

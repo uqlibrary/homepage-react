@@ -24,6 +24,8 @@ import {
     TEST_TAG_REPORT_INSPECTIONS_DUE_API,
     TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API,
     TEST_TAG_REPORT_UTILITY_LICENCED_USERS,
+    TEST_TAG_TAGGED_BUILDING_LIST,
+    TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST,
     TEST_TAG_BULK_UPDATE_API,
 } from 'repositories/routes';
 
@@ -658,6 +660,28 @@ export function getLicencedUsers() {
     };
 }
 
+/* Asset report for DEPT */
+export function loadTaggedBuildingList() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TAGGED_BUILDING_LIST_LOADING });
+        return get(TEST_TAG_TAGGED_BUILDING_LIST())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_TAGGED_BUILDING_LIST_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_TAGGED_BUILDING_LIST_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
 export function bulkAssetUpdate(request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_BULK_ASSET_UPDATE_SAVING });
@@ -678,6 +702,42 @@ export function bulkAssetUpdate(request) {
             });
     };
 }
+
+export function loadAssetReportByFilters({
+    assetStatus,
+    locationType,
+    locationId,
+    inspectionDateFrom,
+    inspectionDateTo,
+}) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_REPORT_LOADING });
+        return get(
+            TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({
+                assetStatus,
+                locationType,
+                locationId,
+                inspectionDateFrom,
+                inspectionDateTo,
+            }),
+        )
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_REPORT_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_REPORT_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
 export function clearBulkAssetUpdate() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_BULK_ASSET_UPDATE_CLEAR });
