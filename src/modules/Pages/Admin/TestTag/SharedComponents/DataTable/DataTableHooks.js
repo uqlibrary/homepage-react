@@ -5,9 +5,9 @@ export const useDataTableRow = (data = [], transform) => {
     const [row, _setRow] = useState(!!transform ? transform(data) : data);
     const setRow = data => _setRow(!!transform ? transform(data) : data);
     useEffect(() => {
-        setRow(data);
+        if (data.length !== row.length) setRow(data);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+    }, [JSON.stringify(data)]);
 
     return { row, setRow };
 };

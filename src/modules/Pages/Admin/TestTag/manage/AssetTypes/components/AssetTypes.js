@@ -34,41 +34,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-// const fieldConfig = config.assettypes;
-
-// const getColumns = ({ onRowEdit, onRowDelete }) => {
-//     const actionsCell = {
-//         field: 'actions',
-//         headerName: 'Actions',
-//         renderCell: params => <RowMenuCell {...params}
-// handleEditClick={onRowEdit} handleDeleteClick={onRowDelete} />,
-//         sortable: false,
-//         width: 100,
-//         headerAlign: 'center',
-//         filterable: false,
-//         align: 'center',
-//         disableColumnMenu: true,
-//         disableReorder: true,
-//         shouldRender: false,
-//     };
-
-//     const columns = [];
-//     const keys = Object.keys(fieldConfig);
-
-//     keys.forEach(key => {
-//         columns.push({
-//             field: key,
-//             headerName: fieldConfig[key].label,
-//             editable: false,
-//             sortable: false,
-//             ...fieldConfig[key].fieldParams,
-//         });
-//     });
-
-//     columns && columns.length > 0 && columns.push(actionsCell);
-//     return columns;
-// };
-
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) => {
     const pageLocale = locale.pages.manage.assetTypes;
 
