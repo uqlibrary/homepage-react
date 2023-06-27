@@ -34,12 +34,13 @@ const useStyles = makeStyles(theme => ({
 
 const InspectionDevices = ({
     actions,
+    canManage = true,
+    pageLocale,
     inspectionDevices,
     inspectionDevicesLoading,
     inspectionDevicesLoaded,
     inspectionDevicesError,
 }) => {
-    const pageLocale = locale.pages.manage.inspectiondevices;
     const classes = useStyles();
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
@@ -63,7 +64,7 @@ const InspectionDevices = ({
     const handleAddClick = () => {
         actionDispatch({
             type: 'add',
-            title: pageLocale.dialogAdd.confirmationTitle,
+            title: pageLocale.dialogAdd?.confirmationTitle,
         });
     };
 
@@ -71,7 +72,7 @@ const InspectionDevices = ({
         const row = api.getRow(id);
         actionDispatch({
             type: 'edit',
-            title: pageLocale.dialogEdit.confirmationTitle,
+            title: pageLocale.dialogEdit?.confirmationTitle,
             row,
         });
     };
@@ -94,12 +95,12 @@ const InspectionDevices = ({
             .addInspectionDevice(wrappedRequest)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts.addSuccess, 'success');
+                openConfirmationAlert(pageLocale.alerts?.addSuccess, 'success');
                 actions.clearInspectionDevices();
             })
             .catch(error => {
                 console.log(error);
-                handleApiError({ message: pageLocale.alerts.addFail });
+                handleApiError({ message: pageLocale.alerts?.addFail });
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -117,12 +118,12 @@ const InspectionDevices = ({
             .updateInspectionDevice(id, wrappedRequest)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts.updateSuccess, 'success');
+                openConfirmationAlert(pageLocale.alerts?.updateSuccess, 'success');
                 actions.clearInspectionDevices();
             })
             .catch(error => {
                 console.log(error);
-                handleApiError({ message: pageLocale.alerts.updateFail });
+                handleApiError({ message: pageLocale.alerts?.updateFail });
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -139,12 +140,12 @@ const InspectionDevices = ({
             .deleteInspectionDevice(id)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts.deleteSuccess, 'success');
+                openConfirmationAlert(pageLocale.alerts?.deleteSuccess, 'success');
                 actions.clearInspectionDevices();
             })
             .catch(error => {
                 console.log(error);
-                handleApiError({ message: pageLocale.alerts.deleteFail });
+                handleApiError({ message: pageLocale.alerts?.deleteFail });
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -153,6 +154,7 @@ const InspectionDevices = ({
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
+        canManage,
         handleEditClick,
         handleDeleteClick,
     });
@@ -173,75 +175,82 @@ const InspectionDevices = ({
         >
             <div className={classes.root}>
                 <StandardCard noHeader>
-                    <UpdateDialog
-                        title={actionState.title}
-                        action="add"
-                        updateDialogueBoxId="addRow"
-                        isOpen={actionState.isAdd}
-                        locale={pageLocale.dialogAdd}
-                        fields={config.fields ?? []}
-                        columns={pageLocale.form.columns}
-                        row={actionState?.row}
-                        onCancelAction={closeDialog}
-                        onAction={onRowAdd}
-                        props={actionState?.props}
-                        isBusy={dialogueBusy}
-                    />
-                    <UpdateDialog
-                        title={actionState.title}
-                        action="edit"
-                        updateDialogueBoxId="editRow"
-                        isOpen={actionState.isEdit}
-                        locale={pageLocale.dialogEdit}
-                        fields={config?.fields ?? []}
-                        columns={pageLocale.form.columns}
-                        row={actionState?.row}
-                        onCancelAction={closeDialog}
-                        onAction={onRowEdit}
-                        props={actionState?.props}
-                        isBusy={dialogueBusy}
-                    />
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        cancelButtonColor="secondary"
-                        confirmationBoxId="deleteRow"
-                        onCancelAction={closeDialog}
-                        onAction={onRowDelete}
-                        isOpen={actionState.isDelete}
-                        locale={
-                            !dialogueBusy
-                                ? pageLocale.dialogDeleteConfirm
-                                : {
-                                      ...pageLocale.dialogDeleteConfirm,
-                                      confirmButtonLabel: (
-                                          <CircularProgress
-                                              color="inherit"
-                                              size={25}
-                                              id="confirmationSpinner"
-                                              data-testid="confirmationSpinner"
-                                          />
-                                      ),
-                                  }
-                        }
-                        disableButtonsWhenBusy
-                        isBusy={dialogueBusy}
-                        noMinContentWidth
-                        actionProps={{ row: actionState?.row, props: actionState?.props }}
-                    />
-
+                    {canManage && (
+                        <>
+                            <UpdateDialog
+                                title={actionState.title}
+                                action="add"
+                                updateDialogueBoxId="addRow"
+                                isOpen={actionState.isAdd}
+                                locale={pageLocale?.dialogAdd}
+                                fields={config.fields ?? []}
+                                columns={pageLocale.form.columns}
+                                row={actionState?.row}
+                                onCancelAction={closeDialog}
+                                onAction={onRowAdd}
+                                props={actionState?.props}
+                                isBusy={dialogueBusy}
+                            />
+                            <UpdateDialog
+                                title={actionState.title}
+                                action="edit"
+                                updateDialogueBoxId="editRow"
+                                isOpen={actionState.isEdit}
+                                locale={pageLocale?.dialogEdit}
+                                fields={config?.fields ?? []}
+                                columns={pageLocale.form.columns}
+                                row={actionState?.row}
+                                onCancelAction={closeDialog}
+                                onAction={onRowEdit}
+                                props={actionState?.props}
+                                isBusy={dialogueBusy}
+                            />
+                            <ConfirmationBox
+                                actionButtonColor="primary"
+                                actionButtonVariant="contained"
+                                cancelButtonColor="secondary"
+                                confirmationBoxId="deleteRow"
+                                onCancelAction={closeDialog}
+                                onAction={onRowDelete}
+                                isOpen={actionState.isDelete}
+                                locale={
+                                    !dialogueBusy
+                                        ? pageLocale?.dialogDeleteConfirm
+                                        : {
+                                              ...pageLocale?.dialogDeleteConfirm,
+                                              confirmButtonLabel: (
+                                                  <CircularProgress
+                                                      color="inherit"
+                                                      size={25}
+                                                      id="confirmationSpinner"
+                                                      data-testid="confirmationSpinner"
+                                                  />
+                                              ),
+                                          }
+                                }
+                                disableButtonsWhenBusy
+                                isBusy={dialogueBusy}
+                                noMinContentWidth
+                                actionProps={{ row: actionState?.row, props: actionState?.props }}
+                            />
+                        </>
+                    )}
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
                                 rows={row}
                                 columns={columns}
                                 rowId={'device_id'}
-                                components={{ Toolbar: AddToolbar }}
+                                components={{ ...(canManage ? { Toolbar: AddToolbar } : {}) }}
                                 componentsProps={{
-                                    toolbar: {
-                                        label: pageLocale.form.addDeviceButton,
-                                        onClick: handleAddClick,
-                                    },
+                                    ...(canManage
+                                        ? {
+                                              toolbar: {
+                                                  label: pageLocale.form?.addDeviceButton,
+                                                  onClick: handleAddClick,
+                                              },
+                                          }
+                                        : {}),
                                 }}
                                 loading={inspectionDevicesLoading}
                                 classes={{ root: classes.gridRoot }}
@@ -263,6 +272,8 @@ const InspectionDevices = ({
 
 InspectionDevices.propTypes = {
     actions: PropTypes.object,
+    canManage: PropTypes.bool,
+    pageLocale: PropTypes.object.isRequired,
     inspectionDevices: PropTypes.any,
     inspectionDevicesLoading: PropTypes.bool,
     inspectionDevicesLoaded: PropTypes.bool,

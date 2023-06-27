@@ -227,6 +227,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
+            path: pathConfig.admin.testntagreportrecalibrationssdue,
+            component: components.TestTagReportRecalibrationsDue,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
             path: pathConfig.admin.testntagreportinspectionsdue,
             component: components.TestTagReportInspectionsDue,
             exact: true,
@@ -235,6 +241,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
             component: components.TestTagReportInspectionsByLicencedUser,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagreportassetsbyfilters,
+            component: components.TestTagAssetReportByFilters,
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },

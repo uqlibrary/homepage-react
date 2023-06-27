@@ -69,7 +69,7 @@ export default {
                 },
                 assets: {
                     title: 'ASSETS',
-                    subtext: duration => <>needing a retest in the next {duration}.</>,
+                    subtext: duration => <>*due in the next {duration}.</>,
                 },
                 inspectionDevices: {
                     title: 'INSPECTION DEVICES',
@@ -118,7 +118,8 @@ export default {
                         {
                             title: 'INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
-                            path: '#',
+                            permissions: [PERMISSIONS.can_see_reports],
+                            path: `${pathConfig.admin.testntagreportrecalibrationssdue}?user=uqtesttag`,
                         },
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
@@ -129,7 +130,7 @@ export default {
                         {
                             title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagreportassetsbyfilters}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTIONS BY LICENSED USER',
@@ -652,10 +653,46 @@ export default {
                 dateFormatNoTime: 'YYYY-MM-DD',
                 dateFormatDisplay: 'Do MMMM, YYYY',
             },
+            recalibrationsDue: {
+                breadcrumbs: [
+                    {
+                        title: 'Reports - Inspection Devices due recalibration',
+                        icon: <InspectionDeviceIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Inspection device recalibration report for ${dept}`,
+                },
+                form: {
+                    columns: {
+                        device_id: {
+                            label: 'Device ID',
+                        },
+                        device_model_name: {
+                            label: 'Model name',
+                        },
+                        device_serial_number: {
+                            label: 'Serial',
+                        },
+                        device_department: {
+                            label: 'Department',
+                        },
+                        device_calibrated_date_last: {
+                            label: 'Last calibrated',
+                        },
+                        device_calibrated_by_last: {
+                            label: 'Last calibrated by',
+                        },
+                        device_calibration_due_date: {
+                            label: 'Next calibration',
+                        },
+                    },
+                },
+            },
             inspectionsDue: {
                 breadcrumbs: [
                     {
-                        title: 'Asset Inspections Due',
+                        title: 'Reports - Asset Inspections Due',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
@@ -688,7 +725,7 @@ export default {
             inspectionsByLicencedUser: {
                 breadcrumbs: [
                     {
-                        title: 'Inspections by Licenced Users',
+                        title: 'Reports - Inspections by Licenced Users',
                         icon: <InspectionByUserIcon fontSize={'small'} />,
                     },
                 ],
@@ -727,6 +764,62 @@ export default {
                     },
                     filterToDateLabel: 'Within date range',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
+                },
+            },
+            assetReportByFilters: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Report',
+                        icon: <AssetsInspectedByDateIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Asset report for ${dept}`,
+                },
+                form: {
+                    title: 'Filters',
+                    columns: {
+                        asset_barcode: {
+                            label: 'Barcode',
+                        },
+                        building_name: {
+                            label: 'Building Name',
+                        },
+                        asset_type: {
+                            label: 'Asset Type',
+                        },
+                        asset_test_date: {
+                            label: 'Last Inspection',
+                        },
+                        asset_next_test_due_date: {
+                            label: 'Next Inspection',
+                        },
+                        asset_status: {
+                            label: 'Status',
+                        },
+                    },
+                    filterStatusLabel: 'With Status',
+                    filterBuildingLabel: 'Tagged Building',
+                    filterToDateLabel: 'Within date range',
+                    filterTaggedDateFrom: 'Tagged Date From',
+                    filterTaggedDateTo: 'Tagged Date To',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
+                    statusTypes: [
+                        {
+                            status_type_id: 0,
+                            status_type_rendered: 'All',
+                            status_type: null,
+                        },
+                        {
+                            status_type_id: 1,
+                            status_type_rendered: 'Out for repair',
+                            status_type: 'OUTFORREPAIR',
+                        },
+                    ],
+                },
+                errors: {
+                    startDate: 'Start date must be before End Date',
+                    endDate: 'End date must be after Start Date',
                 },
             },
         },
