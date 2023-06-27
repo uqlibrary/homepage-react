@@ -9,16 +9,17 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import DataTable from '../../../SharedComponents/DataTable/DataTable';
-
-import locale from '../../../testTag.locale';
-import config from './config';
-import { PERMISSIONS } from '../../../config/auth';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { createLocationString } from '../../../helpers/helpers';
+
+import locale from '../../../testTag.locale';
+import config from './config';
+import { PERMISSIONS } from '../../../config/auth';
+import { transformRow } from './utils';
+
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -35,18 +36,6 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.error.light,
     },
 }));
-
-export const transformRow = row => {
-    return row.map(line => ({
-        ...line,
-        asset_location: createLocationString({
-            site: line.site_id_displayed,
-            building: line.building_id_displayed,
-            floor: line.floor_id_displayed,
-            room: line.room_id_displayed,
-        }),
-    }));
-};
 
 const InspectionsDue = ({
     actions,

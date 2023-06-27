@@ -1,9 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import RowMenuCell from './RowMenuCell';
 
 export const useDataTableRow = (data = [], transform) => {
     const [row, _setRow] = useState(!!transform ? transform(data) : data);
     const setRow = data => _setRow(!!transform ? transform(data) : data);
+    useEffect(() => {
+        setRow(data);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
+
     return { row, setRow };
 };
 

@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import { isEmptyStr } from '../../../helpers/helpers';
 
 export default {
-    assettypes: {
+    fields: {
         asset_type_id: {
             label: 'Id',
             fieldParams: { canEdit: false },
