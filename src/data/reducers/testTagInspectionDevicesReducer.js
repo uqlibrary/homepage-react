@@ -14,7 +14,7 @@ const handlers = {
         inspectionDevices: null,
         inspectionDevicesLoading: true,
         inspectionDevicesLoaded: false,
-        inspectionDevicesError: false,
+        inspectionDevicesError: null,
     }),
     [actions.TESTTAG_INSPECTION_DEVICES_LOADED]: (state, action) => ({
         ...initialState,

@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 // import clsx from 'clsx';
 
 const inputLabelProps = { shrink: true };
@@ -24,6 +25,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const LocationPicker = ({
+    title,
     siteList,
     siteListLoading,
     buildingList,
@@ -33,35 +35,38 @@ const LocationPicker = ({
     // floorListError,
     roomList,
     roomListLoading,
+    hasAllOption = false,
     locale,
     actions,
     location,
     setLocation,
     hide = [],
+    disabled = false,
     inputProps = {},
 }) => {
     const classes = useStyles();
     const divisor = 4 - hide.length;
-    const hasAllOption = React.useRef(false);
-
-    React.useEffect(() => {
-        // check if site has an entry with a value of -1, implying an "all sites" option.
-        // logic assumes if sites has this present then all locations will too.
-        hasAllOption.current = siteList?.some(site => site.site_id === -1) ?? false;
-    }, [siteList]);
-
     const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
     return (
         <>
+            {!!title && (
+                <Grid item xs={12}>
+                    <Typography variant="h6" component={'h3'}>
+                        {title}
+                    </Typography>
+                </Grid>
+            )}
+
             <Grid item xs={12} sm={6} md={12 / divisor}>
                 <FormControl className={classes.formControl} fullWidth>
                     <Autocomplete
                         id="testntag-form-siteid"
                         data-testid="testntag-form-siteid"
+                        aria-controls="testntag-form-siteid-popup"
                         fullWidth
                         options={siteList}
                         value={
-                            !hasAllOption.current && location.site === -1
+                            !hasAllOption && location.site === -1
                                 ? ''
                                 : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
                         }
@@ -112,7 +117,7 @@ const LocationPicker = ({
                                 {...(inputProps?.site ?? {})}
                             />
                         )}
-                        disabled={!!!siteList}
+                        disabled={disabled || !!!siteList}
                         disableClearable
                         loading={siteListLoading}
                     />
@@ -124,10 +129,11 @@ const LocationPicker = ({
                         <Autocomplete
                             id="testntag-form-buildingid"
                             data-testid="testntag-form-buildingid"
+                            aria-controls="testntag-form-buildingid-popup"
                             fullWidth
                             options={buildingList}
                             value={
-                                !hasAllOption.current && location.building === -1
+                                !hasAllOption && location.building === -1
                                     ? ''
                                     : buildingList?.find(building => building.building_id === location.building)
                             }
@@ -181,7 +187,7 @@ const LocationPicker = ({
                                     {...(inputProps?.building ?? {})}
                                 />
                             )}
-                            disabled={location.site === -1 || !!!siteList}
+                            disabled={disabled || location.site === -1 || !!!siteList}
                             disableClearable
                             loading={siteListLoading}
                         />
@@ -195,10 +201,11 @@ const LocationPicker = ({
                         <Autocomplete
                             id="testntag-form-floorid"
                             data-testid="testntag-form-floorid"
+                            aria-controls="testntag-form-floorid-popup"
                             fullWidth
                             options={floorList}
                             value={
-                                !hasAllOption.current && location.floor === -1
+                                !hasAllOption && location.floor === -1
                                     ? ''
                                     : floorList?.find(floor => floor.floor_id === location.floor)
                             }
@@ -239,7 +246,7 @@ const LocationPicker = ({
                                     {...(inputProps?.floor ?? {})}
                                 />
                             )}
-                            disabled={location.building === -1 || floorListLoading}
+                            disabled={disabled || location.building === -1 || floorListLoading}
                             disableClearable
                             loading={!!floorListLoading}
                         />
@@ -252,10 +259,11 @@ const LocationPicker = ({
                         <Autocomplete
                             id="testntag-form-roomid"
                             data-testid="testntag-form-roomid"
+                            aria-controls="testntag-form-roomid-popup"
                             fullWidth
                             options={roomList}
                             value={
-                                !hasAllOption.current && location.room === -1
+                                !hasAllOption && location.room === -1
                                     ? ''
                                     : roomList?.find(room => room.room_id === location.room)
                             }
@@ -293,7 +301,7 @@ const LocationPicker = ({
                                     {...(inputProps?.room ?? {})}
                                 />
                             )}
-                            disabled={location.floor === -1 || roomListLoading}
+                            disabled={disabled || location.floor === -1 || roomListLoading}
                             disableClearable
                             loading={!!roomListLoading}
                         />
@@ -323,6 +331,8 @@ LocationPicker.propTypes = {
     withAllOption: PropTypes.bool,
     inputProps: PropTypes.object,
     hasAllOption: PropTypes.bool,
+    disabled: PropTypes.bool,
+    title: PropTypes.string,
 };
 
 export default React.memo(LocationPicker);

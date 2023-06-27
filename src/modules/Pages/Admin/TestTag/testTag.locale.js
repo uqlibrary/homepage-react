@@ -9,13 +9,27 @@ import AssetTypeIcon from '@material-ui/icons/DevicesOther';
 import LocationIcon from '@material-ui/icons/MyLocation';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
-import OutForRepairIcon from '@material-ui/icons/ExitToApp';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
 import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
 
 import { PERMISSIONS } from './config/auth';
 
 export default {
+    config: {
+        monthsOptions: [
+            { value: '3', label: '3 months' },
+            { value: '6', label: '6 months' },
+            { value: '12', label: '1 year' },
+            { value: '60', label: '5 years' },
+        ],
+        assetStatusOptions: [
+            { value: 'CURRENT', label: 'Current' },
+            { value: 'REMOVED', label: 'Removed' },
+            { value: 'DISCARDED', label: 'Discarded' },
+            { value: 'FAILED', label: 'Failed' },
+            { value: 'OUTFORREPAIR', label: 'Out for Repair' },
+        ],
+    },
     pages: {
         general: {
             loading: 'Loading...',
@@ -84,7 +98,7 @@ export default {
                         {
                             title: 'BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanagebulkassetupdate}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTIONS',
@@ -104,22 +118,18 @@ export default {
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
                             icon: <InspectionIcon />,
-                            path: '#',
+                            permissions: [PERMISSIONS.can_see_reports],
+                            path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
                         },
                         {
-                            title: 'ASSETS OUT FOR REPAIR',
-                            icon: <OutForRepairIcon />,
-                            path: '#',
-                        },
-                        {
-                            title: 'ASSETS INSPECTED BY BUILDING AND DATE RANGE',
+                            title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: '#',
                         },
                         {
                             title: 'INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagreportinspectionsbylicenceduser}?user=uqtesttag`,
                             permissions: [PERMISSIONS.can_admin],
                         },
                     ],
@@ -165,13 +175,31 @@ export default {
                 asset: {
                     title: 'Asset',
                     addText: 'ADD NEW ASSET',
-                    assetId: {
+                    newAssetText: 'NEW ASSET',
+                    assetSelector: {
                         label: 'Asset ID',
                         helperText: 'Enter a new ID to add',
-                        placeholder: 'Enter at least 7 characters',
+                        placeholder: 'Enter at least 5 characters',
                     },
                     assetType: {
                         label: 'Asset type',
+                        addNewLabel: 'Add new asset type',
+                        saveSuccess: {
+                            confirmationTitle: 'The asset type has been added',
+                            confirmationMessage: '',
+                            confirmButtonLabel: 'Close',
+                        },
+                        saveFailure: {
+                            confirmationTitle: (
+                                <span>
+                                    There was a problem saving the Asset type.
+                                    <br />
+                                    Please try again later.
+                                </span>
+                            ),
+                            confirmationMessage: '',
+                            confirmButtonLabel: 'Close',
+                        },
                     },
                     ownerLabel: 'Asset owner',
                 },
@@ -258,7 +286,7 @@ export default {
                 },
                 networkError: {
                     confirmationTitle:
-                        'A network error occurred while loading the requested data. Please try again or contact support if the issue persists.',
+                        'A network error occurred while loading the requested data. You may need to log out and back in. Please try again or contact support if the issue persists.',
                     confirmButtonLabel: 'OK',
                 },
                 dialogLabels: {
@@ -354,6 +382,14 @@ export default {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: type => `Edit ${type}`,
+                },
+                actionDialogue: {
+                    confirmationTitle: 'Delete and Reassign',
+                    deleteReassignTargetPrompt: target => `Delete ${target ?? 'NONE'} and reassign all assets to:`,
+                    newAssetTypePrompt: 'New Asset Type',
+                    deleteReassignWarningPrompt: count => `This will effect ${count ?? 0} assets`,
+                    cancelButtonLabel: 'Cancel',
+                    confirmButtonLabel: 'Proceed',
                 },
             },
             locations: {
@@ -520,6 +556,172 @@ export default {
                     updateFail: 'Device could not be updated',
                     deleteSuccess: 'Device deleted successfully',
                     deleteFail: 'Device could not be deleted',
+                },
+            },
+            bulkassetupdate: {
+                config: {},
+                breadcrumbs: [
+                    {
+                        title: 'Managing Bulk Asset Update',
+                        icon: <BulkUpdateIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Assets in bulk for ${dept}`,
+                },
+                form: {
+                    columns: {
+                        asset_id_displayed: { label: 'Asset ID' },
+                        asset_type_name: { label: 'Type' },
+                        asset_location: { label: 'Location' },
+                        asset_status: { label: 'Status' },
+                    },
+
+                    assetType: {
+                        label: 'Asset type',
+                    },
+                    filterDialog: {
+                        title: 'Select assets by feature',
+                        button: {
+                            cancel: 'Cancel',
+                            submit: 'Add selected',
+                        },
+                        form: {
+                            columns: {
+                                asset_barcode: { label: 'Barcode' },
+                                asset_type_name: { label: 'Type' },
+                                asset_location: { label: 'Last Room ID' },
+                                asset_status: { label: 'Status' },
+                            },
+                            locationTitle: 'Location',
+                            assetTypeTitle: 'Asset Type',
+                        },
+                    },
+                    step: {
+                        one: {
+                            title: 'Step 1: Choose assets to update in bulk',
+                            addText: 'ADD NEW ASSET',
+                            newAssetText: 'NEW ASSET',
+                            assetSelector: {
+                                label: 'Asset ID',
+                                helperText: 'Scan or enter a new ID to add',
+                                placeholder: 'Enter at least 5 characters',
+                            },
+                            button: {
+                                clear: 'Clear',
+                                next: 'Next',
+                                findAndAdd: 'Find and add by feature',
+                            },
+                        },
+                        two: {
+                            title: 'Step 2: Choose bulk update action',
+                            subtext: count => `You have selected ${count} assets to bulk update.`,
+                            button: {
+                                previous: 'Back',
+                                submit: 'Bulk Update',
+                            },
+                            checkbox: {
+                                location: 'Update Location',
+                                status: 'Update Status',
+                                assetType: 'Update Asset Type',
+                            },
+                            dialogBulkUpdateConfirm: {
+                                confirmButtonLabel: 'Proceed',
+                                cancelButtonLabel: 'Cancel',
+                                confirmationMessage:
+                                    'Are you sure you wish to proceed with this bulk update of selected assets?',
+                                confirmationTitle: 'Bulk Update Selected Assets',
+                            },
+                            snackbars: {
+                                success: 'Bulk Asset update successful',
+                                failed: error => `Error attempting to bulk update assets. ${error}`,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        report: {
+            config: {
+                dateFormat: 'YYYY-MM-DD HH:mm',
+                dateFormatNoTime: 'YYYY-MM-DD',
+                dateFormatDisplay: 'Do MMMM, YYYY',
+            },
+            inspectionsDue: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Inspections Due',
+                        icon: <InspectionIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Asset Inspections Due report for ${dept}`,
+                },
+                form: {
+                    title: 'Filter',
+                    columns: {
+                        asset_barcode: {
+                            label: 'Barcode',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type',
+                        },
+                        asset_test_date: {
+                            label: 'Last test',
+                        },
+                        asset_next_test_due_date: {
+                            label: 'Next test',
+                        },
+                        asset_location: {
+                            label: 'Location',
+                        },
+                    },
+                    filterToDateLabel: 'Within date range',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
+                },
+            },
+            inspectionsByLicencedUser: {
+                breadcrumbs: [
+                    {
+                        title: 'Inspections by Licenced Users',
+                        icon: <InspectionByUserIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Inspections by Licenced Users for ${dept}`,
+                },
+                form: {
+                    title: 'Filter',
+                    columns: {
+                        user_id: {
+                            label: 'UserID',
+                        },
+                        user_uid: {
+                            label: 'UUID',
+                        },
+                        user_name: {
+                            label: 'Name',
+                        },
+                        user_licence_number: {
+                            label: 'Licence #',
+                        },
+                        user_department: {
+                            label: 'Dept.',
+                        },
+                        start_date: {
+                            label: 'Start Date',
+                            type: 'dateTime',
+                        },
+                        end_date: {
+                            label: 'End Date',
+                            type: 'dateTime',
+                        },
+                        total_for_user: {
+                            label: 'Total',
+                        },
+                    },
+                    filterToDateLabel: 'Within date range',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
                 },
             },
         },

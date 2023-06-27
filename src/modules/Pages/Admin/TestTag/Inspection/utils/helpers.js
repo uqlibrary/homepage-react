@@ -1,3 +1,4 @@
+import { isEmptyStr } from '../../helpers/helpers';
 const moment = require('moment');
 
 /* istanbul ignore next */
@@ -6,11 +7,8 @@ export const scrollToTopOfPage = () => {
     !!topOfPage && topOfPage.scrollIntoView();
 };
 
-export const isEmpty = value => {
-    return typeof value !== 'string' ? true : !!!value || value === '' || (!!value.length && value.length === 0);
-};
 export const isValidEventDate = (date, format) => {
-    if (isEmpty(date)) return false;
+    if (isEmptyStr(date)) return false;
     const today = new moment();
     const formattedToday = today.startOf('day');
 
@@ -20,7 +18,7 @@ export const isValidEventDate = (date, format) => {
 };
 export const isValidNextTestDate = (inspection, passedValue, format) => {
     const date = inspection?.inspection_date_next ?? undefined;
-    if (!!!date || isEmpty(date)) return false;
+    if (!!!date || isEmptyStr(date)) return false;
     if (inspection.inspection_status !== passedValue) return false;
     const today = new moment();
     const formattedToday = today.startOf('day');
@@ -31,7 +29,7 @@ export const isValidNextTestDate = (inspection, passedValue, format) => {
     return result;
 };
 export const isValidAssetId = assetId => {
-    return !isEmpty(assetId);
+    return !isEmptyStr(assetId);
 };
 export const isValidRoomId = roomId => !!roomId && Number.isFinite(roomId) && roomId > 0;
 export const isValidAssetTypeId = assetTypeId => !!assetTypeId && Number.isFinite(assetTypeId) && assetTypeId > 0;
@@ -43,7 +41,7 @@ export const isValidTestingDeviceId = (testingDeviceId, inspectionStatus, enums)
     ((inspectionStatus === undefined || inspectionStatus === null) &&
         (!Number.isFinite(testingDeviceId) || testingDeviceId === -1));
 export const isValidFailReason = (inspection, failedValue) =>
-    inspection?.inspection_status === failedValue && !isEmpty(inspection?.inspection_fail_reason);
+    inspection?.inspection_status === failedValue && !isEmptyStr(inspection?.inspection_fail_reason);
 export const isValidInspection = (inspection, testStatusEnum) => {
     /* istanbul ignore next */
     if (!!!testStatusEnum) return false;
@@ -56,16 +54,16 @@ export const isValidInspection = (inspection, testStatusEnum) => {
     );
 };
 export const hasTestOrAction = formValues =>
-    !isEmpty(formValues.inspection_status) || !!formValues.isRepair || !!formValues.isDiscarded;
-export const isValidRepairDetails = repairDetails => !isEmpty(repairDetails);
+    !isEmptyStr(formValues.inspection_status) || !!formValues.isRepair || !!formValues.isDiscarded;
+export const isValidRepairDetails = repairDetails => !isEmptyStr(repairDetails);
 export const isValidRepair = ({ formValues, lastInspection, failed: failValue }) =>
     !!formValues?.isRepair &&
     (formValues.inspection_status === failValue || lastInspection?.inspect_status === failValue) &&
     isValidRepairDetails(formValues.repairer_contact_details);
-export const isValidDiscardedDetails = discardedDetails => !isEmpty(discardedDetails);
+export const isValidDiscardedDetails = discardedDetails => !isEmptyStr(discardedDetails);
 export const isValidDiscard = ({ formValues, lastInspection, passed: passValue, failed: failValue }) =>
     !!formValues?.isDiscarded &&
-    (!isEmpty(formValues.inspection_status) ||
+    (!isEmptyStr(formValues.inspection_status) ||
         lastInspection?.inspect_status === passValue ||
         lastInspection?.inspect_status === failValue) &&
     isValidDiscardedDetails(formValues.discard_reason);

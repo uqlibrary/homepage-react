@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -7,25 +7,22 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { debounce } from 'throttle-debounce';
 import InspectionPanel from './InspectionPanel';
 import LastInspectionPanel from './LastInspectionPanel';
+import AssetTypeDialogPopup from './AssetTypeDialogPopup';
+import AssetSelector from '../../SharedComponents/AssetSelector/AssetSelector';
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 
 import locale from '../../testTag.locale';
 
-const filter = createFilterOptions();
-
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
-
-const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
 const AssetPanel = ({
     actions,
-    currentRetestList,
     formValues,
     selectedAsset,
     resetForm,
@@ -35,11 +32,14 @@ const AssetPanel = ({
     focusElementRef,
     defaultNextTestDateValue,
     classes,
+    saveAssetTypeSaving,
+    saveAssetTypeSuccess,
+    saveAssetTypeError,
     isMobileView,
+    canAddAssetType,
 }) => {
     AssetPanel.propTypes = {
         actions: PropTypes.any.isRequired,
-        currentRetestList: PropTypes.array.isRequired,
         formValues: PropTypes.object.isRequired,
         selectedAsset: PropTypes.object,
         resetForm: PropTypes.func.isRequired,
@@ -47,10 +47,14 @@ const AssetPanel = ({
         assignCurrentAsset: PropTypes.func.isRequired,
         handleChange: PropTypes.func.isRequired,
         focusElementRef: PropTypes.any.isRequired,
-        defaultNextTestDateValue: PropTypes.number.isRequired,
+        defaultNextTestDateValue: PropTypes.string.isRequired,
         classes: PropTypes.object.isRequired,
         saveInspectionSaving: PropTypes.bool,
+        saveAssetTypeSaving: PropTypes.bool,
+        saveAssetTypeSuccess: PropTypes.any,
+        saveAssetTypeError: PropTypes.any,
         isMobileView: PropTypes.bool,
+        canAddAssetType: PropTypes.bool,
     };
     const pageLocale = locale.pages.inspect;
 
@@ -59,139 +63,56 @@ const AssetPanel = ({
     );
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
+    const [isAssetTypeDialogOpen, setAssetTypeDialogOpen] = React.useState(false);
 
-    const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
+    const [assetTypeValid, setAssetTypeValid] = React.useState(false);
 
-    const [formAssetList, setFormAssetList] = useState(assetsList);
-    const [isOpen, setIsOpen] = React.useState(false);
-
-    const maskNumber = (number, department) => {
-        const prefix = /^\d+$/.test(number) ? department : '';
-        const paddedNumber = !!prefix ? number.toString().padStart(6, '0') : number;
-        return `${prefix}${paddedNumber}`;
+    const openAssetTypeDialog = () => {
+        setAssetTypeDialogOpen(true);
     };
 
-    const previousValueRef = React.useRef(null);
-
-    const debounceAssetsSearch = React.useRef(
-        debounce(500, (pattern, user) => {
-            const paddedNumber = maskNumber(pattern, user?.user_department);
-            !!paddedNumber &&
-                paddedNumber.length >= MINIMUM_ASSET_ID_PATTERN_LENGTH &&
-                actions.loadAssets(paddedNumber);
-        }),
-    ).current;
-
-    React.useEffect(() => {
-        !!assetsList && setFormAssetList(...[assetsList]);
-        /* istanbul ignore else */ if (assetsList?.length === 1) {
-            assignCurrentAsset(assetsList[0]);
-            setIsOpen(false);
-        }
-        /* istanbul ignore else */ if (assetsList?.length < 1) {
-            resetForm(false);
-            setIsOpen(false);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assetsList]);
+    // we group them all together to place a footer item at the bottom of the list
+    const renderGroup = params => {
+        const addButton = (
+            <li key="testntagFormAssetType-option-add">
+                <Button className={classes.addNewLabel} onClick={() => openAssetTypeDialog()}>
+                    {pageLocale.form.asset.assetType.addNewLabel}
+                </Button>
+            </li>
+        );
+        const children = [params.children];
+        !!canAddAssetType && children.push(addButton);
+        return children;
+    };
 
     return (
         <StandardCard title={pageLocale.form.asset.title} style={{ marginTop: '30px' }}>
+            <AssetTypeDialogPopup
+                isAssetTypeDialogOpen={isAssetTypeDialogOpen}
+                assetTypeValid={assetTypeValid}
+                setAssetTypeValid={setAssetTypeValid}
+                actions={actions}
+                setAssetTypeDialogOpen={setAssetTypeDialogOpen}
+                isMobileView={isMobileView}
+                classes={classes}
+                // initConfig={inspectionConfig}
+                saveAssetTypeSaving={saveAssetTypeSaving}
+                saveAssetTypeSuccess={saveAssetTypeSuccess}
+                saveAssetTypeError={saveAssetTypeError}
+            />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
-                    <FormControl className={classes.formControl} fullWidth>
-                        <Autocomplete
-                            id="testntagFormAssetId"
-                            data-testid="testntagFormAssetId"
-                            fullWidth
-                            open={isOpen}
-                            value={formValues?.asset_id_displayed ?? previousValueRef.current}
-                            onChange={(event, newValue) => {
-                                if (typeof newValue === 'string') {
-                                    assignCurrentAsset({ asset_id_displayed: newValue });
-                                } else if (newValue && newValue.inputValue) {
-                                    // Create a new value from the user input
-                                    assignCurrentAsset({
-                                        asset_id_displayed: newValue.inputValue,
-                                    });
-                                } else {
-                                    assignCurrentAsset(newValue);
-                                }
-                                setIsOpen(false);
-                            }}
-                            filterOptions={(options, params) => {
-                                const filtered = filter(options, params);
-                                // Suggest the creation of a new value
-                                // if (params.inputValue !== '') {
-                                filtered.push({
-                                    inputValue: 'NEW ASSET',
-                                    asset_id_displayed: pageLocale.form.asset.addText,
-                                });
-                                // }
-
-                                return filtered;
-                            }}
-                            openOnFocus
-                            selectOnFocus
-                            handleHomeEndKeys
-                            options={formAssetList}
-                            getOptionLabel={option => {
-                                // Value selected with enter, right from the input
-                                if (typeof option === 'string') {
-                                    return option;
-                                }
-                                // Add "xxx" option created dynamically
-                                if (option.inputValue) {
-                                    return option.inputValue;
-                                }
-                                // Regular option
-                                return `${option.asset_id_displayed ?? /* istanbul ignore next */ ''}`;
-                            }}
-                            renderOption={option => option.asset_id_displayed}
-                            freeSolo
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    {...pageLocale.form.asset.assetId}
-                                    required
-                                    error={!isValidAssetId(formValues.asset_id_displayed)}
-                                    inputRef={focusElementRef}
-                                    variant="standard"
-                                    onFocus={() => setIsOpen(true)}
-                                    onBlur={() => setIsOpen(false)}
-                                    InputLabelProps={{ shrink: true, htmlFor: 'testntagFormAssetIdInput' }}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {!!assetsListLoading ? (
-                                                    <CircularProgress
-                                                        color="inherit"
-                                                        size={20}
-                                                        id="assetIdSpinner"
-                                                        data-testid="assetIdSpinner"
-                                                    />
-                                                ) : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                    onChange={e => {
-                                        !isOpen && setIsOpen(true);
-                                        previousValueRef.current = e.target.value;
-                                        debounceAssetsSearch(e.target.value, user);
-                                    }}
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        id: 'testntagFormAssetIdInput',
-                                        'data-testid': 'testntagFormAssetIdInput',
-                                        maxLength: 12,
-                                    }}
-                                />
-                            )}
-                            loading={!!assetsListLoading}
-                        />
-                    </FormControl>
+                    <AssetSelector
+                        id="testntagFormAssetId"
+                        locale={pageLocale.form.asset}
+                        user={user}
+                        classNames={{ formControl: classes.formControl }}
+                        inputRef={focusElementRef}
+                        onChange={assignCurrentAsset}
+                        onReset={resetForm}
+                        validateAssetId={isValidAssetId}
+                        selectedAsset={formValues?.asset_id_displayed}
+                    />
                 </Grid>
                 <Grid xs={12} item sm={6}>
                     <FormControl className={classes.formControl} fullWidth>
@@ -211,6 +132,8 @@ const AssetPanel = ({
                             getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
                             getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
                             autoHighlight
+                            renderGroup={renderGroup}
+                            groupBy={() => false}
                             renderInput={params => (
                                 <TextField
                                     {...params}
@@ -265,7 +188,6 @@ const AssetPanel = ({
                     formValues={formValues}
                     selectedAsset={selectedAsset}
                     handleChange={handleChange}
-                    currentRetestList={currentRetestList}
                     defaultNextTestDateValue={defaultNextTestDateValue}
                     classes={classes}
                     disabled={!isValidAssetId(formValues?.asset_id_displayed)}

@@ -220,18 +220,63 @@ export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test_a
 
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });
 export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
-export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device/current' });
+export const TEST_TAG_ASSETTYPE_ADD = () => ({ apiUrl: '/test_and_tag/asset_type' });
+export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device/current/mine' });
 export const TEST_TAG_ADD_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device' });
 export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test_and_tag/inspection_device/${id}` });
 
 /** TEST AND TAG ASSET TYPES **/
 // List Asset Types
-export const TEST_TAG_ONLOAD_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/onload/assettype' });
+export const TEST_TAG_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/current' });
 // Add an asset type
-export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
+export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type' });
 // Save an asset type (ID contained in payload)
-export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype' });
+export const TEST_TAG_SAVE_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type' });
 // Delete an Asset type (Reassigning assets to new asset type)
-export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/assettype/reassign' });
+export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/reassign' });
 // Delete an Empty Asset Type
-export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/assettype/${id}` });
+export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/asset_type/${id}` });
+
+/** TEST AND TAG INSPECTIONS REPORT */
+export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType }) => {
+    const urlParams = {
+        ...(!!locationId && !!locationType ? { [`${locationType}_id`]: locationId } : {}),
+        ...(!!period && !!periodType ? { period_length: period, period_type: periodType } : {}),
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = [...qs].length > 0;
+    const apiUrl = `test_and_tag/report/pending_inspections${hasParams ? `?${qs.toString()}` : ''}`;
+    return {
+        apiUrl,
+    };
+};
+/* TEST AND TAG INSPECTIONS BY LICENCED USER */
+export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, endDate, userRange }) => {
+    const urlParams = {
+        ...(!!startDate && !!endDate ? { start_date: startDate, end_date: endDate } : {}),
+        ...(!!userRange ? { user_range: userRange } : {}),
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = Object.keys(urlParams).length > 0;
+    const apiUrl = `test_and_tag/report/user_inspections${hasParams ? `?${qs.toString()}` : ''}`;
+    return {
+        apiUrl,
+    };
+};
+/* UTILITY API USED FOR LICENCED USER INSPECTIONS REPORT - GET LICENCED USERS FOR DROPDOWN */
+export const TEST_TAG_REPORT_UTILITY_LICENCED_USERS = () => ({ apiUrl: 'test_and_tag/report/licenced_inspectors' });
+
+export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId }) => {
+    const urlParams = {
+        ...(!!locationId && !!locationType ? { location_id: locationId, location_type: locationType } : {}),
+        ...(!!assetTypeId ? { asset_type_id: assetTypeId } : {}),
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = [...qs].length > 0;
+    const apiUrl = `/test_and_tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+    return {
+        apiUrl,
+    };
+};
+
+export const TEST_TAG_BULK_UPDATE_API = () => ({ apiUrl: 'test_and_tag/asset' });

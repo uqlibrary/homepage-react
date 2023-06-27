@@ -1,5 +1,5 @@
 import { mutateObject, mutateClearObject } from '../utils/transformers';
-import { isEmpty } from '../utils/helpers';
+import { isEmptyStr } from '../../helpers/helpers';
 
 export const saveInspectionTransformer = (passValue, failValue) => ({
     inspection_status: ({ state, data }) => ({
@@ -86,7 +86,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
         if (
             state.with_repair?.isRepair &&
             (state.with_inspection?.inspection_status === failValue ||
-                (isEmpty(state.with_inspection?.inspection_status) && lastInspection?.inspect_status === failValue))
+                (isEmptyStr(state.with_inspection?.inspection_status) && lastInspection?.inspect_status === failValue))
         ) {
             /* istanbul ignore else */ if (!!state.with_discard) state.with_discard.discard_reason = undefined;
             delete state.with_repair.isRepair;
@@ -98,7 +98,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
     with_discard: ({ state, params: lastInspection }) => {
         if (
             state.with_discard?.isDiscarded &&
-            (!isEmpty(state.with_inspection?.inspection_status) ||
+            (!isEmptyStr(state.with_inspection?.inspection_status) ||
                 lastInspection?.inspect_status === passValue ||
                 lastInspection?.inspect_status === failValue)
         ) {
