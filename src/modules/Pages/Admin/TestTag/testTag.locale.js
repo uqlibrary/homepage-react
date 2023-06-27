@@ -16,6 +16,11 @@ import { PERMISSIONS } from './config/auth';
 
 export default {
     config: {
+        format: {
+            dateFormat: 'YYYY-MM-DD HH:mm',
+            dateFormatNoTime: 'YYYY-MM-DD',
+            dateFormatDisplay: 'Do MMMM, YYYY',
+        },
         monthsOptions: [
             { value: '3', label: '3 months' },
             { value: '6', label: '6 months' },
@@ -183,7 +188,9 @@ export default {
                         placeholder: 'Enter at least 5 characters',
                     },
                     assetType: {
-                        label: 'Asset type',
+                        props: {
+                            label: 'Asset type',
+                        },
                         addNewLabel: 'Add new asset type',
                         saveSuccess: {
                             confirmationTitle: 'The asset type has been added',
@@ -349,28 +356,26 @@ export default {
                     actions: 'Actions',
                     addLocationButton: 'Add Asset type',
                     columns: {
-                        assettype: {
-                            asset_type_id: {
-                                label: 'Id',
-                            },
-                            asset_type_name: {
-                                label: 'Asset Type Name',
-                            },
-                            asset_type_class: {
-                                label: 'Class',
-                            },
-                            asset_type_power_rating: {
-                                label: 'Power Rating',
-                            },
-                            asset_type: {
-                                label: 'Type',
-                            },
-                            asset_type_notes: {
-                                label: 'Notes',
-                            },
-                            asset_count: {
-                                label: 'Usage',
-                            },
+                        asset_type_id: {
+                            label: 'Id',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type Name',
+                        },
+                        asset_type_class: {
+                            label: 'Class',
+                        },
+                        asset_type_power_rating: {
+                            label: 'Power Rating',
+                        },
+                        asset_type: {
+                            label: 'Type',
+                        },
+                        asset_type_notes: {
+                            label: 'Notes',
+                        },
+                        asset_count: {
+                            label: 'Usage',
                         },
                     },
                 },

@@ -19,9 +19,9 @@ import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
+import { getNameStyles, transformRow } from './utils';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -41,28 +41,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function getNameStyles(name, inspectorName, theme) {
-    return {
-        fontWeight:
-            inspectorName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
-    };
-}
-
-export const transformRow = row => {
-    return row.map(line => ({
-        ...line,
-        start_date: moment(line.start_date).format('DD/MM/YYYY'),
-        end_date: moment(line.end_date).format('DD/MM/YYYY'),
-    }));
-};
-
 const InspectionsByLicencedUser = ({
     actions,
     userInspections,
     totalInspections,
     licencedUsers,
     userInspectionsLoading,
-    userInspectionsLoaded,
+    // userInspectionsLoaded,
     userInspectionsError,
     licencedUsersLoading,
     licencedUsersLoaded,
@@ -90,12 +75,13 @@ const InspectionsByLicencedUser = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-    const { row, setRow } = useDataTableRow();
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
         withActions: false,
     });
+    const { row } = useDataTableRow(userInspections, transformRow);
+
     /* HELPERS */
     const reportSearch = () => {
         actions
@@ -181,6 +167,7 @@ const InspectionsByLicencedUser = ({
             }
         }
     };
+
     /* EFFECTS */
     useEffect(() => {
         if (!!!licencedUsers || licencedUsers.length < 1) {
@@ -196,13 +183,7 @@ const InspectionsByLicencedUser = ({
 
     useEffect(() => {
         if (!!apiError) openConfirmationAlert(apiError, 'error');
-        else {
-            if (userInspectionsLoaded) {
-                setRow(transformRow(userInspections));
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userInspections, userInspectionsLoaded, apiError]);
+    }, [apiError]);
 
     return (
         <StandardAuthPage

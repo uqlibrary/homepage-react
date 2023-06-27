@@ -1,24 +1,24 @@
-import React, { useEffect, useMemo, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
-
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+
+import locale from '../../../testTag.locale';
+import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
-import { getColumns, emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
+import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,18 +39,12 @@ const InspectionDevices = ({
     inspectionDevices,
     inspectionDevicesLoading,
     inspectionDevicesLoaded,
-    // inspectionDevicesError,
+    inspectionDevicesError,
 }) => {
     const classes = useStyles();
-    const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { user } = useSelector(state => state.get('testTagUserReducer'));
-
-    useEffect(() => {
-        if (!inspectionDevicesLoaded) actions.loadInspectionDevices();
-        else setRows(inspectionDevices);
-    }, [actions, inspectionDevices, inspectionDevicesLoaded]);
 
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
@@ -157,20 +151,21 @@ const InspectionDevices = ({
                 setDialogueBusy(false);
             });
     };
+    const { columns } = useDataTableColumns({
+        config,
+        locale: pageLocale.form.columns,
+        canManage,
+        handleEditClick,
+        handleDeleteClick,
+    });
 
-    const columns = useMemo(
-        () =>
-            getColumns({
-                config,
-                locale: pageLocale.form.columns,
-                canManage,
-                handleEditClick,
-                handleDeleteClick,
-            }),
+    const { row } = useDataTableRow(inspectionDevices, transformRow);
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [handleDeleteClick, handleEditClick],
-    );
+    useEffect(() => {
+        if (!inspectionDevicesLoading && !inspectionDevicesLoaded && !inspectionDevicesError) {
+            actions.loadInspectionDevices();
+        }
+    }, [actions, inspectionDevicesError, inspectionDevicesLoaded, inspectionDevicesLoading]);
 
     return (
         <StandardAuthPage
@@ -182,78 +177,78 @@ const InspectionDevices = ({
                 <StandardCard noHeader>
                     {canManage && (
                         <>
-                            <UpdateDialog
-                                title={actionState.title}
-                                action="add"
-                                updateDialogueBoxId="addRow"
-                                isOpen={actionState.isAdd}
+                    <UpdateDialog
+                        title={actionState.title}
+                        action="add"
+                        updateDialogueBoxId="addRow"
+                        isOpen={actionState.isAdd}
                                 locale={pageLocale?.dialogAdd}
-                                fields={config.fields ?? []}
-                                columns={pageLocale.form.columns}
-                                row={actionState?.row}
-                                onCancelAction={closeDialog}
-                                onAction={onRowAdd}
-                                props={actionState?.props}
-                                isBusy={dialogueBusy}
-                            />
-                            <UpdateDialog
-                                title={actionState.title}
-                                action="edit"
-                                updateDialogueBoxId="editRow"
-                                isOpen={actionState.isEdit}
+                        fields={config.fields ?? []}
+                        columns={pageLocale.form.columns}
+                        row={actionState?.row}
+                        onCancelAction={closeDialog}
+                        onAction={onRowAdd}
+                        props={actionState?.props}
+                        isBusy={dialogueBusy}
+                    />
+                    <UpdateDialog
+                        title={actionState.title}
+                        action="edit"
+                        updateDialogueBoxId="editRow"
+                        isOpen={actionState.isEdit}
                                 locale={pageLocale?.dialogEdit}
-                                fields={config?.fields ?? []}
-                                columns={pageLocale.form.columns}
-                                row={actionState?.row}
-                                onCancelAction={closeDialog}
-                                onAction={onRowEdit}
-                                props={actionState?.props}
-                                isBusy={dialogueBusy}
-                            />
-                            <ConfirmationBox
-                                actionButtonColor="primary"
-                                actionButtonVariant="contained"
-                                cancelButtonColor="secondary"
-                                confirmationBoxId="deleteRow"
-                                onCancelAction={closeDialog}
-                                onAction={onRowDelete}
-                                isOpen={actionState.isDelete}
-                                locale={
-                                    !dialogueBusy
+                        fields={config?.fields ?? []}
+                        columns={pageLocale.form.columns}
+                        row={actionState?.row}
+                        onCancelAction={closeDialog}
+                        onAction={onRowEdit}
+                        props={actionState?.props}
+                        isBusy={dialogueBusy}
+                    />
+                    <ConfirmationBox
+                        actionButtonColor="primary"
+                        actionButtonVariant="contained"
+                        cancelButtonColor="secondary"
+                        confirmationBoxId="deleteRow"
+                        onCancelAction={closeDialog}
+                        onAction={onRowDelete}
+                        isOpen={actionState.isDelete}
+                        locale={
+                            !dialogueBusy
                                         ? pageLocale?.dialogDeleteConfirm
-                                        : {
+                                : {
                                               ...pageLocale?.dialogDeleteConfirm,
-                                              confirmButtonLabel: (
-                                                  <CircularProgress
-                                                      color="inherit"
-                                                      size={25}
-                                                      id="confirmationSpinner"
-                                                      data-testid="confirmationSpinner"
-                                                  />
-                                              ),
-                                          }
-                                }
-                                disableButtonsWhenBusy
-                                isBusy={dialogueBusy}
-                                noMinContentWidth
-                                actionProps={{ row: actionState?.row, props: actionState?.props }}
-                            />
+                                      confirmButtonLabel: (
+                                          <CircularProgress
+                                              color="inherit"
+                                              size={25}
+                                              id="confirmationSpinner"
+                                              data-testid="confirmationSpinner"
+                                          />
+                                      ),
+                                  }
+                        }
+                        disableButtonsWhenBusy
+                        isBusy={dialogueBusy}
+                        noMinContentWidth
+                        actionProps={{ row: actionState?.row, props: actionState?.props }}
+                    />
                         </>
                     )}
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                rows={rows}
+                                rows={row}
                                 columns={columns}
                                 rowId={'device_id'}
                                 components={{ ...(canManage ? { Toolbar: AddToolbar } : {}) }}
                                 componentsProps={{
                                     ...(canManage
                                         ? {
-                                              toolbar: {
+                                    toolbar: {
                                                   label: pageLocale.form?.addDeviceButton,
-                                                  onClick: handleAddClick,
-                                              },
+                                        onClick: handleAddClick,
+                                    },
                                           }
                                         : {}),
                                 }}
