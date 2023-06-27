@@ -16,6 +16,11 @@ import { PERMISSIONS } from './config/auth';
 
 export default {
     config: {
+        format: {
+            dateFormat: 'YYYY-MM-DD HH:mm',
+            dateFormatNoTime: 'YYYY-MM-DD',
+            dateFormatDisplay: 'Do MMMM, YYYY',
+        },
         monthsOptions: [
             { value: '3', label: '3 months' },
             { value: '6', label: '6 months' },

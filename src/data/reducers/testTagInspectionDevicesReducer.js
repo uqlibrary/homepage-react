@@ -1,7 +1,7 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    inspectionDevices: null,
+    inspectionDevices: [],
     inspectionDevicesLoading: false,
     inspectionDevicesLoaded: false,
     inspectionDevicesError: null,
@@ -11,7 +11,7 @@ const handlers = {
     [actions.TESTTAG_INSPECTION_DEVICES_LOADING]: state => ({
         ...initialState,
         ...state,
-        inspectionDevices: null,
+        inspectionDevices: [],
         inspectionDevicesLoading: true,
         inspectionDevicesLoaded: false,
         inspectionDevicesError: null,
@@ -27,7 +27,7 @@ const handlers = {
     [actions.TESTTAG_INSPECTION_DEVICES_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
-        inspectionDevices: null,
+        inspectionDevices: [],
         inspectionDevicesLoading: false,
         inspectionDevicesLoaded: false,
         inspectionDevicesError: action.payload,

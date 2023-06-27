@@ -1,45 +1,6 @@
-import React from 'react';
-
 import moment from 'moment';
-
-import RowMenuCell from './../../../SharedComponents/DataTable/RowMenuCell';
 import locale from '../../../testTag.locale';
 const dateFormat = locale.pages.manage.config.dateFormat;
-
-export const getColumns = ({ config, locale, handleEditClick, handleDeleteClick }) => {
-    const actionsCell = {
-        field: 'actions',
-        headerName: locale?.actions,
-        renderCell: params => {
-            return <RowMenuCell {...params} handleEditClick={handleEditClick} handleDeleteClick={handleDeleteClick} />;
-        },
-        sortable: false,
-        width: 100,
-        headerAlign: 'center',
-        filterable: false,
-        align: 'center',
-        disableColumnMenu: true,
-        disableReorder: true,
-        renderInUpdate: false,
-    };
-
-    const columns = [];
-    const keys = Object.keys(config.fields);
-
-    keys.forEach(key => {
-        !!(config.fields[key]?.fieldParams.renderInTable ?? true) &&
-            columns.push({
-                field: key,
-                headerName: locale?.[key].label,
-                editable: false,
-                sortable: false,
-                ...config.fields[key].fieldParams,
-            });
-    });
-
-    columns && columns.length > 0 && columns.push(actionsCell);
-    return columns;
-};
 
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
 export const actionReducer = (_, action) => {
@@ -96,4 +57,16 @@ export const transformUpdateRequest = request => {
 
     const newResponse = formatDateStrings(request, '00:00:00');
     return newResponse;
+};
+
+export const transformRow = row => {
+    return row.map(line => ({
+        ...line,
+        device_calibrated_date_last: moment(line.device_calibrated_date_last).format(
+            locale.config.format.dateFormatNoTime,
+        ),
+        device_calibration_due_date: moment(line.device_calibration_due_date).format(
+            locale.config.format.dateFormatNoTime,
+        ),
+    }));
 };
