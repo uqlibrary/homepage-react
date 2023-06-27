@@ -215,7 +215,7 @@ const Dashboard = ({
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={pathConfig.admin.testntagreport}
+                                                to={`${pathConfig.admin.testntagreportrecalibrationssdue}?period=3`}
                                                 data-testid="dashboardLinkReportInspectionDevices"
                                             >
                                                 {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`}
