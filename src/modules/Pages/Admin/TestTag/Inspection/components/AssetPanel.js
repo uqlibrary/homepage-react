@@ -137,7 +137,7 @@ const AssetPanel = ({
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    {...pageLocale.form.asset.assetType}
+                                    {...pageLocale.form.asset.assetType.props}
                                     required
                                     error={
                                         isValidAssetId(formValues.asset_id_displayed) &&

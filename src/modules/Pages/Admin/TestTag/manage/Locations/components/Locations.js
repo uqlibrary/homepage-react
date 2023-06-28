@@ -55,12 +55,13 @@ const actionHandler = {
         actions.loadRooms(location.floor);
     },
 };
+
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
-    const { row, setRow } = useDataTableRow();
+    const { row, setRow } = useDataTableRow([]);
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();

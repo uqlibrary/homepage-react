@@ -25,7 +25,7 @@ context('Personalised panel accessibility', () => {
 
         cy.log('Papercut menu');
         cy.get('button[data-testid="pp-papercut-menu-button"]').click();
-        cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('Log in and manage your print balance');
+        cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('More about your printing account');
         cy.wait(500);
         cy.checkA11y('div[data-testid="papercut-paper"]', {
             reportName: 'My Library',
@@ -120,7 +120,7 @@ context('Personalised panel', () => {
         cy.get('[data-testid="pp-papercut-menu"]')
             .should('exist')
             .scrollIntoView();
-        cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('Log in and manage your print balance');
+        cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('More about your printing account');
 
         // papercut menu closes
         cy.get('body').type('{esc}'); // click away
@@ -129,8 +129,7 @@ context('Personalised panel', () => {
     });
 
     it('can navigate to papercut manage page', () => {
-        // from PersonalisedPanel locale: items.papercut.url
-        cy.intercept(/lib-print/, 'user has navigated to papercut page');
+        cy.intercept(/print-scan-copy/, 'papercut info page');
 
         cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
@@ -138,15 +137,15 @@ context('Personalised panel', () => {
         openPapercutPopup();
 
         cy.get('li[data-testid="pp-papercut-item-button-0"]')
-            .contains('Log in and manage your print balance')
+            .contains('More about your printing account')
             .click();
 
-        cy.get('body').contains('user has navigated to papercut page');
+        cy.get('body').contains('papercut info page');
     });
 
     it('can navigate to papercut topup page', () => {
-        // from PersonalisedPanel locale: items.papercut.url
-        cy.intercept(/payments.uq.edu.au/, 'user has navigated to papercut topup page');
+        // from PersonalisedPanel locale: items.papercut.topup
+        cy.intercept(/payments.uq.edu.au/, 'papercut topup page');
 
         cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
@@ -157,6 +156,6 @@ context('Personalised panel', () => {
             .contains('Top up your print balance')
             .click();
 
-        cy.get('body').contains('user has navigated to papercut topup page');
+        cy.get('body').contains('papercut topup page');
     });
 });

@@ -22,7 +22,6 @@ import locale from '../../testTag.locale';
 import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
 import { PERMISSIONS, ROLES } from '../../config/auth';
 import Panel from './Panel';
-import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -118,30 +117,6 @@ const Dashboard = ({
                                 }
                                 className={classes.card}
                             >
-                                {/* <Typography component={'div'} variant={'h4'}>
-                                    {parseInt(dashboardConfig?.retest?.soon, 10) +
-                                        parseInt(dashboardConfig?.retest?.overdue, 10)}
-                                </Typography> */}
-                                {/* <Typography component={'div'} variant={'h6'}>
-                                    {`(${dashboardConfig?.retest?.soon} upcoming,
-                                        ${dashboardConfig?.retest?.overdue} overdue)`}
-                                </Typography> */}
-                                {/* <Box display="flex" justifyContent="center" flexDirection="column">
-                                    <Typography component={'div'} variant={'h4'} style={{ textAlign: 'center' }}>
-                                        {`${dashboardConfig?.retest?.soon}`}
-                                    </Typography>
-                                    <Typography component={'div'} variant={'h6'} style={{ textAlign: 'center' }}>
-                                        {'Upcoming*'}
-                                    </Typography>
-                                </Box>
-                                <Box display="flex" justifyContent="center" flexDirection="column">
-                                    <Typography component={'div'} variant={'h4'} style={{ textAlign: 'center' }}>
-                                        {`${dashboardConfig?.retest?.overdue}`}
-                                    </Typography>
-                                    <Typography component={'div'} variant={'h6'} style={{ textAlign: 'center' }}>
-                                        {'Overdue'}
-                                    </Typography>
-                                </Box> */}
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
                                         <Box borderRight={1} borderColor="grey.500">
@@ -172,7 +147,7 @@ const Dashboard = ({
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={`${pathConfig.admin.testntagreportinspectionsdue}?period=3`}
+                                                to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.periodLength}`}
                                                 data-testid="dashboardLinkReportInspectionsDue"
                                             >
                                                 {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`}
@@ -230,7 +205,7 @@ const Dashboard = ({
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={pathConfig.admin.testntagreport}
+                                                to={`${pathConfig.admin.testntagreportrecalibrationssdue}?period=3`}
                                                 data-testid="dashboardLinkReportInspectionDevices"
                                             >
                                                 {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`}

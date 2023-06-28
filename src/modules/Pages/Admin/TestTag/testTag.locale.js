@@ -16,6 +16,11 @@ import { PERMISSIONS } from './config/auth';
 
 export default {
     config: {
+        format: {
+            dateFormat: 'YYYY-MM-DD HH:mm',
+            dateFormatNoTime: 'YYYY-MM-DD',
+            dateFormatDisplay: 'Do MMMM, YYYY',
+        },
         monthsOptions: [
             { value: '3', label: '3 months' },
             { value: '6', label: '6 months' },
@@ -113,7 +118,8 @@ export default {
                         {
                             title: 'INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
-                            path: '#',
+                            permissions: [PERMISSIONS.can_see_reports],
+                            path: `${pathConfig.admin.testntagreportrecalibrationssdue}?user=uqtesttag`,
                         },
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
@@ -182,7 +188,9 @@ export default {
                         placeholder: 'Enter at least 5 characters',
                     },
                     assetType: {
-                        label: 'Asset type',
+                        props: {
+                            label: 'Asset type',
+                        },
                         addNewLabel: 'Add new asset type',
                         saveSuccess: {
                             confirmationTitle: 'The asset type has been added',
@@ -348,28 +356,26 @@ export default {
                     actions: 'Actions',
                     addLocationButton: 'Add Asset type',
                     columns: {
-                        assettype: {
-                            asset_type_id: {
-                                label: 'Id',
-                            },
-                            asset_type_name: {
-                                label: 'Asset Type Name',
-                            },
-                            asset_type_class: {
-                                label: 'Class',
-                            },
-                            asset_type_power_rating: {
-                                label: 'Power Rating',
-                            },
-                            asset_type: {
-                                label: 'Type',
-                            },
-                            asset_type_notes: {
-                                label: 'Notes',
-                            },
-                            asset_count: {
-                                label: 'Usage',
-                            },
+                        asset_type_id: {
+                            label: 'Id',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type Name',
+                        },
+                        asset_type_class: {
+                            label: 'Class',
+                        },
+                        asset_type_power_rating: {
+                            label: 'Power Rating',
+                        },
+                        asset_type: {
+                            label: 'Type',
+                        },
+                        asset_type_notes: {
+                            label: 'Notes',
+                        },
+                        asset_count: {
+                            label: 'Usage',
                         },
                     },
                 },
@@ -647,10 +653,46 @@ export default {
                 dateFormatNoTime: 'YYYY-MM-DD',
                 dateFormatDisplay: 'Do MMMM, YYYY',
             },
+            recalibrationsDue: {
+                breadcrumbs: [
+                    {
+                        title: 'Reports - Inspection Devices due recalibration',
+                        icon: <InspectionDeviceIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Inspection device recalibration report for ${dept}`,
+                },
+                form: {
+                    columns: {
+                        device_id: {
+                            label: 'Device ID',
+                        },
+                        device_model_name: {
+                            label: 'Model name',
+                        },
+                        device_serial_number: {
+                            label: 'Serial',
+                        },
+                        device_department: {
+                            label: 'Department',
+                        },
+                        device_calibrated_date_last: {
+                            label: 'Last calibrated',
+                        },
+                        device_calibrated_by_last: {
+                            label: 'Last calibrated by',
+                        },
+                        device_calibration_due_date: {
+                            label: 'Next calibration',
+                        },
+                    },
+                },
+            },
             inspectionsDue: {
                 breadcrumbs: [
                     {
-                        title: 'Asset Inspections Due',
+                        title: 'Reports - Asset Inspections Due',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
@@ -683,7 +725,7 @@ export default {
             inspectionsByLicencedUser: {
                 breadcrumbs: [
                     {
-                        title: 'Inspections by Licenced Users',
+                        title: 'Reports - Inspections by Licenced Users',
                         icon: <InspectionByUserIcon fontSize={'small'} />,
                     },
                 ],
@@ -743,7 +785,7 @@ export default {
                         building_name: {
                             label: 'Building Name',
                         },
-                        asset_type: {
+                        asset_type_name: {
                             label: 'Asset Type',
                         },
                         asset_test_date: {
