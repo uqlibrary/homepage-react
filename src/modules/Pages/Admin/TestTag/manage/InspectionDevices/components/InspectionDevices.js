@@ -20,6 +20,8 @@ import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 
+const moment = require('moment');
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -29,6 +31,10 @@ const useStyles = makeStyles(theme => ({
     },
     gridRoot: {
         border: 0,
+    },
+    inspectionOverdue: {
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
     },
 }));
 
@@ -41,6 +47,8 @@ const InspectionDevices = ({
     inspectionDevicesLoaded,
     inspectionDevicesError,
 }) => {
+    const today = moment().format(locale.config.format.dateFormatNoTime);
+
     const classes = useStyles();
     const pagePermissions = [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports];
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
@@ -256,6 +264,11 @@ const InspectionDevices = ({
                                 }}
                                 loading={inspectionDevicesLoading}
                                 classes={{ root: classes.gridRoot }}
+                                getCellClassName={params =>
+                                    params.field === 'device_calibration_due_date' && params.value <= today
+                                        ? classes.inspectionOverdue
+                                        : ''
+                                }
                             />
                         </Grid>
                     </Grid>
