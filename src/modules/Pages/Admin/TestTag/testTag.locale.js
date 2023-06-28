@@ -58,7 +58,14 @@ export default {
             },
         },
         dashboard: {
-            config: {},
+            config: {
+                pluraliser: (text, count) => (
+                    <>
+                        {text}
+                        {count > 1 ? 's' : ''}
+                    </>
+                ),
+            },
             header: {
                 pageSubtitle: dept => `Dashboard for ${dept}`,
             },
@@ -68,12 +75,12 @@ export default {
                     link: 'Begin test and tagging of assets',
                 },
                 assets: {
-                    title: 'ASSETS',
-                    subtext: duration => <>*due in the next {duration}.</>,
+                    title: 'ASSET INSPECTIONS',
+                    subtext: duration => <>* due in the next {duration}.</>,
                 },
                 inspectionDevices: {
-                    title: 'INSPECTION DEVICES',
-                    subtext: duration => <>needing a recalibration in the next {duration}.</>,
+                    title: 'INSPECTION DEVICE RECALIBRATIONS',
+                    subtext: duration => <>* due in the next {duration}.</>,
                 },
                 management: {
                     title: 'MANAGEMENT',
