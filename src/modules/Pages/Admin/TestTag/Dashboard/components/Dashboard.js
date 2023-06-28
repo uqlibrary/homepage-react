@@ -143,19 +143,19 @@ const Dashboard = ({
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
-                                                dashboardConfig?.periodLength,
+                                                `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
+                                                dashboardConfig?.reinspectionPeriodLength,
                                             ),
                                         )}
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.periodLength}`}
+                                                to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.reinspectionPeriodLength}`}
                                                 data-testid="dashboardLinkReportInspectionsDue"
                                             >
                                                 {pageLocale.config.pluraliser(
-                                                    `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
-                                                    dashboardConfig?.periodLength,
+                                                    `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
+                                                    dashboardConfig?.reinspectionPeriodLength,
                                                 )}
                                             </Link>,
                                         )}
@@ -203,8 +203,8 @@ const Dashboard = ({
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.inspectionDevices.subtext(
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
-                                                dashboardConfig?.periodLength,
+                                                `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
+                                                dashboardConfig?.calibrationPeriodLength,
                                             ),
                                         )}
                                     >
@@ -214,8 +214,8 @@ const Dashboard = ({
                                                 data-testid="dashboardLinkReportInspectionDevices"
                                             >
                                                 {pageLocale.config.pluraliser(
-                                                    `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
-                                                    dashboardConfig?.periodLength,
+                                                    `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
+                                                    dashboardConfig?.calibrationPeriodLength,
                                                 )}
                                             </Link>,
                                         )}
