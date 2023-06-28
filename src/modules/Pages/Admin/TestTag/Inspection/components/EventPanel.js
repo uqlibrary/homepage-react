@@ -59,7 +59,7 @@ const EventPanel = ({
     };
 
     useEffect(() => {
-        if (!inspectionConfigLoading && !!inspectionConfig && inspectionConfig?.sites.length > 0) {
+        if (!inspectionConfigLoading && !!inspectionConfig && inspectionConfig?.sites?.length > 0) {
             setLocation({ site: inspectionConfig.sites[0].site_id });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
