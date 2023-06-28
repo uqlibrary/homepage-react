@@ -124,7 +124,7 @@ const Dashboard = ({
                                                 {`${dashboardConfig?.retest?.soon}`}
                                             </Typography>
                                             <Typography component={'div'} variant={'h6'} className={classes.dueText}>
-                                                {'Upcoming *'}
+                                                {'upcoming *'}
                                             </Typography>
                                         </Box>
                                     </Grid>
@@ -134,7 +134,7 @@ const Dashboard = ({
                                             {`${dashboardConfig?.retest?.overdue}`}
                                         </Typography>
                                         <Typography component={'div'} variant={'h6'} className={retestClass}>
-                                            {'Overdue'}
+                                            {'overdue'}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -184,7 +184,7 @@ const Dashboard = ({
                                                 {`${dashboardConfig?.recalibration?.soon}`}
                                             </Typography>
                                             <Typography component={'div'} variant={'h6'} className={classes.dueText}>
-                                                {'Upcoming *'}
+                                                {'upcoming *'}
                                             </Typography>
                                         </Box>
                                     </Grid>
@@ -194,7 +194,7 @@ const Dashboard = ({
                                             {`${dashboardConfig?.recalibration?.overdue}`}
                                         </Typography>
                                         <Typography component={'div'} variant={'h6'} className={recalibrationClass}>
-                                            {'Overdue'}
+                                            {'overdue'}
                                         </Typography>
                                     </Grid>
                                 </Grid>

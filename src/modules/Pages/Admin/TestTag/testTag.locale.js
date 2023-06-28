@@ -62,7 +62,7 @@ export default {
                 pluraliser: (text, count) => (
                     <>
                         {text}
-                        {count > 1 ? 's' : ''}
+                        {count > 1 ? 'S' : ''}
                     </>
                 ),
             },
@@ -108,7 +108,7 @@ export default {
                             path: `${pathConfig.admin.testntagmanageinspectiondevices}?user=uqtesttag`,
                         },
                         {
-                            title: 'X BULK ASSET UPDATE',
+                            title: 'BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
                             path: `${pathConfig.admin.testntagmanagebulkassetupdate}?user=uqtesttag`,
                         },
@@ -123,7 +123,7 @@ export default {
                     title: 'REPORTING',
                     links: [
                         {
-                            title: 'X INSPECTION DEVICES DUE RECALIBRATION',
+                            title: 'INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
                             path: `${pathConfig.admin.testntagreportrecalibrationssdue}?user=uqtesttag`,
@@ -135,7 +135,7 @@ export default {
                             path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
                         },
                         {
-                            title: 'X ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
+                            title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: `${pathConfig.admin.testntagreportassetsbyfilters}?user=uqtesttag`,
                         },
