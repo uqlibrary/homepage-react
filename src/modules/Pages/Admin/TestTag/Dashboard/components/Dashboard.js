@@ -98,7 +98,7 @@ const Dashboard = ({
                             )}
                         </Grid>
                     </AuthWrapper>
-                    <Grid item xs={12} sm className={classes.flexParent}>
+                    <Grid item xs={12} md className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
@@ -144,7 +144,10 @@ const Dashboard = ({
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
-                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`,
+                                            pageLocale.config.pluraliser(
+                                                `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                                dashboardConfig?.periodLength,
+                                            ),
                                         )}
                                     >
                                         {pageLocale.panel.assets.subtext(
@@ -152,7 +155,10 @@ const Dashboard = ({
                                                 to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.periodLength}`}
                                                 data-testid="dashboardLinkReportInspectionsDue"
                                             >
-                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`}
+                                                {pageLocale.config.pluraliser(
+                                                    `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                                    dashboardConfig?.periodLength,
+                                                )}
                                             </Link>,
                                         )}
                                     </AuthWrapper>
@@ -160,7 +166,7 @@ const Dashboard = ({
                             </Panel>
                         )}
                     </Grid>
-                    <Grid item xs={12} sm className={classes.flexParent}>
+                    <Grid item xs={12} md className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
@@ -202,23 +208,25 @@ const Dashboard = ({
                                         </Typography>
                                     </Grid>
                                 </Grid>
-
-                                {/* <Typography component={'div'} variant={'h4'}>
-                                    {dashboardConfig?.recalibration?.soon}
-                                </Typography>*/}
                                 <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
-                                        fallback={pageLocale.panel.assets.subtext(
-                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`,
+                                        fallback={pageLocale.panel.inspectionDevices.subtext(
+                                            pageLocale.config.pluraliser(
+                                                `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                                dashboardConfig?.periodLength,
+                                            ),
                                         )}
                                     >
-                                        {pageLocale.panel.assets.subtext(
+                                        {pageLocale.panel.inspectionDevices.subtext(
                                             <Link
-                                                to={`${pathConfig.admin.testntagreportrecalibrationssdue}?period=3`}
+                                                to={`${pathConfig.admin.testntagreportrecalibrationssdue}`}
                                                 data-testid="dashboardLinkReportInspectionDevices"
                                             >
-                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`}
+                                                {pageLocale.config.pluraliser(
+                                                    `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                                    dashboardConfig?.periodLength,
+                                                )}
                                             </Link>,
                                         )}
                                     </AuthWrapper>
@@ -229,7 +237,7 @@ const Dashboard = ({
                 </Grid>
                 <Grid container spacing={3}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid item xs={12} sm className={classes.flexParent}>
+                        <Grid item xs={12} md className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton animation="wave" height={300} width={'100%'} />
                             ) : (
@@ -272,7 +280,7 @@ const Dashboard = ({
                         </Grid>
                     </AuthWrapper>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
-                        <Grid item xs={12} sm className={classes.flexParent}>
+                        <Grid item xs={12} md className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton animation="wave" height={300} width={'100%'} />
                             ) : (
