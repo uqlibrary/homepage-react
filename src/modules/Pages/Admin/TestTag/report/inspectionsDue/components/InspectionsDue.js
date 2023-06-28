@@ -33,7 +33,8 @@ const useStyles = makeStyles(theme => ({
         border: 0,
     },
     inspectionOverdue: {
-        backgroundColor: theme.palette.error.light,
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
     },
 }));
 
@@ -99,7 +100,7 @@ const InspectionsDue = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lastSelectedLocation, location, monthRange]);
 
-    const today = moment().format(locale.pages.report.config.dateFormatNoTime);
+    const today = moment().format(locale.config.format.dateFormatNoTime);
 
     const onMonthRangeChange = value => {
         setMonthRange(value);
