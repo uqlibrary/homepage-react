@@ -1,7 +1,7 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    inspectionsDue: null,
+    inspectionsDue: [],
     inspectionsDueLoading: false,
     inspectionsDueLoaded: false,
     inspectionsDueError: null,

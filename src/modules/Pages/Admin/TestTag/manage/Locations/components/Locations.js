@@ -8,19 +8,18 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-
-import DataTable from './../../../SharedComponents/DataTable/DataTable';
-
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
+import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
-import { useLocationDisplayName } from './hooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+
+import { useLocationDisplayName } from './hooks';
+import locale from '../../../testTag.locale';
+import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { capitaliseLeadingChar } from '../../../helpers/helpers';
@@ -56,12 +55,13 @@ const actionHandler = {
         actions.loadRooms(location.floor);
     },
 };
+
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
-    const { row, setRow } = useDataTableRow();
+    const { row, setRow } = useDataTableRow([]);
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
@@ -116,6 +116,7 @@ const ManageLocations = ({ actions }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [location, selectedLocation, locationDisplayedAs],
     );
+    const shouldDisableDelete = row => (row?.asset_count ?? 1) === 0;
 
     const { columns } = useDataTableColumns({
         config,
@@ -123,6 +124,7 @@ const ManageLocations = ({ actions }) => {
         filterKey: selectedLocation,
         handleEditClick,
         handleDeleteClick,
+        shouldDisableDelete,
     });
 
     const closeConfirmationAlert = () => {

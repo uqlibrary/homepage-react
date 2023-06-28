@@ -25,50 +25,54 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const RowMenuCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
+const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClick, handleDeleteClick }) => {
     const classes = useStyles();
 
     const onEditClick = event => {
         event.stopPropagation();
-        handleEditClick({ id, api });
+        handleEditClick?.({ id, api });
     };
 
     const onDeleteClick = event => {
         event.stopPropagation();
-        handleDeleteClick({ id, api });
+        handleDeleteClick?.({ id, api });
     };
 
     return (
         <div className={classes.root}>
-            <IconButton
-                color="inherit"
-                className={classes.textPrimary}
-                size="small"
-                aria-label="edit"
-                disabled={!!!handleEditClick}
-                onClick={onEditClick}
-            >
-                <EditIcon fontSize="small" />
-            </IconButton>
-            <IconButton
-                color="inherit"
-                size="small"
-                aria-label="delete"
-                disabled={!!!handleDeleteClick}
-                onClick={onDeleteClick}
-            >
-                <DeleteIcon fontSize="small" />
-            </IconButton>
+            {withActions.includes('edit') && (
+                <IconButton
+                    color="inherit"
+                    className={classes.textPrimary}
+                    size="small"
+                    aria-label="edit"
+                    disabled={!!!handleEditClick}
+                    onClick={onEditClick}
+                >
+                    <EditIcon fontSize="small" />
+                </IconButton>
+            )}
+
+            {withActions.includes('delete') && (
+                <IconButton
+                    color="inherit"
+                    size="small"
+                    aria-label="delete"
+                    disabled={!!!handleDeleteClick}
+                    onClick={onDeleteClick}
+                >
+                    <DeleteIcon fontSize="small" />
+                </IconButton>
+            )}
         </div>
     );
 };
 
 RowMenuCell.propTypes = {
     api: PropTypes.object.isRequired,
-    row: PropTypes.any,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    // setEditRowsModel: PropTypes.func.isRequired,
-    handleEditClick: PropTypes.func.isRequired,
+    withActions: PropTypes.array,
+    handleEditClick: PropTypes.func,
     handleDeleteClick: PropTypes.func,
 };
 

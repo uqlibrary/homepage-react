@@ -16,11 +16,23 @@ import { PERMISSIONS } from './config/auth';
 
 export default {
     config: {
+        format: {
+            dateFormat: 'YYYY-MM-DD HH:mm',
+            dateFormatNoTime: 'YYYY-MM-DD',
+            dateFormatDisplay: 'Do MMMM, YYYY',
+        },
         monthsOptions: [
             { value: '3', label: '3 months' },
             { value: '6', label: '6 months' },
             { value: '12', label: '1 year' },
             { value: '60', label: '5 years' },
+        ],
+        assetStatusOptions: [
+            { value: 'CURRENT', label: 'Current' },
+            { value: 'REMOVED', label: 'Removed' },
+            { value: 'DISCARDED', label: 'Discarded' },
+            { value: 'FAILED', label: 'Failed' },
+            { value: 'OUTFORREPAIR', label: 'Out for Repair' },
         ],
     },
     pages: {
@@ -46,7 +58,14 @@ export default {
             },
         },
         dashboard: {
-            config: {},
+            config: {
+                pluraliser: (text, count) => (
+                    <>
+                        {text}
+                        {count > 1 ? 's' : ''}
+                    </>
+                ),
+            },
             header: {
                 pageSubtitle: dept => `Dashboard for ${dept}`,
             },
@@ -56,12 +75,12 @@ export default {
                     link: 'Begin test and tagging of assets',
                 },
                 assets: {
-                    title: 'ASSETS',
-                    subtext: duration => <>needing a retest in the next {duration}.</>,
+                    title: 'ASSET INSPECTIONS',
+                    subtext: duration => <>* due in the next {duration}.</>,
                 },
                 inspectionDevices: {
-                    title: 'INSPECTION DEVICES',
-                    subtext: duration => <>needing a recalibration in the next {duration}.</>,
+                    title: 'INSPECTION DEVICE RECALIBRATIONS',
+                    subtext: duration => <>* due in the next {duration}.</>,
                 },
                 management: {
                     title: 'MANAGEMENT',
@@ -91,7 +110,7 @@ export default {
                         {
                             title: 'X BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanagebulkassetupdate}?user=uqtesttag`,
                         },
                         {
                             title: 'X INSPECTIONS',
@@ -106,7 +125,8 @@ export default {
                         {
                             title: 'X INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
-                            path: '#',
+                            permissions: [PERMISSIONS.can_see_reports],
+                            path: `${pathConfig.admin.testntagreportrecalibrationssdue}?user=uqtesttag`,
                         },
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
@@ -117,7 +137,7 @@ export default {
                         {
                             title: 'X ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagreportassetsbyfilters}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTIONS BY LICENSED USER',
@@ -168,13 +188,33 @@ export default {
                 asset: {
                     title: 'Asset',
                     addText: 'ADD NEW ASSET',
-                    assetId: {
+                    newAssetText: 'NEW ASSET',
+                    assetSelector: {
                         label: 'Asset ID',
                         helperText: 'Enter a new ID to add',
-                        placeholder: 'Enter at least 7 characters',
+                        placeholder: 'Enter at least 5 characters',
                     },
                     assetType: {
-                        label: 'Asset type',
+                        props: {
+                            label: 'Asset type',
+                        },
+                        addNewLabel: 'Add new asset type',
+                        saveSuccess: {
+                            confirmationTitle: 'The asset type has been added',
+                            confirmationMessage: '',
+                            confirmButtonLabel: 'Close',
+                        },
+                        saveFailure: {
+                            confirmationTitle: (
+                                <span>
+                                    There was a problem saving the Asset type.
+                                    <br />
+                                    Please try again later.
+                                </span>
+                            ),
+                            confirmationMessage: '',
+                            confirmButtonLabel: 'Close',
+                        },
                     },
                     ownerLabel: 'Asset owner',
                 },
@@ -261,7 +301,7 @@ export default {
                 },
                 networkError: {
                     confirmationTitle:
-                        'A network error occurred while loading the requested data. Please try again or contact support if the issue persists.',
+                        'A network error occurred while loading the requested data. You may need to log out and back in. Please try again or contact support if the issue persists.',
                     confirmButtonLabel: 'OK',
                 },
                 dialogLabels: {
@@ -323,28 +363,26 @@ export default {
                     actions: 'Actions',
                     addLocationButton: 'Add Asset type',
                     columns: {
-                        assettype: {
-                            asset_type_id: {
-                                label: 'Id',
-                            },
-                            asset_type_name: {
-                                label: 'Asset Type Name',
-                            },
-                            asset_type_class: {
-                                label: 'Class',
-                            },
-                            asset_type_power_rating: {
-                                label: 'Power Rating',
-                            },
-                            asset_type: {
-                                label: 'Type',
-                            },
-                            asset_type_notes: {
-                                label: 'Notes',
-                            },
-                            asset_count: {
-                                label: 'Usage',
-                            },
+                        asset_type_id: {
+                            label: 'Id',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type Name',
+                        },
+                        asset_type_class: {
+                            label: 'Class',
+                        },
+                        asset_type_power_rating: {
+                            label: 'Power Rating',
+                        },
+                        asset_type: {
+                            label: 'Type',
+                        },
+                        asset_type_notes: {
+                            label: 'Notes',
+                        },
+                        asset_count: {
+                            label: 'Usage',
                         },
                     },
                 },
@@ -533,6 +571,88 @@ export default {
                     deleteFail: 'Device could not be deleted',
                 },
             },
+            bulkassetupdate: {
+                config: {},
+                breadcrumbs: [
+                    {
+                        title: 'Managing Bulk Asset Update',
+                        icon: <BulkUpdateIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Assets in bulk for ${dept}`,
+                },
+                form: {
+                    columns: {
+                        asset_id_displayed: { label: 'Asset ID' },
+                        asset_type_name: { label: 'Type' },
+                        asset_location: { label: 'Location' },
+                        asset_status: { label: 'Status' },
+                    },
+
+                    assetType: {
+                        label: 'Asset type',
+                    },
+                    filterDialog: {
+                        title: 'Select assets by feature',
+                        button: {
+                            cancel: 'Cancel',
+                            submit: 'Add selected',
+                        },
+                        form: {
+                            columns: {
+                                asset_barcode: { label: 'Barcode' },
+                                asset_type_name: { label: 'Type' },
+                                asset_location: { label: 'Last Room ID' },
+                                asset_status: { label: 'Status' },
+                            },
+                            locationTitle: 'Location',
+                            assetTypeTitle: 'Asset Type',
+                        },
+                    },
+                    step: {
+                        one: {
+                            title: 'Step 1: Choose assets to update in bulk',
+                            addText: 'ADD NEW ASSET',
+                            newAssetText: 'NEW ASSET',
+                            assetSelector: {
+                                label: 'Asset ID',
+                                helperText: 'Scan or enter a new ID to add',
+                                placeholder: 'Enter at least 5 characters',
+                            },
+                            button: {
+                                clear: 'Clear',
+                                next: 'Next',
+                                findAndAdd: 'Find and add by feature',
+                            },
+                        },
+                        two: {
+                            title: 'Step 2: Choose bulk update action',
+                            subtext: count => `You have selected ${count} assets to bulk update.`,
+                            button: {
+                                previous: 'Back',
+                                submit: 'Bulk Update',
+                            },
+                            checkbox: {
+                                location: 'Update Location',
+                                status: 'Update Status',
+                                assetType: 'Update Asset Type',
+                            },
+                            dialogBulkUpdateConfirm: {
+                                confirmButtonLabel: 'Proceed',
+                                cancelButtonLabel: 'Cancel',
+                                confirmationMessage:
+                                    'Are you sure you wish to proceed with this bulk update of selected assets?',
+                                confirmationTitle: 'Bulk Update Selected Assets',
+                            },
+                            snackbars: {
+                                success: 'Bulk Asset update successful',
+                                failed: error => `Error attempting to bulk update assets. ${error}`,
+                            },
+                        },
+                    },
+                },
+            },
         },
         report: {
             config: {
@@ -540,10 +660,46 @@ export default {
                 dateFormatNoTime: 'YYYY-MM-DD',
                 dateFormatDisplay: 'Do MMMM, YYYY',
             },
+            recalibrationsDue: {
+                breadcrumbs: [
+                    {
+                        title: 'Reports - Inspection Devices due recalibration',
+                        icon: <InspectionDeviceIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Inspection device recalibration report for ${dept}`,
+                },
+                form: {
+                    columns: {
+                        device_id: {
+                            label: 'Device ID',
+                        },
+                        device_model_name: {
+                            label: 'Model name',
+                        },
+                        device_serial_number: {
+                            label: 'Serial',
+                        },
+                        device_department: {
+                            label: 'Department',
+                        },
+                        device_calibrated_date_last: {
+                            label: 'Last calibrated',
+                        },
+                        device_calibrated_by_last: {
+                            label: 'Last calibrated by',
+                        },
+                        device_calibration_due_date: {
+                            label: 'Next calibration',
+                        },
+                    },
+                },
+            },
             inspectionsDue: {
                 breadcrumbs: [
                     {
-                        title: 'Asset Inspections Due',
+                        title: 'Reports - Asset Inspections Due',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
@@ -576,7 +732,7 @@ export default {
             inspectionsByLicencedUser: {
                 breadcrumbs: [
                     {
-                        title: 'Inspections by Licenced Users',
+                        title: 'Reports - Inspections by Licenced Users',
                         icon: <InspectionByUserIcon fontSize={'small'} />,
                     },
                 ],
@@ -615,6 +771,62 @@ export default {
                     },
                     filterToDateLabel: 'Within date range',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
+                },
+            },
+            assetReportByFilters: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Report',
+                        icon: <AssetsInspectedByDateIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Asset report for ${dept}`,
+                },
+                form: {
+                    title: 'Filters',
+                    columns: {
+                        asset_barcode: {
+                            label: 'Barcode',
+                        },
+                        building_name: {
+                            label: 'Building Name',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type',
+                        },
+                        asset_test_date: {
+                            label: 'Last Inspection',
+                        },
+                        asset_next_test_due_date: {
+                            label: 'Next Inspection',
+                        },
+                        asset_status: {
+                            label: 'Status',
+                        },
+                    },
+                    filterStatusLabel: 'With Status',
+                    filterBuildingLabel: 'Tagged Building',
+                    filterToDateLabel: 'Within date range',
+                    filterTaggedDateFrom: 'Tagged Date From',
+                    filterTaggedDateTo: 'Tagged Date To',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
+                    statusTypes: [
+                        {
+                            status_type_id: 0,
+                            status_type_rendered: 'All',
+                            status_type: null,
+                        },
+                        {
+                            status_type_id: 1,
+                            status_type_rendered: 'Out for repair',
+                            status_type: 'OUTFORREPAIR',
+                        },
+                    ],
+                },
+                errors: {
+                    startDate: 'Start date must be before End Date',
+                    endDate: 'End date must be after Start Date',
                 },
             },
         },

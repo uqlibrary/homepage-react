@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { isEmptyStr } from '../../../helpers/helpers';
 import locale from '../../../testTag.locale';
-const dateFormat = locale.pages.manage.config.dateFormat;
+const dateFormat = locale.config.format.dateFormatNoTime;
 
 export default {
     fields: {
@@ -38,7 +38,7 @@ export default {
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
-            fieldParams: { canEdit: true, flex: 1 },
+            fieldParams: { canEdit: true, minWidth: 140 },
         },
         device_calibrated_by_last: {
             component: props => <TextField {...props} required />,
@@ -62,7 +62,7 @@ export default {
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
-            fieldParams: { canEdit: true, flex: 1 },
+            fieldParams: { canEdit: true, minWidth: 140 },
         },
     },
 };

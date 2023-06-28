@@ -7,8 +7,10 @@ import {
     TEST_TAG_FLOOR_API,
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
+    TEST_TAG_ASSETS_MINE_API,
     TEST_TAG_ASSET_ACTION,
-    TEST_TAG_ONLOAD_ASSETTYPE_API,
+    TEST_TAG_ASSETTYPE_ADD,
+    TEST_TAG_ASSETTYPE_API,
     TEST_TAG_SAVE_ASSETTYPE_API,
     TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API,
     TEST_TAG_ADD_ASSET_TYPE_API,
@@ -22,6 +24,9 @@ import {
     TEST_TAG_REPORT_INSPECTIONS_DUE_API,
     TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API,
     TEST_TAG_REPORT_UTILITY_LICENCED_USERS,
+    TEST_TAG_TAGGED_BUILDING_LIST,
+    TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST,
+    TEST_TAG_BULK_UPDATE_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -272,6 +277,31 @@ export function clearAssets() {
         dispatch({ type: actions.TESTTAG_ASSETS_CLEAR });
     };
 }
+export function loadAssetsMine(filters) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_MINE_LOADING });
+        return get(TEST_TAG_ASSETS_MINE_API(filters))
+            .then(response => {
+                console.log('>>>>>', response.data);
+                dispatch({
+                    type: actions.TESTTAG_ASSETS_MINE_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSETS_MINE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function clearAssetsMine() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_MINE_CLEAR });
+    };
+}
 
 export function saveInspection(request) {
     return dispatch => {
@@ -294,6 +324,50 @@ export function saveInspection(request) {
 export function clearSaveInspection() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
+    };
+}
+
+export function saveAssetTypeAndReload(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_SAVING });
+        let saveAssetComplete = false;
+        return post(TEST_TAG_ASSETTYPE_ADD(), request)
+            .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS,
+                    payload: data,
+                });
+                saveAssetComplete = true;
+
+                // reload the onload route after the asset type list would have updated with a new asset
+                // to get the update into the dropdown
+                dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
+                return get(TEST_TAG_ONLOAD_INSPECT_API());
+            })
+            .then(data => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                if (saveAssetComplete) {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_CONFIG_FAILED,
+                        payload: error.message,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_SAVE_ASSET_TYPE_FAILED,
+                        payload: error.message,
+                    });
+                }
+            });
+    };
+}
+export function clearSaveAssetType() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR });
     };
 }
 
@@ -414,7 +488,7 @@ export function deleteInspectionDevice(id) {
 export function loadAssetTypes() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_LOADING });
-        return get(TEST_TAG_ONLOAD_ASSETTYPE_API())
+        return get(TEST_TAG_ASSETTYPE_API())
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
@@ -583,5 +657,89 @@ export function getLicencedUsers() {
                 });
                 return Promise.reject(error);
             });
+    };
+}
+
+/* Asset report for DEPT */
+export function loadTaggedBuildingList() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TAGGED_BUILDING_LIST_LOADING });
+        return get(TEST_TAG_TAGGED_BUILDING_LIST())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_TAGGED_BUILDING_LIST_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_TAGGED_BUILDING_LIST_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function bulkAssetUpdate(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_BULK_ASSET_UPDATE_SAVING });
+        return put(TEST_TAG_BULK_UPDATE_API(), request)
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_BULK_ASSET_UPDATE_SUCCESS,
+                    payload: response?.data,
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_BULK_ASSET_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function loadAssetReportByFilters({
+    assetStatus,
+    locationType,
+    locationId,
+    inspectionDateFrom,
+    inspectionDateTo,
+}) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_REPORT_LOADING });
+        return get(
+            TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({
+                assetStatus,
+                locationType,
+                locationId,
+                inspectionDateFrom,
+                inspectionDateTo,
+            }),
+        )
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_REPORT_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSET_REPORT_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function clearBulkAssetUpdate() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_BULK_ASSET_UPDATE_CLEAR });
     };
 }

@@ -9,16 +9,17 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import DataTable from '../../../SharedComponents/DataTable/DataTable';
-
-import locale from '../../../testTag.locale';
-import config from './config';
-import { PERMISSIONS } from '../../../config/auth';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { createLocationString } from '../../../helpers/helpers';
+
+import locale from '../../../testTag.locale';
+import config from './config';
+import { PERMISSIONS } from '../../../config/auth';
+import { transformRow } from './utils';
+
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -32,27 +33,16 @@ const useStyles = makeStyles(theme => ({
         border: 0,
     },
     inspectionOverdue: {
-        backgroundColor: theme.palette.error.light,
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
     },
 }));
-
-export const transformRow = row => {
-    return row.map(line => ({
-        ...line,
-        asset_location: createLocationString({
-            site: line.site_id_displayed,
-            building: line.building_id_displayed,
-            floor: line.floor_id_displayed,
-            room: line.room_id_displayed,
-        }),
-    }));
-};
 
 const InspectionsDue = ({
     actions,
     inspectionsDue,
     inspectionsDueLoading,
-    inspectionsDueLoaded,
+    // inspectionsDueLoaded,
     inspectionsDueError,
 }) => {
     const pageLocale = locale.pages.report.inspectionsDue;
@@ -60,7 +50,6 @@ const InspectionsDue = ({
     const classes = useStyles();
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
-    const { row, setRow } = useDataTableRow();
     const { location, setLocation } = useLocation();
     const { lastSelectedLocation } = useSelectLocation({
         location,
@@ -73,6 +62,7 @@ const InspectionsDue = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
+    const { row } = useDataTableRow(inspectionsDue, transformRow);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
     const [apiError, setApiError] = useState(inspectionsDueError);
@@ -94,16 +84,12 @@ const InspectionsDue = ({
 
     useEffect(() => {
         if (!!apiError) openConfirmationAlert(apiError, 'error');
-        else {
-            if (inspectionsDueLoaded) setRow(transformRow(inspectionsDue));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inspectionsDue, inspectionsDueLoaded, apiError]);
+    }, [apiError]);
 
     useEffect(() => {
         const locationId = location[lastSelectedLocation];
 
-        actions.clearInspectionsDue();
+        // actions.clearInspectionsDue();
 
         actions.getInspectionsDue({
             period: monthRange,
@@ -114,7 +100,7 @@ const InspectionsDue = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lastSelectedLocation, location, monthRange]);
 
-    const today = moment().format(locale.pages.report.config.dateFormatNoTime);
+    const today = moment().format(locale.config.format.dateFormatNoTime);
 
     const onMonthRangeChange = value => {
         setMonthRange(value);
