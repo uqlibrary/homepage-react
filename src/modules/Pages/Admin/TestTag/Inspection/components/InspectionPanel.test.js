@@ -45,7 +45,7 @@ function setup(testProps = {}) {
     } = testProps;
 
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData.data, inspectionConfigLoading: false },
         ...state,
     };
     return render(
@@ -79,7 +79,7 @@ describe('InspectionPanel', () => {
             handleChange,
         });
 
-        expect(getByText(locale.form.inspection.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.inspection.title)).toBeInTheDocument();
         expect(getByTestId('testResultTestingDevice')).toBeInTheDocument();
         expect(getByTestId('testResultToggleButtons')).toBeInTheDocument();
         await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
@@ -164,6 +164,6 @@ describe('InspectionPanel', () => {
             state: { testTagOnLoadInspectionReducer: { inspectionConfig: [], inspectionConfigLoading: true } },
         });
 
-        expect(getByText(locale.form.inspection.title)).toBeInTheDocument();
+        expect(getByText(locale.pages.inspect.form.inspection.title)).toBeInTheDocument();
     });
 });

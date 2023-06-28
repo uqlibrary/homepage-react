@@ -6,42 +6,11 @@ import {
     isTestTagAdminUser,
     isPromoPanelAdminUser,
 } from 'helpers/access';
+import { pathConfig } from './pathConfig';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
 export const adminEditRegexConfig = new RegExp(/\/admin\/alerts\/edit\/(.*)/i);
-
-export const pathConfig = {
-    index: '/',
-    learningresources: '/learning-resources',
-    paymentReceipt: '/payment-receipt',
-    admin: {
-        alertsadd: '/admin/alerts/add',
-        alertsedit: alertid => `/admin/alerts/edit/${alertid}`,
-        alertsclone: alertid => `/admin/alerts/clone/${alertid}`,
-        alertsview: alertid => `/admin/alerts/view/${alertid}`,
-        alerts: '/admin/alerts',
-        masquerade: '/admin/masquerade',
-        promopaneladd: '/admin/promopanel/add',
-        promopaneledit: promopanelid => `/admin/promopanel/edit/${promopanelid}`,
-        // promopanelview: promopanelid => `/admin/promopanel/view/${promopanelid}`,
-        promopanelclone: promopanelid => `/admin/promopanel/clone/${promopanelid}`,
-        promopanel: '/admin/promopanel',
-        spotlightsadd: '/admin/spotlights/add',
-        spotlightsedit: spotlightid => `/admin/spotlights/edit/${spotlightid}`,
-        spotlightsview: spotlightid => `/admin/spotlights/view/${spotlightid}`,
-        spotlightsclone: spotlightid => `/admin/spotlights/clone/${spotlightid}`,
-        spotlights: '/admin/spotlights',
-        testntagdashboard: '/admin/testntag',
-        testntaginspect: '/admin/testntag/inspect',
-        testntagmanage: '/admin/testntag/manage',
-        testntagreport: '/admin/testntag/report',
-    },
-    bookExamBooth: '/book-exam-booth',
-    pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
-    pastExamPaperSearch: '/exams',
-    help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
-};
 
 // a duplicate list of routes for checking validity easily, 2 sets: exact match and startswith
 export const flattedPathConfigExact = [
@@ -57,6 +26,7 @@ export const flattedPathConfigExact = [
     '/admin/promopanel/add',
     '/admin/promopanel',
     '/admin/testntag',
+    '/admin/testntag/manage/assettypes',
     '/book-exam-booth',
     '/exams',
     '/exams/',
@@ -169,7 +139,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: locale.pages.admin.promopanel.title,
         },
-        // Is add and Edit the same?
         {
             path: pathConfig.admin.promopaneladd,
             component: components.PromoPanelAdd,
@@ -186,11 +155,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.PromoPanelClone,
             pageTitle: locale.pages.admin.promopanel.form.clone.title,
         },
-        // {
-        //     path: pathConfig.admin.promopanelview(promopanelid),
-        //     component: components.PromoPanelView,
-        //     pageTitle: locale.pages.admin.promopanel.form.view.title,
-        // },
     ];
 
     const spotlightidRegExp = '.*';
@@ -238,7 +202,63 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
+        {
+            path: pathConfig.admin.testntagmanageassettypes,
+            component: components.TestTagManageAssetTypes,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagmanagelocations,
+            component: components.TestTagManageLocations,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagmanageinspectiondevices,
+            component: components.TestTagManageInspectionDevices,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagmanagebulkassetupdate,
+            component: components.TestTagManageBulkAssetUpdate,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagreportrecalibrationssdue,
+            component: components.TestTagReportRecalibrationsDue,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagreportinspectionsdue,
+            component: components.TestTagReportInspectionsDue,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
+            component: components.TestTagReportInspectionsByLicencedUser,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagreportassetsbyfilters,
+            component: components.TestTagAssetReportByFilters,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
     ];
+    // const testntagManageAssetTypes = [
+    //     {
+    //         path: pathConfig.admin.testntagmanageassettypes,
+    //         component: components.TestTagManageAssetTypes,
+    //         exact: true,
+    //         pageTitle: locale.pages.admin.testntag.title,
+    //     },
+    // ];
 
     return [
         ...publicPages,
@@ -248,6 +268,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
         ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
+        // ...(account && isTestTagAdminUser(account) ? testntagManageAssetTypes : []),
         {
             component: components.NotFound,
         },

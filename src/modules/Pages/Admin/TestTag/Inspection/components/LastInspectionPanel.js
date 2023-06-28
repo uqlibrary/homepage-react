@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import clsx from 'clsx';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { isEmpty } from '../utils/helpers';
+import { isEmptyStr } from '../../helpers/helpers';
 import locale from '../../testTag.locale';
 import { statusEnum } from '../utils/helpers';
 
@@ -89,8 +89,8 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
         last_discard: lastDiscard,
     } = asset;
     const didPass = lastTest?.inspect_status === testStatusEnum.PASSED.value;
-    const isRepair = !isEmpty(lastRepair?.repair_date);
-    const isDiscard = !isEmpty(lastDiscard?.discard_date);
+    const isRepair = !isEmptyStr(lastRepair?.repair_date);
+    const isDiscard = !isEmptyStr(lastDiscard?.discard_date);
     const theme = useTheme();
     const classes = useTestPanelStyles({ pass: didPass });
     const [testPanelExpanded, setTestPanelExpanded] = React.useState(!disabled);
@@ -99,20 +99,14 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
     useEffect(() => {
         /* istanbul ignore else */ if (!!asset?.asset_id) {
             setMismatchingLocation(
-                currentLocation.formSiteId !== lastLocation?.site_id ||
-                    currentLocation.formBuildingId !== lastLocation?.building_id ||
-                    currentLocation.formFloorId !== lastLocation?.floor_id ||
-                    currentLocation.formRoomId !== lastLocation?.room_id,
+                currentLocation.site !== lastLocation?.site_id ||
+                    currentLocation.building !== lastLocation?.building_id ||
+                    currentLocation.floor !== lastLocation?.floor_id ||
+                    currentLocation.room !== lastLocation?.room_id,
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        asset?.asset_id,
-        currentLocation.formSiteId,
-        currentLocation.formBuildingId,
-        currentLocation.formFloorId,
-        currentLocation.formRoomId,
-    ]);
+    }, [asset?.asset_id, currentLocation.site, currentLocation.building, currentLocation.floor, currentLocation.room]);
 
     useEffect(() => {
         if (disabled) {

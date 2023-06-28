@@ -10,7 +10,7 @@ import Icon from '@material-ui/core/Icon';
 import HomeIcon from '@material-ui/icons/Home';
 import clsx from 'clsx';
 
-import { pathConfig } from 'config/routes';
+import { pathConfig } from '../../../../../../config/pathConfig';
 
 const useStyles = makeStyles(theme => ({
     header: {
@@ -41,22 +41,17 @@ const TestTagHeader = (
 
     return (
         <Box className={clsx([classes.header, className])} data-testid="tntHeader" {...props}>
-            {!!departmentText && departmentText.length > 0 && (
-                <Typography component={'h2'} variant={'h5'}>
-                    {!!!departmentText ? (
-                        <Skeleton animation="wave" data-testid="tntHeaderSkeletonDepartmentTextLoading" />
-                    ) : (
-                        departmentText
-                    )}
-                </Typography>
-            )}
+            <Typography component={'h2'} variant={'h5'}>
+                {!!departmentText && departmentText.length > 0 ? (
+                    departmentText
+                ) : (
+                    <Skeleton animation="wave" data-testid="tntHeaderSkeletonDepartmentTextLoading" />
+                )}
+            </Typography>
+
             {!!requiredText && requiredText.length > 0 && (
                 <Typography variant={'body1'} component={'p'}>
-                    {!!!requiredText ? (
-                        <Skeleton animation="wave" data-testid="tntHeaderSkeletonRequiredTextLoading" />
-                    ) : (
-                        requiredText
-                    )}
+                    {requiredText}
                 </Typography>
             )}
             {!!breadcrumbs && breadcrumbs?.length > 0 && (

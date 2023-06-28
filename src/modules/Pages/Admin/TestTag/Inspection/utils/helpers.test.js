@@ -1,6 +1,5 @@
 import locale from '../../testTag.locale.js';
 import {
-    isEmpty,
     isValidEventDate,
     isValidNextTestDate,
     isValidAssetId,
@@ -18,7 +17,7 @@ import {
 } from './helpers.js';
 
 const moment = require('moment');
-const testStatusEnum = statusEnum(locale);
+const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const PASS = testStatusEnum.PASSED.value;
 const FAIL = testStatusEnum.FAILED.value;
@@ -32,10 +31,6 @@ const checkStandardArguments = (callback, expected) => {
 };
 
 describe('Helper functions', () => {
-    it('isEmpty function validates strings', () => {
-        expect(isEmpty('uql12345')).toBe(false);
-        checkStandardArguments(isEmpty, true);
-    });
     it('isValidEventDate validates dates', () => {
         const today = new moment();
         // valid dates must be in past

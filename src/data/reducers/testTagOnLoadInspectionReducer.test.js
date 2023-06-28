@@ -18,6 +18,7 @@ describe('testTagOnLoadInspectionReducer reducer', () => {
             ...emptyState,
             inspectionConfig: null,
             inspectionConfigLoading: true,
+            inspectionConfigLoaded: false,
             inspectionConfigError: false,
         });
     });
@@ -30,6 +31,7 @@ describe('testTagOnLoadInspectionReducer reducer', () => {
         expect(test).toEqual({
             ...emptyState,
             inspectionConfig: mockTestTagList,
+            inspectionConfigLoaded: true,
             inspectionConfigLoading: false,
             inspectionConfigError: false,
         });
@@ -43,6 +45,7 @@ describe('testTagOnLoadInspectionReducer reducer', () => {
         expect(test).toEqual({
             ...emptyState,
             inspectionConfig: null,
+            inspectionConfigLoaded: false,
             inspectionConfigLoading: false,
             inspectionConfigError: 'failed!',
         });

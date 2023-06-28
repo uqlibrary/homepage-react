@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi, STORAGE_ACCOUNT_KEYNAME } from 'config';
+import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -36,13 +36,24 @@ import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_user from './data/records/test_tag_user';
+import testTag_user_UQPF from './data/records/test_tag_userUQPF';
 import testTag_dashboardOnLoad from './data/records/test_tag_dashboardOnLoad';
 import testTag_inspectionOnLoad from './data/records/test_tag_inspectionOnLoad';
 import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
+import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
-// import testTag_testDevices from './data/records/test_tag_test_devices';
+import testTag_inspectionDevices from './data/records/test_tag_inspection_devices';
 import testTag_assets from './data/records/test_tag_assets';
+// Test and Tag Asset Types
+import test_tag_asset_types from './data/records/test_tag_asset_types';
+import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
+import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspections_by_licenced_user';
+import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors'; 
+import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
+import test_tag_assets_report_assets from './data/records/test_tag_assets_report_assets';
+import test_tag_assets_mine from './data/records/test_tag_assets_mine';
+
 import { accounts, currentAuthor } from './data';
 
 import {
@@ -55,7 +66,14 @@ import {
     promoPanelMocks,
 } from './data/promoPanels';
 
-import { TEST_TAG_ONLOAD_DASHBOARD_API, TEST_TAG_ONLOAD_INSPECT_API, TEST_TAG_ASSETS_API, TEST_TAG_ASSET_ACTION, TEST_TAG_FLOOR_API, TEST_TAG_ROOM_API, } from 'repositories/routes';
+import {
+    TEST_TAG_ONLOAD_DASHBOARD_API,
+    TEST_TAG_ONLOAD_INSPECT_API,
+    TEST_TAG_ASSETS_API,
+    TEST_TAG_ASSET_ACTION,
+    TEST_TAG_FLOOR_API,
+    TEST_TAG_ROOM_API,
+} from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -67,11 +85,6 @@ const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\
 const queryString = require('query-string');
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
 user = user || 'vanilla';
-
-addMockAccountToStoredAccount(
-    !!accounts[user] && accounts[user],
-    !!user && !!currentAuthor[user] ? currentAuthor[user].data : null,
-);
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -86,42 +99,6 @@ if (user && !mockData.accounts[user]) {
     );
 }
 
-export function addMockAccountToStoredAccount(account, currentAuthor, numberOfHoursUntilExpiry = 1) {
-    let bc;
-    if ('BroadcastChannel' in window) {
-        bc = new BroadcastChannel('account_availability');
-    }
-    if (!(!!account && account.hasOwnProperty('hasSession') && account.hasSession === true)) {
-        // the broadcast event in production happens in reusable
-        !!bc && bc.postMessage('account_removed');
-        return;
-    }
-    const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
-    const storageExpiryDate = {
-        storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
-    };
-    let storeableAccount = {
-        status: 'loggedin',
-        account: {
-            ...account,
-        },
-        ...storageExpiryDate,
-    };
-    if (!!currentAuthor) {
-        storeableAccount = {
-            ...storeableAccount,
-            currentAuthor: {
-                ...currentAuthor,
-            },
-        };
-    }
-    storeableAccount = JSON.stringify(storeableAccount);
-    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
-
-    // the broadcast event in production happens in reusable
-    !!bc && bc.postMessage('account_updated');
-}
-
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
     // const randomTime = 5000;
@@ -129,16 +106,6 @@ const withDelay = response => config => {
         setTimeout(function() {
             resolve(response);
         }, randomTime);
-    });
-};
-const withSetDelay = (response, seconds = 0.1) => config => {
-    seconds = seconds > 5 ? 0.1 : seconds;
-    const setTime = seconds * 1000; // Change these values to delay mock API
-    // const randomTime = 5000;
-    return new Promise(function(resolve, reject) {
-        setTimeout(function() {
-            resolve(response);
-        }, setTime);
     });
 };
 
@@ -766,8 +733,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        console.log('onget');
-        return [200, testTag_user];
+        return [200, config?.headers['X-Uql-Token'] === 'uqpf' ? testTag_user_UQPF : testTag_user];
     })
 
     // dashboard CONFIG
@@ -779,8 +745,17 @@ mock.onGet('exams/course/FREN1010/summary')
     // inspection CONFIG
     .onGet(routes.TEST_TAG_ONLOAD_INSPECT_API().apiUrl)
     .reply(config => {
-        return [200, config?.headers["X-Uql-Token"] === "uqpf" ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
+        return [200, config?.headers['X-Uql-Token'] === 'uqpf' ? testTag_onLoadUQPF : testTag_inspectionOnLoad];
     })
+
+    // T&T SITES
+    .onGet(routes.TEST_TAG_SITE_API().apiUrl)
+    .reply(config => {
+        console.log('onget sites', testTag_siteList.data);
+        return [200, testTag_siteList];
+    })
+
+    // T&T BUILDINGS
 
     // T&T FLOORS
     .onGet(/test_and_tag\/building\/\d+\/current/)
@@ -798,6 +773,36 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, {data: testTag_roomList.data.find(room => room.floor_id === id)}];
     })
 
+    // T&T LOCATIONS
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+
+    // T&T MANAGE INSPECTION DEVICES
+    .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
+    .reply(() => {
+        return [200, testTag_inspectionDevices];
+    })
+    .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().apiUrl)
+    .reply(() => [200, {status: 'OK'}])
+    .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
+    .reply(() => [200, {status: 'OK'}])
+    .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
+    .reply(() => [200, {status: 'OK'}])
+
     // ASSETS (with pattern matching)
     .onGet(/test_and_tag\/asset\/search\/current\/*/)
     .reply(config => {
@@ -805,19 +810,15 @@ mock.onGet('exams/course/FREN1010/summary')
         // filter array to matching asset id's
         return [
             200,
-            {data: testTag_assets.data.filter(asset => asset.asset_id_displayed.toUpperCase().startsWith( pattern.toUpperCase()))},
+            {
+                data: testTag_assets.data.filter(asset =>
+                    asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()),
+                ),
+            },
         ];
     })
 
     .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
-    // .reply(() => [200, {data: {
-    //     asset_status: 'FAILED',
-    //     asset_id_displayed:'UQL000298',
-    //     user_licence_number: '13962556',
-    //     action_date: '2022-11-16',
-    //     asset_next_test_due_date: '2023Nov16',
-    //     }}]
-    // )
     .reply(() => [
         200,
         {
@@ -830,11 +831,108 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         },
     ])
+    .onPost(routes.TEST_TAG_ASSETTYPE_ADD().apiUrl)
+    // .reply(() => {
+    //     return [500, []];
+    // })
+    .reply(() => [
+        200,
+        {
+            status: 'ok',
+            data: {
+                asset_id: 1,
+                asset_type_name: 'PWRC13-10',
+                asset_type_class: 'Cable',
+                asset_type_power_rating: '10',
+                asset_type: 'IEC C13 Power Cable (10 Amp)',
+                asset_type_notes: 'Standard Computer Type Cable',
+            },
+        },
+    ])
 
+    // Test and Tag Asset Types
+    .onGet(routes.TEST_TAG_ASSETTYPE_API().apiUrl)
+    .reply(() => 
+        [
+            200,
+            {
+                status: 'OK',
+                data: {
+                    asset_types: test_tag_asset_types.data,
+                }
+            }
+        ]
+    )
+    .onPost(routes.TEST_TAG_ADD_ASSET_TYPE_API().apiUrl)
+    .reply(() => [
+        200,
+        {
+            status: 'OK',
+        },
+    ])
+    .onPut(routes.TEST_TAG_SAVE_ASSETTYPE_API().apiUrl)
+    .reply(() => [
+        200,
+        {
+            status: 'OK', 
+        },
+    ])
+    .onPost(routes.TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API().apiUrl)
+    .reply(() => [
+        200,
+        {
+            status: 'OK',
+            data: {
+                effected_assets: 1,
+                effected_asset_types: 1,
+            },
+        },
+    ])
+    .onDelete(/test_and_tag\/asset_type\/4/)
+    .reply(() => {
+        return [200, { status: 'OK' }];
+    })
+    .onDelete(/test_and_tag\/asset_type\/5/)
+    .reply(() => {
+        return [
+            400,
+            {
+                status: 'error',
+                message: '5 is a test error',
+            },
+        ];
+    })
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections])
+    .onGet(
+        new RegExp(
+            panelRegExp(
+                routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API({
+                    startDate: null,
+                    endDate: null,
+                    userRange: null,
+                }).apiUrl,
+            ),
+        ),
+    )
+    .reply(() => [200, test_tag_inspections_by_licenced_user])
+    .onGet(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS().apiUrl)
+    .reply(() => [200, test_tag_licenced_inspectors])
+    .onGet(routes.TEST_TAG_TAGGED_BUILDING_LIST().apiUrl)
+    .reply(() => [200, test_tag_tagged_building_list])
+    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: null, locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .reply(() => [200, test_tag_assets_report_assets])
+    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .reply(() => [200, test_tag_assets_report_assets])
+    .onGet(routes.TEST_TAG_ASSETS_MINE_API({}).apiUrl)
+    .reply(() => [200, test_tag_assets_mine])
+    .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)
+    .reply(() => [200, {status: 'OK'}])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
     })
+    // PROMO PANEL API
     .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
     .reply(withDelay([200, {}]))
     .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))

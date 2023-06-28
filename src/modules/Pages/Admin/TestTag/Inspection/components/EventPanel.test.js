@@ -36,7 +36,7 @@ function setup(testProps = {}) {
         },
     ];
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData.data, inspectionConfigLoading: false },
         testTagLocationReducer: { floorList, floorListLoading: false, roomList, roomListLoading: false },
         ...state,
     };
@@ -50,7 +50,7 @@ function setup(testProps = {}) {
 describe('EventPanel', () => {
     it('renders component', () => {
         const actions = {};
-        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+        const location = { site: -1, building: -1, floor: -1, room: -1 };
         const setLocation = jest.fn();
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
@@ -61,8 +61,8 @@ describe('EventPanel', () => {
 
         const { getByText, getByTestId } = setup({ actions, location, setLocation, handleChange });
 
-        expect(getByText(locale.form.event.title)).toBeInTheDocument();
-        expect(setLocation).toHaveBeenCalledWith({ formSiteId: 1 });
+        expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
+        expect(setLocation).toHaveBeenCalledWith({ site: 1 });
         expect(getByTestId('testntag-form-event-date')).toBeInTheDocument();
         expect(getByTestId('testntag-form-siteid')).toBeInTheDocument();
         expect(getByTestId('testntag-form-buildingid')).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe('EventPanel', () => {
 
     it('shows location text in floor and room elements', () => {
         const actions = {};
-        const location = { formSiteId: 1, formBuildingId: 1, formFloorId: 1, formRoomId: 1 };
+        const location = { site: 1, building: 1, floor: 1, room: 1 };
         const setLocation = jest.fn();
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
@@ -119,7 +119,7 @@ describe('EventPanel', () => {
 
     it('shows error status on building id when hasInspection=true and location empty', () => {
         const actions = {};
-        const location = { formSiteId: 1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+        const location = { site: 1, building: -1, floor: -1, room: -1 };
         const setLocation = jest.fn();
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
@@ -136,7 +136,7 @@ describe('EventPanel', () => {
 
     it('shows error status on floor id when hasInspection=true and location empty', () => {
         const actions = {};
-        const location = { formSiteId: 1, formBuildingId: 1, formFloorId: -1, formRoomId: -1 };
+        const location = { site: 1, building: 1, floor: -1, room: -1 };
         const setLocation = jest.fn();
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
@@ -153,7 +153,7 @@ describe('EventPanel', () => {
 
     it('shows error status on room id when hasInspection=true and location empty', () => {
         const actions = {};
-        const location = { formSiteId: 1, formBuildingId: 1, formFloorId: 1, formRoomId: -1 };
+        const location = { site: 1, building: 1, floor: 1, room: -1 };
         const setLocation = jest.fn();
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
@@ -170,7 +170,7 @@ describe('EventPanel', () => {
 
     it('shows loading spinners', async () => {
         const actions = {};
-        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+        const location = { site: -1, building: -1, floor: -1, room: -1 };
         const setLocation = jest.fn();
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
@@ -192,7 +192,7 @@ describe('EventPanel', () => {
 
     it('should handle defaults (coverage)', () => {
         const actions = {};
-        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+        const location = { site: -1, building: -1, floor: -1, room: -1 };
         const setLocation = jest.fn();
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
@@ -200,7 +200,7 @@ describe('EventPanel', () => {
         const setStateMock = jest.fn();
         const spyState = useState => [useState, setStateMock];
         jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
-        const testConfig = JSON.parse(JSON.stringify(configData)); // deep copy
+        const testConfig = structuredClone(configData.data); // deep copy
 
         testConfig.sites.forEach(site => {
             delete site.site_id_displayed;
@@ -217,9 +217,9 @@ describe('EventPanel', () => {
             handleChange,
         });
 
-        expect(getByText(locale.form.event.title)).toBeInTheDocument();
-        expect(setLocation).toHaveBeenCalledWith({ formSiteId: 1 });
-        configData.sites.forEach(site => {
+        expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
+        expect(setLocation).toHaveBeenCalledWith({ site: 1 });
+        configData.data.sites.forEach(site => {
             expect(queryByText(site.site_id_displayed)).not.toBeInTheDocument();
             expect(queryByText(site.site_name)).not.toBeInTheDocument();
         });

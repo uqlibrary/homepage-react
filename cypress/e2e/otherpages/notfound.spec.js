@@ -94,7 +94,7 @@ context('404 errors', () => {
         cy.get('body').should('not.contain', 'This page has permanently moved and is now available at');
     });
     it('the course resources page notifies the user of the new url', () => {
-        cy.visit('/courseresources');
+        cy.visit('/courseresources?user=public');
         cy.viewport(1300, 1000);
         cy.get('body').should('not.contain', 'The requested page could not be found.');
         cy.get('body').should('contain', 'This page has permanently moved and is now available at');

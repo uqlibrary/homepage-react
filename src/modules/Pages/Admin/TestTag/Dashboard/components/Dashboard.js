@@ -11,11 +11,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import clsx from 'clsx';
 
+import { Box } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import InspectionIcon from '@material-ui/icons/Search';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 
-import { pathConfig } from 'config/routes';
+import { pathConfig } from '../../../../../../config/pathConfig';
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import locale from '../../testTag.locale';
 import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
@@ -42,6 +43,10 @@ const useStyles = makeStyles(theme => ({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    overDueText: {
+        color: theme.palette.error.main,
+        textAlign: 'center',
     },
 }));
 
@@ -106,22 +111,48 @@ const Dashboard = ({
                                 }
                                 className={classes.card}
                             >
-                                <Typography component={'div'} variant={'h4'}>
-                                    {dashboardConfig?.retest?.soon}
-                                </Typography>
-                                <Typography variant={'body1'}>
+                                <Grid container style={{ marginBottom: 5 }}>
+                                    <Grid item xs={6}>
+                                        <Box borderRight={1} borderColor="grey.500">
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h4'}
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                {`${dashboardConfig?.retest?.soon}`}
+                                            </Typography>
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h6'}
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                {'Upcoming *'}
+                                            </Typography>
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                        <Typography component={'div'} variant={'h4'} className={classes.overDueText}>
+                                            {`${dashboardConfig?.retest?.overdue}`}
+                                        </Typography>
+                                        <Typography component={'div'} variant={'h6'} className={classes.overDueText}>
+                                            {'Overdue'}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
-                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`,
                                         )}
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={pathConfig.admin.testntagreport}
-                                                data-testid="dashboardLinkManagement"
+                                                to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.periodLength}`}
+                                                data-testid="dashboardLinkReportInspectionsDue"
                                             >
-                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`}
+                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`}
                                             </Link>,
                                         )}
                                     </AuthWrapper>
@@ -142,22 +173,52 @@ const Dashboard = ({
                                 }
                                 className={classes.card}
                             >
-                                <Typography component={'div'} variant={'h4'}>
+                                <Grid container style={{ marginBottom: 5 }}>
+                                    <Grid item xs={6}>
+                                        <Box borderRight={1} borderColor="grey.500">
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h4'}
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                {`${dashboardConfig?.recalibration?.soon}`}
+                                            </Typography>
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h6'}
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                {'Upcoming *'}
+                                            </Typography>
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                        <Typography component={'div'} variant={'h4'} className={classes.overDueText}>
+                                            {`${dashboardConfig?.recalibration?.overdue}`}
+                                        </Typography>
+                                        <Typography component={'div'} variant={'h6'} className={classes.overDueText}>
+                                            {'Overdue'}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+
+                                {/* <Typography component={'div'} variant={'h4'}>
                                     {dashboardConfig?.recalibration?.soon}
-                                </Typography>
-                                <Typography variant={'body1'}>
+                                </Typography>*/}
+                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
-                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`,
                                         )}
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={pathConfig.admin.testntagreport}
-                                                data-testid="dashboardLinkManagement"
+                                                to={`${pathConfig.admin.testntagreportrecalibrationssdue}?period=3`}
+                                                data-testid="dashboardLinkReportInspectionDevices"
                                             >
-                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`}
+                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}(s)`}
                                             </Link>,
                                         )}
                                     </AuthWrapper>

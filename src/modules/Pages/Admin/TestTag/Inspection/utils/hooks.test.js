@@ -1,5 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useForm, useLocation, useValidation } from './hooks';
+import { useForm } from '../../helpers/hooks';
+import { useValidation } from './hooks';
+import { useLocation } from '../../helpers/hooks';
 
 describe('Tests custom hooks', () => {
     it('useForm manages setting and returning of form value state', () => {
@@ -275,65 +277,65 @@ describe('Tests custom hooks', () => {
         const { result } = renderHook(() => useLocation());
 
         expect(result.current.location).toEqual({
-            formSiteId: -1,
-            formBuildingId: -1,
-            formFloorId: -1,
-            formRoomId: -1,
+            site: -1,
+            building: -1,
+            floor: -1,
+            room: -1,
         });
 
         act(() => {
-            result.current.setLocation({ formSiteId: 100 });
+            result.current.setLocation({ site: 100 });
         });
         expect(result.current.location).toEqual({
-            formSiteId: 100,
-            formBuildingId: -1,
-            formFloorId: -1,
-            formRoomId: -1,
+            site: 100,
+            building: -1,
+            floor: -1,
+            room: -1,
         });
 
         act(() => {
-            result.current.setLocation({ formBuildingId: 100 });
+            result.current.setLocation({ building: 100 });
         });
         expect(result.current.location).toEqual({
-            formSiteId: 100,
-            formBuildingId: 100,
-            formFloorId: -1,
-            formRoomId: -1,
+            site: 100,
+            building: 100,
+            floor: -1,
+            room: -1,
         });
 
         act(() => {
-            result.current.setLocation({ formFloorId: 100 });
+            result.current.setLocation({ floor: 100 });
         });
         expect(result.current.location).toEqual({
-            formSiteId: 100,
-            formBuildingId: 100,
-            formFloorId: 100,
-            formRoomId: -1,
+            site: 100,
+            building: 100,
+            floor: 100,
+            room: -1,
         });
 
         act(() => {
-            result.current.setLocation({ formRoomId: 100 });
+            result.current.setLocation({ room: 100 });
         });
         expect(result.current.location).toEqual({
-            formSiteId: 100,
-            formBuildingId: 100,
-            formFloorId: 100,
-            formRoomId: 100,
+            site: 100,
+            building: 100,
+            floor: 100,
+            room: 100,
         });
 
         act(() => {
             result.current.setLocation({
-                formSiteId: -1,
-                formBuildingId: -1,
-                formFloorId: -1,
-                formRoomId: -1,
+                site: -1,
+                building: -1,
+                floor: -1,
+                room: -1,
             });
         });
         expect(result.current.location).toEqual({
-            formSiteId: -1,
-            formBuildingId: -1,
-            formFloorId: -1,
-            formRoomId: -1,
+            site: -1,
+            building: -1,
+            floor: -1,
+            room: -1,
         });
     });
 });

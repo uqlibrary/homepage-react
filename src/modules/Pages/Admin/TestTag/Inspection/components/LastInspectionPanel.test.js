@@ -55,8 +55,8 @@ describe('LastInspectionPanel Renders component', () => {
         };
     });
 
-    const dateFormatPattern = locale.config.dateFormatDisplay;
-    const formLocale = locale.form.lastInspectionPanel;
+    const dateFormatPattern = locale.pages.inspect.config.dateFormatDisplay;
+    const formLocale = locale.pages.inspect.form.lastInspectionPanel;
 
     const assertFormText = ({ getByText, asset, disabled = false }) => {
         const title = formLocale.title(disabled ? formLocale.statusUnavailableLabel : '');
@@ -99,10 +99,10 @@ describe('LastInspectionPanel Renders component', () => {
 
     it('should render disabled panel', () => {
         const currentLocation = {
-            formSiteId: 1,
-            formBuildingId: 1,
-            formFloorId: 1,
-            formRoomId: 1,
+            site: 1,
+            building: 1,
+            floor: 1,
+            room: 1,
         };
         const { getByText } = setup({
             asset,
@@ -117,10 +117,10 @@ describe('LastInspectionPanel Renders component', () => {
 
     it('should render PASS panel with mismatch location alert, no notes', () => {
         const currentLocation = {
-            formSiteId: 2,
-            formBuildingId: 1,
-            formFloorId: 1,
-            formRoomId: 1,
+            site: 2,
+            building: 1,
+            floor: 1,
+            room: 1,
         };
         const testAsset = { ...asset };
         testAsset.last_inspection.inspect_notes = undefined;
@@ -137,10 +137,10 @@ describe('LastInspectionPanel Renders component', () => {
 
     it('should render Unavailable title if disabled', () => {
         const currentLocation = {
-            formSiteId: 1,
-            formBuildingId: 1,
-            formFloorId: 1,
-            formRoomId: 1,
+            site: 1,
+            building: 1,
+            floor: 1,
+            room: 1,
         };
         const { getByText } = setup({
             asset,
@@ -157,10 +157,10 @@ describe('LastInspectionPanel Renders component', () => {
         const testAsset = { ...asset };
         testAsset.asset_status = undefined;
         const currentLocation = {
-            formSiteId: 1,
-            formBuildingId: 1,
-            formFloorId: 1,
-            formRoomId: 1,
+            site: 1,
+            building: 1,
+            floor: 1,
+            room: 1,
         };
         const { getByText } = setup({
             asset: testAsset,
@@ -175,10 +175,10 @@ describe('LastInspectionPanel Renders component', () => {
 
     it('should render FAIL panel without mismatch location alert, with No reason', () => {
         const currentLocation = {
-            formSiteId: 1,
-            formBuildingId: 1,
-            formFloorId: 1,
-            formRoomId: 1,
+            site: 1,
+            building: 1,
+            floor: 1,
+            room: 1,
         };
         const testAsset = { ...asset };
         testAsset.last_inspection.inspect_status = 'FAILED';
@@ -201,10 +201,10 @@ describe('LastInspectionPanel Renders component', () => {
         const spyState = useState => [useState, setStateMock];
         jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
         const currentLocation = {
-            formSiteId: 1,
-            formBuildingId: 1,
-            formFloorId: 1,
-            formRoomId: 1,
+            site: 1,
+            building: 1,
+            floor: 1,
+            room: 1,
         };
         const { getByTestId } = setup({
             asset,
@@ -225,10 +225,10 @@ describe('LastInspectionPanel Renders component', () => {
         const spyState = useState => [useState, setStateMock];
         jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
         const currentLocation = {
-            formSiteId: 1,
-            formBuildingId: 1,
-            formFloorId: 1,
-            formRoomId: 1,
+            site: 1,
+            building: 1,
+            floor: 1,
+            room: 1,
         };
         const { getByTestId } = setup({
             asset,
@@ -246,10 +246,10 @@ describe('LastInspectionPanel Renders component', () => {
 
     it('should handle defaults (coverage)', () => {
         const currentLocation = {
-            formSiteId: 2,
-            formBuildingId: 1,
-            formFloorId: 1,
-            formRoomId: 1,
+            site: 2,
+            building: 1,
+            floor: 1,
+            room: 1,
         };
         const testAsset = { ...asset, last_location: { ...asset.last_location } };
         delete testAsset.last_location.site_id_displayed;

@@ -15,14 +15,12 @@ export const getUserPermissions = (privileges = {}) => {
 };
 
 export const hasAccess = (userPrivilege = PERMISSIONS.none, requiredPermissions = [], inclusive = true) => {
-    const shouldAllow = requiredPermissions.reduce((accumulated, current) => {
-        if (inclusive) {
-            if (accumulated !== false) return (userPrivilege & current) > 0;
-            return accumulated;
-        }
-        if (accumulated !== true) return (userPrivilege & current) > 0;
-        return accumulated;
-    }, null);
-
+    const shouldAllow = inclusive
+        ? requiredPermissions.every(current => {
+              return (userPrivilege & current) > 0;
+          })
+        : requiredPermissions.some(current => {
+              return (userPrivilege & current) > 0;
+          });
     return shouldAllow ?? false;
 };
