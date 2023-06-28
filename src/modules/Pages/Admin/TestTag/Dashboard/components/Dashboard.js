@@ -48,6 +48,9 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.error.main,
         textAlign: 'center',
     },
+    dueText: {
+        textAlign: 'center',
+    },
 }));
 
 const Dashboard = ({
@@ -63,6 +66,9 @@ const Dashboard = ({
     useEffect(() => {
         if (!dashboardConfigLoaded) actions.loadDashboard();
     }, [actions, dashboardConfigLoaded]);
+
+    const retestClass = dashboardConfig?.retest?.overdue > 0 ? classes.overDueText : classes.dueText;
+    const recalibrationClass = dashboardConfig?.recalibration?.overdue > 0 ? classes.overDueText : classes.dueText;
 
     return (
         <StandardAuthPage
@@ -114,28 +120,20 @@ const Dashboard = ({
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
                                         <Box borderRight={1} borderColor="grey.500">
-                                            <Typography
-                                                component={'div'}
-                                                variant={'h4'}
-                                                style={{ textAlign: 'center' }}
-                                            >
+                                            <Typography component={'div'} variant={'h4'} className={classes.dueText}>
                                                 {`${dashboardConfig?.retest?.soon}`}
                                             </Typography>
-                                            <Typography
-                                                component={'div'}
-                                                variant={'h6'}
-                                                style={{ textAlign: 'center' }}
-                                            >
+                                            <Typography component={'div'} variant={'h6'} className={classes.dueText}>
                                                 {'Upcoming *'}
                                             </Typography>
                                         </Box>
                                     </Grid>
 
                                     <Grid item xs={6}>
-                                        <Typography component={'div'} variant={'h4'} className={classes.overDueText}>
+                                        <Typography component={'div'} variant={'h4'} className={retestClass}>
                                             {`${dashboardConfig?.retest?.overdue}`}
                                         </Typography>
-                                        <Typography component={'div'} variant={'h6'} className={classes.overDueText}>
+                                        <Typography component={'div'} variant={'h6'} className={retestClass}>
                                             {'Overdue'}
                                         </Typography>
                                     </Grid>
@@ -182,28 +180,20 @@ const Dashboard = ({
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
                                         <Box borderRight={1} borderColor="grey.500">
-                                            <Typography
-                                                component={'div'}
-                                                variant={'h4'}
-                                                style={{ textAlign: 'center' }}
-                                            >
+                                            <Typography component={'div'} variant={'h4'} className={classes.dueText}>
                                                 {`${dashboardConfig?.recalibration?.soon}`}
                                             </Typography>
-                                            <Typography
-                                                component={'div'}
-                                                variant={'h6'}
-                                                style={{ textAlign: 'center' }}
-                                            >
+                                            <Typography component={'div'} variant={'h6'} className={classes.dueText}>
                                                 {'Upcoming *'}
                                             </Typography>
                                         </Box>
                                     </Grid>
 
                                     <Grid item xs={6}>
-                                        <Typography component={'div'} variant={'h4'} className={classes.overDueText}>
+                                        <Typography component={'div'} variant={'h4'} className={recalibrationClass}>
                                             {`${dashboardConfig?.recalibration?.overdue}`}
                                         </Typography>
-                                        <Typography component={'div'} variant={'h6'} className={classes.overDueText}>
+                                        <Typography component={'div'} variant={'h6'} className={recalibrationClass}>
                                             {'Overdue'}
                                         </Typography>
                                     </Grid>
