@@ -26,6 +26,7 @@ export const TestTagManageInspectionDevices = lazy(() => lazyRetry(() => import(
 export const TestTagReportRecalibrationsDue = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/recalibrationsDue/containers/RecalibrationsDue')));
 export const TestTagReportInspectionsDue = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/inspectionsDue/containers/InspectionsDue')));
 export const TestTagReportInspectionsByLicencedUser = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/inspectionsByLicencedUser/containers/InspectionsByLicencedUser')));
+export const TestTagAssetReportByFilters = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/AssetReportByFilters/containers/AssetReportByFilters')));
 export const TestTagManageBulkAssetUpdate = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/BulkAssetUpdate/containers/BulkAssetUpdate')));
 
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));

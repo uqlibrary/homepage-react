@@ -11,6 +11,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import clsx from 'clsx';
 
+import { Box } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import InspectionIcon from '@material-ui/icons/Search';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
@@ -42,6 +43,10 @@ const useStyles = makeStyles(theme => ({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    overDueText: {
+        color: theme.palette.error.main,
+        textAlign: 'center',
     },
 }));
 
@@ -93,7 +98,7 @@ const Dashboard = ({
                             )}
                         </Grid>
                     </AuthWrapper>
-                    <Grid item xs={12} sm className={classes.flexParent}>
+                    <Grid item xs={12} md className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
@@ -106,22 +111,54 @@ const Dashboard = ({
                                 }
                                 className={classes.card}
                             >
-                                <Typography component={'div'} variant={'h4'}>
-                                    {dashboardConfig?.retest?.soon}
-                                </Typography>
-                                <Typography variant={'body1'}>
+                                <Grid container style={{ marginBottom: 5 }}>
+                                    <Grid item xs={6}>
+                                        <Box borderRight={1} borderColor="grey.500">
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h4'}
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                {`${dashboardConfig?.retest?.soon}`}
+                                            </Typography>
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h6'}
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                {'Upcoming *'}
+                                            </Typography>
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                        <Typography component={'div'} variant={'h4'} className={classes.overDueText}>
+                                            {`${dashboardConfig?.retest?.overdue}`}
+                                        </Typography>
+                                        <Typography component={'div'} variant={'h6'} className={classes.overDueText}>
+                                            {'Overdue'}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
-                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                            pageLocale.config.pluraliser(
+                                                `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                                dashboardConfig?.periodLength,
+                                            ),
                                         )}
                                     >
                                         {pageLocale.panel.assets.subtext(
                                             <Link
-                                                to={`${pathConfig.admin.testntagreportinspectionsdue}?period=3`}
+                                                to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.periodLength}`}
                                                 data-testid="dashboardLinkReportInspectionsDue"
                                             >
-                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`}
+                                                {pageLocale.config.pluraliser(
+                                                    `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                                    dashboardConfig?.periodLength,
+                                                )}
                                             </Link>,
                                         )}
                                     </AuthWrapper>
@@ -129,7 +166,7 @@ const Dashboard = ({
                             </Panel>
                         )}
                     </Grid>
-                    <Grid item xs={12} sm className={classes.flexParent}>
+                    <Grid item xs={12} md className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton animation="wave" height={300} width={'100%'} />
                         ) : (
@@ -142,22 +179,54 @@ const Dashboard = ({
                                 }
                                 className={classes.card}
                             >
-                                <Typography component={'div'} variant={'h4'}>
-                                    {dashboardConfig?.recalibration?.soon}
-                                </Typography>
-                                <Typography variant={'body1'}>
+                                <Grid container style={{ marginBottom: 5 }}>
+                                    <Grid item xs={6}>
+                                        <Box borderRight={1} borderColor="grey.500">
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h4'}
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                {`${dashboardConfig?.recalibration?.soon}`}
+                                            </Typography>
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h6'}
+                                                style={{ textAlign: 'center' }}
+                                            >
+                                                {'Upcoming *'}
+                                            </Typography>
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                        <Typography component={'div'} variant={'h4'} className={classes.overDueText}>
+                                            {`${dashboardConfig?.recalibration?.overdue}`}
+                                        </Typography>
+                                        <Typography component={'div'} variant={'h6'} className={classes.overDueText}>
+                                            {'Overdue'}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
-                                        fallback={pageLocale.panel.assets.subtext(
-                                            `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                        fallback={pageLocale.panel.inspectionDevices.subtext(
+                                            pageLocale.config.pluraliser(
+                                                `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                                dashboardConfig?.periodLength,
+                                            ),
                                         )}
                                     >
-                                        {pageLocale.panel.assets.subtext(
+                                        {pageLocale.panel.inspectionDevices.subtext(
                                             <Link
-                                                to={`${pathConfig.admin.testntagreportrecalibrationssdue}?period=3`}
+                                                to={`${pathConfig.admin.testntagreportrecalibrationssdue}`}
                                                 data-testid="dashboardLinkReportInspectionDevices"
                                             >
-                                                {`${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`}
+                                                {pageLocale.config.pluraliser(
+                                                    `${dashboardConfig?.periodLength} ${dashboardConfig?.periodType}`,
+                                                    dashboardConfig?.periodLength,
+                                                )}
                                             </Link>,
                                         )}
                                     </AuthWrapper>
@@ -168,7 +237,7 @@ const Dashboard = ({
                 </Grid>
                 <Grid container spacing={3}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid item xs={12} sm className={classes.flexParent}>
+                        <Grid item xs={12} md className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton animation="wave" height={300} width={'100%'} />
                             ) : (
@@ -211,7 +280,7 @@ const Dashboard = ({
                         </Grid>
                     </AuthWrapper>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
-                        <Grid item xs={12} sm className={classes.flexParent}>
+                        <Grid item xs={12} md className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton animation="wave" height={300} width={'100%'} />
                             ) : (

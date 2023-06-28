@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -6,7 +6,6 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
-import RowMenuCell from './../../../SharedComponents/DataTable/RowMenuCell';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import locale from '../../../testTag.locale';
@@ -20,6 +19,7 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import config from './config';
 
 const useStyles = makeStyles(theme => ({
@@ -34,52 +34,16 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const fieldConfig = config.assettypes;
-
-const getColumns = ({ onRowEdit, onRowDelete }) => {
-    const actionsCell = {
-        field: 'actions',
-        headerName: 'Actions',
-        renderCell: params => <RowMenuCell {...params} handleEditClick={onRowEdit} handleDeleteClick={onRowDelete} />,
-        sortable: false,
-        width: 100,
-        headerAlign: 'center',
-        filterable: false,
-        align: 'center',
-        disableColumnMenu: true,
-        disableReorder: true,
-        shouldRender: false,
-    };
-
-    const columns = [];
-    const keys = Object.keys(fieldConfig);
-
-    keys.forEach(key => {
-        columns.push({
-            field: key,
-            headerName: fieldConfig[key].label,
-            editable: false,
-            sortable: false,
-            ...fieldConfig[key].fieldParams,
-        });
-    });
-
-    columns && columns.length > 0 && columns.push(actionsCell);
-    return columns;
-};
-
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) => {
     const pageLocale = locale.pages.manage.assetTypes;
+
     const classes = useStyles();
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
     const [confirmID, setConfirmID] = React.useState(null);
-    React.useEffect(() => {
-        actions.loadAssetTypes();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
+
     const actionReducer = (_, action) => {
         switch (action.type) {
             case 'add':
@@ -107,19 +71,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
     const closeConfirmationAlert = () => {
         setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
-    const openConfirmationAlert = (message, type, autoHide) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: !!autoHide ? 6000 : null,
-        });
-    };
-    const handleAddClick = () => {
-        closeConfirmationAlert();
-        actionDispatch({ type: 'add' });
-    };
-
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
         closeConfirmationAlert();
@@ -136,6 +87,34 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
             showDeleteConfirm();
         }
     };
+
+    const { columns } = useDataTableColumns({
+        config,
+        locale: pageLocale.form.columns,
+        handleEditClick: onRowEdit,
+        handleDeleteClick: onRowDelete,
+    });
+
+    const { row } = useDataTableRow(assetTypesList);
+
+    React.useEffect(() => {
+        actions.loadAssetTypes();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const openConfirmationAlert = (message, type, autoHide) => {
+        setConfirmationAlert({
+            message: message,
+            visible: true,
+            type: !!type ? type : 'info',
+            autoHideDuration: !!autoHide ? 6000 : null,
+        });
+    };
+    const handleAddClick = () => {
+        closeConfirmationAlert();
+        actionDispatch({ type: 'add' });
+    };
+
     const onRowAdd = data => {
         const Payload = data;
         delete Payload.asset_type_id;
@@ -230,11 +209,11 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
             });
     };
 
-    const columns = useMemo(
-        () => getColumns({ data: assetTypesList, onRowEdit, onRowDelete }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [assetTypesList],
-    );
+    // const columns = useMemo(
+    //     () => getColumns({ data: assetTypesList, onRowEdit, onRowDelete }),
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //     [assetTypesList],
+    // );
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -257,8 +236,8 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
-                        fields={config?.assettypes ?? []}
-                        columns={pageLocale.form.columns.assettype}
+                        fields={config?.fields ?? []}
+                        columns={pageLocale.form.columns}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowAdd}
@@ -271,8 +250,8 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
-                        fields={config?.assettypes ?? []}
-                        columns={pageLocale.form.columns.assettype}
+                        fields={config?.fields ?? []}
+                        columns={pageLocale.form.columns}
                         row={actionState?.row}
                         onCancelAction={() => actionDispatch({ type: 'clear' })}
                         onAction={onRowUpdate}
@@ -295,7 +274,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                rows={assetTypesList}
+                                rows={row}
                                 columns={columns}
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}

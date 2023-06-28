@@ -1,7 +1,6 @@
 import { createLocationString } from '../../../helpers/helpers';
 
 export const transformRow = row => {
-    console.log('>>ROW', row);
     return row.map(line => {
         if (!!line?.asset_location) return line;
         return {

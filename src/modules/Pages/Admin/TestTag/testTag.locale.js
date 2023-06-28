@@ -16,6 +16,11 @@ import { PERMISSIONS } from './config/auth';
 
 export default {
     config: {
+        format: {
+            dateFormat: 'YYYY-MM-DD HH:mm',
+            dateFormatNoTime: 'YYYY-MM-DD',
+            dateFormatDisplay: 'Do MMMM, YYYY',
+        },
         monthsOptions: [
             { value: '3', label: '3 months' },
             { value: '6', label: '6 months' },
@@ -53,7 +58,14 @@ export default {
             },
         },
         dashboard: {
-            config: {},
+            config: {
+                pluraliser: (text, count) => (
+                    <>
+                        {text}
+                        {count > 1 ? 's' : ''}
+                    </>
+                ),
+            },
             header: {
                 pageSubtitle: dept => `Dashboard for ${dept}`,
             },
@@ -63,12 +75,12 @@ export default {
                     link: 'Begin test and tagging of assets',
                 },
                 assets: {
-                    title: 'ASSETS',
-                    subtext: duration => <>needing a retest in the next {duration}.</>,
+                    title: 'ASSET INSPECTIONS',
+                    subtext: duration => <>* due in the next {duration}.</>,
                 },
                 inspectionDevices: {
-                    title: 'INSPECTION DEVICES',
-                    subtext: duration => <>needing a recalibration in the next {duration}.</>,
+                    title: 'INSPECTION DEVICE RECALIBRATIONS',
+                    subtext: duration => <>* due in the next {duration}.</>,
                 },
                 management: {
                     title: 'MANAGEMENT',
@@ -125,7 +137,7 @@ export default {
                         {
                             title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagreportassetsbyfilters}?user=uqtesttag`,
                         },
                         {
                             title: 'INSPECTIONS BY LICENSED USER',
@@ -183,7 +195,9 @@ export default {
                         placeholder: 'Enter at least 5 characters',
                     },
                     assetType: {
-                        label: 'Asset type',
+                        props: {
+                            label: 'Asset type',
+                        },
                         addNewLabel: 'Add new asset type',
                         saveSuccess: {
                             confirmationTitle: 'The asset type has been added',
@@ -349,28 +363,26 @@ export default {
                     actions: 'Actions',
                     addLocationButton: 'Add Asset type',
                     columns: {
-                        assettype: {
-                            asset_type_id: {
-                                label: 'Id',
-                            },
-                            asset_type_name: {
-                                label: 'Asset Type Name',
-                            },
-                            asset_type_class: {
-                                label: 'Class',
-                            },
-                            asset_type_power_rating: {
-                                label: 'Power Rating',
-                            },
-                            asset_type: {
-                                label: 'Type',
-                            },
-                            asset_type_notes: {
-                                label: 'Notes',
-                            },
-                            asset_count: {
-                                label: 'Usage',
-                            },
+                        asset_type_id: {
+                            label: 'Id',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type Name',
+                        },
+                        asset_type_class: {
+                            label: 'Class',
+                        },
+                        asset_type_power_rating: {
+                            label: 'Power Rating',
+                        },
+                        asset_type: {
+                            label: 'Type',
+                        },
+                        asset_type_notes: {
+                            label: 'Notes',
+                        },
+                        asset_count: {
+                            label: 'Usage',
                         },
                     },
                 },
@@ -759,6 +771,62 @@ export default {
                     },
                     filterToDateLabel: 'Within date range',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
+                },
+            },
+            assetReportByFilters: {
+                breadcrumbs: [
+                    {
+                        title: 'Asset Report',
+                        icon: <AssetsInspectedByDateIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Asset report for ${dept}`,
+                },
+                form: {
+                    title: 'Filters',
+                    columns: {
+                        asset_barcode: {
+                            label: 'Barcode',
+                        },
+                        building_name: {
+                            label: 'Building Name',
+                        },
+                        asset_type_name: {
+                            label: 'Asset Type',
+                        },
+                        asset_test_date: {
+                            label: 'Last Inspection',
+                        },
+                        asset_next_test_due_date: {
+                            label: 'Next Inspection',
+                        },
+                        asset_status: {
+                            label: 'Status',
+                        },
+                    },
+                    filterStatusLabel: 'With Status',
+                    filterBuildingLabel: 'Tagged Building',
+                    filterToDateLabel: 'Within date range',
+                    filterTaggedDateFrom: 'Tagged Date From',
+                    filterTaggedDateTo: 'Tagged Date To',
+                    filterToDateFormatted: value => `Including assets up to ${value}`,
+                    statusTypes: [
+                        {
+                            status_type_id: 0,
+                            status_type_rendered: 'All',
+                            status_type: null,
+                        },
+                        {
+                            status_type_id: 1,
+                            status_type_rendered: 'Out for repair',
+                            status_type: 'OUTFORREPAIR',
+                        },
+                    ],
+                },
+                errors: {
+                    startDate: 'Start date must be before End Date',
+                    endDate: 'End date must be after Start Date',
                 },
             },
         },

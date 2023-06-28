@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { isEmptyStr } from '../../../helpers/helpers';
 import locale from '../../../testTag.locale';
-const dateFormat = locale.pages.manage.config.dateFormat;
+const dateFormat = locale.config.format.dateFormatNoTime;
 
 export default {
     fields: {
