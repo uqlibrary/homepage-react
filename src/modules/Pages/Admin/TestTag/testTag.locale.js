@@ -62,7 +62,7 @@ export default {
                 pluraliser: (text, count) => (
                     <>
                         {text}
-                        {count > 1 ? 's' : ''}
+                        {count > 1 ? 'S' : ''}
                     </>
                 ),
             },

@@ -81,9 +81,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     useEffect(() => {
         console.log('formValues', formValues);
     }, [formValues]);
+
     const handleSearchAssetIdChange = useCallback(
         newValue => {
             console.log(newValue);
+            if (typeof newValue === 'string' && isEmptyStr(newValue)) return;
+            if (isEmptyObject(newValue)) return;
             list.addStart(newValue);
         },
         [list],
