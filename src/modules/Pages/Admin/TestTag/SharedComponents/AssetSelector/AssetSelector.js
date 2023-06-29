@@ -27,6 +27,7 @@ const AssetSelector = ({
     required = true,
     canAddNew = true,
     clearOnSelect = false,
+    headless = false, // if true, no popup is shown and the calling component is expected to intercept the Redux store
     minAssetIdLength = MINIMUM_ASSET_ID_PATTERN_LENGTH,
     user,
     classNames,
@@ -82,7 +83,7 @@ const AssetSelector = ({
                 data-testid={`${id}-select`}
                 className={classNames.autocomplete}
                 fullWidth
-                open={isOpen}
+                open={!headless && isOpen}
                 value={selectedAsset ?? currentValue ?? previousValueRef.current}
                 onChange={(event, newValue) => {
                     if (typeof newValue === 'string') {
@@ -118,6 +119,7 @@ const AssetSelector = ({
                 openOnFocus
                 selectOnFocus
                 handleHomeEndKeys
+                clearOnBlur={headless}
                 options={formAssetList}
                 getOptionLabel={option => {
                     // Value selected with enter, right from the input
@@ -188,6 +190,7 @@ AssetSelector.propTypes = {
     masked: PropTypes.bool,
     required: PropTypes.bool,
     canAddNew: PropTypes.bool,
+    headless: PropTypes.bool,
     clearOnSelect: PropTypes.bool,
     user: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),

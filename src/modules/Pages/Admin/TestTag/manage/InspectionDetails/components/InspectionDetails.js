@@ -139,6 +139,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                                 canAddNew={false}
                                 required={false}
                                 clearOnSelect
+                                headless
                             />
                         </Grid>
                     </Grid>
@@ -147,7 +148,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                             <DataTable
                                 rows={row}
                                 columns={columns}
-                                rowId={'asset_barcode'}
+                                rowId={'asset_id'}
                                 loading={assetsListLoading}
                                 classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
