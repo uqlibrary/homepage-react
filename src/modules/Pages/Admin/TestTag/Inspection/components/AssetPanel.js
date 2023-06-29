@@ -71,10 +71,20 @@ const AssetPanel = ({
         setAssetTypeDialogOpen(true);
     };
 
+    const [createdAssetTypeName, setCreatedAssetTypeName] = React.useState(null);
+
     // we group them all together to place a footer item at the bottom of the list
     const renderGroup = params => {
         const addButton = (
-            <li key="testntagFormAssetType-option-add">
+            <li
+                key="testntagFormAssetType-option-add"
+                id="testntagFormAssetType-option-999999"
+                data-option-index="0"
+                role="option"
+                aria-selected="false"
+                className="MuiAutocomplete-option"
+                data-focus="true"
+            >
                 <Button className={classes.addNewLabel} onClick={() => openAssetTypeDialog()}>
                     {pageLocale.form.asset.assetType.addNewLabel}
                 </Button>
@@ -84,6 +94,19 @@ const AssetPanel = ({
         !!canAddAssetType && children.push(addButton);
         return children;
     };
+
+    function getCurrentAssetType() {
+        const fromCreatedAsset =
+            !!createdAssetTypeName &&
+            inspectionConfig?.asset_types?.find(assetType => assetType.asset_type_name === createdAssetTypeName);
+        return (
+            (!!fromCreatedAsset
+                ? fromCreatedAsset
+                : inspectionConfig?.asset_types?.find(
+                      assetType => assetType.asset_type_id === formValues.asset_type_id,
+                  )) ?? ''
+        );
+    }
 
     return (
         <StandardCard title={pageLocale.form.asset.title} style={{ marginTop: '30px' }}>
@@ -95,10 +118,10 @@ const AssetPanel = ({
                 setAssetTypeDialogOpen={setAssetTypeDialogOpen}
                 isMobileView={isMobileView}
                 classes={classes}
-                // initConfig={inspectionConfig}
                 saveAssetTypeSaving={saveAssetTypeSaving}
                 saveAssetTypeSuccess={saveAssetTypeSuccess}
                 saveAssetTypeError={saveAssetTypeError}
+                setCreatedAssetTypeName={setCreatedAssetTypeName}
             />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
@@ -121,15 +144,11 @@ const AssetPanel = ({
                             data-testid="testntagFormAssetType"
                             fullWidth
                             options={inspectionConfig?.asset_types ?? []}
-                            value={
-                                inspectionConfig?.asset_types?.find(
-                                    assetType => assetType.asset_type_id === formValues.asset_type_id,
-                                ) ?? null
-                            }
+                            value={getCurrentAssetType()}
                             onChange={(_, newValue) => {
                                 handleChange('asset_type_id')(newValue.asset_type_id);
                             }}
-                            getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
+                            getOptionLabel={option => option?.asset_type_name ?? /* istanbul ignore next */ ''}
                             getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
                             autoHighlight
                             renderGroup={renderGroup}

@@ -23,6 +23,7 @@ const AssetTypeDialogPopup = props => {
         assetTypeValid: PropTypes.bool.isRequired,
         setAssetTypeValid: PropTypes.func.isRequired,
         actions: PropTypes.object,
+        setCreatedAssetTypeName: PropTypes.func,
         setAssetTypeDialogOpen: PropTypes.func.isRequired,
         saveAssetTypeSaving: PropTypes.bool,
         saveAssetTypeSuccess: PropTypes.any,
@@ -41,6 +42,7 @@ const AssetTypeDialogPopup = props => {
         assetTypeValid,
         setAssetTypeValid,
         actions,
+        setCreatedAssetTypeName,
         setAssetTypeDialogOpen,
         saveAssetTypeSaving,
         saveAssetTypeSuccess,
@@ -84,6 +86,7 @@ const AssetTypeDialogPopup = props => {
 
     function saveAssetTypeAndReload() {
         actions.saveAssetTypeAndReload(formValues);
+        !!formValues?.asset_type_name && setCreatedAssetTypeName(formValues.asset_type_name);
     }
 
     function handleAssetTypeSaveConfirmationBoxAction() {

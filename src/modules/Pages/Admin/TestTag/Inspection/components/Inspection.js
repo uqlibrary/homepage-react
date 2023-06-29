@@ -142,6 +142,9 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
+    addNewLabel: {
+        width: '100%',
+    },
 }));
 
 const Inspection = ({
