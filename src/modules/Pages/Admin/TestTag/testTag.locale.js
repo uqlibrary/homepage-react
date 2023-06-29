@@ -657,6 +657,54 @@ export default {
                     },
                 },
             },
+            users: {
+                header: {
+                    pageSubtitle: dept => `Managing users for ${dept}`,
+                },
+                breadcrumbs: [
+                    {
+                        title: 'Manage Users',
+                        icon: <UsersIcon fontSize={'small'} />,
+                    },
+                ],
+                form: {
+                    actions: 'Actions',
+                    addButtonLabel: 'Add User',
+                    columns: {
+                        user_id: {
+                            label: 'ID',
+                        },
+                        user_uid: {
+                            label: 'UUID',
+                        },
+                        user_name: {
+                            label: 'Name',
+                        },
+                        can_admin: {
+                            label: 'Admin',
+                        },
+                        can_inspect: {
+                            label: 'Inspect',
+                        },
+                        can_alter: {
+                            label: 'Alter',
+                        },
+                        can_see_reports: {
+                            label: 'Report',
+                        },
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Add new user',
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit user',
+                },
+            },
         },
         report: {
             config: {

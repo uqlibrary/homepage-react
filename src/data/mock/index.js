@@ -53,6 +53,7 @@ import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspe
 import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
 import test_tag_assets_report_assets from './data/records/test_tag_assets_report_assets';
 import test_tag_assets_mine from './data/records/test_tag_assets_mine';
+import test_tag_user_list from './data/records/test_tag_user_list';
 
 import { accounts, currentAuthor } from './data';
 
@@ -73,6 +74,7 @@ import {
     TEST_TAG_ASSET_ACTION,
     TEST_TAG_FLOOR_API,
     TEST_TAG_ROOM_API,
+    TEST_TAG_USER_LIST_API
 } from 'repositories/routes';
 
 const moment = require('moment');
@@ -932,6 +934,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [500, []];
     })
+    .onGet(routes.TEST_TAG_USER_LIST_API().apiUrl)
+    .reply(() => [200, test_tag_user_list])
     // PROMO PANEL API
     .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
     .reply(withDelay([200, {}]))

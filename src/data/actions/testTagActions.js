@@ -27,6 +27,7 @@ import {
     TEST_TAG_TAGGED_BUILDING_LIST,
     TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST,
     TEST_TAG_BULK_UPDATE_API,
+    TEST_TAG_USER_LIST_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -741,5 +742,26 @@ export function loadAssetReportByFilters({
 export function clearBulkAssetUpdate() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_BULK_ASSET_UPDATE_CLEAR });
+    };
+}
+
+export function loadUserList() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_LOADING });
+        return get(TEST_TAG_USER_LIST_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
     };
 }

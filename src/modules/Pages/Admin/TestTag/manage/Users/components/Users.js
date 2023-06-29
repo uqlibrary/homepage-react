@@ -12,6 +12,7 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import { transformRow, emptyActionState, actionReducer } from './utils';
 // import ActionDialogue from './ActionDialogue';
 
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
@@ -34,10 +35,117 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Users = ({ actions }) => {
-    const pageLocale = locale.pages.manage.assetTypes;
+const Users = ({ actions, userListLoading, userList }) => {
+    const pageLocale = locale.pages.manage.users;
+
+    const [dialogueBusy, setDialogueBusy] = React.useState(false);
+    const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
     const classes = useStyles();
+
+    const closeDialog = () => actionDispatch({ type: 'clear' });
+
+    const onRowAdd = data => {
+        setDialogueBusy(true);
+        const request = structuredClone(data);
+        const wrappedRequest = transformAddRequest(request, user);
+        console.log('add', wrappedRequest);
+
+        actions
+            .addInspectionDevice(wrappedRequest)
+            .then(() => {
+                closeDialog();
+                openConfirmationAlert(pageLocale.alerts?.addSuccess, 'success');
+                actions.clearInspectionDevices();
+            })
+            .catch(error => {
+                console.log(error);
+                handleApiError({ message: pageLocale.alerts?.addFail });
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
+    };
+
+    const onRowEdit = data => {
+        setDialogueBusy(true);
+        const id = data.device_id;
+        const request = structuredClone(data);
+        const wrappedRequest = transformUpdateRequest(request);
+        console.log('edit', wrappedRequest);
+
+        actions
+            .updateInspectionDevice(id, wrappedRequest)
+            .then(() => {
+                closeDialog();
+                openConfirmationAlert(pageLocale.alerts?.updateSuccess, 'success');
+                actions.clearInspectionDevices();
+            })
+            .catch(error => {
+                console.log(error);
+                handleApiError({ message: pageLocale.alerts?.updateFail });
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
+    };
+
+    const handleEditClick = ({ id, api }) => {
+        const row = api.getRow(id);
+        actionDispatch({
+            type: 'edit',
+            title: pageLocale.dialogEdit?.confirmationTitle,
+            row,
+        });
+    };
+
+    const handleDeleteClick = ({ id, api }) => {
+        const row = api.getRow(id);
+        actionDispatch({
+            type: 'delete',
+            row,
+        });
+    };
+
+    const onRowDelete = data => {
+        setDialogueBusy(true);
+        const id = data.row.device_id;
+
+        console.log('delete', id);
+
+        actions
+            .deleteInspectionDevice(id)
+            .then(() => {
+                closeDialog();
+                openConfirmationAlert(pageLocale.alerts?.deleteSuccess, 'success');
+                actions.clearInspectionDevices();
+            })
+            .catch(error => {
+                console.log(error);
+                handleApiError({ message: pageLocale.alerts?.deleteFail });
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
+    };
+    const handleAddClick = () => {
+        actionDispatch({
+            type: 'add',
+            title: pageLocale.dialogAdd?.confirmationTitle,
+        });
+    };
+
+    const { row } = useDataTableRow(userList, transformRow);
+    const { columns } = useDataTableColumns({
+        config,
+        locale: pageLocale.form.columns,
+        handleEditClick,
+        handleDeleteClick,
+    });
+
+    React.useEffect(() => {
+        actions.loadUserList();
+    }, []);
 
     return (
         <StandardAuthPage
@@ -45,14 +153,63 @@ const Users = ({ actions }) => {
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
-            <h1>USERS PAGE</h1>
+            <StandardCard noHeader>
+                <UpdateDialog
+                    title={actionState.title}
+                    action="add"
+                    updateDialogueBoxId="addRow"
+                    isOpen={actionState.isAdd}
+                    locale={pageLocale?.dialogAdd}
+                    fields={config.fields ?? []}
+                    columns={pageLocale.form.columns}
+                    row={actionState?.row}
+                    onCancelAction={closeDialog}
+                    onAction={onRowAdd}
+                    props={actionState?.props}
+                    isBusy={dialogueBusy}
+                />
+                <UpdateDialog
+                    title={actionState.title}
+                    action="edit"
+                    updateDialogueBoxId="editRow"
+                    isOpen={actionState.isEdit}
+                    locale={pageLocale?.dialogEdit}
+                    fields={config?.fields ?? []}
+                    columns={pageLocale.form.columns}
+                    row={actionState?.row}
+                    onCancelAction={closeDialog}
+                    onAction={onRowEdit}
+                    props={actionState?.props}
+                    isBusy={dialogueBusy}
+                />
+                <Grid container spacing={3}>
+                    <Grid item padding={3} style={{ flex: 1 }}>
+                        <DataTable
+                            rows={row}
+                            columns={columns}
+                            rowId="user_id"
+                            loading={userListLoading}
+                            /* editRowsModel={editRowsModel}*/
+                            components={{ Toolbar: AddToolbar }}
+                            componentsProps={{
+                                toolbar: {
+                                    label: pageLocale.form.addButtonLabel,
+                                    onClick: handleAddClick,
+                                },
+                            }}
+                            classes={{ root: classes.gridRoot }}
+                        />
+                    </Grid>
+                </Grid>
+            </StandardCard>
         </StandardAuthPage>
     );
 };
 
 Users.propTypes = {
     actions: PropTypes.object,
-    assetTypesList: PropTypes.array,
+    userList: PropTypes.array,
+    userListLoading: PropTypes.bool,
     assetTypesActionType: PropTypes.string,
     assetTypesListLoading: PropTypes.bool,
     assetTypesActionError: PropTypes.bool,

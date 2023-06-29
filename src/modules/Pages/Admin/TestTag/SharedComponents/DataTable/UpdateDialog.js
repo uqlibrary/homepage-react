@@ -61,6 +61,8 @@ export const UpdateDialogue = ({
     const isMobileView = useIsMobileView();
     const [isValid, setIsValid] = React.useState(false);
 
+    const [checkboxState, setCheckboxState] = React.useState({});
+
     React.useEffect(() => {
         if (isOpen) {
             setDataColumns(columns);
@@ -80,6 +82,19 @@ export const UpdateDialogue = ({
         setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field]) ?? true));
     }, [data, dataFields, editableFields]);
 
+    React.useEffect(() => {
+        console.log('Data Fields XYZ', dataFields);
+        for (const item in dataFields) {
+            if (Object.hasOwn(dataFields, item)) {
+                console.log('item', dataFields[item]?.isClicked ?? false);
+                setCheckboxState({
+                    ...checkboxState,
+                    [item]: true,
+                });
+            }
+        }
+    }, [dataFields]);
+
     const _onAction = () => {
         onClose?.();
         onAction?.(data);
@@ -91,10 +106,15 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
+        console.log(event);
         setData({
             ...data,
             [event.target.id]: event.target.value,
         });
+    };
+
+    const handleClick = event => {
+        console.log('handling the click of the checkbox', event);
     };
 
     return (
@@ -128,6 +148,7 @@ export const UpdateDialogue = ({
                                                 </Typography>
                                             </>
                                         )}
+                                        {console.log('F', dataFields[field], data[field])}
                                         {!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
                                                 {dataFields[field]?.component({
@@ -138,7 +159,9 @@ export const UpdateDialogue = ({
                                                         dataFields[field]?.valueFormatter?.(data?.[field]) ??
                                                         data?.[field],
                                                     error: dataFields[field]?.validate?.(data?.[field]) ?? false,
-                                                    onChange: handleChange,
+                                                    checked: data?.[field] === 'Yes',
+                                                    onChange: dataFields[field]?.isClicked ? handleClick : handleChange,
+                                                    onClick: () => console.log('Clicked'),
                                                     InputLabelProps: {
                                                         shrink: true,
                                                     },
