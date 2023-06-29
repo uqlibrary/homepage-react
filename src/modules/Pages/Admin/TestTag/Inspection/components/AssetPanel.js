@@ -37,6 +37,8 @@ const AssetPanel = ({
     saveAssetTypeError,
     isMobileView,
     canAddAssetType,
+    createdAssetTypeName,
+    setCreatedAssetTypeName,
 }) => {
     AssetPanel.propTypes = {
         actions: PropTypes.any.isRequired,
@@ -55,6 +57,8 @@ const AssetPanel = ({
         saveAssetTypeError: PropTypes.any,
         isMobileView: PropTypes.bool,
         canAddAssetType: PropTypes.bool,
+        createdAssetTypeName: PropTypes.string,
+        setCreatedAssetTypeName: PropTypes.func,
     };
     const pageLocale = locale.pages.inspect;
 
@@ -70,8 +74,6 @@ const AssetPanel = ({
     const openAssetTypeDialog = () => {
         setAssetTypeDialogOpen(true);
     };
-
-    const [createdAssetTypeName, setCreatedAssetTypeName] = React.useState(null);
 
     // we group them all together to place a footer item at the bottom of the list
     const renderGroup = params => {
