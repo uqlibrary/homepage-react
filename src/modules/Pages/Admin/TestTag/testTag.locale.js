@@ -115,7 +115,7 @@ export default {
                         {
                             title: 'INSPECTIONS',
                             icon: <InspectionIcon />,
-                            path: '#',
+                            path: `${pathConfig.admin.testntagmanageinspectiondetails}?user=uqtesttag`,
                         },
                     ],
                 },
@@ -569,6 +569,66 @@ export default {
                     updateFail: 'Device could not be updated',
                     deleteSuccess: 'Device deleted successfully',
                     deleteFail: 'Device could not be deleted',
+                },
+            },
+            inspectiondetails: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage Inspection Details',
+                        icon: <InspectionIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Inspection Details for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    columns: {
+                        asset_id: {
+                            label: 'ID',
+                        },
+                        asset_id_displayed: {
+                            label: 'Asset ID',
+                        },
+                        asset_type: {
+                            label: 'Type',
+                        },
+                        asset_status: {
+                            label: 'Status',
+                        },
+                        user_name: {
+                            label: 'Last Inspected by',
+                        },
+                        inspect_date: {
+                            label: 'Last inspection date',
+                        },
+                        inspect_notes: {
+                            label: 'Inspection notes',
+                        },
+                        inspect_fail_reason: {
+                            label: 'Fail reason',
+                        },
+                        discard_reason: {
+                            label: 'Discard reason',
+                        },
+                        repairer_name: {
+                            label: 'Repair notes',
+                        },
+                    },
+                    assetSelector: {
+                        label: 'Asset ID',
+                        helperText: 'Scan or enter a new ID to search',
+                        placeholder: 'Enter at least 3 characters',
+                    },
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit asset details',
+                },
+                alerts: {
+                    updateSuccess: 'Asset updated successfully',
+                    updateFail: 'Asset could not be updated',
                 },
             },
             bulkassetupdate: {
