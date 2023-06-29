@@ -79,11 +79,7 @@ const LocationPicker = ({
                             });
                             actions.clearFloors();
                         }}
-                        getOptionLabel={option =>
-                            `${option.site_id_displayed ?? /* istanbul ignore next */ ''}${
-                                option.site_id_displayed ? ' - ' : /* istanbul ignore next */ ''
-                            }${option.site_name ?? /* istanbul ignore next */ ''}`
-                        }
+                        getOptionLabel={option => `${option?.site_name ?? /* istanbul ignore next */ ''}`}
                         renderInput={params => (
                             <TextField
                                 {...params}
@@ -149,11 +145,7 @@ const LocationPicker = ({
                                     actions.loadFloors(newValue.building_id);
                                 }
                             }}
-                            getOptionLabel={option =>
-                                `${option.building_id_displayed ?? /* istanbul ignore next */ ''}${
-                                    option.building_id_displayed ? ' - ' : /* istanbul ignore next */ ''
-                                }${option.building_name ?? /* istanbul ignore next */ ''}`
-                            }
+                            getOptionLabel={option => `${option?.building_name ?? /* istanbul ignore next */ ''}`}
                             renderInput={params => (
                                 <TextField
                                     {...params}
