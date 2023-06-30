@@ -12,7 +12,7 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
-import { transformRow, emptyActionState, actionReducer } from './utils';
+import { transformRow, transformUpdateRequest, emptyActionState, actionReducer } from './utils';
 // import ActionDialogue from './ActionDialogue';
 
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
@@ -69,25 +69,24 @@ const Users = ({ actions, userListLoading, userList }) => {
 
     const onRowEdit = data => {
         setDialogueBusy(true);
-        const id = data.device_id;
         const request = structuredClone(data);
         const wrappedRequest = transformUpdateRequest(request);
         console.log('edit', wrappedRequest);
 
-        actions
-            .updateInspectionDevice(id, wrappedRequest)
-            .then(() => {
-                closeDialog();
-                openConfirmationAlert(pageLocale.alerts?.updateSuccess, 'success');
-                actions.clearInspectionDevices();
-            })
-            .catch(error => {
-                console.log(error);
-                handleApiError({ message: pageLocale.alerts?.updateFail });
-            })
-            .finally(() => {
-                setDialogueBusy(false);
-            });
+        // actions
+        //     .updateInspectionDevice(id, wrappedRequest)
+        //     .then(() => {
+        //         closeDialog();
+        //         openConfirmationAlert(pageLocale.alerts?.updateSuccess, 'success');
+        //         actions.clearInspectionDevices();
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //         handleApiError({ message: pageLocale.alerts?.updateFail });
+        //     })
+        //     .finally(() => {
+        //         setDialogueBusy(false);
+        //     });
     };
 
     const handleEditClick = ({ id, api }) => {

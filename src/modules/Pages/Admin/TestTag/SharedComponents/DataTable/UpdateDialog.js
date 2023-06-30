@@ -83,10 +83,10 @@ export const UpdateDialogue = ({
     }, [data, dataFields, editableFields]);
 
     React.useEffect(() => {
-        // console.log('Data Fields XYZ', dataFields, row);
         const tempState = {};
+        console.log('dataFields', dataFields);
+        // const user_id = dataFields.user_id;
         for (const item in dataFields) {
-            // console.log('Checking for ', item, ' in ', dataFields);
             if (Object.hasOwn(dataFields, item)) {
                 if (!(item in checkboxState)) {
                     if (!!dataFields[item]?.isBoolean) {
@@ -114,17 +114,9 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        console.log('handle change', event);
-        console.log('The current state', checkboxState);
-        console.log(event.target.id);
-        console.log('??', !event.target.id);
-
-        console.log('Is it a checkbox', event.target.type);
-
         const isCheckbox = event.target.type === 'checkbox';
-
         // eslint-disable-next-line no-nested-ternary
-        const value = isCheckbox ? event.target.value : event.target.checked ? 'Yes' : 'No';
+        const value = !isCheckbox ? event.target.value : event.target.checked ? 'Yes' : 'No';
 
         if (isCheckbox) {
             setCheckboxState({
@@ -136,16 +128,8 @@ export const UpdateDialogue = ({
             ...data,
             [event.target.id]: value,
         });
-
-        console.log('DATA', data);
-        console.log('CHECKBOXES', checkboxState);
     };
 
-    const handleClick = event => {
-        console.log('handling the click of the checkbox', event);
-    };
-
-    console.log('checkbox State', checkboxState);
     return (
         <Dialog
             classes={{ paper: classes.dialogPaper }}
@@ -177,7 +161,6 @@ export const UpdateDialogue = ({
                                                 </Typography>
                                             </>
                                         )}
-                                        {console.log('State', checkboxState[field], field)}
                                         {!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
                                                 {dataFields[field]?.component({
