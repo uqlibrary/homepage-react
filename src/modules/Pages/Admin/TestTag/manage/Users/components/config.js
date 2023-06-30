@@ -25,27 +25,34 @@ export default {
         },
         can_admin: {
             label: 'Admin',
-            isClicked: true,
-            // component: props => <TextField {...props} />,
-            component: props => {
-                console.log('TEST', props);
-                return <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} />} label={'Admin'} />;
-            },
+            isBoolean: true,
+            component: props => (
+                <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} {...props} />} label={'Admin'} />
+            ),
             fieldParams: { canEdit: true },
         },
         can_inspect: {
             label: 'Inspect',
-            component: props => <TextField {...props} />,
+            isBoolean: true,
+            component: props => (
+                <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} {...props} />} label={'Inspect'} />
+            ),
             fieldParams: { canEdit: true },
         },
         can_alter: {
             label: 'Alter',
-            component: props => <TextField {...props} />,
+            isBoolean: true,
+            component: props => (
+                <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} {...props} />} label={'Alter'} />
+            ),
             fieldParams: { canEdit: true },
         },
         can_see_reports: {
             label: 'Report',
-            component: props => <TextField {...props} />,
+            isBoolean: true,
+            component: props => (
+                <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} {...props} />} label={'Report'} />
+            ),
             fieldParams: { canEdit: true },
         },
     },

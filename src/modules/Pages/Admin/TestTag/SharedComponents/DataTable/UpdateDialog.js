@@ -83,40 +83,69 @@ export const UpdateDialogue = ({
     }, [data, dataFields, editableFields]);
 
     React.useEffect(() => {
-        console.log('Data Fields XYZ', dataFields);
+        // console.log('Data Fields XYZ', dataFields, row);
+        const tempState = {};
         for (const item in dataFields) {
+            // console.log('Checking for ', item, ' in ', dataFields);
             if (Object.hasOwn(dataFields, item)) {
-                console.log('item', dataFields[item]?.isClicked ?? false);
-                setCheckboxState({
-                    ...checkboxState,
-                    [item]: true,
-                });
+                if (!(item in checkboxState)) {
+                    if (!!dataFields[item]?.isBoolean) {
+                        tempState[item] = row[item] === 'Yes';
+                    }
+                }
             }
         }
-    }, [dataFields]);
+        setCheckboxState({
+            ...checkboxState,
+            ...tempState,
+        });
+    }, [data]);
 
     const _onAction = () => {
         onClose?.();
+        setCheckboxState({});
         onAction?.(data);
     };
 
     const _onCancelAction = () => {
         onClose?.();
+        setCheckboxState({});
         onCancelAction?.();
     };
 
     const handleChange = event => {
-        console.log(event);
+        console.log('handle change', event);
+        console.log('The current state', checkboxState);
+        console.log(event.target.id);
+        console.log('??', !event.target.id);
+
+        console.log('Is it a checkbox', event.target.type);
+
+        const isCheckbox = event.target.type === 'checkbox';
+
+        // eslint-disable-next-line no-nested-ternary
+        const value = isCheckbox ? event.target.value : event.target.checked ? 'Yes' : 'No';
+
+        if (isCheckbox) {
+            setCheckboxState({
+                ...checkboxState,
+                [event.target.id]: event.target.checked,
+            });
+        }
         setData({
             ...data,
-            [event.target.id]: event.target.value,
+            [event.target.id]: value,
         });
+
+        console.log('DATA', data);
+        console.log('CHECKBOXES', checkboxState);
     };
 
     const handleClick = event => {
         console.log('handling the click of the checkbox', event);
     };
 
+    console.log('checkbox State', checkboxState);
     return (
         <Dialog
             classes={{ paper: classes.dialogPaper }}
@@ -148,7 +177,7 @@ export const UpdateDialogue = ({
                                                 </Typography>
                                             </>
                                         )}
-                                        {console.log('F', dataFields[field], data[field])}
+                                        {console.log('State', checkboxState[field], field)}
                                         {!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
                                                 {dataFields[field]?.component({
@@ -159,9 +188,8 @@ export const UpdateDialogue = ({
                                                         dataFields[field]?.valueFormatter?.(data?.[field]) ??
                                                         data?.[field],
                                                     error: dataFields[field]?.validate?.(data?.[field]) ?? false,
-                                                    checked: data?.[field] === 'Yes',
-                                                    onChange: dataFields[field]?.isClicked ? handleClick : handleChange,
-                                                    onClick: () => console.log('Clicked'),
+                                                    checked: !!checkboxState[field],
+                                                    onChange: handleChange,
                                                     InputLabelProps: {
                                                         shrink: true,
                                                     },
