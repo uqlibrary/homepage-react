@@ -775,12 +775,12 @@ export function updateUser(request) {
             .then(response => {
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
-                        type: actions.TESTTAG_INSPECTION_DEVICES_UPDATED,
+                        type: actions.TESTTAG_USER_LIST_UPDATED,
                         payload: response,
                     });
                 } else {
                     dispatch({
-                        type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_FAILED,
+                        type: actions.TESTTAG_USER_LIST_UPDATE_FAILED,
                         payload: response.message,
                     });
                 }

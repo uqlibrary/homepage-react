@@ -84,8 +84,6 @@ export const UpdateDialogue = ({
 
     React.useEffect(() => {
         const tempState = {};
-        console.log('dataFields', dataFields);
-        // const user_id = dataFields.user_id;
         for (const item in dataFields) {
             if (Object.hasOwn(dataFields, item)) {
                 if (!(item in checkboxState)) {

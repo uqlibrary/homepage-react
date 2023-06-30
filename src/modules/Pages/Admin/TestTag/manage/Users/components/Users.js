@@ -71,8 +71,18 @@ const Users = ({ actions, userListLoading, userList }) => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformUpdateRequest(request);
-        console.log('edit', wrappedRequest);
-
+        console.log('sending to the API', wrappedRequest);
+        actions
+            .updateUser(wrappedRequest)
+            .then(() => {
+                closeDialog();
+            })
+            .catch(error => {
+                console.log('Error: ', error);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
         // actions
         //     .updateInspectionDevice(id, wrappedRequest)
         //     .then(() => {
