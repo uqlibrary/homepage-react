@@ -77,10 +77,14 @@ export default {
                 assets: {
                     title: 'ASSET INSPECTIONS',
                     subtext: duration => <>* due in the next {duration}.</>,
+                    upcomingText: 'upcoming *',
+                    overdueText: 'overdue',
                 },
                 inspectionDevices: {
                     title: 'INSPECTION DEVICE RECALIBRATIONS',
                     subtext: duration => <>* due in the next {duration}.</>,
+                    upcomingText: 'upcoming *',
+                    overdueText: 'overdue',
                 },
                 management: {
                     title: 'MANAGEMENT',
