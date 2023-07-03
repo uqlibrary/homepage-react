@@ -142,6 +142,9 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
+    addNewLabel: {
+        width: '100%',
+    },
 }));
 
 const Inspection = ({
@@ -219,6 +222,8 @@ const Inspection = ({
         assetsListError,
     ]);
 
+    const [createdAssetTypeName, setCreatedAssetTypeName] = React.useState(null);
+
     const [inView, setInView] = React.useState(false);
 
     const assignCurrentAsset = asset => {
@@ -285,6 +290,7 @@ const Inspection = ({
                 selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
             );
             actions.saveInspection(transformedData);
+            setCreatedAssetTypeName(null);
         }
     };
 
@@ -371,6 +377,8 @@ const Inspection = ({
                 saveAssetTypeError={saveAssetTypeError}
                 isMobileView={isMobileView}
                 canAddAssetType
+                createdAssetTypeName={createdAssetTypeName}
+                setCreatedAssetTypeName={setCreatedAssetTypeName}
             />
             <InView onChange={setInView} rootMargin="200% 0px 0px 0px" threshold={0}>
                 <AppBar component={'div'} className={appbarDynamicClasses}>

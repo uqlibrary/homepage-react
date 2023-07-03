@@ -124,7 +124,7 @@ const Dashboard = ({
                                                 {`${dashboardConfig?.retest?.soon}`}
                                             </Typography>
                                             <Typography component={'div'} variant={'h6'} className={classes.dueText}>
-                                                {'Upcoming *'}
+                                                {pageLocale.panel.assets.upcomingText}
                                             </Typography>
                                         </Box>
                                     </Grid>
@@ -134,7 +134,7 @@ const Dashboard = ({
                                             {`${dashboardConfig?.retest?.overdue}`}
                                         </Typography>
                                         <Typography component={'div'} variant={'h6'} className={retestClass}>
-                                            {'Overdue'}
+                                            {pageLocale.panel.assets.overdueText}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -184,7 +184,7 @@ const Dashboard = ({
                                                 {`${dashboardConfig?.recalibration?.soon}`}
                                             </Typography>
                                             <Typography component={'div'} variant={'h6'} className={classes.dueText}>
-                                                {'Upcoming *'}
+                                                {pageLocale.panel.inspectionDevices.upcomingText}
                                             </Typography>
                                         </Box>
                                     </Grid>
@@ -194,7 +194,7 @@ const Dashboard = ({
                                             {`${dashboardConfig?.recalibration?.overdue}`}
                                         </Typography>
                                         <Typography component={'div'} variant={'h6'} className={recalibrationClass}>
-                                            {'Overdue'}
+                                            {pageLocale.panel.inspectionDevices.overdueText}
                                         </Typography>
                                     </Grid>
                                 </Grid>
