@@ -30,27 +30,29 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const emptyActionState = { isEdit: false, rows: {}, row: {}, title: '' };
+
+const actionReducer = (_, action) => {
+    switch (action.type) {
+        case 'edit':
+            return {
+                title: action.title,
+                isEdit: true,
+                row: action.row,
+            };
+        case 'clear':
+            return { ...emptyActionState };
+        default:
+            throw `Unknown action '${action.type}'`;
+    }
+};
+
 const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
     const pageLocale = locale.pages.manage.inspectiondetails;
     const classes = useStyles();
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
-    const emptyActionState = { isEdit: false, rows: {}, row: {}, title: '' };
 
-    const actionReducer = (_, action) => {
-        switch (action.type) {
-            case 'edit':
-                return {
-                    title: pageLocale.dialogEdit.confirmationTitle,
-                    isEdit: true,
-                    row: action.row,
-                };
-            case 'clear':
-                return { ...emptyActionState };
-            default:
-                throw `Unknown action '${action.type}'`;
-        }
-    };
     const [actionState, actionDispatch] = React.useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
 
@@ -140,7 +142,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                                 classNames={{ formControl: classes.formControl }}
                                 canAddNew={false}
                                 required={false}
-                                clearOnSelect
+                                clearOnSelect={false}
                                 headless
                             />
                         </Grid>

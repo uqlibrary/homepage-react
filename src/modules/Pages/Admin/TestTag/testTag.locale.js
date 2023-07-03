@@ -27,6 +27,13 @@ export default {
             { value: '12', label: '1 year' },
             { value: '60', label: '5 years' },
         ],
+        assetStatus: {
+            current: 'CURRENT',
+            passed: 'PASSED',
+            failed: 'FAILED',
+            outforrepair: 'OUTFORREPAIR',
+            discarded: 'DISCARDED',
+        },
         assetStatusOptions: [
             { value: 'CURRENT', label: 'Current' },
             { value: 'REMOVED', label: 'Removed' },

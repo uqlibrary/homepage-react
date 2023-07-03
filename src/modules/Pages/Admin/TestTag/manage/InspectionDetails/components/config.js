@@ -2,6 +2,9 @@ import React from 'react';
 
 import TextField from '@material-ui/core/TextField';
 
+import locale from '../../../testTag.locale';
+import { isEmptyStr } from '../../../helpers/helpers';
+
 export default {
     fields: {
         asset_id: {
@@ -17,19 +20,58 @@ export default {
             fieldParams: { canEdit: false, minWidth: 140 },
         },
         inspect_notes: {
-            component: props => <TextField {...props} multiline minRows={2} />,
+            component: props => {
+                return <TextField {...props} multiline minRows={2} />;
+            },
             fieldParams: { canEdit: true, renderInTable: false },
         },
         inspect_fail_reason: {
-            component: props => <TextField {...props} multiline minRows={2} />,
+            component: props => (
+                <TextField
+                    {...props}
+                    multiline
+                    minRows={2}
+                    disabled={props.row.asset_status === locale.config.assetStatus.current}
+                    required={props.row.asset_status === locale.config.assetStatus.failed}
+                />
+            ),
+            validate: (value, row) => {
+                console.log('>', row);
+                // should return true if a validation error exists
+                return row?.asset_status === locale.config.assetStatus.failed && isEmptyStr(value);
+            },
             fieldParams: { canEdit: true, renderInTable: false },
         },
         discard_reason: {
-            component: props => <TextField {...props} multiline minRows={2} />,
+            component: props => (
+                <TextField
+                    {...props}
+                    multiline
+                    minRows={2}
+                    disabled={props.row.asset_status !== locale.config.assetStatus.discarded}
+                    required={props.row.asset_status === locale.config.assetStatus.discarded}
+                />
+            ),
+            validate: (value, row) => {
+                // should return true if a validation error exists
+                return row?.asset_status === locale.config.assetStatus.discarded && isEmptyStr(value);
+            },
             fieldParams: { canEdit: true, renderInTable: false },
         },
         repairer_name: {
-            component: props => <TextField {...props} multiline minRows={2} />,
+            component: props => (
+                <TextField
+                    {...props}
+                    multiline
+                    minRows={2}
+                    disabled={props.row.asset_status !== locale.config.assetStatus.outforrepair}
+                    required={props.row.asset_status === locale.config.assetStatus.outforrepair}
+                />
+            ),
+            validate: (value, row) => {
+                // should return true if a validation error exists
+                return row?.asset_status === locale.config.assetStatus.outforrepair && isEmptyStr(value);
+            },
             fieldParams: { canEdit: true, renderInTable: false },
         },
     },

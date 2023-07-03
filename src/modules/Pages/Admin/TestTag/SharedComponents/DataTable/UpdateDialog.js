@@ -77,7 +77,7 @@ export const UpdateDialogue = ({
     }, [isOpen, fields, row, columns]);
 
     React.useEffect(() => {
-        setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field]) ?? true));
+        setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field], data) ?? true));
     }, [data, dataFields, editableFields]);
 
     const _onAction = () => {
@@ -138,7 +138,7 @@ export const UpdateDialogue = ({
                                                     value:
                                                         dataFields[field]?.valueFormatter?.(data?.[field]) ??
                                                         data?.[field],
-                                                    error: dataFields[field]?.validate?.(data?.[field]) ?? false,
+                                                    error: dataFields[field]?.validate?.(data?.[field], data) ?? false,
                                                     onChange: handleChange,
                                                     InputLabelProps: {
                                                         shrink: true,
@@ -147,6 +147,7 @@ export const UpdateDialogue = ({
                                                         ['data-testid']: `${field}-input`,
                                                     },
                                                     fullWidth: true,
+                                                    row: data,
                                                 })}
                                             </>
                                         )}
