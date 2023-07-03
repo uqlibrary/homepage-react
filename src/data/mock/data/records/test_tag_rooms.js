@@ -269,7 +269,8 @@ export default {
           {
             "room_id": 48,
             "room_description": "Unassignable",
-            "room_id_displayed": "D199"
+            "room_id_displayed": "D199",
+            "asset_count": 0,
           }
         ]
       },
@@ -448,7 +449,8 @@ export default {
           {
             "room_id": 76,
             "room_description": "Unassignable",
-            "room_id_displayed": "D299"
+            "room_id_displayed": "D299",
+            "asset_count": 0,
           }
         ]
       },{
@@ -584,7 +586,8 @@ export default {
           {
             "room_id": 496,
             "room_description": "Library Facilities",
-            "room_id_displayed": "143"
+            "room_id_displayed": "143",
+            "asset_count": 0,
           }
         ]
       },{
@@ -822,7 +825,8 @@ export default {
           {
             "room_id": 534,
             "room_description": "Library Facilities",
-            "room_id_displayed": "259"
+            "room_id_displayed": "259",
+            "asset_count": 0,
           }
         ]
       },{
@@ -862,7 +866,8 @@ export default {
           {
             "room_id": 539,
             "room_description": "Library Facilities",
-            "room_id_displayed": "107"
+            "room_id_displayed": "107",
+            "asset_count": 0,
           }
         ]
       }
