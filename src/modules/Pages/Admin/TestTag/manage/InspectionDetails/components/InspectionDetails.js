@@ -16,6 +16,7 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
+import { transformRow } from './utils';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -70,6 +71,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
+        console.log('edit clicked', row);
         actionDispatch({
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
@@ -105,7 +107,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
         handleEditClick,
     });
 
-    const { row } = useDataTableRow(assetsList);
+    const { row } = useDataTableRow(assetsList, transformRow);
 
     return (
         <StandardAuthPage

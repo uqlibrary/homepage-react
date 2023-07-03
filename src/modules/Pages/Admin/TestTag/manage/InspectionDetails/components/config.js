@@ -17,19 +17,19 @@ export default {
             fieldParams: { canEdit: false, minWidth: 140 },
         },
         inspect_notes: {
-            component: props => <TextField {...props} multiline />,
+            component: props => <TextField {...props} multiline minRows={2} />,
             fieldParams: { canEdit: true, renderInTable: false },
         },
         inspect_fail_reason: {
-            component: props => <TextField {...props} multiline />,
+            component: props => <TextField {...props} multiline minRows={2} />,
             fieldParams: { canEdit: true, renderInTable: false },
         },
         discard_reason: {
-            component: props => <TextField {...props} multiline />,
+            component: props => <TextField {...props} multiline minRows={2} />,
             fieldParams: { canEdit: true, renderInTable: false },
         },
         repairer_name: {
-            component: props => <TextField {...props} multiline />,
+            component: props => <TextField {...props} multiline minRows={2} />,
             fieldParams: { canEdit: true, renderInTable: false },
         },
     },
