@@ -12,7 +12,6 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { isEmptyStr } from '../../helpers/helpers';
 import { useIsMobileView } from 'hooks';
 
 export const useStyles = makeStyles(theme => ({
@@ -36,6 +35,7 @@ export const useStyles = makeStyles(theme => ({
 }));
 
 export const UpdateDialogue = ({
+    action,
     confirmationBoxId = 'dialogBox',
     locale,
     isOpen,
@@ -63,23 +63,22 @@ export const UpdateDialogue = ({
 
     React.useEffect(() => {
         if (isOpen) {
-            console.log({ columns, fields, row });
             setDataColumns(columns);
             setDataFields(fields);
             setData(row);
             setEditableFields(
                 Object.keys(fields).filter(
                     field =>
-                        !!(fields[field].fieldParams?.renderInUpdate ?? true) &&
-                        !!(fields[field].fieldParams?.canEdit ?? false),
+                        !!(fields[field]?.fieldParams?.renderInUpdate ?? true) &&
+                        !!(fields[field]?.fieldParams?.canEdit ?? false),
                 ),
             );
         }
     }, [isOpen, fields, row, columns]);
 
     React.useEffect(() => {
-        setIsValid(!editableFields.some(entry => isEmptyStr(data[entry])));
-    }, [data, editableFields]);
+        setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field]) ?? true));
+    }, [data, dataFields, editableFields]);
 
     const _onAction = () => {
         onClose?.();
@@ -92,7 +91,10 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        setData({ ...data, [event.target.dataset.field]: event.target.value });
+        setData({
+            ...data,
+            [event.target.id]: event.target.value,
+        });
     };
 
     return (
@@ -111,9 +113,10 @@ export const UpdateDialogue = ({
                         !!dataFields &&
                         Object.keys(dataFields).map(field => (
                             <React.Fragment key={field}>
-                                {!!(dataFields[field].fieldParams?.renderInUpdate ?? true) && (
+                                {((action === 'edit' && !!(dataFields[field]?.fieldParams?.renderInUpdate ?? true)) ||
+                                    (action === 'add' && !!(dataFields[field]?.fieldParams?.renderInAdd ?? true))) && (
                                     <Grid item xs={12} sm={6}>
-                                        {!dataFields[field].fieldParams.canEdit && (
+                                        {!!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
                                                 <Typography variant="body2">{dataColumns[field].label}</Typography>
                                                 <Typography variant="body1">
@@ -125,20 +128,22 @@ export const UpdateDialogue = ({
                                                 </Typography>
                                             </>
                                         )}
-                                        {dataFields[field].fieldParams.canEdit && (
+                                        {!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
                                                 {dataFields[field]?.component({
-                                                    id: `${field}-input`,
+                                                    id: field,
+                                                    name: field,
                                                     label: dataColumns[field].label,
-                                                    value: data?.[field],
-                                                    error: isEmptyStr(data?.[field]),
+                                                    value:
+                                                        dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                        data?.[field],
+                                                    error: dataFields[field]?.validate?.(data?.[field]) ?? false,
                                                     onChange: handleChange,
                                                     InputLabelProps: {
                                                         shrink: true,
                                                     },
                                                     inputProps: {
                                                         ['data-testid']: `${field}-input`,
-                                                        ['data-field']: field,
                                                     },
                                                     fullWidth: true,
                                                 })}
@@ -204,10 +209,10 @@ export const UpdateDialogue = ({
 };
 
 UpdateDialogue.propTypes = {
+    action: PropTypes.oneOf(['add', 'edit']).isRequired,
     locale: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     columns: PropTypes.object.isRequired,
-    locationType: PropTypes.string.isRequired,
     title: PropTypes.string,
     confirmationBoxId: PropTypes.string,
     row: PropTypes.object,

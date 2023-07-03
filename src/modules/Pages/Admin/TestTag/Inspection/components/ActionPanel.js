@@ -5,7 +5,7 @@ import { Grid } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Alert from '@material-ui/lab/Alert';
-import DebouncedTextField from './DebouncedTextField';
+import DebouncedTextField from '../../SharedComponents/DebouncedTextField/DebouncedTextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -14,7 +14,8 @@ import Typography from '@material-ui/core/Typography';
 
 import locale from '../../testTag.locale';
 import TabPanel from './TabPanel';
-import { isValidRepair, isValidDiscard, isEmpty, statusEnum } from '../utils/helpers';
+import { isValidRepair, isValidDiscard, statusEnum } from '../utils/helpers';
+import { isEmptyStr } from '../../helpers/helpers';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
@@ -36,7 +37,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
     const [selectedTabValue, setSelectedTabValue] = React.useState(0);
 
     React.useEffect(() => {
-        if (isEmpty(formValues?.inspection_status)) {
+        if (isEmptyStr(formValues?.inspection_status)) {
             handleChange('isRepair')(false);
             handleChange('isDiscarded')(false);
         }
@@ -57,20 +58,21 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
     const isRepairDisabled = React.useMemo(
         () =>
             !!formValues.isDiscarded ||
-            (isEmpty(formValues?.inspection_status) && isEmpty(selectedAsset?.last_inspection?.inspect_status)) ||
-            (isEmpty(formValues?.inspection_status) &&
-                !isEmpty(selectedAsset?.last_inspection?.inspect_status) &&
+            (isEmptyStr(formValues?.inspection_status) && isEmptyStr(selectedAsset?.last_inspection?.inspect_status)) ||
+            (isEmptyStr(formValues?.inspection_status) &&
+                !isEmptyStr(selectedAsset?.last_inspection?.inspect_status) &&
                 selectedAsset?.last_inspection?.inspect_status !== testStatusEnum.FAILED.value) ||
-            (!isEmpty(formValues?.inspection_status) && formValues?.inspection_status !== testStatusEnum.FAILED.value),
+            (!isEmptyStr(formValues?.inspection_status) &&
+                formValues?.inspection_status !== testStatusEnum.FAILED.value),
         [formValues?.isDiscarded, formValues?.inspection_status, selectedAsset?.last_inspection?.inspect_status],
     );
     const isDiscardDisabled = React.useMemo(
         () =>
             !!formValues.isRepair ||
-            (isEmpty(formValues?.inspection_status) && isEmpty(selectedAsset?.last_inspection?.inspect_status)) ||
-            (!isEmpty(selectedAsset?.last_inspection?.inspect_status) &&
+            (isEmptyStr(formValues?.inspection_status) && isEmptyStr(selectedAsset?.last_inspection?.inspect_status)) ||
+            (!isEmptyStr(selectedAsset?.last_inspection?.inspect_status) &&
                 selectedAsset?.last_inspection?.inspect_status === testStatusEnum.OUTFORREPAIR.value) ||
-            (!isEmpty(formValues?.inspection_status) &&
+            (!isEmptyStr(formValues?.inspection_status) &&
                 formValues?.inspection_status !== testStatusEnum.FAILED.value &&
                 formValues?.inspection_status !== testStatusEnum.PASSED.value),
         [formValues?.isRepair, formValues?.inspection_status, selectedAsset?.last_inspection?.inspect_status],

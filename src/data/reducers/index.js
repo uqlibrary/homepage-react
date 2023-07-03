@@ -19,3 +19,10 @@ export { default as testTagOnLoadInspectionReducer } from './testTagOnLoadInspec
 export { default as testTagLocationReducer } from './testTagLocationReducer';
 export { default as testTagAssetsReducer } from './testTagAssetsReducer';
 export { default as testTagSaveInspectionReducer } from './testTagSaveInspectionReducer';
+export { default as testTagSaveAssetTypeReducer } from './testTagSaveAssetTypeReducer';
+export { default as testTagAssetTypesReducer } from './testTagAssetTypesReducer';
+export { default as testTagInspectionDevicesReducer } from './testTagInspectionDevicesReducer';
+export { default as testTagInspectionsDueReducer } from './testTagInspectionsDueReducer';
+export { default as testTagInspectionsByLicencedUserReducer } from './testTagInspectionsByLicencedUserReducer';
+export { default as testTagAssetsByFiltersReducer } from './testTagAssetsByFiltersReducer';
+export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpdateReducer';

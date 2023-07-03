@@ -1,28 +1,29 @@
-import React, { useMemo, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-
-import DataTable from './../../../SharedComponents/DataTable/DataTable';
-
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
-import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
-import { useLocation } from '../../../helpers/hooks';
+import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
+import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
+import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+
+import { useLocationDisplayName } from './hooks';
+import locale from '../../../testTag.locale';
+import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
-import { getColumns, emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
+import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { capitaliseLeadingChar } from '../../../helpers/helpers';
+import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,19 +38,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const actionHandler = {
-    site: actions => {
+    [locationType.site]: actions => {
         actions.clearSites();
         actions.loadSites();
     },
-    building: actions => {
+    [locationType.building]: actions => {
         actions.clearSites();
         actions.loadSites();
     },
-    floor: (actions, location) => {
+    [locationType.floor]: (actions, location) => {
         actions.clearFloors();
         actions.loadFloors(location.building);
     },
-    room: (actions, location) => {
+    [locationType.room]: (actions, location) => {
         actions.clearRooms();
         actions.loadRooms(location.floor);
     },
@@ -58,120 +59,47 @@ const actionHandler = {
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
-    const [selectedFilter, setSelectedFilter] = React.useState('site');
-    const [rows, setRows] = React.useState([]);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
+    const { row, setRow } = useDataTableRow([]);
 
-    const {
-        siteList,
-        siteListLoading,
-        siteListLoaded,
-        // siteListError,
-        // buildingList,
-        // buildingListLoading,
-        // buildingListError,
-        floorList,
-        floorListLoading,
-        floorListLoaded,
-        // floorListError,
-        roomList,
-        roomListLoading,
-        roomListLoaded,
-        // roomListError,
-    } = useSelector(state => state.get?.('testTagLocationReducer'));
+    const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
-
-    React.useEffect(() => {
-        if (roomListLoaded) {
-            if (location.floor !== -1) {
-                setRows(roomList.rooms);
-            } else {
-                setLocation({ room: -1 });
-                actions.clearRooms();
-            }
-            setSelectedFilter('room');
-        } else if (floorListLoaded) {
-            if (location.building !== -1) {
-                setRows(floorList.floors);
-            } else {
-                setRows(
-                    siteList
-                        ?.find(site => site.site_id === location.site)
-                        ?.buildings?.find(building => building.building_id === location.building)?.floors ?? [],
-                );
-                setLocation({ floor: -1, room: -1 });
-                actions.clearFloors();
-            }
-            setSelectedFilter('floor');
-        } else if (siteListLoaded) {
-            if (location.site !== -1) {
-                setRows(siteList.find(site => site.site_id === location.site).buildings);
-                setSelectedFilter('building');
-            } else {
-                setRows(siteList);
-                setLocation({ building: -1, floor: -1, room: -1 });
-                setSelectedFilter('site');
-            }
-        } else actions.loadSites();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.site, location.building, location.floor, siteListLoaded, floorListLoaded, roomListLoaded]);
-
+    const { selectedLocation } = useSelectLocation({
+        location,
+        setLocation,
+        setRow,
+        actions,
+        store,
+    });
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info' });
-    };
-
-    const getLocationDisplayedAs = React.useMemo(
-        () => {
-            const value = {
-                site: siteList?.find(site => site.site_id === location.site)?.site_id_displayed,
-                building: siteList
-                    ?.find(site => site.site_id === location.site)
-                    ?.buildings?.find(building => building.building_id === location.building)?.building_id_displayed,
-                floor: floorList?.floors?.find(floor => floor.floor_id === location.floor)?.floor_id_displayed,
-            };
-            return value;
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [location, siteList, floorList],
-    );
-
-    const closeDialog = () => actionDispatch({ type: 'clear' });
-
-    const handleApiError = response => {
-        openConfirmationAlert(`Request failed: ${response.message}`, 'error');
-    };
+    const { locationDisplayedAs } = useLocationDisplayName(location, store.siteList, store.floorList);
 
     const handleAddClick = React.useCallback(() => {
         actionDispatch({
             type: 'add',
-            title: pageLocale.dialogAdd.confirmationTitle(selectedFilter),
-            selectedFilter,
+            title: pageLocale.dialogAdd.confirmationTitle(selectedLocation),
+            selectedLocation,
             location,
-            displayLocation: getLocationDisplayedAs,
+            displayLocation: locationDisplayedAs,
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location, selectedFilter, getLocationDisplayedAs]);
+    }, [location, selectedLocation, locationDisplayedAs]);
 
     const handleEditClick = React.useCallback(
         ({ id, api }) => {
             const row = api.getRow(id);
             actionDispatch({
                 type: 'edit',
-                title: pageLocale.dialogEdit.confirmationTitle(selectedFilter),
+                title: pageLocale.dialogEdit.confirmationTitle(selectedLocation),
                 row,
-                selectedFilter,
+                selectedLocation,
                 location,
-                displayLocation: getLocationDisplayedAs,
+                displayLocation: locationDisplayedAs,
             });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [location, selectedFilter, getLocationDisplayedAs],
+        [location, selectedLocation, locationDisplayedAs],
     );
 
     const handleDeleteClick = React.useCallback(
@@ -180,112 +108,120 @@ const ManageLocations = ({ actions }) => {
             actionDispatch({
                 type: 'delete',
                 row,
-                selectedFilter,
+                selectedLocation,
                 location,
-                displayLocation: getLocationDisplayedAs,
+                displayLocation: locationDisplayedAs,
             });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [location, selectedFilter, getLocationDisplayedAs],
+        [location, selectedLocation, locationDisplayedAs],
     );
+    const shouldDisableDelete = row => (row?.asset_count ?? 1) === 0;
+
+    const { columns } = useDataTableColumns({
+        config,
+        locale: pageLocale.form.columns,
+        filterKey: selectedLocation,
+        handleEditClick,
+        handleDeleteClick,
+        shouldDisableDelete,
+    });
+
+    const closeConfirmationAlert = () => {
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+    };
+    const openConfirmationAlert = (message, type) => {
+        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
+    };
+
+    const closeDialog = () => actionDispatch({ type: 'clear' });
+
+    const handleApiError = response => {
+        openConfirmationAlert(`Request failed: ${response.message}`, 'error');
+    };
 
     const onRowAdd = React.useCallback(
         data => {
             setDialogueBusy(true);
             const request = structuredClone(data);
-            const wrappedRequest = transformAddRequest({ request, selectedFilter, location });
+            const wrappedRequest = transformAddRequest({ request, selectedLocation, location });
 
             actions
-                .addLocation({ type: selectedFilter, request: wrappedRequest })
+                .addLocation({ type: selectedLocation, request: wrappedRequest })
                 .then(() => {
                     closeDialog();
                     openConfirmationAlert(
-                        pageLocale.alerts.addSuccess(capitaliseLeadingChar(selectedFilter)),
+                        pageLocale.alerts.addSuccess(capitaliseLeadingChar(selectedLocation)),
                         'success',
                     );
-                    actionHandler[selectedFilter](actions, location);
+                    actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
-                    handleApiError({ message: pageLocale.alerts.addFail(capitaliseLeadingChar(selectedFilter)) });
+                    console.error(error);
+                    handleApiError({ message: pageLocale.alerts.addFail(capitaliseLeadingChar(selectedLocation)) });
                 })
                 .finally(() => {
                     setDialogueBusy(false);
                 });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [location, selectedFilter],
+        [location, selectedLocation],
     );
 
     const onRowEdit = React.useCallback(
         data => {
             setDialogueBusy(true);
             const request = structuredClone(data);
-            const wrappedRequest = transformUpdateRequest({ request, selectedFilter, location });
+            const wrappedRequest = transformUpdateRequest({ request, selectedLocation, location });
 
             actions
-                .updateLocation({ type: selectedFilter, request: wrappedRequest })
+                .updateLocation({ type: selectedLocation, request: wrappedRequest })
                 .then(() => {
                     closeDialog();
                     openConfirmationAlert(
-                        pageLocale.alerts.updateSuccess(capitaliseLeadingChar(selectedFilter)),
+                        pageLocale.alerts.updateSuccess(capitaliseLeadingChar(selectedLocation)),
                         'success',
                     );
-                    actionHandler[selectedFilter](actions, location);
+                    actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
-                    handleApiError({ message: pageLocale.alerts.updateFail(capitaliseLeadingChar(selectedFilter)) });
+                    console.error(error);
+                    handleApiError({ message: pageLocale.alerts.updateFail(capitaliseLeadingChar(selectedLocation)) });
                 })
                 .finally(() => {
                     setDialogueBusy(false);
                 });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [location, selectedFilter],
+        [location, selectedLocation],
     );
 
     const onRowDelete = React.useCallback(
         data => {
             setDialogueBusy(true);
-            const selectedFilter = data.props.selectedFilter;
-            const id = data.row[`${selectedFilter}_id`];
+            const selectedLocation = data.props.selectedLocation;
+            const id = data.row[`${selectedLocation}_id`];
 
             actions
-                .deleteLocation({ type: selectedFilter, id })
+                .deleteLocation({ type: selectedLocation, id })
                 .then(() => {
                     closeDialog();
                     openConfirmationAlert(
-                        pageLocale.alerts.deleteSuccess(capitaliseLeadingChar(selectedFilter)),
+                        pageLocale.alerts.deleteSuccess(capitaliseLeadingChar(selectedLocation)),
                         'success',
                     );
-                    actionHandler[selectedFilter](actions, location);
+                    actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
-                    console.log(error);
-                    handleApiError({ message: pageLocale.alerts.deleteFail(capitaliseLeadingChar(selectedFilter)) });
+                    console.error(error);
+                    handleApiError({ message: pageLocale.alerts.deleteFail(capitaliseLeadingChar(selectedLocation)) });
                 })
                 .finally(() => {
                     setDialogueBusy(false);
                 });
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [location, selectedFilter],
-    );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const columns = useMemo(
-        () =>
-            getColumns({
-                config,
-                locale: pageLocale.form.columns,
-                selectedFilter,
-                handleEditClick,
-                handleDeleteClick,
-            }),
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [handleDeleteClick, handleEditClick, selectedFilter],
+        [location, selectedLocation],
     );
 
     return (
@@ -295,15 +231,16 @@ const ManageLocations = ({ actions }) => {
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <div className={classes.root}>
-                <StandardCard noHeader>
+                <StandardCard title={pageLocale.form.title}>
                     <UpdateDialog
                         title={actionState.title}
+                        action="add"
                         updateDialogueBoxId="addRow"
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
-                        locationType={selectedFilter}
-                        fields={config?.[selectedFilter].fields ?? []}
-                        columns={pageLocale.form.columns[selectedFilter]}
+                        locationType={selectedLocation}
+                        fields={config?.[selectedLocation].fields ?? []}
+                        columns={pageLocale.form.columns[selectedLocation]}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
                         onAction={onRowAdd}
@@ -312,12 +249,13 @@ const ManageLocations = ({ actions }) => {
                     />
                     <UpdateDialog
                         title={actionState.title}
+                        action="edit"
                         updateDialogueBoxId="editRow"
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
-                        locationType={selectedFilter}
-                        fields={config?.[selectedFilter].fields ?? []}
-                        columns={pageLocale.form.columns[selectedFilter]}
+                        locationType={selectedLocation}
+                        fields={config?.[selectedLocation].fields ?? []}
+                        columns={pageLocale.form.columns[selectedLocation]}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
                         onAction={onRowEdit}
@@ -353,33 +291,30 @@ const ManageLocations = ({ actions }) => {
                         actionProps={{ row: actionState?.row, props: actionState?.props }}
                     />
 
-                    <Grid container spacing={0} className={classes.tableMarginTop}>
-                        <Grid item xs={12} padding={0}>
-                            <Typography variant={'h6'} component={'div'}>
-                                Select location
-                            </Typography>
-                            <LocationPicker
-                                actions={actions}
-                                location={location}
-                                setLocation={setLocation}
-                                hide={['room']}
-                            />
-                        </Grid>
+                    <Grid container spacing={3}>
+                        <AutoLocationPicker
+                            actions={actions}
+                            location={location}
+                            setLocation={setLocation}
+                            hide={['room']}
+                            hasAllOption
+                            locale={locale.pages.general.locationPicker}
+                        />
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                rows={rows}
+                                rows={row}
                                 columns={columns}
-                                rowId={`${selectedFilter}_id`}
+                                rowId={`${selectedLocation}_id`}
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {
-                                        label: pageLocale.form.addLocationButton(selectedFilter),
+                                        label: pageLocale.form.addLocationButton(selectedLocation),
                                         onClick: handleAddClick,
                                     },
                                 }}
-                                loading={siteListLoading || floorListLoading || roomListLoading}
+                                loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
                                 classes={{ root: classes.gridRoot }}
                             />
                         </Grid>
@@ -388,6 +323,7 @@ const ManageLocations = ({ actions }) => {
                         isOpen={confirmationAlert.visible}
                         message={confirmationAlert.message}
                         type={confirmationAlert.type}
+                        autoHideDuration={confirmationAlert.autoHideDuration}
                         closeAlert={closeConfirmationAlert}
                     />
                 </StandardCard>

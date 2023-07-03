@@ -27,16 +27,14 @@ const handlers = {
         siteListLoaded: false,
         siteListError: false,
     }),
-    [actions.TESTTAG_SITE_LIST_LOADED]: (state, action) => {
-        return {
-            ...initialState,
-            ...state,
-            siteListLoading: false,
-            siteListLoaded: true,
-            siteListError: false,
-            siteList: action.payload,
-        };
-    },
+    [actions.TESTTAG_SITE_LIST_LOADED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        siteListLoading: false,
+        siteListLoaded: true,
+        siteListError: false,
+        siteList: action.payload,
+    }),
     [actions.TESTTAG_SITE_LIST_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
@@ -44,13 +42,8 @@ const handlers = {
         siteListLoaded: false,
         siteListError: action.payload,
     }),
-    [actions.TESTTAG_SITE_LIST_CLEAR]: state => ({
+    [actions.TESTTAG_SITE_LIST_CLEAR]: () => ({
         ...initialState,
-        ...state,
-        siteListLoading: false,
-        siteListLoaded: false,
-        siteListError: null,
-        siteList: null,
     }),
 
     [actions.TESTTAG_BUILDING_LIST_LOADING]: state => ({
@@ -82,7 +75,7 @@ const handlers = {
         ...state,
         buildingListLoading: false,
         buildingListLoaded: false,
-        buildingListError: null,
+        buildingListError: false,
         buildingList: null,
     }),
 
@@ -113,10 +106,15 @@ const handlers = {
     [actions.TESTTAG_FLOOR_LIST_CLEAR]: state => ({
         ...initialState,
         ...state,
+
+        floorList: null,
         floorListLoading: false,
         floorListLoaded: false,
         floorListError: null,
-        floorList: null,
+        roomList: null,
+        roomListLoading: false,
+        roomListLoaded: false,
+        roomListError: null,
     }),
 
     [actions.TESTTAG_ROOM_LIST_LOADING]: state => ({
@@ -146,10 +144,11 @@ const handlers = {
     [actions.TESTTAG_ROOM_LIST_CLEAR]: state => ({
         ...initialState,
         ...state,
+
+        roomList: null,
         roomListLoading: false,
         roomListLoaded: false,
         roomListError: null,
-        roomList: null,
     }),
 };
 

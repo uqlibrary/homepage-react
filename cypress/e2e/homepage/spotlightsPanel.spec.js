@@ -45,10 +45,8 @@ context('Spotlights on homepage', () => {
     it('Spotlights homepage controls act as expected', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
-        cy.log('Spootlights navigation tests');
-        cy.get(
-            '[alt="Academic Integrity Modules - Everything you need to know about academic integrity at UQ"]',
-        ).should('be.visible');
+        cy.log('Spotlights navigation tests');
+        cy.get('[data-testid="spotlights-slide-0"] img').should('be.visible');
 
         // first spotlights panel starts with focus
         slideWithFocusIs(0, 'first');

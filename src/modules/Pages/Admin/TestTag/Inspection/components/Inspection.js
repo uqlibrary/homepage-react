@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -19,8 +19,8 @@ import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAu
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
-import { useForm, useValidation } from '../utils/hooks';
-import { useLocation } from '../../helpers/hooks';
+import { useValidation } from '../utils/hooks';
+import { useLocation, useForm } from '../../helpers/hooks';
 import locale from '../../testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
@@ -142,12 +142,14 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
+    addNewLabel: {
+        width: '100%',
+    },
 }));
 
 const Inspection = ({
     actions,
     defaultFormValues,
-    currentRetestList,
     defaultNextTestDateValue,
     assetsListError,
     inspectionConfig,
@@ -159,6 +161,9 @@ const Inspection = ({
     saveInspectionSaving,
     saveInspectionSuccess,
     saveInspectionError,
+    saveAssetTypeSaving,
+    saveAssetTypeSuccess,
+    saveAssetTypeError,
 }) => {
     const classes = useStyles();
     const theme = useTheme();
@@ -177,7 +182,7 @@ const Inspection = ({
                 ...defaultFormValues,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
-                room_id: location?.formRoomId ?? undefined,
+                room_id: location?.room ?? undefined,
                 action_date: formValues?.action_date ?? today,
                 inspection_device_id:
                     formValues?.inspection_device_id !== undefined
@@ -217,10 +222,15 @@ const Inspection = ({
         assetsListError,
     ]);
 
+    const [createdAssetTypeName, setCreatedAssetTypeName] = React.useState(null);
+
     const [inView, setInView] = React.useState(false);
 
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues, location);
+
+        console.log('assignCurrentAsset', { asset, location, formValues, newFormValues });
+
         resetFormValues(newFormValues);
         setSelectedAsset(asset);
     };
@@ -233,7 +243,7 @@ const Inspection = ({
         !!scroll && scrollToTopOfPage();
         assignCurrentAsset({});
     };
-    useEffect(() => {
+    useLayoutEffect(() => {
         /* istanbul ignore else */ if (
             formValues?.asset_id_displayed === undefined &&
             assetIdElementRef.current &&
@@ -280,6 +290,7 @@ const Inspection = ({
                 selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
             );
             actions.saveInspection(transformedData);
+            setCreatedAssetTypeName(null);
         }
     };
 
@@ -352,7 +363,6 @@ const Inspection = ({
                 actions={actions}
                 location={location}
                 resetForm={() => resetForm()}
-                currentRetestList={currentRetestList}
                 formValues={formValues}
                 selectedAsset={selectedAsset}
                 assignCurrentAsset={assignCurrentAsset}
@@ -362,7 +372,13 @@ const Inspection = ({
                 setSelectedAsset={setSelectedAsset}
                 defaultNextTestDateValue={defaultNextTestDateValue}
                 saveInspectionSaving={saveInspectionSaving}
+                saveAssetTypeSaving={saveAssetTypeSaving}
+                saveAssetTypeSuccess={saveAssetTypeSuccess}
+                saveAssetTypeError={saveAssetTypeError}
                 isMobileView={isMobileView}
+                canAddAssetType
+                createdAssetTypeName={createdAssetTypeName}
+                setCreatedAssetTypeName={setCreatedAssetTypeName}
             />
             <InView onChange={setInView} rootMargin="200% 0px 0px 0px" threshold={0}>
                 <AppBar component={'div'} className={appbarDynamicClasses}>
@@ -409,8 +425,7 @@ const Inspection = ({
 Inspection.propTypes = {
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
-    currentRetestList: PropTypes.array,
-    defaultNextTestDateValue: PropTypes.number,
+    defaultNextTestDateValue: PropTypes.string,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,
@@ -427,6 +442,9 @@ Inspection.propTypes = {
     saveInspectionSaving: PropTypes.bool,
     saveInspectionSuccess: PropTypes.any,
     saveInspectionError: PropTypes.any,
+    saveAssetTypeSaving: PropTypes.bool,
+    saveAssetTypeSuccess: PropTypes.any,
+    saveAssetTypeError: PropTypes.any,
 };
 
 export default React.memo(Inspection);
