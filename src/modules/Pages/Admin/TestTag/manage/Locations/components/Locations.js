@@ -116,7 +116,7 @@ const ManageLocations = ({ actions }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [location, selectedLocation, locationDisplayedAs],
     );
-    const shouldDisableDelete = row => (row?.asset_count ?? 1) === 0;
+    const shouldDisableDelete = row => (row?.asset_count ?? 1) > 0;
 
     const { columns } = useDataTableColumns({
         config,
