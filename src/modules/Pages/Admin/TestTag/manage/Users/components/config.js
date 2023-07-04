@@ -19,41 +19,57 @@ export default {
             fieldParams: { canEdit: false },
         },
         user_name: {
-            label: 'Name',
             component: props => <TextField {...props} />,
             fieldParams: { canEdit: true, flex: 1 },
         },
+        user_licence_number: {
+            component: props => <TextField {...props} />,
+            fieldParams: { canEdit: true, renderInUpdate: true, renderInAdd: true, renderInTable: false },
+        },
         can_admin: {
-            label: 'Admin',
-            isBoolean: true,
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+        },
+        can_admin_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} {...props} />} label={'Admin'} />
+                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Admin'} />
             ),
-            fieldParams: { canEdit: true },
+            fieldParams: { canEdit: true, renderInTable: false },
         },
         can_inspect: {
-            label: 'Inspect',
-            isBoolean: true,
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+        },
+        can_inspect_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} {...props} />} label={'Inspect'} />
+                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Inspect'} />
             ),
-            fieldParams: { canEdit: true },
+            fieldParams: { canEdit: true, renderInTable: false },
         },
         can_alter: {
-            label: 'Alter',
-            isBoolean: true,
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+        },
+        can_alter_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} {...props} />} label={'Alter'} />
+                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Alter'} />
             ),
-            fieldParams: { canEdit: true },
+            fieldParams: { canEdit: true, renderInTable: false },
         },
         can_see_reports: {
-            label: 'Report',
-            isBoolean: true,
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+        },
+        can_see_reports_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value === 'Yes'} {...props} />} label={'Report'} />
+                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Report'} />
             ),
-            fieldParams: { canEdit: true },
+            fieldParams: { canEdit: true, renderInTable: false },
+        },
+        user_current_flag: {
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+        },
+        user_current_flag_cb: {
+            component: props => (
+                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Is Current'} />
+            ),
+            fieldParams: { canEdit: true, renderInTable: false },
         },
     },
 };

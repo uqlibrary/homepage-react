@@ -680,17 +680,38 @@ export default {
                         user_name: {
                             label: 'Name',
                         },
+                        user_licence_number: {
+                            label: 'Lic #',
+                        },
                         can_admin: {
+                            label: 'Admin',
+                        },
+                        can_admin_cb: {
                             label: 'Admin',
                         },
                         can_inspect: {
                             label: 'Inspect',
                         },
+                        can_inspect_cb: {
+                            label: 'Admin',
+                        },
                         can_alter: {
                             label: 'Alter',
                         },
+                        can_alter_cb: {
+                            label: 'Admin',
+                        },
                         can_see_reports: {
                             label: 'Report',
+                        },
+                        can_see_reports_cb: {
+                            label: 'Admin',
+                        },
+                        user_current_flag: {
+                            label: 'Is Current',
+                        },
+                        user_current_flag_cb: {
+                            label: 'Is Current',
                         },
                     },
                 },
