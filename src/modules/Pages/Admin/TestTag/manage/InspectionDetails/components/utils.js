@@ -12,10 +12,20 @@ export const transformRow = row => {
             asset_status: line.asset_status,
             user_name: line.last_inspection?.user_name,
             inspect_date: !!line.last_inspection ? moment(line.last_inspection.inspect_date).format(dateFormat) : '',
-            inspect_notes: line.last_inspection?.inspect_notes,
-            inspect_fail_reason: line.last_inspection?.inspect_fail_reason,
-            discard_reason: line.last_discard?.discard_reason,
-            repairer_name: line.last_repair?.repairer_name,
+            inspect_notes: line.last_inspection?.inspect_notes ?? '',
+            inspect_fail_reason: line.last_inspection?.inspect_fail_reason ?? '',
+            discard_reason: line.last_discard?.discard_reason ?? '',
+            repairer_name: line.last_repair?.repairer_name ?? '',
+            last_inspect_status: line.last_inspection?.inspect_status ?? '',
         };
     });
+};
+
+export const transformUpdateRequest = request => {
+    const newRequest = structuredClone(request);
+    const fieldsToKeep = ['inspect_notes', 'inspect_fail_reason', 'discard_reason', 'repairer_name'];
+    Object.keys(request).forEach(key => {
+        if (!fieldsToKeep.includes(key)) delete newRequest[key];
+    });
+    return newRequest;
 };

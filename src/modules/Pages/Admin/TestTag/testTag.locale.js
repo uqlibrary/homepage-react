@@ -29,10 +29,12 @@ export default {
         ],
         assetStatus: {
             current: 'CURRENT',
-            passed: 'PASSED',
-            failed: 'FAILED',
             outforrepair: 'OUTFORREPAIR',
             discarded: 'DISCARDED',
+        },
+        inspectStatus: {
+            passed: 'PASSED',
+            failed: 'FAILED',
         },
         assetStatusOptions: [
             { value: 'CURRENT', label: 'Current' },
@@ -41,6 +43,11 @@ export default {
             { value: 'FAILED', label: 'Failed' },
             { value: 'OUTFORREPAIR', label: 'Out for Repair' },
         ],
+        alerts: {
+            success: () => 'Request successfully completed',
+            error: err => `Encountered an error: ${err}`,
+            failed: err => `Operation failed: ${err}`,
+        },
     },
     pages: {
         general: {

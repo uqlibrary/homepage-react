@@ -7,6 +7,7 @@ import * as actions from 'data/actions';
 export const mapStateToProps = state => {
     return {
         ...state.get('testTagAssetsReducer'),
+        ...state.get('testTagInspectionDetailsUpdateReducer'),
     };
 };
 

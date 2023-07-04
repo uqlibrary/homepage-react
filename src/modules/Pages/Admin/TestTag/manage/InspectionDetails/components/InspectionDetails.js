@@ -16,7 +16,7 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
-import { transformRow } from './utils';
+import { transformRow, transformUpdateRequest } from './utils';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -58,6 +58,8 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
 
     const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
+    const searchPatternRef = React.useRef('');
+
     const closeConfirmationAlert = () => {
         setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
     };
@@ -67,8 +69,16 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
 
+    const onSearch = pattern => {
+        searchPatternRef.current = pattern;
+    };
+
+    const repeatCurrentSearch = () => {
+        actions.loadAssets(searchPatternRef.current);
+    };
+
     const handleApiError = response => {
-        openConfirmationAlert(`Request failed: ${response.message}`, 'error');
+        openConfirmationAlert(locale.config.alerts.error(response.message), 'error');
     };
 
     const handleEditClick = ({ id, api }) => {
@@ -83,24 +93,24 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
 
     const onRowEdit = data => {
         setDialogueBusy(true);
-        // const id = data.device_id;
-        // const request = structuredClone(data);
-        // const wrappedRequest = transformUpdateRequest(request);
-        // console.log('edit', wrappedRequest);
-        // actions
-        //     .updateInspectionDevice(id, wrappedRequest)
-        //     .then(() => {
-        //         closeDialog();
-        //         openConfirmationAlert(pageLocale.alerts?.updateSuccess, 'success');
-        //         actions.clearInspectionDevices();
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //         handleApiError({ message: pageLocale.alerts?.updateFail });
-        //     })
-        //     .finally(() => {
-        //         setDialogueBusy(false);
-        //     });
+        console.log(data);
+        const id = data.asset_id;
+        const request = structuredClone(data);
+        const wrappedRequest = transformUpdateRequest(request);
+        actions
+            .updateInspectionDetails(id, wrappedRequest)
+            .then(() => {
+                closeDialog();
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
+                repeatCurrentSearch();
+            })
+            .catch(error => {
+                console.error(error);
+                handleApiError({ message: error.message });
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
     };
 
     const { columns } = useDataTableColumns({
@@ -144,6 +154,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                                 required={false}
                                 clearOnSelect={false}
                                 headless
+                                onSearch={onSearch}
                             />
                         </Grid>
                     </Grid>
@@ -174,6 +185,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
 };
 
 InspectionDetails.propTypes = {
+    actions: PropTypes.object,
     assetsList: PropTypes.any,
     assetsListLoading: PropTypes.bool,
     assetsListError: PropTypes.any,

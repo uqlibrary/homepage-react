@@ -34,6 +34,7 @@ const AssetSelector = ({
     inputRef,
     onChange,
     onReset,
+    onSearch,
     validateAssetId,
 }) => {
     const previousValueRef = React.useRef(null);
@@ -48,7 +49,10 @@ const AssetSelector = ({
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
             setCurrentValue(assetPartial);
-            !!assetPartial && assetPartial.length >= minAssetIdLength && dispatch(actions.loadAssets(assetPartial));
+            if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
+                onSearch?.(assetPartial);
+                dispatch(actions.loadAssets(assetPartial));
+            }
         }),
     ).current;
 
@@ -196,6 +200,7 @@ AssetSelector.propTypes = {
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
     inputRef: PropTypes.any,
     onChange: PropTypes.func,
+    onSearch: PropTypes.func,
     onReset: PropTypes.func,
     validateAssetId: PropTypes.func,
 };

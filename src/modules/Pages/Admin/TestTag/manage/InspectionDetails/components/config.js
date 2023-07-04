@@ -26,19 +26,22 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false },
         },
         inspect_fail_reason: {
-            component: props => (
-                <TextField
-                    {...props}
-                    multiline
-                    minRows={2}
-                    disabled={props.row.asset_status === locale.config.assetStatus.current}
-                    required={props.row.asset_status === locale.config.assetStatus.failed}
-                />
-            ),
+            component: props => {
+                console.log(props, props.row.last_inspection?.inspect_status, locale.config.inspectStatus.failed);
+                return (
+                    <TextField
+                        {...props}
+                        multiline
+                        minRows={2}
+                        disabled={props.row.asset_status === locale.config.assetStatus.current}
+                        required={props.row?.last_inspect_status === locale.config.inspectStatus.failed ?? false}
+                    />
+                );
+            },
+
             validate: (value, row) => {
-                console.log('>', row);
                 // should return true if a validation error exists
-                return row?.asset_status === locale.config.assetStatus.failed && isEmptyStr(value);
+                return row?.last_inspect_status === locale.config.inspectStatus.failed && isEmptyStr(value);
             },
             fieldParams: { canEdit: true, renderInTable: false },
         },

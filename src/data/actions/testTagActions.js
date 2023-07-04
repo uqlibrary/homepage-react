@@ -27,6 +27,7 @@ import {
     TEST_TAG_TAGGED_BUILDING_LIST,
     TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST,
     TEST_TAG_BULK_UPDATE_API,
+    TEST_TAG_MODIFY_INSPECTION_DETAILS_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -582,6 +583,35 @@ export function deleteAssetType(id) {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_DELETE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+/* INSPECTION DETAILS UPDATE */
+export function updateInspectionDetails(id, request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DETAILS_UPDATING });
+        return post(TEST_TAG_MODIFY_INSPECTION_DETAILS_API(id), request)
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DETAILS_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DETAILS_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_DETAILS_UPDATE_FAILED,
                     payload: error.message,
                 });
                 return Promise.reject(error);
