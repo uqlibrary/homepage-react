@@ -29,6 +29,7 @@ export default {
         ],
         assetStatus: {
             current: 'CURRENT',
+            failed: 'FAILED',
             outforrepair: 'OUTFORREPAIR',
             discarded: 'DISCARDED',
         },
@@ -69,6 +70,10 @@ export default {
                     labelAll: 'All floors',
                 },
                 room: { label: 'Room', labelAll: 'All rooms' },
+            },
+            helperText: {
+                maxChars: count => `Max ${count} characters`,
+                minChars: count => `Min ${count} characters`,
             },
         },
         dashboard: {

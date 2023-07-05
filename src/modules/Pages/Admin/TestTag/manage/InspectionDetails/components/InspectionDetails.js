@@ -95,8 +95,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
         setDialogueBusy(true);
         console.log(data);
         const id = data.asset_id;
-        const request = structuredClone(data);
-        const wrappedRequest = transformUpdateRequest(request);
+        const wrappedRequest = transformUpdateRequest(data);
         actions
             .updateInspectionDetails(id, wrappedRequest)
             .then(() => {
@@ -132,7 +131,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                     <UpdateDialog
                         title={actionState.title}
                         action="edit"
-                        updateDialogueBoxId="editRow"
+                        id="inspection-details"
                         isOpen={actionState.isEdit}
                         locale={pageLocale?.dialogEdit}
                         fields={config?.fields ?? []}
@@ -146,7 +145,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                     <Grid container spacing={3}>
                         <Grid item padding={3} xs={12} md={4} style={{ flex: 1 }}>
                             <AssetSelector
-                                id="assetId"
+                                id="inspection-details"
                                 locale={pageLocale.form}
                                 user={user}
                                 classNames={{ formControl: classes.formControl }}
@@ -163,6 +162,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                             <DataTable
                                 rows={row}
                                 columns={columns}
+                                id="inspection-details"
                                 rowId={'asset_id'}
                                 loading={assetsListLoading}
                                 classes={{ root: classes.gridRoot }}

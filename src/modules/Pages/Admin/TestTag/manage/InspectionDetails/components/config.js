@@ -27,13 +27,12 @@ export default {
         },
         inspect_fail_reason: {
             component: props => {
-                console.log(props, props.row.last_inspection?.inspect_status, locale.config.inspectStatus.failed);
                 return (
                     <TextField
                         {...props}
                         multiline
                         minRows={2}
-                        disabled={props.row.asset_status === locale.config.assetStatus.current}
+                        disabled={props.row?.last_inspect_status !== locale.config.inspectStatus.failed ?? false}
                         required={props.row?.last_inspect_status === locale.config.inspectStatus.failed ?? false}
                     />
                 );

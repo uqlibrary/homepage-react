@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { DataGrid } from '@mui/x-data-grid';
 
-const DataTable = ({ rows = [], columns = [], rowId, autoHeight = true, height, ...rest }) => {
+const DataTable = ({ rows = [], columns = [], id, rowId, autoHeight = true, height, ...rest }) => {
     delete rest.editMode;
     delete rest.getRowId;
 
     return (
         <Box display={'flex'} {...(autoHeight === false ? { height: height ?? 400 } : {})} width={'100%'}>
-            <Box flexGrow={1}>
+            <Box flexGrow={1} id={`data_table-${id}`} data-testid={`data_table-${id}`}>
                 <DataGrid
                     rows={rows}
                     columns={columns}
@@ -30,6 +30,7 @@ const DataTable = ({ rows = [], columns = [], rowId, autoHeight = true, height, 
 DataTable.propTypes = {
     rows: PropTypes.array,
     columns: PropTypes.array,
+    id: PropTypes.string.isRequired,
     rowId: PropTypes.string.isRequired,
     toolbarComponent: PropTypes.object,
     autoHeight: PropTypes.bool,

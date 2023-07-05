@@ -83,8 +83,8 @@ const AssetSelector = ({
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
-                id={`${id}-select`}
-                data-testid={`${id}-select`}
+                id={`asset_selector-${id}`}
+                data-testid={`asset_selector-${id}`}
                 className={classNames.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
@@ -149,7 +149,7 @@ const AssetSelector = ({
                         variant="standard"
                         onFocus={() => setIsOpen(true)}
                         onBlur={() => setIsOpen(false)}
-                        InputLabelProps={{ shrink: true, htmlFor: `${id}-input` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `asset_selector-${id}-input` }}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -158,8 +158,8 @@ const AssetSelector = ({
                                         <CircularProgress
                                             color="inherit"
                                             size={20}
-                                            id="assetIdSpinner"
-                                            data-testid="assetIdSpinner"
+                                            id={`asset_selector-${id}-progress`}
+                                            data-testid={`asset_selector-${id}-progress`}
                                         />
                                     ) : null}
                                     {params.InputProps.endAdornment}
@@ -173,8 +173,8 @@ const AssetSelector = ({
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `${id}-input`,
-                            'data-testid': `${id}-input`,
+                            id: `asset_selector-${id}-input`,
+                            'data-testid': `asset_selector-${id}-input`,
                             maxLength: 12,
                         }}
                     />

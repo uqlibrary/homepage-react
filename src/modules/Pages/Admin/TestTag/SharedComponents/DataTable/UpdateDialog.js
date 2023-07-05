@@ -36,11 +36,10 @@ export const useStyles = makeStyles(theme => ({
 
 export const UpdateDialogue = ({
     action,
-    confirmationBoxId = 'dialogBox',
     locale,
     isOpen,
     title,
-    updateDialogueBoxId = 'actionDialogBox',
+    id = 'action',
     hideActionButton = false,
     hideCancelButton = false,
     onAction,
@@ -93,7 +92,7 @@ export const UpdateDialogue = ({
     const handleChange = event => {
         setData({
             ...data,
-            [event.target.id]: event.target.value,
+            [event.target.name]: event.target.value,
         });
     };
 
@@ -102,11 +101,17 @@ export const UpdateDialogue = ({
             classes={{ paper: classes.dialogPaper }}
             style={{ padding: 6 }}
             open={isOpen}
-            id={`dialogbox-${updateDialogueBoxId}`}
-            data-testid={`dialogbox-${updateDialogueBoxId}`}
+            id={`dialog-${id}`}
+            data-testid={`dialog-${id}`}
         >
-            <DialogTitle data-testid="message-title">{title}</DialogTitle>
-            <DialogContent style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}>
+            <DialogTitle id={`dialog-${id}-title`} data-testid={`dialog-${id}-title`}>
+                {title}
+            </DialogTitle>
+            <DialogContent
+                id={`dialog-${id}-content`}
+                data-testid={`dialog-${id}-content`}
+                style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}
+            >
                 <Grid container padding={0} spacing={2}>
                     {isOpen &&
                         !!data &&
@@ -132,7 +137,7 @@ export const UpdateDialogue = ({
                                         {!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
                                                 {dataFields[field]?.component({
-                                                    id: field,
+                                                    id: `${field}-input`,
                                                     name: field,
                                                     label: dataColumns[field].label,
                                                     value:
@@ -158,7 +163,7 @@ export const UpdateDialogue = ({
                 </Grid>
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
-                <DialogActions>
+                <DialogActions id={`dialog-${id}-actions`} data-testid={`dialog-${id}-actions`}>
                     <Grid container spacing={3}>
                         {!hideCancelButton && (
                             <Grid item xs={12} sm>
@@ -166,8 +171,8 @@ export const UpdateDialogue = ({
                                     <Button
                                         variant={'outlined'}
                                         onClick={_onCancelAction}
-                                        id="confirm-cancel-action"
-                                        data-testid={`cancel-${confirmationBoxId}`}
+                                        id={`dialog-${id}-cancel-button`}
+                                        data-testid={`dialog-${id}-cancel-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy}
                                     >
@@ -184,8 +189,8 @@ export const UpdateDialogue = ({
                                         autoFocus
                                         color={'primary'}
                                         onClick={_onAction}
-                                        id="confirm-action"
-                                        data-testid={`confirm-${confirmationBoxId}`}
+                                        id={`dialog-${id}-confirm-button`}
+                                        data-testid={`dialog-${id}-confirm-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy || !isValid}
                                     >
@@ -193,8 +198,8 @@ export const UpdateDialogue = ({
                                             <CircularProgress
                                                 color="inherit"
                                                 size={25}
-                                                id="saveInspectionSpinner"
-                                                data-testid="saveInspectionSpinner"
+                                                id={`dialog-${id}-progress`}
+                                                data-testid={`dialog-${id}-progress`}
                                             />
                                         ) : (
                                             locale.confirmButtonLabel
@@ -215,12 +220,12 @@ UpdateDialogue.propTypes = {
     locale: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     columns: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
     title: PropTypes.string,
     confirmationBoxId: PropTypes.string,
     row: PropTypes.object,
     isOpen: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
-    updateDialogueBoxId: PropTypes.string,
     hideActionButton: PropTypes.bool,
     hideCancelButton: PropTypes.bool,
     onAction: PropTypes.func,

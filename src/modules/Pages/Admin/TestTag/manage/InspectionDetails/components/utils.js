@@ -22,10 +22,30 @@ export const transformRow = row => {
 };
 
 export const transformUpdateRequest = request => {
-    const newRequest = structuredClone(request);
-    const fieldsToKeep = ['inspect_notes', 'inspect_fail_reason', 'discard_reason', 'repairer_name'];
-    Object.keys(request).forEach(key => {
-        if (!fieldsToKeep.includes(key)) delete newRequest[key];
-    });
-    return newRequest;
+    const clonedRequest = structuredClone(request);
+    const { asset_status: assetStatus, last_inspect_status: lastInspectStatus } = clonedRequest;
+    const defaultValues = { inspect_notes: clonedRequest.inspect_notes };
+
+    switch (assetStatus) {
+        case locale.config.assetStatus.current:
+            return defaultValues;
+        case locale.config.assetStatus.failed:
+            return { ...defaultValues, inspect_fail_reason: clonedRequest.inspect_fail_reason };
+        case locale.config.assetStatus.outforrepair:
+            return {
+                ...defaultValues,
+                inspect_fail_reason: clonedRequest.inspect_fail_reason,
+                repairer_name: clonedRequest.repairer_name,
+            };
+        case locale.config.assetStatus.discarded:
+            return {
+                ...defaultValues,
+                ...(lastInspectStatus === locale.config.inspectStatus.failed
+                    ? { inspect_fail_reason: clonedRequest.inspect_fail_reason }
+                    : {}),
+                discard_reason: clonedRequest.discard_reason,
+            };
+        default:
+            return request;
+    }
 };
