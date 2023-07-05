@@ -76,7 +76,7 @@ describe('AssetPanel', () => {
             isValid: false,
         });
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
-        expect(getByTestId('testntagFormAssetId-select')).toBeInTheDocument();
+        expect(getByTestId('asset_selector-testntagFormAssetId')).toBeInTheDocument();
         expect(getByTestId('testntagFormAssetType')).toBeInTheDocument();
     });
 
@@ -124,7 +124,7 @@ describe('AssetPanel', () => {
             },
         });
 
-        expect(getByTestId('assetIdSpinner')).toBeInTheDocument();
+        expect(getByTestId('asset_selector-testntagFormAssetId-progress')).toBeInTheDocument();
         expect(getByTestId('assetTypeSpinner')).toBeInTheDocument();
     });
 
