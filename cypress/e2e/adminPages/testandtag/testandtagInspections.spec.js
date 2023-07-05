@@ -15,9 +15,9 @@ describe('Test and Tag Admin Inspection page', () => {
         });
     };
     const selectAssetId = pattern => {
-        cy.data('testntagFormAssetId-input').click();
+        cy.data('asset_selector-testntagFormAssetId-input').click();
         selectListbox(pattern);
-        cy.data('testntagFormAssetId-input').should('have.value', pattern);
+        cy.data('asset_selector-testntagFormAssetId-input').should('have.value', pattern);
     };
     const selectTestingDevice = pattern => {
         cy.data('testResultTestingDevice').click();
@@ -163,16 +163,16 @@ describe('Test and Tag Admin Inspection page', () => {
             it('should allow entry of new asset IDs (temporary)', () => {
                 cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
                 // this is for code coverage. Will be removed post MVP
-                cy.data('testntagFormAssetId-input').click();
-                cy.data('testntagFormAssetId-input').type('AN ASSET ID{enter}');
-                cy.data('testntagFormAssetId-input').should('have.value', 'AN ASSET ID');
+                cy.data('asset_selector-testntagFormAssetId-input').click();
+                cy.data('asset_selector-testntagFormAssetId-input').type('AN ASSET ID{enter}');
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'AN ASSET ID');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
             it('should allow auto complete of asset ID as mask', () => {
                 cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
                 // Enter partial asset ID for mask search
-                cy.data('testntagFormAssetId-input').click();
-                cy.data('testntagFormAssetId-input').type('123');
+                cy.data('asset_selector-testntagFormAssetId-input').click();
+                cy.data('asset_selector-testntagFormAssetId-input').type('123');
                 cy.wait(3000);
                 // Asset found
                 cy.data('lastInspectionFailChip').should('exist');
@@ -181,26 +181,26 @@ describe('Test and Tag Admin Inspection page', () => {
                 const initialText = 'ABCDEFGHIJKLMNOP'; // not a long enough text
                 const croppedText = 'ABCDEFGHIJKL';
                 // this is for code coverage. Will be removed post MVP
-                cy.data('testntagFormAssetId-input').click();
-                cy.data('testntagFormAssetId-input').type(`${initialText}{enter}`);
-                cy.data('testntagFormAssetId-input').should('have.value', croppedText);
+                cy.data('asset_selector-testntagFormAssetId-input').click();
+                cy.data('asset_selector-testntagFormAssetId-input').type(`${initialText}{enter}`);
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', croppedText);
             });
             it('should allow selection of new asset and type', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
-                cy.data('testntagFormAssetId-input').click();
-                cy.get('#testntagFormAssetId-select-option-0').should('exist');
-                cy.get('#testntagFormAssetId-select-option-0').click();
-                cy.data('testntagFormAssetId-input').should('have.value', 'NEW ASSET');
+                cy.data('asset_selector-testntagFormAssetId-input').click();
+                cy.get('#asset_selector-testntagFormAssetId-option-0').should('exist');
+                cy.get('#asset_selector-testntagFormAssetId-option-0').click();
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'NEW ASSET');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
                 // select asset type
                 selectAssetType('PowerBoard');
             });
             it('should allow creation of new asset type', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
-                cy.data('testntagFormAssetId-input').click();
-                cy.get('#testntagFormAssetId-select-option-0').should('exist');
-                cy.get('#testntagFormAssetId-select-option-0').click();
-                cy.data('testntagFormAssetId-input').should('have.value', 'NEW ASSET');
+                cy.data('asset_selector-testntagFormAssetId-input').click();
+                cy.get('#asset_selector-testntagFormAssetId-option-0').should('exist');
+                cy.get('#asset_selector-testntagFormAssetId-option-0').click();
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'NEW ASSET');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
 
                 cy.data('testntagFormAssetTypeInput')
@@ -242,21 +242,21 @@ describe('Test and Tag Admin Inspection page', () => {
             });
             it('should allow selection of existing asset', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
-                cy.data('testntagFormAssetId-input').type('UQL3100');
+                cy.data('asset_selector-testntagFormAssetId-input').type('UQL3100');
                 cy.wait(3000);
-                cy.get('#testntagFormAssetId-select-option-0').contains('UQL31000');
-                cy.get('#testntagFormAssetId-select-option-0').click();
-                cy.data('testntagFormAssetId-input').should('have.value', 'UQL310000');
+                cy.get('#asset_selector-testntagFormAssetId-option-0').contains('UQL31000');
+                cy.get('#asset_selector-testntagFormAssetId-option-0').click();
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'UQL310000');
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
                 cy.data('testntagFormAssetTypeInput').should('have.value', 'Power Cord - C13');
             });
 
             it('should show PASSED Previous Inspection panel', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
-                cy.data('testntagFormAssetId-input').type('UQL3100');
+                cy.data('asset_selector-testntagFormAssetId-input').type('UQL3100');
                 cy.wait(3000);
-                cy.get('#testntagFormAssetId-select-option-0').click();
-                cy.data('testntagFormAssetId-input').should('have.value', 'UQL310000');
+                cy.get('#asset_selector-testntagFormAssetId-option-0').click();
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'UQL310000');
                 cy.data('lastInspectionPanel')
                     .should('not.be.disabled')
                     .and('have.css', 'border-color', 'rgb(0, 114, 0)');
@@ -280,10 +280,10 @@ describe('Test and Tag Admin Inspection page', () => {
 
             it('should show FAILED Previous Inspection panel', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
-                cy.data('testntagFormAssetId-input').type('UQL20000');
+                cy.data('asset_selector-testntagFormAssetId-input').type('UQL20000');
                 cy.wait(2000);
                 // only 1 item should match and should be auto selected
-                cy.data('testntagFormAssetId-input').should('have.value', 'UQL200000');
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'UQL200000');
                 cy.data('lastInspectionPanel')
                     .should('not.be.disabled')
                     .and('have.css', 'border-color', 'rgb(149, 17, 38)');
@@ -307,10 +307,10 @@ describe('Test and Tag Admin Inspection page', () => {
 
             it('should show DISCARDED Previous Inspection panel', () => {
                 cy.data('testntagFormAssetTypeInput').should('be.disabled');
-                cy.data('testntagFormAssetId-input').type('UQL300000');
+                cy.data('asset_selector-testntagFormAssetId-input').type('UQL300000');
                 cy.wait(2000);
                 // only 1 item should match and should be auto selected
-                cy.data('testntagFormAssetId-input').should('have.value', 'UQL300000');
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'UQL300000');
                 cy.data('lastInspectionPanel')
                     .should('not.be.disabled')
                     .and('have.css', 'border-color', 'rgb(0, 114, 0)');
@@ -404,20 +404,20 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('tab-repair').should('not.be.disabled');
                 cy.data('tab-discard').should('not.be.disabled');
 
-                cy.data('testntagFormAssetId-input').type('UQL310000'); // last inspection = passed
+                cy.data('asset_selector-testntagFormAssetId-input').type('UQL310000'); // last inspection = passed
                 cy.wait(2000);
-                cy.data('testntagFormAssetId-input').should('have.value', 'UQL310000');
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'UQL310000');
                 cy.data('tab-repair').should('be.disabled'); // shouldnt be able to send for repair
                 cy.data('tab-discard').should('not.be.disabled');
 
-                cy.data('testntagFormAssetId-input')
+                cy.data('asset_selector-testntagFormAssetId-input')
                     // need 2 clears because the first only clears the asset lists returned
                     // by the last search. second clear actually empties the input
                     .clear()
                     .clear()
                     .type('UQL20000'); // last inspection = failed
                 cy.wait(2000);
-                cy.data('testntagFormAssetId-input').should('have.value', 'UQL200000');
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', 'UQL200000');
                 cy.data('tab-repair').should('not.be.disabled'); // failed should be able send for repair
                 cy.data('tab-discard').should('not.be.disabled');
 
@@ -469,7 +469,7 @@ describe('Test and Tag Admin Inspection page', () => {
                     cy.data('confirm-testTag-save-succeeded').click();
                 });
 
-                cy.data('testntagFormAssetId-input').should('have.value', '');
+                cy.data('asset_selector-testntagFormAssetId-input').should('have.value', '');
             });
         });
     };
