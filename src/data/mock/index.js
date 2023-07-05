@@ -928,7 +928,7 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_assets_mine])
     .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)
     .reply(() => [200, {status: 'OK'}])
-    .onPost(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API('.*').apiUrl)))
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API('.*').apiUrl)))
     .reply(() => [200, {status: 'OK'}])
     .onGet('exams/search/fail')
     .reply(() => {
