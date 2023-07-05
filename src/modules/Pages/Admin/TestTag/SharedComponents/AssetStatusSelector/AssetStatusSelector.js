@@ -7,6 +7,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { isEmptyObject } from '../../helpers/helpers';
 
+const rootId = 'asset_status_selector';
+
 const AssetStatusSelector = ({ id, label, options, required = false, onChange, classNames, disabled, ...rest }) => {
     const [currentValue, setCurrentValue] = useState({});
     const handleOnChange = (event, newValue) => {
@@ -17,8 +19,8 @@ const AssetStatusSelector = ({ id, label, options, required = false, onChange, c
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
-                id={`testntagFormAssetStatus-${id}`}
-                data-testid={`testntagFormAssetStatus-${id}`}
+                id={`${rootId}-${id}`}
+                data-testid={`${rootId}-${id}`}
                 className={classNames.autocomplete}
                 fullWidth
                 options={options}
@@ -33,14 +35,14 @@ const AssetStatusSelector = ({ id, label, options, required = false, onChange, c
                         required={required}
                         variant="standard"
                         error={(!disabled && required && isEmptyObject(currentValue)) ?? false}
-                        InputLabelProps={{ shrink: true, htmlFor: `testntagFormAssetStatusInput-${id}` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${rootId}-${id}-input` }}
                         InputProps={{
                             ...params.InputProps,
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `testntagFormAssetStatusInput-${id}`,
-                            'data-testid': `testntagFormAssetStatusInput-${id}`,
+                            id: `${rootId}-${id}-input`,
+                            'data-testid': `${rootId}-${id}-input`,
                         }}
                     />
                 )}

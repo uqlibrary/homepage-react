@@ -5,22 +5,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 
-import DataTable from './../../../SharedComponents/DataTable/DataTable';
-
-import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
-import ActionDialogue from './ActionDialogue';
-
-import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
+import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
+import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
+import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import ActionDialogue from './ActionDialogue';
+import locale from '../../../testTag.locale';
+import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
+
+const rootId = 'asset-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -221,6 +220,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <ActionDialogue
+                id={rootId}
                 data={assetTypesList}
                 row={actionState.row}
                 isOpen={actionState.isDelete}
@@ -233,7 +233,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <UpdateDialog
                         title={actionState.title}
                         action="add"
-                        updateDialogueBoxId="addRow"
+                        id={rootId}
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
                         fields={config?.fields ?? []}
@@ -247,7 +247,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <UpdateDialog
                         title={actionState.title}
                         action="edit"
-                        updateDialogueBoxId="editRow"
+                        id={rootId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
                         fields={config?.fields ?? []}
@@ -263,7 +263,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         actionButtonColor="primary"
                         actionButtonVariant="contained"
                         cancelButtonColor="secondary"
-                        confirmationBoxId="testTag-network-error"
+                        confirmationBoxId={rootId}
                         onAction={onDeleteEmptyAssetType}
                         onClose={hideDeleteConfirm}
                         isOpen={isDeleteConfirmOpen}
@@ -274,6 +274,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={rootId}
                                 rows={row}
                                 columns={columns}
                                 rowId="asset_type_id"
@@ -282,6 +283,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {
+                                        id: rootId,
                                         label: pageLocale.header.addButtonLabel,
                                         onClick: handleAddClick,
                                     },

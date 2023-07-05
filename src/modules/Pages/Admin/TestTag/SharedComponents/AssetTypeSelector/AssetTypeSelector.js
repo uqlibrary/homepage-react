@@ -8,6 +8,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
+const rootId = 'asset_type_selector';
+
 const AssetTypeSelector = ({
     id,
     title,
@@ -44,8 +46,8 @@ const AssetTypeSelector = ({
                 </Typography>
             )}
             <Autocomplete
-                id={`testntagFormAssetType-${id}`}
-                data-testid={`testntagFormAssetType-${id}`}
+                id={`${rootId}-${id}`}
+                data-testid={`${rootId}-${id}`}
                 className={classNames.autocomplete}
                 fullWidth
                 options={assetTypesList ?? []}
@@ -61,7 +63,7 @@ const AssetTypeSelector = ({
                         required={required}
                         error={(!disabled && required && !validateAssetTypeId?.(value)) ?? false}
                         variant="standard"
-                        InputLabelProps={{ shrink: true, htmlFor: `testntagFormAssetTypeInput-${id}` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${rootId}-${id}-input` }}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -70,8 +72,8 @@ const AssetTypeSelector = ({
                                         <CircularProgress
                                             color="inherit"
                                             size={20}
-                                            id="assetTypeSpinner"
-                                            data-testid="assetTypeSpinner"
+                                            id={`${rootId}-${id}-progress`}
+                                            data-testid={`${rootId}-${id}-progress`}
                                         />
                                     ) : null}
                                     {params.InputProps.endAdornment}
@@ -80,8 +82,8 @@ const AssetTypeSelector = ({
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `testntagFormAssetTypeInput-${id}`,
-                            'data-testid': `testntagFormAssetTypeInput-${id}`,
+                            id: `${rootId}-${id}-input`,
+                            'data-testid': `${rootId}-${id}-input`,
                         }}
                     />
                 )}

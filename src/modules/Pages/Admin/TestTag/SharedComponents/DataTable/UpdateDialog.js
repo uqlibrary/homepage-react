@@ -14,6 +14,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useIsMobileView } from 'hooks';
 
+const rootId = 'update_dialog';
+
 export const useStyles = makeStyles(theme => ({
     alternateActionButtonClass: {
         color: theme.palette.white.main,
@@ -101,15 +103,15 @@ export const UpdateDialogue = ({
             classes={{ paper: classes.dialogPaper }}
             style={{ padding: 6 }}
             open={isOpen}
-            id={`dialog-${id}`}
-            data-testid={`dialog-${id}`}
+            id={`${rootId}-${id}`}
+            data-testid={`${rootId}-${id}`}
         >
-            <DialogTitle id={`dialog-${id}-title`} data-testid={`dialog-${id}-title`}>
+            <DialogTitle id={`${rootId}-${id}-title`} data-testid={`${rootId}-${id}-title`}>
                 {title}
             </DialogTitle>
             <DialogContent
-                id={`dialog-${id}-content`}
-                data-testid={`dialog-${id}-content`}
+                id={`${rootId}-${id}-content`}
+                data-testid={`${rootId}-${id}-content`}
                 style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}
             >
                 <Grid container padding={0} spacing={2}>
@@ -163,7 +165,7 @@ export const UpdateDialogue = ({
                 </Grid>
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
-                <DialogActions id={`dialog-${id}-actions`} data-testid={`dialog-${id}-actions`}>
+                <DialogActions id={`${rootId}-${id}-actions`} data-testid={`${rootId}-${id}-actions`}>
                     <Grid container spacing={3}>
                         {!hideCancelButton && (
                             <Grid item xs={12} sm>
@@ -171,8 +173,8 @@ export const UpdateDialogue = ({
                                     <Button
                                         variant={'outlined'}
                                         onClick={_onCancelAction}
-                                        id={`dialog-${id}-cancel-button`}
-                                        data-testid={`dialog-${id}-cancel-button`}
+                                        id={`${rootId}-${id}-cancel-button`}
+                                        data-testid={`${rootId}-${id}-cancel-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy}
                                     >
@@ -189,8 +191,8 @@ export const UpdateDialogue = ({
                                         autoFocus
                                         color={'primary'}
                                         onClick={_onAction}
-                                        id={`dialog-${id}-confirm-button`}
-                                        data-testid={`dialog-${id}-confirm-button`}
+                                        id={`${rootId}-${id}-action-button`}
+                                        data-testid={`${rootId}-${id}-action-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy || !isValid}
                                     >
@@ -198,8 +200,8 @@ export const UpdateDialogue = ({
                                             <CircularProgress
                                                 color="inherit"
                                                 size={25}
-                                                id={`dialog-${id}-progress`}
-                                                data-testid={`dialog-${id}-progress`}
+                                                id={`${rootId}-${id}-progress`}
+                                                data-testid={`${rootId}-${id}-progress`}
                                             />
                                         ) : (
                                             locale.confirmButtonLabel
@@ -222,7 +224,6 @@ UpdateDialogue.propTypes = {
     columns: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     title: PropTypes.string,
-    confirmationBoxId: PropTypes.string,
     row: PropTypes.object,
     isOpen: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,

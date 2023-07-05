@@ -9,6 +9,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
 
+const rootId = 'asset_selector';
+
 const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
 const filter = createFilterOptions();
@@ -83,8 +85,8 @@ const AssetSelector = ({
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
-                id={`asset_selector-${id}`}
-                data-testid={`asset_selector-${id}`}
+                id={`${rootId}-${id}`}
+                data-testid={`${rootId}-${id}`}
                 className={classNames.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
@@ -149,7 +151,7 @@ const AssetSelector = ({
                         variant="standard"
                         onFocus={() => setIsOpen(true)}
                         onBlur={() => setIsOpen(false)}
-                        InputLabelProps={{ shrink: true, htmlFor: `asset_selector-${id}-input` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${rootId}-${id}-input` }}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -158,8 +160,8 @@ const AssetSelector = ({
                                         <CircularProgress
                                             color="inherit"
                                             size={20}
-                                            id={`asset_selector-${id}-progress`}
-                                            data-testid={`asset_selector-${id}-progress`}
+                                            id={`${rootId}-${id}-progress`}
+                                            data-testid={`${rootId}-${id}-progress`}
                                         />
                                     ) : null}
                                     {params.InputProps.endAdornment}
@@ -173,8 +175,8 @@ const AssetSelector = ({
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `asset_selector-${id}-input`,
-                            'data-testid': `asset_selector-${id}-input`,
+                            id: `${rootId}-${id}-input`,
+                            'data-testid': `${rootId}-${id}-input`,
                             maxLength: 12,
                         }}
                     />

@@ -9,6 +9,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 
 const defaultTheme = createTheme();
+const rootId = 'action_cell';
 
 const useStyles = makeStyles(
     theme => ({
@@ -25,7 +26,7 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClick, handleDeleteClick }) => {
+const ActionCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
     const classes = useStyles();
 
     const onEditClick = event => {
@@ -40,8 +41,10 @@ const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClic
 
     return (
         <div className={classes.root}>
-            {withActions.includes('edit') && (
+            {!!handleEditClick && (
                 <IconButton
+                    id={`${rootId}-${id}-edit-button`}
+                    data-testid={`${rootId}-${id}-edit-button`}
                     color="inherit"
                     className={classes.textPrimary}
                     size="small"
@@ -53,8 +56,10 @@ const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClic
                 </IconButton>
             )}
 
-            {withActions.includes('delete') && (
+            {!!handleDeleteClick && (
                 <IconButton
+                    id={`${rootId}-${id}-delete-button`}
+                    data-testid={`${rootId}-${id}-delete-button`}
                     color="inherit"
                     size="small"
                     aria-label="delete"
@@ -68,12 +73,11 @@ const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClic
     );
 };
 
-RowMenuCell.propTypes = {
+ActionCell.propTypes = {
     api: PropTypes.object.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    withActions: PropTypes.array,
     handleEditClick: PropTypes.func,
     handleDeleteClick: PropTypes.func,
 };
 
-export default React.memo(RowMenuCell);
+export default React.memo(ActionCell);

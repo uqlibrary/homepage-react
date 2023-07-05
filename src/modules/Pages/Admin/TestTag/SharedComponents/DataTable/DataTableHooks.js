@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import RowMenuCell from './RowMenuCell';
+import ActionCell from './ActionCell';
 
 export const useDataTableRow = (data = [], transform) => {
     const [row, _setRow] = useState(!!transform ? transform(data) : data);
@@ -30,7 +30,7 @@ export const useDataTableColumns = ({
                       headerName: locale?.actions,
                       renderCell: params => {
                           return (
-                              <RowMenuCell
+                              <ActionCell
                                   {...params}
                                   withActions={[!!handleEditClick ? 'edit' : '', !!handleDeleteClick ? 'delete' : '']}
                                   {...((!!shouldDisableEdit ? !shouldDisableEdit(params.row) : true) &&

@@ -163,7 +163,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                                 rows={row}
                                 columns={columns}
                                 id="inspection-details"
-                                rowId={'asset_id'}
+                                rowId={'asset_id_displayed'}
                                 loading={assetsListLoading}
                                 classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
