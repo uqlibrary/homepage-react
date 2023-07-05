@@ -594,7 +594,7 @@ export function deleteAssetType(id) {
 export function updateInspectionDetails(id, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_DETAILS_UPDATING });
-        return post(TEST_TAG_MODIFY_INSPECTION_DETAILS_API(id), request)
+        return put(TEST_TAG_MODIFY_INSPECTION_DETAILS_API(id), request)
             .then(response => {
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
