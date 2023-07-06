@@ -859,9 +859,7 @@ mock.onGet('exams/course/FREN1010/summary')
             200,
             {
                 status: 'OK',
-                data: {
-                    asset_types: test_tag_asset_types.data,
-                }
+                data:test_tag_asset_types.data,
             }
         ]
     )

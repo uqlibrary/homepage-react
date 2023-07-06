@@ -494,7 +494,7 @@ export function loadAssetTypes() {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
-                    payload: response?.data?.asset_types ?? /* istanbul ignore next */ {},
+                    payload: response?.data ?? /* istanbul ignore next */ {},
                 });
                 return Promise.resolve(response);
             })
