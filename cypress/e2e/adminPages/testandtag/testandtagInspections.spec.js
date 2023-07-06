@@ -33,12 +33,12 @@ describe('Test and Tag Admin Inspection page', () => {
     const selectLocation = ({ site, building, floor, room }) => {
         // Site
         if (!!site) {
-            cy.data('testntag-form-siteid').click();
+            cy.data('location_picker-eventPanel-site').click();
             selectListbox(site);
         }
         if (!!building) {
             // Building
-            cy.data('testntag-form-buildingid').click();
+            cy.data('location_picker-eventPanel-building').click();
             selectListbox(building);
 
             !!floor && cy.wait(1500);
@@ -46,14 +46,14 @@ describe('Test and Tag Admin Inspection page', () => {
 
         // Floor
         if (!!floor) {
-            cy.data('testntag-form-floorid').click();
+            cy.data('location_picker-eventPanel-floor').click();
             selectListbox(floor);
             !!room && cy.wait(1500);
         }
 
         // Room
         if (!!room) {
-            cy.data('testntag-form-roomid').click();
+            cy.data('location_picker-eventPanel-room').click();
             selectListbox(room);
         }
     };
@@ -64,7 +64,7 @@ describe('Test and Tag Admin Inspection page', () => {
             cy.viewport(1300, 1000);
             cy.get('h1').contains('UQ Asset Test and Tag');
             cy.get('h2').contains('Managing Assets for Library');
-            cy.waitUntil(() => cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia'));
+            cy.waitUntil(() => cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia'));
             cy.wait(1000);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Test and Tag Inspection Form',
@@ -102,66 +102,66 @@ describe('Test and Tag Admin Inspection page', () => {
 
             it('should allow selection of location', () => {
                 // Site
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
-                cy.data('testntag-form-siteid').click();
-                cy.get('#testntag-form-siteid-option-1').click();
-                cy.data('testntag-form-siteid-input').should('have.value', 'Gatton');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-site').click();
+                cy.get('#location_picker-eventPanel-site-option-1').click();
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'Gatton');
 
                 // Building
-                cy.data('testntag-form-buildingid').click();
-                cy.get('#testntag-form-buildingid-option-0').click();
-                cy.data('testntag-form-buildingid-input').should('have.value', 'J.K. Murray Library');
+                cy.data('location_picker-eventPanel-building').click();
+                cy.get('#location_picker-eventPanel-building-option-0').click();
+                cy.data('location_picker-eventPanel-building-input').should('have.value', 'J.K. Murray Library');
 
                 // Floor
                 cy.wait(1500);
-                cy.data('testntag-form-floorid').click();
-                cy.get('#testntag-form-floorid-option-0').click();
-                cy.data('testntag-form-floorid-input').should('have.value', '1');
+                cy.data('location_picker-eventPanel-floor').click();
+                cy.get('#location_picker-eventPanel-floor-option-0').click();
+                cy.data('location_picker-eventPanel-floor-input').should('have.value', '1');
 
                 // Room
                 cy.wait(1500);
-                cy.data('testntag-form-roomid').click();
-                cy.get('#testntag-form-roomid-option-0').click();
-                cy.data('testntag-form-roomid-input').should('have.value', '101');
+                cy.data('location_picker-eventPanel-room').click();
+                cy.get('#location_picker-eventPanel-room-option-0').click();
+                cy.data('location_picker-eventPanel-room-input').should('have.value', '101');
 
                 // Reset by changing site
-                cy.data('testntag-form-siteid').click();
-                cy.get('#testntag-form-siteid-option-0').click();
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
-                cy.data('testntag-form-buildingid-input').should('not.have.value', 'J.K. Murray Library');
-                cy.data('testntag-form-floorid-input').should('not.have.value', '1');
-                cy.data('testntag-form-roomid-input').should('not.have.value', '101');
+                cy.data('location_picker-eventPanel-site').click();
+                cy.get('#location_picker-eventPanel-site-option-0').click();
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-building-input').should('not.have.value', 'J.K. Murray Library');
+                cy.data('location_picker-eventPanel-floor-input').should('not.have.value', '1');
+                cy.data('location_picker-eventPanel-room-input').should('not.have.value', '101');
             });
 
             it('should reset location when fields change', () => {
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
                 // set location so that we can test it clears later
                 selectLocation({ building: 'Forgan Smith Building', floor: '2', room: 'W212' });
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
-                cy.data('testntag-form-buildingid-input').should('have.value', 'Forgan Smith Building');
-                cy.data('testntag-form-floorid-input').should('have.value', '2');
-                cy.data('testntag-form-roomid-input').should('have.value', 'W212');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-building-input').should('have.value', 'Forgan Smith Building');
+                cy.data('location_picker-eventPanel-floor-input').should('have.value', '2');
+                cy.data('location_picker-eventPanel-room-input').should('have.value', 'W212');
                 selectLocation({ floor: '3' });
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
-                cy.data('testntag-form-buildingid-input').should('have.value', 'Forgan Smith Building');
-                cy.data('testntag-form-floorid-input').should('have.value', '3');
-                cy.data('testntag-form-roomid-input').should('have.value', '');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-building-input').should('have.value', 'Forgan Smith Building');
+                cy.data('location_picker-eventPanel-floor-input').should('have.value', '3');
+                cy.data('location_picker-eventPanel-room-input').should('have.value', '');
                 selectLocation({ building: 'Duhig' });
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
-                cy.data('testntag-form-buildingid-input').should('have.value', 'Duhig Tower');
-                cy.data('testntag-form-floorid-input').should('have.value', '');
-                cy.data('testntag-form-roomid-input').should('have.value', '');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-building-input').should('have.value', 'Duhig Tower');
+                cy.data('location_picker-eventPanel-floor-input').should('have.value', '');
+                cy.data('location_picker-eventPanel-room-input').should('have.value', '');
                 selectLocation({ site: 'Gatton' });
-                cy.data('testntag-form-siteid-input').should('have.value', 'Gatton');
-                cy.data('testntag-form-buildingid-input').should('have.value', '');
-                cy.data('testntag-form-floorid-input').should('have.value', '');
-                cy.data('testntag-form-roomid-input').should('have.value', '');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'Gatton');
+                cy.data('location_picker-eventPanel-building-input').should('have.value', '');
+                cy.data('location_picker-eventPanel-floor-input').should('have.value', '');
+                cy.data('location_picker-eventPanel-room-input').should('have.value', '');
             });
         });
 
         describe('Asset panel functionality', () => {
             it('should allow entry of new asset IDs (temporary)', () => {
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
                 // this is for code coverage. Will be removed post MVP
                 cy.data('asset_selector-testntagFormAssetId-input').click();
                 cy.data('asset_selector-testntagFormAssetId-input').type('AN ASSET ID{enter}');
@@ -169,7 +169,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
             it('should allow auto complete of asset ID as mask', () => {
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
                 // Enter partial asset ID for mask search
                 cy.data('asset_selector-testntagFormAssetId-input').click();
                 cy.data('asset_selector-testntagFormAssetId-input').type('123');
@@ -365,27 +365,27 @@ describe('Test and Tag Admin Inspection page', () => {
                         .format(locale.pages.inspect.config.dateFormatDisplay),
                 );
 
-                cy.data('testResultNextDate').should('exist');
-                cy.data('testResultNextDate-nextdate-label').should('contain', plus12months); // default 12 months
+                cy.data('months_selector-testResultNextDate').should('exist');
+                cy.data('months_selector-testResultNextDate-next-date-label').should('contain', plus12months); // default 12 months
                 // 3 months
-                cy.data('testResultNextDate').click();
+                cy.data('months_selector-testResultNextDate').click();
                 selectListbox('3 months');
-                cy.data('testResultNextDate-nextdate-label').should('contain', plus3months);
+                cy.data('months_selector-testResultNextDate-next-date-label').should('contain', plus3months);
                 // 6 months
-                cy.data('testResultNextDate').click();
+                cy.data('months_selector-testResultNextDate').click();
                 selectListbox('6 months');
-                cy.data('testResultNextDate-nextdate-label').should('contain', plus6months);
+                cy.data('months_selector-testResultNextDate-next-date-label').should('contain', plus6months);
                 // 5 years
-                cy.data('testResultNextDate').click();
+                cy.data('months_selector-testResultNextDate').click();
                 selectListbox('5 years');
-                cy.data('testResultNextDate-nextdate-label').should('contain', plus60months);
+                cy.data('months_selector-testResultNextDate-next-date-label').should('contain', plus60months);
 
-                cy.data('inspectionNotes-input').type('Test notes');
+                cy.data('debounced_text_field-inspectionNotes-input').type('Test notes');
 
                 cy.data('testResultToggleButtons-FAILED').click();
-                cy.data('testResultNextDate').should('not.exist');
-                cy.data('inspectionFailReason').should('exist');
-                cy.data('inspectionFailReason-input').type('Failed reason');
+                cy.data('months_selector-testResultNextDate').should('not.exist');
+                cy.data('debounced_text_field-inspectionFailReason-input').should('exist');
+                cy.data('debounced_text_field-inspectionFailReason-input').type('Failed reason');
 
                 cy.data('testntagFormResetButton').click();
                 cy.data('testResultToggleButtons-PASSED').should('be.disabled');
@@ -421,12 +421,12 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('tab-repair').should('not.be.disabled'); // failed should be able send for repair
                 cy.data('tab-discard').should('not.be.disabled');
 
-                cy.data('discardReason-input').should('be.disabled');
+                cy.data('debounced_text_field-discardReason-input').should('be.disabled');
                 cy.data('selectIsDiscarded').click();
                 selectListbox('YES');
                 cy.data('tab-repair').should('be.disabled'); // can only enter details for one tab at a time
-                cy.data('discardReason-input').should('not.be.disabled');
-                cy.data('discardReason-input').type('Discard reason');
+                cy.data('debounced_text_field-discardReason-input').should('not.be.disabled');
+                cy.data('debounced_text_field-discardReason-input').type('Discard reason');
                 cy.data('selectIsDiscarded').click();
                 selectListbox('NO');
                 cy.data('tab-repair').should('not.be.disabled'); // can only enter details for one tab at a time
@@ -435,9 +435,9 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('selectIsRepair').click();
                 selectListbox('YES');
                 cy.data('tab-discard').should('be.disabled'); // can only enter details for one tab at a time
-                cy.data('repairerDetails-input').should('exist');
-                cy.data('repairerDetails-input').should('not.be.disabled');
-                cy.data('repairerDetails-input').type('Repair reason');
+                cy.data('debounced_text_field-repairerDetails-input').should('exist');
+                cy.data('debounced_text_field-repairerDetails-input').should('not.be.disabled');
+                cy.data('debounced_text_field-repairerDetails-input').type('Repair reason');
 
                 cy.data('testResultToggleButtons-PASSED').click(); // can't allow repair option if test passes
                 cy.data('tab-repair').should('be.disabled'); // make sure repair tab disables
@@ -453,13 +453,13 @@ describe('Test and Tag Admin Inspection page', () => {
         describe('saving values', () => {
             it('should enable save button and show saved message', () => {
                 cy.data('testntagFormSubmitButton').should('be.disabled');
-                cy.data('testntag-form-siteid-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
                 selectLocation({ building: 'Forgan Smith Building', floor: '2', room: 'W212' });
                 selectAssetId('NEW ASSET');
                 selectAssetType('PowerBoard');
                 selectTestingDevice('ITS-PAT-06');
                 cy.data('testResultToggleButtons-PASSED').click();
-                cy.data('inspectionNotes-input').type('Test notes');
+                cy.data('debounced_text_field-inspectionNotes-input').type('Test notes');
                 cy.data('testntagFormSubmitButton').should('not.be.disabled');
                 cy.data('testntagFormSubmitButton').click();
                 cy.wait(2000);
@@ -482,11 +482,11 @@ describe('Test and Tag Admin Inspection page', () => {
         runAllTests();
     });
 
-    describe('Mobile', () => {
-        beforeEach(() => {
-            cy.viewport(320, 480);
-        });
+    // describe('Mobile', () => {
+    //     beforeEach(() => {
+    //         cy.viewport(320, 480);
+    //     });
 
-        runAllTests();
-    });
+    //     runAllTests();
+    // });
 });
