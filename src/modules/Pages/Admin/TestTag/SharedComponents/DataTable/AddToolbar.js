@@ -9,14 +9,15 @@ import AddIcon from '@material-ui/icons/Add';
 const rootId = 'add_toolbar';
 
 const AddToolbar = ({ id, label, onClick, startIcon = <AddIcon /> }) => {
+    const componentId = `${rootId}-${id}`;
     return (
-        <GridToolbarContainer id={`${rootId}-${id}`} data-testid={`${rootId}-${id}`}>
+        <GridToolbarContainer id={`${componentId}`} data-testid={`${componentId}`}>
             <Button
                 color="primary"
                 startIcon={startIcon}
                 onClick={onClick}
-                id={`${rootId}-${id}-add-button`}
-                data-testid={`${rootId}-${id}-add-button`}
+                id={`${componentId}-add-button`}
+                data-testid={`${componentId}-add-button`}
             >
                 {label}
             </Button>

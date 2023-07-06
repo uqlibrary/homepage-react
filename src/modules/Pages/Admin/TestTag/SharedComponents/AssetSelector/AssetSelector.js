@@ -39,6 +39,7 @@ const AssetSelector = ({
     onSearch,
     validateAssetId,
 }) => {
+    const componentId = `${rootId}-${id}`;
     const previousValueRef = React.useRef(null);
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
@@ -85,8 +86,8 @@ const AssetSelector = ({
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
-                id={`${rootId}-${id}`}
-                data-testid={`${rootId}-${id}`}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
                 className={classNames.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
@@ -151,7 +152,7 @@ const AssetSelector = ({
                         variant="standard"
                         onFocus={() => setIsOpen(true)}
                         onBlur={() => setIsOpen(false)}
-                        InputLabelProps={{ shrink: true, htmlFor: `${rootId}-${id}-input` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -160,8 +161,8 @@ const AssetSelector = ({
                                         <CircularProgress
                                             color="inherit"
                                             size={20}
-                                            id={`${rootId}-${id}-progress`}
-                                            data-testid={`${rootId}-${id}-progress`}
+                                            id={`${componentId}-progress`}
+                                            data-testid={`${componentId}-progress`}
                                         />
                                     ) : null}
                                     {params.InputProps.endAdornment}
@@ -175,8 +176,8 @@ const AssetSelector = ({
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `${rootId}-${id}-input`,
-                            'data-testid': `${rootId}-${id}-input`,
+                            id: `${componentId}-input`,
+                            'data-testid': `${componentId}-input`,
                             maxLength: 12,
                         }}
                     />

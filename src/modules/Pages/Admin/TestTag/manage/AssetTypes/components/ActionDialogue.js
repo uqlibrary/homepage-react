@@ -38,6 +38,8 @@ export const useStyles = makeStyles(theme => ({
 }));
 
 export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCancel, onProceed, isBusy }) => {
+    const componentId = `${rootId}-${id}`;
+
     const classes = useStyles();
     const pageLocale = locale.pages.manage.assetTypes.actionDialogue;
 
@@ -53,16 +55,16 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
             classes={{ paper: classes.dialogPaper }}
             style={{ padding: 6 }}
             open={isOpen}
-            id={`${rootId}-${id}`}
-            data-testid={`${rootId}-${id}`}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
         >
-            <DialogTitle id={`${rootId}-${id}-title`} data-testid={`${rootId}-${id}-title`}>
+            <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {pageLocale.confirmationTitle}
             </DialogTitle>
             <DialogContent
                 style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }}
-                id={`${rootId}-${id}-content`}
-                data-testid={`${rootId}-${id}-content`}
+                id={`${componentId}-content`}
+                data-testid={`${componentId}-content`}
             >
                 <Typography component={'p'}>{pageLocale.deleteReassignTargetPrompt(row?.asset_type_name)}</Typography>
                 <InputLabel shrink required>
@@ -71,8 +73,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                 <Select
                     fullWidth
                     className={classes.formSelect}
-                    id={`${rootId}-${id}-select`}
-                    data-testid={`${rootId}-${id}-select`}
+                    id={`${componentId}-select`}
+                    data-testid={`${componentId}-select`}
                     value={selectedAssetType}
                     onChange={e => onAssetTypeChange(e.target.value)}
                     required
@@ -81,8 +83,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         <MenuItem
                             value={item.asset_type_id}
                             key={item.asset_type_id}
-                            id={`${rootId}-${id}-option-${item.asset_type_id}`}
-                            data-testid={`${rootId}-${id}-option-${item.asset_type_id}`}
+                            id={`${componentId}-option-${item.asset_type_id}`}
+                            data-testid={`${componentId}-option-${item.asset_type_id}`}
                         >
                             {item.asset_type_name}
                         </MenuItem>
@@ -96,8 +98,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         <Button
                             variant="outlined"
                             onClick={onCancel}
-                            id={`${rootId}-${id}-cancel-button`}
-                            data-testid={`${rootId}-${id}-cancel-button`}
+                            id={`${componentId}-cancel-button`}
+                            data-testid={`${componentId}-cancel-button`}
                             color={'default'}
                             disabled={!!isBusy}
                         >
@@ -108,8 +110,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         <Button
                             variant="contained"
                             onClick={() => onProceed(row.asset_type_id, selectedAssetType)}
-                            id={`${rootId}-${id}-action-button`}
-                            data-testid={`${rootId}-${id}-action-button`}
+                            id={`${componentId}-action-button`}
+                            data-testid={`${componentId}-action-button`}
                             color={'default'}
                             disabled={!!isBusy || !!!selectedAssetType || row?.asset_type_id === selectedAssetType}
                         >
@@ -117,8 +119,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                                 <CircularProgress
                                     color="inherit"
                                     size={25}
-                                    id={`${rootId}-${id}-progress`}
-                                    data-testid={`${rootId}-${id}-progress`}
+                                    id={`${componentId}-progress`}
+                                    data-testid={`${componentId}-progress`}
                                 />
                             ) : (
                                 pageLocale.confirmButtonLabel

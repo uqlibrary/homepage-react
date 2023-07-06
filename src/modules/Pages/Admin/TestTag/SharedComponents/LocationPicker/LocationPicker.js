@@ -46,6 +46,7 @@ const LocationPicker = ({
     disabled = false,
     inputProps = {},
 }) => {
+    const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const divisor = 4 - hide.length;
     const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
@@ -62,9 +63,9 @@ const LocationPicker = ({
             <Grid item xs={12} sm={6} md={12 / divisor}>
                 <FormControl className={classes.formControl} fullWidth>
                     <Autocomplete
-                        id={`${rootId}-${id}-site`}
-                        data-testid={`${rootId}-${id}-site`}
-                        aria-controls={`${rootId}-${id}-site-popup`}
+                        id={`${componentId}-site`}
+                        data-testid={`${componentId}-site`}
+                        aria-controls={`${componentId}-site-popup`}
                         fullWidth
                         options={siteList}
                         value={
@@ -89,7 +90,7 @@ const LocationPicker = ({
                                 variant="standard"
                                 InputLabelProps={{
                                     ...inputLabelProps,
-                                    htmlFor: `${rootId}-${id}-site-input`,
+                                    htmlFor: `${componentId}-site-input`,
                                 }}
                                 InputProps={{
                                     ...params.InputProps,
@@ -99,8 +100,8 @@ const LocationPicker = ({
                                                 <CircularProgress
                                                     color="inherit"
                                                     size={20}
-                                                    id={`${rootId}-${id}-site-progress`}
-                                                    data-testid={`${rootId}-${id}-site-progress`}
+                                                    id={`${componentId}-site-progress`}
+                                                    data-testid={`${componentId}-site-progress`}
                                                 />
                                             ) : null}
                                             {params.InputProps.endAdornment}
@@ -109,8 +110,8 @@ const LocationPicker = ({
                                 }}
                                 inputProps={{
                                     ...params.inputProps,
-                                    id: `${rootId}-${id}-site-input`,
-                                    'data-testid': `${rootId}-${id}-site-input`,
+                                    id: `${componentId}-site-input`,
+                                    'data-testid': `${componentId}-site-input`,
                                 }}
                                 {...(inputProps?.site ?? {})}
                             />
@@ -125,9 +126,9 @@ const LocationPicker = ({
                 <Grid item xs={12} sm={6} md={12 / divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
-                            id={`${rootId}-${id}-building`}
-                            data-testid={`${rootId}-${id}-building`}
-                            aria-controls={`${rootId}-${id}-building-popup`}
+                            id={`${componentId}-building`}
+                            data-testid={`${componentId}-building`}
+                            aria-controls={`${componentId}-building-popup`}
                             fullWidth
                             options={buildingList}
                             value={
@@ -155,7 +156,7 @@ const LocationPicker = ({
                                     variant="standard"
                                     InputLabelProps={{
                                         ...inputLabelProps,
-                                        htmlFor: `${rootId}-${id}-building-input`,
+                                        htmlFor: `${componentId}-building-input`,
                                     }}
                                     InputProps={{
                                         ...params.InputProps,
@@ -165,8 +166,8 @@ const LocationPicker = ({
                                                     <CircularProgress
                                                         color="inherit"
                                                         size={20}
-                                                        id={`${rootId}-${id}-building-progress`}
-                                                        data-testid={`${rootId}-${id}-building-progress`}
+                                                        id={`${componentId}-building-progress`}
+                                                        data-testid={`${componentId}-building-progress`}
                                                     />
                                                 ) : null}
                                                 {params.InputProps.endAdornment}
@@ -175,8 +176,8 @@ const LocationPicker = ({
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
-                                        id: `${rootId}-${id}-building-input`,
-                                        'data-testid': `${rootId}-${id}-building-input`,
+                                        id: `${componentId}-building-input`,
+                                        'data-testid': `${componentId}-building-input`,
                                     }}
                                     {...(inputProps?.building ?? {})}
                                 />
@@ -193,9 +194,9 @@ const LocationPicker = ({
                 <Grid item xs={12} sm={6} md={12 / divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
-                            id={`${rootId}-${id}-floor`}
-                            data-testid={`${rootId}-${id}-floor`}
-                            aria-controls={`${rootId}-${id}-floor-popup`}
+                            id={`${componentId}-floor`}
+                            data-testid={`${componentId}-floor`}
+                            aria-controls={`${componentId}-floor-popup`}
                             fullWidth
                             options={floorList}
                             value={
@@ -215,7 +216,7 @@ const LocationPicker = ({
                                     {...params}
                                     label={locale.floor.label}
                                     variant="standard"
-                                    InputLabelProps={{ ...inputLabelProps, htmlFor: `${rootId}-${id}-floor-input` }}
+                                    InputLabelProps={{ ...inputLabelProps, htmlFor: `${componentId}-floor-input` }}
                                     InputProps={{
                                         ...params.InputProps,
                                         endAdornment: (
@@ -224,8 +225,8 @@ const LocationPicker = ({
                                                     <CircularProgress
                                                         color="inherit"
                                                         size={20}
-                                                        id={`${rootId}-${id}-floor-progress`}
-                                                        data-testid={`${rootId}-${id}-floor-progress`}
+                                                        id={`${componentId}-floor-progress`}
+                                                        data-testid={`${componentId}-floor-progress`}
                                                     />
                                                 ) : null}
                                                 {params.InputProps.endAdornment}
@@ -234,8 +235,8 @@ const LocationPicker = ({
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
-                                        id: `${rootId}-${id}-floor-input`,
-                                        'data-testid': `${rootId}-${id}-floor-input`,
+                                        id: `${componentId}-floor-input`,
+                                        'data-testid': `${componentId}-floor-input`,
                                     }}
                                     {...(inputProps?.floor ?? {})}
                                 />
@@ -251,9 +252,9 @@ const LocationPicker = ({
                 <Grid item xs={12} sm={6} md={12 / divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
-                            id={`${rootId}-${id}-room`}
-                            data-testid={`${rootId}-${id}-room`}
-                            aria-controls={`${rootId}-${id}-room-popup`}
+                            id={`${componentId}-room`}
+                            data-testid={`${componentId}-room`}
+                            aria-controls={`${componentId}-room-popup`}
                             fullWidth
                             options={roomList}
                             value={
@@ -270,7 +271,7 @@ const LocationPicker = ({
                                     {...params}
                                     label={locale.room.label}
                                     variant="standard"
-                                    InputLabelProps={{ ...inputLabelProps, htmlFor: `${rootId}-${id}-room-input` }}
+                                    InputLabelProps={{ ...inputLabelProps, htmlFor: `${componentId}-room-input` }}
                                     InputProps={{
                                         ...params.InputProps,
                                         endAdornment: (
@@ -279,8 +280,8 @@ const LocationPicker = ({
                                                     <CircularProgress
                                                         color="inherit"
                                                         size={20}
-                                                        id={`${rootId}-${id}-room-progress`}
-                                                        data-testid={`${rootId}-${id}-room-progress`}
+                                                        id={`${componentId}-room-progress`}
+                                                        data-testid={`${componentId}-room-progress`}
                                                     />
                                                 ) : null}
                                                 {params.InputProps.endAdornment}
@@ -289,8 +290,8 @@ const LocationPicker = ({
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
-                                        id: `${rootId}-${id}-room-input`,
-                                        'data-testid': `${rootId}-${id}-room-input`,
+                                        id: `${componentId}-room-input`,
+                                        'data-testid': `${componentId}-room-input`,
                                     }}
                                     {...(inputProps?.room ?? {})}
                                 />

@@ -54,6 +54,7 @@ export const UpdateDialogue = ({
     props,
     isBusy = false,
 } = {}) => {
+    const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const [dataColumns, setDataColumns] = React.useState({});
     const [dataFields, setDataFields] = React.useState({});
@@ -103,15 +104,15 @@ export const UpdateDialogue = ({
             classes={{ paper: classes.dialogPaper }}
             style={{ padding: 6 }}
             open={isOpen}
-            id={`${rootId}-${id}`}
-            data-testid={`${rootId}-${id}`}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
         >
-            <DialogTitle id={`${rootId}-${id}-title`} data-testid={`${rootId}-${id}-title`}>
+            <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {title}
             </DialogTitle>
             <DialogContent
-                id={`${rootId}-${id}-content`}
-                data-testid={`${rootId}-${id}-content`}
+                id={`${componentId}-content`}
+                data-testid={`${componentId}-content`}
                 style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}
             >
                 <Grid container padding={0} spacing={2}>
@@ -165,7 +166,7 @@ export const UpdateDialogue = ({
                 </Grid>
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
-                <DialogActions id={`${rootId}-${id}-actions`} data-testid={`${rootId}-${id}-actions`}>
+                <DialogActions id={`${componentId}-actions`} data-testid={`${componentId}-actions`}>
                     <Grid container spacing={3}>
                         {!hideCancelButton && (
                             <Grid item xs={12} sm>
@@ -173,8 +174,8 @@ export const UpdateDialogue = ({
                                     <Button
                                         variant={'outlined'}
                                         onClick={_onCancelAction}
-                                        id={`${rootId}-${id}-cancel-button`}
-                                        data-testid={`${rootId}-${id}-cancel-button`}
+                                        id={`${componentId}-cancel-button`}
+                                        data-testid={`${componentId}-cancel-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy}
                                     >
@@ -191,8 +192,8 @@ export const UpdateDialogue = ({
                                         autoFocus
                                         color={'primary'}
                                         onClick={_onAction}
-                                        id={`${rootId}-${id}-action-button`}
-                                        data-testid={`${rootId}-${id}-action-button`}
+                                        id={`${componentId}-action-button`}
+                                        data-testid={`${componentId}-action-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy || !isValid}
                                     >
@@ -200,8 +201,8 @@ export const UpdateDialogue = ({
                                             <CircularProgress
                                                 color="inherit"
                                                 size={25}
-                                                id={`${rootId}-${id}-progress`}
-                                                data-testid={`${rootId}-${id}-progress`}
+                                                id={`${componentId}-progress`}
+                                                data-testid={`${componentId}-progress`}
                                             />
                                         ) : (
                                             locale.confirmButtonLabel

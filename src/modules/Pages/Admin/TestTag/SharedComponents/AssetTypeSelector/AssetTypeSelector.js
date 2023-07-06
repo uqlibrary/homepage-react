@@ -23,6 +23,7 @@ const AssetTypeSelector = ({
     disabled = false,
     ...rest
 }) => {
+    const componentId = `${rootId}-${id}`;
     const [value, setValue] = useState(initValue);
     const { assetTypesList, assetTypesListLoading } = useSelector(state => state.get('testTagAssetTypesReducer'));
 
@@ -46,8 +47,8 @@ const AssetTypeSelector = ({
                 </Typography>
             )}
             <Autocomplete
-                id={`${rootId}-${id}`}
-                data-testid={`${rootId}-${id}`}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
                 className={classNames.autocomplete}
                 fullWidth
                 options={assetTypesList ?? []}
@@ -63,7 +64,7 @@ const AssetTypeSelector = ({
                         required={required}
                         error={(!disabled && required && !validateAssetTypeId?.(value)) ?? false}
                         variant="standard"
-                        InputLabelProps={{ shrink: true, htmlFor: `${rootId}-${id}-input` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -72,8 +73,8 @@ const AssetTypeSelector = ({
                                         <CircularProgress
                                             color="inherit"
                                             size={20}
-                                            id={`${rootId}-${id}-progress`}
-                                            data-testid={`${rootId}-${id}-progress`}
+                                            id={`${componentId}-progress`}
+                                            data-testid={`${componentId}-progress`}
                                         />
                                     ) : null}
                                     {params.InputProps.endAdornment}
@@ -82,8 +83,8 @@ const AssetTypeSelector = ({
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `${rootId}-${id}-input`,
-                            'data-testid': `${rootId}-${id}-input`,
+                            id: `${componentId}-input`,
+                            'data-testid': `${componentId}-input`,
                         }}
                     />
                 )}

@@ -27,6 +27,7 @@ const useStyles = makeStyles(
 );
 
 const ActionCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
+    const componentId = `${rootId}-${id}`;
     const classes = useStyles();
 
     const onEditClick = event => {
@@ -43,8 +44,8 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
         <div className={classes.root}>
             {!!handleEditClick && (
                 <IconButton
-                    id={`${rootId}-${id}-edit-button`}
-                    data-testid={`${rootId}-${id}-edit-button`}
+                    id={`${componentId}-edit-button`}
+                    data-testid={`${componentId}-edit-button`}
                     color="inherit"
                     className={classes.textPrimary}
                     size="small"
@@ -58,8 +59,8 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
 
             {!!handleDeleteClick && (
                 <IconButton
-                    id={`${rootId}-${id}-delete-button`}
-                    data-testid={`${rootId}-${id}-delete-button`}
+                    id={`${componentId}-delete-button`}
+                    data-testid={`${componentId}-delete-button`}
                     color="inherit"
                     size="small"
                     aria-label="delete"

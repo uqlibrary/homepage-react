@@ -10,6 +10,7 @@ import { isEmptyObject } from '../../helpers/helpers';
 const rootId = 'asset_status_selector';
 
 const AssetStatusSelector = ({ id, label, options, required = false, onChange, classNames, disabled, ...rest }) => {
+    const componentId = `${rootId}-${id}`;
     const [currentValue, setCurrentValue] = useState({});
     const handleOnChange = (event, newValue) => {
         console.log('handleOnChange', event, newValue);
@@ -19,8 +20,8 @@ const AssetStatusSelector = ({ id, label, options, required = false, onChange, c
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
-                id={`${rootId}-${id}`}
-                data-testid={`${rootId}-${id}`}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
                 className={classNames.autocomplete}
                 fullWidth
                 options={options}
@@ -35,14 +36,14 @@ const AssetStatusSelector = ({ id, label, options, required = false, onChange, c
                         required={required}
                         variant="standard"
                         error={(!disabled && required && isEmptyObject(currentValue)) ?? false}
-                        InputLabelProps={{ shrink: true, htmlFor: `${rootId}-${id}-input` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `${rootId}-${id}-input`,
-                            'data-testid': `${rootId}-${id}-input`,
+                            id: `${componentId}-input`,
+                            'data-testid': `${componentId}-input`,
                         }}
                     />
                 )}

@@ -94,10 +94,7 @@ const Dashboard = ({
                                     className={clsx([classes.card, classes.centreAlignParent])}
                                     contentProps={{ className: classes.centreAlign }}
                                 >
-                                    <Link
-                                        to={`${pathConfig.admin.testntaginspect}?user=uqtesttag`}
-                                        data-testid="linkInspection"
-                                    >
+                                    <Link to={pathConfig.admin.testntaginspect} data-testid="linkInspection">
                                         {pageLocale.panel.inspections.link}
                                     </Link>
                                 </Panel>

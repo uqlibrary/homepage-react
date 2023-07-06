@@ -6,10 +6,11 @@ import Snackbar from '@material-ui/core/Snackbar';
 const rootId = 'confirmation_alert';
 
 const ConfirmationAlert = ({ isOpen, message, type, closeAlert, ...props }) => {
+    const componentId = `${rootId}-${type}`;
     return (
         <Snackbar
-            id={`${rootId}-${type}`}
-            data-testid={`${rootId}-${type}`}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
             anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'center',
@@ -22,8 +23,8 @@ const ConfirmationAlert = ({ isOpen, message, type, closeAlert, ...props }) => {
             <Alert
                 onClose={closeAlert}
                 severity={type}
-                id={`${rootId}-${type}-alert`}
-                data-testid={`${rootId}-${type}-alert`}
+                id={`${componentId}-alert`}
+                data-testid={`${componentId}-alert`}
             >
                 {message}
             </Alert>

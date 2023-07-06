@@ -14,6 +14,7 @@ const FooterBar = ({
     cancelButtonProps,
     nextButtonProps,
 }) => {
+    const componentId = `${rootId}-${id}`;
     FooterBar.propTypes = {
         id: PropTypes.string.isRequired,
         actionLabel: PropTypes.string,
@@ -25,14 +26,14 @@ const FooterBar = ({
     };
 
     return (
-        <GridFooterContainer id={`${rootId}-${id}`} data-testid={`${rootId}-${id}`}>
+        <GridFooterContainer id={`${componentId}`} data-testid={`${componentId}`}>
             {!!onAltClick && (
                 <Button
                     color="primary"
                     onClick={onAltClick}
                     variant="outlined"
-                    id={`${rootId}-${id}-alt-button`}
-                    data-testid={`${rootId}-${id}-alt-button`}
+                    id={`${componentId}-alt-button`}
+                    data-testid={`${componentId}-alt-button`}
                     {...cancelButtonProps}
                 >
                     {altLabel}
@@ -43,8 +44,8 @@ const FooterBar = ({
                     color="primary"
                     onClick={onActionClick}
                     variant="contained"
-                    id={`${rootId}-${id}-action-button`}
-                    data-testid={`${rootId}-${id}-action-button`}
+                    id={`${componentId}-action-button`}
+                    data-testid={`${componentId}-action-button`}
                     {...nextButtonProps}
                 >
                     {actionLabel}

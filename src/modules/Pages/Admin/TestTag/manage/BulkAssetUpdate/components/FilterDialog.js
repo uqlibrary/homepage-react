@@ -41,6 +41,7 @@ const FilterDialog = ({
     onCancel,
     onAction,
 }) => {
+    const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const { row, setRow } = useDataTableRow([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');
@@ -113,12 +114,12 @@ const FilterDialog = ({
             classes={{ paper: classes.dialogPaper }}
             style={{ padding: 6 }}
             open={isOpen}
-            id={`${rootId}-${id}`}
-            data-testid={`${rootId}-${id}`}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
             fullWidth
             aria-describedby="messageTitle"
         >
-            <DialogTitle id={`${rootId}-${id}-title`} data-testid={`${rootId}-${id}-title`}>
+            <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {locale?.title}
             </DialogTitle>
             <DialogContent>
@@ -169,8 +170,8 @@ const FilterDialog = ({
                         <Button
                             variant="outlined"
                             onClick={handleCancelAction}
-                            id={`${rootId}-${id}-cancel-button`}
-                            data-testid={`${rootId}-${id}-cancel-button`}
+                            id={`${componentId}-cancel-button`}
+                            data-testid={`${componentId}-cancel-button`}
                             color={'default'}
                         >
                             {locale.button.cancel}
@@ -181,8 +182,8 @@ const FilterDialog = ({
                             variant="contained"
                             color="primary"
                             onClick={handleAddAction}
-                            id={`${rootId}-${id}-action-button`}
-                            data-testid={`${rootId}-${id}-action-button`}
+                            id={`${componentId}-action-button`}
+                            data-testid={`${componentId}-action-button`}
                             disabled={row.length === 0}
                         >
                             {locale.button.submit}

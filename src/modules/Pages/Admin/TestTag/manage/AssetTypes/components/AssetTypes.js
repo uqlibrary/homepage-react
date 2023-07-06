@@ -19,7 +19,7 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 
-const rootId = 'asset-types';
+const componentId = 'asset-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -220,7 +220,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <ActionDialogue
-                id={rootId}
+                id={componentId}
                 data={assetTypesList}
                 row={actionState.row}
                 isOpen={actionState.isDelete}
@@ -233,7 +233,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <UpdateDialog
                         title={actionState.title}
                         action="add"
-                        id={rootId}
+                        id={componentId}
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
                         fields={config?.fields ?? []}
@@ -247,7 +247,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <UpdateDialog
                         title={actionState.title}
                         action="edit"
-                        id={rootId}
+                        id={componentId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
                         fields={config?.fields ?? []}
@@ -263,7 +263,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         actionButtonColor="primary"
                         actionButtonVariant="contained"
                         cancelButtonColor="secondary"
-                        confirmationBoxId={rootId}
+                        confirmationBoxId={componentId}
                         onAction={onDeleteEmptyAssetType}
                         onClose={hideDeleteConfirm}
                         isOpen={isDeleteConfirmOpen}
@@ -274,7 +274,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
-                                id={rootId}
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId="asset_type_id"
@@ -283,7 +283,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {
-                                        id: rootId,
+                                        id: componentId,
                                         label: pageLocale.header.addButtonLabel,
                                         onClick: handleAddClick,
                                     },

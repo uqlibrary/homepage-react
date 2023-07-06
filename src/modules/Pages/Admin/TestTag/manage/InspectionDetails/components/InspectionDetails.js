@@ -18,6 +18,8 @@ import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { transformRow, transformUpdateRequest } from './utils';
 
+const rootId = 'inspection-details';
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -131,7 +133,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                     <UpdateDialog
                         title={actionState.title}
                         action="edit"
-                        id="inspection-details"
+                        id={rootId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale?.dialogEdit}
                         fields={config?.fields ?? []}
@@ -145,7 +147,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                     <Grid container spacing={3}>
                         <Grid item padding={3} xs={12} md={4} style={{ flex: 1 }}>
                             <AssetSelector
-                                id="inspection-details"
+                                id={rootId}
                                 locale={pageLocale.form}
                                 user={user}
                                 classNames={{ formControl: classes.formControl }}
@@ -162,7 +164,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                             <DataTable
                                 rows={row}
                                 columns={columns}
-                                id="inspection-details"
+                                id={rootId}
                                 rowId={'asset_id_displayed'}
                                 loading={assetsListLoading}
                                 classes={{ root: classes.gridRoot }}
