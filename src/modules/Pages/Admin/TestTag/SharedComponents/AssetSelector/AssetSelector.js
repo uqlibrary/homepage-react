@@ -9,6 +9,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
 
+const rootId = 'asset_selector';
+
 const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
 const filter = createFilterOptions();
@@ -37,6 +39,7 @@ const AssetSelector = ({
     onSearch,
     validateAssetId,
 }) => {
+    const componentId = `${rootId}-${id}`;
     const previousValueRef = React.useRef(null);
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
@@ -83,8 +86,8 @@ const AssetSelector = ({
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
-                id={`asset_selector-${id}`}
-                data-testid={`asset_selector-${id}`}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
                 className={classNames.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
@@ -149,7 +152,7 @@ const AssetSelector = ({
                         variant="standard"
                         onFocus={() => setIsOpen(true)}
                         onBlur={() => setIsOpen(false)}
-                        InputLabelProps={{ shrink: true, htmlFor: `asset_selector-${id}-input` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -158,8 +161,8 @@ const AssetSelector = ({
                                         <CircularProgress
                                             color="inherit"
                                             size={20}
-                                            id={`asset_selector-${id}-progress`}
-                                            data-testid={`asset_selector-${id}-progress`}
+                                            id={`${componentId}-progress`}
+                                            data-testid={`${componentId}-progress`}
                                         />
                                     ) : null}
                                     {params.InputProps.endAdornment}
@@ -173,8 +176,8 @@ const AssetSelector = ({
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `asset_selector-${id}-input`,
-                            'data-testid': `asset_selector-${id}-input`,
+                            id: `${componentId}-input`,
+                            'data-testid': `${componentId}-input`,
                             maxLength: 12,
                         }}
                     />

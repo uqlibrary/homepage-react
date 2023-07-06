@@ -28,6 +28,8 @@ import {
     TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST,
     TEST_TAG_BULK_UPDATE_API,
     TEST_TAG_MODIFY_INSPECTION_DETAILS_API,
+    TEST_TAG_USER_LIST_API,
+    TEST_TAG_UPDATE_USER_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -493,7 +495,7 @@ export function loadAssetTypes() {
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
-                    payload: response?.data?.asset_types ?? /* istanbul ignore next */ {},
+                    payload: response?.data ?? /* istanbul ignore next */ {},
                 });
                 return Promise.resolve(response);
             })
@@ -528,10 +530,10 @@ export function addAssetType(request) {
     };
 }
 
-export function saveAssetType(request) {
+export function saveAssetType(id, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_SAVING });
-        return put(TEST_TAG_SAVE_ASSETTYPE_API(), request)
+        return put(TEST_TAG_SAVE_ASSETTYPE_API(id), request)
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_SAVED,
@@ -771,5 +773,55 @@ export function loadAssetReportByFilters({
 export function clearBulkAssetUpdate() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_BULK_ASSET_UPDATE_CLEAR });
+    };
+}
+
+/* Manage User Lists */
+export function loadUserList() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_LOADING });
+        return get(TEST_TAG_USER_LIST_API())
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_LOADED,
+                    payload: response?.data ?? /* istanbul ignore next */ [],
+                });
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function updateUser(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_UPDATING });
+        return put(TEST_TAG_UPDATE_USER_API(), request)
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
     };
 }

@@ -9,39 +9,31 @@ function setup(testProps = {}, renderer = rtlRender) {
 describe('DebouncedTextField Renders component', () => {
     it('renders component without value', () => {
         const handleChange = jest.fn();
-        const testId = 'testField';
-        const testInputId = 'testField-input';
 
         const { getByTestId } = setup({
             handleChange,
             updateKey: 'my-key',
-            'data-testid': testId,
+            id: 'testing',
         });
-        expect(getByTestId(testId)).toBeInTheDocument();
-        expect(getByTestId(testInputId)).toBeInTheDocument();
-        expect(getByTestId(testInputId)).toHaveAttribute('value', '');
+        expect(getByTestId('debounced_text_field-testing-input')).toBeInTheDocument();
+        expect(getByTestId('debounced_text_field-testing-input')).toHaveAttribute('value', '');
     });
     it('renders component with value', () => {
         const handleChange = jest.fn();
-        const testId = 'testField';
-        const testInputId = 'testField-input';
         const value = 'some value';
 
         const { getByTestId } = setup({
             handleChange,
             updateKey: 'my-key',
+            id: 'testing',
             value,
-            'data-testid': testId,
         });
-        expect(getByTestId(testId)).toBeInTheDocument();
-        expect(getByTestId(testInputId)).toBeInTheDocument();
-        expect(getByTestId(testInputId)).toHaveAttribute('value', value);
+        expect(getByTestId('debounced_text_field-testing-input')).toBeInTheDocument();
+        expect(getByTestId('debounced_text_field-testing-input')).toHaveAttribute('value', value);
     });
 
     it('rerenders component with reset value', () => {
         const handleChange = jest.fn();
-        const testId = 'testField';
-        const testInputId = 'testField-input';
         const value = 'some value';
         const resetValue = 'reset value';
 
@@ -49,27 +41,24 @@ describe('DebouncedTextField Renders component', () => {
             handleChange,
             updateKey: 'my-key',
             value,
-            'data-testid': testId,
+            id: 'testing',
         });
-        expect(getByTestId(testId)).toBeInTheDocument();
-        expect(getByTestId(testInputId)).toBeInTheDocument();
-        expect(getByTestId(testInputId)).toHaveAttribute('value', value);
+        expect(getByTestId('debounced_text_field-testing-input')).toBeInTheDocument();
+        expect(getByTestId('debounced_text_field-testing-input')).toHaveAttribute('value', value);
 
         setup(
             {
                 handleChange,
                 updateKey: 'my-key',
                 value: resetValue,
-                'data-testid': `${testId}-rerendered`,
+                id: 'testing-rerendered',
             },
             rerender,
         );
-        expect(getByTestId(`${testId}-rerendered-input`)).toHaveAttribute('value', resetValue);
+        expect(getByTestId('debounced_text_field-testing-rerendered-input')).toHaveAttribute('value', resetValue);
     });
 
     it('fires update handler onChange', async () => {
-        const testId = 'testField';
-        const testInputId = 'testField-input';
         const value = '';
         const updateKey = 'my-key';
         const newValue = 'new value';
@@ -84,13 +73,13 @@ describe('DebouncedTextField Renders component', () => {
             handleChange,
             value,
             updateKey,
-            'data-testid': testId,
+            id: 'testing',
         });
-        expect(getByTestId(testId)).toBeInTheDocument();
-        expect(getByTestId(testInputId)).toBeInTheDocument();
-        expect(getByTestId(testInputId)).toHaveAttribute('value', value);
+        expect(getByTestId('debounced_text_field-testing-input')).toBeInTheDocument();
+        expect(getByTestId('debounced_text_field-testing-input')).toHaveAttribute('value', value);
+
         act(() => {
-            fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });
+            fireEvent.change(getByTestId('debounced_text_field-testing-input'), { target: { value: newValue } });
         });
         await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
     });

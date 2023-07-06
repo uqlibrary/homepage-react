@@ -30,6 +30,7 @@ export const pathConfig = {
         testntagmanagebulkassetupdate: '/admin/testntag/manage/bulkassetupdate',
         testntagreportinspectionsdue: '/admin/testntag/report/inspectionsdue',
         testntagreportrecalibrationssdue: '/admin/testntag/report/recalibrationsdue',
+        testntagmanageusers: '/admin/testntag/manage/users',
     },
     bookExamBooth: '/book-exam-booth',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,

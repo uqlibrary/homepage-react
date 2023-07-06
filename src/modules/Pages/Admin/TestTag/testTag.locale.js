@@ -117,28 +117,28 @@ export default {
                         {
                             title: 'ASSET TYPES',
                             icon: <AssetTypeIcon />,
-                            path: `${pathConfig.admin.testntagmanageassettypes}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanageassettypes,
                         },
                         {
                             title: 'LOCATIONS',
                             icon: <LocationIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: `${pathConfig.admin.testntagmanagelocations}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanagelocations,
                         },
                         {
                             title: 'INSPECTION DEVICES',
                             icon: <InspectionDeviceIcon />,
-                            path: `${pathConfig.admin.testntagmanageinspectiondevices}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanageinspectiondevices,
                         },
                         {
                             title: 'BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
-                            path: `${pathConfig.admin.testntagmanagebulkassetupdate}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanagebulkassetupdate,
                         },
                         {
                             title: 'INSPECTIONS',
                             icon: <InspectionIcon />,
-                            path: `${pathConfig.admin.testntagmanageinspectiondetails}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanageinspectiondetails,
                         },
                     ],
                 },
@@ -149,23 +149,23 @@ export default {
                             title: 'INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
-                            path: `${pathConfig.admin.testntagreportrecalibrationssdue}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportrecalibrationssdue,
                         },
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
                             icon: <InspectionIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
-                            path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportinspectionsdue,
                         },
                         {
                             title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
-                            path: `${pathConfig.admin.testntagreportassetsbyfilters}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportassetsbyfilters,
                         },
                         {
                             title: 'INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
-                            path: `${pathConfig.admin.testntagreportinspectionsbylicenceduser}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
                             permissions: [PERMISSIONS.can_admin],
                         },
                     ],
@@ -676,6 +676,11 @@ export default {
                     assetType: {
                         label: 'Asset type',
                     },
+
+                    assetStatus: {
+                        label: 'Asset status',
+                    },
+
                     filterDialog: {
                         title: 'Select assets by feature',
                         button: {
@@ -734,6 +739,75 @@ export default {
                             },
                         },
                     },
+                },
+            },
+            users: {
+                header: {
+                    pageSubtitle: dept => `Managing users for ${dept}`,
+                },
+                breadcrumbs: [
+                    {
+                        title: 'Manage Users',
+                        icon: <UsersIcon fontSize={'small'} />,
+                    },
+                ],
+                form: {
+                    actions: 'Actions',
+                    addButtonLabel: 'Add User',
+                    columns: {
+                        user_id: {
+                            label: 'ID',
+                        },
+                        user_uid: {
+                            label: 'UUID',
+                        },
+                        user_name: {
+                            label: 'Name',
+                        },
+                        user_licence_number: {
+                            label: 'Lic #',
+                        },
+                        can_admin: {
+                            label: 'Admin',
+                        },
+                        can_admin_cb: {
+                            label: 'Admin',
+                        },
+                        can_inspect: {
+                            label: 'Inspect',
+                        },
+                        can_inspect_cb: {
+                            label: 'Admin',
+                        },
+                        can_alter: {
+                            label: 'Alter',
+                        },
+                        can_alter_cb: {
+                            label: 'Admin',
+                        },
+                        can_see_reports: {
+                            label: 'Report',
+                        },
+                        can_see_reports_cb: {
+                            label: 'Admin',
+                        },
+                        user_current_flag: {
+                            label: 'Is Current',
+                        },
+                        user_current_flag_cb: {
+                            label: 'Is Current',
+                        },
+                    },
+                },
+                dialogAdd: {
+                    confirmButtonLabel: 'Add',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Add new user',
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit user',
                 },
             },
         },
@@ -896,14 +970,14 @@ export default {
                     filterToDateFormatted: value => `Including assets up to ${value}`,
                     statusTypes: [
                         {
-                            status_type_id: 0,
-                            status_type_rendered: 'All',
-                            status_type: null,
+                            id: 0,
+                            label: 'All',
+                            value: null,
                         },
                         {
-                            status_type_id: 1,
-                            status_type_rendered: 'Out for repair',
-                            status_type: 'OUTFORREPAIR',
+                            id: 1,
+                            label: 'Out for repair',
+                            value: 'OUTFORREPAIR',
                         },
                     ],
                 },

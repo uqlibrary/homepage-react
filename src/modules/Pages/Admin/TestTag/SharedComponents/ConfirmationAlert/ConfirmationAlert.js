@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 
+const rootId = 'confirmation_alert';
+
 const ConfirmationAlert = ({ isOpen, message, type, closeAlert, ...props }) => {
+    const componentId = `${rootId}-${type}`;
     return (
         <Snackbar
-            id={`confirmation_alert-${type}`}
-            data-testid={`confirmation_alert-${type}`}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
             anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'center',
@@ -20,8 +23,8 @@ const ConfirmationAlert = ({ isOpen, message, type, closeAlert, ...props }) => {
             <Alert
                 onClose={closeAlert}
                 severity={type}
-                id={`confirmation_alert-${type}-alert`}
-                data-testid={`confirmation_alert-${type}-alert`}
+                id={`${componentId}-alert`}
+                data-testid={`${componentId}-alert`}
             >
                 {message}
             </Alert>

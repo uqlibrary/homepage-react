@@ -9,6 +9,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 
 const defaultTheme = createTheme();
+const rootId = 'action_cell';
 
 const useStyles = makeStyles(
     theme => ({
@@ -25,7 +26,8 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClick, handleDeleteClick }) => {
+const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, disableDelete }) => {
+    const componentId = `${rootId}-${id}`;
     const classes = useStyles();
 
     const onEditClick = event => {
@@ -40,25 +42,29 @@ const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClic
 
     return (
         <div className={classes.root}>
-            {withActions.includes('edit') && (
+            {!!handleEditClick && (
                 <IconButton
+                    id={`${componentId}-edit-button`}
+                    data-testid={`${componentId}-edit-button`}
                     color="inherit"
                     className={classes.textPrimary}
                     size="small"
                     aria-label="edit"
-                    disabled={!!!handleEditClick}
+                    disabled={disableEdit}
                     onClick={onEditClick}
                 >
                     <EditIcon fontSize="small" />
                 </IconButton>
             )}
 
-            {withActions.includes('delete') && (
+            {!!handleDeleteClick && (
                 <IconButton
+                    id={`${componentId}-delete-button`}
+                    data-testid={`${componentId}-delete-button`}
                     color="inherit"
                     size="small"
                     aria-label="delete"
-                    disabled={!!!handleDeleteClick}
+                    disabled={disableDelete}
                     onClick={onDeleteClick}
                 >
                     <DeleteIcon fontSize="small" />
@@ -68,12 +74,13 @@ const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClic
     );
 };
 
-RowMenuCell.propTypes = {
+ActionCell.propTypes = {
     api: PropTypes.object.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    withActions: PropTypes.array,
     handleEditClick: PropTypes.func,
     handleDeleteClick: PropTypes.func,
+    disableEdit: PropTypes.bool,
+    disableDelete: PropTypes.bool,
 };
 
-export default React.memo(RowMenuCell);
+export default React.memo(ActionCell);

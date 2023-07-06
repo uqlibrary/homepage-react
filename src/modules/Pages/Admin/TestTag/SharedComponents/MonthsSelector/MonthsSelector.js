@@ -10,10 +10,12 @@ import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+const rootId = 'months_selector';
+
 const moment = require('moment');
 
 const MonthsSelector = ({
-    id = 'monthsSelector',
+    id,
     label,
     options,
     currentValue,
@@ -28,6 +30,7 @@ const MonthsSelector = ({
     classNames,
     ...props
 }) => {
+    const componentId = `${rootId}-${id}`;
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
 
@@ -43,30 +46,34 @@ const MonthsSelector = ({
                 </InputLabel>
             )}
             <Select
-                id={id}
-                data-testid={id}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
                 fullWidth={responsive && isMobileView}
                 className={classNames.select}
                 value={currentValue}
                 onChange={onValueChange}
                 required={required}
                 disabled={disabled}
-                inputProps={{ id: `${id}-input`, 'data-testid': `${id}-input` }}
+                inputProps={{ id: `${componentId}-input`, 'data-testid': `${componentId}-input` }}
                 {...props}
             >
                 {options?.map(period => (
                     <MenuItem
                         value={period.value}
                         key={period.value}
-                        id={`${id}-option-${period.value}`}
-                        data-testid={`${id}-option-${period.value}`}
+                        id={`${componentId}-option-${period.value}`}
+                        data-testid={`${componentId}-option-${period.value}`}
                     >
                         {period.label}
                     </MenuItem>
                 ))}
             </Select>
             {!!nextDateTextFormatter && (
-                <Typography component={'span'} data-testid={`${id}-nextdate-label`}>
+                <Typography
+                    component={'span'}
+                    id={`${componentId}-next-date-label`}
+                    data-testid={`${componentId}-next-date-label`}
+                >
                     {nextDateTextFormatter(
                         moment(fromDate, fromDateFormat)
                             .add(currentValue, 'months')

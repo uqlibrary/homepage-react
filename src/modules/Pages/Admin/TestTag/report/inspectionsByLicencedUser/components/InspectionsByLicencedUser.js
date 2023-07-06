@@ -8,20 +8,22 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import Input from '@material-ui/core/Input';
 import Typography from '@material-ui/core/Typography';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { getNameStyles, transformRow } from './utils';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
-import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+
+const componentId = 'user-inspections';
+const componentIdLower = 'user_inspections';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -182,7 +184,7 @@ const InspectionsByLicencedUser = ({
     }, []);
 
     useEffect(() => {
-        if (!!apiError) openConfirmationAlert(apiError, 'error');
+        if (!!apiError) openConfirmationAlert(locale.config.alerts.error(apiError), 'error');
     }, [apiError]);
 
     return (
@@ -197,17 +199,20 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* Date Pickers go here */}
                             <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel id="inspector-name-selector-label">Inspector Name</InputLabel>
+                                <InputLabel>Inspector Name</InputLabel>
                                 <Select
                                     fullWidth
-                                    labelId="inspector-name-selector-label"
-                                    id="inspector-name-selector"
+                                    id={`${componentIdLower}-user-name`}
+                                    data-testid={`${componentIdLower}-user-name`}
+                                    inputProps={{
+                                        id: `${componentIdLower}-user-name-input`,
+                                        'data-testid': `${componentIdLower}-user-name-input`,
+                                    }}
                                     multiple
                                     disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                     value={inspectorName}
                                     onChange={handleInspectorChange}
                                     onClose={handleInspectorClose}
-                                    input={<Input id="inspector-selector-input" />}
                                     renderValue={selected => {
                                         return (
                                             <div className={classes.chips}>
@@ -232,6 +237,8 @@ const InspectionsByLicencedUser = ({
                                             key={user.user_id}
                                             value={user.user_id}
                                             style={getNameStyles(user, inspectorName, theme)}
+                                            id={`${componentIdLower}-user-name-option-${user.user_id}`}
+                                            data-testid={`${componentIdLower}-user-name-option-${user.user_id}`}
                                         >
                                             {user.user_name}
                                         </MenuItem>
@@ -242,14 +249,19 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
                             <KeyboardDatePicker
+                                id={`${componentIdLower}-tagged-start`}
+                                data-testid={`${componentIdLower}-tagged-start`}
+                                inputProps={{
+                                    id: `${componentIdLower}-tagged-start-input`,
+                                    'data-testid': `${componentIdLower}-tagged-start-input`,
+                                }}
+                                format={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
-                                format="DD/MM/yyyy"
                                 margin="normal"
-                                id="inspections-start-date"
                                 label="Period Start Date"
                                 value={selectedStartDate.date}
                                 onChange={handleStartDateChange}
@@ -265,14 +277,19 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* End Date */}
                             <KeyboardDatePicker
+                                id={`${componentIdLower}-tagged-end`}
+                                data-testid={`${componentIdLower}-tagged-end`}
+                                inputProps={{
+                                    id: `${componentIdLower}-tagged-end-input`,
+                                    'data-testid': `${componentIdLower}-tagged-end-input`,
+                                }}
+                                format={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
-                                format="DD/MM/yyyy"
                                 margin="normal"
-                                id="inspections-end-date"
                                 label="Period End Date"
                                 value={selectedEndDate.date}
                                 onChange={handleEndDateChange}
@@ -287,11 +304,18 @@ const InspectionsByLicencedUser = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={0}>
-                        <Typography component={'p'}>{totalInspections} Total Inspections.</Typography>
+                        <Typography
+                            component={'p'}
+                            id={`${componentIdLower}-total-text`}
+                            data-testid={`${componentIdLower}-total-text`}
+                        >
+                            {totalInspections} Total Inspections.
+                        </Typography>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId={'user_uid'}

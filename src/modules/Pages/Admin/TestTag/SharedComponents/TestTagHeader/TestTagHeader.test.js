@@ -16,18 +16,16 @@ describe('TestTagHeader Renders component', () => {
         const { getByTestId } = setup({
             departmentText: undefined,
             requiredText: undefined,
-            'data-testid': 'boxId',
         });
-        expect(getByTestId('boxId')).toBeInTheDocument();
-        expect(getByTestId('tntHeaderSkeletonDepartmentTextLoading')).toBeInTheDocument();
+        expect(getByTestId('test_tag_header')).toBeInTheDocument();
+        expect(getByTestId('test_tag_header-skeleton')).toBeInTheDocument();
     });
     it('should render header text', () => {
         const { getByText, getByTestId } = setup({
             departmentText: 'UQL',
             requiredText: 'is required',
-            'data-testid': 'boxId',
         });
-        expect(getByTestId('boxId')).toBeInTheDocument();
+        expect(getByTestId('test_tag_header')).toBeInTheDocument();
         expect(getByText('UQL')).toBeInTheDocument();
         expect(getByText('is required')).toBeInTheDocument();
     });

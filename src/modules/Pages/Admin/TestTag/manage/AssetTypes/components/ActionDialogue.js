@@ -11,7 +11,11 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Alert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import locale from '../../../testTag.locale';
+
+const rootId = 'action_dialogue';
 
 export const useStyles = makeStyles(theme => ({
     alternateActionButtonClass: {
@@ -33,16 +37,9 @@ export const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const ActionDialogue = ({
-    data,
-    row,
-    isOpen,
-    noMinContentWidth,
-    actionDialogueBoxId,
-    onCancel,
-    onProceed,
-    isBusy,
-}) => {
+export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCancel, onProceed, isBusy }) => {
+    const componentId = `${rootId}-${id}`;
+
     const classes = useStyles();
     const pageLocale = locale.pages.manage.assetTypes.actionDialogue;
 
@@ -58,21 +55,26 @@ export const ActionDialogue = ({
             classes={{ paper: classes.dialogPaper }}
             style={{ padding: 6 }}
             open={isOpen}
-            data-testid={`dialogbox-${actionDialogueBoxId}`}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
         >
-            <DialogTitle data-testid="message-title">{pageLocale.confirmationTitle}</DialogTitle>
-            <DialogContent style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }}>
-                <Typography component={'p'} data-testid="deleteReassign-target-prompt">
-                    {pageLocale.deleteReassignTargetPrompt(row?.asset_type_name)}
-                </Typography>
+            <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
+                {pageLocale.confirmationTitle}
+            </DialogTitle>
+            <DialogContent
+                style={{ minWidth: !noMinContentWidth ? 400 : 'auto' }}
+                id={`${componentId}-content`}
+                data-testid={`${componentId}-content`}
+            >
+                <Typography component={'p'}>{pageLocale.deleteReassignTargetPrompt(row?.asset_type_name)}</Typography>
                 <InputLabel shrink required>
                     {pageLocale.newAssetTypePrompt}
                 </InputLabel>
                 <Select
                     fullWidth
                     className={classes.formSelect}
-                    id="actionDialogueTypeSelect"
-                    data-testid="actionDialogueTypeSelect"
+                    id={`${componentId}-new-asset-type`}
+                    data-testid={`${componentId}-new-asset-type`}
                     value={selectedAssetType}
                     onChange={e => onAssetTypeChange(e.target.value)}
                     required
@@ -81,14 +83,19 @@ export const ActionDialogue = ({
                         <MenuItem
                             value={item.asset_type_id}
                             key={item.asset_type_id}
-                            id={`DialogueItem-${item.asset_type_id}`}
-                            data-testid={`DialogueItem-${item.asset_type_id}`}
+                            id={`${componentId}-new-asset-type-option-${item.asset_type_id}`}
+                            data-testid={`${componentId}-new-asset-type-option-${item.asset_type_id}`}
                         >
                             {item.asset_type_name}
                         </MenuItem>
                     ))}
                 </Select>
-                <Alert className={classes.alertPanel} severity="warning">
+                <Alert
+                    className={classes.alertPanel}
+                    severity="warning"
+                    id={`${componentId}-alert`}
+                    data-testid={`${componentId}-alert`}
+                >
                     {pageLocale.deleteReassignWarningPrompt(row?.asset_count)}
                 </Alert>
                 <Grid container spacing={4} className={classes.actionButtons}>
@@ -96,8 +103,8 @@ export const ActionDialogue = ({
                         <Button
                             variant="outlined"
                             onClick={onCancel}
-                            id="actionDialogueCancelButton"
-                            data-testid={`actionDialogueCancel-${row.asset_type_id}`}
+                            id={`${componentId}-cancel-button`}
+                            data-testid={`${componentId}-cancel-button`}
                             color={'default'}
                             disabled={!!isBusy}
                         >
@@ -108,12 +115,21 @@ export const ActionDialogue = ({
                         <Button
                             variant="contained"
                             onClick={() => onProceed(row.asset_type_id, selectedAssetType)}
-                            id="actionDialogueConfirmButton"
-                            data-testid={`actionDialogueConfirm-${row.asset_type_id}`}
+                            id={`${componentId}-action-button`}
+                            data-testid={`${componentId}-action-button`}
                             color={'default'}
                             disabled={!!isBusy || !!!selectedAssetType || row?.asset_type_id === selectedAssetType}
                         >
-                            {pageLocale.confirmButtonLabel}
+                            {isBusy ? (
+                                <CircularProgress
+                                    color="inherit"
+                                    size={25}
+                                    id={`${componentId}-progress`}
+                                    data-testid={`${componentId}-progress`}
+                                />
+                            ) : (
+                                pageLocale.confirmButtonLabel
+                            )}
                         </Button>
                     </Grid>
                 </Grid>
@@ -123,13 +139,13 @@ export const ActionDialogue = ({
 };
 
 ActionDialogue.propTypes = {
+    id: PropTypes.string.isRequired,
     dialogueContent: PropTypes.any,
     data: PropTypes.array,
     row: PropTypes.object,
     isOpen: PropTypes.bool,
     locale: PropTypes.object,
     noMinContentWidth: PropTypes.bool,
-    actionDialogueBoxId: PropTypes.string,
     onCancel: PropTypes.func,
     onProceed: PropTypes.func,
     isBusy: PropTypes.bool,
