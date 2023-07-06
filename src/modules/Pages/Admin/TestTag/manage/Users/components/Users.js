@@ -70,10 +70,11 @@ const Users = ({ actions, userListLoading, userList }) => {
     const onRowEdit = data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
+        const userID = request.user_id;
         const wrappedRequest = transformUpdateRequest(request);
         console.log('sending to the API', wrappedRequest);
         actions
-            .updateUser(wrappedRequest)
+            .updateUser(userID, wrappedRequest)
             .then(() => {
                 closeDialog();
             })

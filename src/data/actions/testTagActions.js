@@ -768,10 +768,10 @@ export function loadUserList() {
     };
 }
 
-export function updateUser(request) {
+export function updateUser(id, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_USER_LIST_UPDATING });
-        return put(TEST_TAG_UPDATE_USER_API(), request)
+        return put(TEST_TAG_UPDATE_USER_API(id), request)
             .then(response => {
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
