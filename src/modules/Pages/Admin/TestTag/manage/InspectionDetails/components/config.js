@@ -26,14 +26,14 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false },
         },
         inspect_fail_reason: {
-            component: props => {
+            component: (props, row) => {
                 return (
                     <TextField
                         {...props}
                         multiline
                         minRows={2}
-                        disabled={props.row?.last_inspect_status !== locale.config.inspectStatus.failed ?? false}
-                        required={props.row?.last_inspect_status === locale.config.inspectStatus.failed ?? false}
+                        disabled={row?.last_inspect_status !== locale.config.inspectStatus.failed ?? false}
+                        required={row?.last_inspect_status === locale.config.inspectStatus.failed ?? false}
                     />
                 );
             },
@@ -45,13 +45,13 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false },
         },
         discard_reason: {
-            component: props => (
+            component: (props, row) => (
                 <TextField
                     {...props}
                     multiline
                     minRows={2}
-                    disabled={props.row.asset_status !== locale.config.assetStatus.discarded}
-                    required={props.row.asset_status === locale.config.assetStatus.discarded}
+                    disabled={row?.asset_status !== locale.config.assetStatus.discarded}
+                    required={row?.asset_status === locale.config.assetStatus.discarded}
                 />
             ),
             validate: (value, row) => {
@@ -61,13 +61,13 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false },
         },
         repairer_name: {
-            component: props => (
+            component: (props, row) => (
                 <TextField
                     {...props}
                     multiline
                     minRows={2}
-                    disabled={props.row.asset_status !== locale.config.assetStatus.outforrepair}
-                    required={props.row.asset_status === locale.config.assetStatus.outforrepair}
+                    disabled={row?.asset_status !== locale.config.assetStatus.outforrepair}
+                    required={row?.asset_status === locale.config.assetStatus.outforrepair}
                 />
             ),
             validate: (value, row) => {

@@ -46,8 +46,8 @@ const MonthsSelector = ({
                 </InputLabel>
             )}
             <Select
-                id={`${componentId}-select`}
-                data-testid={`${componentId}-select`}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
                 fullWidth={responsive && isMobileView}
                 className={classNames.select}
                 value={currentValue}

@@ -22,8 +22,6 @@ import { emptyActionState, actionReducer, transformRow, transformAddRequest, tra
 
 const moment = require('moment');
 
-const componentId = 'inspection-devices';
-
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -40,7 +38,15 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const InspectionDevices = ({ actions, canManage = true, pageLocale, inspectionDevices, inspectionDevicesLoading }) => {
+const InspectionDevices = ({
+    componentId,
+    componentIdLower,
+    actions,
+    canManage = true,
+    pageLocale,
+    inspectionDevices,
+    inspectionDevicesLoading,
+}) => {
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
     const classes = useStyles();
@@ -220,8 +226,8 @@ const InspectionDevices = ({ actions, canManage = true, pageLocale, inspectionDe
                                                   <CircularProgress
                                                       color="inherit"
                                                       size={25}
-                                                      id={`${componentId}-progress`}
-                                                      data-testid={`${componentId}-progress`}
+                                                      id={`${componentIdLower}-progress`}
+                                                      data-testid={`${componentIdLower}-progress`}
                                                   />
                                               ),
                                           }
@@ -276,6 +282,8 @@ const InspectionDevices = ({ actions, canManage = true, pageLocale, inspectionDe
 };
 
 InspectionDevices.propTypes = {
+    componentId: PropTypes.string.isRequired,
+    componentIdLower: PropTypes.string.isRequired, // container provided
     actions: PropTypes.object,
     canManage: PropTypes.bool,
     pageLocale: PropTypes.object.isRequired,

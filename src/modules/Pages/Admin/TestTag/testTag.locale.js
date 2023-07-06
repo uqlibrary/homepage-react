@@ -676,6 +676,11 @@ export default {
                     assetType: {
                         label: 'Asset type',
                     },
+
+                    assetStatus: {
+                        label: 'Asset status',
+                    },
+
                     filterDialog: {
                         title: 'Select assets by feature',
                         button: {
@@ -896,14 +901,14 @@ export default {
                     filterToDateFormatted: value => `Including assets up to ${value}`,
                     statusTypes: [
                         {
-                            status_type_id: 0,
-                            status_type_rendered: 'All',
-                            status_type: null,
+                            id: 0,
+                            label: 'All',
+                            value: null,
                         },
                         {
-                            status_type_id: 1,
-                            status_type_rendered: 'Out for repair',
-                            status_type: 'OUTFORREPAIR',
+                            id: 1,
+                            label: 'Out for repair',
+                            value: 'OUTFORREPAIR',
                         },
                     ],
                 },

@@ -401,10 +401,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     <Grid item xs={12}>
                                         <AssetStatusSelector
                                             id={componentId}
-                                            label="Asset status"
+                                            label={pageLocale.form.assetStatus.label}
                                             onChange={handleChange('asset_status')}
                                             options={locale.config.assetStatusOptions.filter(
-                                                option => option.value === 'DISCARDED',
+                                                option => option.value === locale.config.assetStatus.discarded,
                                             )}
                                             disabled={!formValues.hasStatus}
                                             required={formValues.hasStatus}

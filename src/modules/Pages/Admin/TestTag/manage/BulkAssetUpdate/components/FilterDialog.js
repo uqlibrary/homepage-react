@@ -18,6 +18,7 @@ import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { transformFilterRow } from './utils';
 
 const rootId = 'filter-dialog';
+const rootIdLower = 'filter_dialog';
 
 const useStyles = makeStyles(() => ({
     dialogPaper: {
@@ -41,7 +42,7 @@ const FilterDialog = ({
     onCancel,
     onAction,
 }) => {
-    const componentId = `${rootId}-${id}`;
+    const componentId = `${rootIdLower}-${id}`;
     const classes = useStyles();
     const { row, setRow } = useDataTableRow([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');

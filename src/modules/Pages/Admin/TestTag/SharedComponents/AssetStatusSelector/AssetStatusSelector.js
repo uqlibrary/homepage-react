@@ -9,25 +9,35 @@ import { isEmptyObject } from '../../helpers/helpers';
 
 const rootId = 'asset_status_selector';
 
-const AssetStatusSelector = ({ id, label, options, required = false, onChange, classNames, disabled, ...rest }) => {
+const AssetStatusSelector = ({
+    id,
+    label,
+    options,
+    initialOptionIndex = -1,
+    required = false,
+    onChange,
+    classNames,
+    disabled,
+    ...rest
+}) => {
     const componentId = `${rootId}-${id}`;
-    const [currentValue, setCurrentValue] = useState({});
+    const [currentValue, setCurrentValue] = useState(initialOptionIndex > -1 ? options[initialOptionIndex] : {});
     const handleOnChange = (event, newValue) => {
         console.log('handleOnChange', event, newValue);
         setCurrentValue(newValue);
         onChange?.(newValue);
     };
     return (
-        <FormControl className={classNames.formControl} fullWidth>
+        <FormControl className={classNames?.formControl} fullWidth>
             <Autocomplete
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
-                className={classNames.autocomplete}
+                className={classNames?.autocomplete}
                 fullWidth
                 options={options}
                 value={currentValue}
                 onChange={handleOnChange}
-                getOptionLabel={option => option.label}
+                getOptionLabel={option => option?.label}
                 autoHighlight
                 renderInput={params => (
                     <TextField
@@ -58,6 +68,7 @@ AssetStatusSelector.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string,
     options: PropTypes.object.required,
+    initialOptionIndex: PropTypes.number,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

@@ -22,6 +22,8 @@ import { transformRow } from './utils';
 
 const moment = require('moment');
 
+const componentId = 'inspections-due';
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -83,7 +85,7 @@ const InspectionsDue = ({
     };
 
     useEffect(() => {
-        if (!!apiError) openConfirmationAlert(apiError, 'error');
+        if (!!apiError) openConfirmationAlert(locale.config.alerts.error(apiError), 'error');
     }, [apiError]);
 
     useEffect(() => {
@@ -116,6 +118,7 @@ const InspectionsDue = ({
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
                         <AutoLocationPicker
+                            id={componentId}
                             actions={actions}
                             location={location}
                             setLocation={setLocation}
@@ -124,7 +127,7 @@ const InspectionsDue = ({
                         />
                         <Grid item>
                             <MonthsSelector
-                                id="testResultNextDate"
+                                id={componentId}
                                 label={pageLocale.form.filterToDateLabel}
                                 options={monthsOptions}
                                 currentValue={monthRange}
@@ -142,6 +145,7 @@ const InspectionsDue = ({
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId={'asset_barcode'}

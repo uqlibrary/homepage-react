@@ -139,24 +139,27 @@ export const UpdateDialogue = ({
                                         )}
                                         {!!dataFields[field]?.fieldParams?.canEdit && (
                                             <>
-                                                {dataFields[field]?.component({
-                                                    id: `${field}-input`,
-                                                    name: field,
-                                                    label: dataColumns[field].label,
-                                                    value:
-                                                        dataFields[field]?.valueFormatter?.(data?.[field]) ??
-                                                        data?.[field],
-                                                    error: dataFields[field]?.validate?.(data?.[field], data) ?? false,
-                                                    onChange: handleChange,
-                                                    InputLabelProps: {
-                                                        shrink: true,
+                                                {dataFields[field]?.component(
+                                                    {
+                                                        id: `${field}-input`,
+                                                        name: field,
+                                                        label: dataColumns[field].label,
+                                                        value:
+                                                            dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                            data?.[field],
+                                                        error:
+                                                            dataFields[field]?.validate?.(data?.[field], data) ?? false,
+                                                        onChange: handleChange,
+                                                        InputLabelProps: {
+                                                            shrink: true,
+                                                        },
+                                                        inputProps: {
+                                                            ['data-testid']: `${field}-input`,
+                                                        },
+                                                        fullWidth: true,
                                                     },
-                                                    inputProps: {
-                                                        ['data-testid']: `${field}-input`,
-                                                    },
-                                                    fullWidth: true,
-                                                    row: data,
-                                                })}
+                                                    data,
+                                                )}
                                             </>
                                         )}
                                     </Grid>

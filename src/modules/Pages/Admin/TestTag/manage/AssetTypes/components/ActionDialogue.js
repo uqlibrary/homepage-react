@@ -73,8 +73,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                 <Select
                     fullWidth
                     className={classes.formSelect}
-                    id={`${componentId}-select`}
-                    data-testid={`${componentId}-select`}
+                    id={`${componentId}-new-asset-type`}
+                    data-testid={`${componentId}-new-asset-type`}
                     value={selectedAssetType}
                     onChange={e => onAssetTypeChange(e.target.value)}
                     required
@@ -83,14 +83,19 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         <MenuItem
                             value={item.asset_type_id}
                             key={item.asset_type_id}
-                            id={`${componentId}-option-${item.asset_type_id}`}
-                            data-testid={`${componentId}-option-${item.asset_type_id}`}
+                            id={`${componentId}-new-asset-type-option-${item.asset_type_id}`}
+                            data-testid={`${componentId}-new-asset-type-option-${item.asset_type_id}`}
                         >
                             {item.asset_type_name}
                         </MenuItem>
                     ))}
                 </Select>
-                <Alert className={classes.alertPanel} severity="warning">
+                <Alert
+                    className={classes.alertPanel}
+                    severity="warning"
+                    id={`${componentId}-alert`}
+                    data-testid={`${componentId}-alert`}
+                >
                     {pageLocale.deleteReassignWarningPrompt(row?.asset_count)}
                 </Alert>
                 <Grid container spacing={4} className={classes.actionButtons}>
