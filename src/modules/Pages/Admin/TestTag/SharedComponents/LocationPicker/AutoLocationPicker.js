@@ -22,16 +22,14 @@ const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }
 
     const fullSiteList = React.useMemo(
         () =>
-            !!hasAllOption
-                ? [{ site_id: -1, site_id_displayed: locale.site.labelAll }, ...(siteList ?? [])]
-                : siteList ?? [],
+            !!hasAllOption ? [{ site_id: -1, site_name: locale.site.labelAll }, ...(siteList ?? [])] : siteList ?? [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [hasAllOption, siteList],
     );
 
     const buildingList = siteList?.find(site => site.site_id === location.site)?.buildings ?? [];
     const fullBuildingList = !!hasAllOption
-        ? [{ building_id: -1, building_id_displayed: locale.building.labelAll }, ...buildingList]
+        ? [{ building_id: -1, building_name: locale.building.labelAll }, ...buildingList]
         : buildingList;
 
     const fullFloorList = React.useMemo(
