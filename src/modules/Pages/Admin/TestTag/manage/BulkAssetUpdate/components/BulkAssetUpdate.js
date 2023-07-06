@@ -155,11 +155,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         actions
             .bulkAssetUpdate(request)
             .then(() => {
-                openSnackbarAlert(stepTwoLocale.snackbars.success, 'success');
+                openSnackbarAlert(locale.config.alerts.success(), 'success');
                 resetForm();
             })
             .catch(error => {
-                openSnackbarAlert(stepTwoLocale.snackbars.failed(error), 'error', false);
+                openSnackbarAlert(locale.config.alerts.error(error.message), 'error');
                 setConfirmDialogueBusy(false);
             });
     };
@@ -308,6 +308,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         </Grid>
                         <FilterDialog
+                            id={componentId}
                             locale={pageLocale.form.filterDialog}
                             assetTypeLocale={pageLocale.form.assetType}
                             locationLocale={locale.pages.general.locationPicker}

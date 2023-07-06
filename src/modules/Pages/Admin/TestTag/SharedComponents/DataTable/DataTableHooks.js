@@ -29,18 +29,15 @@ export const useDataTableColumns = ({
                       field: 'actions',
                       headerName: locale?.actions,
                       renderCell: params => {
+                          const disableEdit = shouldDisableEdit?.(params.row) ?? false;
+                          const disableDelete = shouldDisableDelete?.(params.row) ?? false;
                           return (
                               <ActionCell
                                   {...params}
-                                  withActions={[!!handleEditClick ? 'edit' : '', !!handleDeleteClick ? 'delete' : '']}
-                                  {...((!!shouldDisableEdit ? !shouldDisableEdit(params.row) : true) &&
-                                  !!handleEditClick
-                                      ? { handleEditClick: handleEditClick }
-                                      : {})}
-                                  {...((!!shouldDisableDelete ? !shouldDisableDelete(params.row) : true) &&
-                                  !!handleDeleteClick
-                                      ? { handleDeleteClick: handleDeleteClick }
-                                      : {})}
+                                  {...(!!handleEditClick ? { handleEditClick: handleEditClick } : {})}
+                                  {...(!!handleDeleteClick ? { handleDeleteClick: handleDeleteClick } : {})}
+                                  disableEdit={disableEdit}
+                                  disableDelete={disableDelete}
                               />
                           );
                       },

@@ -18,7 +18,7 @@ import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { transformRow, transformUpdateRequest } from './utils';
 
-const rootId = 'inspection-details';
+const componentId = 'inspection-details';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -79,10 +79,6 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
         actions.loadAssets(searchPatternRef.current);
     };
 
-    const handleApiError = response => {
-        openConfirmationAlert(locale.config.alerts.error(response.message), 'error');
-    };
-
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
         console.log('edit clicked', row);
@@ -107,7 +103,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
             })
             .catch(error => {
                 console.error(error);
-                handleApiError({ message: error.message });
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -133,7 +129,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                     <UpdateDialog
                         title={actionState.title}
                         action="edit"
-                        id={rootId}
+                        id={componentId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale?.dialogEdit}
                         fields={config?.fields ?? []}
@@ -147,7 +143,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                     <Grid container spacing={3}>
                         <Grid item padding={3} xs={12} md={4} style={{ flex: 1 }}>
                             <AssetSelector
-                                id={rootId}
+                                id={componentId}
                                 locale={pageLocale.form}
                                 user={user}
                                 classNames={{ formControl: classes.formControl }}
@@ -164,7 +160,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
                             <DataTable
                                 rows={row}
                                 columns={columns}
-                                id={rootId}
+                                id={componentId}
                                 rowId={'asset_id_displayed'}
                                 loading={assetsListLoading}
                                 classes={{ root: classes.gridRoot }}

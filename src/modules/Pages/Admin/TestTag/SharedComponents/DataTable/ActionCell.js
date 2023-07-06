@@ -26,7 +26,7 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const ActionCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
+const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, disableDelete }) => {
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
 
@@ -50,7 +50,7 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
                     className={classes.textPrimary}
                     size="small"
                     aria-label="edit"
-                    disabled={!!!handleEditClick}
+                    disabled={disableEdit}
                     onClick={onEditClick}
                 >
                     <EditIcon fontSize="small" />
@@ -64,7 +64,7 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick }) => {
                     color="inherit"
                     size="small"
                     aria-label="delete"
-                    disabled={!!!handleDeleteClick}
+                    disabled={disableDelete}
                     onClick={onDeleteClick}
                 >
                     <DeleteIcon fontSize="small" />
@@ -79,6 +79,8 @@ ActionCell.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     handleEditClick: PropTypes.func,
     handleDeleteClick: PropTypes.func,
+    disableEdit: PropTypes.bool,
+    disableDelete: PropTypes.bool,
 };
 
 export default React.memo(ActionCell);

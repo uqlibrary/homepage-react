@@ -126,14 +126,14 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(pageLocale.snackbars.addSuccess, 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.addFailed(error), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
             });
     };
 
@@ -150,11 +150,11 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         openConfirmationAlert(pageLocale.snackbars.updateSuccess, 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.updateFail(error), 'error', false);
+                openConfirmationAlert(pageLocale.snackbars.updateFail(error.message), 'error', false);
             });
     };
 
@@ -180,11 +180,11 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         actionDispatch({ type: 'clear' });
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.reallocateFail(error), 'error', false);
+                openConfirmationAlert(pageLocale.snackbars.reallocateFail(error.message), 'error', false);
             });
     };
 
@@ -200,11 +200,11 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         actionDispatch({ type: 'clear' });
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.deleteFail(error), 'error', false);
+                        openConfirmationAlert(pageLocale.snackbars.deleteFail(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.deleteFail(error), 'error', false);
+                openConfirmationAlert(pageLocale.snackbars.deleteFail(error.message), 'error', false);
             });
     };
 
