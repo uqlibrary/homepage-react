@@ -163,7 +163,6 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 handleChange={handleChange}
                                 updateKey="repairer_contact_details"
                                 id="repairerDetails"
-                                data-testid="repairerDetails"
                             />
                         </FormControl>
                     </Grid>
@@ -226,7 +225,6 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 handleChange={handleChange}
                                 updateKey="discard_reason"
                                 id="discardReason"
-                                data-testid="discardReason"
                             />
                         </FormControl>
                     </Grid>
