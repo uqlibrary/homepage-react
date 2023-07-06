@@ -527,10 +527,10 @@ export function addAssetType(request) {
     };
 }
 
-export function saveAssetType(request) {
+export function saveAssetType(id, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_SAVING });
-        return put(TEST_TAG_SAVE_ASSETTYPE_API(), request)
+        return put(TEST_TAG_SAVE_ASSETTYPE_API(id), request)
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSET_TYPES_SAVED,

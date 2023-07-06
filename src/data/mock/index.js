@@ -870,13 +870,13 @@ mock.onGet('exams/course/FREN1010/summary')
             status: 'OK',
         },
     ])
-    .onPut(routes.TEST_TAG_SAVE_ASSETTYPE_API().apiUrl)
-    .reply(() => [
+    .onPut(/test_and_tag\/asset_type\/\d*/)
+    .reply(withDelay([
         200,
         {
             status: 'OK', 
         },
-    ])
+    ]))
     .onPost(routes.TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API().apiUrl)
     .reply(() => [
         200,
