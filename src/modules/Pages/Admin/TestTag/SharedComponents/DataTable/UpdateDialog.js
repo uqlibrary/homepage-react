@@ -61,6 +61,8 @@ export const UpdateDialogue = ({
     const isMobileView = useIsMobileView();
     const [isValid, setIsValid] = React.useState(false);
 
+    const [checkboxState, setCheckboxState] = React.useState({});
+
     React.useEffect(() => {
         if (isOpen) {
             setDataColumns(columns);
@@ -80,20 +82,49 @@ export const UpdateDialogue = ({
         setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field]) ?? true));
     }, [data, dataFields, editableFields]);
 
+    // React.useEffect(() => {
+    //     const tempState = {};
+    //     for (const item in dataFields) {
+    //         if (Object.hasOwn(dataFields, item)) {
+    //             if (!(item in checkboxState)) {
+    //                 if (!!dataFields[item]?.isBoolean) {
+    //                     tempState[item] = row[item] === 'Yes';
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     setCheckboxState({
+    //         ...checkboxState,
+    //         ...tempState,
+    //     });
+    // }, [data]);
+
     const _onAction = () => {
         onClose?.();
+        // setCheckboxState({});
         onAction?.(data);
     };
 
     const _onCancelAction = () => {
         onClose?.();
+        // setCheckboxState({});
         onCancelAction?.();
     };
 
     const handleChange = event => {
+        const isCheckbox = event.target.type === 'checkbox';
+        // eslint-disable-next-line no-nested-ternary
+        const value = !isCheckbox ? event.target.value : event.target.checked;
+
+        // if (isCheckbox) {
+        //     setCheckboxState({
+        //         ...checkboxState,
+        //         [event.target.id]: event.target.checked,
+        //     });
+        // }
         setData({
             ...data,
-            [event.target.id]: event.target.value,
+            [event.target.id]: value,
         });
     };
 
@@ -138,6 +169,7 @@ export const UpdateDialogue = ({
                                                         dataFields[field]?.valueFormatter?.(data?.[field]) ??
                                                         data?.[field],
                                                     error: dataFields[field]?.validate?.(data?.[field]) ?? false,
+                                                    checked: !!data?.[field],
                                                     onChange: handleChange,
                                                     InputLabelProps: {
                                                         shrink: true,
