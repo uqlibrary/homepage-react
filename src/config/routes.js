@@ -228,6 +228,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
+            path: pathConfig.admin.testntagmanageinspectiondetails,
+            component: components.TestTagManageInspectionDetails,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
             path: pathConfig.admin.testntagreportrecalibrationssdue,
             component: components.TestTagReportRecalibrationsDue,
             exact: true,

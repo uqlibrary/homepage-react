@@ -22,8 +22,9 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
-import { capitaliseLeadingChar } from '../../../helpers/helpers';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
+
+const componentId = 'locations';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,19 +40,15 @@ const useStyles = makeStyles(theme => ({
 
 const actionHandler = {
     [locationType.site]: actions => {
-        actions.clearSites();
         actions.loadSites();
     },
     [locationType.building]: actions => {
-        actions.clearSites();
         actions.loadSites();
     },
     [locationType.floor]: (actions, location) => {
-        actions.clearFloors();
         actions.loadFloors(location.building);
     },
     [locationType.room]: (actions, location) => {
-        actions.clearRooms();
         actions.loadRooms(location.floor);
     },
 };
@@ -136,10 +133,6 @@ const ManageLocations = ({ actions }) => {
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
 
-    const handleApiError = response => {
-        openConfirmationAlert(`Request failed: ${response.message}`, 'error');
-    };
-
     const onRowAdd = React.useCallback(
         data => {
             setDialogueBusy(true);
@@ -150,15 +143,12 @@ const ManageLocations = ({ actions }) => {
                 .addLocation({ type: selectedLocation, request: wrappedRequest })
                 .then(() => {
                     closeDialog();
-                    openConfirmationAlert(
-                        pageLocale.alerts.addSuccess(capitaliseLeadingChar(selectedLocation)),
-                        'success',
-                    );
+                    openConfirmationAlert(locale.config.alerts.success(), 'success');
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
                     console.error(error);
-                    handleApiError({ message: pageLocale.alerts.addFail(capitaliseLeadingChar(selectedLocation)) });
+                    openConfirmationAlert(locale.config.alerts.error(error.message), 'success');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -178,15 +168,13 @@ const ManageLocations = ({ actions }) => {
                 .updateLocation({ type: selectedLocation, request: wrappedRequest })
                 .then(() => {
                     closeDialog();
-                    openConfirmationAlert(
-                        pageLocale.alerts.updateSuccess(capitaliseLeadingChar(selectedLocation)),
-                        'success',
-                    );
+
+                    openConfirmationAlert(locale.config.alerts.success(), 'success');
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
                     console.error(error);
-                    handleApiError({ message: pageLocale.alerts.updateFail(capitaliseLeadingChar(selectedLocation)) });
+                    openConfirmationAlert(locale.config.alerts.error(error.message), 'success');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -206,15 +194,13 @@ const ManageLocations = ({ actions }) => {
                 .deleteLocation({ type: selectedLocation, id })
                 .then(() => {
                     closeDialog();
-                    openConfirmationAlert(
-                        pageLocale.alerts.deleteSuccess(capitaliseLeadingChar(selectedLocation)),
-                        'success',
-                    );
+
+                    openConfirmationAlert(locale.config.alerts.success(), 'success');
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
                     console.error(error);
-                    handleApiError({ message: pageLocale.alerts.deleteFail(capitaliseLeadingChar(selectedLocation)) });
+                    openConfirmationAlert(locale.config.alerts.error(error.message), 'success');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -235,7 +221,7 @@ const ManageLocations = ({ actions }) => {
                     <UpdateDialog
                         title={actionState.title}
                         action="add"
-                        updateDialogueBoxId="addRow"
+                        id={componentId}
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
                         locationType={selectedLocation}
@@ -250,7 +236,7 @@ const ManageLocations = ({ actions }) => {
                     <UpdateDialog
                         title={actionState.title}
                         action="edit"
-                        updateDialogueBoxId="editRow"
+                        id={componentId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
                         locationType={selectedLocation}
@@ -266,7 +252,7 @@ const ManageLocations = ({ actions }) => {
                         actionButtonColor="primary"
                         actionButtonVariant="contained"
                         cancelButtonColor="secondary"
-                        confirmationBoxId="deleteRow"
+                        confirmationBoxId={componentId}
                         onCancelAction={closeDialog}
                         onAction={onRowDelete}
                         isOpen={actionState.isDelete}
@@ -279,8 +265,8 @@ const ManageLocations = ({ actions }) => {
                                           <CircularProgress
                                               color="inherit"
                                               size={25}
-                                              id="confirmationSpinner"
-                                              data-testid="confirmationSpinner"
+                                              id={`${componentId}-progress`}
+                                              data-testid={`${componentId}-progress`}
                                           />
                                       ),
                                   }
@@ -293,6 +279,7 @@ const ManageLocations = ({ actions }) => {
 
                     <Grid container spacing={3}>
                         <AutoLocationPicker
+                            id={componentId}
                             actions={actions}
                             location={location}
                             setLocation={setLocation}
@@ -304,12 +291,14 @@ const ManageLocations = ({ actions }) => {
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId={`${selectedLocation}_id`}
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {
+                                        id: componentId,
                                         label: pageLocale.form.addLocationButton(selectedLocation),
                                         onClick: handleAddClick,
                                     },

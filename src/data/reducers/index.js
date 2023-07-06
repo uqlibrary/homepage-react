@@ -26,4 +26,5 @@ export { default as testTagInspectionsDueReducer } from './testTagInspectionsDue
 export { default as testTagInspectionsByLicencedUserReducer } from './testTagInspectionsByLicencedUserReducer';
 export { default as testTagAssetsByFiltersReducer } from './testTagAssetsByFiltersReducer';
 export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpdateReducer';
+export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspectionDetailsUpdateReducer';
 export { default as testTagUserListReducer } from './testTagUserListReducer';

@@ -5,22 +5,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 
-import DataTable from './../../../SharedComponents/DataTable/DataTable';
-
-import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
-import ActionDialogue from './ActionDialogue';
-
-import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
+import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
+import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
+import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import ActionDialogue from './ActionDialogue';
+import locale from '../../../testTag.locale';
+import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
+
+const componentId = 'asset-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -127,14 +126,14 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(pageLocale.snackbars.addSuccess, 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.addFailed(error), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
             });
     };
 
@@ -152,11 +151,11 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         openConfirmationAlert(pageLocale.snackbars.updateSuccess, 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.updateFail(error), 'error', false);
+                openConfirmationAlert(pageLocale.snackbars.updateFail(error.message), 'error', false);
             });
     };
 
@@ -182,11 +181,11 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         actionDispatch({ type: 'clear' });
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.reallocateFail(error), 'error', false);
+                openConfirmationAlert(pageLocale.snackbars.reallocateFail(error.message), 'error', false);
             });
     };
 
@@ -202,11 +201,11 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         actionDispatch({ type: 'clear' });
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.deleteFail(error), 'error', false);
+                        openConfirmationAlert(pageLocale.snackbars.deleteFail(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.deleteFail(error), 'error', false);
+                openConfirmationAlert(pageLocale.snackbars.deleteFail(error.message), 'error', false);
             });
     };
 
@@ -222,6 +221,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <ActionDialogue
+                id={componentId}
                 data={assetTypesList}
                 row={actionState.row}
                 isOpen={actionState.isDelete}
@@ -234,7 +234,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <UpdateDialog
                         title={actionState.title}
                         action="add"
-                        updateDialogueBoxId="addRow"
+                        id={componentId}
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
                         fields={config?.fields ?? []}
@@ -248,7 +248,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <UpdateDialog
                         title={actionState.title}
                         action="edit"
-                        updateDialogueBoxId="editRow"
+                        id={componentId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
                         fields={config?.fields ?? []}
@@ -264,7 +264,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         actionButtonColor="primary"
                         actionButtonVariant="contained"
                         cancelButtonColor="secondary"
-                        confirmationBoxId="testTag-network-error"
+                        confirmationBoxId={componentId}
                         onAction={onDeleteEmptyAssetType}
                         onClose={hideDeleteConfirm}
                         isOpen={isDeleteConfirmOpen}
@@ -275,6 +275,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId="asset_type_id"
@@ -283,6 +284,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {
+                                        id: componentId,
                                         label: pageLocale.header.addButtonLabel,
                                         onClick: handleAddClick,
                                     },

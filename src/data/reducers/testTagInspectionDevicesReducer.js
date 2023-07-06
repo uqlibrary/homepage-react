@@ -11,7 +11,6 @@ const handlers = {
     [actions.TESTTAG_INSPECTION_DEVICES_LOADING]: state => ({
         ...initialState,
         ...state,
-        inspectionDevices: [],
         inspectionDevicesLoading: true,
         inspectionDevicesLoaded: false,
         inspectionDevicesError: null,
@@ -27,7 +26,6 @@ const handlers = {
     [actions.TESTTAG_INSPECTION_DEVICES_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
-        inspectionDevices: [],
         inspectionDevicesLoading: false,
         inspectionDevicesLoaded: false,
         inspectionDevicesError: action.payload,

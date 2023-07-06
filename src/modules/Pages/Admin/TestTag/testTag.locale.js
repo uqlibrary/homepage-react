@@ -27,6 +27,16 @@ export default {
             { value: '12', label: '1 year' },
             { value: '60', label: '5 years' },
         ],
+        assetStatus: {
+            current: 'CURRENT',
+            failed: 'FAILED',
+            outforrepair: 'OUTFORREPAIR',
+            discarded: 'DISCARDED',
+        },
+        inspectStatus: {
+            passed: 'PASSED',
+            failed: 'FAILED',
+        },
         assetStatusOptions: [
             { value: 'CURRENT', label: 'Current' },
             { value: 'REMOVED', label: 'Removed' },
@@ -34,6 +44,11 @@ export default {
             { value: 'FAILED', label: 'Failed' },
             { value: 'OUTFORREPAIR', label: 'Out for Repair' },
         ],
+        alerts: {
+            success: () => 'Request successfully completed',
+            error: err => `Encountered an error: ${err}`,
+            failed: err => `Operation failed: ${err}`,
+        },
     },
     pages: {
         general: {
@@ -55,6 +70,10 @@ export default {
                     labelAll: 'All floors',
                 },
                 room: { label: 'Room', labelAll: 'All rooms' },
+            },
+            helperText: {
+                maxChars: count => `Max ${count} characters`,
+                minChars: count => `Min ${count} characters`,
             },
         },
         dashboard: {
@@ -98,28 +117,28 @@ export default {
                         {
                             title: 'ASSET TYPES',
                             icon: <AssetTypeIcon />,
-                            path: `${pathConfig.admin.testntagmanageassettypes}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanageassettypes,
                         },
                         {
                             title: 'LOCATIONS',
                             icon: <LocationIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: `${pathConfig.admin.testntagmanagelocations}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanagelocations,
                         },
                         {
                             title: 'INSPECTION DEVICES',
                             icon: <InspectionDeviceIcon />,
-                            path: `${pathConfig.admin.testntagmanageinspectiondevices}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanageinspectiondevices,
                         },
                         {
                             title: 'BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
-                            path: `${pathConfig.admin.testntagmanagebulkassetupdate}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanagebulkassetupdate,
                         },
                         {
                             title: 'INSPECTIONS',
                             icon: <InspectionIcon />,
-                            path: '#',
+                            path: pathConfig.admin.testntagmanageinspectiondetails,
                         },
                     ],
                 },
@@ -130,23 +149,23 @@ export default {
                             title: 'INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
-                            path: `${pathConfig.admin.testntagreportrecalibrationssdue}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportrecalibrationssdue,
                         },
                         {
                             title: 'ASSETS DUE NEXT INSPECTION',
                             icon: <InspectionIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
-                            path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportinspectionsdue,
                         },
                         {
                             title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
-                            path: `${pathConfig.admin.testntagreportassetsbyfilters}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportassetsbyfilters,
                         },
                         {
                             title: 'INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
-                            path: `${pathConfig.admin.testntagreportinspectionsbylicenceduser}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
                             permissions: [PERMISSIONS.can_admin],
                         },
                     ],
@@ -575,6 +594,66 @@ export default {
                     deleteFail: 'Device could not be deleted',
                 },
             },
+            inspectiondetails: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage Inspection Details',
+                        icon: <InspectionIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Inspection Details for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    columns: {
+                        asset_id: {
+                            label: 'ID',
+                        },
+                        asset_id_displayed: {
+                            label: 'Asset ID',
+                        },
+                        asset_type: {
+                            label: 'Type',
+                        },
+                        asset_status: {
+                            label: 'Status',
+                        },
+                        user_name: {
+                            label: 'Last Inspected by',
+                        },
+                        inspect_date: {
+                            label: 'Last inspection date',
+                        },
+                        inspect_notes: {
+                            label: 'Inspection notes',
+                        },
+                        inspect_fail_reason: {
+                            label: 'Fail reason',
+                        },
+                        discard_reason: {
+                            label: 'Discard reason',
+                        },
+                        repairer_name: {
+                            label: 'Repair notes',
+                        },
+                    },
+                    assetSelector: {
+                        label: 'Asset ID',
+                        helperText: 'Scan or enter a new ID to search',
+                        placeholder: 'Enter at least 3 characters',
+                    },
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit asset details',
+                },
+                alerts: {
+                    updateSuccess: 'Asset updated successfully',
+                    updateFail: 'Asset could not be updated',
+                },
+            },
             bulkassetupdate: {
                 config: {},
                 breadcrumbs: [
@@ -597,6 +676,11 @@ export default {
                     assetType: {
                         label: 'Asset type',
                     },
+
+                    assetStatus: {
+                        label: 'Asset status',
+                    },
+
                     filterDialog: {
                         title: 'Select assets by feature',
                         button: {
@@ -886,14 +970,14 @@ export default {
                     filterToDateFormatted: value => `Including assets up to ${value}`,
                     statusTypes: [
                         {
-                            status_type_id: 0,
-                            status_type_rendered: 'All',
-                            status_type: null,
+                            id: 0,
+                            label: 'All',
+                            value: null,
                         },
                         {
-                            status_type_id: 1,
-                            status_type_rendered: 'Out for repair',
-                            status_type: 'OUTFORREPAIR',
+                            id: 1,
+                            label: 'Out for repair',
+                            value: 'OUTFORREPAIR',
                         },
                     ],
                 },
