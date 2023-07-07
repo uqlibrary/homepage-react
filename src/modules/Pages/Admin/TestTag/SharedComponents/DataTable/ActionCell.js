@@ -8,6 +8,8 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 
+import { getDataFieldParams } from './utils';
+
 const defaultTheme = createTheme();
 const rootId = 'action_cell';
 
@@ -26,9 +28,11 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, disableDelete }) => {
+const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, disableDelete, dataFieldKeys }) => {
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
+
+    const { dataFieldName, dataFieldValue } = getDataFieldParams(api.getRow(id), dataFieldKeys);
 
     const onEditClick = event => {
         event.stopPropagation();
@@ -46,6 +50,9 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, 
                 <IconButton
                     id={`${componentId}-edit-button`}
                     data-testid={`${componentId}-edit-button`}
+                    {...(!!dataFieldValue
+                        ? { ['data-fieldname']: dataFieldName, ['data-fieldvalue']: dataFieldValue }
+                        : {})}
                     color="inherit"
                     className={classes.textPrimary}
                     size="small"
@@ -61,6 +68,9 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, 
                 <IconButton
                     id={`${componentId}-delete-button`}
                     data-testid={`${componentId}-delete-button`}
+                    {...(!!dataFieldValue
+                        ? { ['data-fieldname']: dataFieldName, ['data-fieldvalue']: dataFieldValue }
+                        : {})}
                     color="inherit"
                     size="small"
                     aria-label="delete"
@@ -81,6 +91,7 @@ ActionCell.propTypes = {
     handleDeleteClick: PropTypes.func,
     disableEdit: PropTypes.bool,
     disableDelete: PropTypes.bool,
+    dataFieldKeys: PropTypes.object,
 };
 
 export default React.memo(ActionCell);

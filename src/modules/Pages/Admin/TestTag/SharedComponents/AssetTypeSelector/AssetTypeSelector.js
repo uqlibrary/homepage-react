@@ -99,8 +99,8 @@ const AssetTypeSelector = ({
 };
 AssetTypeSelector.propTypes = {
     id: PropTypes.string.isRequired,
-    locale: PropTypes.object.required,
-    actions: PropTypes.object.required,
+    locale: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
     required: PropTypes.bool,
     initValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onChange: PropTypes.func,

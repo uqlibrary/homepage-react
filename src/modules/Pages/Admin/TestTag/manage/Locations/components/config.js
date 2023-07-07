@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TextField from '@material-ui/core/TextField';
+import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
 
 import locale from '../../../testTag.locale';
 import { createLocationString } from '../../../helpers/helpers';
@@ -10,16 +10,16 @@ export default {
     site: {
         fields: {
             site_id: {
-                fieldParams: { canEdit: false },
+                fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
             },
             site_name: {
-                component: props => <TextField {...props} required />,
+                component: props => <DebouncedTextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             site_id_displayed: {
                 component: props => (
-                    <TextField
+                    <DebouncedTextField
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
@@ -37,7 +37,7 @@ export default {
     building: {
         fields: {
             building_id: {
-                fieldParams: { canEdit: false },
+                fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
             },
             building_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
@@ -45,13 +45,13 @@ export default {
                 fieldParams: { canEdit: false, renderInTable: false },
             },
             building_name: {
-                component: props => <TextField {...props} required />,
+                component: props => <DebouncedTextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             building_id_displayed: {
                 component: props => (
-                    <TextField
+                    <DebouncedTextField
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
@@ -69,7 +69,7 @@ export default {
     floor: {
         fields: {
             floor_id: {
-                fieldParams: { canEdit: false, flex: 1 },
+                fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
             },
             floor_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
@@ -78,7 +78,7 @@ export default {
             },
             floor_id_displayed: {
                 component: props => (
-                    <TextField
+                    <DebouncedTextField
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
@@ -96,7 +96,7 @@ export default {
     room: {
         fields: {
             room_id: {
-                fieldParams: { canEdit: false },
+                fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
             },
             room_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
@@ -104,12 +104,12 @@ export default {
                 fieldParams: { canEdit: false, renderInTable: false },
             },
             room_description: {
-                component: props => <TextField {...props} />,
+                component: props => <DebouncedTextField {...props} />,
                 fieldParams: { canEdit: true, flex: 1 },
             },
             room_id_displayed: {
                 component: props => (
-                    <TextField
+                    <DebouncedTextField
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required

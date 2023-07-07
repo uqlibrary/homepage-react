@@ -162,6 +162,7 @@ const InspectionDevices = ({
         withActions: canManage,
         handleEditClick,
         handleDeleteClick,
+        actionDataFieldKeys: { valueKey: 'device_model_name' },
     });
 
     const { row } = useDataTableRow(inspectionDevices, transformRow);
