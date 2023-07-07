@@ -8,23 +8,23 @@ function setup(testProps = {}, renderer = rtlRender) {
 
 describe('DebouncedTextField Renders component', () => {
     it('renders component without value', () => {
-        const handleChange = jest.fn();
+        const onChange = jest.fn();
 
         const { getByTestId } = setup({
-            handleChange,
-            updateKey: 'my-key',
+            onChange,
+
             id: 'testing',
         });
         expect(getByTestId('debounced_text_field-testing-input')).toBeInTheDocument();
         expect(getByTestId('debounced_text_field-testing-input')).toHaveAttribute('value', '');
     });
     it('renders component with value', () => {
-        const handleChange = jest.fn();
+        const onChange = jest.fn();
         const value = 'some value';
 
         const { getByTestId } = setup({
-            handleChange,
-            updateKey: 'my-key',
+            onChange,
+
             id: 'testing',
             value,
         });
@@ -33,13 +33,13 @@ describe('DebouncedTextField Renders component', () => {
     });
 
     it('rerenders component with reset value', () => {
-        const handleChange = jest.fn();
+        const onChange = jest.fn();
         const value = 'some value';
         const resetValue = 'reset value';
 
         const { getByTestId } = setup({
-            handleChange,
-            updateKey: 'my-key',
+            onChange,
+
             value,
             id: 'testing',
         });
@@ -48,8 +48,8 @@ describe('DebouncedTextField Renders component', () => {
 
         setup(
             {
-                handleChange,
-                updateKey: 'my-key',
+                onChange,
+
                 value: resetValue,
                 id: 'testing-rerendered',
             },
@@ -60,19 +60,16 @@ describe('DebouncedTextField Renders component', () => {
 
     it('fires update handler onChange', async () => {
         const value = '';
-        const updateKey = 'my-key';
         const newValue = 'new value';
-        const handleChange = jest.fn(prop =>
+        const onChange = jest.fn(() =>
             jest.fn(event => {
-                expect(prop).toEqual(updateKey);
                 expect(event.target.value).toEqual(newValue);
             }),
         );
 
         const { getByTestId } = setup({
-            handleChange,
+            onChange,
             value,
-            updateKey,
             id: 'testing',
         });
         expect(getByTestId('debounced_text_field-testing-input')).toBeInTheDocument();
@@ -81,6 +78,10 @@ describe('DebouncedTextField Renders component', () => {
         act(() => {
             fireEvent.change(getByTestId('debounced_text_field-testing-input'), { target: { value: newValue } });
         });
-        await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
+        await waitFor(() =>
+            expect(onChange).toHaveBeenCalledWith(
+                expect.objectContaining({ target: expect.objectContaining({ value: newValue }) }),
+            ),
+        );
     });
 });
