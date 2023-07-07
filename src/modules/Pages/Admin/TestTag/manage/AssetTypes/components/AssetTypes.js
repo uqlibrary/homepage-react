@@ -138,9 +138,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
     };
 
     const onRowUpdate = data => {
+        const Id = data?.asset_type_id;
         setDialogueBusy(true);
         actions
-            .saveAssetType(data)
+            .saveAssetType(Id, data)
             .then(() => {
                 actions
                     .loadAssetTypes()

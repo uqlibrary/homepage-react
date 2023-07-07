@@ -78,6 +78,9 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
         [formValues?.isRepair, formValues?.inspection_status, selectedAsset?.last_inspection?.inspect_status],
     );
 
+    const handleRepairerDetailsChange = e => handleChange('repairer_contact_details')(e);
+    const handleDiscardReasonChange = e => handleChange('discard_reason')(e);
+
     return (
         <>
             <Grid container spacing={3}>
@@ -160,8 +163,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
                                 value={formValues?.repairer_contact_details ?? ''}
-                                handleChange={handleChange}
-                                updateKey="repairer_contact_details"
+                                onChange={handleRepairerDetailsChange}
                                 id="repairerDetails"
                             />
                         </FormControl>
@@ -222,8 +224,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled || isDiscardDisabled || !!!formValues.isDiscarded}
                                 value={formValues?.discard_reason ?? ''}
-                                handleChange={handleChange}
-                                updateKey="discard_reason"
+                                onChange={handleDiscardReasonChange}
                                 id="discardReason"
                             />
                         </FormControl>

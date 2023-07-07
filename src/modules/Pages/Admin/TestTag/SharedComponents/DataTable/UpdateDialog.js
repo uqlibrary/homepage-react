@@ -41,7 +41,7 @@ export const UpdateDialogue = ({
     locale,
     isOpen,
     title,
-    id = 'action',
+    id,
     hideActionButton = false,
     hideCancelButton = false,
     onAction,
@@ -80,7 +80,8 @@ export const UpdateDialogue = ({
 
     React.useEffect(() => {
         setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field], data) ?? true));
-    }, [data, dataFields, editableFields]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
 
     const _onAction = () => {
         onClose?.();
@@ -93,10 +94,13 @@ export const UpdateDialogue = ({
     };
 
     const handleChange = event => {
-        setData({
-            ...data,
-            [event.target.name]: event.target.value,
-        });
+        const isCheckbox = event.target.type === 'checkbox';
+        // eslint-disable-next-line no-nested-ternary
+        const value = !isCheckbox ? event.target.value : event.target.checked;
+        setData(prevState => ({
+            ...prevState,
+            [event.target.name]: value,
+        }));
     };
 
     return (
@@ -149,6 +153,7 @@ export const UpdateDialogue = ({
                                                             data?.[field],
                                                         error:
                                                             dataFields[field]?.validate?.(data?.[field], data) ?? false,
+                                                        checked: !!data?.[field],
                                                         onChange: handleChange,
                                                         InputLabelProps: {
                                                             shrink: true,
