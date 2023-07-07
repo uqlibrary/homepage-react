@@ -1,7 +1,6 @@
 import React from 'react';
 
-import TextField from '@material-ui/core/TextField';
-
+import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
 import locale from '../../../testTag.locale';
 import { isEmptyStr } from '../../../helpers/helpers';
 
@@ -21,14 +20,14 @@ export default {
         },
         inspect_notes: {
             component: props => {
-                return <TextField {...props} multiline minRows={2} />;
+                return <DebouncedTextField {...props} multiline minRows={2} />;
             },
             fieldParams: { canEdit: true, renderInTable: false },
         },
         inspect_fail_reason: {
             component: (props, row) => {
                 return (
-                    <TextField
+                    <DebouncedTextField
                         {...props}
                         multiline
                         minRows={2}
@@ -46,7 +45,7 @@ export default {
         },
         discard_reason: {
             component: (props, row) => (
-                <TextField
+                <DebouncedTextField
                     {...props}
                     multiline
                     minRows={2}
@@ -62,7 +61,7 @@ export default {
         },
         repairer_name: {
             component: (props, row) => (
-                <TextField
+                <DebouncedTextField
                     {...props}
                     multiline
                     minRows={2}
