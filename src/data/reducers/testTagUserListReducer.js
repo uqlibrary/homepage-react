@@ -11,7 +11,6 @@ const handlers = {
     [actions.TESTTAG_USER_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
-        userList: [],
         userListLoading: true,
         userListLoaded: false,
         userListError: null,
