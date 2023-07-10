@@ -31,6 +31,14 @@ const useStyles = makeStyles(theme => ({
     gridRoot: {
         border: 0,
     },
+    MuiCheckbox: {
+        colorSecondary: {
+            color: '#112233',
+            '&$checked': {
+                color: '#998877',
+            },
+        },
+    },
 }));
 
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) => {
@@ -92,6 +100,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
         locale: pageLocale.form.columns,
         handleEditClick: onRowEdit,
         handleDeleteClick: onRowDelete,
+        actionDataFieldKeys: { valueKey: 'asset_type_id' },
     });
 
     const { row } = useDataTableRow(assetTypesList);

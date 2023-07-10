@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -19,7 +20,6 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useConfirmationState } from 'hooks';
 
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import config from './config';
@@ -39,6 +39,10 @@ const useStyles = makeStyles(theme => ({
 const Users = ({ actions, userListLoading, userList }) => {
     const componentId = 'user-management';
     const componentIdLower = 'user_management';
+
+    const { user } = useSelector(state => state.get?.('testTagUserReducer'));
+
+    const userDepartment = user?.user_department ?? null;
 
     const pageLocale = locale.pages.manage.users;
 
@@ -60,13 +64,13 @@ const Users = ({ actions, userListLoading, userList }) => {
     const onRowAdd = data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
-        const wrappedRequest = transformAddRequest(request);
+        const wrappedRequest = transformAddRequest(request, userDepartment);
         actions
             .addUser(wrappedRequest)
             .then(() => {
                 closeDialog();
                 openConfirmationAlert(pageLocale.alerts?.addSuccess, 'success');
-                actions.clearInspectionDevices();
+                actions.loadUserList();
             })
             .catch(error => {
                 console.log(error);
@@ -117,7 +121,7 @@ const Users = ({ actions, userListLoading, userList }) => {
 
     const onRowDelete = data => {
         setDialogueBusy(true);
-        const id = data.row.device_id;
+        const id = data.row.user_id;
 
         console.log('delete', id);
 
@@ -126,7 +130,7 @@ const Users = ({ actions, userListLoading, userList }) => {
             .then(() => {
                 closeDialog();
                 openConfirmationAlert(pageLocale.alerts?.deleteSuccess, 'success');
-                actions.clearInspectionDevices();
+                actions.loadUserList();
             })
             .catch(error => {
                 console.log(error);
@@ -144,7 +148,7 @@ const Users = ({ actions, userListLoading, userList }) => {
     };
 
     const { row } = useDataTableRow(userList, transformRow);
-    const shouldDisableDelete = row => (row?.inspectionCount ?? 0) > 0;
+    const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0;
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -156,7 +160,7 @@ const Users = ({ actions, userListLoading, userList }) => {
 
     React.useEffect(() => {
         actions.loadUserList();
-    }, []);
+    }, [actions]);
 
     return (
         <StandardAuthPage

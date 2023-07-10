@@ -18,7 +18,8 @@ export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, 
 
 export const transformUpdateRequest = request => {
     // delete request.previleges;
-    delete request.inspectionCount;
+    console.log('request is', request);
+    delete request.actions_count;
     delete request.id;
     delete request.department_display_name;
     request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
@@ -41,10 +42,13 @@ export const transformUpdateRequest = request => {
     return request;
 };
 
-export const transformAddRequest = request => {
+export const transformAddRequest = (request, dept) => {
     // clear data not required from UI for request.
-    delete request.inspectionCount;
+    console.log('USER DEPARTMENT', dept);
+    delete request.actions_count;
     delete request.user_id;
+    // Assign user department
+    request.user_department = dept;
     // Prime Privileges
     request.privileges = {};
     request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
@@ -63,6 +67,8 @@ export const transformAddRequest = request => {
     delete request.can_see_reports;
     delete request.can_see_reports_cb;
     delete request.user_current_flag_cb;
+
+    console.log('This is the return ', request);
 
     return request;
 };

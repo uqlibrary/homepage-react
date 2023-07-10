@@ -23,6 +23,7 @@ export const useDataTableColumns = ({
     shouldDisableEdit,
     shouldDisableDelete,
 }) => {
+    console.log('actionDataFieldKeys', actionDataFieldKeys);
     const columns = useMemo(
         () => {
             const actionsCell = withActions

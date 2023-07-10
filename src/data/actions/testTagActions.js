@@ -860,7 +860,7 @@ export function addUser(request) {
 export function deleteUser(id) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_USER_LIST_DELETING });
-        return put(TEST_TAG_DELETE_USER_API(id))
+        return destroy(TEST_TAG_DELETE_USER_API(id))
             .then(response => {
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({

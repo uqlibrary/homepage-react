@@ -37,7 +37,10 @@ export default {
         },
         can_admin_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Admin'} />
+                <FormControlLabel
+                    control={<Checkbox color="primary" checked={props.value} {...props} />}
+                    label={'Admin'}
+                />
             ),
             fieldParams: { canEdit: true, renderInTable: false },
         },
@@ -46,7 +49,10 @@ export default {
         },
         can_inspect_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Inspect'} />
+                <FormControlLabel
+                    control={<Checkbox color="primary" checked={props.value} {...props} />}
+                    label={'Inspect'}
+                />
             ),
             fieldParams: { canEdit: true, renderInTable: false },
         },
@@ -55,7 +61,10 @@ export default {
         },
         can_alter_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Alter'} />
+                <FormControlLabel
+                    control={<Checkbox color="primary" checked={props.value} {...props} />}
+                    label={'Alter'}
+                />
             ),
             fieldParams: { canEdit: true, renderInTable: false },
         },
@@ -64,7 +73,10 @@ export default {
         },
         can_see_reports_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Report'} />
+                <FormControlLabel
+                    control={<Checkbox color="primary" checked={props.value} {...props} />}
+                    label={'Report'}
+                />
             ),
             fieldParams: { canEdit: true, renderInTable: false },
         },
@@ -73,7 +85,10 @@ export default {
         },
         user_current_flag_cb: {
             component: props => (
-                <FormControlLabel control={<Checkbox checked={props.value} {...props} />} label={'Is Current'} />
+                <FormControlLabel
+                    control={<Checkbox color="primary" checked={props.value} {...props} />}
+                    label={'Is Current'}
+                />
             ),
             fieldParams: { canEdit: true, renderInTable: false },
         },
