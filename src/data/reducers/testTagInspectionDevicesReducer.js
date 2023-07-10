@@ -30,6 +30,11 @@ const handlers = {
         inspectionDevicesLoaded: false,
         inspectionDevicesError: action.payload,
     }),
+    [actions.TESTTAG_INSPECTION_DEVICES_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        inspectionDevicesError: null,
+    }),
     [actions.TESTTAG_INSPECTION_DEVICES_CLEAR]: () => ({
         ...initialState,
     }),

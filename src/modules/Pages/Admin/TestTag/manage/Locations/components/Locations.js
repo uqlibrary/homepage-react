@@ -17,6 +17,7 @@ import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useLocationDisplayName } from './hooks';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
@@ -76,7 +77,11 @@ const ManageLocations = ({ actions }) => {
         actions,
         store,
     });
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+    });
+
     const { locationDisplayedAs } = useLocationDisplayName(location, store.siteList, store.floorList);
 
     const handleAddClick = React.useCallback(() => {
@@ -131,14 +136,6 @@ const ManageLocations = ({ actions }) => {
         shouldDisableDelete,
         actionDataFieldKeys: { valueKey: locationDataFieldKeys[selectedLocation] },
     });
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
-    };
-
     const closeDialog = () => actionDispatch({ type: 'clear' });
 
     const onRowAdd = React.useCallback(

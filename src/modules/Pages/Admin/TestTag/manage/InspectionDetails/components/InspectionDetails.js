@@ -10,9 +10,11 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+
+import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
@@ -49,25 +51,23 @@ const actionReducer = (_, action) => {
     }
 };
 
-const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
+const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListError }) => {
     const pageLocale = locale.pages.manage.inspectiondetails;
     const classes = useStyles();
+
+    const onCloseConfirmationAlert = () => actions.clearAssetsError();
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: assetsListError,
+    });
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
     const [actionState, actionDispatch] = React.useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
 
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
     const searchPatternRef = React.useRef('');
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
-    };
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
 

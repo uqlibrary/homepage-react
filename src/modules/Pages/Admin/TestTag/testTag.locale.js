@@ -45,6 +45,7 @@ export default {
             { value: 'OUTFORREPAIR', label: 'Out for Repair' },
         ],
         alerts: {
+            timeout: 6000,
             success: () => 'Request successfully completed',
             error: err => `Encountered an error: ${err}`,
             failed: err => `Operation failed: ${err}`,

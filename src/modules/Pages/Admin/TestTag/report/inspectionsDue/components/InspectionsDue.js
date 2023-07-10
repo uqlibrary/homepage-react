@@ -14,6 +14,7 @@ import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelec
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import { useConfirmationAlert } from '../../../helpers/hooks';
 
 import locale from '../../../testTag.locale';
 import config from './config';
@@ -47,6 +48,12 @@ const InspectionsDue = ({
     // inspectionsDueLoaded,
     inspectionsDueError,
 }) => {
+    console.log({
+        inspectionsDue,
+        inspectionsDueLoading,
+        // inspectionsDueLoaded,
+        inspectionsDueError,
+    });
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
     const classes = useStyles();
@@ -67,31 +74,38 @@ const InspectionsDue = ({
     const { row } = useDataTableRow(inspectionsDue, transformRow);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
-    const [apiError, setApiError] = useState(inspectionsDueError);
 
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+    const onCloseConfirmationAlert = () => actions.clearInspectionsDueError();
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: inspectionsDueError,
+    });
 
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: 2000,
-            onClose: () => setApiError(null),
-        });
-    };
+    // const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
-    useEffect(() => {
-        if (!!apiError) openConfirmationAlert(locale.config.alerts.error(apiError), 'error');
-    }, [apiError]);
+    // const closeConfirmationAlert = () => {
+    //     setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+    // };
+    // const openConfirmationAlert = (message, type) => {
+    //     setConfirmationAlert({
+    //         message: message,
+    //         visible: true,
+    //         type: !!type ? type : 'info',
+    //         autoHideDuration: locale.config.alerts.timeout,
+    //         ...(type === 'error' ? { onClose: () => actions.clearInspectionsDueError() } : {}),
+    //     });
+    // };
+
+    // useEffect(() => {
+    //     if (!!inspectionsDueError) {
+    //         openConfirmationAlert(locale.config.alerts.error(inspectionsDueError), 'error');
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [inspectionsDueError]);
 
     useEffect(() => {
         const locationId = location[lastSelectedLocation];
-
-        // actions.clearInspectionsDue();
 
         actions.getInspectionsDue({
             period: monthRange,

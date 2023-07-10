@@ -31,6 +31,12 @@ const handlers = {
         assetsListLoading: false,
         assetsListError: action.payload,
     }),
+    [actions.TESTTAG_ASSETS_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        assetsListError: null,
+    }),
+
     [actions.TESTTAG_ASSETS_CLEAR]: () => ({
         ...initialState,
     }),
@@ -56,6 +62,11 @@ const handlers = {
         ...state,
         assetsMineListLoading: false,
         assetsMineListError: action.payload,
+    }),
+    [actions.TESTTAG_ASSETS_MINE_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        assetsMineListError: null,
     }),
     [actions.TESTTAG_ASSETS_MINE_CLEAR]: () => ({
         ...initialState,
