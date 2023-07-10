@@ -14,12 +14,13 @@ export default {
         },
         user_uid: {
             label: 'UUID',
-            // component: props => <TextField {...props} required />,
-            // validate: value => isEmptyStr(value), // should return true if a validation error exists
-            fieldParams: { canEdit: false },
+            component: props => <TextField {...props} required />,
+            validate: value => isEmptyStr(value),
+            fieldParams: { canEdit: true, canAdd: true },
         },
         user_name: {
             component: props => <TextField {...props} />,
+            validate: value => isEmptyStr(value),
             fieldParams: { canEdit: true, flex: 1 },
         },
         user_licence_number: {
