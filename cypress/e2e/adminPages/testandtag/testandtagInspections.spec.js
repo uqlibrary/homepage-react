@@ -380,12 +380,12 @@ describe('Test and Tag Admin Inspection page', () => {
                 selectListbox('5 years');
                 cy.data('months_selector-testResultNextDate-next-date-label').should('contain', plus60months);
 
-                cy.data('debounced_text_field-inspectionNotes-input').type('Test notes');
+                cy.data('inspectionNotes-input').type('Test notes');
 
                 cy.data('testResultToggleButtons-FAILED').click();
                 cy.data('months_selector-testResultNextDate').should('not.exist');
-                cy.data('debounced_text_field-inspectionFailReason-input').should('exist');
-                cy.data('debounced_text_field-inspectionFailReason-input').type('Failed reason');
+                cy.data('inspectionFailReason-input').should('exist');
+                cy.data('inspectionFailReason-input').type('Failed reason');
 
                 cy.data('testntagFormResetButton').click();
                 cy.data('testResultToggleButtons-PASSED').should('be.disabled');
@@ -421,12 +421,12 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('tab-repair').should('not.be.disabled'); // failed should be able send for repair
                 cy.data('tab-discard').should('not.be.disabled');
 
-                cy.data('debounced_text_field-discardReason-input').should('be.disabled');
+                cy.data('discardReason-input').should('be.disabled');
                 cy.data('selectIsDiscarded').click();
                 selectListbox('YES');
                 cy.data('tab-repair').should('be.disabled'); // can only enter details for one tab at a time
-                cy.data('debounced_text_field-discardReason-input').should('not.be.disabled');
-                cy.data('debounced_text_field-discardReason-input').type('Discard reason');
+                cy.data('discardReason-input').should('not.be.disabled');
+                cy.data('discardReason-input').type('Discard reason');
                 cy.data('selectIsDiscarded').click();
                 selectListbox('NO');
                 cy.data('tab-repair').should('not.be.disabled'); // can only enter details for one tab at a time
@@ -435,9 +435,9 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('selectIsRepair').click();
                 selectListbox('YES');
                 cy.data('tab-discard').should('be.disabled'); // can only enter details for one tab at a time
-                cy.data('debounced_text_field-repairerDetails-input').should('exist');
-                cy.data('debounced_text_field-repairerDetails-input').should('not.be.disabled');
-                cy.data('debounced_text_field-repairerDetails-input').type('Repair reason');
+                cy.data('repairerDetails-input').should('exist');
+                cy.data('repairerDetails-input').should('not.be.disabled');
+                cy.data('repairerDetails-input').type('Repair reason');
 
                 cy.data('testResultToggleButtons-PASSED').click(); // can't allow repair option if test passes
                 cy.data('tab-repair').should('be.disabled'); // make sure repair tab disables
@@ -459,7 +459,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 selectAssetType('PowerBoard');
                 selectTestingDevice('ITS-PAT-06');
                 cy.data('testResultToggleButtons-PASSED').click();
-                cy.data('debounced_text_field-inspectionNotes-input').type('Test notes');
+                cy.data('inspectionNotes-input').type('Test notes');
                 cy.data('testntagFormSubmitButton').should('not.be.disabled');
                 cy.data('testntagFormSubmitButton').click();
                 cy.wait(2000);

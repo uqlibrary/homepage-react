@@ -86,7 +86,7 @@ describe('InspectionPanel', () => {
     });
 
     it('allows entry of inspection notes text', async () => {
-        const testInputId = 'debounced_text_field-inspectionNotes-input';
+        const testInputId = 'inspectionNotes-input';
         const updateKey = 'inspection_notes';
         const newValue = 'some inspection notes';
 
@@ -113,7 +113,7 @@ describe('InspectionPanel', () => {
     });
 
     it('allows entry of fail reason text', async () => {
-        const testInputId = 'debounced_text_field-inspectionFailReason-input';
+        const testInputId = 'inspectionFailReason-input';
         const updateKey = 'inspection_fail_reason';
         const newValue = 'some fail reason';
 

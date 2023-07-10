@@ -1,7 +1,4 @@
-import { useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { useDispatch } from 'react-redux';
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
 const moment = require('moment');
 
@@ -47,7 +44,6 @@ export const useObjectList = (list = [], transform, options = {}) => {
     const [data, _setData] = useState(!!transform ? transform(list) : list);
     const [_options] = useState({ duplicates: false, duplicateKey: 'id', ...options });
 
-    console.log('useObjectlist', { data, _options });
     const setData = data => _setData(!!transform ? transform(data) : data);
 
     const addAt = (index, item) => {
@@ -83,16 +79,28 @@ export const useObjectList = (list = [], transform, options = {}) => {
     return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear };
 };
 
-export function useActions(actions, deps) {
-    const dispatch = useDispatch();
-    return useMemo(
-        () => {
-            if (Array.isArray(actions)) {
-                return actions.map(a => bindActionCreators(a, dispatch));
-            }
-            return bindActionCreators(actions, dispatch);
-        },
+export function useConfirmationAlert({ duration, onClose = null, errorMessage = null }) {
+    const [confirmationAlert, setConfirmationAlert] = useState({ message: '', visible: false });
+
+    const closeConfirmationAlert = () => {
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+        onClose?.();
+    };
+    const openConfirmationAlert = (message, type) => {
+        setConfirmationAlert({
+            message: message,
+            visible: true,
+            type: !!type ? type : 'info',
+            autoHideDuration: duration,
+        });
+    };
+
+    useEffect(() => {
+        if (!!errorMessage) {
+            openConfirmationAlert(errorMessage, 'error');
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        deps ? [dispatch, ...deps] : [dispatch],
-    );
+    }, [errorMessage]);
+
+    return { confirmationAlert, openConfirmationAlert, closeConfirmationAlert };
 }

@@ -96,7 +96,7 @@ describe('ActionPanel', () => {
     });
 
     it('allows entry of repair text', async () => {
-        const testInputId = 'debounced_text_field-repairerDetails-input';
+        const testInputId = 'repairerDetails-input';
         const updateKey = 'repairer_contact_details';
         const newValue = 'repair details';
 
@@ -130,7 +130,7 @@ describe('ActionPanel', () => {
     });
 
     it('allows entry of discarded text', async () => {
-        const testInputId = 'debounced_text_field-discardReason-input';
+        const testInputId = 'discardReason-input';
         const updateKey = 'discard_reason';
         const newValue = 'discard details';
         // eslint-disable-next-line no-unused-vars

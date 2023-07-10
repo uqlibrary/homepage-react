@@ -15,6 +15,7 @@ import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
@@ -46,6 +47,7 @@ const InspectionDevices = ({
     pageLocale,
     inspectionDevices,
     inspectionDevicesLoading,
+    inspectionDevicesError,
 }) => {
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
@@ -55,14 +57,12 @@ const InspectionDevices = ({
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
-    };
+    const onCloseConfirmationAlert = () => actions.clearInspectionDevicesError();
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: inspectionDevicesError,
+    });
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
 

@@ -13,8 +13,10 @@ import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/Standar
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
 import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import ActionDialogue from './ActionDialogue';
+
+import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
@@ -33,13 +35,20 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) => {
+const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, assetTypesListError }) => {
     const pageLocale = locale.pages.manage.assetTypes;
 
     const classes = useStyles();
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
     const [confirmID, setConfirmID] = React.useState(null);
+
+    const onCloseConfirmationAlert = () => actions.clearAssetTypesError();
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: assetTypesListError,
+    });
 
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
 
@@ -65,11 +74,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
     };
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
         closeConfirmationAlert();
@@ -101,14 +105,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const openConfirmationAlert = (message, type, autoHide) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: !!autoHide ? 6000 : null,
-        });
-    };
     const handleAddClick = () => {
         closeConfirmationAlert();
         actionDispatch({ type: 'add' });
@@ -148,14 +144,14 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(pageLocale.snackbars.updateSuccess, 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error.message), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.updateFail(error.message), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
             });
     };
 
@@ -172,20 +168,20 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
         setDialogueBusy(true);
         actions
             .deleteAndReassignAssetType(Payload)
-            .then(response => {
-                openConfirmationAlert(pageLocale.snackbars.reallocateSuccess(response), 'success', true);
+            .then(() => {
                 actions
                     .loadAssetTypes()
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error.message), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.reallocateFail(error.message), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
             });
     };
 
@@ -197,23 +193,18 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     .loadAssetTypes()
                     .then(() => {
                         setDialogueBusy(false);
-                        openConfirmationAlert(pageLocale.snackbars.deleteSuccess, 'success', true);
                         actionDispatch({ type: 'clear' });
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.deleteFail(error.message), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.deleteFail(error.message), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
             });
     };
 
-    // const columns = useMemo(
-    //     () => getColumns({ data: assetTypesList, onRowEdit, onRowDelete }),
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //     [assetTypesList],
-    // );
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -309,6 +300,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
 ManageAssetTypes.propTypes = {
     actions: PropTypes.object,
     assetTypesList: PropTypes.array,
+    assetTypesListError: PropTypes.string,
     assetTypesActionType: PropTypes.string,
     assetTypesListLoading: PropTypes.bool,
     assetTypesActionError: PropTypes.bool,

@@ -8,39 +8,17 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import { useGridSlotComponentProps } from '@mui/x-data-grid';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
-import { getDataFieldParams } from '../../../SharedComponents/DataTable/utils';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { transformFilterRow } from './utils';
-
-// eslint-disable-next-line react/prop-types
-const CustomCheckbox = ({ row, id, dataFieldKeys, ...props }) => {
-    const { apiRef } = useGridSlotComponentProps();
-    const rows = apiRef.current.getRow(props.rowId());
-    // HERE - THIS STUFF AINT WORKING, NEED TO GET THE ROW OR THE ROW ID OR INDEX OR SOME DAMN THING
-    // SO WE CAN GRAB THE DATAFIELDVALUE
-    const { dataFieldName, dataFieldValue } = getDataFieldParams(row, dataFieldKeys);
-    console.log('checkbox', rows, props, dataFieldName, dataFieldValue, row);
-    return (
-        <Checkbox
-            // eslint-disable-next-line react/prop-types
-            id={`${id}-${row?.asset_id}-checkbox`}
-            inputProps={{
-                // eslint-disable-next-line react/prop-types
-                ['data-testid']: `${id}-${row?.asset_id}-checkbox`,
-                ...(!!dataFieldValue ? { ['data-fieldname']: dataFieldName, ['data-fieldvalue']: dataFieldValue } : {}),
-            }}
-            {...props}
-        />
-    );
-};
+import { useConfirmationAlert } from '../../../helpers/hooks';
 
 const rootId = 'filter-dialog';
 const rootIdLower = 'filter_dialog';
@@ -60,9 +38,10 @@ const FilterDialog = ({
     actions,
     isOpen = false,
     isBusy = false,
+    confirmAlertTimeout = 6000,
+    locale,
     locationLocale,
     assetTypeLocale,
-    locale,
     config,
     onCancel,
     onAction,
@@ -72,8 +51,18 @@ const FilterDialog = ({
     const { row, setRow } = useDataTableRow([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');
     const [selectedAssets, setSelectedAssets] = useState([]);
-    const { assetsMineList, assetsMineListLoading } = useSelector(state => state.get('testTagAssetsReducer'));
+    const { assetsMineList, assetsMineListLoading, assetsMineListError } = useSelector(state =>
+        state.get('testTagAssetsReducer'),
+    );
     const locationStore = useSelector(state => state.get('testTagLocationReducer'));
+
+    const onCloseConfirmationAlert = () => actions.clearAssetsMineError();
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: confirmAlertTimeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: assetsMineListError,
+    });
+
     const { location, setLocation } = useLocation();
     const { lastSelectedLocation } = useSelectLocation({
         location,
@@ -137,98 +126,98 @@ const FilterDialog = ({
     };
 
     return (
-        <Dialog
-            classes={{ paper: classes.dialogPaper }}
-            style={{ padding: 6 }}
-            open={isOpen}
-            id={`${componentId}`}
-            data-testid={`${componentId}`}
-            fullWidth
-            aria-describedby="messageTitle"
-        >
-            <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
-                {locale?.title}
-            </DialogTitle>
-            <DialogContent>
-                <Grid container spacing={3}>
-                    <AutoLocationPicker
-                        id={rootId}
-                        actions={actions}
-                        location={location}
-                        setLocation={setLocation}
-                        locale={locationLocale}
-                        hasAllOption
-                    />
-                </Grid>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={4} padding={3} style={{ flex: 1 }}>
-                        <AssetTypeSelector
+        <>
+            <Dialog
+                classes={{ paper: classes.dialogPaper }}
+                style={{ padding: 6 }}
+                open={isOpen}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
+                fullWidth
+                aria-describedby="messageTitle"
+            >
+                <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
+                    {locale?.title}
+                </DialogTitle>
+                <DialogContent>
+                    <Grid container spacing={3}>
+                        <AutoLocationPicker
                             id={rootId}
-                            locale={assetTypeLocale}
                             actions={actions}
-                            onChange={handleAssetTypeChange}
-                            validateAssetTypeId={isValidAssetTypeId}
-                            required={false}
-                            autoSelect={false}
-                            autoHighlight={false}
-                            selectOnFocus
-                            disableClearable={false}
+                            location={location}
+                            setLocation={setLocation}
+                            locale={locationLocale}
+                            hasAllOption
                         />
                     </Grid>
-                </Grid>
-                <Grid container spacing={3}>
-                    <Grid item padding={3} style={{ flex: 1 }}>
-                        <DataTable
-                            id={rootId}
-                            rows={row}
-                            columns={columns}
-                            rowId={'asset_id_displayed'}
-                            loading={assetsMineListLoading}
-                            classes={{ root: classes.gridRoot }}
-                            checkboxSelection
-                            disableRowSelectionOnClick
-                            onSelectionModelChange={handleAssetSelectionChange}
-                            autoHeight={false}
-                            components={{
-                                Checkbox: CustomCheckbox,
-                            }}
-                            componentsProps={{
-                                checkbox: {
-                                    rowId: params => params.row.asset_barcode,
-                                    id: rootId,
-                                    dataFieldKeys: { valueKey: 'asset_barcode' },
-                                },
-                            }}
-                        />
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={4} padding={3} style={{ flex: 1 }}>
+                            <AssetTypeSelector
+                                id={rootId}
+                                locale={assetTypeLocale}
+                                actions={actions}
+                                onChange={handleAssetTypeChange}
+                                validateAssetTypeId={isValidAssetTypeId}
+                                required={false}
+                                autoSelect={false}
+                                autoHighlight={false}
+                                selectOnFocus
+                                disableClearable={false}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container spacing={4} className={classes.actionButtons}>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-start">
-                        <Button
-                            variant="outlined"
-                            onClick={handleCancelAction}
-                            id={`${componentId}-cancel-button`}
-                            data-testid={`${componentId}-cancel-button`}
-                            color={'default'}
-                        >
-                            {locale.button.cancel}
-                        </Button>
+                    <Grid container spacing={3}>
+                        <Grid item padding={3} style={{ flex: 1 }}>
+                            <DataTable
+                                id={rootId}
+                                rows={row}
+                                columns={columns}
+                                rowId={'asset_id_displayed'}
+                                loading={assetsMineListLoading}
+                                classes={{ root: classes.gridRoot }}
+                                checkboxSelection
+                                disableRowSelectionOnClick
+                                onSelectionModelChange={handleAssetSelectionChange}
+                                autoHeight={false}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-end">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleAddAction}
-                            id={`${componentId}-action-button`}
-                            data-testid={`${componentId}-action-button`}
-                            disabled={row.length === 0}
-                        >
-                            {locale.button.submit}
-                        </Button>
+                    <Grid container spacing={4} className={classes.actionButtons}>
+                        <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                            <Button
+                                variant="outlined"
+                                onClick={handleCancelAction}
+                                id={`${componentId}-cancel-button`}
+                                data-testid={`${componentId}-cancel-button`}
+                                color={'default'}
+                            >
+                                {locale.button.cancel}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} container justifyContent="flex-end">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleAddAction}
+                                id={`${componentId}-action-button`}
+                                data-testid={`${componentId}-action-button`}
+                                disabled={row.length === 0}
+                            >
+                                {locale.button.submit}
+                            </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
+
+            <ConfirmationAlert
+                isOpen={confirmationAlert.visible}
+                message={confirmationAlert.message}
+                type={confirmationAlert.type}
+                autoHideDuration={confirmationAlert.autoHideDuration}
+                closeAlert={closeConfirmationAlert}
+            />
+        </>
     );
 };
 
@@ -238,6 +227,7 @@ FilterDialog.propTypes = {
     actions: PropTypes.object.isRequired,
     locale: PropTypes.object.isRequired,
     locationLocale: PropTypes.object.isRequired,
+    confirmAlertTimeout: PropTypes.number,
     dialogueContent: PropTypes.any,
     isOpen: PropTypes.bool,
     assetTypeLocale: PropTypes.object,
