@@ -57,7 +57,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const stepOneLocale = pageLocale.form.step.one;
     const stepTwoLocale = pageLocale.form.step.two;
     const classes = useStyles();
-    const list = useObjectList([], transformRow);
+    const list = useObjectList([], transformRow, { duplicateKey: 'asset_id' });
     const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -66,6 +66,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
     });
+
+    const { user } = useSelector(state => state.get('testTagUserReducer'));
+
     const locationStore = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation, resetLocation } = useLocation();
     useSelectLocation({
@@ -122,6 +125,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         config: config.form,
         locale: pageLocale.form.columns,
         handleDeleteClick,
+        actionDataFieldKeys: { valueKey: 'asset_id_displayed' },
     });
 
     const handleNextStepButton = () => {
@@ -259,7 +263,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 <AssetSelector
                                     id={componentId}
                                     locale={stepOneLocale}
-                                    masked={false}
+                                    user={user}
                                     classNames={{ formControl: classes.formControl }}
                                     onChange={handleSearchAssetIdChange}
                                     validateAssetId={isValidAssetId}

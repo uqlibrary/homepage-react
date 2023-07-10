@@ -114,6 +114,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading }) => {
         config,
         locale: pageLocale.form.columns,
         handleEditClick,
+        actionDataFieldKeys: { valueKey: 'asset_id_displayed' },
     });
 
     const { row } = useDataTableRow(assetsList, transformRow);

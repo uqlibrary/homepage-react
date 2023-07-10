@@ -43,14 +43,19 @@ export const useForm = (
     return { formValues, resetFormValues, handleChange };
 };
 
-export const useObjectList = (list = [], transform) => {
+export const useObjectList = (list = [], transform, options = {}) => {
     const [data, _setData] = useState(!!transform ? transform(list) : list);
+    const [_options] = useState({ duplicates: false, duplicateKey: 'id', ...options });
 
-    console.log('useObjectlist', data);
+    console.log('useObjectlist', { data, _options });
     const setData = data => _setData(!!transform ? transform(data) : data);
 
     const addAt = (index, item) => {
         if (!Array.isArray(item) && typeof item !== 'object') return;
+        // check for dupes if not allowed
+        if (_options.duplicates === false && data.findIndex(entry => entry[options.duplicateKey]) >= 0) {
+            return;
+        }
         setData([...data.slice(0, index), ...item, ...data.slice(index)].flat());
     };
 

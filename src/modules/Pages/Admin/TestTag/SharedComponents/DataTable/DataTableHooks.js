@@ -19,6 +19,7 @@ export const useDataTableColumns = ({
     handleDeleteClick,
     filterKey = null,
     withActions = true,
+    actionDataFieldKeys,
     shouldDisableEdit,
     shouldDisableDelete,
 }) => {
@@ -36,6 +37,7 @@ export const useDataTableColumns = ({
                                   {...params}
                                   {...(!!handleEditClick ? { handleEditClick: handleEditClick } : {})}
                                   {...(!!handleDeleteClick ? { handleDeleteClick: handleDeleteClick } : {})}
+                                  {...(!!actionDataFieldKeys ? { dataFieldKeys: actionDataFieldKeys } : {})}
                                   disableEdit={disableEdit}
                                   disableDelete={disableDelete}
                               />

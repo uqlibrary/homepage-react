@@ -8,14 +8,39 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import { useGridSlotComponentProps } from '@mui/x-data-grid';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import { getDataFieldParams } from '../../../SharedComponents/DataTable/utils';
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { transformFilterRow } from './utils';
+
+// eslint-disable-next-line react/prop-types
+const CustomCheckbox = ({ row, id, dataFieldKeys, ...props }) => {
+    const { apiRef } = useGridSlotComponentProps();
+    const rows = apiRef.current.getRow(props.rowId());
+    // HERE - THIS STUFF AINT WORKING, NEED TO GET THE ROW OR THE ROW ID OR INDEX OR SOME DAMN THING
+    // SO WE CAN GRAB THE DATAFIELDVALUE
+    const { dataFieldName, dataFieldValue } = getDataFieldParams(row, dataFieldKeys);
+    console.log('checkbox', rows, props, dataFieldName, dataFieldValue, row);
+    return (
+        <Checkbox
+            // eslint-disable-next-line react/prop-types
+            id={`${id}-${row?.asset_id}-checkbox`}
+            inputProps={{
+                // eslint-disable-next-line react/prop-types
+                ['data-testid']: `${id}-${row?.asset_id}-checkbox`,
+                ...(!!dataFieldValue ? { ['data-fieldname']: dataFieldName, ['data-fieldvalue']: dataFieldValue } : {}),
+            }}
+            {...props}
+        />
+    );
+};
 
 const rootId = 'filter-dialog';
 const rootIdLower = 'filter_dialog';
@@ -105,8 +130,9 @@ const FilterDialog = ({
         setAssetTypeId(row?.asset_type_id ?? '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
-        console.log('handleAssetSelectionChange', selectedRowIds);
-        const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_id));
+        const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
+
+        console.log('handleAssetSelectionChange', row, selectedRowIds, assets);
         setSelectedAssets(assets);
     };
 
@@ -163,6 +189,16 @@ const FilterDialog = ({
                             disableRowSelectionOnClick
                             onSelectionModelChange={handleAssetSelectionChange}
                             autoHeight={false}
+                            components={{
+                                Checkbox: CustomCheckbox,
+                            }}
+                            componentsProps={{
+                                checkbox: {
+                                    rowId: params => params.row.asset_barcode,
+                                    id: rootId,
+                                    dataFieldKeys: { valueKey: 'asset_barcode' },
+                                },
+                            }}
                         />
                     </Grid>
                 </Grid>
