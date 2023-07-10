@@ -51,6 +51,48 @@ const handlers = {
         userListLoaded: false,
         userListError: action.payload,
     }),
+    [actions.TESTTAG_USER_LIST_ADDING]: state => ({
+        ...initialState,
+        ...state,
+        userListLoading: true,
+        userListLoaded: false,
+        userListError: null,
+    }),
+    [actions.TESTTAG_USER_LIST_ADDED]: state => ({
+        ...initialState,
+        ...state,
+        userListLoading: false,
+        userListLoaded: false,
+        userListError: null,
+    }),
+    [actions.TESTTAG_USER_LIST_ADD_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        userListLoading: false,
+        userListLoaded: false,
+        userListError: action.payload,
+    }),
+    [actions.TESTTAG_USER_LIST_DELETING]: state => ({
+        ...initialState,
+        ...state,
+        userListLoading: true,
+        userListLoaded: false,
+        userListError: null,
+    }),
+    [actions.TESTTAG_USER_LIST_DELETED]: state => ({
+        ...initialState,
+        ...state,
+        userListLoading: false,
+        userListLoaded: false,
+        userListError: null,
+    }),
+    [actions.TESTTAG_USER_LIST_DELETE_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        userListLoading: false,
+        userListLoaded: false,
+        userListError: action.payload,
+    }),
 };
 
 export default function testTagUserListReducer(state = initialState, action) {

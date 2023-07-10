@@ -30,6 +30,8 @@ import {
     TEST_TAG_MODIFY_INSPECTION_DETAILS_API,
     TEST_TAG_USER_LIST_API,
     TEST_TAG_UPDATE_USER_API,
+    TEST_TAG_ADD_USER_API,
+    TEST_TAG_DELETE_USER_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -800,6 +802,7 @@ export function loadUserList() {
 
 export function updateUser(id, request) {
     return dispatch => {
+        console.log('Editing user ACTION', id, request);
         dispatch({ type: actions.TESTTAG_USER_LIST_UPDATING });
         return put(TEST_TAG_UPDATE_USER_API(id), request)
             .then(response => {
@@ -818,7 +821,63 @@ export function updateUser(id, request) {
             })
             .catch(error => {
                 dispatch({
-                    type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_FAILED,
+                    type: actions.TESTTAG_USER_LIST_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function addUser(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_ADDING });
+        return post(TEST_TAG_ADD_USER_API(), request)
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_ADD_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_ADD_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteUser(id) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_DELETING });
+        return put(TEST_TAG_DELETE_USER_API(id))
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_DELETE_FAILED,
                     payload: error.message,
                 });
                 return Promise.reject(error);

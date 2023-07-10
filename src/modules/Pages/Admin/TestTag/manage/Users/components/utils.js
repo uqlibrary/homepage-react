@@ -20,6 +20,7 @@ export const transformUpdateRequest = request => {
     // delete request.previleges;
     delete request.inspectionCount;
     delete request.id;
+    delete request.department_display_name;
     request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
     request.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
     request.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
@@ -35,6 +36,7 @@ export const transformUpdateRequest = request => {
     delete request.can_alter_cb;
     delete request.can_see_reports;
     delete request.can_see_reports_cb;
+    delete request.user_current_flag_cb;
 
     return request;
 };

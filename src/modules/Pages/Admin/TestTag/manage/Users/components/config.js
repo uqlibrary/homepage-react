@@ -12,7 +12,7 @@ export default {
             label: 'UUID',
             component: props => <TextField {...props} required />,
             validate: value => isEmptyStr(value),
-            fieldParams: { canEdit: true, canAdd: true },
+            fieldParams: { canEdit: false, canAdd: true },
         },
         user_name: {
             component: props => <TextField {...props} />,

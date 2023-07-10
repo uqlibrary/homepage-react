@@ -809,6 +809,16 @@ export default {
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Edit user',
                 },
+                alerts: {
+                    addSuccess: 'User added successfully',
+                    deleteSuccess: 'User deleted successfully',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to delete this user?',
+                    confirmationTitle: 'Delete user',
+                },
             },
         },
         report: {

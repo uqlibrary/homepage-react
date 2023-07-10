@@ -308,3 +308,5 @@ export const TEST_TAG_MODIFY_INSPECTION_DETAILS_API = id => ({ apiUrl: `/test_an
 
 export const TEST_TAG_USER_LIST_API = () => ({ apiUrl: 'test_and_tag/users/all' });
 export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test_and_tag/user/${id}` });
+export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test_and_tag/user' });
+export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test_and_tag/user/${id}` });

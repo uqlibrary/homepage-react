@@ -936,8 +936,37 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_USER_LIST_API().apiUrl)
     .reply(withDelay([200, test_tag_user_list]))
-    .onPut(routes.TEST_TAG_UPDATE_USER_API().apiUrl)
-    .reply(() => [200, {status: 'OK'}])
+    .onPut(/test_and_tag\/user\/5/)
+    .reply(withDelay([
+        403,
+        {},
+    ]))
+    .onPut(/test_and_tag\/user\/\d*/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
+    .onPost(/test_and_tag\/user/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
+    .onDelete(/test_and_tag\/user\/5/)
+    .reply(withDelay([
+        403,
+        {},
+    ]))
+    .onDelete(/test_and_tag\/user\/\d*/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
     // PROMO PANEL API
     .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
     .reply(withDelay([200, {}]))

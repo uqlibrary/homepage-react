@@ -18,6 +18,7 @@ import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionS
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { useConfirmationState } from 'hooks';
 
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
@@ -36,25 +37,32 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Users = ({ actions, userListLoading, userList }) => {
+    const componentId = 'user-management';
+    const componentIdLower = 'user_management';
+
     const pageLocale = locale.pages.manage.users;
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
+    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
     const classes = useStyles();
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
 
+    const closeConfirmationAlert = () => {
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+    };
+    const openConfirmationAlert = (message, type) => {
+        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
+    };
+
     const onRowAdd = data => {
         setDialogueBusy(true);
-        console.log('Adding', data);
         const request = structuredClone(data);
-        console.log('Request Cloned', request);
         const wrappedRequest = transformAddRequest(request);
-        console.log('add', wrappedRequest);
-
         actions
-            .addInspectionDevice(wrappedRequest)
+            .addUser(wrappedRequest)
             .then(() => {
                 closeDialog();
                 openConfirmationAlert(pageLocale.alerts?.addSuccess, 'success');
@@ -62,7 +70,7 @@ const Users = ({ actions, userListLoading, userList }) => {
             })
             .catch(error => {
                 console.log(error);
-                handleApiError({ message: pageLocale.alerts?.addFail });
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -77,11 +85,13 @@ const Users = ({ actions, userListLoading, userList }) => {
         actions
             .updateUser(userID, wrappedRequest)
             .then(() => {
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
                 actions.loadUserList();
                 closeDialog();
             })
             .catch(error => {
                 console.log('Error: ', error);
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -112,7 +122,7 @@ const Users = ({ actions, userListLoading, userList }) => {
         console.log('delete', id);
 
         actions
-            .deleteInspectionDevice(id)
+            .deleteUser(id)
             .then(() => {
                 closeDialog();
                 openConfirmationAlert(pageLocale.alerts?.deleteSuccess, 'success');
@@ -120,7 +130,7 @@ const Users = ({ actions, userListLoading, userList }) => {
             })
             .catch(error => {
                 console.log(error);
-                handleApiError({ message: pageLocale.alerts?.deleteFail });
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -141,6 +151,7 @@ const Users = ({ actions, userListLoading, userList }) => {
         handleEditClick,
         handleDeleteClick,
         shouldDisableDelete,
+        actionDataFieldKeys: { valueKey: 'user_id' },
     });
 
     React.useEffect(() => {
@@ -182,6 +193,34 @@ const Users = ({ actions, userListLoading, userList }) => {
                     props={actionState?.props}
                     isBusy={dialogueBusy}
                 />
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    cancelButtonColor="secondary"
+                    confirmationBoxId={componentId}
+                    onCancelAction={closeDialog}
+                    onAction={onRowDelete}
+                    isOpen={actionState.isDelete}
+                    locale={
+                        !dialogueBusy
+                            ? pageLocale?.dialogDeleteConfirm
+                            : {
+                                  ...pageLocale?.dialogDeleteConfirm,
+                                  confirmButtonLabel: (
+                                      <CircularProgress
+                                          color="inherit"
+                                          size={25}
+                                          id={`${componentIdLower}-progress`}
+                                          data-testid={`${componentIdLower}-progress`}
+                                      />
+                                  ),
+                              }
+                    }
+                    disableButtonsWhenBusy
+                    isBusy={dialogueBusy}
+                    noMinContentWidth
+                    actionProps={{ row: actionState?.row, props: actionState?.props }}
+                />
                 <Grid container spacing={3}>
                     <Grid item padding={3} style={{ flex: 1 }}>
                         <DataTable
@@ -201,6 +240,13 @@ const Users = ({ actions, userListLoading, userList }) => {
                         />
                     </Grid>
                 </Grid>
+                <ConfirmationAlert
+                    isOpen={confirmationAlert.visible}
+                    message={confirmationAlert.message}
+                    type={confirmationAlert.type}
+                    closeAlert={closeConfirmationAlert}
+                    autoHideDuration={confirmationAlert.autoHideDuration}
+                />
             </StandardCard>
         </StandardAuthPage>
     );
