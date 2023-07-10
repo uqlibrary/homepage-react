@@ -134,11 +134,13 @@ const Users = ({ actions, userListLoading, userList }) => {
     };
 
     const { row } = useDataTableRow(userList, transformRow);
+    const shouldDisableDelete = row => (row?.inspectionCount ?? 0) > 0;
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
         handleEditClick,
         handleDeleteClick,
+        shouldDisableDelete,
     });
 
     React.useEffect(() => {

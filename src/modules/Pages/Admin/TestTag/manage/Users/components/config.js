@@ -8,10 +8,6 @@ import { isEmptyStr } from '../../../helpers/helpers';
 
 export default {
     fields: {
-        user_id: {
-            label: 'ID',
-            fieldParams: { canEdit: false },
-        },
         user_uid: {
             label: 'UUID',
             component: props => <TextField {...props} required />,
@@ -25,7 +21,16 @@ export default {
         },
         user_licence_number: {
             component: props => <TextField {...props} />,
-            fieldParams: { canEdit: true, renderInUpdate: true, renderInAdd: true, renderInTable: false },
+            fieldParams: {
+                canEdit: true,
+                renderInUpdate: true,
+                renderInAdd: true,
+                renderInTable: false,
+                renderFullWidth: true,
+            },
+            validate: (value, row) => {
+                return row?.can_inspect_cb && isEmptyStr(value);
+            },
         },
         can_admin: {
             fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
