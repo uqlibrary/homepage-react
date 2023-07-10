@@ -127,8 +127,9 @@ export const UpdateDialogue = ({
                             <React.Fragment key={field}>
                                 {((action === 'edit' && !!(dataFields[field]?.fieldParams?.renderInUpdate ?? true)) ||
                                     (action === 'add' && !!(dataFields[field]?.fieldParams?.renderInAdd ?? true))) && (
-                                    <Grid item xs={12} sm={dataFields[field]?.fieldParams?.renderFullWidth ? 12 : 6}>
-                                        {!!!dataFields[field]?.fieldParams?.canEdit && (
+                                    <Grid item xs={12}>
+                                        {(!!!dataFields[field]?.fieldParams?.canEdit ||
+                                            !!!dataFields[field]?.fieldParams?.canAdd) && (
                                             <>
                                                 <Typography variant="body2">{dataColumns[field].label}</Typography>
                                                 <Typography variant="body1">
@@ -141,7 +142,8 @@ export const UpdateDialogue = ({
                                                 </Typography>
                                             </>
                                         )}
-                                        {!!dataFields[field]?.fieldParams?.canEdit && (
+                                        {(!!dataFields[field]?.fieldParams?.canEdit ||
+                                            !!dataFields[field]?.fieldParams?.canAdd) && (
                                             <>
                                                 {console.log(
                                                     'Valid',
