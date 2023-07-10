@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -16,12 +16,16 @@ import Avatar from '@material-ui/core/Avatar';
 import InspectionIcon from '@material-ui/icons/Search';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 
-import { pathConfig } from '../../../../../../config/pathConfig';
+import ConfirmationAlert from '../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import locale from '../../testTag.locale';
 import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
-import { PERMISSIONS, ROLES } from '../../config/auth';
 import Panel from './Panel';
+import { pathConfig } from '../../../../../../config/pathConfig';
+import locale from '../../testTag.locale';
+import { PERMISSIONS, ROLES } from '../../config/auth';
+import { useConfirmationAlert } from '../../helpers/hooks';
+
+const componentId = 'dashboard';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -53,19 +57,21 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Dashboard = ({
-    actions,
-    dashboardConfig,
-    dashboardConfigLoading,
-    dashboardConfigLoaded,
-    dashboardConfigError,
-}) => {
+const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboardConfigError }) => {
     const pageLocale = locale.pages.dashboard;
     const classes = useStyles();
 
-    useEffect(() => {
-        if (!dashboardConfigLoaded) actions.loadDashboard();
-    }, [actions, dashboardConfigLoaded]);
+    const onCloseConfirmationAlert = () => actions.clearDashboardError();
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: dashboardConfigError,
+    });
+
+    React.useEffect(() => {
+        actions.loadDashboard();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const retestClass = dashboardConfig?.retest?.overdue > 0 ? classes.overDueText : classes.dueText;
     const recalibrationClass = dashboardConfig?.recalibration?.overdue > 0 ? classes.overDueText : classes.dueText;
@@ -82,7 +88,13 @@ const Dashboard = ({
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
                         <Grid item xs={12} sm className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton animation="wave" height={300} width={'100%'} />
+                                <Skeleton
+                                    animation="wave"
+                                    height={300}
+                                    width={'100%'}
+                                    id={`${componentId}-${pageLocale.panel.inspections.id}-skeleton`}
+                                    data-testid={`${componentId}-${pageLocale.panel.inspections.id}-skeleton`}
+                                />
                             ) : (
                                 <Panel
                                     title={pageLocale.panel.inspections.title}
@@ -93,8 +105,14 @@ const Dashboard = ({
                                     }
                                     className={clsx([classes.card, classes.centreAlignParent])}
                                     contentProps={{ className: classes.centreAlign }}
+                                    id={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
+                                    data-testid={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
                                 >
-                                    <Link to={pathConfig.admin.testntaginspect} data-testid="linkInspection">
+                                    <Link
+                                        to={pathConfig.admin.testntaginspect}
+                                        id={`${componentId}-${pageLocale.panel.inspections.id}-link`}
+                                        data-testid={`${componentId}-${pageLocale.panel.inspections.id}-link`}
+                                    >
                                         {pageLocale.panel.inspections.link}
                                     </Link>
                                 </Panel>
@@ -103,7 +121,13 @@ const Dashboard = ({
                     </AuthWrapper>
                     <Grid item xs={12} md className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} width={'100%'} />
+                            <Skeleton
+                                animation="wave"
+                                height={300}
+                                width={'100%'}
+                                id={`${componentId}-${pageLocale.panel.assets.id}-skeleton`}
+                                data-testid={`${componentId}-${pageLocale.panel.assets.id}-skeleton`}
+                            />
                         ) : (
                             <Panel
                                 title={pageLocale.panel.assets.title}
@@ -113,6 +137,8 @@ const Dashboard = ({
                                     </Avatar>
                                 }
                                 className={classes.card}
+                                id={`${componentId}-${pageLocale.panel.assets.id}-panel`}
+                                data-testid={`${componentId}-${pageLocale.panel.assets.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
@@ -148,7 +174,8 @@ const Dashboard = ({
                                         {pageLocale.panel.assets.subtext(
                                             <Link
                                                 to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.reinspectionPeriodLength}`}
-                                                data-testid="dashboardLinkReportInspectionsDue"
+                                                id={`${componentId}-${pageLocale.panel.assets.id}-link`}
+                                                data-testid={`${componentId}-${pageLocale.panel.assets.id}-link`}
                                             >
                                                 {pageLocale.config.pluraliser(
                                                     `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
@@ -163,7 +190,13 @@ const Dashboard = ({
                     </Grid>
                     <Grid item xs={12} md className={classes.flexParent}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
-                            <Skeleton animation="wave" height={300} width={'100%'} />
+                            <Skeleton
+                                animation="wave"
+                                height={300}
+                                width={'100%'}
+                                id={`${componentId}-${pageLocale.panel.inspectionDevices.id}-skeleton`}
+                                data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-skeleton`}
+                            />
                         ) : (
                             <Panel
                                 title={pageLocale.panel.inspectionDevices.title}
@@ -173,6 +206,8 @@ const Dashboard = ({
                                     </Avatar>
                                 }
                                 className={classes.card}
+                                id={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
+                                data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
@@ -208,7 +243,8 @@ const Dashboard = ({
                                         {pageLocale.panel.inspectionDevices.subtext(
                                             <Link
                                                 to={`${pathConfig.admin.testntagreportrecalibrationssdue}`}
-                                                data-testid="dashboardLinkReportInspectionDevices"
+                                                id={`${componentId}-${pageLocale.panel.inspectionDevices.id}-link`}
+                                                data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-link`}
                                             >
                                                 {pageLocale.config.pluraliser(
                                                     `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
@@ -226,12 +262,20 @@ const Dashboard = ({
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
                         <Grid item xs={12} md className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton animation="wave" height={300} width={'100%'} />
+                                <Skeleton
+                                    animation="wave"
+                                    height={300}
+                                    width={'100%'}
+                                    id={`${componentId}-${pageLocale.panel.management.id}-skeleton`}
+                                    data-testid={`${componentId}-${pageLocale.panel.management.id}-skeleton`}
+                                />
                             ) : (
                                 <Panel
                                     title={pageLocale.panel.management.title}
                                     className={classes.card}
                                     headerProps={{ titleTypographyProps: { variant: 'body2' } }}
+                                    id={`${componentId}-${pageLocale.panel.management.id}-panel`}
+                                    data-testid={`${componentId}-${pageLocale.panel.management.id}-panel`}
                                 >
                                     <List component="nav" aria-label="management actions">
                                         {pageLocale.panel.management.links.map(link => {
@@ -241,7 +285,13 @@ const Dashboard = ({
                                                         requiredPermissions={link.permissions}
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
-                                                        <ListItem button component={Link} to={link.path}>
+                                                        <ListItem
+                                                            button
+                                                            component={Link}
+                                                            to={link.path}
+                                                            id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                            data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                        >
                                                             {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                             <ListItemText primary={link.title} />
                                                         </ListItem>
@@ -254,6 +304,8 @@ const Dashboard = ({
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                         component={Link}
                                                         to={link.path}
+                                                        id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                        data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
                                                     >
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />
@@ -269,12 +321,20 @@ const Dashboard = ({
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
                         <Grid item xs={12} md className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton animation="wave" height={300} width={'100%'} />
+                                <Skeleton
+                                    animation="wave"
+                                    height={300}
+                                    width={'100%'}
+                                    id={`${componentId}-${pageLocale.panel.reporting.id}-skeleton`}
+                                    data-testid={`${componentId}-${pageLocale.panel.reporting.id}-skeleton`}
+                                />
                             ) : (
                                 <Panel
                                     title={pageLocale.panel.reporting.title}
                                     className={classes.card}
                                     headerProps={{ titleTypographyProps: { variant: 'body2' } }}
+                                    id={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
+                                    data-testid={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
                                 >
                                     <List component="nav" aria-label="reporting actions">
                                         {pageLocale.panel.reporting.links.map(link => {
@@ -284,7 +344,13 @@ const Dashboard = ({
                                                         requiredPermissions={link.permissions}
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
-                                                        <ListItem button component={Link} to={link.path}>
+                                                        <ListItem
+                                                            button
+                                                            component={Link}
+                                                            to={link.path}
+                                                            id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                            data-testid={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                        >
                                                             {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                             <ListItemText primary={link.title} />
                                                         </ListItem>
@@ -297,6 +363,8 @@ const Dashboard = ({
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                         component={Link}
                                                         to={link.path}
+                                                        id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                        data-testid={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
                                                     >
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />
@@ -311,16 +379,23 @@ const Dashboard = ({
                     </AuthWrapper>
                 </Grid>
             </div>
+            <ConfirmationAlert
+                isOpen={confirmationAlert.visible}
+                message={confirmationAlert.message}
+                type={confirmationAlert.type}
+                autoHideDuration={confirmationAlert.autoHideDuration}
+                closeAlert={closeConfirmationAlert}
+            />
         </StandardAuthPage>
     );
 };
 
 Dashboard.propTypes = {
     actions: PropTypes.object,
-    dashboardConfig: PropTypes.any,
+    dashboardConfig: PropTypes.object,
     dashboardConfigLoading: PropTypes.bool,
     dashboardConfigLoaded: PropTypes.bool,
-    dashboardConfigError: PropTypes.bool,
+    dashboardConfigError: PropTypes.string,
 };
 
 export default React.memo(Dashboard);

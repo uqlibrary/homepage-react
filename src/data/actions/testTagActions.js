@@ -69,6 +69,11 @@ export function loadDashboard() {
             });
     };
 }
+export function clearDashboardError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_DASHBOARD_CONFIG_CLEAR_ERROR });
+    };
+}
 
 export function loadInspectionConfig() {
     return dispatch => {
@@ -89,6 +94,11 @@ export function loadInspectionConfig() {
     };
 }
 
+export function clearInspectionConfigError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR_ERROR });
+    };
+}
 export function clearInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR });

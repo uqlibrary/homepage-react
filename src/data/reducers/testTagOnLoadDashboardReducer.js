@@ -13,14 +13,14 @@ const handlers = {
         ...state,
         dashboardConfigLoading: true,
         dashboardConfigLoaded: false,
-        dashboardConfigError: false,
+        dashboardConfigError: null,
     }),
     [actions.TESTTAG_DASHBOARD_CONFIG_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         dashboardConfigLoading: false,
         dashboardConfigLoaded: true,
-        dashboardConfigError: false,
+        dashboardConfigError: null,
         dashboardConfig: action.payload,
     }),
     [actions.TESTTAG_DASHBOARD_CONFIG_FAILED]: (state, action) => ({
@@ -29,6 +29,11 @@ const handlers = {
         dashboardConfigLoading: false,
         dashboardConfigLoaded: false,
         dashboardConfigError: action.payload,
+    }),
+    [actions.TESTTAG_DASHBOARD_CONFIG_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        dashboardConfigError: null,
     }),
 };
 
