@@ -53,6 +53,13 @@ const actionHandler = {
     },
 };
 
+const locationDataFieldKeys = {
+    [locationType.site]: 'site_name',
+    [locationType.building]: 'building_name',
+    [locationType.floor]: 'floor_id_displayed',
+    [locationType.room]: 'room_description',
+};
+
 const ManageLocations = ({ actions }) => {
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
@@ -122,6 +129,7 @@ const ManageLocations = ({ actions }) => {
         handleEditClick,
         handleDeleteClick,
         shouldDisableDelete,
+        actionDataFieldKeys: { valueKey: locationDataFieldKeys[selectedLocation] },
     });
 
     const closeConfirmationAlert = () => {

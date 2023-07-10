@@ -67,7 +67,7 @@ const AssetStatusSelector = ({
 AssetStatusSelector.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string,
-    options: PropTypes.object.required,
+    options: PropTypes.object.isRequired,
     initialOptionIndex: PropTypes.number,
     required: PropTypes.bool,
     disabled: PropTypes.bool,

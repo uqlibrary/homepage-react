@@ -20,7 +20,7 @@ export default {
         },
         inspect_notes: {
             component: props => {
-                return <DebouncedTextField {...props} multiline minRows={2} />;
+                return <DebouncedTextField {...props} multiline minRows={3} />;
             },
             fieldParams: { canEdit: true, renderInTable: false },
         },
@@ -30,7 +30,7 @@ export default {
                     <DebouncedTextField
                         {...props}
                         multiline
-                        minRows={2}
+                        minRows={3}
                         disabled={row?.last_inspect_status !== locale.config.inspectStatus.failed ?? false}
                         required={row?.last_inspect_status === locale.config.inspectStatus.failed ?? false}
                     />
@@ -48,7 +48,7 @@ export default {
                 <DebouncedTextField
                     {...props}
                     multiline
-                    minRows={2}
+                    minRows={3}
                     disabled={row?.asset_status !== locale.config.assetStatus.discarded}
                     required={row?.asset_status === locale.config.assetStatus.discarded}
                 />
@@ -64,7 +64,7 @@ export default {
                 <DebouncedTextField
                     {...props}
                     multiline
-                    minRows={2}
+                    minRows={3}
                     disabled={row?.asset_status !== locale.config.assetStatus.outforrepair}
                     required={row?.asset_status === locale.config.assetStatus.outforrepair}
                 />

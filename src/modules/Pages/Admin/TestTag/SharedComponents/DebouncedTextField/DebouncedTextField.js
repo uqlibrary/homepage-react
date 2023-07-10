@@ -7,7 +7,7 @@ const rootId = 'debounced_text_field';
 const DEBOUNCE_INTERVAL = 250;
 
 const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL, ...rest }) => {
-    const componentId = `${rootId}-${id}`;
+    const componentId = id; //
     const debounceText = useRef(debounce(interval, e => onChange(e))).current;
     const [internalValue, setInternalValue] = useState(value ?? '');
 
@@ -29,10 +29,12 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
         <TextField
             onChange={debounceChange}
             value={internalValue}
-            id={`${componentId}-input`}
+            id={componentId}
+            data-fieldtype={rootId}
             InputLabelProps={{ htmlFor: `${componentId}-input` }}
             inputProps={{
                 'data-testid': `${componentId}-input`,
+                'data-fieldtype': rootId,
             }}
             {...rest}
         />

@@ -128,8 +128,9 @@ export const UpdateDialogue = ({
                                 {((action === 'edit' && !!(dataFields[field]?.fieldParams?.renderInUpdate ?? true)) ||
                                     (action === 'add' && !!(dataFields[field]?.fieldParams?.renderInAdd ?? true))) && (
                                     <Grid item xs={12}>
-                                        {(!!!dataFields[field]?.fieldParams?.canEdit ||
-                                            !!!dataFields[field]?.fieldParams?.canAdd) && (
+                                        {((action === 'edit' && !!!(dataFields[field]?.fieldParams?.canEdit ?? true)) ||
+                                            (action === 'add' &&
+                                                !!!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
                                             <>
                                                 <Typography variant="body2">{dataColumns[field].label}</Typography>
                                                 <Typography variant="body1">
@@ -142,8 +143,9 @@ export const UpdateDialogue = ({
                                                 </Typography>
                                             </>
                                         )}
-                                        {(!!dataFields[field]?.fieldParams?.canEdit ||
-                                            !!dataFields[field]?.fieldParams?.canAdd) && (
+                                        {((action === 'edit' && !!(dataFields[field]?.fieldParams?.canEdit ?? true)) ||
+                                            (action === 'add' &&
+                                                !!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
                                             <>
                                                 {dataFields[field]?.component(
                                                     {

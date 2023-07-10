@@ -384,19 +384,19 @@ export default {
                 form: {
                     locationTypeTitle: 'Asset type',
                     actions: 'Actions',
-                    addLocationButton: 'Add Asset type',
+                    addLocationButton: 'Add asset type',
                     columns: {
                         asset_type_id: {
                             label: 'Id',
                         },
                         asset_type_name: {
-                            label: 'Asset Type Name',
+                            label: 'Asset type name',
                         },
                         asset_type_class: {
                             label: 'Class',
                         },
                         asset_type_power_rating: {
-                            label: 'Power Rating',
+                            label: 'Power rating',
                         },
                         asset_type: {
                             label: 'Type',
