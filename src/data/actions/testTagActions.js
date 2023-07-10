@@ -71,6 +71,11 @@ export function loadDashboard() {
             });
     };
 }
+export function clearDashboardError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_DASHBOARD_CONFIG_CLEAR_ERROR });
+    };
+}
 
 export function loadInspectionConfig() {
     return dispatch => {
@@ -91,6 +96,11 @@ export function loadInspectionConfig() {
     };
 }
 
+export function clearInspectionConfigError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR_ERROR });
+    };
+}
 export function clearInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR });
@@ -282,6 +292,11 @@ export function clearAssets() {
         dispatch({ type: actions.TESTTAG_ASSETS_CLEAR });
     };
 }
+export function clearAssetsError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_CLEAR_ERROR });
+    };
+}
 export function loadAssetsMine(filters) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_LOADING });
@@ -305,6 +320,12 @@ export function loadAssetsMine(filters) {
 export function clearAssetsMine() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_CLEAR });
+    };
+}
+
+export function clearAssetsMineError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_MINE_CLEAR_ERROR });
     };
 }
 
@@ -397,6 +418,11 @@ export function loadInspectionDevices() {
     };
 }
 
+export function clearInspectionDevicesError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_LOAD_CLEAR_ERROR });
+    };
+}
 export function clearInspectionDevices() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_CLEAR });
@@ -431,6 +457,11 @@ export function addInspectionDevice(request) {
             });
     };
 }
+export function clearInspectionDevicesAddError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_ADD_CLEAR_ERROR });
+    };
+}
 
 export function updateInspectionDevice(id, request) {
     return dispatch => {
@@ -457,6 +488,11 @@ export function updateInspectionDevice(id, request) {
                 });
                 return Promise.reject(error);
             });
+    };
+}
+export function clearInspectionDevicesUpdateError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_CLEAR_ERROR });
     };
 }
 
@@ -487,6 +523,11 @@ export function deleteInspectionDevice(id) {
             });
     };
 }
+export function clearInspectionDevicesDeleteError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_DELETE_CLEAR_ERROR });
+    };
+}
 
 /** * ASSET TYPES ACTIONS  ***/
 
@@ -510,6 +551,11 @@ export function loadAssetTypes() {
             });
     };
 }
+export function clearAssetTypesError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_CLEAR_ERROR });
+    };
+}
 
 export function addAssetType(request) {
     return dispatch => {
@@ -529,6 +575,11 @@ export function addAssetType(request) {
                 });
                 return Promise.reject(error);
             });
+    };
+}
+export function clearAssetTypeAddError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_ADD_CLEAR_ERROR });
     };
 }
 
@@ -552,6 +603,11 @@ export function saveAssetType(id, request) {
             });
     };
 }
+export function clearAssetTypeSaveError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_SAVE_CLEAR_ERROR });
+    };
+}
 
 export const deleteAndReassignAssetType = request => {
     return dispatch => {
@@ -573,6 +629,11 @@ export const deleteAndReassignAssetType = request => {
             });
     };
 };
+export function clearAssetTypeReassignError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGN_CLEAR_ERROR });
+    };
+}
 
 export function deleteAssetType(id) {
     return dispatch => {
@@ -591,6 +652,11 @@ export function deleteAssetType(id) {
                 });
                 return Promise.reject(error);
             });
+    };
+}
+export function clearAssetTypeDeleteError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_DELETE_CLEAR_ERROR });
     };
 }
 
@@ -645,6 +711,11 @@ export function getInspectionsDue({ locationId, locationType, period, periodType
             });
     };
 }
+export function clearInspectionsDueError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_CLEAR_ERROR });
+    };
+}
 export function clearInspectionsDue() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_CLEAR });
@@ -693,6 +764,11 @@ export function getLicencedUsers() {
             });
     };
 }
+export function clearLicencedUsersError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_LICENCED_INSPECTORS_CLEAR_ERROR });
+    };
+}
 
 /* Asset report for DEPT */
 export function loadTaggedBuildingList() {
@@ -713,6 +789,11 @@ export function loadTaggedBuildingList() {
                 });
                 return Promise.reject(error);
             });
+    };
+}
+export function clearTaggedBuildingListError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TAGGED_BUILDING_LIST_CLEAR_ERROR });
     };
 }
 
@@ -769,6 +850,11 @@ export function loadAssetReportByFilters({
                 });
                 return Promise.reject(error);
             });
+    };
+}
+export function clearAssetReportByFiltersError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_REPORT_CLEAR_ERROR });
     };
 }
 

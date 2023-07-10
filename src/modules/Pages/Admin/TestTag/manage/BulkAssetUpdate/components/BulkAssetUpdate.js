@@ -29,7 +29,7 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { isValidRoomId, isValidAssetId, isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { isEmptyObject, isEmptyStr } from '../../../helpers/helpers';
-import { useForm, useObjectList } from '../../../helpers/hooks';
+import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/hooks';
 import { transformRow, transformRequest } from './utils';
 
 const useStyles = makeStyles(theme => ({
@@ -93,14 +93,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         [list],
     );
 
-    const [snackbarAlert, setSnackbarAlert] = React.useState({ message: '', visible: false });
-
-    const closeSnackbarAlert = () => {
-        setSnackbarAlert({ message: '', visible: false, type: snackbarAlert.type });
-    };
-    const openSnackbarAlert = (message, type) => {
-        setSnackbarAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
-    };
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+    });
 
     const resetForm = () => {
         const newFormValues = assignAssetDefaults();
@@ -159,11 +154,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         actions
             .bulkAssetUpdate(request)
             .then(() => {
-                openSnackbarAlert(locale.config.alerts.success(), 'success');
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
                 resetForm();
             })
             .catch(error => {
-                openSnackbarAlert(locale.config.alerts.error(error.message), 'error');
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
                 setConfirmDialogueBusy(false);
             });
     };
@@ -316,6 +311,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             locale={pageLocale.form.filterDialog}
                             assetTypeLocale={pageLocale.form.assetType}
                             locationLocale={locale.pages.general.locationPicker}
+                            confirmAlertTimeout={locale.config.alerts.timeout}
                             minContentWidth={'100%'}
                             config={config.filterDialog}
                             isOpen={isFilterDialogOpen}
@@ -476,11 +472,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                 )}
             </div>
             <ConfirmationAlert
-                isOpen={snackbarAlert.visible}
-                message={snackbarAlert.message}
-                type={snackbarAlert.type}
-                autoHideDuration={snackbarAlert.autoHideDuration}
-                closeAlert={closeSnackbarAlert}
+                isOpen={confirmationAlert.visible}
+                message={confirmationAlert.message}
+                type={confirmationAlert.type}
+                autoHideDuration={confirmationAlert.autoHideDuration}
+                closeAlert={closeConfirmationAlert}
             />
         </StandardAuthPage>
     );

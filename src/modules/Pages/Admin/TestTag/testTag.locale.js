@@ -45,6 +45,7 @@ export default {
             { value: 'OUTFORREPAIR', label: 'Out for Repair' },
         ],
         alerts: {
+            timeout: 6000,
             success: () => 'Request successfully completed',
             error: err => `Encountered an error: ${err}`,
             failed: err => `Operation failed: ${err}`,
@@ -90,79 +91,94 @@ export default {
             },
             panel: {
                 inspections: {
+                    id: 'new-inspection',
                     title: 'INSPECTIONS',
                     link: 'Begin test and tagging of assets',
                 },
                 assets: {
+                    id: 'assets-due-inspection',
                     title: 'ASSET INSPECTIONS',
                     subtext: duration => <>* due in the next {duration}.</>,
                     upcomingText: 'upcoming *',
                     overdueText: 'overdue',
                 },
                 inspectionDevices: {
+                    id: 'devices-due-recalibration',
                     title: 'INSPECTION DEVICE RECALIBRATIONS',
                     subtext: duration => <>* due in the next {duration}.</>,
                     upcomingText: 'upcoming *',
                     overdueText: 'overdue',
                 },
                 management: {
+                    id: 'management',
                     title: 'MANAGEMENT',
                     links: [
                         {
-                            title: 'X USERS',
+                            id: 'users',
+                            title: 'USERS',
                             icon: <UsersIcon />,
                             permissions: [PERMISSIONS.can_admin],
                             path: '#',
                         },
                         {
+                            id: 'asset-types',
                             title: 'ASSET TYPES',
                             icon: <AssetTypeIcon />,
                             path: pathConfig.admin.testntagmanageassettypes,
                         },
                         {
+                            id: 'locations',
                             title: 'LOCATIONS',
                             icon: <LocationIcon />,
                             permissions: [PERMISSIONS.can_admin],
                             path: pathConfig.admin.testntagmanagelocations,
                         },
                         {
+                            id: 'inspection-devices',
                             title: 'INSPECTION DEVICES',
                             icon: <InspectionDeviceIcon />,
                             path: pathConfig.admin.testntagmanageinspectiondevices,
                         },
                         {
+                            id: 'bulk-asset-update',
                             title: 'BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
                             path: pathConfig.admin.testntagmanagebulkassetupdate,
                         },
                         {
-                            title: 'X INSPECTIONS',
+                            id: 'inspections',
+                            title: 'INSPECTIONS',
                             icon: <InspectionIcon />,
                             path: pathConfig.admin.testntagmanageinspectiondetails,
                         },
                     ],
                 },
                 reporting: {
+                    id: 'reporting',
                     title: 'REPORTING',
                     links: [
                         {
+                            id: 'devices-due-recalibration',
                             title: 'INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
                             path: pathConfig.admin.testntagreportrecalibrationssdue,
                         },
                         {
+                            id: 'assets-due-inspection',
                             title: 'ASSETS DUE NEXT INSPECTION',
                             icon: <InspectionIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
                             path: pathConfig.admin.testntagreportinspectionsdue,
                         },
                         {
+                            id: 'assets-inspected',
                             title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
                             path: pathConfig.admin.testntagreportassetsbyfilters,
                         },
                         {
+                            id: 'inspections-by-user',
                             title: 'INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
                             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,

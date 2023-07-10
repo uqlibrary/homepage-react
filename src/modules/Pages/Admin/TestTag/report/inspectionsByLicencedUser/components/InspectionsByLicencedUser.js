@@ -16,6 +16,7 @@ import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/Standar
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
@@ -73,10 +74,20 @@ const InspectionsByLicencedUser = ({
     const [inspectorName, setInspectorName] = React.useState([]);
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, dateFormatted: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, dateFormatted: null });
-    const [apiError, setApiError] = useState(licencedUsersError || userInspectionsError);
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+    // const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const onCloseConfirmationAlert = () => {
+        if (!!userInspectionsError) actions.clearInspectionsError();
+        if (!!licencedUsersError) actions.clearLicencedUsersError();
+    };
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: userInspectionsError || licencedUsersError,
+    });
+
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -124,18 +135,7 @@ const InspectionsByLicencedUser = ({
     const handleInspectorClose = () => {
         reportSearch();
     };
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: 2000,
-            onClose: () => setApiError(null),
-        });
-    };
+
     const handleDateClose = () => {
         if (!!!selectedStartDate.date && !!!selectedEndDate.date) {
             clearDateErrors();
@@ -182,10 +182,6 @@ const InspectionsByLicencedUser = ({
         actions.getInspectionsByLicencedUser({ startDate: null, endDate: null, userRange: null });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    useEffect(() => {
-        if (!!apiError) openConfirmationAlert(locale.config.alerts.error(apiError), 'error');
-    }, [apiError]);
 
     return (
         <StandardAuthPage

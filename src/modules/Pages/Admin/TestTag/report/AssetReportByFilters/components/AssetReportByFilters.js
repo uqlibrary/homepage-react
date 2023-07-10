@@ -16,6 +16,7 @@ import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/Standar
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
 
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from '../../../testTag.locale';
 import config from './config';
@@ -76,8 +77,19 @@ const AssetReportByFilters = ({
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, error: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
-    const [apiError, setApiError] = useState(taggedBuildingListError || assetListError);
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+    // const [apiError, setApiError] = useState(taggedBuildingListError || assetListError);
+    // const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const onCloseConfirmationAlert = () => {
+        if (!!taggedBuildingListError) actions.clearTaggedBuildingListError();
+        if (!!assetListError) actions.clearAssetReportByFiltersError();
+    };
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: taggedBuildingListError || assetListError,
+    });
+
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
@@ -149,18 +161,7 @@ const AssetReportByFilters = ({
             dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
     };
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: 2000,
-            onClose: () => setApiError(null),
-        });
-    };
+
     /* EFFECTS */
     useEffect(() => {
         actions.loadTaggedBuildingList();
@@ -191,11 +192,6 @@ const AssetReportByFilters = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taggedBuildingList, taggedBuildingListLoaded]);
-
-    useEffect(() => {
-        if (!!apiError) openConfirmationAlert(locale.config.alerts.error(apiError), 'error');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [apiError]);
 
     return (
         <StandardAuthPage

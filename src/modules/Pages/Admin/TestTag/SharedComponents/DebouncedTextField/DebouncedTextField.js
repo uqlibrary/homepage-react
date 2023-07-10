@@ -29,7 +29,7 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
         <TextField
             onChange={debounceChange}
             value={internalValue}
-            id={componentId}
+            id={`${componentId}-input`}
             data-fieldtype={rootId}
             InputLabelProps={{ htmlFor: `${componentId}-input` }}
             inputProps={{
