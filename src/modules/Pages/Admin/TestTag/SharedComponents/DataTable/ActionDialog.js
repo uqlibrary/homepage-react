@@ -8,6 +8,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+const rootId = 'action_dialog';
 
 export const useStyles = makeStyles(theme => ({
     alternateActionButtonClass: {
@@ -30,12 +33,12 @@ export const useStyles = makeStyles(theme => ({
 }));
 
 export const ActionDialogue = ({
-    confirmationBoxId = 'dialogBox',
+    id,
     confirmationTitle = '',
     cancelButtonLabel = '',
     confirmButtonLabel = '',
     isOpen,
-    actionDialogueBoxId = 'actionDialogBox',
+    isBusy = false,
     hideActionButton = false,
     hideCancelButton = false,
     onAction,
@@ -44,6 +47,7 @@ export const ActionDialogue = ({
     noMinContentWidth,
     children,
 } = {}) => {
+    const componentId = `${rootId}-${id}`;
     const classes = useStyles();
 
     const _onAction = () => {
@@ -61,13 +65,21 @@ export const ActionDialogue = ({
             classes={{ paper: classes.dialogPaper }}
             style={{ padding: 6 }}
             open={isOpen}
-            id={`dialogbox-${actionDialogueBoxId}`}
-            data-testid={`dialogbox-${actionDialogueBoxId}`}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
         >
-            <DialogTitle data-testid="message-title">{confirmationTitle}</DialogTitle>
-            <DialogContent style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}>{children}</DialogContent>
+            <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
+                {confirmationTitle}
+            </DialogTitle>
+            <DialogContent
+                style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}
+                id={`${componentId}-content`}
+                data-testid={`${componentId}-content`}
+            >
+                {children}
+            </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
-                <DialogActions>
+                <DialogActions id={`${componentId}-actions`} data-testid={`${componentId}-actions`}>
                     <Grid container spacing={1}>
                         {!hideCancelButton && (
                             <Grid item xs={12} sm={6}>
@@ -75,8 +87,8 @@ export const ActionDialogue = ({
                                     <Button
                                         variant={'outlined'}
                                         onClick={_onCancelAction}
-                                        id="confirm-cancel-action"
-                                        data-testid={`cancel-${confirmationBoxId}`}
+                                        id={`${componentId}-cancel-button`}
+                                        data-testid={`${componentId}-cancel-button`}
                                         fullWidth
                                     >
                                         {cancelButtonLabel}
@@ -92,10 +104,19 @@ export const ActionDialogue = ({
                                         autoFocus
                                         color={'primary'}
                                         onClick={_onAction}
-                                        id="confirm-action"
-                                        data-testid={`confirm-${confirmationBoxId}`}
+                                        id={`${componentId}-action-button`}
+                                        data-testid={`${componentId}-action-button`}
                                     >
-                                        {confirmButtonLabel}
+                                        {isBusy ? (
+                                            <CircularProgress
+                                                color="inherit"
+                                                size={25}
+                                                id={`${componentId}-progress`}
+                                                data-testid={`${componentId}-progress`}
+                                            />
+                                        ) : (
+                                            confirmButtonLabel
+                                        )}
                                     </Button>
                                 </Box>
                             </Grid>
@@ -108,7 +129,7 @@ export const ActionDialogue = ({
 };
 
 ActionDialogue.propTypes = {
-    confirmationBoxId: PropTypes.string,
+    id: PropTypes.string.isRequired,
     confirmationTitle: PropTypes.string,
     cancelButtonLabel: PropTypes.string,
     confirmButtonLabel: PropTypes.string,
@@ -116,8 +137,8 @@ ActionDialogue.propTypes = {
     data: PropTypes.array,
     row: PropTypes.object,
     isOpen: PropTypes.bool,
+    isBusy: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
-    actionDialogueBoxId: PropTypes.string,
     hideActionButton: PropTypes.bool,
     hideCancelButton: PropTypes.bool,
     onAction: PropTypes.bool,

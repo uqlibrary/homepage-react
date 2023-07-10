@@ -48,6 +48,10 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
     },
 }));
+
+const componentId = 'bulk-asset-update';
+const componentIdLower = 'bulk_asset_update';
+
 const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
@@ -73,18 +77,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     });
 
     useEffect(() => {
-        console.log('effect', list.data);
         handleChange('asset_list')(list.data);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [list.data]);
 
-    useEffect(() => {
-        console.log('formValues', formValues);
-    }, [formValues]);
-
     const handleSearchAssetIdChange = useCallback(
         newValue => {
-            console.log(newValue);
             if (typeof newValue === 'string' && isEmptyStr(newValue)) return;
             if (isEmptyObject(newValue)) return;
             list.addStart(newValue);
@@ -115,7 +113,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const handleDeleteClick = useCallback(
         ({ id, api }) => {
             const row = api.getRow(id);
-            console.log(row, list);
             list.deleteWith('asset_id', row.asset_id);
         },
         [list],
@@ -127,12 +124,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         handleDeleteClick,
     });
 
-    const handleNextStepButton = e => {
-        console.log('handleNextStepButton', e, formValues);
+    const handleNextStepButton = () => {
         setStep(2);
     };
-    const handlePrevStepButton = e => {
-        console.log('handlePrevStepButton', e, formValues);
+    const handlePrevStepButton = () => {
         setStep(1);
     };
 
@@ -141,15 +136,13 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const handleFilterDialogClose = () => closeFilterDialog();
     const handleFilterDialogAction = data => {
         closeFilterDialog();
-        console.log('handleFilterDialogAction', data);
         list.addStart(data);
     };
 
     const openConfirmDialog = () => setConfirmDialogOpen(true);
     const closeConfirmDialog = () => setConfirmDialogOpen(false);
 
-    const handleOnSubmit = e => {
-        console.log('submit', e);
+    const handleOnSubmit = () => {
         openConfirmDialog();
     };
 
@@ -162,11 +155,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         actions
             .bulkAssetUpdate(request)
             .then(() => {
-                openSnackbarAlert(stepTwoLocale.snackbars.success, 'success');
+                openSnackbarAlert(locale.config.alerts.success(), 'success');
                 resetForm();
             })
             .catch(error => {
-                openSnackbarAlert(stepTwoLocale.snackbars.failed(error), 'error', false);
+                openSnackbarAlert(locale.config.alerts.error(error.message), 'error');
                 setConfirmDialogueBusy(false);
             });
     };
@@ -215,8 +208,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             validStatus &&
             validAssetType;
 
-        console.log('validateFormValues', isValid);
-
         return isValid;
     }, [
         formValues.asset_status,
@@ -238,7 +229,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     cancelButtonColor="secondary"
-                    confirmationBoxId="confirmBulkUpdate"
+                    confirmationBoxId={componentId}
                     onCancelAction={handleConfirmDialogClose}
                     onAction={handleConfirmDialogAction}
                     isOpen={confirmDialogOpen}
@@ -262,11 +253,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                     noMinContentWidth
                 />
                 {step === 1 && (
-                    <StandardCard title={stepOneLocale.title}>
+                    <StandardCard title={stepOneLocale.title} standardCardId={`standard_card-${componentId}-step-1`}>
                         <Grid container spacing={3}>
                             <Grid item xs={12} sm={4}>
                                 <AssetSelector
-                                    id="assetId"
+                                    id={componentId}
                                     locale={stepOneLocale}
                                     masked={false}
                                     classNames={{ formControl: classes.formControl }}
@@ -283,8 +274,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             <Grid item xs={12} sm={6} className={classes.centredGridNoJustify}>
                                 <Button
                                     variant="outlined"
-                                    id="addByFeatureButton"
-                                    data-testid="addByFeatureButton"
+                                    id={`${componentIdLower}-feature-button`}
+                                    data-testid={`${componentIdLower}-feature-button`}
                                     color="primary"
                                     onClick={openFilterDialog}
                                 >
@@ -295,15 +286,16 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         <Grid container spacing={3}>
                             <Grid item padding={3} style={{ flex: 1 }}>
                                 <DataTable
+                                    id={componentId}
                                     rows={list.data}
                                     columns={columns}
-                                    rowId={'asset_id'}
+                                    rowId={'asset_id_displayed'}
                                     classes={{ root: classes.gridRoot }}
                                     handleDeleteClick={handleDeleteClick}
                                     components={{ Footer: FooterBar }}
                                     componentsProps={{
                                         footer: {
-                                            id: 'bulkAssetUpdate',
+                                            id: componentId,
                                             actionLabel: stepOneLocale.button.next,
                                             altLabel: stepOneLocale.button.clear,
                                             onAltClick: resetForm,
@@ -316,6 +308,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         </Grid>
                         <FilterDialog
+                            id={componentId}
                             locale={pageLocale.form.filterDialog}
                             assetTypeLocale={pageLocale.form.assetType}
                             locationLocale={locale.pages.general.locationPicker}
@@ -329,7 +322,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                     </StandardCard>
                 )}
                 {step === 2 && (
-                    <StandardCard title={stepTwoLocale.title}>
+                    <StandardCard title={stepTwoLocale.title} standardCardId={`standard_card-${componentId}-step-2`}>
                         <Grid container spacing={3}>
                             <Grid item>
                                 <Typography variant="body2">{stepTwoLocale.subtext(list.data.length)}</Typography>
@@ -343,8 +336,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             checked={formValues.hasLocation}
                                             onChange={handleCheckboxChange}
                                             name="hasLocation"
-                                            id="bulkAssetUpdateLocationCheckbox"
-                                            data-testid="bulkAssetUpdateLocationCheckbox"
+                                            id={`${componentIdLower}-location-checkbox`}
+                                            data-testid={`${componentIdLower}-location-checkbox`}
                                             color="primary"
                                         />
                                     }
@@ -352,6 +345,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 />
                             </Grid>
                             <AutoLocationPicker
+                                id={componentId}
                                 disabled={!formValues.hasLocation}
                                 actions={actions}
                                 location={location}
@@ -396,8 +390,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                                     checked={formValues.hasStatus}
                                                     onChange={handleCheckboxChange}
                                                     name="hasStatus"
-                                                    id="bulkAssetUpdateStatusCheckbox"
-                                                    data-testid="bulkAssetUpdateStatusCheckbox"
+                                                    id={`${componentIdLower}-status-checkbox`}
+                                                    data-testid={`${componentIdLower}-status-checkbox`}
                                                     color="primary"
                                                 />
                                             }
@@ -406,11 +400,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <AssetStatusSelector
-                                            id="bulkUpdate"
-                                            label="Asset status"
+                                            id={componentId}
+                                            label={pageLocale.form.assetStatus.label}
                                             onChange={handleChange('asset_status')}
                                             options={locale.config.assetStatusOptions.filter(
-                                                option => option.value === 'DISCARDED',
+                                                option => option.value === locale.config.assetStatus.discarded,
                                             )}
                                             disabled={!formValues.hasStatus}
                                             required={formValues.hasStatus}
@@ -428,8 +422,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                                     checked={formValues.hasAssetType}
                                                     onChange={handleCheckboxChange}
                                                     name="hasAssetType"
-                                                    id="bulkAssetUpdateAssetTypeCheckbox"
-                                                    data-testid="bulkAssetUpdateAssetTypeCheckbox"
+                                                    id={`${componentIdLower}-asset-type-checkbox`}
+                                                    data-testid={`${componentIdLower}-asset-type-checkbox`}
                                                     color="primary"
                                                 />
                                             }
@@ -438,7 +432,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <AssetTypeSelector
-                                            id="bulkUpdate"
+                                            id={componentId}
                                             locale={pageLocale.form.assetType}
                                             actions={actions}
                                             onChange={handleChange('asset_type')}
@@ -454,8 +448,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 <Button
                                     variant="outlined"
                                     onClick={handlePrevStepButton}
-                                    id="bulkUpdateBackButton"
-                                    data-testid="bulkUpdateBackButton"
+                                    id={`${componentIdLower}-back-button`}
+                                    data-testid={`${componentIdLower}-back-button`}
                                     color={'default'}
                                 >
                                     {stepTwoLocale.button.previous}
@@ -466,8 +460,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     variant="contained"
                                     color="primary"
                                     onClick={handleOnSubmit}
-                                    id="bulkUpdateSubmitButton"
-                                    data-testid="bulkUpdateSubmitButton"
+                                    id={`${componentIdLower}-submit-button`}
+                                    data-testid={`${componentIdLower}-submit-button`}
                                     disabled={!validFormValues}
                                 >
                                     {stepTwoLocale.button.submit}

@@ -7,24 +7,37 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { isEmptyObject } from '../../helpers/helpers';
 
-const AssetStatusSelector = ({ id, label, options, required = false, onChange, classNames, disabled, ...rest }) => {
-    const [currentValue, setCurrentValue] = useState({});
+const rootId = 'asset_status_selector';
+
+const AssetStatusSelector = ({
+    id,
+    label,
+    options,
+    initialOptionIndex = -1,
+    required = false,
+    onChange,
+    classNames,
+    disabled,
+    ...rest
+}) => {
+    const componentId = `${rootId}-${id}`;
+    const [currentValue, setCurrentValue] = useState(initialOptionIndex > -1 ? options[initialOptionIndex] : {});
     const handleOnChange = (event, newValue) => {
         console.log('handleOnChange', event, newValue);
         setCurrentValue(newValue);
         onChange?.(newValue);
     };
     return (
-        <FormControl className={classNames.formControl} fullWidth>
+        <FormControl className={classNames?.formControl} fullWidth>
             <Autocomplete
-                id={`testntagFormAssetStatus-${id}`}
-                data-testid={`testntagFormAssetStatus-${id}`}
-                className={classNames.autocomplete}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
+                className={classNames?.autocomplete}
                 fullWidth
                 options={options}
                 value={currentValue}
                 onChange={handleOnChange}
-                getOptionLabel={option => option.label}
+                getOptionLabel={option => option?.label}
                 autoHighlight
                 renderInput={params => (
                     <TextField
@@ -33,14 +46,14 @@ const AssetStatusSelector = ({ id, label, options, required = false, onChange, c
                         required={required}
                         variant="standard"
                         error={(!disabled && required && isEmptyObject(currentValue)) ?? false}
-                        InputLabelProps={{ shrink: true, htmlFor: `testntagFormAssetStatusInput-${id}` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `testntagFormAssetStatusInput-${id}`,
-                            'data-testid': `testntagFormAssetStatusInput-${id}`,
+                            id: `${componentId}-input`,
+                            'data-testid': `${componentId}-input`,
                         }}
                     />
                 )}
@@ -55,6 +68,7 @@ AssetStatusSelector.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string,
     options: PropTypes.object.required,
+    initialOptionIndex: PropTypes.number,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     onChange: PropTypes.func,

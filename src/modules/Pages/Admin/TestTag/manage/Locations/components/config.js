@@ -2,6 +2,7 @@ import React from 'react';
 
 import TextField from '@material-ui/core/TextField';
 
+import locale from '../../../testTag.locale';
 import { createLocationString } from '../../../helpers/helpers';
 import { isEmptyStr } from '../../../helpers/helpers';
 
@@ -18,7 +19,12 @@ export default {
             },
             site_id_displayed: {
                 component: props => (
-                    <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />
+                    <TextField
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 10 }}
+                        required
+                        helperText={locale.pages.general.helperText.maxChars(10)}
+                    />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
@@ -45,7 +51,12 @@ export default {
             },
             building_id_displayed: {
                 component: props => (
-                    <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />
+                    <TextField
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 10 }}
+                        required
+                        helperText={locale.pages.general.helperText.maxChars(10)}
+                    />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
@@ -67,7 +78,12 @@ export default {
             },
             floor_id_displayed: {
                 component: props => (
-                    <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />
+                    <TextField
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 10 }}
+                        required
+                        helperText={locale.pages.general.helperText.maxChars(10)}
+                    />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
@@ -93,7 +109,12 @@ export default {
             },
             room_id_displayed: {
                 component: props => (
-                    <TextField {...props} inputProps={{ ...props.inputProps, maxLength: 10 }} required />
+                    <TextField
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 10 }}
+                        required
+                        helperText={locale.pages.general.helperText.maxChars(10)}
+                    />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },

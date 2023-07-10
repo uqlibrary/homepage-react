@@ -8,6 +8,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
+const rootId = 'asset_type_selector';
+
 const AssetTypeSelector = ({
     id,
     title,
@@ -21,6 +23,7 @@ const AssetTypeSelector = ({
     disabled = false,
     ...rest
 }) => {
+    const componentId = `${rootId}-${id}`;
     const [value, setValue] = useState(initValue);
     const { assetTypesList, assetTypesListLoading } = useSelector(state => state.get('testTagAssetTypesReducer'));
 
@@ -44,8 +47,8 @@ const AssetTypeSelector = ({
                 </Typography>
             )}
             <Autocomplete
-                id={`testntagFormAssetType-${id}`}
-                data-testid={`testntagFormAssetType-${id}`}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
                 className={classNames.autocomplete}
                 fullWidth
                 options={assetTypesList ?? []}
@@ -61,7 +64,7 @@ const AssetTypeSelector = ({
                         required={required}
                         error={(!disabled && required && !validateAssetTypeId?.(value)) ?? false}
                         variant="standard"
-                        InputLabelProps={{ shrink: true, htmlFor: `testntagFormAssetTypeInput-${id}` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -70,8 +73,8 @@ const AssetTypeSelector = ({
                                         <CircularProgress
                                             color="inherit"
                                             size={20}
-                                            id="assetTypeSpinner"
-                                            data-testid="assetTypeSpinner"
+                                            id={`${componentId}-progress`}
+                                            data-testid={`${componentId}-progress`}
                                         />
                                     ) : null}
                                     {params.InputProps.endAdornment}
@@ -80,8 +83,8 @@ const AssetTypeSelector = ({
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `testntagFormAssetTypeInput-${id}`,
-                            'data-testid': `testntagFormAssetTypeInput-${id}`,
+                            id: `${componentId}-input`,
+                            'data-testid': `${componentId}-input`,
                         }}
                     />
                 )}

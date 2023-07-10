@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { GridFooterContainer } from '@mui/x-data-grid';
 import Button from '@material-ui/core/Button';
 
+const rootId = 'footer_bar';
+
 const FooterBar = ({
     id,
     actionLabel = '',
@@ -12,6 +14,7 @@ const FooterBar = ({
     cancelButtonProps,
     nextButtonProps,
 }) => {
+    const componentId = `${rootId}-${id}`;
     FooterBar.propTypes = {
         id: PropTypes.string.isRequired,
         actionLabel: PropTypes.string,
@@ -23,14 +26,14 @@ const FooterBar = ({
     };
 
     return (
-        <GridFooterContainer>
+        <GridFooterContainer id={`${componentId}`} data-testid={`${componentId}`}>
             {!!onAltClick && (
                 <Button
                     color="primary"
                     onClick={onAltClick}
                     variant="outlined"
-                    id={`${id}-gridFooterClearBtn`}
-                    data-testid={`${id}-gridFooterClearBtn`}
+                    id={`${componentId}-alt-button`}
+                    data-testid={`${componentId}-alt-button`}
                     {...cancelButtonProps}
                 >
                     {altLabel}
@@ -41,8 +44,8 @@ const FooterBar = ({
                     color="primary"
                     onClick={onActionClick}
                     variant="contained"
-                    id={`${id}-gridFooterNextBtn`}
-                    data-testid={`${id}-gridFooterNextBtn`}
+                    id={`${componentId}-action-button`}
+                    data-testid={`${componentId}-action-button`}
                     {...nextButtonProps}
                 >
                     {actionLabel}

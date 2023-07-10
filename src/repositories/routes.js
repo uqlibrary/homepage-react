@@ -304,5 +304,7 @@ export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId
 
 export const TEST_TAG_BULK_UPDATE_API = () => ({ apiUrl: 'test_and_tag/asset' });
 
+export const TEST_TAG_MODIFY_INSPECTION_DETAILS_API = id => ({ apiUrl: `/test_and_tag/asset/${id}/action` });
+
 export const TEST_TAG_USER_LIST_API = () => ({ apiUrl: 'test_and_tag/users/all' });
 export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test_and_tag/user/${id}` });
