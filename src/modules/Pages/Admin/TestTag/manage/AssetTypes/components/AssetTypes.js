@@ -152,6 +152,9 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             })
             .catch(error => {
                 openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
