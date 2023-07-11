@@ -870,7 +870,7 @@ mock.onGet('exams/course/FREN1010/summary')
             status: 'OK',
         },
     ])
-    .onPut(/test-and-tag\/asset_type\/\d*/)
+    .onPut(/test-and-tag\/asset-type\/\d*/)
     .reply(withDelay([
         200,
         {
