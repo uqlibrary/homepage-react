@@ -93,6 +93,11 @@ const handlers = {
         userListLoaded: false,
         userListError: action.payload,
     }),
+    [actions.TESTTAG_USER_LIST_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        userListError: null,
+    }),
 };
 
 export default function testTagUserListReducer(state = initialState, action) {

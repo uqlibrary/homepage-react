@@ -21,7 +21,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: false,
                 assetTypesActionType: '',
                 assetTypesList: [],
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: true,
             });
         });
@@ -65,7 +65,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: false,
                 assetTypesActionType: 'SAVE',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: true,
             });
         });
@@ -77,7 +77,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: false,
                 assetTypesActionType: '',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: false,
             });
         });
@@ -91,7 +91,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: false,
                 assetTypesActionType: 'DELETE',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: false,
             });
         });
@@ -104,7 +104,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: false,
                 assetTypesActionType: '',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: false,
             });
         });
@@ -117,7 +117,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: true,
                 assetTypesActionType: 'SAVE',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: false,
             });
         });
@@ -130,7 +130,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: true,
                 assetTypesActionType: 'DELETE',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: false,
             });
         });
@@ -144,7 +144,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: false,
                 assetTypesActionType: 'REASSIGN',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: true,
             });
         });
@@ -156,7 +156,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: false,
                 assetTypesActionType: '',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: false,
             });
         });
@@ -168,7 +168,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesActionError: true,
                 assetTypesActionType: 'REASSIGN',
                 assetTypesList: mockAssetTypeList,
-                assetTypesListError: false,
+                assetTypesListError: null,
                 assetTypesListLoading: false,
             });
         });
