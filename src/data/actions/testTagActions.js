@@ -417,7 +417,7 @@ export function loadInspectionDevices() {
 
 export function clearInspectionDevicesError() {
     return dispatch => {
-        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_LOAD_CLEAR_ERROR });
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_CLEAR_ERROR });
     };
 }
 export function clearInspectionDevices() {
@@ -453,11 +453,6 @@ export function addInspectionDevice(request) {
             });
     };
 }
-export function clearInspectionDevicesAddError() {
-    return dispatch => {
-        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_ADD_CLEAR_ERROR });
-    };
-}
 
 export function updateInspectionDevice(id, request) {
     return dispatch => {
@@ -486,11 +481,6 @@ export function updateInspectionDevice(id, request) {
             });
     };
 }
-export function clearInspectionDevicesUpdateError() {
-    return dispatch => {
-        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_CLEAR_ERROR });
-    };
-}
 
 export function deleteInspectionDevice(id) {
     return dispatch => {
@@ -517,11 +507,6 @@ export function deleteInspectionDevice(id) {
                 });
                 return Promise.reject(error);
             });
-    };
-}
-export function clearInspectionDevicesDeleteError() {
-    return dispatch => {
-        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_DELETE_CLEAR_ERROR });
     };
 }
 
@@ -573,11 +558,6 @@ export function addAssetType(request) {
             });
     };
 }
-export function clearAssetTypeAddError() {
-    return dispatch => {
-        dispatch({ type: actions.TESTTAG_ASSET_TYPES_ADD_CLEAR_ERROR });
-    };
-}
 
 export function saveAssetType(id, request) {
     return dispatch => {
@@ -597,11 +577,6 @@ export function saveAssetType(id, request) {
                 });
                 return Promise.reject(error);
             });
-    };
-}
-export function clearAssetTypeSaveError() {
-    return dispatch => {
-        dispatch({ type: actions.TESTTAG_ASSET_TYPES_SAVE_CLEAR_ERROR });
     };
 }
 
@@ -625,11 +600,6 @@ export const deleteAndReassignAssetType = request => {
             });
     };
 };
-export function clearAssetTypeReassignError() {
-    return dispatch => {
-        dispatch({ type: actions.TESTTAG_ASSET_TYPES_REASSIGN_CLEAR_ERROR });
-    };
-}
 
 export function deleteAssetType(id) {
     return dispatch => {
@@ -648,11 +618,6 @@ export function deleteAssetType(id) {
                 });
                 return Promise.reject(error);
             });
-    };
-}
-export function clearAssetTypeDeleteError() {
-    return dispatch => {
-        dispatch({ type: actions.TESTTAG_ASSET_TYPES_DELETE_CLEAR_ERROR });
     };
 }
 
