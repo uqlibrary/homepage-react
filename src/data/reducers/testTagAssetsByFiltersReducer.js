@@ -34,6 +34,11 @@ const handlers = {
         taggedBuildingListLoaded: false,
         taggedBuildingListError: action.payload,
     }),
+    [actions.TESTTAG_TAGGED_BUILDING_LIST_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        taggedBuildingListError: null,
+    }),
     [actions.TESTTAG_ASSET_REPORT_LOADING]: state => ({
         ...initialState,
         ...state,
@@ -55,6 +60,11 @@ const handlers = {
         assetListLoading: false,
         assetListLoaded: false,
         assetListError: action.payload,
+    }),
+    [actions.TESTTAG_ASSET_REPORT_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        assetListError: null,
     }),
 };
 

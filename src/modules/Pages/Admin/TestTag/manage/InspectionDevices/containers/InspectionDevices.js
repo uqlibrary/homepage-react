@@ -6,9 +6,14 @@ import * as actions from 'data/actions';
 import locale from '../../../testTag.locale';
 
 export const mapStateToProps = state => {
+    const componentId = 'inspection-devices';
+    const componentIdLower = 'inspection_devices';
+
     return {
         ...state.get('testTagInspectionDevicesReducer'),
         pageLocale: locale.pages.manage.inspectiondevices,
+        componentId,
+        componentIdLower,
     };
 };
 

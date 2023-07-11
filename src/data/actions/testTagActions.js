@@ -27,8 +27,11 @@ import {
     TEST_TAG_TAGGED_BUILDING_LIST,
     TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST,
     TEST_TAG_BULK_UPDATE_API,
+    TEST_TAG_MODIFY_INSPECTION_DETAILS_API,
     TEST_TAG_USER_LIST_API,
     TEST_TAG_UPDATE_USER_API,
+    TEST_TAG_ADD_USER_API,
+    TEST_TAG_DELETE_USER_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -68,6 +71,11 @@ export function loadDashboard() {
             });
     };
 }
+export function clearDashboardError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_DASHBOARD_CONFIG_CLEAR_ERROR });
+    };
+}
 
 export function loadInspectionConfig() {
     return dispatch => {
@@ -88,6 +96,11 @@ export function loadInspectionConfig() {
     };
 }
 
+export function clearInspectionConfigError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR_ERROR });
+    };
+}
 export function clearInspectionConfig() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_CLEAR });
@@ -99,7 +112,6 @@ export function addLocation({ type, request }) {
         dispatch({ type: actions.TESTTAG_LOCATION_ADDING });
         return post(TEST_TAG_ADD_LOCATION_API(type), request)
             .then(response => {
-                console.log(response, response.status.toLowerCase());
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_LOCATION_ADDED,
@@ -279,12 +291,16 @@ export function clearAssets() {
         dispatch({ type: actions.TESTTAG_ASSETS_CLEAR });
     };
 }
+export function clearAssetsError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_CLEAR_ERROR });
+    };
+}
 export function loadAssetsMine(filters) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_LOADING });
         return get(TEST_TAG_ASSETS_MINE_API(filters))
             .then(response => {
-                console.log('>>>>>', response.data);
                 dispatch({
                     type: actions.TESTTAG_ASSETS_MINE_LOADED,
                     payload: response.data,
@@ -302,6 +318,12 @@ export function loadAssetsMine(filters) {
 export function clearAssetsMine() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_CLEAR });
+    };
+}
+
+export function clearAssetsMineError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_MINE_CLEAR_ERROR });
     };
 }
 
@@ -379,7 +401,6 @@ export function loadInspectionDevices() {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_LOADING });
         return get(TEST_TAG_INSPECTION_DEVICE_API())
             .then(response => {
-                console.log(response);
                 dispatch({
                     type: actions.TESTTAG_INSPECTION_DEVICES_LOADED,
                     payload: response.data,
@@ -394,6 +415,11 @@ export function loadInspectionDevices() {
     };
 }
 
+export function clearInspectionDevicesError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_CLEAR_ERROR });
+    };
+}
 export function clearInspectionDevices() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_CLEAR });
@@ -405,7 +431,6 @@ export function addInspectionDevice(request) {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_ADDING });
         return post(TEST_TAG_ADD_INSPECTION_DEVICE_API(), request)
             .then(response => {
-                console.log(response, response.status.toLowerCase());
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_INSPECTION_DEVICES_ADDED,
@@ -507,6 +532,11 @@ export function loadAssetTypes() {
             });
     };
 }
+export function clearAssetTypesError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_CLEAR_ERROR });
+    };
+}
 
 export function addAssetType(request) {
     return dispatch => {
@@ -591,6 +621,35 @@ export function deleteAssetType(id) {
     };
 }
 
+/* INSPECTION DETAILS UPDATE */
+export function updateInspectionDetails(id, request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTION_DETAILS_UPDATING });
+        return put(TEST_TAG_MODIFY_INSPECTION_DETAILS_API(id), request)
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DETAILS_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_INSPECTION_DETAILS_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_INSPECTION_DETAILS_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
 /* REPORT INSPECTIONS DUE */
 
 export function getInspectionsDue({ locationId, locationType, period, periodType }) {
@@ -611,6 +670,11 @@ export function getInspectionsDue({ locationId, locationType, period, periodType
                 });
                 // return Promise.reject(error);
             });
+    };
+}
+export function clearInspectionsDueError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_INSPECTIONS_DUE_CLEAR_ERROR });
     };
 }
 export function clearInspectionsDue() {
@@ -642,7 +706,6 @@ export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) 
 }
 export function getLicencedUsers() {
     return dispatch => {
-        console.log('Getting Licenced Users');
         dispatch({ type: actions.TESTTAG_LICENCED_INSPECTORS_LOADING });
         return get(TEST_TAG_REPORT_UTILITY_LICENCED_USERS())
             .then(response => {
@@ -659,6 +722,11 @@ export function getLicencedUsers() {
                 });
                 return Promise.reject(error);
             });
+    };
+}
+export function clearLicencedUsersError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_LICENCED_INSPECTORS_CLEAR_ERROR });
     };
 }
 
@@ -681,6 +749,11 @@ export function loadTaggedBuildingList() {
                 });
                 return Promise.reject(error);
             });
+    };
+}
+export function clearTaggedBuildingListError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_TAGGED_BUILDING_LIST_CLEAR_ERROR });
     };
 }
 
@@ -739,6 +812,11 @@ export function loadAssetReportByFilters({
             });
     };
 }
+export function clearAssetReportByFiltersError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_REPORT_CLEAR_ERROR });
+    };
+}
 
 export function clearBulkAssetUpdate() {
     return dispatch => {
@@ -768,10 +846,16 @@ export function loadUserList() {
     };
 }
 
-export function updateUser(request) {
+export function clearUserListError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_CLEAR_ERROR });
+    };
+}
+
+export function updateUser(id, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_USER_LIST_UPDATING });
-        return put(TEST_TAG_UPDATE_USER_API(), request)
+        return put(TEST_TAG_UPDATE_USER_API(id), request)
             .then(response => {
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
@@ -788,7 +872,63 @@ export function updateUser(request) {
             })
             .catch(error => {
                 dispatch({
-                    type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_FAILED,
+                    type: actions.TESTTAG_USER_LIST_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function addUser(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_ADDING });
+        return post(TEST_TAG_ADD_USER_API(), request)
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_ADD_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_ADD_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteUser(id) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_DELETING });
+        return destroy(TEST_TAG_DELETE_USER_API(id))
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_DELETE_FAILED,
                     payload: error.message,
                 });
                 return Promise.reject(error);

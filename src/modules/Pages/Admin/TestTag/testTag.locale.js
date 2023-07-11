@@ -27,6 +27,16 @@ export default {
             { value: '12', label: '1 year' },
             { value: '60', label: '5 years' },
         ],
+        assetStatus: {
+            current: 'CURRENT',
+            failed: 'FAILED',
+            outforrepair: 'OUTFORREPAIR',
+            discarded: 'DISCARDED',
+        },
+        inspectStatus: {
+            passed: 'PASSED',
+            failed: 'FAILED',
+        },
         assetStatusOptions: [
             { value: 'CURRENT', label: 'Current' },
             { value: 'REMOVED', label: 'Removed' },
@@ -34,6 +44,12 @@ export default {
             { value: 'FAILED', label: 'Failed' },
             { value: 'OUTFORREPAIR', label: 'Out for Repair' },
         ],
+        alerts: {
+            timeout: 6000,
+            success: () => 'Request successfully completed',
+            error: err => `Encountered an error: ${err}`,
+            failed: err => `Operation failed: ${err}`,
+        },
     },
     pages: {
         general: {
@@ -56,6 +72,10 @@ export default {
                 },
                 room: { label: 'Room', labelAll: 'All rooms' },
             },
+            helperText: {
+                maxChars: count => `Max ${count} characters`,
+                minChars: count => `Min ${count} characters`,
+            },
         },
         dashboard: {
             config: {
@@ -71,82 +91,97 @@ export default {
             },
             panel: {
                 inspections: {
+                    id: 'new-inspection',
                     title: 'INSPECTIONS',
                     link: 'Begin test and tagging of assets',
                 },
                 assets: {
+                    id: 'assets-due-inspection',
                     title: 'ASSET INSPECTIONS',
                     subtext: duration => <>* due in the next {duration}.</>,
                     upcomingText: 'upcoming *',
                     overdueText: 'overdue',
                 },
                 inspectionDevices: {
+                    id: 'devices-due-recalibration',
                     title: 'INSPECTION DEVICE RECALIBRATIONS',
                     subtext: duration => <>* due in the next {duration}.</>,
                     upcomingText: 'upcoming *',
                     overdueText: 'overdue',
                 },
                 management: {
+                    id: 'management',
                     title: 'MANAGEMENT',
                     links: [
                         {
-                            title: 'X USERS',
+                            id: 'users',
+                            title: 'USERS',
                             icon: <UsersIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: '#',
+                            path: pathConfig.admin.testntagmanageusers,
                         },
                         {
+                            id: 'asset-types',
                             title: 'ASSET TYPES',
                             icon: <AssetTypeIcon />,
-                            path: `${pathConfig.admin.testntagmanageassettypes}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanageassettypes,
                         },
                         {
+                            id: 'locations',
                             title: 'LOCATIONS',
                             icon: <LocationIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: `${pathConfig.admin.testntagmanagelocations}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanagelocations,
                         },
                         {
+                            id: 'inspection-devices',
                             title: 'INSPECTION DEVICES',
                             icon: <InspectionDeviceIcon />,
-                            path: `${pathConfig.admin.testntagmanageinspectiondevices}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanageinspectiondevices,
                         },
                         {
+                            id: 'bulk-asset-update',
                             title: 'BULK ASSET UPDATE',
                             icon: <BulkUpdateIcon />,
-                            path: `${pathConfig.admin.testntagmanagebulkassetupdate}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagmanagebulkassetupdate,
                         },
                         {
-                            title: 'X INSPECTIONS',
+                            id: 'inspections',
+                            title: 'INSPECTIONS',
                             icon: <InspectionIcon />,
-                            path: '#',
+                            path: pathConfig.admin.testntagmanageinspectiondetails,
                         },
                     ],
                 },
                 reporting: {
+                    id: 'reporting',
                     title: 'REPORTING',
                     links: [
                         {
+                            id: 'devices-due-recalibration',
                             title: 'INSPECTION DEVICES DUE RECALIBRATION',
                             icon: <InspectionDeviceIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
-                            path: `${pathConfig.admin.testntagreportrecalibrationssdue}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportrecalibrationssdue,
                         },
                         {
+                            id: 'assets-due-inspection',
                             title: 'ASSETS DUE NEXT INSPECTION',
                             icon: <InspectionIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
-                            path: `${pathConfig.admin.testntagreportinspectionsdue}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportinspectionsdue,
                         },
                         {
+                            id: 'assets-inspected',
                             title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
                             icon: <AssetsInspectedByDateIcon />,
-                            path: `${pathConfig.admin.testntagreportassetsbyfilters}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportassetsbyfilters,
                         },
                         {
+                            id: 'inspections-by-user',
                             title: 'INSPECTIONS BY LICENSED USER',
                             icon: <InspectionByUserIcon />,
-                            path: `${pathConfig.admin.testntagreportinspectionsbylicenceduser}?user=uqtesttag`,
+                            path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
                             permissions: [PERMISSIONS.can_admin],
                         },
                     ],
@@ -365,19 +400,19 @@ export default {
                 form: {
                     locationTypeTitle: 'Asset type',
                     actions: 'Actions',
-                    addLocationButton: 'Add Asset type',
+                    addLocationButton: 'Add asset type',
                     columns: {
                         asset_type_id: {
                             label: 'Id',
                         },
                         asset_type_name: {
-                            label: 'Asset Type Name',
+                            label: 'Asset type name',
                         },
                         asset_type_class: {
                             label: 'Class',
                         },
                         asset_type_power_rating: {
-                            label: 'Power Rating',
+                            label: 'Power rating',
                         },
                         asset_type: {
                             label: 'Type',
@@ -575,6 +610,66 @@ export default {
                     deleteFail: 'Device could not be deleted',
                 },
             },
+            inspectiondetails: {
+                breadcrumbs: [
+                    {
+                        title: 'Manage Inspection Details',
+                        icon: <InspectionIcon fontSize={'small'} />,
+                    },
+                ],
+                header: {
+                    pageSubtitle: dept => `Managing Inspection Details for ${dept}`,
+                },
+                form: {
+                    actions: 'Actions',
+                    columns: {
+                        asset_id: {
+                            label: 'ID',
+                        },
+                        asset_id_displayed: {
+                            label: 'Asset ID',
+                        },
+                        asset_type: {
+                            label: 'Type',
+                        },
+                        asset_status: {
+                            label: 'Status',
+                        },
+                        user_name: {
+                            label: 'Last Inspected by',
+                        },
+                        inspect_date: {
+                            label: 'Last inspection date',
+                        },
+                        inspect_notes: {
+                            label: 'Inspection notes',
+                        },
+                        inspect_fail_reason: {
+                            label: 'Fail reason',
+                        },
+                        discard_reason: {
+                            label: 'Discard reason',
+                        },
+                        repairer_name: {
+                            label: 'Repair notes',
+                        },
+                    },
+                    assetSelector: {
+                        label: 'Asset ID',
+                        helperText: 'Scan or enter a new ID to search',
+                        placeholder: 'Enter at least 3 characters',
+                    },
+                },
+                dialogEdit: {
+                    confirmButtonLabel: 'Update',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationTitle: 'Edit asset details',
+                },
+                alerts: {
+                    updateSuccess: 'Asset updated successfully',
+                    updateFail: 'Asset could not be updated',
+                },
+            },
             bulkassetupdate: {
                 config: {},
                 breadcrumbs: [
@@ -597,6 +692,11 @@ export default {
                     assetType: {
                         label: 'Asset type',
                     },
+
+                    assetStatus: {
+                        label: 'Asset status',
+                    },
+
                     filterDialog: {
                         title: 'Select assets by feature',
                         button: {
@@ -622,7 +722,7 @@ export default {
                             assetSelector: {
                                 label: 'Asset ID',
                                 helperText: 'Scan or enter a new ID to add',
-                                placeholder: 'Enter at least 5 characters',
+                                placeholder: 'Enter at least 3 characters',
                             },
                             button: {
                                 clear: 'Clear',
@@ -713,6 +813,9 @@ export default {
                         user_current_flag_cb: {
                             label: 'Is Current',
                         },
+                        actions_count: {
+                            label: 'Inspections',
+                        },
                     },
                 },
                 dialogAdd: {
@@ -724,6 +827,16 @@ export default {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Edit user',
+                },
+                alerts: {
+                    addSuccess: 'User added successfully',
+                    deleteSuccess: 'User deleted successfully',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to delete this user?',
+                    confirmationTitle: 'Delete user',
                 },
             },
         },
@@ -886,14 +999,14 @@ export default {
                     filterToDateFormatted: value => `Including assets up to ${value}`,
                     statusTypes: [
                         {
-                            status_type_id: 0,
-                            status_type_rendered: 'All',
-                            status_type: null,
+                            id: 0,
+                            label: 'All',
+                            value: null,
                         },
                         {
-                            status_type_id: 1,
-                            status_type_rendered: 'Out for repair',
-                            status_type: 'OUTFORREPAIR',
+                            id: 1,
+                            label: 'Out for repair',
+                            value: 'OUTFORREPAIR',
                         },
                     ],
                 },

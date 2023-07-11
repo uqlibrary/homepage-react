@@ -49,7 +49,7 @@ import testTag_assets from './data/records/test_tag_assets';
 import test_tag_asset_types from './data/records/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
 import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspections_by_licenced_user';
-import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors'; 
+import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors';
 import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
 import test_tag_assets_report_assets from './data/records/test_tag_assets_report_assets';
 import test_tag_assets_mine from './data/records/test_tag_assets_mine';
@@ -760,15 +760,15 @@ mock.onGet('exams/course/FREN1010/summary')
     // T&T BUILDINGS
 
     // T&T FLOORS
-    .onGet(/test_and_tag\/building\/\d+\/current/)
+    .onGet(/test-and-tag\/building\/\d+\/current/)
     .reply(config => {
         const r = /\d+/;
         const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
-        return [200, {data: testTag_floorList.data.find(floor => floor.building_id === id)}];
+        return [200, { data: testTag_floorList.data.find(floor => floor.building_id === id) }];
     })
 
     // T&T ROOMS
-    .onGet(/test_and_tag\/floor\/\d+\/current/)
+    .onGet(/test-and-tag\/floor\/\d+\/current/)
     .reply(config => {
         const r = /\d+/;
         const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
@@ -778,19 +778,19 @@ mock.onGet('exams/course/FREN1010/summary')
     // T&T LOCATIONS
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
 
     // T&T MANAGE INSPECTION DEVICES
@@ -800,13 +800,13 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => [200, {status: 'OK'}])
-    .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)))
     .reply(() => [200, {status: 'OK'}])
-    .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
+    .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)))
     .reply(() => [200, {status: 'OK'}])
 
     // ASSETS (with pattern matching)
-    .onGet(/test_and_tag\/asset\/search\/current\/*/)
+    .onGet(/test-and-tag\/asset\/search\/current\/*/)
     .reply(config => {
         const pattern = config.url.split('/').pop();
         // filter array to matching asset id's
@@ -870,7 +870,7 @@ mock.onGet('exams/course/FREN1010/summary')
             status: 'OK',
         },
     ])
-    .onPut(/test_and_tag\/asset_type\/\d*/)
+    .onPut(/test-and-tag\/asset-type\/\d*/)
     .reply(withDelay([
         200,
         {
@@ -888,11 +888,11 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         },
     ])
-    .onDelete(/test_and_tag\/asset_type\/4/)
+    .onDelete(/test-and-tag\/asset_type\/4/)
     .reply(() => {
         return [200, { status: 'OK' }];
     })
-    .onDelete(/test_and_tag\/asset_type\/5/)
+    .onDelete(/test-and-tag\/asset_type\/5/)
     .reply(() => {
         return [
             400,
@@ -928,14 +928,45 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_assets_mine])
     .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)
     .reply(() => [200, {status: 'OK'}])
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API('.*').apiUrl)))
+    .reply(() => [200, {status: 'OK'}])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
     })
     .onGet(routes.TEST_TAG_USER_LIST_API().apiUrl)
     .reply(withDelay([200, test_tag_user_list]))
-    .onPut(routes.TEST_TAG_UPDATE_USER_API().apiUrl)
-    .reply(() => [200, {status: 'OK'}])
+    .onPut(/test-and-tag\/user\/5/)
+    .reply(withDelay([
+        403,
+        {},
+    ]))
+    .onPut(/test-and-tag\/user\/\d*/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
+    .onPost(/test-and-tag\/user/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
+    .onDelete(/test-and-tag\/user\/5/)
+    .reply(withDelay([
+        403,
+        {},
+    ]))
+    .onDelete(/test-and-tag\/user\/\d*/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
     // PROMO PANEL API
     .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
     .reply(withDelay([200, {}]))

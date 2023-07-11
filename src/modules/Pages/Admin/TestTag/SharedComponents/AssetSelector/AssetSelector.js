@@ -9,6 +9,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
 
+const rootId = 'asset_selector';
+
 const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
 const filter = createFilterOptions();
@@ -27,14 +29,17 @@ const AssetSelector = ({
     required = true,
     canAddNew = true,
     clearOnSelect = false,
+    headless = false, // if true, no popup is shown and the calling component is expected to intercept the Redux store
     minAssetIdLength = MINIMUM_ASSET_ID_PATTERN_LENGTH,
     user,
     classNames,
     inputRef,
     onChange,
     onReset,
+    onSearch,
     validateAssetId,
 }) => {
+    const componentId = `${rootId}-${id}`;
     const previousValueRef = React.useRef(null);
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
@@ -47,7 +52,10 @@ const AssetSelector = ({
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
             setCurrentValue(assetPartial);
-            !!assetPartial && assetPartial.length >= minAssetIdLength && dispatch(actions.loadAssets(assetPartial));
+            if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
+                onSearch?.(assetPartial);
+                dispatch(actions.loadAssets(assetPartial));
+            }
         }),
     ).current;
 
@@ -78,11 +86,11 @@ const AssetSelector = ({
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
-                id={`${id}-select`}
-                data-testid={`${id}-select`}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
                 className={classNames.autocomplete}
                 fullWidth
-                open={isOpen}
+                open={!headless && isOpen}
                 value={selectedAsset ?? currentValue ?? previousValueRef.current}
                 onChange={(event, newValue) => {
                     if (typeof newValue === 'string') {
@@ -118,6 +126,7 @@ const AssetSelector = ({
                 openOnFocus
                 selectOnFocus
                 handleHomeEndKeys
+                clearOnBlur={headless}
                 options={formAssetList}
                 getOptionLabel={option => {
                     // Value selected with enter, right from the input
@@ -143,7 +152,7 @@ const AssetSelector = ({
                         variant="standard"
                         onFocus={() => setIsOpen(true)}
                         onBlur={() => setIsOpen(false)}
-                        InputLabelProps={{ shrink: true, htmlFor: `${id}-input` }}
+                        InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -152,8 +161,8 @@ const AssetSelector = ({
                                         <CircularProgress
                                             color="inherit"
                                             size={20}
-                                            id="assetIdSpinner"
-                                            data-testid="assetIdSpinner"
+                                            id={`${componentId}-progress`}
+                                            data-testid={`${componentId}-progress`}
                                         />
                                     ) : null}
                                     {params.InputProps.endAdornment}
@@ -167,8 +176,8 @@ const AssetSelector = ({
                         }}
                         inputProps={{
                             ...params.inputProps,
-                            id: `${id}-input`,
-                            'data-testid': `${id}-input`,
+                            id: `${componentId}-input`,
+                            'data-testid': `${componentId}-input`,
                             maxLength: 12,
                         }}
                     />
@@ -188,11 +197,13 @@ AssetSelector.propTypes = {
     masked: PropTypes.bool,
     required: PropTypes.bool,
     canAddNew: PropTypes.bool,
+    headless: PropTypes.bool,
     clearOnSelect: PropTypes.bool,
     user: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
     inputRef: PropTypes.any,
     onChange: PropTypes.func,
+    onSearch: PropTypes.func,
     onReset: PropTypes.func,
     validateAssetId: PropTypes.func,
 };

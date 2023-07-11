@@ -118,6 +118,7 @@ const EventPanel = ({
                     </Grid>
 
                     <LocationPicker
+                        id="eventPanel"
                         siteList={inspectionConfig?.sites ?? []}
                         siteListLoading={inspectionConfigLoading}
                         buildingList={

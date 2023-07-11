@@ -96,7 +96,6 @@ describe('ActionPanel', () => {
     });
 
     it('allows entry of repair text', async () => {
-        const testId = 'repairerDetails';
         const testInputId = 'repairerDetails-input';
         const updateKey = 'repairer_contact_details';
         const newValue = 'repair details';
@@ -123,7 +122,6 @@ describe('ActionPanel', () => {
             disabled,
         });
 
-        expect(getByTestId(testId)).toBeInTheDocument();
         expect(getByTestId(testInputId)).toBeInTheDocument();
         act(() => {
             fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });
@@ -132,7 +130,6 @@ describe('ActionPanel', () => {
     });
 
     it('allows entry of discarded text', async () => {
-        const testId = 'discardReason';
         const testInputId = 'discardReason-input';
         const updateKey = 'discard_reason';
         const newValue = 'discard details';
@@ -162,7 +159,6 @@ describe('ActionPanel', () => {
             fireEvent.click(getByTestId('tab-discard'));
         });
 
-        expect(getByTestId(testId)).toBeInTheDocument();
         expect(getByTestId(testInputId)).toBeInTheDocument();
         act(() => {
             fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });

@@ -58,6 +58,11 @@ const handlers = {
         licencedUsersLoaded: false,
         licencedUsersError: action.payload,
     }),
+    [actions.TESTTAG_LICENCED_INSPECTORS_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        licencedUsersError: null,
+    }),
 };
 
 export default function testTagInspectionsByLicencedUserReducer(state = initialState, action) {

@@ -9,7 +9,7 @@ module.exports = defineConfig({
     videoUploadOnPasses: false,
     projectId: 'd2f4io',
     blockHosts: ['www.googletagmanager.com'],
-    numTestsKeptInMemory: 1,
+    numTestsKeptInMemory: 100,
     retries: {
         openMode: 0,
         runMode: 5,

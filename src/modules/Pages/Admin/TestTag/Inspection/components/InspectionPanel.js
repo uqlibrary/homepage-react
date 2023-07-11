@@ -82,6 +82,9 @@ const InspectionPanel = ({
         setFormNextTestDate(value);
     };
 
+    const handleFailReasonChange = e => handleChange('inspection_fail_reason')(e);
+    const handleInspectionNotesChange = e => handleChange('inspection_notes')(e);
+
     return (
         <StandardCard
             title={`${pageLocale.form.inspection.title}`}
@@ -215,8 +218,7 @@ const InspectionPanel = ({
                                     disabled={disabled}
                                     error={!isValidFailReason(formValues, testStatusEnum.FAILED.value)}
                                     value={formValues?.inspection_fail_reason ?? ''}
-                                    handleChange={handleChange}
-                                    updateKey="inspection_fail_reason"
+                                    onChange={handleFailReasonChange}
                                     id="inspectionFailReason"
                                     data-testid="inspectionFailReason"
                                 />
@@ -234,8 +236,7 @@ const InspectionPanel = ({
                                 InputProps={{ fullWidth: true }}
                                 disabled={disabled}
                                 value={formValues?.inspection_notes ?? ''}
-                                handleChange={handleChange}
-                                updateKey="inspection_notes"
+                                onChange={handleInspectionNotesChange}
                                 id="inspectionNotes"
                                 data-testid="inspectionNotes"
                             />

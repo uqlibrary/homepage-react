@@ -11,7 +11,6 @@ const handlers = {
     [actions.TESTTAG_USER_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
-        userList: [],
         userListLoading: true,
         userListLoaded: false,
         userListError: null,
@@ -51,6 +50,53 @@ const handlers = {
         userListLoading: false,
         userListLoaded: false,
         userListError: action.payload,
+    }),
+    [actions.TESTTAG_USER_LIST_ADDING]: state => ({
+        ...initialState,
+        ...state,
+        userListLoading: true,
+        userListLoaded: false,
+        userListError: null,
+    }),
+    [actions.TESTTAG_USER_LIST_ADDED]: state => ({
+        ...initialState,
+        ...state,
+        userListLoading: false,
+        userListLoaded: false,
+        userListError: null,
+    }),
+    [actions.TESTTAG_USER_LIST_ADD_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        userListLoading: false,
+        userListLoaded: false,
+        userListError: action.payload,
+    }),
+    [actions.TESTTAG_USER_LIST_DELETING]: state => ({
+        ...initialState,
+        ...state,
+        userListLoading: true,
+        userListLoaded: false,
+        userListError: null,
+    }),
+    [actions.TESTTAG_USER_LIST_DELETED]: state => ({
+        ...initialState,
+        ...state,
+        userListLoading: false,
+        userListLoaded: false,
+        userListError: null,
+    }),
+    [actions.TESTTAG_USER_LIST_DELETE_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        userListLoading: false,
+        userListLoaded: false,
+        userListError: action.payload,
+    }),
+    [actions.TESTTAG_USER_LIST_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        userListError: null,
     }),
 };
 

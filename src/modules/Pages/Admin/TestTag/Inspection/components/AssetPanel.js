@@ -67,6 +67,7 @@ const AssetPanel = ({
     );
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
+
     const [isAssetTypeDialogOpen, setAssetTypeDialogOpen] = React.useState(false);
 
     const [assetTypeValid, setAssetTypeValid] = React.useState(false);

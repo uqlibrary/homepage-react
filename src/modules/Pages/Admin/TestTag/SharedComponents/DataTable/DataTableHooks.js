@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import RowMenuCell from './RowMenuCell';
+import ActionCell from './ActionCell';
 
 export const useDataTableRow = (data = [], transform) => {
     const [row, _setRow] = useState(!!transform ? transform(data) : data);
@@ -19,6 +19,7 @@ export const useDataTableColumns = ({
     handleDeleteClick,
     filterKey = null,
     withActions = true,
+    actionDataFieldKeys,
     shouldDisableEdit,
     shouldDisableDelete,
 }) => {
@@ -29,18 +30,16 @@ export const useDataTableColumns = ({
                       field: 'actions',
                       headerName: locale?.actions,
                       renderCell: params => {
+                          const disableEdit = shouldDisableEdit?.(params.row) ?? false;
+                          const disableDelete = shouldDisableDelete?.(params.row) ?? false;
                           return (
-                              <RowMenuCell
+                              <ActionCell
                                   {...params}
-                                  withActions={[!!handleEditClick ? 'edit' : '', !!handleDeleteClick ? 'delete' : '']}
-                                  {...((!!shouldDisableEdit ? !shouldDisableEdit(params.row) : true) &&
-                                  !!handleEditClick
-                                      ? { handleEditClick: handleEditClick }
-                                      : {})}
-                                  {...((!!shouldDisableDelete ? !shouldDisableDelete(params.row) : true) &&
-                                  !!handleDeleteClick
-                                      ? { handleDeleteClick: handleDeleteClick }
-                                      : {})}
+                                  {...(!!handleEditClick ? { handleEditClick: handleEditClick } : {})}
+                                  {...(!!handleDeleteClick ? { handleDeleteClick: handleDeleteClick } : {})}
+                                  {...(!!actionDataFieldKeys ? { dataFieldKeys: actionDataFieldKeys } : {})}
+                                  disableEdit={disableEdit}
+                                  disableDelete={disableDelete}
                               />
                           );
                       },

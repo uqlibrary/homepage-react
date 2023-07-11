@@ -24,6 +24,7 @@ export const pathConfig = {
         testntagmanagelocations: '/admin/testntag/manage/locations',
         testntagmanageinspectiondevices: '/admin/testntag/manage/inspectiondevices',
         testntagmanageassettypes: '/admin/testntag/manage/assettypes',
+        testntagmanageinspectiondetails: '/admin/testntag/manage/inspectiondetails',
         testntagreportassetsbyfilters: '/admin/testntag/report/assetsbyfilter',
         testntagreportinspectionsbylicenceduser: '/admin/testntag/report/inspectionsbylicenceduser',
         testntagmanagebulkassetupdate: '/admin/testntag/manage/bulkassetupdate',

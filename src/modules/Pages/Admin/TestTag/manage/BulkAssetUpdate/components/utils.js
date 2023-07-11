@@ -26,3 +26,14 @@ export const transformRequest = formValues => {
         ...(!!formValues.hasStatus ? { is_discarding: 1 } : {}),
     };
 };
+
+export const transformFilterRow = row => {
+    return row.map(line => {
+        if (!!line?.asset_id_displayed) return line;
+        return {
+            ...line,
+            asset_id_displayed: line?.asset_barcode ?? '',
+            asset_location: line?.asset_room_id_last_seen ?? '',
+        };
+    });
+};

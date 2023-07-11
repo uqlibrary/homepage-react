@@ -86,7 +86,6 @@ describe('InspectionPanel', () => {
     });
 
     it('allows entry of inspection notes text', async () => {
-        const testId = 'inspectionNotes';
         const testInputId = 'inspectionNotes-input';
         const updateKey = 'inspection_notes';
         const newValue = 'some inspection notes';
@@ -106,7 +105,6 @@ describe('InspectionPanel', () => {
             selectedAsset: { ...assetData[0] },
         });
 
-        expect(getByTestId(testId)).toBeInTheDocument();
         expect(getByTestId(testInputId)).toBeInTheDocument();
         act(() => {
             fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });
@@ -115,7 +113,6 @@ describe('InspectionPanel', () => {
     });
 
     it('allows entry of fail reason text', async () => {
-        const testId = 'inspectionFailReason';
         const testInputId = 'inspectionFailReason-input';
         const updateKey = 'inspection_fail_reason';
         const newValue = 'some fail reason';
@@ -138,7 +135,6 @@ describe('InspectionPanel', () => {
             selectedAsset: { ...assetData[0] },
         });
 
-        expect(getByTestId(testId)).toBeInTheDocument();
         expect(getByTestId(testInputId)).toBeInTheDocument();
         act(() => {
             fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });
