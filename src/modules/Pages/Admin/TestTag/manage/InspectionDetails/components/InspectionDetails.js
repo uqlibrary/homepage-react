@@ -67,16 +67,16 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
     const [actionState, actionDispatch] = React.useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
 
-    const searchPatternRef = React.useRef('');
+    const [searchPattern, setSearchPattern] = React.useState('');
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
 
     const onSearch = pattern => {
-        searchPatternRef.current = pattern;
+        setSearchPattern(pattern);
     };
 
     const repeatCurrentSearch = () => {
-        actions.loadAssets(searchPatternRef.current);
+        actions.loadAssets(searchPattern);
     };
 
     const handleEditClick = ({ id, api }) => {
