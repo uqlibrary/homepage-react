@@ -223,6 +223,7 @@ const Users = ({ actions, userListLoading, userList }) => {
                 <Grid container spacing={3}>
                     <Grid item padding={3} style={{ flex: 1 }}>
                         <DataTable
+                            id={componentId}
                             rows={row}
                             columns={columns}
                             rowId="user_id"
@@ -233,6 +234,7 @@ const Users = ({ actions, userListLoading, userList }) => {
                                 toolbar: {
                                     label: pageLocale.form.addButtonLabel,
                                     onClick: handleAddClick,
+                                    id: componentId,
                                 },
                             }}
                             classes={{ root: classes.gridRoot }}

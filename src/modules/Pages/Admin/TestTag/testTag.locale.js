@@ -813,6 +813,9 @@ export default {
                         user_current_flag_cb: {
                             label: 'Is Current',
                         },
+                        actions_count: {
+                            label: 'Inspections',
+                        },
                     },
                 },
                 dialogAdd: {

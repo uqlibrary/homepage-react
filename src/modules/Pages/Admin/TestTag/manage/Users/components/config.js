@@ -92,5 +92,8 @@ export default {
             ),
             fieldParams: { canEdit: true, renderInTable: false },
         },
+        actions_count: {
+            fieldParams: { canEdit: false, canAdd: false, renderInUpdate: false, renderInAdd: false, minWidth: 110 },
+        },
     },
 };
