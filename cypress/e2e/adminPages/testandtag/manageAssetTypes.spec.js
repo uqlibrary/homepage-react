@@ -112,5 +112,9 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.data('action_cell-10-delete-button').click();
         cy.data('confirm-asset-types').click();
         cy.get('.MuiAlert-message').should('contain', 'Request successfully completed');
+        // Test a fail delete
+        cy.data('action_cell-52-delete-button').click();
+        cy.data('confirm-asset-types').click();
+        cy.get('.MuiAlert-message').should('contain', 'Operation failed');
     });
 });
