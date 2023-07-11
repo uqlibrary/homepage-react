@@ -21,7 +21,7 @@ const DataTable = ({ rows = [], columns = [], id, rowId, autoHeight = true, heig
                     disableColumnFilter
                     disableColumnSort
                     getRowId={row => row?.[rowId]}
-                    autoHeight={autoHeight}
+                    autoHeight
                     rowsPerPageOptions={[10, 25, 50, 100]}
                     {...rest}
                 />
