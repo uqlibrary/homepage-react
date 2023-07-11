@@ -28,6 +28,11 @@ const handlers = {
         saveAssetTypeSuccess: null,
         saveAssetTypeError: action.payload,
     }),
+    [actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        saveAssetTypeError: null,
+    }),
     [actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR]: () => ({
         ...initialState,
     }),

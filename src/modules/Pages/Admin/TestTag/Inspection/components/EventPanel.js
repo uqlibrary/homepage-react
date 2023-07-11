@@ -14,10 +14,13 @@ import clsx from 'clsx';
 import locale from '../../testTag.locale';
 import LocationPicker from '../../SharedComponents/LocationPicker/LocationPicker';
 
+const rootId = 'event_panel';
+
 const moment = require('moment');
 const inputLabelProps = { shrink: true };
 
 const EventPanel = ({
+    id,
     actions,
     location,
     setLocation,
@@ -27,16 +30,7 @@ const EventPanel = ({
     hasInspection = false,
     isMobileView,
 }) => {
-    EventPanel.propTypes = {
-        actions: PropTypes.any.isRequired,
-        location: PropTypes.object.isRequired,
-        setLocation: PropTypes.func.isRequired,
-        actionDate: PropTypes.any,
-        handleChange: PropTypes.func.isRequired,
-        classes: PropTypes.object.isRequired,
-        hasInspection: PropTypes.bool,
-        isMobileView: PropTypes.bool,
-    };
+    const componentId = `${rootId}-${id}`;
 
     const [eventExpanded, setEventExpanded] = React.useState(true);
     const pageLocale = locale.pages.inspect;
@@ -76,8 +70,8 @@ const EventPanel = ({
                     aria-expanded={eventExpanded}
                     aria-label={pageLocale.form.event.aria.collapseButtonLabel}
                     onClick={() => setEventExpanded(!eventExpanded)}
-                    id="testntagEventPanelExpander"
-                    data-testid="testntagEventPanelExpander"
+                    id={`${componentId}-expand-button`}
+                    data-testid={`${componentId}-expand-button`}
                 >
                     <ExpandMoreIcon />
                 </IconButton>
@@ -89,9 +83,15 @@ const EventPanel = ({
                     <Grid item xs={12} sm={6} md={3}>
                         <KeyboardDatePicker
                             {...pageLocale.form.event.date}
-                            id="testntag-form-event-date"
+                            id={`${componentId}-event-date`}
+                            data-testid={`${componentId}-event-date`}
                             inputProps={{
-                                'data-testid': 'testntag-form-event-date',
+                                id: `${componentId}-event-date-input`,
+                                'data-testid': `${componentId}-event-date-input`,
+                            }}
+                            DialogProps={{
+                                id: `${componentId}-event-date-dialog`,
+                                'data-testid': `${componentId}-event-date-dialog`,
                             }}
                             InputLabelProps={inputLabelProps}
                             format={pageLocale.config.dateFormatNoTime}
@@ -106,8 +106,8 @@ const EventPanel = ({
                             fullWidth={isMobileView}
                             KeyboardButtonProps={{
                                 'aria-label': 'Event date',
-                                id: 'testntag-form-event-date-button',
-                                'data-testid': 'testntag-form-event-date-button',
+                                id: `${componentId}-event-date-button`,
+                                'data-testid': `${componentId}-event-date-button`,
                             }}
                         />
                     </Grid>
@@ -118,7 +118,7 @@ const EventPanel = ({
                     </Grid>
 
                     <LocationPicker
-                        id="eventPanel"
+                        id={componentId}
                         siteList={inspectionConfig?.sites ?? []}
                         siteListLoading={inspectionConfigLoading}
                         buildingList={
@@ -164,6 +164,18 @@ const EventPanel = ({
             </Collapse>
         </StandardCard>
     );
+};
+
+EventPanel.propTypes = {
+    id: PropTypes.string.isRequired,
+    actions: PropTypes.any.isRequired,
+    location: PropTypes.object.isRequired,
+    setLocation: PropTypes.func.isRequired,
+    actionDate: PropTypes.any,
+    handleChange: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    hasInspection: PropTypes.bool,
+    isMobileView: PropTypes.bool,
 };
 
 export default React.memo(EventPanel);

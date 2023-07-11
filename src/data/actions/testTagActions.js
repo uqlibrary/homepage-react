@@ -210,6 +210,12 @@ export function loadSites() {
     };
 }
 
+export function clearSitesError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SITE_LIST_CLEAR_ERROR });
+    };
+}
+
 export function clearSites() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SITE_LIST_CLEAR });
@@ -240,6 +246,11 @@ export function clearFloors() {
         dispatch({ type: actions.TESTTAG_FLOOR_LIST_CLEAR });
     };
 }
+export function clearFloorsError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_FLOOR_LIST_CLEAR_ERROR });
+    };
+}
 
 export function loadRooms(floorId) {
     return dispatch => {
@@ -263,6 +274,11 @@ export function loadRooms(floorId) {
 export function clearRooms() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ROOM_LIST_CLEAR });
+    };
+}
+export function clearRoomsError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ROOM_LIST_CLEAR_ERROR });
     };
 }
 
@@ -350,6 +366,11 @@ export function clearSaveInspection() {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
     };
 }
+export function clearSaveInspectionError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR_ERROR });
+    };
+}
 
 export function saveAssetTypeAndReload(request) {
     return dispatch => {
@@ -387,6 +408,11 @@ export function saveAssetTypeAndReload(request) {
                     });
                 }
             });
+    };
+}
+export function clearSaveAssetTypeError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR_ERROR });
     };
 }
 export function clearSaveAssetType() {
