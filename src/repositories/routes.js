@@ -203,39 +203,39 @@ export const PROMOPANEL_UNSCHEDULE_API = ({ id }) => ({
     apiUrl: `promo_panel/schedule/${id}`,
 });
 /** TEST AND TAG **/
-export const TEST_TAG_USER_API = () => ({ apiUrl: 'test_and_tag/user' });
-export const TEST_TAG_ONLOAD_DASHBOARD_API = () => ({ apiUrl: 'test_and_tag/onload/dashboard' });
-export const TEST_TAG_ONLOAD_INSPECT_API = () => ({ apiUrl: 'test_and_tag/onload/inspect' });
+export const TEST_TAG_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
+export const TEST_TAG_ONLOAD_DASHBOARD_API = () => ({ apiUrl: 'test-and-tag/onload/dashboard' });
+export const TEST_TAG_ONLOAD_INSPECT_API = () => ({ apiUrl: 'test-and-tag/onload/inspect' });
 
-export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
+export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test-and-tag/site/current' });
 export const TEST_TAG_FLOOR_API = id => ({
-    apiUrl: `test_and_tag/building/${id}/current`,
+    apiUrl: `test-and-tag/building/${id}/current`,
 });
 export const TEST_TAG_ROOM_API = id => ({
-    apiUrl: `test_and_tag/floor/${id}/current`,
+    apiUrl: `test-and-tag/floor/${id}/current`,
 });
 
-export const TEST_TAG_ADD_LOCATION_API = type => ({ apiUrl: `test_and_tag/${type}` });
-export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test_and_tag/${type}/${id}` });
+export const TEST_TAG_ADD_LOCATION_API = type => ({ apiUrl: `test-and-tag/${type}` });
+export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test-and-tag/${type}/${id}` });
 
-export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test_and_tag/asset/search/current/${pattern}` });
-export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test_and_tag/action' });
-export const TEST_TAG_ASSETTYPE_ADD = () => ({ apiUrl: '/test_and_tag/asset_type' });
-export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device/current/mine' });
-export const TEST_TAG_ADD_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test_and_tag/inspection_device' });
-export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test_and_tag/inspection_device/${id}` });
+export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test-and-tag/asset/search/current/${pattern}` });
+export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test-and-tag/action' });
+export const TEST_TAG_ASSETTYPE_ADD = () => ({ apiUrl: '/test-and-tag/asset-type' });
+export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test-and-tag/inspection-device/current/mine' });
+export const TEST_TAG_ADD_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test-and-tag/inspection-device' });
+export const TEST_TAG_MODIFY_INSPECTION_DEVICE_API = id => ({ apiUrl: `/test-and-tag/inspection-device/${id}` });
 
 /** TEST AND TAG ASSET TYPES **/
 // List Asset Types
-export const TEST_TAG_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/current' });
+export const TEST_TAG_ASSETTYPE_API = () => ({ apiUrl: 'test-and-tag/asset-type/current' });
 // Add an asset type
-export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type' });
+export const TEST_TAG_ADD_ASSET_TYPE_API = () => ({ apiUrl: 'test-and-tag/asset-type' });
 // Save an asset type (ID contained in payload)
-export const TEST_TAG_SAVE_ASSETTYPE_API = id => ({ apiUrl: `test_and_tag/asset_type/${id}` });
+export const TEST_TAG_SAVE_ASSETTYPE_API = id => ({ apiUrl: `test-and-tag/asset-type/${id}` });
 // Delete an Asset type (Reassigning assets to new asset type)
-export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test_and_tag/asset_type/reassign' });
+export const TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API = () => ({ apiUrl: 'test-and-tag/asset-type/reassign' });
 // Delete an Empty Asset Type
-export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test_and_tag/asset_type/${id}` });
+export const TEST_TAG_DELETE_ASSET_TYPE_API = id => ({ apiUrl: `test-and-tag/asset-type/${id}` });
 
 /** TEST AND TAG INSPECTIONS REPORT */
 export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, period, periodType }) => {
@@ -245,7 +245,7 @@ export const TEST_TAG_REPORT_INSPECTIONS_DUE_API = ({ locationId, locationType, 
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
-    const apiUrl = `test_and_tag/report/pending_inspections${hasParams ? `?${qs.toString()}` : ''}`;
+    const apiUrl = `test-and-tag/report/pending-inspections${hasParams ? `?${qs.toString()}` : ''}`;
     return {
         apiUrl,
     };
@@ -258,16 +258,16 @@ export const TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API = ({ startDate, en
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
-    const apiUrl = `test_and_tag/report/user_inspections${hasParams ? `?${qs.toString()}` : ''}`;
+    const apiUrl = `test-and-tag/report/user-inspections${hasParams ? `?${qs.toString()}` : ''}`;
     return {
         apiUrl,
     };
 };
 /* UTILITY API USED FOR LICENCED USER INSPECTIONS REPORT - GET LICENCED USERS FOR DROPDOWN */
-export const TEST_TAG_REPORT_UTILITY_LICENCED_USERS = () => ({ apiUrl: 'test_and_tag/report/licenced_inspectors' });
+export const TEST_TAG_REPORT_UTILITY_LICENCED_USERS = () => ({ apiUrl: 'test-and-tag/report/licenced-inspectors' });
 
 /* Asset Report for DEPT */
-export const TEST_TAG_TAGGED_BUILDING_LIST = () => ({ apiUrl: 'test_and_tag/building/mine' });
+export const TEST_TAG_TAGGED_BUILDING_LIST = () => ({ apiUrl: 'test-and-tag/building/mine' });
 export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
     assetStatus,
     locationType,
@@ -284,7 +284,7 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
-    const apiUrl = `test_and_tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+    const apiUrl = `test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
     return {
         apiUrl,
     };
@@ -296,17 +296,17 @@ export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
-    const apiUrl = `/test_and_tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+    const apiUrl = `/test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
     return {
         apiUrl,
     };
 };
 
-export const TEST_TAG_BULK_UPDATE_API = () => ({ apiUrl: 'test_and_tag/asset' });
+export const TEST_TAG_BULK_UPDATE_API = () => ({ apiUrl: 'test-and-tag/asset' });
 
-export const TEST_TAG_MODIFY_INSPECTION_DETAILS_API = id => ({ apiUrl: `/test_and_tag/asset/${id}/action` });
+export const TEST_TAG_MODIFY_INSPECTION_DETAILS_API = id => ({ apiUrl: `/test-and-tag/asset/${id}/action` });
 
-export const TEST_TAG_USER_LIST_API = () => ({ apiUrl: 'test_and_tag/users/all' });
-export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test_and_tag/user/${id}` });
-export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test_and_tag/user' });
-export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test_and_tag/user/${id}` });
+export const TEST_TAG_USER_LIST_API = () => ({ apiUrl: 'test-and-tag/users/all' });
+export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
+export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
+export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
