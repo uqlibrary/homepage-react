@@ -813,6 +813,9 @@ export default {
                         user_current_flag_cb: {
                             label: 'Is Current',
                         },
+                        actions_count: {
+                            label: 'Inspections',
+                        },
                     },
                 },
                 dialogAdd: {
@@ -824,6 +827,16 @@ export default {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Edit user',
+                },
+                alerts: {
+                    addSuccess: 'User added successfully',
+                    deleteSuccess: 'User deleted successfully',
+                },
+                dialogDeleteConfirm: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: 'Are you sure you wish to delete this user?',
+                    confirmationTitle: 'Delete user',
                 },
             },
         },

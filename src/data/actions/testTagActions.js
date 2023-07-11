@@ -30,6 +30,8 @@ import {
     TEST_TAG_MODIFY_INSPECTION_DETAILS_API,
     TEST_TAG_USER_LIST_API,
     TEST_TAG_UPDATE_USER_API,
+    TEST_TAG_ADD_USER_API,
+    TEST_TAG_DELETE_USER_API,
 } from 'repositories/routes';
 
 export function loadUser() {
@@ -110,7 +112,6 @@ export function addLocation({ type, request }) {
         dispatch({ type: actions.TESTTAG_LOCATION_ADDING });
         return post(TEST_TAG_ADD_LOCATION_API(type), request)
             .then(response => {
-                console.log(response, response.status.toLowerCase());
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_LOCATION_ADDED,
@@ -300,7 +301,6 @@ export function loadAssetsMine(filters) {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_LOADING });
         return get(TEST_TAG_ASSETS_MINE_API(filters))
             .then(response => {
-                console.log('>>>>>', response.data);
                 dispatch({
                     type: actions.TESTTAG_ASSETS_MINE_LOADED,
                     payload: response.data,
@@ -401,7 +401,6 @@ export function loadInspectionDevices() {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_LOADING });
         return get(TEST_TAG_INSPECTION_DEVICE_API())
             .then(response => {
-                console.log(response);
                 dispatch({
                     type: actions.TESTTAG_INSPECTION_DEVICES_LOADED,
                     payload: response.data,
@@ -432,7 +431,6 @@ export function addInspectionDevice(request) {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_ADDING });
         return post(TEST_TAG_ADD_INSPECTION_DEVICE_API(), request)
             .then(response => {
-                console.log(response, response.status.toLowerCase());
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_INSPECTION_DEVICES_ADDED,
@@ -743,7 +741,6 @@ export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) 
 }
 export function getLicencedUsers() {
     return dispatch => {
-        console.log('Getting Licenced Users');
         dispatch({ type: actions.TESTTAG_LICENCED_INSPECTORS_LOADING });
         return get(TEST_TAG_REPORT_UTILITY_LICENCED_USERS())
             .then(response => {
@@ -884,10 +881,10 @@ export function loadUserList() {
     };
 }
 
-export function updateUser(request) {
+export function updateUser(id, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_USER_LIST_UPDATING });
-        return put(TEST_TAG_UPDATE_USER_API(), request)
+        return put(TEST_TAG_UPDATE_USER_API(id), request)
             .then(response => {
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
@@ -904,7 +901,63 @@ export function updateUser(request) {
             })
             .catch(error => {
                 dispatch({
-                    type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_FAILED,
+                    type: actions.TESTTAG_USER_LIST_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function addUser(request) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_ADDING });
+        return post(TEST_TAG_ADD_USER_API(), request)
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_ADDED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_ADD_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_ADD_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteUser(id) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_DELETING });
+        return destroy(TEST_TAG_DELETE_USER_API(id))
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.TESTTAG_USER_LIST_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_USER_LIST_DELETE_FAILED,
                     payload: error.message,
                 });
                 return Promise.reject(error);

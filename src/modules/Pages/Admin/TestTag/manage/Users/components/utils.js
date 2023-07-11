@@ -18,8 +18,9 @@ export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, 
 
 export const transformUpdateRequest = request => {
     // delete request.previleges;
-    delete request.inspectionCount;
+    delete request.actions_count;
     delete request.id;
+    delete request.department_display_name;
     request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
     request.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
     request.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
@@ -35,6 +36,35 @@ export const transformUpdateRequest = request => {
     delete request.can_alter_cb;
     delete request.can_see_reports;
     delete request.can_see_reports_cb;
+    delete request.user_current_flag_cb;
+
+    return request;
+};
+
+export const transformAddRequest = (request, dept) => {
+    // clear data not required from UI for request.
+    delete request.actions_count;
+    delete request.user_id;
+    // Assign user department
+    request.user_department = dept;
+    // Prime Privileges
+    request.privileges = {};
+    request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
+    request.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
+    request.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
+    request.privileges.can_see_reports = request?.can_see_reports_cb ? 1 : 0;
+    // Assign user Current flag.
+    request.user_current_flag = request?.user_current_flag_cb ? 1 : 0;
+    // Delete remainder of root note elements used by other checkboxes, or in FE captured by request{} object.
+    delete request.can_admin;
+    delete request.can_admin_cb;
+    delete request.can_inspect;
+    delete request.can_inspect_cb;
+    delete request.can_alter;
+    delete request.can_alter_cb;
+    delete request.can_see_reports;
+    delete request.can_see_reports_cb;
+    delete request.user_current_flag_cb;
 
     return request;
 };
@@ -47,13 +77,12 @@ export const actionReducer = (_, action) => {
                 isAdd: true,
                 isEdit: false,
                 isDelete: false,
-                // row: {
-                //     device_id: 'auto',
-                //     device_calibrated_date_last: moment().format(dateFormat),
-                //     device_calibration_due_date: moment()
-                //         .add(1, 'd')
-                //         .format(dateFormat),
-                // },
+                row: {
+                    user_id: 'Auto',
+                    user_uid: '',
+                    user_name: '',
+                    user_current_flag_cb: true,
+                },
                 title,
                 props: { ...props },
             };

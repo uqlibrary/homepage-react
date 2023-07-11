@@ -15,7 +15,7 @@ export default {
                 "can_alter": 1,
                 "can_see_reports": 0
             },
-            "inspectionCount": 0
+            "actions_count": 0
         },
         {
             "department_display_name": "Library",
@@ -31,7 +31,7 @@ export default {
                 "can_alter": 1,
                 "can_see_reports": 1
             },
-            "inspectionCount": 8
+            "actions_count": 8
         },
         {
             "department_display_name": "Library",
@@ -47,7 +47,7 @@ export default {
                 "can_alter": 0,
                 "can_see_reports": 1
             },
-            "inspectionCount": 0
+            "actions_count": 0
         },
         {
             "department_display_name": "Library",
@@ -63,7 +63,7 @@ export default {
                 "can_alter": 1,
                 "can_see_reports": 1
             },
-            "inspectionCount": 0
+            "actions_count": 0
         }
     ]
 }
