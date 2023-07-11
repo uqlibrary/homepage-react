@@ -1,7 +1,7 @@
 import React from 'react';
 
 import moment from 'moment';
-
+import TextField from '@material-ui/core/TextField';
 import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
 import { isEmptyStr } from '../../../helpers/helpers';
 import locale from '../../../testTag.locale';
@@ -27,7 +27,7 @@ export default {
         },
         device_calibrated_date_last: {
             component: props => (
-                <DebouncedTextField
+                <TextField
                     format={dateFormat}
                     type="date"
                     {...props}
@@ -46,7 +46,7 @@ export default {
         },
         device_calibration_due_date: {
             component: props => (
-                <DebouncedTextField
+                <TextField
                     format={dateFormat}
                     type="date"
                     {...props}

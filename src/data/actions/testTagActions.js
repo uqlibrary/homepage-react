@@ -881,6 +881,12 @@ export function loadUserList() {
     };
 }
 
+export function clearUserListError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_USER_LIST_CLEAR_ERROR });
+    };
+}
+
 export function updateUser(id, request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_USER_LIST_UPDATING });

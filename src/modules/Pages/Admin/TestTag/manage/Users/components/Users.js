@@ -1,28 +1,28 @@
 import React, { useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+
 import { makeStyles } from '@material-ui/core/styles';
-
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
-
-import DataTable from './../../../SharedComponents/DataTable/DataTable';
-
-import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
-import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
-// import ActionDialogue from './ActionDialogue';
-
-import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-
-import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+
+import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
+import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
+import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+
+import locale from '../../../testTag.locale';
+import { PERMISSIONS } from '../../../config/auth';
+import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import config from './config';
+
+const componentId = 'user-management';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,30 +36,25 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Users = ({ actions, userListLoading, userList }) => {
-    const componentId = 'user-management';
-    const componentIdLower = 'user_management';
+const Users = ({ actions, userListLoading, userList, userListError }) => {
+    const pageLocale = locale.pages.manage.users;
 
     const { user } = useSelector(state => state.get?.('testTagUserReducer'));
-
     const userDepartment = user?.user_department ?? null;
-
-    const pageLocale = locale.pages.manage.users;
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const onCloseConfirmationAlert = () => actions.clearUserListError();
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: userListError,
+    });
 
     const classes = useStyles();
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
-    };
 
     const onRowAdd = data => {
         setDialogueBusy(true);
@@ -150,7 +145,7 @@ const Users = ({ actions, userListLoading, userList }) => {
         handleEditClick,
         handleDeleteClick,
         shouldDisableDelete,
-        actionDataFieldKeys: { valueKey: 'user_id' },
+        actionDataFieldKeys: { valueKey: 'user_uid' },
     });
 
     React.useEffect(() => {
@@ -165,6 +160,7 @@ const Users = ({ actions, userListLoading, userList }) => {
         >
             <StandardCard noHeader>
                 <UpdateDialog
+                    id={componentId}
                     title={actionState.title}
                     action="add"
                     updateDialogueBoxId="addRow"
@@ -179,6 +175,7 @@ const Users = ({ actions, userListLoading, userList }) => {
                     isBusy={dialogueBusy}
                 />
                 <UpdateDialog
+                    id={componentId}
                     title={actionState.title}
                     action="edit"
                     updateDialogueBoxId="editRow"
@@ -209,8 +206,8 @@ const Users = ({ actions, userListLoading, userList }) => {
                                       <CircularProgress
                                           color="inherit"
                                           size={25}
-                                          id={`${componentIdLower}-progress`}
-                                          data-testid={`${componentIdLower}-progress`}
+                                          id={`${componentId}-progress`}
+                                          data-testid={`${componentId}-progress`}
                                       />
                                   ),
                               }
@@ -257,6 +254,7 @@ Users.propTypes = {
     actions: PropTypes.object,
     userList: PropTypes.array,
     userListLoading: PropTypes.bool,
+    userListError: PropTypes.string,
 };
 
 export default React.memo(Users);

@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useIsMobileView } from 'hooks';
+import { filterComponentProps } from './utils';
 
 const rootId = 'update_dialog';
 
@@ -148,7 +149,7 @@ export const UpdateDialogue = ({
                                                 !!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
                                             <>
                                                 {dataFields[field]?.component(
-                                                    {
+                                                    filterComponentProps({
                                                         id: `${field}-input`,
                                                         name: field,
                                                         label: dataColumns[field].label,
@@ -166,7 +167,8 @@ export const UpdateDialogue = ({
                                                             ['data-testid']: `${field}-input`,
                                                         },
                                                         fullWidth: true,
-                                                    },
+                                                        type: dataFields[field]?.fieldParams?.type ?? undefined,
+                                                    }),
                                                     data,
                                                 )}
                                             </>
