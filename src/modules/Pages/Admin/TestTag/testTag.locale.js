@@ -58,6 +58,7 @@ export default {
             checkingAuth: 'Retrieving user details...',
             pageUnavailable: 'Page unavailable',
             locationPicker: {
+                allLabel: 'All',
                 site: {
                     label: 'Site',
                     labelAll: 'All sites',
@@ -203,12 +204,12 @@ export default {
 
             breadcrumbs: [
                 {
-                    title: 'Inspection',
+                    title: 'Create a new Inspection',
                     icon: <InspectionIcon fontSize={'small'} />,
                 },
             ],
             header: {
-                pageSubtitle: dept => `Managing Assets for ${dept}`,
+                pageSubtitle: dept => `Creating a new Inspection for ${dept}`,
                 requiredText: 'All fields are required unless otherwise indicated.',
             },
             form: {
@@ -360,12 +361,12 @@ export default {
             assetTypes: {
                 breadcrumbs: [
                     {
-                        title: 'Asset Type Management',
+                        title: 'Manage - Asset Types',
                         icon: <AssetTypeIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Managing Asset Types for ${dept}`,
+                    pageSubtitle: dept => `Asset Type management for ${dept}`,
                     requiredText: 'All fields are required unless otherwise indicated.',
                     addButtonLabel: 'Add Asset Type',
                 },
@@ -447,12 +448,12 @@ export default {
             locations: {
                 breadcrumbs: [
                     {
-                        title: 'Manage Locations',
+                        title: 'Manage - Locations',
                         icon: <LocationIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Managing Locations for ${dept}`,
+                    pageSubtitle: dept => `Locations management for ${dept}`,
                 },
                 form: {
                     title: 'Filter',
@@ -551,12 +552,12 @@ export default {
             inspectiondevices: {
                 breadcrumbs: [
                     {
-                        title: 'Manage Inspection Devices',
+                        title: 'Manage - Inspection Devices',
                         icon: <InspectionDeviceIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Managing Inspection Devices for ${dept}`,
+                    pageSubtitle: dept => `Inspection Device management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -613,12 +614,12 @@ export default {
             inspectiondetails: {
                 breadcrumbs: [
                     {
-                        title: 'Manage Inspection Details',
+                        title: 'Manage - Inspection Details',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Managing Inspection Details for ${dept}`,
+                    pageSubtitle: dept => `Inspection Details management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -674,12 +675,12 @@ export default {
                 config: {},
                 breadcrumbs: [
                     {
-                        title: 'Managing Bulk Asset Update',
+                        title: 'Manage - Assets in Bulk',
                         icon: <BulkUpdateIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Managing Assets in bulk for ${dept}`,
+                    pageSubtitle: dept => `Bulk Asset management for ${dept}`,
                 },
                 form: {
                     columns: {
@@ -758,15 +759,15 @@ export default {
                 },
             },
             users: {
-                header: {
-                    pageSubtitle: dept => `Managing users for ${dept}`,
-                },
                 breadcrumbs: [
                     {
-                        title: 'Manage Users',
+                        title: 'Manage - Users',
                         icon: <UsersIcon fontSize={'small'} />,
                     },
                 ],
+                header: {
+                    pageSubtitle: dept => `User management for ${dept}`,
+                },
                 form: {
                     actions: 'Actions',
                     addButtonLabel: 'Add User',
@@ -849,12 +850,12 @@ export default {
             recalibrationsDue: {
                 breadcrumbs: [
                     {
-                        title: 'Reports - Inspection Devices due recalibration',
+                        title: 'Report - Inspection Devices Due Recalibration',
                         icon: <InspectionDeviceIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Inspection device recalibration report for ${dept}`,
+                    pageSubtitle: dept => `Inspection Devices Due Recalibration report for ${dept}`,
                 },
                 form: {
                     columns: {
@@ -885,7 +886,7 @@ export default {
             inspectionsDue: {
                 breadcrumbs: [
                     {
-                        title: 'Reports - Asset Inspections Due',
+                        title: 'Report - Asset Inspections Due',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
@@ -899,7 +900,7 @@ export default {
                             label: 'Barcode',
                         },
                         asset_type_name: {
-                            label: 'Asset Type',
+                            label: 'Asset type',
                         },
                         asset_test_date: {
                             label: 'Last test',
@@ -918,12 +919,12 @@ export default {
             inspectionsByLicencedUser: {
                 breadcrumbs: [
                     {
-                        title: 'Reports - Inspections by Licenced Users',
+                        title: 'Report - Inspections by Licenced Users',
                         icon: <InspectionByUserIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Inspections by Licenced Users for ${dept}`,
+                    pageSubtitle: dept => `Inspections by Licenced Users report for ${dept}`,
                 },
                 form: {
                     title: 'Filter',
@@ -957,17 +958,31 @@ export default {
                     },
                     filterToDateLabel: 'Within date range',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
+                    errors: {
+                        startDateBeforeEnd: 'Start date must be before end date',
+                        endDateAfterStart: 'End date must be after start date',
+                        startDateRequired: 'A start date is required to search by date',
+                        endDateRequired: 'An end date is required to search by date',
+                    },
+                    selectedAndMore: count => ` (and ${count} more)`,
+                    keyboardDatePicker: {
+                        startDateLabel: 'Period start date',
+                        startDateAriaLabel: 'change start date',
+                        endDateLabel: 'Period end date',
+                        endDateAriaLabel: 'change end date',
+                    },
+                    totalInspections: count => `${count} total inspections.`,
                 },
             },
             assetReportByFilters: {
                 breadcrumbs: [
                     {
-                        title: 'Asset Report',
+                        title: 'Report - Assets',
                         icon: <AssetsInspectedByDateIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset report for ${dept}`,
+                    pageSubtitle: dept => `Assets report for ${dept}`,
                 },
                 form: {
                     title: 'Filters',
@@ -991,11 +1006,9 @@ export default {
                             label: 'Status',
                         },
                     },
-                    filterStatusLabel: 'With Status',
-                    filterBuildingLabel: 'Tagged Building',
+                    filterStatusLabel: 'With status',
+                    filterBuildingLabel: 'Tagged building',
                     filterToDateLabel: 'Within date range',
-                    filterTaggedDateFrom: 'Tagged Date From',
-                    filterTaggedDateTo: 'Tagged Date To',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
                     statusTypes: [
                         {
@@ -1009,6 +1022,12 @@ export default {
                             value: 'OUTFORREPAIR',
                         },
                     ],
+                    keyboardDatePicker: {
+                        startDateLabel: 'Tagged date from',
+                        startDateAriaLabel: 'change start date',
+                        endDateLabel: 'Tagged date to',
+                        endDateAriaLabel: 'change end date',
+                    },
                 },
                 errors: {
                     startDate: 'Start date must be before End Date',

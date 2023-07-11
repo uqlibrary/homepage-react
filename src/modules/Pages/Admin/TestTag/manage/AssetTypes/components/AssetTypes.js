@@ -47,6 +47,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: assetTypesListError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
