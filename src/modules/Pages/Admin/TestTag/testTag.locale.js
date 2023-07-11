@@ -118,7 +118,7 @@ export default {
                             title: 'USERS',
                             icon: <UsersIcon />,
                             permissions: [PERMISSIONS.can_admin],
-                            path: '#',
+                            path: pathConfig.admin.testntagmanageusers,
                         },
                         {
                             id: 'asset-types',
