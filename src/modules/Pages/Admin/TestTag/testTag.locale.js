@@ -722,7 +722,7 @@ export default {
                             assetSelector: {
                                 label: 'Asset ID',
                                 helperText: 'Scan or enter a new ID to add',
-                                placeholder: 'Enter at least 5 characters',
+                                placeholder: 'Enter at least 3 characters',
                             },
                             button: {
                                 clear: 'Clear',

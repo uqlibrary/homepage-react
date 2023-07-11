@@ -42,17 +42,20 @@ export const useForm = (
 
 export const useObjectList = (list = [], transform, options = {}) => {
     const [data, _setData] = useState(!!transform ? transform(list) : list);
-    const [_options] = useState({ duplicates: false, duplicateKey: 'id', ...options });
+    const [_options] = useState({ key: 'id', ...options });
 
+    // use setData (no _) to transform data before updating state
     const setData = data => _setData(!!transform ? transform(data) : data);
 
     const addAt = (index, item) => {
-        if (!Array.isArray(item) && typeof item !== 'object') return;
-        // check for dupes if not allowed
-        if (_options.duplicates === false && data.findIndex(entry => entry[options.duplicateKey]) >= 0) {
-            return;
+        // Note: Dupes are not allowed
+        if (Array.isArray(item)) {
+            const ids = new Set(data.map(d => d[_options.key]));
+            setData([...data, ...item.filter(d => !ids.has(d[_options.key]))]);
+        } else if (typeof item === 'object') {
+            if (data.findIndex(d => d[_options.key] === item[_options.key]) >= 0) return;
+            setData([...data.slice(0, index), ...item, ...data.slice(index)].flat());
         }
-        setData([...data.slice(0, index), ...item, ...data.slice(index)].flat());
     };
 
     const addStart = item => {

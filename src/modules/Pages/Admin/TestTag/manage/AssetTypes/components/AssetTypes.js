@@ -96,6 +96,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         locale: pageLocale.form.columns,
         handleEditClick: onRowEdit,
         handleDeleteClick: onRowDelete,
+        actionDataFieldKeys: { valueKey: 'asset_type_name' },
     });
 
     const { row } = useDataTableRow(assetTypesList);
@@ -269,7 +270,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                 id={componentId}
                                 rows={row}
                                 columns={columns}
-                                rowId="asset_type_id"
+                                rowId="asset_type_name"
                                 loading={assetTypesListLoading}
                                 /* editRowsModel={editRowsModel}*/
                                 components={{ Toolbar: AddToolbar }}

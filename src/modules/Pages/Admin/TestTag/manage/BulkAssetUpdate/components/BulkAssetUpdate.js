@@ -57,7 +57,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const stepOneLocale = pageLocale.form.step.one;
     const stepTwoLocale = pageLocale.form.step.two;
     const classes = useStyles();
-    const list = useObjectList([], transformRow, { duplicateKey: 'asset_id' });
+    const list = useObjectList([], transformRow, { key: 'asset_id' });
     const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
