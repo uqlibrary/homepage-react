@@ -870,7 +870,7 @@ mock.onGet('exams/course/FREN1010/summary')
             status: 'OK',
         },
     ])
-    .onPut(/test-and-tag\/asset-type\/\d*/)
+    .onPut(/test-and-tag\/asset-type\/\d+/)
     .reply(withDelay([
         200,
         {
@@ -888,19 +888,19 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         },
     ])
-    .onDelete(/test-and-tag\/asset_type\/4/)
-    .reply(() => {
-        return [200, { status: 'OK' }];
-    })
-    .onDelete(/test-and-tag\/asset_type\/5/)
+    .onDelete(/test-and-tag\/asset-type\/52/)
     .reply(() => {
         return [
             400,
             {
                 status: 'error',
-                message: '5 is a test error',
+                message: '52 is a test error',
             },
         ];
+    })
+    .onDelete(/test-and-tag\/asset-type\/\d+/)
+    .reply(() => {
+        return [200, { status: 'OK' }];
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
