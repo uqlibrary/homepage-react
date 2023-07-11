@@ -18,7 +18,6 @@ export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, 
 
 export const transformUpdateRequest = request => {
     // delete request.previleges;
-    console.log('request is', request);
     delete request.actions_count;
     delete request.id;
     delete request.department_display_name;
@@ -44,7 +43,6 @@ export const transformUpdateRequest = request => {
 
 export const transformAddRequest = (request, dept) => {
     // clear data not required from UI for request.
-    console.log('USER DEPARTMENT', dept);
     delete request.actions_count;
     delete request.user_id;
     // Assign user department
@@ -68,8 +66,6 @@ export const transformAddRequest = (request, dept) => {
     delete request.can_see_reports_cb;
     delete request.user_current_flag_cb;
 
-    console.log('This is the return ', request);
-
     return request;
 };
 
@@ -91,7 +87,6 @@ export const actionReducer = (_, action) => {
                 props: { ...props },
             };
         case 'edit':
-            console.log('Edit Row', row);
             return {
                 isAdd: false,
                 isEdit: true,

@@ -73,7 +73,6 @@ const Users = ({ actions, userListLoading, userList }) => {
                 actions.loadUserList();
             })
             .catch(error => {
-                console.log(error);
                 openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
@@ -94,7 +93,6 @@ const Users = ({ actions, userListLoading, userList }) => {
                 closeDialog();
             })
             .catch(error => {
-                console.log('Error: ', error);
                 openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
@@ -123,8 +121,6 @@ const Users = ({ actions, userListLoading, userList }) => {
         setDialogueBusy(true);
         const id = data.row.user_id;
 
-        console.log('delete', id);
-
         actions
             .deleteUser(id)
             .then(() => {
@@ -133,7 +129,6 @@ const Users = ({ actions, userListLoading, userList }) => {
                 actions.loadUserList();
             })
             .catch(error => {
-                console.log(error);
                 openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
@@ -260,9 +255,6 @@ Users.propTypes = {
     actions: PropTypes.object,
     userList: PropTypes.array,
     userListLoading: PropTypes.bool,
-    assetTypesActionType: PropTypes.string,
-    assetTypesListLoading: PropTypes.bool,
-    assetTypesActionError: PropTypes.bool,
 };
 
 export default React.memo(Users);

@@ -112,7 +112,6 @@ export function addLocation({ type, request }) {
         dispatch({ type: actions.TESTTAG_LOCATION_ADDING });
         return post(TEST_TAG_ADD_LOCATION_API(type), request)
             .then(response => {
-                console.log(response, response.status.toLowerCase());
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_LOCATION_ADDED,
@@ -302,7 +301,6 @@ export function loadAssetsMine(filters) {
         dispatch({ type: actions.TESTTAG_ASSETS_MINE_LOADING });
         return get(TEST_TAG_ASSETS_MINE_API(filters))
             .then(response => {
-                console.log('>>>>>', response.data);
                 dispatch({
                     type: actions.TESTTAG_ASSETS_MINE_LOADED,
                     payload: response.data,
@@ -403,7 +401,6 @@ export function loadInspectionDevices() {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_LOADING });
         return get(TEST_TAG_INSPECTION_DEVICE_API())
             .then(response => {
-                console.log(response);
                 dispatch({
                     type: actions.TESTTAG_INSPECTION_DEVICES_LOADED,
                     payload: response.data,
@@ -434,7 +431,6 @@ export function addInspectionDevice(request) {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_ADDING });
         return post(TEST_TAG_ADD_INSPECTION_DEVICE_API(), request)
             .then(response => {
-                console.log(response, response.status.toLowerCase());
                 if (response.status.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_INSPECTION_DEVICES_ADDED,
@@ -745,7 +741,6 @@ export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) 
 }
 export function getLicencedUsers() {
     return dispatch => {
-        console.log('Getting Licenced Users');
         dispatch({ type: actions.TESTTAG_LICENCED_INSPECTORS_LOADING });
         return get(TEST_TAG_REPORT_UTILITY_LICENCED_USERS())
             .then(response => {
@@ -888,7 +883,6 @@ export function loadUserList() {
 
 export function updateUser(id, request) {
     return dispatch => {
-        console.log('Editing user ACTION', id, request);
         dispatch({ type: actions.TESTTAG_USER_LIST_UPDATING });
         return put(TEST_TAG_UPDATE_USER_API(id), request)
             .then(response => {

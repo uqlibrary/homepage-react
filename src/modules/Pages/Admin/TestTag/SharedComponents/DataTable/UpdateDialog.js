@@ -147,11 +147,6 @@ export const UpdateDialogue = ({
                                             (action === 'add' &&
                                                 !!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
                                             <>
-                                                {console.log(
-                                                    'Valid',
-                                                    dataFields[field]?.validate?.(data?.[field], data),
-                                                )}
-                                                {console.log('Data', data)}
                                                 {dataFields[field]?.component(
                                                     {
                                                         id: `${field}-input`,
