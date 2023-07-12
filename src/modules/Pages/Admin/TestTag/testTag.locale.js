@@ -180,7 +180,7 @@ export default {
                         },
                         {
                             id: 'inspections-by-user',
-                            title: 'INSPECTIONS BY LICENSED USER',
+                            title: 'INSPECTIONS BY LICENCED USER',
                             icon: <InspectionByUserIcon />,
                             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
                             permissions: [PERMISSIONS.can_admin],
@@ -675,7 +675,7 @@ export default {
                 config: {},
                 breadcrumbs: [
                     {
-                        title: 'Manage - Assets in Bulk',
+                        title: 'Manage - Bulk Asset Update',
                         icon: <BulkUpdateIcon fontSize={'small'} />,
                     },
                 ],
@@ -977,12 +977,12 @@ export default {
             assetReportByFilters: {
                 breadcrumbs: [
                     {
-                        title: 'Report - Assets',
+                        title: 'Report - Asset Inspections',
                         icon: <AssetsInspectedByDateIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Assets report for ${dept}`,
+                    pageSubtitle: dept => `Asset Inspections report for ${dept}`,
                 },
                 form: {
                     title: 'Filters',
