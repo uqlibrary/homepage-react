@@ -88,14 +88,16 @@ const AssetReportByFilters = ({
     });
 
     /* HELPERS */
-    const buildPayload = () => ({
-        ...config.defaults,
-        assetStatus: statusType > 0 ? statusTypes[statusType].status_type : null,
-        locationType: 'building',
-        locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
-        inspectionDateFrom: !!selectedStartDate.dateFormatted ? selectedStartDate.dateFormatted : null,
-        inspectionDateTo: !!selectedEndDate.dateFormatted ? selectedEndDate.dateFormatted : null,
-    });
+    const buildPayload = () => {
+        return {
+            ...config.defaults,
+            assetStatus: statusType > 0 ? statusTypes[statusType].value : null,
+            locationType: 'building',
+            locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
+            inspectionDateFrom: !!selectedStartDate.dateFormatted ? selectedStartDate.dateFormatted : null,
+            inspectionDateTo: !!selectedEndDate.dateFormatted ? selectedEndDate.dateFormatted : null,
+        };
+    };
 
     const clearDateErrors = () => {
         setStartDateError({
