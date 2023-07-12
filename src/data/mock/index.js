@@ -842,7 +842,7 @@ mock.onGet('exams/course/FREN1010/summary')
         {
             status: 'ok',
             data: {
-                asset_id: 1,
+                asset_type_id: 99999,
                 asset_type_name: 'PWRC13-10',
                 asset_type_class: 'Cable',
                 asset_type_power_rating: '10',

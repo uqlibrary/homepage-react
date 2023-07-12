@@ -165,7 +165,6 @@ const Inspection = ({
     saveInspectionSuccess,
     saveInspectionError,
     saveAssetTypeSaving,
-    saveAssetTypeSuccess,
     saveAssetTypeError,
 }) => {
     const classes = useStyles();
@@ -184,7 +183,7 @@ const Inspection = ({
         !!floorListError && actions.clearFloorsError();
         !!roomListError && actions.clearRoomsError();
     };
-    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage:
@@ -222,8 +221,6 @@ const Inspection = ({
         }
     }, [saveInspectionSuccess, showSaveSuccessConfirmation]);
 
-    const [createdAssetTypeName, setCreatedAssetTypeName] = React.useState(null);
-
     const [inView, setInView] = React.useState(false);
 
     const assignCurrentAsset = asset => {
@@ -259,6 +256,11 @@ const Inspection = ({
         resetForm();
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        resetForm();
+    }, []);
+
     useEffect(() => {
         if (!inspectionConfigLoaded) actions.loadInspectionConfig();
     }, [actions, inspectionConfigLoaded]);
@@ -280,7 +282,6 @@ const Inspection = ({
                 selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
             );
             actions.saveInspection(transformedData);
-            setCreatedAssetTypeName(null);
         }
     };
 
@@ -341,14 +342,12 @@ const Inspection = ({
                 classes={classes}
                 setSelectedAsset={setSelectedAsset}
                 defaultNextTestDateValue={defaultNextTestDateValue}
-                saveInspectionSaving={saveInspectionSaving}
                 saveAssetTypeSaving={saveAssetTypeSaving}
-                saveAssetTypeSuccess={saveAssetTypeSuccess}
-                saveAssetTypeError={saveAssetTypeError}
                 isMobileView={isMobileView}
                 canAddAssetType
-                createdAssetTypeName={createdAssetTypeName}
-                setCreatedAssetTypeName={setCreatedAssetTypeName}
+                confirmationAlert={confirmationAlert}
+                openConfirmationAlert={openConfirmationAlert}
+                closeConfirmationAlert={closeConfirmationAlert}
             />
             <InView onChange={setInView} rootMargin="200% 0px 0px 0px" threshold={0}>
                 <AppBar

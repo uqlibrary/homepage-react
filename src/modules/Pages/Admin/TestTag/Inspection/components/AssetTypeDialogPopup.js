@@ -17,8 +17,11 @@ import TextField from '@material-ui/core/TextField';
 import locale from '../../testTag.locale';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
+const rootId = 'asset_type_dialog_popup';
+
 const AssetTypeDialogPopup = props => {
     AssetTypeDialogPopup.propTypes = {
+        id: PropTypes.string.isRequired,
         isAssetTypeDialogOpen: PropTypes.bool.isRequired,
         assetTypeValid: PropTypes.bool.isRequired,
         setAssetTypeValid: PropTypes.func.isRequired,
@@ -38,6 +41,7 @@ const AssetTypeDialogPopup = props => {
         isMobileView: false,
     };
     const {
+        id,
         isAssetTypeDialogOpen,
         assetTypeValid,
         setAssetTypeValid,
@@ -50,6 +54,8 @@ const AssetTypeDialogPopup = props => {
         isMobileView,
         classes,
     } = props;
+
+    const componentId = `${rootId}-${id}`;
 
     const [formValues, setValues] = React.useState({
         asset_type_name: '',
@@ -100,7 +106,7 @@ const AssetTypeDialogPopup = props => {
                 <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
-                    confirmationBoxId="tnt-assettype-add-confirmation"
+                    confirmationBoxId={`${componentId}-add-confirmation`}
                     onAction={handleAssetTypeSaveConfirmationBoxAction}
                     onClose={handleAssetTypeSaveConfirmationBoxAction}
                     hideCancelButton
@@ -116,18 +122,20 @@ const AssetTypeDialogPopup = props => {
                     aria-label="Asset Type Editor"
                     role="dialog"
                     open={!!isAssetTypeDialogOpen}
+                    id={componentId}
+                    data-testid={componentId}
                     PaperProps={{
-                        id: 'asset-type-dialog',
                         style: {
                             backgroundColor: '#fff',
                             color: '#000',
                             height: '40em',
                         },
                         'aria-label': 'Manage asset type',
-                        'data-testid': 'tntAssetTypeAddDialog',
                     }}
                 >
                     <DialogTitle
+                        id={`${componentId}-title`}
+                        data-testid={`${componentId}-title`}
                         style={{ borderBottom: '1px solid #d7d1cc' }}
                         children={
                             <React.Fragment>
@@ -138,13 +146,15 @@ const AssetTypeDialogPopup = props => {
                                     style={{ float: 'right' }}
                                     onClick={closeAssetTypeDialog}
                                     aria-label="Click to close asset type dialog"
+                                    id={`${componentId}-close-button`}
+                                    data-testid={`${componentId}-close-button`}
                                 >
                                     <CloseIcon fontSize="small" />
                                 </IconButton>
                             </React.Fragment>
                         }
                     />
-                    <DialogContent>
+                    <DialogContent id={`${componentId}-content`} data-testid={`${componentId}-content`}>
                         <Grid
                             container
                             spacing={0}
@@ -195,9 +205,9 @@ const AssetTypeDialogPopup = props => {
                             <Grid item xs={12} style={{ padding: '8px 0' }}>
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
-                                        id="asset_type"
+                                        id="asset_type-input"
                                         variant="standard"
-                                        InputProps={{ fullWidth: true }}
+                                        InputProps={{ fullWidth: true, ['data-testid']: 'asset_type-input' }}
                                         onChange={handleChange('asset_type')}
                                         label="Asset type (a longer version of the name, if needed)"
                                         value={formValues?.asset_type ?? /* istanbul ignore next */ ''}
@@ -207,9 +217,9 @@ const AssetTypeDialogPopup = props => {
                             <Grid item xs={12} style={{ padding: '8px 0' }}>
                                 <FormControl className={classes.formControl} fullWidth>
                                     <TextField
-                                        id="asset_type_notes"
+                                        id="asset_type_notes-input"
                                         variant="standard"
-                                        InputProps={{ fullWidth: true }}
+                                        InputProps={{ fullWidth: true, ['data-testid']: 'asset_type_notes-input' }}
                                         onChange={handleChange('asset_type_notes')}
                                         label="Notes"
                                         value={formValues?.asset_type_notes ?? /* istanbul ignore next */ ''}
@@ -220,7 +230,11 @@ const AssetTypeDialogPopup = props => {
                             </Grid>
                         </Grid>
                     </DialogContent>
-                    <DialogActions style={{ borderTop: '1px solid #d7d1cc' }}>
+                    <DialogActions
+                        style={{ borderTop: '1px solid #d7d1cc' }}
+                        id={`${componentId}-actions`}
+                        data-testid={`${componentId}-actions`}
+                    >
                         <Box display={'flex'} justifyContent={'flex-end'} style={{ paddingRight: 24, margin: 0 }}>
                             <Button
                                 variant="contained"
@@ -228,10 +242,16 @@ const AssetTypeDialogPopup = props => {
                                 disabled={!assetTypeValid || saveAssetTypeSaving}
                                 onClick={saveAssetTypeAndReload}
                                 fullWidth={isMobileView}
-                                data-testid="testntagAssetTypeSubmitButton"
+                                id={`${componentId}-action-button`}
+                                data-testid={`${componentId}-action-button`}
                             >
                                 {saveAssetTypeSaving ? (
-                                    <CircularProgress color="inherit" size={25} id="saveInspectionSpinner" />
+                                    <CircularProgress
+                                        color="inherit"
+                                        size={25}
+                                        id={`${componentId}-progress`}
+                                        data-testid={`${componentId}-progress`}
+                                    />
                                 ) : (
                                     locale.pages.inspect.form.buttons.save
                                 )}

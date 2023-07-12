@@ -30,3 +30,8 @@ export const transformer = (originalFormValues, transformerRules, extraParams = 
     );
     return { ...newFormData, ...newVals };
 };
+
+export const transformAddAssetTypeRequest = request => {
+    delete request.asset_type_id;
+    return request;
+};

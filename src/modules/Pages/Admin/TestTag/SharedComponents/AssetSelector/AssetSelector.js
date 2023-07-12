@@ -48,6 +48,11 @@ const AssetSelector = ({
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
+    React.useEffect(() => {
+        previousValueRef.current = selectedAsset;
+        setCurrentValue(selectedAsset);
+    }, [selectedAsset]);
+
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
@@ -91,7 +96,7 @@ const AssetSelector = ({
                 className={classNames.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
-                value={selectedAsset ?? currentValue ?? previousValueRef.current}
+                value={currentValue ?? previousValueRef.current}
                 onChange={(event, newValue) => {
                     if (typeof newValue === 'string') {
                         onChange?.(

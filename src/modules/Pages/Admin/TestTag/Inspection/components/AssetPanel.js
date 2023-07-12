@@ -1,27 +1,47 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@material-ui/core';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-
-import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import InspectionPanel from './InspectionPanel';
 import LastInspectionPanel from './LastInspectionPanel';
-import AssetTypeDialogPopup from './AssetTypeDialogPopup';
 import AssetSelector from '../../SharedComponents/AssetSelector/AssetSelector';
-import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
+import UpdateDialog from '../../SharedComponents/DataTable/UpdateDialog';
+import AssetTypeSelector from '../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 
+import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
+import { transformAddAssetTypeRequest } from '../utils/transformers';
+import configAssetPanel from '../../manage/AssetTypes/components/config';
 import locale from '../../testTag.locale';
+
+const rootId = 'asset-panel';
+const rootIdLower = 'asset_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
+const emptyActionState = { isAdd: false, rows: {}, row: {}, title: '' };
+
+const actionReducer = (_, action) => {
+    switch (action.type) {
+        case 'add':
+            return {
+                title: action.title,
+                isAdd: true,
+                row: { asset_type_id: 'auto' },
+            };
+        case 'clear':
+            return { ...emptyActionState };
+        default:
+            throw `Unknown action '${action.type}'`;
+    }
+};
+
 const AssetPanel = ({
+    id,
     actions,
     formValues,
     selectedAsset,
@@ -33,63 +53,43 @@ const AssetPanel = ({
     defaultNextTestDateValue,
     classes,
     saveAssetTypeSaving,
-    saveAssetTypeSuccess,
-    saveAssetTypeError,
     isMobileView,
     canAddAssetType,
-    createdAssetTypeName,
-    setCreatedAssetTypeName,
+    openConfirmationAlert,
 }) => {
-    AssetPanel.propTypes = {
-        actions: PropTypes.any.isRequired,
-        formValues: PropTypes.object.isRequired,
-        selectedAsset: PropTypes.object,
-        resetForm: PropTypes.func.isRequired,
-        location: PropTypes.object.isRequired,
-        assignCurrentAsset: PropTypes.func.isRequired,
-        handleChange: PropTypes.func.isRequired,
-        focusElementRef: PropTypes.any.isRequired,
-        defaultNextTestDateValue: PropTypes.string.isRequired,
-        classes: PropTypes.object.isRequired,
-        saveInspectionSaving: PropTypes.bool,
-        saveAssetTypeSaving: PropTypes.bool,
-        saveAssetTypeSuccess: PropTypes.any,
-        saveAssetTypeError: PropTypes.any,
-        isMobileView: PropTypes.bool,
-        canAddAssetType: PropTypes.bool,
-        createdAssetTypeName: PropTypes.string,
-        setCreatedAssetTypeName: PropTypes.func,
-    };
-    const pageLocale = locale.pages.inspect;
+    const componentId = `${rootId}-${id}`;
+    const componentIdLower = `${rootIdLower}-${id}`;
+    const pageLocale = locale.pages.inspect.form.asset;
+    const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
-    const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
-        state.get?.('testTagOnLoadInspectionReducer'),
-    );
+    const { inspectionConfigLoading } = useSelector(state => state.get?.('testTagOnLoadInspectionReducer'));
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
-    const [isAssetTypeDialogOpen, setAssetTypeDialogOpen] = React.useState(false);
+    const [dialogueBusy, setDialogueBusy] = React.useState(false);
 
-    const [assetTypeValid, setAssetTypeValid] = React.useState(false);
-
-    const openAssetTypeDialog = () => {
-        setAssetTypeDialogOpen(true);
+    const handleAddClick = () => {
+        actionDispatch({
+            type: 'add',
+            title: pageLocale.assetType.addDialog?.confirmationTitle,
+        });
     };
 
     // we group them all together to place a footer item at the bottom of the list
     const renderGroup = params => {
         const addButton = (
             <li
-                key="testntagFormAssetType-option-add"
-                id="testntagFormAssetType-option-999999"
+                key={`${componentIdLower}-asset-type-option-999999`}
+                id={`${componentIdLower}-asset-type-option-999999`}
+                data-testid={`${componentIdLower}-asset-type-option-999999`}
                 data-option-index="0"
                 role="option"
                 aria-selected="false"
                 className="MuiAutocomplete-option"
                 data-focus="true"
             >
-                <Button className={classes.addNewLabel} onClick={() => openAssetTypeDialog()}>
-                    {pageLocale.form.asset.assetType.addNewLabel}
+                <Button className={classes.addNewLabel} onClick={() => handleAddClick()}>
+                    {pageLocale.assetType.addNewLabel}
                 </Button>
             </li>
         );
@@ -98,39 +98,64 @@ const AssetPanel = ({
         return children;
     };
 
-    function getCurrentAssetType() {
-        const fromCreatedAsset =
-            !!createdAssetTypeName &&
-            inspectionConfig?.asset_types?.find(assetType => assetType.asset_type_name === createdAssetTypeName);
-        return (
-            (!!fromCreatedAsset
-                ? fromCreatedAsset
-                : inspectionConfig?.asset_types?.find(
-                      assetType => assetType.asset_type_id === formValues.asset_type_id,
-                  )) ?? ''
-        );
-    }
+    const closeDialog = () => actionDispatch({ type: 'clear' });
+
+    const onRowAdd = data => {
+        setDialogueBusy(true);
+        const request = structuredClone(data);
+        const wrappedRequest = transformAddAssetTypeRequest(request);
+        console.log('add', wrappedRequest);
+
+        actions
+            .saveAssetTypeAndReload(wrappedRequest)
+            .then(response => {
+                closeDialog();
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
+                actions
+                    .loadAssetTypes()
+                    .then(() => {
+                        handleChange('asset_type_id')(response.data.asset_type_id);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                    });
+            })
+            .catch(error => {
+                console.log(error);
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+            })
+            .finally(() => {
+                setDialogueBusy(false);
+            });
+    };
+
+    const handleAssetTypeChange = assetType => {
+        handleChange('asset_type_id')(assetType.asset_type_id);
+    };
 
     return (
-        <StandardCard title={pageLocale.form.asset.title} style={{ marginTop: '30px' }}>
-            <AssetTypeDialogPopup
-                isAssetTypeDialogOpen={isAssetTypeDialogOpen}
-                assetTypeValid={assetTypeValid}
-                setAssetTypeValid={setAssetTypeValid}
-                actions={actions}
-                setAssetTypeDialogOpen={setAssetTypeDialogOpen}
-                isMobileView={isMobileView}
-                classes={classes}
-                saveAssetTypeSaving={saveAssetTypeSaving}
-                saveAssetTypeSuccess={saveAssetTypeSuccess}
-                saveAssetTypeError={saveAssetTypeError}
-                setCreatedAssetTypeName={setCreatedAssetTypeName}
+        <StandardCard title={pageLocale.title} style={{ marginTop: '30px' }}>
+            {console.log(formValues)}
+            <UpdateDialog
+                title={actionState.title}
+                action="add"
+                id={componentId}
+                isOpen={actionState.isAdd}
+                locale={locale.pages.manage.assetTypes.dialogAdd}
+                fields={configAssetPanel.fields ?? []}
+                columns={locale.pages.manage.assetTypes.form.columns}
+                row={actionState?.row}
+                onCancelAction={closeDialog}
+                onAction={onRowAdd}
+                props={actionState?.props}
+                isBusy={dialogueBusy}
             />
             <Grid container spacing={3}>
                 <Grid xs={12} item sm={6} md={3}>
                     <AssetSelector
-                        id="testntagFormAssetId"
-                        locale={pageLocale.form.asset}
+                        id={componentId}
+                        locale={pageLocale}
                         user={user}
                         classNames={{ formControl: classes.formControl }}
                         inputRef={focusElementRef}
@@ -142,71 +167,36 @@ const AssetPanel = ({
                 </Grid>
                 <Grid xs={12} item sm={6}>
                     <FormControl className={classes.formControl} fullWidth>
-                        <Autocomplete
-                            id="testntagFormAssetType"
-                            data-testid="testntagFormAssetType"
-                            fullWidth
-                            options={inspectionConfig?.asset_types ?? []}
-                            value={getCurrentAssetType()}
-                            onChange={(_, newValue) => {
-                                handleChange('asset_type_id')(newValue.asset_type_id);
-                            }}
-                            getOptionLabel={option => option?.asset_type_name ?? /* istanbul ignore next */ ''}
-                            getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
-                            autoHighlight
+                        <AssetTypeSelector
+                            id={rootId}
+                            locale={pageLocale.assetType.props}
+                            actions={actions}
+                            value={formValues?.asset_type_id}
+                            onChange={handleAssetTypeChange}
+                            validateAssetTypeId={isValidAssetTypeId}
+                            disabled={
+                                inspectionConfigLoading ||
+                                saveAssetTypeSaving ||
+                                !isValidAssetId(formValues?.asset_id_displayed)
+                            }
                             renderGroup={renderGroup}
                             groupBy={() => false}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    {...pageLocale.form.asset.assetType.props}
-                                    required
-                                    error={
-                                        isValidAssetId(formValues.asset_id_displayed) &&
-                                        !isValidAssetTypeId(formValues.asset_type_id)
-                                    }
-                                    variant="standard"
-                                    InputLabelProps={{ shrink: true, htmlFor: 'testntagFormAssetTypeInput' }}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {inspectionConfigLoading ? (
-                                                    <CircularProgress
-                                                        color="inherit"
-                                                        size={20}
-                                                        id="assetTypeSpinner"
-                                                        data-testid="assetTypeSpinner"
-                                                    />
-                                                ) : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        id: 'testntagFormAssetTypeInput',
-                                        'data-testid': 'testntagFormAssetTypeInput',
-                                    }}
-                                />
-                            )}
-                            disabled={inspectionConfigLoading || !isValidAssetId(formValues?.asset_id_displayed)}
-                            disableClearable
-                            autoSelect
-                            loading={!!inspectionConfigLoading}
+                            autoSelect={false}
                         />
                     </FormControl>
                 </Grid>
             </Grid>
             <LastInspectionPanel
+                id={componentId}
                 asset={selectedAsset ?? {}}
                 currentLocation={location}
-                dateFormatPattern={pageLocale.config.dateFormatDisplay}
+                dateFormatPattern={locale.config.format.dateFormatDisplay}
                 disabled={!!!selectedAsset?.last_inspection?.inspect_status ?? /* istanbul ignore next */ true}
                 forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
             />
             {selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value && (
                 <InspectionPanel
+                    id={componentId}
                     formValues={formValues}
                     selectedAsset={selectedAsset}
                     handleChange={handleChange}
@@ -218,6 +208,26 @@ const AssetPanel = ({
             )}
         </StandardCard>
     );
+};
+
+AssetPanel.propTypes = {
+    id: PropTypes.string.isRequired,
+    actions: PropTypes.any.isRequired,
+    formValues: PropTypes.object.isRequired,
+    selectedAsset: PropTypes.object,
+    resetForm: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired,
+    assignCurrentAsset: PropTypes.func.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    focusElementRef: PropTypes.any.isRequired,
+    defaultNextTestDateValue: PropTypes.string.isRequired,
+    classes: PropTypes.object.isRequired,
+    saveAssetTypeSaving: PropTypes.bool,
+    isMobileView: PropTypes.bool,
+    canAddAssetType: PropTypes.bool,
+    confirmationAlert: PropTypes.object,
+    openConfirmationAlert: PropTypes.func,
+    closeConfirmationAlert: PropTypes.func,
 };
 
 export default React.memo(AssetPanel);
