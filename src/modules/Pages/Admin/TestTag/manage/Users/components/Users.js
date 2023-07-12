@@ -50,6 +50,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: userListError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const classes = useStyles();
@@ -64,7 +65,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             .addUser(wrappedRequest)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts?.addSuccess, 'success');
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
                 actions.loadUserList();
             })
             .catch(error => {
@@ -120,7 +121,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             .deleteUser(id)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts?.deleteSuccess, 'success');
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
                 actions.loadUserList();
             })
             .catch(error => {

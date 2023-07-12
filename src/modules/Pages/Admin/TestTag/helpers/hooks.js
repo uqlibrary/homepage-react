@@ -82,7 +82,7 @@ export const useObjectList = (list = [], transform, options = {}) => {
     return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear };
 };
 
-export function useConfirmationAlert({ duration, onClose = null, errorMessage = null }) {
+export function useConfirmationAlert({ duration, onClose = null, errorMessage = null, errorMessageFormatter }) {
     const [confirmationAlert, setConfirmationAlert] = useState({ message: '', visible: false });
 
     const closeConfirmationAlert = () => {
@@ -100,7 +100,10 @@ export function useConfirmationAlert({ duration, onClose = null, errorMessage = 
 
     useEffect(() => {
         if (!!errorMessage) {
-            openConfirmationAlert(errorMessage, 'error');
+            openConfirmationAlert(
+                !!errorMessageFormatter ? errorMessageFormatter(errorMessage) : errorMessage,
+                'error',
+            );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [errorMessage]);
