@@ -367,7 +367,6 @@ export default {
                 ],
                 header: {
                     pageSubtitle: dept => `Asset Type management for ${dept}`,
-                    requiredText: 'All fields are required unless otherwise indicated.',
                     addButtonLabel: 'Add Asset Type',
                 },
                 addAsset: {
@@ -384,7 +383,7 @@ export default {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
                     confirmationMessage: 'Are you sure you wish to remove this Asset Type?',
-                    confirmationTitle: 'Remove Unused Asset Type',
+                    confirmationTitle: 'Remove unused Asset Type',
                 },
                 snackbars: {
                     loadFailed: error => `Error loading Asset Types. ${error}`,
@@ -440,7 +439,7 @@ export default {
                     confirmationTitle: 'Delete and Reassign',
                     deleteReassignTargetPrompt: target => `Delete ${target ?? 'NONE'} and reassign all assets to:`,
                     newAssetTypePrompt: 'New Asset Type',
-                    deleteReassignWarningPrompt: count => `This will effect ${count ?? 0} assets`,
+                    deleteReassignWarningPrompt: count => `This will affect ${count ?? 0} assets`,
                     cancelButtonLabel: 'Cancel',
                     confirmButtonLabel: 'Proceed',
                 },
@@ -589,18 +588,18 @@ export default {
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new device',
+                    confirmationTitle: 'Add new Device',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Edit device',
+                    confirmationTitle: 'Edit Device',
                 },
                 dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
-                    confirmationMessage: 'Are you sure you wish to delete this device?',
-                    confirmationTitle: 'Delete device',
+                    confirmationMessage: 'Are you sure you wish to delete this Device?',
+                    confirmationTitle: 'Delete Device',
                 },
                 alerts: {
                     addSuccess: 'Device added successfully',
@@ -822,12 +821,12 @@ export default {
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new user',
+                    confirmationTitle: 'Add new User',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Edit user',
+                    confirmationTitle: 'Edit User',
                 },
                 alerts: {
                     addSuccess: 'User added successfully',
@@ -836,8 +835,8 @@ export default {
                 dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
-                    confirmationMessage: 'Are you sure you wish to delete this user?',
-                    confirmationTitle: 'Delete user',
+                    confirmationMessage: 'Are you sure you wish to delete this User?',
+                    confirmationTitle: 'Delete User',
                 },
             },
         },

@@ -53,6 +53,7 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, 
                     {...(!!dataFieldValue
                         ? { ['data-fieldname']: dataFieldName, ['data-fieldvalue']: dataFieldValue }
                         : {})}
+                    data-action="edit"
                     color="inherit"
                     className={classes.textPrimary}
                     size="small"
@@ -71,6 +72,7 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, 
                     {...(!!dataFieldValue
                         ? { ['data-fieldname']: dataFieldName, ['data-fieldvalue']: dataFieldValue }
                         : {})}
+                    data-action="delete"
                     color="inherit"
                     size="small"
                     aria-label="delete"
