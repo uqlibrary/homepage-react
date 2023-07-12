@@ -189,10 +189,14 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             })
             .catch(error => {
                 openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
     const onDeleteEmptyAssetType = () => {
+        setDialogueBusy(true);
         actions
             .deleteAssetType(confirmID)
             .then(() => {
@@ -209,6 +213,9 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             })
             .catch(error => {
                 openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
