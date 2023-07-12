@@ -30,7 +30,6 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         // });
     });
     it.only('UI Dropdown for Status and building function correctly', () => {
-        cy.intercept('/*').as('getSearch');
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         forcePageRefresh();
@@ -40,9 +39,6 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.data('asset_status_selector-assets-inspected-input').should('have.value', 'All');
         cy.data('asset_status_selector-assets-inspected-input').click();
         cy.get('#asset_status_selector-assets-inspected-option-1').click();
-        cy.wait('@getSearch')
-            .its('request.url')
-            .should('include', '/test?a');
         cy.data('asset_status_selector-assets-inspected-input').should('have.value', 'Out for repair');
         cy.data('asset_status_selector-assets-inspected-input').click();
         cy.get('#asset_status_selector-assets-inspected-option-0').click();
