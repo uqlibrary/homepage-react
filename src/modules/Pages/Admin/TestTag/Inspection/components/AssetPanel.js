@@ -135,7 +135,7 @@ const AssetPanel = ({
     };
 
     return (
-        <StandardCard title={pageLocale.title} style={{ marginTop: '30px' }}>
+        <StandardCard standardCardId={componentId} title={pageLocale.title} style={{ marginTop: '30px' }}>
             {console.log(formValues)}
             <UpdateDialog
                 title={actionState.title}
@@ -168,7 +168,7 @@ const AssetPanel = ({
                 <Grid xs={12} item sm={6}>
                     <FormControl className={classes.formControl} fullWidth>
                         <AssetTypeSelector
-                            id={rootId}
+                            id={componentId}
                             locale={pageLocale.assetType.props}
                             actions={actions}
                             value={formValues?.asset_type_id}
@@ -187,7 +187,7 @@ const AssetPanel = ({
                 </Grid>
             </Grid>
             <LastInspectionPanel
-                id={componentId}
+                id={componentIdLower}
                 asset={selectedAsset ?? {}}
                 currentLocation={location}
                 dateFormatPattern={locale.config.format.dateFormatDisplay}
@@ -196,7 +196,7 @@ const AssetPanel = ({
             />
             {selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value && (
                 <InspectionPanel
-                    id={componentId}
+                    id={componentIdLower}
                     formValues={formValues}
                     selectedAsset={selectedAsset}
                     handleChange={handleChange}

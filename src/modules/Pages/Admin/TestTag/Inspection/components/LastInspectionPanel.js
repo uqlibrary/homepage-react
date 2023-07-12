@@ -21,6 +21,8 @@ import { statusEnum } from '../utils/helpers';
 const moment = require('moment');
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
+const rootId = 'last-inspection-panel';
+
 const useTestPanelStyles = makeStyles(theme => ({
     card: {
         marginTop: theme.spacing(2),
@@ -69,15 +71,15 @@ const useTestPanelStyles = makeStyles(theme => ({
     },
 }));
 
-const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabled = false, forceOpen = false }) => {
-    LastInspectionPanel.propTypes = {
-        asset: PropTypes.object.isRequired,
-        currentLocation: PropTypes.object.isRequired,
-        dateFormatPattern: PropTypes.string.isRequired,
-        disabled: PropTypes.bool,
-        forceOpen: PropTypes.bool,
-    };
-
+const LastInspectionPanel = ({
+    id,
+    asset,
+    currentLocation,
+    dateFormatPattern,
+    disabled = false,
+    forceOpen = false,
+}) => {
+    const componentId = `${id}-${rootId}`;
     const formLocale = locale.pages.inspect.form.lastInspectionPanel;
 
     const {
@@ -116,7 +118,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
 
     return (
         <StandardCard
-            standardCardId="lastInspectionPanel"
+            standardCardId={componentId}
             variant="outlined"
             noPadding={!(forceOpen || testPanelExpanded)}
             title={
@@ -294,6 +296,15 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
             </Collapse>
         </StandardCard>
     );
+};
+
+LastInspectionPanel.propTypes = {
+    id: PropTypes.string.isRequired,
+    asset: PropTypes.object.isRequired,
+    currentLocation: PropTypes.object.isRequired,
+    dateFormatPattern: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
+    forceOpen: PropTypes.bool,
 };
 
 export default React.memo(LastInspectionPanel);

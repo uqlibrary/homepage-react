@@ -61,6 +61,7 @@ const EventPanel = ({
     // console.log('pageLocale=', pageLocale);
     return (
         <StandardCard
+            standardCardId={componentId}
             title={pageLocale.form.event.title}
             headerAction={
                 <IconButton
