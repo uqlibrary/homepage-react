@@ -637,7 +637,7 @@ export default {
                             label: 'Status',
                         },
                         user_name: {
-                            label: 'Last Inspected by',
+                            label: 'Last inspected by',
                         },
                         inspect_date: {
                             label: 'Last inspection date',
@@ -708,7 +708,7 @@ export default {
                             columns: {
                                 asset_barcode: { label: 'Barcode' },
                                 asset_type_name: { label: 'Type' },
-                                asset_location: { label: 'Last Room ID' },
+                                asset_location: { label: 'Last room' },
                                 asset_status: { label: 'Status' },
                             },
                             locationTitle: 'Location',
@@ -809,10 +809,10 @@ export default {
                             label: 'Admin',
                         },
                         user_current_flag: {
-                            label: 'Is Current',
+                            label: 'Current',
                         },
                         user_current_flag_cb: {
-                            label: 'Is Current',
+                            label: 'Current',
                         },
                         actions_count: {
                             label: 'Inspections',
@@ -930,7 +930,7 @@ export default {
                     title: 'Filter',
                     columns: {
                         user_id: {
-                            label: 'UserID',
+                            label: 'User ID',
                         },
                         user_uid: {
                             label: 'UUID',
@@ -945,11 +945,11 @@ export default {
                             label: 'Dept.',
                         },
                         start_date: {
-                            label: 'Start Date',
+                            label: 'Start date',
                             type: 'dateTime',
                         },
                         end_date: {
-                            label: 'End Date',
+                            label: 'End date',
                             type: 'dateTime',
                         },
                         total_for_user: {
@@ -991,16 +991,16 @@ export default {
                             label: 'Barcode',
                         },
                         building_name: {
-                            label: 'Building Name',
+                            label: 'Building name',
                         },
                         asset_type_name: {
-                            label: 'Asset Type',
+                            label: 'Asset type',
                         },
                         asset_test_date: {
-                            label: 'Last Inspection',
+                            label: 'Last inspection',
                         },
                         asset_next_test_due_date: {
-                            label: 'Next Inspection',
+                            label: 'Next inspection',
                         },
                         asset_status: {
                             label: 'Status',
