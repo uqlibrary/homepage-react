@@ -60,6 +60,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: assetsListError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));

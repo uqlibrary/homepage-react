@@ -61,6 +61,7 @@ const FilterDialog = ({
         duration: confirmAlertTimeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: assetsMineListError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const { location, setLocation } = useLocation();
