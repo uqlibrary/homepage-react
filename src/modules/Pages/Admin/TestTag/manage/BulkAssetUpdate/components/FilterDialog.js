@@ -43,6 +43,7 @@ const FilterDialog = ({
     locationLocale,
     assetTypeLocale,
     config,
+    errorMessageFormatter,
     onCancel,
     onAction,
 }) => {
@@ -61,7 +62,7 @@ const FilterDialog = ({
         duration: confirmAlertTimeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: assetsMineListError,
-        errorMessageFormatter: locale.config.alerts.error,
+        errorMessageFormatter,
     });
 
     const { location, setLocation } = useLocation();
@@ -232,6 +233,7 @@ FilterDialog.propTypes = {
     dialogueContent: PropTypes.any,
     isOpen: PropTypes.bool,
     assetTypeLocale: PropTypes.object,
+    errorMessageFormatter: PropTypes.func,
     onCancel: PropTypes.func,
     onAction: PropTypes.func,
     isBusy: PropTypes.bool,
