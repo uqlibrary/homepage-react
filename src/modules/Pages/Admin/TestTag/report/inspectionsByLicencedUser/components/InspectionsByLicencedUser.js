@@ -76,7 +76,6 @@ const InspectionsByLicencedUser = ({
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, dateFormatted: null });
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
-    // const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
     const onCloseConfirmationAlert = () => {
         if (!!userInspectionsError) actions.clearInspectionsError();
@@ -86,6 +85,7 @@ const InspectionsByLicencedUser = ({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: userInspectionsError || licencedUsersError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const { columns } = useDataTableColumns({
@@ -120,13 +120,13 @@ const InspectionsByLicencedUser = ({
     const handleStartDateChange = date => {
         setSelectedStartDate({
             date: date,
-            dateFormatted: !!date ? date.format('yyyy-MM-DD') : null,
+            dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
     };
     const handleEndDateChange = date => {
         setSelectedEndDate({
             date: date,
-            dateFormatted: !!date ? date.format('yyyy-MM-DD') : null,
+            dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
     };
     const handleInspectorChange = event => {
@@ -148,23 +148,23 @@ const InspectionsByLicencedUser = ({
                 } else {
                     setStartDateError({
                         error: true,
-                        message: 'Start date must be before End Date',
+                        message: pageLocale.form.errors.startDateBeforeEnd,
                     });
                     setEndDateError({
                         error: true,
-                        message: 'End date must be after Start Date',
+                        message: pageLocale.form.errors.endDateAfterStart,
                     });
                 }
             } else {
                 !!!selectedStartDate.date &&
                     setStartDateError({
                         error: true,
-                        message: 'A start date is required to search by date',
+                        message: pageLocale.form.errors.startDateRequired,
                     });
                 !!!selectedEndDate.date &&
                     setEndDateError({
                         error: true,
-                        message: 'An end date is required to search by date',
+                        message: pageLocale.form.errors.endDateRequired,
                     });
             }
         }
@@ -219,7 +219,7 @@ const InspectionsByLicencedUser = ({
                                                         .map(value => value.user_name)
                                                         .concat(
                                                             selected.length > 2
-                                                                ? ` (and ${selected.length - 2} more)`
+                                                                ? pageLocale.form.selectedAndMore(selected.length - 2)
                                                                 : [],
                                                         )
                                                         .join(', ')}
@@ -258,7 +258,7 @@ const InspectionsByLicencedUser = ({
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
-                                label="Period Start Date"
+                                label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                 value={selectedStartDate.date}
                                 onChange={handleStartDateChange}
                                 onBlur={handleDateClose}
@@ -266,7 +266,7 @@ const InspectionsByLicencedUser = ({
                                 error={startDateError.error}
                                 helperText={startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change start date',
+                                    'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                             />
                         </Grid>
@@ -286,7 +286,7 @@ const InspectionsByLicencedUser = ({
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
-                                label="Period End Date"
+                                label={pageLocale.form.keyboardDatePicker.endDateLabel}
                                 value={selectedEndDate.date}
                                 onChange={handleEndDateChange}
                                 onClose={handleDateClose}
@@ -294,7 +294,7 @@ const InspectionsByLicencedUser = ({
                                 helperText={endDateError.error && endDateError.message}
                                 error={endDateError.error}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change end date',
+                                    'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                             />
                         </Grid>
@@ -305,7 +305,7 @@ const InspectionsByLicencedUser = ({
                             id={`${componentIdLower}-total-text`}
                             data-testid={`${componentIdLower}-total-text`}
                         >
-                            {totalInspections} Total Inspections.
+                            {pageLocale.form.totalInspections(totalInspections)}
                         </Typography>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>

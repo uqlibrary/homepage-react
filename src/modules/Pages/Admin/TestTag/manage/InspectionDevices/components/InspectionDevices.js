@@ -62,6 +62,7 @@ const InspectionDevices = ({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: inspectionDevicesError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
@@ -100,7 +101,7 @@ const InspectionDevices = ({
             .addInspectionDevice(wrappedRequest)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts?.addSuccess, 'success');
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
                 actions.loadInspectionDevices();
             })
             .catch(error => {
