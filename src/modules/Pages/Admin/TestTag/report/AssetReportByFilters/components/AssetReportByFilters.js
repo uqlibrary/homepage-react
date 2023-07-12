@@ -74,6 +74,7 @@ const AssetReportByFilters = ({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: taggedBuildingListError || assetListError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
@@ -315,10 +316,10 @@ AssetReportByFilters.propTypes = {
     assetList: PropTypes.array,
     taggedBuildingListLoading: PropTypes.bool,
     taggedBuildingListLoaded: PropTypes.bool,
-    taggedBuildingListError: PropTypes.bool,
+    taggedBuildingListError: PropTypes.string,
     assetListLoading: PropTypes.bool,
     assetListLoaded: PropTypes.bool,
-    assetListError: PropTypes.bool,
+    assetListError: PropTypes.string,
 };
 
 export default React.memo(AssetReportByFilters);

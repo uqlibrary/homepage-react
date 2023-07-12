@@ -80,29 +80,8 @@ const InspectionsDue = ({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: inspectionsDueError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
-
-    // const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
-    // const closeConfirmationAlert = () => {
-    //     setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    // };
-    // const openConfirmationAlert = (message, type) => {
-    //     setConfirmationAlert({
-    //         message: message,
-    //         visible: true,
-    //         type: !!type ? type : 'info',
-    //         autoHideDuration: locale.config.alerts.timeout,
-    //         ...(type === 'error' ? { onClose: () => actions.clearInspectionsDueError() } : {}),
-    //     });
-    // };
-
-    // useEffect(() => {
-    //     if (!!inspectionsDueError) {
-    //         openConfirmationAlert(locale.config.alerts.error(inspectionsDueError), 'error');
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [inspectionsDueError]);
 
     useEffect(() => {
         const locationId = location[lastSelectedLocation];

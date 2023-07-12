@@ -85,6 +85,7 @@ const InspectionsByLicencedUser = ({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: userInspectionsError || licencedUsersError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const { columns } = useDataTableColumns({
