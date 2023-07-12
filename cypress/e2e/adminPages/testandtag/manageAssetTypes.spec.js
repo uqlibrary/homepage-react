@@ -82,7 +82,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.data('update_dialog-asset-types-cancel-button').click();
         cy.get('.MuiAlert-message').should('not.exist');
     });
-    it.only('Delete and Reassign work correctly', () => {
+    it('Delete and Reassign work correctly', () => {
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
