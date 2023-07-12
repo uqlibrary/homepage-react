@@ -60,7 +60,7 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
             .should('contain', 'SecondTesting user')
             .should('contain', '(and 1 more)');
     });
-    it.only('Date selectors work as intended', () => {
+    it('Date selectors work as intended', () => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
         cy.viewport(1300, 1000);
