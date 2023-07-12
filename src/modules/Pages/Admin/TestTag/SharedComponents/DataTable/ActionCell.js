@@ -50,9 +50,7 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, 
                 <IconButton
                     id={`${componentId}-edit-button`}
                     data-testid={`${componentId}-edit-button`}
-                    {...(!!dataFieldValue
-                        ? { ['data-fieldname']: dataFieldName, ['data-fieldvalue']: dataFieldValue }
-                        : {})}
+                    {...(!!dataFieldValue ? { ['data-name']: dataFieldName, ['data-value']: dataFieldValue } : {})}
                     data-action="edit"
                     color="inherit"
                     className={classes.textPrimary}
@@ -69,9 +67,7 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, 
                 <IconButton
                     id={`${componentId}-delete-button`}
                     data-testid={`${componentId}-delete-button`}
-                    {...(!!dataFieldValue
-                        ? { ['data-fieldname']: dataFieldName, ['data-fieldvalue']: dataFieldValue }
-                        : {})}
+                    {...(!!dataFieldValue ? { ['data-name']: dataFieldName, ['data-value']: dataFieldValue } : {})}
                     data-action="delete"
                     color="inherit"
                     size="small"
