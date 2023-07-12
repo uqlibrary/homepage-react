@@ -92,13 +92,19 @@ describe('Test and Tag Manage Asset Types', () => {
         // Delete an asset type - contains assets.
         cy.data('action_cell-1-delete-button').click();
         cy.data('action_dialogue-asset-types-title').should('contain', 'Delete and Reassign');
-        cy.get('.MuiAlert-message').should('contain', 'This will effect 76 assets');
+        cy.data('action_dialogue-asset-types-alert').should(
+            'contain',
+            locale.pages.manage.assetTypes.actionDialogue.deleteReassignWarningPrompt(76),
+        );
         // Fire cancel
         cy.data('action_dialogue-asset-types-cancel-button').click();
         // Reopen and confirm
         cy.data('action_cell-1-delete-button').click();
         cy.data('action_dialogue-asset-types-title').should('contain', 'Delete and Reassign');
-        cy.get('.MuiAlert-message').should('contain', 'This will effect 76 assets');
+        cy.data('action_dialogue-asset-types-alert').should(
+            'contain',
+            locale.pages.manage.assetTypes.actionDialogue.deleteReassignWarningPrompt(76),
+        );
         cy.get('#action_dialogue-asset-types-reassign-select').click();
         cy.data('action_dialogue-asset-types-reassign-option-6').click();
         cy.data('action_dialogue-asset-types-action-button').click();

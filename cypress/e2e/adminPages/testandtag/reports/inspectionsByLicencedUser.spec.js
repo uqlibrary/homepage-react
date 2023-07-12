@@ -60,27 +60,47 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
             .should('contain', 'SecondTesting user')
             .should('contain', '(and 1 more)');
     });
-    it('Date selectors work as intended', () => {
+    it.only('Date selectors work as intended', () => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
-
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqtest1'));
+        // Add a start date
         cy.get('[data-testid="user_inspections-tagged-start"] button').click();
         cy.get('.MuiPickersCalendar-week')
-            .contains('10')
+            .contains('11')
             .click();
         cy.get('body').click();
-        cy.data('user_inspections-tagged-start-input').should('have.value', `${currentYear}-${currentMonth}-10`);
+        // Should require an end date here
+        cy.get('#user_inspections-tagged-end-helper-text').should('contain', 'An end date is required');
+        // Add an end date
+        cy.data('user_inspections-tagged-start-input').should('have.value', `${currentYear}-${currentMonth}-11`);
         cy.get('[data-testid="user_inspections-tagged-end"] button').click();
         cy.get('.MuiPickersCalendar-week')
             .contains('12')
             .click();
         cy.get('body').click();
         cy.data('user_inspections-tagged-end-input').should('have.value', `${currentYear}-${currentMonth}-12`);
+        // Set up an incorrect date for the end.
+        cy.get('[data-testid="user_inspections-tagged-end"] button').click();
+        cy.get('.MuiPickersCalendar-week')
+            .contains('10')
+            .click();
+        cy.get('body').click();
+        cy.get('#user_inspections-tagged-end-helper-text').should('contain', 'End date must be after start date');
+        cy.get('#user_inspections-tagged-start-helper-text').should('contain', 'Start date must be before end date');
+        // Now clear the inspection start date, showing error on end date.
+        cy.data('user_inspections-tagged-start-input').clear();
+        cy.get('body').click();
+        cy.get('#user_inspections-tagged-start-helper-text').should('contain', 'A start date is required');
+        // Clear the end date.
+        cy.data('user_inspections-tagged-end-input').clear();
+        cy.get('body').click();
+        cy.data('user_inspections-tagged-end-input').should('not.have.value', `${currentYear}-${currentMonth}-12`);
+        cy.data('user_inspections-tagged-start-input').should('not.have.value', `${currentYear}-${currentMonth}-12`);
     });
 });
