@@ -17,7 +17,7 @@ import TabPanel from './TabPanel';
 import { isValidRepair, isValidDiscard, statusEnum } from '../utils/helpers';
 import { isEmptyStr } from '../../helpers/helpers';
 
-const componentId = 'action_panel';
+export const componentId = 'action_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
@@ -99,7 +99,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                     key="Repair"
                     {...a11yProps(1)}
                     disabled={disabled || isRepairDisabled}
-                    id={`${componentId}-repair-tab`}
+                    id={`${componentId}-repair-tab-button`}
                     data-testid={`${componentId}-repair-tab-button`}
                 />
                 <Tab
@@ -107,7 +107,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                     key="Discard"
                     {...a11yProps(2)}
                     disabled={disabled || isDiscardDisabled}
-                    id={`${componentId}-discard-tab`}
+                    id={`${componentId}-discard-tab-button`}
                     data-testid={`${componentId}-discard-tab-button`}
                 />
             </Tabs>
@@ -163,7 +163,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
                                 value={formValues?.repairer_contact_details ?? ''}
                                 onChange={handleRepairerDetailsChange}
-                                id={`${componentId}-repair-details`}
+                                id={`${componentId}-repairer-details`}
                             />
                         </FormControl>
                     </Grid>
