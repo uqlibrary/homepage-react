@@ -80,7 +80,7 @@ export const useSelectLocation = ({
                     setLocation?.({ building: -1, floor: -1, room: -1 });
                     setSelectedLocation(locationType.site);
                 }
-            } else actions?.loadSites();
+            }
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,6 +93,13 @@ export const useSelectLocation = ({
         floorListLoaded,
         roomListLoaded,
     ]);
+
+    useEffect(() => {
+        if (condition?.() ?? true) {
+            actions?.loadSites();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return { selectedLocation, lastSelectedLocation, setSelectedLocation, setLastSelectedLocation };
 };
