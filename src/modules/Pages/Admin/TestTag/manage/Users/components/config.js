@@ -4,15 +4,24 @@ import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/Deb
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { isEmptyStr } from '../../../helpers/helpers';
+import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
+
+import locale from '../../../testTag.locale';
 
 export default {
     fields: {
         user_uid: {
             label: 'UUID',
-            component: props => <DebouncedTextField {...props} required />,
-            validate: value => isEmptyStr(value),
-            fieldParams: { canEdit: false, canAdd: true },
+            component: props => (
+                <DebouncedTextField
+                    required
+                    {...props}
+                    inputProps={{ ...props.inputProps, maxLength: 20 }}
+                    helperText={locale.pages.general.helperText.maxChars(20)}
+                />
+            ),
+            validate: value => isEmptyStr(value) || isInvalidUUID(value),
+            fieldParams: { canEdit: true, canAdd: true },
         },
         user_name: {
             component: props => <DebouncedTextField {...props} required />,
@@ -20,13 +29,21 @@ export default {
             fieldParams: { canEdit: true, flex: 1 },
         },
         user_licence_number: {
-            component: props => <DebouncedTextField {...props} />,
+            component: props => (
+                <DebouncedTextField
+                    {...props}
+                    inputProps={{ ...props.inputProps, maxLength: 45 }}
+                    helperText={locale.pages.general.helperText.maxChars(45)}
+                />
+            ),
             fieldParams: {
-                canEdit: true,
+                canAdd: true,
+                canEdit: false,
                 renderInUpdate: true,
                 renderInAdd: true,
                 renderInTable: false,
                 renderFullWidth: true,
+                maxLength: 45,
             },
             validate: (value, row) => {
                 return row?.can_inspect_cb && isEmptyStr(value);
