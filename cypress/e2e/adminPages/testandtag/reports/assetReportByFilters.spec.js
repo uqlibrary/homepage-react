@@ -29,7 +29,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         // });
     });
-    it.only('UI Dropdown for Status and building function correctly', () => {
+    it('UI Dropdown for Status and building function correctly', () => {
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         forcePageRefresh();
@@ -43,5 +43,44 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.data('asset_status_selector-assets-inspected-input').click();
         cy.get('#asset_status_selector-assets-inspected-option-0').click();
         cy.data('asset_status_selector-assets-inspected-input').should('have.value', 'All');
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        // Building Dropdown - all
+        cy.wait(1500);
+        cy.data('assets_inspected-building').should('contain', 'All buildings');
+        cy.data('assets_inspected-building').click();
+        cy.data('assets_inspected-building-option-1').click();
+        cy.wait(1500);
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        // Building Dropdown - selected
+        cy.data('assets_inspected-building').should('contain', 'Forgan Smith Building');
+        cy.data('assets_inspected-building').click();
+        cy.data('assets_inspected-building-option--1').click();
+        cy.data('assets_inspected-building').should('contain', 'All buildings');
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+    });
+    it.only('UI for date pickers function correctly', () => {
+        const currentYear = new Date().getFullYear();
+        const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
+        cy.get('h1').contains(locale.pages.general.pageTitle);
+        cy.get('h2').contains(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        forcePageRefresh();
+        cy.wait(1000);
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        // Select a Tagged from Date.
+        cy.get('[data-testid="assets_inspected-tagged-start"] button').click();
+        cy.get('.MuiPickersCalendar-week')
+            .contains('11')
+            .click();
+        cy.get('body').type('{esc}');
+        cy.wait(1000);
+        cy.data('assets_inspected-tagged-start-input').should('have.value', `${currentYear}-${currentMonth}-11`);
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        cy.get('[data-testid="assets_inspected-tagged-end"] button').click();
+        cy.get('.MuiPickersCalendar-week')
+            .contains('12')
+            .click();
+        cy.get('body').type('{esc}');
+        cy.wait(1000);
+        cy.data('assets_inspected-tagged-end-input').should('have.value', `${currentYear}-${currentMonth}-12`);
     });
 });
