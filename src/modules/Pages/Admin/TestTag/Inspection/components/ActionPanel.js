@@ -169,7 +169,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                     </Grid>
                 </Grid>
             </TabPanel>
-            <TabPanel value={selectedTabValue} index={1}>
+            <TabPanel id={componentId} value={selectedTabValue} index={1}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <Alert severity="warning">{pageLocale.form.action.discard.alertMessage}</Alert>

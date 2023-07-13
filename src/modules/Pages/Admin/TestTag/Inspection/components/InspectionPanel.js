@@ -259,7 +259,6 @@ const InspectionPanel = ({
 };
 
 InspectionPanel.propTypes = {
-    id: PropTypes.string.isRequired,
     formValues: PropTypes.object.isRequired,
     selectedAsset: PropTypes.object,
     handleChange: PropTypes.func.isRequired,

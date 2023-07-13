@@ -65,8 +65,9 @@ describe('AssetPanel', () => {
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
-
+        const actionFn = jest.fn();
         const { getByText, getByTestId } = setup({
+            actions: { loadAssetTypes: actionFn },
             formValues,
             location,
             resetForm,
@@ -75,9 +76,10 @@ describe('AssetPanel', () => {
             saveInspectionSaving: false,
             isValid: false,
         });
+
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
-        expect(getByTestId('asset_selector-testntagFormAssetId')).toBeInTheDocument();
-        expect(getByTestId('testntagFormAssetType')).toBeInTheDocument();
+        expect(getByTestId('asset_selector-asset-panel')).toBeInTheDocument();
+        expect(getByTestId('asset_type_selector-asset-panel')).toBeInTheDocument();
     });
 
     it('renders component without certain params', () => {
@@ -89,8 +91,9 @@ describe('AssetPanel', () => {
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const newValues = { ...formValues };
         newValues.asset_id_displayed = undefined;
-
+        const actionFn = jest.fn();
         const { getByText } = setup({
+            actions: { loadAssetTypes: actionFn },
             formValues: newValues,
             location,
             resetForm,
@@ -109,8 +112,9 @@ describe('AssetPanel', () => {
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
-
+        const actionFn = jest.fn();
         const { getByTestId } = setup({
+            actions: { loadAssetTypes: actionFn },
             formValues,
             location,
             resetForm,
@@ -121,11 +125,11 @@ describe('AssetPanel', () => {
             state: {
                 testTagOnLoadInspectionReducer: { inspectionConfig: {}, inspectionConfigLoading: true },
                 testTagAssetsReducer: { assetsList: [], assetsListLoading: true },
+                testTagAssetTypesReducer: { assetTypesList: [], assetTypesListLoading: true },
             },
         });
-
-        expect(getByTestId('asset_selector-testntagFormAssetId-progress')).toBeInTheDocument();
-        expect(getByTestId('assetTypeSpinner')).toBeInTheDocument();
+        expect(getByTestId('asset_selector-asset-panel-progress')).toBeInTheDocument();
+        expect(getByTestId('asset_type_selector-asset-panel-progress')).toBeInTheDocument();
     });
 
     // MOVE FOLLOWING TESTS TO ASSETSELECTOR TEST
