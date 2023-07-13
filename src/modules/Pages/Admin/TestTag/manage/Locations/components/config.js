@@ -42,7 +42,7 @@ export default {
             building_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canEdit: false, renderInTable: false },
+                fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
             },
             building_name: {
                 component: props => <DebouncedTextField {...props} required />,
@@ -74,7 +74,7 @@ export default {
             floor_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canEdit: false, renderInTable: false, flex: 1 },
+                fieldParams: { canAdd: false, canEdit: false, renderInTable: false, flex: 1 },
             },
             floor_id_displayed: {
                 component: props => (
@@ -101,7 +101,7 @@ export default {
             room_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canEdit: false, renderInTable: false },
+                fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
             },
             room_description: {
                 component: props => <DebouncedTextField {...props} />,
