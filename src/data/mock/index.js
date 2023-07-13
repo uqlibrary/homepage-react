@@ -870,7 +870,7 @@ mock.onGet('exams/course/FREN1010/summary')
             status: 'OK',
         },
     ])
-    .onPut(/test-and-tag\/asset_type\/\d*/)
+    .onPut(/test-and-tag\/asset-type\/\d+/)
     .reply(withDelay([
         200,
         {
@@ -888,19 +888,19 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         },
     ])
-    .onDelete(/test-and-tag\/asset_type\/4/)
-    .reply(() => {
-        return [200, { status: 'OK' }];
-    })
-    .onDelete(/test-and-tag\/asset_type\/5/)
+    .onDelete(/test-and-tag\/asset-type\/52/)
     .reply(() => {
         return [
             400,
             {
                 status: 'error',
-                message: '5 is a test error',
+                message: '52 is a test error',
             },
         ];
+    })
+    .onDelete(/test-and-tag\/asset-type\/\d+/)
+    .reply(() => {
+        return [200, { status: 'OK' }];
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
@@ -920,9 +920,9 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_licenced_inspectors])
     .onGet(routes.TEST_TAG_TAGGED_BUILDING_LIST().apiUrl)
     .reply(() => [200, test_tag_tagged_building_list])
-    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: null, locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: '4', inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
     .reply(() => [200, test_tag_assets_report_assets])
-    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .onGet(/test-and-tag\/asset\/search\/mine.*/)
     .reply(() => [200, test_tag_assets_report_assets])
     .onGet(routes.TEST_TAG_ASSETS_MINE_API({}).apiUrl)
     .reply(() => [200, test_tag_assets_mine])

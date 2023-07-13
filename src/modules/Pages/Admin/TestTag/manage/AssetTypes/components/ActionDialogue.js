@@ -6,6 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -67,29 +68,40 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                 data-testid={`${componentId}-content`}
             >
                 <Typography component={'p'}>{pageLocale.deleteReassignTargetPrompt(row?.asset_type_name)}</Typography>
-                <InputLabel shrink required>
-                    {pageLocale.newAssetTypePrompt}
-                </InputLabel>
-                <Select
-                    fullWidth
-                    className={classes.formSelect}
-                    id={`${componentId}-new-asset-type`}
-                    data-testid={`${componentId}-new-asset-type`}
-                    value={selectedAssetType}
-                    onChange={e => onAssetTypeChange(e.target.value)}
-                    required
-                >
-                    {data.map(item => (
-                        <MenuItem
-                            value={item.asset_type_id}
-                            key={item.asset_type_id}
-                            id={`${componentId}-new-asset-type-option-${item.asset_type_id}`}
-                            data-testid={`${componentId}-new-asset-type-option-${item.asset_type_id}`}
-                        >
-                            {item.asset_type_name}
-                        </MenuItem>
-                    ))}
-                </Select>
+                <FormControl fullWidth>
+                    <InputLabel
+                        shrink
+                        required
+                        id={`${componentId}-reassign-label`}
+                        data-testid={`${componentId}-reassign-label`}
+                    >
+                        {pageLocale.newAssetTypePrompt}
+                    </InputLabel>
+                    <Select
+                        fullWidth
+                        className={classes.formSelect}
+                        id={`${componentId}-reassign-select`}
+                        data-testid={`${componentId}-reassign-select`}
+                        value={selectedAssetType}
+                        onChange={e => onAssetTypeChange(e.target.value)}
+                        inputProps={{
+                            id: `${componentId}-reassign-input`,
+                            ['data-testid']: `${componentId}-reassign-input`,
+                        }}
+                        required
+                    >
+                        {data.map(item => (
+                            <MenuItem
+                                value={item.asset_type_id}
+                                key={item.asset_type_id}
+                                id={`${componentId}-reassign-option-${item.asset_type_id}`}
+                                data-testid={`${componentId}-reassign-option-${item.asset_type_id}`}
+                            >
+                                {item.asset_type_name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <Alert
                     className={classes.alertPanel}
                     severity="warning"

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TextField from '@material-ui/core/TextField';
+import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
@@ -10,17 +10,17 @@ export default {
     fields: {
         user_uid: {
             label: 'UUID',
-            component: props => <TextField {...props} required />,
+            component: props => <DebouncedTextField {...props} required />,
             validate: value => isEmptyStr(value),
             fieldParams: { canEdit: false, canAdd: true },
         },
         user_name: {
-            component: props => <TextField {...props} />,
+            component: props => <DebouncedTextField {...props} required />,
             validate: value => isEmptyStr(value),
             fieldParams: { canEdit: true, flex: 1 },
         },
         user_licence_number: {
-            component: props => <TextField {...props} />,
+            component: props => <DebouncedTextField {...props} />,
             fieldParams: {
                 canEdit: true,
                 renderInUpdate: true,
@@ -42,7 +42,7 @@ export default {
                     label={'Admin'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_inspect: {
             fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
@@ -54,7 +54,7 @@ export default {
                     label={'Inspect'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_alter: {
             fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
@@ -66,7 +66,7 @@ export default {
                     label={'Alter'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_see_reports: {
             fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
@@ -78,7 +78,7 @@ export default {
                     label={'Report'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         user_current_flag: {
             fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
@@ -90,7 +90,7 @@ export default {
                     label={'Is Current'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         actions_count: {
             fieldParams: { canEdit: false, canAdd: false, renderInUpdate: false, renderInAdd: false, minWidth: 110 },

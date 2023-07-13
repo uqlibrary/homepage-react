@@ -63,7 +63,7 @@ describe('Test and Tag Admin Inspection page', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h1').contains('UQ Asset Test and Tag');
-            cy.get('h2').contains('Managing Assets for Library');
+            cy.get('h2').contains('Creating a new Inspection for Library');
             cy.waitUntil(() => cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia'));
             cy.wait(1000);
             cy.checkA11y('[data-testid="StandardPage"]', {

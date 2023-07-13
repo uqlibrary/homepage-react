@@ -25,18 +25,6 @@ import { PERMISSIONS } from '../../../config/auth';
 const componentId = 'assets-inspected';
 const componentIdLower = 'assets_inspected';
 
-// const ITEM_HEIGHT = 48;
-// const ITEM_PADDING_TOP = 8;
-
-// const MenuProps = {
-//     PaperProps: {
-//         style: {
-//             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-//             width: 250,
-//         },
-//     },
-// };
-
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -77,8 +65,6 @@ const AssetReportByFilters = ({
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, error: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
-    // const [apiError, setApiError] = useState(taggedBuildingListError || assetListError);
-    // const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
 
     const onCloseConfirmationAlert = () => {
         if (!!taggedBuildingListError) actions.clearTaggedBuildingListError();
@@ -88,6 +74,7 @@ const AssetReportByFilters = ({
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: taggedBuildingListError || assetListError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
@@ -101,14 +88,16 @@ const AssetReportByFilters = ({
     });
 
     /* HELPERS */
-    const buildPayload = () => ({
-        ...config.defaults,
-        assetStatus: statusType > 0 ? statusTypes[statusType].status_type : null,
-        locationType: 'building',
-        locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
-        inspectionDateFrom: !!selectedStartDate.dateFormatted ? selectedStartDate.dateFormatted : null,
-        inspectionDateTo: !!selectedEndDate.dateFormatted ? selectedEndDate.dateFormatted : null,
-    });
+    const buildPayload = () => {
+        return {
+            ...config.defaults,
+            assetStatus: statusType > 0 ? statusTypes[statusType].value : null,
+            locationType: 'building',
+            locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
+            inspectionDateFrom: !!selectedStartDate.dateFormatted ? selectedStartDate.dateFormatted : null,
+            inspectionDateTo: !!selectedEndDate.dateFormatted ? selectedEndDate.dateFormatted : null,
+        };
+    };
 
     const clearDateErrors = () => {
         setStartDateError({
@@ -177,9 +166,9 @@ const AssetReportByFilters = ({
         setBuildingList([
             {
                 building_id: -1,
-                building_name: 'All Buildings',
+                building_name: locale.pages.general.locationPicker.building.labelAll,
                 building_site_id: -1,
-                building_id_displayed: 'All',
+                building_id_displayed: locale.pages.general.locationPicker.allLabel,
                 building_current_flag: 1,
             },
             ...taggedBuildingList,
@@ -260,13 +249,13 @@ const AssetReportByFilters = ({
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
-                                label={pageLocale.form.filterTaggedDateFrom}
+                                label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                 value={selectedStartDate.date}
                                 onChange={handleStartDateChange}
                                 error={!!startDateError.error}
                                 helperText={!!startDateError.error && startDateError.error}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change start date',
+                                    'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                             />
                             <KeyboardDatePicker
@@ -283,13 +272,13 @@ const AssetReportByFilters = ({
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
-                                label={pageLocale.form.filterTaggedDateTo}
+                                label={pageLocale.form.keyboardDatePicker.endDateLabel}
                                 value={selectedEndDate.date}
                                 onChange={handleEndDateChange}
                                 error={!!endDateError.error}
                                 helperText={!!endDateError.error && endDateError.error}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change end date',
+                                    'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                             />
                         </Grid>
@@ -329,10 +318,10 @@ AssetReportByFilters.propTypes = {
     assetList: PropTypes.array,
     taggedBuildingListLoading: PropTypes.bool,
     taggedBuildingListLoaded: PropTypes.bool,
-    taggedBuildingListError: PropTypes.bool,
+    taggedBuildingListError: PropTypes.string,
     assetListLoading: PropTypes.bool,
     assetListLoaded: PropTypes.bool,
-    assetListError: PropTypes.bool,
+    assetListError: PropTypes.string,
 };
 
 export default React.memo(AssetReportByFilters);

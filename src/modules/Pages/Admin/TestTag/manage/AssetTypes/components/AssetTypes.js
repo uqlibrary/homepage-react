@@ -33,19 +33,10 @@ const useStyles = makeStyles(theme => ({
     gridRoot: {
         border: 0,
     },
-    MuiCheckbox: {
-        colorSecondary: {
-            color: '#112233',
-            '&$checked': {
-                color: '#998877',
-            },
-        },
-    },
 }));
 
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, assetTypesListError }) => {
     const pageLocale = locale.pages.manage.assetTypes;
-
     const classes = useStyles();
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
@@ -56,6 +47,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         duration: locale.config.alerts.timeout,
         onClose: onCloseConfirmationAlert,
         errorMessage: assetTypesListError,
+        errorMessageFormatter: locale.config.alerts.error,
     });
 
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
@@ -104,7 +96,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         locale: pageLocale.form.columns,
         handleEditClick: onRowEdit,
         handleDeleteClick: onRowDelete,
-        actionDataFieldKeys: { valueKey: 'asset_type_id' },
+        actionDataFieldKeys: { valueKey: 'asset_type_name' },
     });
 
     const { row } = useDataTableRow(assetTypesList);
@@ -120,11 +112,11 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     };
 
     const onRowAdd = data => {
-        const Payload = data;
-        delete Payload.asset_type_id;
+        const payload = structuredClone(data);
+        delete payload.asset_type_id;
         setDialogueBusy(true);
         actions
-            .addAssetType(Payload)
+            .addAssetType(payload)
             .then(() => {
                 actions
                     .loadAssetTypes()
@@ -139,14 +131,17 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             })
             .catch(error => {
                 openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
     const onRowUpdate = data => {
-        const Id = data?.asset_type_id;
+        const id = data?.asset_type_id;
         setDialogueBusy(true);
         actions
-            .saveAssetType(Id, data)
+            .saveAssetType(id, data)
             .then(() => {
                 actions
                     .loadAssetTypes()
@@ -161,6 +156,9 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             })
             .catch(error => {
                 openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
@@ -170,13 +168,13 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     };
 
     const onActionDialogueProceed = (oldTypeID, newTypeID) => {
-        const Payload = {
+        const payload = {
             old_asset_type_id: oldTypeID,
             new_asset_type_id: newTypeID,
         };
         setDialogueBusy(true);
         actions
-            .deleteAndReassignAssetType(Payload)
+            .deleteAndReassignAssetType(payload)
             .then(() => {
                 actions
                     .loadAssetTypes()
@@ -191,10 +189,14 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             })
             .catch(error => {
                 openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
     const onDeleteEmptyAssetType = () => {
+        setDialogueBusy(true);
         actions
             .deleteAssetType(confirmID)
             .then(() => {
@@ -211,6 +213,9 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             })
             .catch(error => {
                 openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 

@@ -57,7 +57,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const stepOneLocale = pageLocale.form.step.one;
     const stepTwoLocale = pageLocale.form.step.two;
     const classes = useStyles();
-    const list = useObjectList([], transformRow, { duplicateKey: 'asset_id' });
+    const list = useObjectList([], transformRow, { key: 'asset_id' });
     const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -288,7 +288,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     id={componentId}
                                     rows={list.data}
                                     columns={columns}
-                                    rowId={'asset_id_displayed'}
+                                    rowId={'asset_id'}
                                     classes={{ root: classes.gridRoot }}
                                     handleDeleteClick={handleDeleteClick}
                                     components={{ Footer: FooterBar }}
@@ -312,6 +312,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             assetTypeLocale={pageLocale.form.assetType}
                             locationLocale={locale.pages.general.locationPicker}
                             confirmAlertTimeout={locale.config.alerts.timeout}
+                            errorMessageFormatter={locale.config.alerts.error}
                             minContentWidth={'100%'}
                             config={config.filterDialog}
                             isOpen={isFilterDialogOpen}
