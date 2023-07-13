@@ -94,6 +94,10 @@ export const UpdateDialogue = ({
         onCancelAction?.();
     };
 
+    const _onClickAction = e => {
+        e.stopPropagation();
+    };
+
     const handleChange = event => {
         const isCheckbox = event.target.type === 'checkbox';
         // eslint-disable-next-line no-nested-ternary
@@ -160,6 +164,7 @@ export const UpdateDialogue = ({
                                                             dataFields[field]?.validate?.(data?.[field], data) ?? false,
                                                         checked: !!data?.[field],
                                                         onChange: handleChange,
+                                                        onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
                                                         },
