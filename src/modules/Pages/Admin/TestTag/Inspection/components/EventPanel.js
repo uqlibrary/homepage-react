@@ -14,13 +14,13 @@ import clsx from 'clsx';
 import locale from '../../testTag.locale';
 import LocationPicker from '../../SharedComponents/LocationPicker/LocationPicker';
 
-const rootId = 'event_panel';
+const componentId = 'event-panel';
+const componentIdLower = 'event_panel';
 
 const moment = require('moment');
 const inputLabelProps = { shrink: true };
 
 const EventPanel = ({
-    id,
     actions,
     location,
     setLocation,
@@ -30,8 +30,6 @@ const EventPanel = ({
     hasInspection = false,
     isMobileView,
 }) => {
-    const componentId = `${rootId}-${id}`;
-
     const [eventExpanded, setEventExpanded] = React.useState(true);
     const pageLocale = locale.pages.inspect;
     const startDate = moment()
@@ -61,7 +59,7 @@ const EventPanel = ({
     // console.log('pageLocale=', pageLocale);
     return (
         <StandardCard
-            standardCardId={componentId}
+            standardCardId={componentIdLower}
             title={pageLocale.form.event.title}
             headerAction={
                 <IconButton
@@ -71,8 +69,8 @@ const EventPanel = ({
                     aria-expanded={eventExpanded}
                     aria-label={pageLocale.form.event.aria.collapseButtonLabel}
                     onClick={() => setEventExpanded(!eventExpanded)}
-                    id={`${componentId}-expand-button`}
-                    data-testid={`${componentId}-expand-button`}
+                    id={`${componentIdLower}-expand-button`}
+                    data-testid={`${componentIdLower}-expand-button`}
                 >
                     <ExpandMoreIcon />
                 </IconButton>
@@ -84,15 +82,15 @@ const EventPanel = ({
                     <Grid item xs={12} sm={6} md={3}>
                         <KeyboardDatePicker
                             {...pageLocale.form.event.date}
-                            id={`${componentId}-event-date`}
-                            data-testid={`${componentId}-event-date`}
+                            id={`${componentIdLower}-event-date`}
+                            data-testid={`${componentIdLower}-event-date`}
                             inputProps={{
-                                id: `${componentId}-event-date-input`,
-                                'data-testid': `${componentId}-event-date-input`,
+                                id: `${componentIdLower}-event-date-input`,
+                                'data-testid': `${componentIdLower}-event-date-input`,
                             }}
                             DialogProps={{
-                                id: `${componentId}-event-date-dialog`,
-                                'data-testid': `${componentId}-event-date-dialog`,
+                                id: `${componentIdLower}-event-date-dialog`,
+                                'data-testid': `${componentIdLower}-event-date-dialog`,
                             }}
                             InputLabelProps={inputLabelProps}
                             format={pageLocale.config.dateFormatNoTime}
@@ -107,8 +105,8 @@ const EventPanel = ({
                             fullWidth={isMobileView}
                             KeyboardButtonProps={{
                                 'aria-label': 'Event date',
-                                id: `${componentId}-event-date-button`,
-                                'data-testid': `${componentId}-event-date-button`,
+                                id: `${componentIdLower}-event-date-button`,
+                                'data-testid': `${componentIdLower}-event-date-button`,
                             }}
                         />
                     </Grid>
@@ -168,7 +166,6 @@ const EventPanel = ({
 };
 
 EventPanel.propTypes = {
-    id: PropTypes.string.isRequired,
     actions: PropTypes.any.isRequired,
     location: PropTypes.object.isRequired,
     setLocation: PropTypes.func.isRequired,

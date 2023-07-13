@@ -21,7 +21,7 @@ import { statusEnum } from '../utils/helpers';
 const moment = require('moment');
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
-const rootId = 'last-inspection-panel';
+const componentId = 'last_inspection_panel';
 
 const useTestPanelStyles = makeStyles(theme => ({
     card: {
@@ -71,15 +71,7 @@ const useTestPanelStyles = makeStyles(theme => ({
     },
 }));
 
-const LastInspectionPanel = ({
-    id,
-    asset,
-    currentLocation,
-    dateFormatPattern,
-    disabled = false,
-    forceOpen = false,
-}) => {
-    const componentId = `${id}-${rootId}`;
+const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabled = false, forceOpen = false }) => {
     const formLocale = locale.pages.inspect.form.lastInspectionPanel;
 
     const {
@@ -128,23 +120,21 @@ const LastInspectionPanel = ({
                         variant={'h6'}
                         color={disabled ? 'textSecondary' : 'textPrimary'}
                         className={classes.title}
+                        id={`${componentId}-header-text`}
+                        data-testid={`${componentId}-header-text`}
                     >
                         {asset.asset_id_displayed} {formLocale.title(disabled ? formLocale.statusUnavailableLabel : '')}
                     </Typography>
                     {!!!disabled && (
                         <>
                             <Chip
+                                id={`${componentId}-header-${didPass ? 'pass' : 'fail'}-chip`}
+                                data-testid={`${componentId}-header-${didPass ? 'pass' : 'fail'}-chip`}
                                 icon={
                                     didPass ? (
-                                        <DoneIcon
-                                            classes={{ root: classes.chipIcon }}
-                                            data-testid="lastInspectionPassChip"
-                                        />
+                                        <DoneIcon classes={{ root: classes.chipIcon }} />
                                     ) : (
-                                        <ClearIcon
-                                            classes={{ root: classes.chipIcon }}
-                                            data-testid="lastInspectionFailChip"
-                                        />
+                                        <ClearIcon classes={{ root: classes.chipIcon }} />
                                     )
                                 }
                                 classes={{ root: classes.chip }}
@@ -154,8 +144,8 @@ const LastInspectionPanel = ({
                             {!!mismatchingLocation && (
                                 <ReportProblemOutlinedIcon
                                     style={{ color: theme.palette.warning.main }}
-                                    id="lastInspectionLocationMismatch"
-                                    data-testid="lastInspectionLocationMismatch"
+                                    id={`${componentId}-header-mismatch-icon`}
+                                    data-testid={`${componentId}-header-mismatch-icon`}
                                 />
                             )}
                         </>
@@ -164,8 +154,8 @@ const LastInspectionPanel = ({
             }
             headerAction={
                 <IconButton
-                    id="headerExpandButton"
-                    data-testid="headerExpandButton"
+                    id={`${componentId}-expand-button`}
+                    data-testid={`${componentId}-expand-button`}
                     className={clsx(classes.expand, {
                         [classes.expandOpen]: forceOpen || testPanelExpanded,
                     })}
@@ -186,7 +176,11 @@ const LastInspectionPanel = ({
                         <Typography component={'span'} className={classes.pastTestLabel}>
                             {formLocale.statusLabel}
                         </Typography>
-                        <Typography component={'span'}>
+                        <Typography
+                            component={'span'}
+                            id={`${componentId}-status`}
+                            data-testid={`${componentId}-status`}
+                        >
                             {assetStatus?.toUpperCase() ?? formLocale.statusUnknownLabel}
                         </Typography>
                     </Grid>
@@ -194,7 +188,7 @@ const LastInspectionPanel = ({
                         <Typography component={'span'} className={classes.pastTestLabel}>
                             {formLocale.testDateLabel}
                         </Typography>
-                        <Typography component={'span'}>
+                        <Typography component={'span'} id={`${componentId}-date`} data-testid={`${componentId}-date`}>
                             {!!lastTest?.inspect_date && moment(lastTest.inspect_date).format(dateFormatPattern)}
                         </Typography>
                     </Grid>
@@ -203,7 +197,11 @@ const LastInspectionPanel = ({
                             <Typography component={'span'} className={classes.pastTestLabel}>
                                 {formLocale.siteLabel}
                             </Typography>
-                            <Typography component={'span'}>
+                            <Typography
+                                component={'span'}
+                                id={`${componentId}-site`}
+                                data-testid={`${componentId}-site`}
+                            >
                                 {lastLocation?.site_id_displayed ?? ''}
                                 {lastLocation?.site_id_displayed ? ' - ' : ''}
                                 {lastLocation?.site_name ?? ''}
@@ -213,7 +211,11 @@ const LastInspectionPanel = ({
                             <Typography component={'span'} className={classes.pastTestLabel}>
                                 {formLocale.buildingLabel}
                             </Typography>
-                            <Typography component={'span'}>
+                            <Typography
+                                component={'span'}
+                                id={`${componentId}-building`}
+                                data-testid={`${componentId}-building`}
+                            >
                                 {lastLocation?.building_id_displayed ?? ''}
                                 {lastLocation?.building_id_displayed ? ' - ' : ''}
                                 {lastLocation?.building_name ?? ''}
@@ -223,13 +225,25 @@ const LastInspectionPanel = ({
                             <Typography component={'span'} className={classes.pastTestLabel}>
                                 {formLocale.floorLabel}
                             </Typography>
-                            <Typography component={'span'}>{lastLocation?.floor_id_displayed}</Typography>
+                            <Typography
+                                component={'span'}
+                                id={`${componentId}-floor`}
+                                data-testid={`${componentId}-floor`}
+                            >
+                                {lastLocation?.floor_id_displayed}
+                            </Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
                                 {formLocale.roomLabel}
                             </Typography>
-                            <Typography component={'span'}>{lastLocation?.room_id_displayed}</Typography>
+                            <Typography
+                                component={'span'}
+                                id={`${componentId}-room`}
+                                data-testid={`${componentId}-room`}
+                            >
+                                {lastLocation?.room_id_displayed}
+                            </Typography>
                         </Grid>
                         {!!mismatchingLocation && (
                             <Grid item xs={12} lg={6}>
@@ -241,11 +255,15 @@ const LastInspectionPanel = ({
                                         justifyContent: 'center',
                                     }}
                                     fontSize="small"
+                                    id={`${componentId}-mismatch-icon`}
+                                    data-testid={`${componentId}-mismatch-icon`}
                                 />
                                 <Typography
                                     component={'span'}
                                     className={classes.pastTestLabel}
                                     style={{ color: theme.palette.warning.main }}
+                                    id={`${componentId}-mismatch-text`}
+                                    data-testid={`${componentId}-mismatch-text`}
                                 >
                                     {formLocale.alertLocationMismatch}
                                 </Typography>
@@ -257,7 +275,11 @@ const LastInspectionPanel = ({
                             <Typography component={'p'} className={classes.pastTestLabel}>
                                 {formLocale.failReasonLabel}
                             </Typography>
-                            <Typography component={'p'}>
+                            <Typography
+                                component={'p'}
+                                id={`${componentId}-fail-reason`}
+                                data-testid={`${componentId}-fail-reason`}
+                            >
                                 {lastTest?.inspect_fail_reason ?? formLocale.noneLabel}
                             </Typography>
                         </Grid>
@@ -266,14 +288,26 @@ const LastInspectionPanel = ({
                         <Typography component={'p'} className={classes.pastTestLabel}>
                             {formLocale.testNotesLabel}
                         </Typography>
-                        <Typography component={'p'}>{lastTest?.inspect_notes ?? formLocale.noneLabel}</Typography>
+                        <Typography
+                            component={'p'}
+                            id={`${componentId}-test-notes`}
+                            data-testid={`${componentId}-test-notes`}
+                        >
+                            {lastTest?.inspect_notes ?? formLocale.noneLabel}
+                        </Typography>
                     </Grid>
                     {didPass && (
                         <Grid item xs={12}>
                             <Typography component={'span'} className={classes.pastTestLabel}>
                                 {formLocale.nextTestDateLabel}
                             </Typography>
-                            <Typography component={'span'}>{moment(nextTestDate).format(dateFormatPattern)}</Typography>
+                            <Typography
+                                component={'span'}
+                                id={`${componentId}-next-inspection-date`}
+                                data-testid={`${componentId}-next-inspection-date`}
+                            >
+                                {moment(nextTestDate).format(dateFormatPattern)}
+                            </Typography>
                         </Grid>
                     )}
                     {!!isRepair && (
@@ -281,7 +315,13 @@ const LastInspectionPanel = ({
                             <Typography component={'p'} className={classes.pastTestLabel}>
                                 {formLocale.repairDetailsLabel}
                             </Typography>
-                            <Typography component={'p'}>{lastRepair?.repairer_name}</Typography>
+                            <Typography
+                                component={'p'}
+                                id={`${componentId}-repairer-name`}
+                                data-testid={`${componentId}-repairer-name`}
+                            >
+                                {lastRepair?.repairer_name}
+                            </Typography>
                         </Grid>
                     )}
                     {!!isDiscard && (
@@ -289,7 +329,13 @@ const LastInspectionPanel = ({
                             <Typography component={'p'} className={classes.pastTestLabel}>
                                 {formLocale.discardReasonLabel}
                             </Typography>
-                            <Typography component={'p'}>{lastDiscard?.discard_reason}</Typography>
+                            <Typography
+                                component={'p'}
+                                id={`${componentId}-discard-reason`}
+                                data-testid={`${componentId}-discard-reason`}
+                            >
+                                {lastDiscard?.discard_reason}
+                            </Typography>
                         </Grid>
                     )}
                 </Grid>
@@ -299,7 +345,6 @@ const LastInspectionPanel = ({
 };
 
 LastInspectionPanel.propTypes = {
-    id: PropTypes.string.isRequired,
     asset: PropTypes.object.isRequired,
     currentLocation: PropTypes.object.isRequired,
     dateFormatPattern: PropTypes.string.isRequired,

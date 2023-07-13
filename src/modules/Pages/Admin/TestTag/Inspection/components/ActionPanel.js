@@ -17,22 +17,16 @@ import TabPanel from './TabPanel';
 import { isValidRepair, isValidDiscard, statusEnum } from '../utils/helpers';
 import { isEmptyStr } from '../../helpers/helpers';
 
+const componentId = 'action_panel';
+
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
-const a11yProps = index => ({
-    id: `scrollable-auto-tab-${index}`,
-    'aria-controls': `scrollable-auto-tabpanel-${index}`,
-});
-
 const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobileView, disabled }) => {
-    ActionPanel.propTypes = {
-        formValues: PropTypes.object.isRequired,
-        selectedAsset: PropTypes.object,
-        handleChange: PropTypes.func.isRequired,
-        classes: PropTypes.any.isRequired,
-        isMobileView: PropTypes.bool.isRequired,
-        disabled: PropTypes.bool.isRequired,
-    };
+    const a11yProps = index => ({
+        id: `${componentId}-tab-panel-${index}`,
+        'aria-controls': `${componentId}-tab-panel-${index}`,
+    });
+
     const pageLocale = locale.pages.inspect;
     const [selectedTabValue, setSelectedTabValue] = React.useState(0);
 
@@ -97,25 +91,27 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 textColor="primary"
                 onChange={(e, value) => setSelectedTabValue(value)}
                 variant={isMobileView ? 'fullWidth' : 'standard'}
+                id={`${componentId}-tabs`}
+                data-testid={`${componentId}-tabs`}
             >
                 <Tab
                     label="Repair"
                     key="Repair"
                     {...a11yProps(1)}
                     disabled={disabled || isRepairDisabled}
-                    id="tab-repair"
-                    data-testid="tab-repair"
+                    id={`${componentId}-repair-tab`}
+                    data-testid={`${componentId}-repair-tab-button`}
                 />
                 <Tab
                     label="Discard"
                     key="Discard"
                     {...a11yProps(2)}
                     disabled={disabled || isDiscardDisabled}
-                    id="tab-discard"
-                    data-testid="tab-discard"
+                    id={`${componentId}-discard-tab`}
+                    data-testid={`${componentId}-discard-tab-button`}
                 />
             </Tabs>
-            <TabPanel value={selectedTabValue} index={0}>
+            <TabPanel id={componentId} value={selectedTabValue} index={0}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth={isMobileView}>
@@ -127,16 +123,19 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 onChange={e => handleChange('isRepair')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
                                 disabled={disabled || isRepairDisabled}
-                                id="selectIsRepair"
-                                data-testid="selectIsRepair"
-                                inputProps={{ id: 'selectIsRepair-input', 'data-testid': 'selectIsRepair-input' }}
+                                id={`${componentId}-is-repair`}
+                                data-testid={`${componentId}-is-repair`}
+                                inputProps={{
+                                    id: `${componentId}-is-repair-input`,
+                                    'data-testid': `${componentId}-is-repair-input`,
+                                }}
                             >
                                 {pageLocale.form.action.repair.options.map(option => (
                                     <MenuItem
                                         value={option.value}
                                         key={option.value}
-                                        id={`selectIsRepair-option-${option.value}`}
-                                        data-testid={`selectIsRepair-option-${option.value}`}
+                                        id={`${componentId}-is-repair-option-${option.value}`}
+                                        data-testid={`${componentId}-is-repair-option-${option.value}`}
                                     >
                                         {option.label}
                                     </MenuItem>
@@ -164,7 +163,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
                                 value={formValues?.repairer_contact_details ?? ''}
                                 onChange={handleRepairerDetailsChange}
-                                id="repairerDetails"
+                                id={`${componentId}-repair-details`}
                             />
                         </FormControl>
                     </Grid>
@@ -187,16 +186,19 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 onChange={e => handleChange('isDiscarded')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
                                 disabled={disabled || isDiscardDisabled}
-                                id="selectIsDiscarded"
-                                data-testid="selectIsDiscarded"
-                                inputProps={{ id: 'selectIsDiscarded-input', 'data-testid': 'selectIsDiscarded-input' }}
+                                id={`${componentId}-is-discarded`}
+                                data-testid={`${componentId}-is-discarded`}
+                                inputProps={{
+                                    id: `${componentId}-is-discarded-input`,
+                                    'data-testid': `${componentId}-is-discarded-input`,
+                                }}
                             >
                                 {pageLocale.form.action.discard.options.map(option => (
                                     <MenuItem
                                         value={option.value}
                                         key={option.value}
-                                        id={`selectIsDiscarded-option-${option.value}`}
-                                        data-testid={`selectIsDiscarded-option-${option.value}`}
+                                        id={`${componentId}-is-discarded-option-${option.value}`}
+                                        data-testid={`${componentId}-is-discarded-option-${option.value}`}
                                     >
                                         {option.label}
                                     </MenuItem>
@@ -225,7 +227,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 disabled={disabled || isDiscardDisabled || !!!formValues.isDiscarded}
                                 value={formValues?.discard_reason ?? ''}
                                 onChange={handleDiscardReasonChange}
-                                id="discardReason"
+                                id={`${componentId}-discard-reason`}
                             />
                         </FormControl>
                     </Grid>
@@ -233,6 +235,15 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
             </TabPanel>
         </>
     );
+};
+
+ActionPanel.propTypes = {
+    formValues: PropTypes.object.isRequired,
+    selectedAsset: PropTypes.object,
+    handleChange: PropTypes.func.isRequired,
+    classes: PropTypes.any.isRequired,
+    isMobileView: PropTypes.bool.isRequired,
+    disabled: PropTypes.bool.isRequired,
 };
 
 export default React.memo(ActionPanel);

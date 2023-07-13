@@ -18,8 +18,8 @@ import { transformAddAssetTypeRequest } from '../utils/transformers';
 import configAssetPanel from '../../manage/AssetTypes/components/config';
 import locale from '../../testTag.locale';
 
-const rootId = 'asset-panel';
-const rootIdLower = 'asset_panel';
+const componentId = 'asset-panel';
+const componentIdLower = 'asset_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
@@ -41,7 +41,6 @@ const actionReducer = (_, action) => {
 };
 
 const AssetPanel = ({
-    id,
     actions,
     formValues,
     selectedAsset,
@@ -57,8 +56,6 @@ const AssetPanel = ({
     canAddAssetType,
     openConfirmationAlert,
 }) => {
-    const componentId = `${rootId}-${id}`;
-    const componentIdLower = `${rootIdLower}-${id}`;
     const pageLocale = locale.pages.inspect.form.asset;
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
@@ -135,7 +132,7 @@ const AssetPanel = ({
     };
 
     return (
-        <StandardCard standardCardId={componentId} title={pageLocale.title} style={{ marginTop: '30px' }}>
+        <StandardCard standardCardId={componentIdLower} title={pageLocale.title} style={{ marginTop: '30px' }}>
             {console.log(formValues)}
             <UpdateDialog
                 title={actionState.title}
@@ -187,7 +184,6 @@ const AssetPanel = ({
                 </Grid>
             </Grid>
             <LastInspectionPanel
-                id={componentIdLower}
                 asset={selectedAsset ?? {}}
                 currentLocation={location}
                 dateFormatPattern={locale.config.format.dateFormatDisplay}
@@ -196,7 +192,6 @@ const AssetPanel = ({
             />
             {selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value && (
                 <InspectionPanel
-                    id={componentIdLower}
                     formValues={formValues}
                     selectedAsset={selectedAsset}
                     handleChange={handleChange}
