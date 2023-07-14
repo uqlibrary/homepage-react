@@ -58,7 +58,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.data('assets_inspected-building').should('contain', 'All buildings');
         cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
     });
-    it.only('UI for date pickers function correctly', () => {
+    it('UI for date pickers function correctly', () => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
         cy.get('h1').contains(locale.pages.general.pageTitle);
