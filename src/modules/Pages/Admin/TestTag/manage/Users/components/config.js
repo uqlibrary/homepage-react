@@ -20,7 +20,7 @@ export default {
                     helperText={locale.pages.general.helperText.maxChars(20)}
                 />
             ),
-            validate: value => isEmptyStr(value),
+            validate: value => isEmptyStr(value) || isInvalidUUID(value),
             fieldParams: { canEdit: true, canAdd: true },
         },
         user_name: {
