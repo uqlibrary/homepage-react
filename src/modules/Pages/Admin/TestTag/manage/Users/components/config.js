@@ -21,7 +21,7 @@ export default {
                 />
             ),
             validate: value => isEmptyStr(value),
-            fieldParams: { canEdit: false, canAdd: true },
+            fieldParams: { canEdit: true, canAdd: true },
         },
         user_name: {
             component: props => <TextField {...props} required />,
