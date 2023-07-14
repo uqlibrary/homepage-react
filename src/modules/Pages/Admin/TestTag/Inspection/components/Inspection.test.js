@@ -13,6 +13,7 @@ import userData from '../../../../../../data/mock/data/testing/testTagUser';
 // import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
 import locale from '../../testTag.locale.js';
 import { getUserPermissions } from '../../helpers/auth';
+import { screen } from 'test-utils';
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -104,7 +105,12 @@ describe('TestTag', () => {
     it('renders component', async () => {
         const mockFn = jest.fn();
         const { getByText, getByTestId } = setup({
-            actions: { loadInspectionConfig: mockFn, clearAssets: mockFn, clearSaveInspection: mockFn },
+            actions: {
+                loadAssetTypes: mockFn,
+                loadInspectionConfig: mockFn,
+                clearAssets: mockFn,
+                clearSaveInspection: mockFn,
+            },
         });
 
         expect(getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
@@ -113,63 +119,78 @@ describe('TestTag', () => {
         ).toBeInTheDocument();
         expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
-        expect(getByTestId('testntagFormResetButton')).toBeInTheDocument();
-        expect(getByTestId('testntagFormSubmitButton')).toBeInTheDocument();
-        expect(getByTestId('testntagFormSubmitButton')).toHaveAttribute('disabled', '');
+        expect(getByTestId('inspection-reset-button')).toBeInTheDocument();
+        expect(getByTestId('inspection-save-button')).toBeInTheDocument();
+        expect(getByTestId('inspection-save-button')).toHaveAttribute('disabled', '');
         expect(mockFn).toHaveBeenCalled();
     });
 
     it('should show a save error dialog panel', async () => {
+        const mockFn = jest.fn();
         const loadConfigFn = jest.fn();
         const clearAssetsFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
+        const clearSaveInspectionErrorFn = jest.fn();
         const saveErrorTitle = 'Some error';
-        const { getByRole, getByText, getByTestId, queryByRole } = setup({
+        const { getByRole, getByText, queryByRole, getByTitle } = setup({
             actions: {
+                loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
                 clearAssets: clearAssetsFn,
                 clearSaveInspection: clearSaveInspectionFn,
+                clearSaveInspectionError: clearSaveInspectionErrorFn,
             },
             saveInspectionError: saveErrorTitle,
         });
-        await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
-        expect(getByText(locale.pages.inspect.form.saveError.confirmationTitle(saveErrorTitle))).toBeInTheDocument();
+        screen.debug(undefined, 150000);
+        await waitFor(() => expect(getByRole('alert')).toBeInTheDocument());
+        expect(getByText(locale.config.alerts.error(saveErrorTitle))).toBeInTheDocument();
+
         act(() => {
-            fireEvent.click(getByTestId('confirm-testTag-save-failed'));
+            fireEvent.click(getByTitle('Close'));
         });
+        expect(clearSaveInspectionErrorFn).toHaveBeenCalled();
         expect(clearSaveInspectionFn).toHaveBeenCalled();
-        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+
+        await waitFor(() => expect(queryByRole('alert')).not.toBeInTheDocument());
         expect(clearAssetsFn).toHaveBeenCalled();
     });
 
     it('should show a network error dialog panel', async () => {
+        const mockFn = jest.fn();
         const loadConfigFn = jest.fn();
         const clearAssetsFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
-        const { getByRole, getByText, getByTestId, queryByRole } = setup({
+        const clearInspectionConfigError = jest.fn();
+        const inspectionConfigError = 'network error';
+        const { getByRole, getByText, getByTitle, queryByRole } = setup({
             actions: {
+                loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
                 clearAssets: clearAssetsFn,
                 clearSaveInspection: clearSaveInspectionFn,
+                clearInspectionConfigError,
             },
-            inspectionConfigError: 'error',
+            inspectionConfigError,
         });
-
-        await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
-        expect(getByText(locale.pages.inspect.form.networkError.confirmationTitle)).toBeInTheDocument();
+        await waitFor(() => expect(getByRole('alert')).toBeInTheDocument());
+        expect(getByText(locale.config.alerts.error(inspectionConfigError))).toBeInTheDocument();
         act(() => {
-            fireEvent.click(getByTestId('confirm-testTag-network-error'));
+            fireEvent.click(getByTitle('Close'));
         });
-        await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
+        await waitFor(() => expect(queryByRole('alert')).not.toBeInTheDocument());
+        expect(clearInspectionConfigError).toHaveBeenCalled();
     });
 
     it('should show a save success for PASSED asset dialog panel', async () => {
+        const mockFn = jest.fn();
         const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
+                loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
@@ -197,12 +218,14 @@ describe('TestTag', () => {
     });
 
     it('should show a save success for FAILED asset dialog panel', async () => {
+        const mockFn = jest.fn();
         const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
+                loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
@@ -233,12 +256,14 @@ describe('TestTag', () => {
     });
 
     it('should show a save success for OUTFORREPAIR asset dialog panel', async () => {
+        const mockFn = jest.fn();
         const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
+                loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
@@ -267,12 +292,14 @@ describe('TestTag', () => {
     });
 
     it('should show a save success for DISCARDED asset dialog panel', async () => {
+        const mockFn = jest.fn();
         const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole, queryByText } = setup({
             actions: {
+                loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
@@ -301,12 +328,14 @@ describe('TestTag', () => {
     });
 
     it('should show defaults (coverage)', async () => {
+        const mockFn = jest.fn();
         const loadConfigFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearAssetsFn = jest.fn();
 
         const { getByRole, getByText, getByTestId, queryByRole } = setup({
             actions: {
+                loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearAssets: clearAssetsFn,
@@ -399,7 +428,7 @@ describe('TestTag', () => {
         };
 
         act(() => {
-            fireEvent.click(getByTestId('testntagFormSubmitButton'));
+            fireEvent.click(getByTestId('inspection-save-button'));
         });
         expect(saveActionFn).toHaveBeenCalledWith(expected);
 
@@ -458,10 +487,10 @@ describe('TestTag', () => {
 
         // // screen.debug(undefined, 100000);
 
-        // expect(getByTestId('testntagFormSubmitButton')).not.toHaveAttribute('disabled', '');
+        // expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled', '');
 
         // act(() => {
-        //     fireEvent.click(getByTestId('testntagFormSubmitButton'));
+        //     fireEvent.click(getByTestId('inspection-save-button'));
         // });
         // expect(actionFn).toHaveBeenCalledWith(expected);
     });

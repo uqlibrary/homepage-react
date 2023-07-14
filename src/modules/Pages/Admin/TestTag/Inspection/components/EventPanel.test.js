@@ -5,7 +5,6 @@ import Immutable from 'immutable';
 
 import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
 import locale from '../../testTag.locale.js';
-import { screen } from 'test-utils';
 
 function setup(testProps = {}) {
     const { state = {}, actionDate = '2017-12-01 00:00', classes = {}, ...props } = testProps;

@@ -159,15 +159,15 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 multiline
                                 minRows={4}
                                 variant="standard"
+                                id={`${componentId}-repairer-details-input`}
                                 InputProps={{ fullWidth: true }}
-                                InputLabelProps={{ htmlFor: 'repairerDetails' }}
+                                InputLabelProps={{ htmlFor: `${componentId}-repairer-details-input` }}
                                 inputProps={{
-                                    'data-testid': 'repairerDetails-input',
+                                    'data-testid': `${componentId}-repairer-details-input`,
                                 }}
                                 disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
                                 value={formValues?.repairer_contact_details ?? ''}
                                 onChange={handleRepairerDetailsChange}
-                                id={`${componentId}-repairer-details`}
                             />
                         </FormControl>
                     </Grid>
@@ -227,15 +227,15 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 multiline
                                 minRows={4}
                                 variant="standard"
+                                id={`${componentId}-discard-reason-input`}
                                 InputProps={{ fullWidth: true }}
-                                InputLabelProps={{ htmlFor: 'discardReason' }}
+                                InputLabelProps={{ htmlFor: `${componentId}-discard-reason-input` }}
                                 inputProps={{
-                                    'data-testid': 'discardReason-input',
+                                    'data-testid': `${componentId}-discard-reason-input`,
                                 }}
                                 disabled={disabled || isDiscardDisabled || !!!formValues.isDiscarded}
                                 value={formValues?.discard_reason ?? ''}
                                 onChange={handleDiscardReasonChange}
-                                id={`${componentId}-discard-reason`}
                             />
                         </FormControl>
                     </Grid>

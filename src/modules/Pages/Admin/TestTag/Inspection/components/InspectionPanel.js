@@ -92,14 +92,14 @@ const InspectionPanel = ({
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <InputLabel required htmlFor="testResultTestingDevice">
+                            <InputLabel required htmlFor={`${componentIdLower}-inspection-device`}>
                                 {pageLocale.form.inspection.deviceLabel}
                             </InputLabel>
                             <Select
                                 fullWidth
                                 className={classes.formSelect}
-                                id={`${componentIdLower}-inspection-device-select`}
-                                data-testid={`${componentIdLower}-inspection-device-select`}
+                                id={`${componentIdLower}-inspection-device`}
+                                data-testid={`${componentIdLower}-inspection-device`}
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => handleChange('inspection_device_id')(e.target.value)}
                                 required
