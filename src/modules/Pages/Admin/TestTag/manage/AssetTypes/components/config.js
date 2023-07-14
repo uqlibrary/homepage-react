@@ -1,7 +1,6 @@
 import React from 'react';
 
-// import TextField from '@material-ui/core/TextField';
-import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
+import TextField from '@material-ui/core/TextField';
 import { isEmptyStr } from '../../../helpers/helpers';
 
 export default {
@@ -10,24 +9,24 @@ export default {
             fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
         },
         asset_type_name: {
-            component: props => <DebouncedTextField {...props} required />,
+            component: props => <TextField {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, flex: 1 },
         },
         asset_type_class: {
-            component: props => <DebouncedTextField {...props} />,
+            component: props => <TextField {...props} />,
             fieldParams: { canEdit: true, flex: 1 },
         },
         asset_type_power_rating: {
-            component: props => <DebouncedTextField {...props} />,
+            component: props => <TextField {...props} />,
             fieldParams: { canEdit: true, flex: 1 },
         },
         asset_type: {
-            component: props => <DebouncedTextField {...props} />,
+            component: props => <TextField {...props} />,
             fieldParams: { canEdit: true, flex: 1 },
         },
         asset_type_notes: {
-            component: props => <DebouncedTextField multiline minRows={3} {...props} />,
+            component: props => <TextField multiline minRows={3} {...props} />,
             fieldParams: { canEdit: true, flex: 1 },
         },
         asset_count: {

@@ -5,7 +5,7 @@ import { Grid } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Alert from '@material-ui/lab/Alert';
-import DebouncedTextField from '../../SharedComponents/DebouncedTextField/DebouncedTextField';
+import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -146,7 +146,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth required>
-                            <DebouncedTextField
+                            <TextField
                                 {...pageLocale.form.action.repair.repairerDetails}
                                 required
                                 error={
@@ -161,6 +161,10 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 minRows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
+                                InputLabelProps={{ htmlFor: 'repairerDetails' }}
+                                inputProps={{
+                                    'data-testid': 'repairerDetails-input',
+                                }}
                                 disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
                                 value={formValues?.repairer_contact_details ?? ''}
                                 onChange={handleRepairerDetailsChange}
@@ -206,7 +210,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth required>
-                            <DebouncedTextField
+                            <TextField
                                 {...pageLocale.form.action.discard.discardReason}
                                 required
                                 error={
@@ -222,6 +226,10 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 minRows={4}
                                 variant="standard"
                                 InputProps={{ fullWidth: true }}
+                                InputLabelProps={{ htmlFor: 'discardReason' }}
+                                inputProps={{
+                                    'data-testid': 'discardReason-input',
+                                }}
                                 disabled={disabled || isDiscardDisabled || !!!formValues.isDiscarded}
                                 value={formValues?.discard_reason ?? ''}
                                 onChange={handleDiscardReasonChange}
