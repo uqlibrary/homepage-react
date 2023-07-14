@@ -17,26 +17,43 @@ export default {
                     {...props}
                     required
                     inputProps={{ ...props.inputProps, maxLength: 20 }}
-                    helperText={locale.pages.general.helperText.maxChars(20)}
+                    helperText={
+                        props.error
+                            ? locale.pages.manage.users.helperText.user_uid
+                            : locale.pages.general.helperText.maxChars(20)
+                    }
                 />
             ),
             validate: value => isEmptyStr(value) || isInvalidUUID(value),
             fieldParams: { canEdit: true, canAdd: true },
         },
         user_name: {
-            component: props => <TextField {...props} required />,
+            component: props => (
+                <TextField
+                    {...props}
+                    required
+                    helperText={props.error ? locale.pages.manage.users.helperText.user_name : null}
+                />
+            ),
             validate: value => isEmptyStr(value),
             fieldParams: { canEdit: true, flex: 1 },
         },
         user_licence_number: {
-            component: (props, data) => (
-                <TextField
-                    required={data?.can_inspect_cb}
-                    {...props}
-                    inputProps={{ ...props.inputProps, maxLength: 45 }}
-                    helperText={locale.pages.general.helperText.maxChars(45)}
-                />
-            ),
+            component: (props, data) => {
+                return (
+                    <TextField
+                        required={data?.can_inspect_cb}
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 45 }}
+                        helperText={
+                            props.error
+                                ? locale.pages.manage.users.helperText.user_licence_number
+                                : locale.pages.general.helperText.maxChars(45)
+                        }
+                    />
+                );
+            },
+
             fieldParams: {
                 canAdd: true,
                 canEdit: false,
