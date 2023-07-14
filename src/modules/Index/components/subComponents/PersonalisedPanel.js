@@ -202,7 +202,8 @@ const PersonalisedPanel = ({
             setAnchorEl(null);
         };
         const handleNavigationToManage = () => {
-            window.location.href = ppLocale.items.papercut.url;
+            window.location.href =
+                'https://web.library.uq.edu.au/library-services/it/print-scan-copy/your-printing-account';
             handleClose();
         };
         const navigatToTopUpUrl = value => {
@@ -254,14 +255,6 @@ const PersonalisedPanel = ({
                         'data-testid': 'papercut-paper',
                     }}
                 >
-                    <MenuItem
-                        id={getPapercutId('item-button-0')}
-                        data-testid={getPapercutId('item-button-0')}
-                        data-analyticsid={getPapercutId('item-button-0')}
-                        onClick={() => handleNavigationToManage()}
-                    >
-                        Log in and manage your print balance
-                    </MenuItem>
                     {[5, 10, 20].map((topupAmount, index) => (
                         <MenuItem
                             id={getPapercutId(`item-button-${index + 1}`)}
@@ -272,6 +265,14 @@ const PersonalisedPanel = ({
                             Top up your print balance - ${topupAmount}
                         </MenuItem>
                     ))}
+                    <MenuItem
+                        id={getPapercutId('item-button-0')}
+                        data-testid={getPapercutId('item-button-0')}
+                        data-analyticsid={getPapercutId('item-button-0')}
+                        onClick={() => handleNavigationToManage()}
+                    >
+                        More about your printing account
+                    </MenuItem>
                 </Menu>
             </Grid>
         );

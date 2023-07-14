@@ -10,7 +10,6 @@ export const ppLocale = {
         papercut: {
             label: 'Manage your print balance [balance]',
             tooltip: 'Click to manage your print balance',
-            url: 'https://lib-print.library.uq.edu.au:9192/user',
             topup:
                 'https://payments.uq.edu.au/OneStopWeb/aspx/TranAdd.aspx?TRAN-TYPE=W361&username=[id]&unitamountinctax=[value]&email=[email]',
         },
