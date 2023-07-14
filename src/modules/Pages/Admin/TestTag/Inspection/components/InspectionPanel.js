@@ -15,10 +15,10 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Box from '@material-ui/core/Box';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ActionPanel from './ActionPanel';
-import DebouncedTextField from '../../SharedComponents/DebouncedTextField/DebouncedTextField';
 import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
 import locale from '../../testTag.locale';
 import { isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
@@ -212,18 +212,22 @@ const InspectionPanel = ({
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
                         <Grid item xs={12} sm={12}>
                             <FormControl className={classes.formControl} fullWidth>
-                                <DebouncedTextField
+                                <TextField
                                     {...pageLocale.form.inspection.failReason}
                                     multiline
                                     minRows={4}
                                     variant="standard"
-                                    InputProps={{ fullWidth: true }}
                                     required
                                     disabled={disabled}
                                     error={!isValidFailReason(formValues, testStatusEnum.FAILED.value)}
                                     value={formValues?.inspection_fail_reason ?? ''}
                                     onChange={handleFailReasonChange}
                                     id={`${componentIdLower}-fail-reason`}
+                                    InputProps={{ fullWidth: true }}
+                                    InputLabelProps={{ htmlFor: `${componentIdLower}-fail-reason` }}
+                                    inputProps={{
+                                        'data-testid': `${componentIdLower}-fail-reason-input`,
+                                    }}
                                 />
                             </FormControl>
                         </Grid>
@@ -231,16 +235,20 @@ const InspectionPanel = ({
 
                     <Grid item xs={12} sm={12}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <DebouncedTextField
+                            <TextField
                                 {...pageLocale.form.inspection.inspectionNotes}
                                 multiline
                                 minRows={4}
                                 variant="standard"
-                                InputProps={{ fullWidth: true }}
                                 disabled={disabled}
                                 value={formValues?.inspection_notes ?? ''}
                                 onChange={handleInspectionNotesChange}
                                 id={`${componentIdLower}-inspection-notes`}
+                                InputProps={{ fullWidth: true }}
+                                InputLabelProps={{ htmlFor: `${componentIdLower}-inspection-notes` }}
+                                inputProps={{
+                                    'data-testid': `${componentIdLower}-inspection-notes-input`,
+                                }}
                             />
                         </FormControl>
                     </Grid>
