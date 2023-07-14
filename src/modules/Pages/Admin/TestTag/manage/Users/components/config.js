@@ -29,13 +29,16 @@ export default {
             fieldParams: { canEdit: true, flex: 1 },
         },
         user_licence_number: {
-            component: props => (
-                <DebouncedTextField
-                    {...props}
-                    inputProps={{ ...props.inputProps, maxLength: 45 }}
-                    helperText={locale.pages.general.helperText.maxChars(45)}
-                />
-            ),
+            component: (props, data) => {
+                return (
+                    <DebouncedTextField
+                        required={data?.can_inspect_cb}
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 45 }}
+                        helperText={locale.pages.general.helperText.maxChars(45)}
+                    />
+                );
+            },
             fieldParams: {
                 canAdd: true,
                 canEdit: false,
