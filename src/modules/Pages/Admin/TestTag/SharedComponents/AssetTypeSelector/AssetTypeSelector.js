@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
+import Popper from '@material-ui/core/Popper';
 
 const rootId = 'asset_type_selector';
 
@@ -42,6 +43,10 @@ const AssetTypeSelector = ({
     React.useEffect(() => {
         setValue(value);
     }, [value]);
+
+    const customPopper = props => (
+        <Popper {...props} id={`${componentId}-popper`} data-testid={`${componentId}-popper`} />
+    );
 
     return (
         <FormControl className={classNames.formControl} fullWidth>
@@ -92,6 +97,7 @@ const AssetTypeSelector = ({
                         }}
                     />
                 )}
+                PopperComponent={customPopper}
                 disabled={disabled || assetTypesListLoading}
                 disableClearable
                 autoSelect

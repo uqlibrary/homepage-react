@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Popper from '@material-ui/core/Popper';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
 
@@ -88,6 +89,10 @@ const AssetSelector = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
 
+    const customPopper = props => (
+        <Popper {...props} id={`${componentId}-popper`} data-testid={`${componentId}-popper`} />
+    );
+
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
@@ -146,6 +151,7 @@ const AssetSelector = ({
                     return `${option.asset_id_displayed ?? /* istanbul ignore next */ ''}`;
                 }}
                 renderOption={option => option.asset_id_displayed}
+                PopperComponent={customPopper}
                 freeSolo
                 renderInput={params => (
                     <TextField

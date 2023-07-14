@@ -2,13 +2,14 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+import Popper from '@material-ui/core/Popper';
 
 const rootId = 'months_selector';
 
@@ -34,40 +35,50 @@ const MonthsSelector = ({
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
 
-    const onValueChange = event => {
-        onChange?.(event.target.value);
+    const handleChange = (_event, option) => {
+        onChange?.(option.value);
     };
+
+    const customPopper = props => (
+        <Popper {...props} id={`${componentId}-popper`} data-testid={`${componentId}-popper`} />
+    );
 
     return (
         <FormControl className={classNames.formControl} fullWidth={responsive && isMobileView}>
-            {!!label && (
-                <InputLabel shrink required={required} id={`${componentId}-label`} data-testid={`${componentId}-label`}>
-                    {label}
-                </InputLabel>
-            )}
-            <Select
+            <Autocomplete
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
                 fullWidth={responsive && isMobileView}
-                className={classNames.select}
-                value={currentValue}
-                onChange={onValueChange}
-                required={required}
+                options={options ?? []}
+                value={options?.find(option => option.value === currentValue) ?? null}
+                onChange={handleChange}
+                getOptionLabel={option => {
+                    console.log(option);
+                    return option.label ?? /* istanbul ignore next */ null;
+                }}
+                getOptionSelected={(option, value) => option.value === value}
+                autoHighlight
+                renderInput={params => (
+                    <TextField
+                        {...params}
+                        {...(!!label ? { label: label } : {})}
+                        required={required}
+                        variant="standard"
+                        InputLabelProps={{ shrink: true, htmlFor: `${componentId}` }}
+                        inputProps={{
+                            ...params.inputProps,
+                            id: `${componentId}-input`,
+                            'data-testid': `${componentId}-input`,
+                        }}
+                    />
+                )}
+                PopperComponent={customPopper}
                 disabled={disabled}
-                inputProps={{ id: `${componentId}-input`, 'data-testid': `${componentId}-input` }}
+                disableClearable
+                autoSelect={false}
                 {...props}
-            >
-                {options?.map(period => (
-                    <MenuItem
-                        value={period.value}
-                        key={period.value}
-                        id={`${componentId}-option-${period.value}`}
-                        data-testid={`${componentId}-option-${period.value}`}
-                    >
-                        {period.label}
-                    </MenuItem>
-                ))}
-            </Select>
+            />
+
             {!!nextDateTextFormatter && (
                 <Typography
                     component={'span'}

@@ -22,10 +22,10 @@ export default {
             dateFormatDisplay: 'Do MMMM, YYYY',
         },
         monthsOptions: [
-            { value: '3', label: '3 months' },
-            { value: '6', label: '6 months' },
-            { value: '12', label: '1 year' },
-            { value: '60', label: '5 years' },
+            { value: 3, label: '3 months' },
+            { value: 6, label: '6 months' },
+            { value: 12, label: '1 year' },
+            { value: 60, label: '5 years' },
         ],
         assetStatus: {
             current: 'CURRENT',

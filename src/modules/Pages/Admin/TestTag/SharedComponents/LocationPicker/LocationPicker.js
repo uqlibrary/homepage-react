@@ -8,7 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
-// import clsx from 'clsx';
+import Popper from '@material-ui/core/Popper';
 
 const rootId = 'location_picker';
 const inputLabelProps = { shrink: true };
@@ -50,6 +50,11 @@ const LocationPicker = ({
     const classes = useStyles();
     const divisor = 4 - hide.length;
     const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
+
+    const customPopper = props => (
+        <Popper {...props} id={`${componentId}-popper`} data-testid={`${componentId}-popper`} />
+    );
+
     return (
         <>
             {!!title && (
@@ -116,6 +121,7 @@ const LocationPicker = ({
                                 {...(inputProps?.site ?? {})}
                             />
                         )}
+                        PopperComponent={customPopper}
                         disabled={disabled || !!!siteList}
                         disableClearable
                         loading={siteListLoading}
@@ -182,6 +188,7 @@ const LocationPicker = ({
                                     {...(inputProps?.building ?? {})}
                                 />
                             )}
+                            PopperComponent={customPopper}
                             disabled={disabled || location.site === -1 || !!!siteList}
                             disableClearable
                             loading={siteListLoading}
@@ -241,6 +248,7 @@ const LocationPicker = ({
                                     {...(inputProps?.floor ?? {})}
                                 />
                             )}
+                            PopperComponent={customPopper}
                             disabled={disabled || location.building === -1 || floorListLoading}
                             disableClearable
                             loading={!!floorListLoading}
@@ -296,6 +304,7 @@ const LocationPicker = ({
                                     {...(inputProps?.room ?? {})}
                                 />
                             )}
+                            PopperComponent={customPopper}
                             disabled={disabled || location.floor === -1 || roomListLoading}
                             disableClearable
                             loading={!!roomListLoading}
