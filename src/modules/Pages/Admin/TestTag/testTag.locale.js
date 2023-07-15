@@ -827,6 +827,11 @@ export default {
                     confirmationMessage: 'Are you sure you wish to delete this User?',
                     confirmationTitle: 'Delete User',
                 },
+                helperText: {
+                    user_uid: 'A user ID must contain only lower case letters and numbers',
+                    user_licence_number: 'A licence number is required for inspect privilege',
+                    user_name: 'A user name is required',
+                },
             },
         },
         report: {
