@@ -18,7 +18,6 @@ const componentId = 'event-panel';
 const componentIdLower = 'event_panel';
 
 const moment = require('moment');
-const inputLabelProps = { shrink: true };
 
 const EventPanel = ({
     actions,
@@ -92,7 +91,7 @@ const EventPanel = ({
                                 id: `${componentIdLower}-event-date-dialog`,
                                 'data-testid': `${componentIdLower}-event-date-dialog`,
                             }}
-                            InputLabelProps={inputLabelProps}
+                            InputLabelProps={{ shrink: true, htmlFor: `${componentIdLower}-event-date-input` }}
                             format={pageLocale.config.dateFormatNoTime}
                             minDate={startDate}
                             autoOk

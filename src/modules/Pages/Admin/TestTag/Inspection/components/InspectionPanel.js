@@ -168,8 +168,8 @@ const InspectionPanel = ({
                                 style={{ display: 'flex' }}
                             >
                                 <ToggleButton
-                                    id={`${componentIdLower}-inspection-result-${testStatusEnum.PASSED.value}-button`}
-                                    data-testid={`${componentIdLower}-inspection-result-${testStatusEnum.PASSED.value}-button`}
+                                    id={`${componentIdLower}-inspection-result-${testStatusEnum.PASSED.value.toLowerCase()}-button`}
+                                    data-testid={`${componentIdLower}-inspection-result-${testStatusEnum.PASSED.value.toLowerCase()}-button`}
                                     value={testStatusEnum.PASSED.value}
                                     aria-label={testStatusEnum.PASSED.label}
                                     classes={{
@@ -182,8 +182,8 @@ const InspectionPanel = ({
                                     <DoneIcon /> {testStatusEnum.PASSED.label}
                                 </ToggleButton>
                                 <ToggleButton
-                                    id={`${componentIdLower}-inspection-result-${testStatusEnum.FAILED.value}-button`}
-                                    data-testid={`${componentIdLower}-inspection-result-${testStatusEnum.FAILED.value}-button`}
+                                    id={`${componentIdLower}-inspection-result-${testStatusEnum.FAILED.value.toLowerCase()}-button`}
+                                    data-testid={`${componentIdLower}-inspection-result-${testStatusEnum.FAILED.value.toLowerCase()}-button`}
                                     value={testStatusEnum.FAILED.value}
                                     aria-label={testStatusEnum.FAILED.label}
                                     classes={{

@@ -310,7 +310,7 @@ const Inspection = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="testTag-save-succeeded"
+                confirmationBoxId={`${componentId}-save-success`}
                 hideCancelButton
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
