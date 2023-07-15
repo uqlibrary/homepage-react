@@ -210,7 +210,7 @@ describe('TestTag', () => {
         expect(getByText('2022-12-12')).toBeInTheDocument();
         expect(getByText('2023Dec12')).toBeInTheDocument();
         act(() => {
-            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+            fireEvent.click(getByTestId('confirm-inspection-save-success'));
         });
         expect(clearSaveInspectionFn).toHaveBeenCalled();
         expect(clearAssetsFn).toHaveBeenCalled();
@@ -248,7 +248,7 @@ describe('TestTag', () => {
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
         act(() => {
-            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+            fireEvent.click(getByTestId('confirm-inspection-save-success'));
         });
         expect(clearSaveInspectionFn).toHaveBeenCalled();
         expect(clearAssetsFn).toHaveBeenCalled();
@@ -284,7 +284,7 @@ describe('TestTag', () => {
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
         act(() => {
-            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+            fireEvent.click(getByTestId('confirm-inspection-save-success'));
         });
         expect(clearSaveInspectionFn).toHaveBeenCalled();
         expect(clearAssetsFn).toHaveBeenCalled();
@@ -320,7 +320,7 @@ describe('TestTag', () => {
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
         act(() => {
-            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+            fireEvent.click(getByTestId('confirm-inspection-save-success'));
         });
         expect(clearSaveInspectionFn).toHaveBeenCalled();
         expect(clearAssetsFn).toHaveBeenCalled();
@@ -354,7 +354,7 @@ describe('TestTag', () => {
         expect(getByText('2022-12-12')).toBeInTheDocument();
         expect(getByText('N/A')).toBeInTheDocument();
         act(() => {
-            fireEvent.click(getByTestId('confirm-testTag-save-succeeded'));
+            fireEvent.click(getByTestId('confirm-inspection-save-success'));
         });
         expect(clearSaveInspectionFn).toHaveBeenCalled();
         expect(clearAssetsFn).toHaveBeenCalled();
