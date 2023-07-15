@@ -33,12 +33,12 @@ describe('Test and Tag Admin Inspection page', () => {
     const selectLocation = ({ site, building, floor, room }) => {
         // Site
         if (!!site) {
-            cy.data('location_picker-eventPanel-site').click();
+            cy.data('location_picker-event-panel-site').click();
             selectListbox(site);
         }
         if (!!building) {
             // Building
-            cy.data('location_picker-eventPanel-building').click();
+            cy.data('location_picker-event-panel-building').click();
             selectListbox(building);
 
             !!floor && cy.wait(1500);
@@ -46,14 +46,14 @@ describe('Test and Tag Admin Inspection page', () => {
 
         // Floor
         if (!!floor) {
-            cy.data('location_picker-eventPanel-floor').click();
+            cy.data('location_picker-event-panel-floor').click();
             selectListbox(floor);
             !!room && cy.wait(1500);
         }
 
         // Room
         if (!!room) {
-            cy.data('location_picker-eventPanel-room').click();
+            cy.data('location_picker-event-panel-room').click();
             selectListbox(room);
         }
     };
@@ -64,7 +64,7 @@ describe('Test and Tag Admin Inspection page', () => {
             cy.viewport(1300, 1000);
             cy.get('h1').contains('UQ Asset Test and Tag');
             cy.get('h2').contains('Creating a new Inspection for Library');
-            cy.waitUntil(() => cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia'));
+            cy.waitUntil(() => cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia'));
             cy.wait(1000);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Test and Tag Inspection Form',
@@ -102,66 +102,66 @@ describe('Test and Tag Admin Inspection page', () => {
 
             it('should allow selection of location', () => {
                 // Site
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-eventPanel-site').click();
-                cy.get('#location_picker-eventPanel-site-option-1').click();
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'Gatton');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-site').click();
+                cy.get('#location_picker-event-panel-site-option-1').click();
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'Gatton');
 
                 // Building
-                cy.data('location_picker-eventPanel-building').click();
-                cy.get('#location_picker-eventPanel-building-option-0').click();
-                cy.data('location_picker-eventPanel-building-input').should('have.value', 'J.K. Murray Library');
+                cy.data('location_picker-event-panel-building').click();
+                cy.get('#location_picker-event-panel-building-option-0').click();
+                cy.data('location_picker-event-panel-building-input').should('have.value', 'J.K. Murray Library');
 
                 // Floor
                 cy.wait(1500);
-                cy.data('location_picker-eventPanel-floor').click();
-                cy.get('#location_picker-eventPanel-floor-option-0').click();
-                cy.data('location_picker-eventPanel-floor-input').should('have.value', '1');
+                cy.data('location_picker-event-panel-floor').click();
+                cy.get('#location_picker-event-panel-floor-option-0').click();
+                cy.data('location_picker-event-panel-floor-input').should('have.value', '1');
 
                 // Room
                 cy.wait(1500);
-                cy.data('location_picker-eventPanel-room').click();
-                cy.get('#location_picker-eventPanel-room-option-0').click();
-                cy.data('location_picker-eventPanel-room-input').should('have.value', '101');
+                cy.data('location_picker-event-panel-room').click();
+                cy.get('#location_picker-event-panel-room-option-0').click();
+                cy.data('location_picker-event-panel-room-input').should('have.value', '101');
 
                 // Reset by changing site
-                cy.data('location_picker-eventPanel-site').click();
-                cy.get('#location_picker-eventPanel-site-option-0').click();
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-eventPanel-building-input').should('not.have.value', 'J.K. Murray Library');
-                cy.data('location_picker-eventPanel-floor-input').should('not.have.value', '1');
-                cy.data('location_picker-eventPanel-room-input').should('not.have.value', '101');
+                cy.data('location_picker-event-panel-site').click();
+                cy.get('#location_picker-event-panel-site-option-0').click();
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-building-input').should('not.have.value', 'J.K. Murray Library');
+                cy.data('location_picker-event-panel-floor-input').should('not.have.value', '1');
+                cy.data('location_picker-event-panel-room-input').should('not.have.value', '101');
             });
 
             it('should reset location when fields change', () => {
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
                 // set location so that we can test it clears later
                 selectLocation({ building: 'Forgan Smith Building', floor: '2', room: 'W212' });
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-eventPanel-building-input').should('have.value', 'Forgan Smith Building');
-                cy.data('location_picker-eventPanel-floor-input').should('have.value', '2');
-                cy.data('location_picker-eventPanel-room-input').should('have.value', 'W212');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-building-input').should('have.value', 'Forgan Smith Building');
+                cy.data('location_picker-event-panel-floor-input').should('have.value', '2');
+                cy.data('location_picker-event-panel-room-input').should('have.value', 'W212');
                 selectLocation({ floor: '3' });
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-eventPanel-building-input').should('have.value', 'Forgan Smith Building');
-                cy.data('location_picker-eventPanel-floor-input').should('have.value', '3');
-                cy.data('location_picker-eventPanel-room-input').should('have.value', '');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-building-input').should('have.value', 'Forgan Smith Building');
+                cy.data('location_picker-event-panel-floor-input').should('have.value', '3');
+                cy.data('location_picker-event-panel-room-input').should('have.value', '');
                 selectLocation({ building: 'Duhig' });
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-eventPanel-building-input').should('have.value', 'Duhig Tower');
-                cy.data('location_picker-eventPanel-floor-input').should('have.value', '');
-                cy.data('location_picker-eventPanel-room-input').should('have.value', '');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-building-input').should('have.value', 'Duhig Tower');
+                cy.data('location_picker-event-panel-floor-input').should('have.value', '');
+                cy.data('location_picker-event-panel-room-input').should('have.value', '');
                 selectLocation({ site: 'Gatton' });
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'Gatton');
-                cy.data('location_picker-eventPanel-building-input').should('have.value', '');
-                cy.data('location_picker-eventPanel-floor-input').should('have.value', '');
-                cy.data('location_picker-eventPanel-room-input').should('have.value', '');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'Gatton');
+                cy.data('location_picker-event-panel-building-input').should('have.value', '');
+                cy.data('location_picker-event-panel-floor-input').should('have.value', '');
+                cy.data('location_picker-event-panel-room-input').should('have.value', '');
             });
         });
 
         describe('Asset panel functionality', () => {
             it('should allow entry of new asset IDs (temporary)', () => {
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
                 // this is for code coverage. Will be removed post MVP
                 cy.data('asset_selector-testntagFormAssetId-input').click();
                 cy.data('asset_selector-testntagFormAssetId-input').type('AN ASSET ID{enter}');
@@ -169,7 +169,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('testntagFormAssetTypeInput').should('not.be.disabled');
             });
             it('should allow auto complete of asset ID as mask', () => {
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
                 // Enter partial asset ID for mask search
                 cy.data('asset_selector-testntagFormAssetId-input').click();
                 cy.data('asset_selector-testntagFormAssetId-input').type('123');
@@ -453,7 +453,7 @@ describe('Test and Tag Admin Inspection page', () => {
         describe('saving values', () => {
             it('should enable save button and show saved message', () => {
                 cy.data('testntagFormSubmitButton').should('be.disabled');
-                cy.data('location_picker-eventPanel-site-input').should('have.value', 'St Lucia');
+                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
                 selectLocation({ building: 'Forgan Smith Building', floor: '2', room: 'W212' });
                 selectAssetId('NEW ASSET');
                 selectAssetType('PowerBoard');

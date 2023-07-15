@@ -117,25 +117,33 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                         <FormControl className={classes.formControl} fullWidth={isMobileView}>
                             <InputLabel shrink>{pageLocale.form.action.repair.label}</InputLabel>
                             <Select
+                                id={`${componentId}-is-repair`}
+                                data-testid={`${componentId}-is-repair`}
+                                MenuProps={{
+                                    id: `${componentId}-is-repair-options`,
+                                    'data-testid': `${componentId}-is-repair-options`,
+                                }}
+                                inputProps={{
+                                    id: `${componentId}-is-repair-input`,
+                                    ['data-testid']: `${componentId}-is-repair-input`,
+                                }}
+                                SelectDisplayProps={{
+                                    id: `${componentId}-is-repair-select`,
+                                    'data-testid': `${componentId}-is-repair-select`,
+                                }}
                                 fullWidth
                                 className={classes.formSelect}
                                 value={formValues.isRepair ? 2 : 1}
                                 onChange={e => handleChange('isRepair')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
                                 disabled={disabled || isRepairDisabled}
-                                id={`${componentId}-is-repair`}
-                                data-testid={`${componentId}-is-repair`}
-                                inputProps={{
-                                    id: `${componentId}-is-repair-input`,
-                                    'data-testid': `${componentId}-is-repair-input`,
-                                }}
                             >
-                                {pageLocale.form.action.repair.options.map(option => (
+                                {pageLocale.form.action.repair.options.map((option, index) => (
                                     <MenuItem
                                         value={option.value}
                                         key={option.value}
-                                        id={`${componentId}-is-repair-option-${option.value}`}
-                                        data-testid={`${componentId}-is-repair-option-${option.value}`}
+                                        id={`${componentId}-is-repair-option-${index}`}
+                                        data-testid={`${componentId}-is-repair-option-${index}`}
                                     >
                                         {option.label}
                                     </MenuItem>
@@ -184,25 +192,33 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                         <FormControl className={classes.formControl} fullWidth={isMobileView}>
                             <InputLabel shrink>{pageLocale.form.action.discard.label}</InputLabel>
                             <Select
+                                id={`${componentId}-is-discard`}
+                                data-testid={`${componentId}-is-discard`}
+                                MenuProps={{
+                                    id: `${componentId}-is-discard-options`,
+                                    'data-testid': `${componentId}-is-discard-options`,
+                                }}
+                                inputProps={{
+                                    id: `${componentId}-is-discard-input`,
+                                    ['data-testid']: `${componentId}-is-discard-input`,
+                                }}
+                                SelectDisplayProps={{
+                                    id: `${componentId}-is-discard-select`,
+                                    'data-testid': `${componentId}-is-discard-select`,
+                                }}
                                 fullWidth
                                 className={classes.formSelect}
                                 value={formValues.isDiscarded ? 2 : 1}
                                 onChange={e => handleChange('isDiscarded')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
                                 disabled={disabled || isDiscardDisabled}
-                                id={`${componentId}-is-discarded`}
-                                data-testid={`${componentId}-is-discarded`}
-                                inputProps={{
-                                    id: `${componentId}-is-discarded-input`,
-                                    'data-testid': `${componentId}-is-discarded-input`,
-                                }}
                             >
-                                {pageLocale.form.action.discard.options.map(option => (
+                                {pageLocale.form.action.discard.options.map((option, index) => (
                                     <MenuItem
                                         value={option.value}
                                         key={option.value}
-                                        id={`${componentId}-is-discarded-option-${option.value}`}
-                                        data-testid={`${componentId}-is-discarded-option-${option.value}`}
+                                        id={`${componentId}-is-discard-option-${index}`}
+                                        data-testid={`${componentId}-is-discard-option-${index}`}
                                     >
                                         {option.label}
                                     </MenuItem>

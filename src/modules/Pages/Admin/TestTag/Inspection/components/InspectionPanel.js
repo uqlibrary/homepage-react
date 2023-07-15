@@ -92,14 +92,26 @@ const InspectionPanel = ({
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <InputLabel required htmlFor={`${componentIdLower}-inspection-device`}>
+                            <InputLabel required htmlFor={`${componentIdLower}-inspection-device-input`}>
                                 {pageLocale.form.inspection.deviceLabel}
                             </InputLabel>
                             <Select
-                                fullWidth
-                                className={classes.formSelect}
                                 id={`${componentIdLower}-inspection-device`}
                                 data-testid={`${componentIdLower}-inspection-device`}
+                                MenuProps={{
+                                    id: `${componentIdLower}-inspection-device-options`,
+                                    'data-testid': `${componentIdLower}-inspection-device-options`,
+                                }}
+                                inputProps={{
+                                    id: `${componentIdLower}-inspection-device-input`,
+                                    ['data-testid']: `${componentIdLower}-inspection-device-input`,
+                                }}
+                                SelectDisplayProps={{
+                                    id: `${componentIdLower}-inspection-device-select`,
+                                    'data-testid': `${componentIdLower}-inspection-device-select`,
+                                }}
+                                fullWidth
+                                className={classes.formSelect}
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => handleChange('inspection_device_id')(e.target.value)}
                                 required
@@ -111,10 +123,6 @@ const InspectionPanel = ({
                                     )
                                 }
                                 disabled={disabled}
-                                inputProps={{
-                                    id: `${componentIdLower}-inspection-device-input`,
-                                    ['data-testid']: `${componentIdLower}-inspection-device-input`,
-                                }}
                             >
                                 {!!inspectionConfigLoading && (
                                     <MenuItem value={-1} disabled key={'devicetypes-loading'}>
@@ -125,12 +133,12 @@ const InspectionPanel = ({
                                     !!inspectionConfig &&
                                     !!inspectionConfig?.inspection_devices &&
                                     inspectionConfig?.inspection_devices?.length > 0 &&
-                                    inspectionConfig.inspection_devices.map(device => (
+                                    inspectionConfig.inspection_devices.map((device, index) => (
                                         <MenuItem
                                             value={device.device_id}
                                             key={device.device_id}
-                                            id={`${componentIdLower}-inspection-device-option-${device.device_id}`}
-                                            data-testid={`${componentIdLower}-inspection-device-option-${device.device_id}`}
+                                            id={`${componentIdLower}-inspection-device-option-${index}`}
+                                            data-testid={`${componentIdLower}-inspection-device-option-${index}`}
                                         >
                                             {device.device_model_name}
                                         </MenuItem>

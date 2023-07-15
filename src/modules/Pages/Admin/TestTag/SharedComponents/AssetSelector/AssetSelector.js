@@ -90,7 +90,7 @@ const AssetSelector = ({
     }, [assetsList]);
 
     const customPopper = props => (
-        <Popper {...props} id={`${componentId}-popper`} data-testid={`${componentId}-popper`} />
+        <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
 
     return (

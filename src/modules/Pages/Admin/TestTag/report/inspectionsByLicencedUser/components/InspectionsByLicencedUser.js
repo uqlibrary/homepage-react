@@ -44,17 +44,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
 const InspectionsByLicencedUser = ({
     actions,
     userInspections,
@@ -198,13 +187,21 @@ const InspectionsByLicencedUser = ({
                             <FormControl fullWidth className={classes.formControl}>
                                 <InputLabel>Inspector Name</InputLabel>
                                 <Select
-                                    fullWidth
                                     id={`${componentIdLower}-user-name`}
                                     data-testid={`${componentIdLower}-user-name`}
+                                    MenuProps={{
+                                        id: `${componentIdLower}-user-name-options`,
+                                        'data-testid': `${componentIdLower}-user-name-options`,
+                                    }}
                                     inputProps={{
                                         id: `${componentIdLower}-user-name-input`,
-                                        'data-testid': `${componentIdLower}-user-name-input`,
+                                        ['data-testid']: `${componentIdLower}-user-name-input`,
                                     }}
+                                    SelectDisplayProps={{
+                                        id: `${componentIdLower}-user-name-select`,
+                                        'data-testid': `${componentIdLower}-user-name-select`,
+                                    }}
+                                    fullWidth
                                     multiple
                                     disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                     value={inspectorName}
@@ -227,15 +224,14 @@ const InspectionsByLicencedUser = ({
                                             </div>
                                         );
                                     }}
-                                    MenuProps={MenuProps}
                                 >
-                                    {licencedUsers.map(user => (
+                                    {licencedUsers.map((user, index) => (
                                         <MenuItem
                                             key={user.user_id}
                                             value={user.user_id}
                                             style={getNameStyles(user, inspectorName, theme)}
-                                            id={`${componentIdLower}-user-name-option-${user.user_id}`}
-                                            data-testid={`${componentIdLower}-user-name-option-${user.user_id}`}
+                                            id={`${componentIdLower}-user-name-option-${index}`}
+                                            data-testid={`${componentIdLower}-user-name-option-${index}`}
                                         >
                                             {user.user_name}
                                         </MenuItem>
