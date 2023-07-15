@@ -239,21 +239,10 @@ export default {
                             label: 'Asset type',
                         },
                         addNewLabel: 'Add new asset type',
-                        saveSuccess: {
-                            confirmationTitle: 'The asset type has been added',
-                            confirmationMessage: '',
-                            confirmButtonLabel: 'Close',
-                        },
-                        saveFailure: {
-                            confirmationTitle: (
-                                <span>
-                                    There was a problem saving the Asset type.
-                                    <br />
-                                    Please try again later.
-                                </span>
-                            ),
-                            confirmationMessage: '',
-                            confirmButtonLabel: 'Close',
+                        addDialog: {
+                            confirmButtonLabel: 'Add',
+                            cancelButtonLabel: 'Cancel',
+                            confirmationTitle: 'Add new Asset Type',
                         },
                     },
                     ownerLabel: 'Asset owner',
@@ -370,7 +359,7 @@ export default {
                     addButtonLabel: 'Add Asset Type',
                 },
                 addAsset: {
-                    title: 'Add New Asset Type',
+                    title: 'Add new Asset Type',
                     cancelButtonLabel: 'Cancel',
                     confirmButtonLabel: 'Add',
                 },

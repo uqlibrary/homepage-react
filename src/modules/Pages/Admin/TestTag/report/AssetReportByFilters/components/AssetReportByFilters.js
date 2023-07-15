@@ -207,25 +207,33 @@ const AssetReportByFilters = ({
                             <FormControl fullWidth className={classes.formControl}>
                                 <InputLabel shrink>{pageLocale.form.filterBuildingLabel}</InputLabel>
                                 <Select
-                                    fullWidth
                                     id={`${componentIdLower}-building`}
                                     data-testid={`${componentIdLower}-building`}
+                                    MenuProps={{
+                                        id: `${componentIdLower}-building-options`,
+                                        'data-testid': `${componentIdLower}-building-options`,
+                                    }}
                                     inputProps={{
                                         id: `${componentIdLower}-building-input`,
-                                        'data-testid': `${componentIdLower}-building-input`,
+                                        ['data-testid']: `${componentIdLower}-building-input`,
                                     }}
+                                    SelectDisplayProps={{
+                                        id: `${componentIdLower}-building-select`,
+                                        'data-testid': `${componentIdLower}-building-select`,
+                                    }}
+                                    fullWidth
                                     disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                     value={taggedBuildingName}
                                     onChange={handleTaggedBuildingChange}
                                 >
                                     {!!buildingList &&
                                         buildingList.length > 0 &&
-                                        buildingList.map(building => (
+                                        buildingList.map((building, index) => (
                                             <MenuItem
                                                 key={building.building_id < 0 ? 9999999999 : building.building_id}
                                                 value={building.building_id}
-                                                id={`${componentIdLower}-building-option-${building.building_id}`}
-                                                data-testid={`${componentIdLower}-building-option-${building.building_id}`}
+                                                id={`${componentIdLower}-building-option-${index}`}
+                                                data-testid={`${componentIdLower}-building-option-${index}`}
                                             >
                                                 {building.building_name}
                                             </MenuItem>

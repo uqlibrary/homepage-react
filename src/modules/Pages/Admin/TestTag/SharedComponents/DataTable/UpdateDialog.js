@@ -172,6 +172,9 @@ export const UpdateDialogue = ({
                                                         onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
+                                                            htmlFor: `${field}-input`,
+                                                            id: `${field}-label`,
+                                                            ['data-testid']: `${field}-label`,
                                                         },
                                                         inputProps: {
                                                             ['data-testid']: `${field}-input`,

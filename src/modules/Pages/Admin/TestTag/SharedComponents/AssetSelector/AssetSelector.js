@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Popper from '@material-ui/core/Popper';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
 
@@ -48,6 +49,11 @@ const AssetSelector = ({
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
+    React.useEffect(() => {
+        previousValueRef.current = selectedAsset;
+        setCurrentValue(selectedAsset);
+    }, [selectedAsset]);
+
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
@@ -83,6 +89,10 @@ const AssetSelector = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
 
+    const customPopper = props => (
+        <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
+    );
+
     return (
         <FormControl className={classNames.formControl} fullWidth>
             <Autocomplete
@@ -91,7 +101,7 @@ const AssetSelector = ({
                 className={classNames.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
-                value={selectedAsset ?? currentValue ?? previousValueRef.current}
+                value={currentValue ?? previousValueRef.current}
                 onChange={(event, newValue) => {
                     if (typeof newValue === 'string') {
                         onChange?.(
@@ -141,6 +151,7 @@ const AssetSelector = ({
                     return `${option.asset_id_displayed ?? /* istanbul ignore next */ ''}`;
                 }}
                 renderOption={option => option.asset_id_displayed}
+                PopperComponent={customPopper}
                 freeSolo
                 renderInput={params => (
                     <TextField

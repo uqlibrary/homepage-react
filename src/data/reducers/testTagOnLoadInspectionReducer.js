@@ -30,6 +30,11 @@ const handlers = {
         inspectionConfigLoaded: false,
         inspectionConfigError: action.payload,
     }),
+    [actions.TESTTAG_INSPECTION_CONFIG_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        inspectionConfigError: null,
+    }),
     [actions.TESTTAG_INSPECTION_CONFIG_CLEAR]: () => ({
         ...initialState,
     }),
