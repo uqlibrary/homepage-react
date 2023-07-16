@@ -4,29 +4,64 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { isEmptyStr } from '../../../helpers/helpers';
+import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
+
+import locale from '../../../testTag.locale';
 
 export default {
     fields: {
         user_uid: {
             label: 'UUID',
-            component: props => <TextField {...props} required />,
-            validate: value => isEmptyStr(value),
-            fieldParams: { canEdit: false, canAdd: true },
+            component: props => (
+                <TextField
+                    {...props}
+                    required
+                    inputProps={{ ...props.inputProps, maxLength: 20 }}
+                    helperText={
+                        props.error
+                            ? locale.pages.manage.users.helperText.user_uid
+                            : locale.pages.general.helperText.maxChars(20)
+                    }
+                />
+            ),
+            validate: value => isEmptyStr(value) || isInvalidUUID(value),
+            fieldParams: { canEdit: true, canAdd: true },
         },
         user_name: {
-            component: props => <TextField {...props} required />,
+            component: props => (
+                <TextField
+                    {...props}
+                    required
+                    helperText={props.error ? locale.pages.manage.users.helperText.user_name : null}
+                />
+            ),
             validate: value => isEmptyStr(value),
             fieldParams: { canEdit: true, flex: 1 },
         },
         user_licence_number: {
-            component: props => <TextField {...props} />,
+            component: (props, data) => {
+                return (
+                    <TextField
+                        required={data?.can_inspect_cb}
+                        {...props}
+                        inputProps={{ ...props.inputProps, maxLength: 45 }}
+                        helperText={
+                            props.error
+                                ? locale.pages.manage.users.helperText.user_licence_number
+                                : locale.pages.general.helperText.maxChars(45)
+                        }
+                    />
+                );
+            },
+
             fieldParams: {
-                canEdit: true,
+                canAdd: true,
+                canEdit: false,
                 renderInUpdate: true,
                 renderInAdd: true,
                 renderInTable: false,
                 renderFullWidth: true,
+                maxLength: 45,
             },
             validate: (value, row) => {
                 return row?.can_inspect_cb && isEmptyStr(value);

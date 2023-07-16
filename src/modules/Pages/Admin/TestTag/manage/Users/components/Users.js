@@ -41,6 +41,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     const { user } = useSelector(state => state.get?.('testTagUserReducer'));
     const userDepartment = user?.user_department ?? null;
+    const userUID = user?.user_uid ?? null;
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
@@ -139,13 +140,15 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     };
 
     const { row } = useDataTableRow(userList, transformRow);
-    const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0;
+    const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0 || userUID === row?.user_uid;
+    const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
         handleEditClick,
         handleDeleteClick,
         shouldDisableDelete,
+        shouldDisableEdit,
         actionDataFieldKeys: { valueKey: 'user_uid' },
     });
 

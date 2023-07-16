@@ -73,14 +73,19 @@ export const UpdateDialogue = ({
                 Object.keys(fields).filter(
                     field =>
                         !!(fields[field]?.fieldParams?.renderInUpdate ?? true) &&
-                        !!(fields[field]?.fieldParams?.canEdit ?? false),
+                        (!!(fields[field]?.fieldParams?.canEdit ?? true) ||
+                            !!(fields[field]?.fieldParams?.canAdd ?? true)),
                 ),
             );
         }
     }, [isOpen, fields, row, columns]);
 
     React.useEffect(() => {
-        setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field], data) ?? true));
+        setIsValid(
+            editableFields.every(field => {
+                return !dataFields[field]?.validate?.(data[field], data) ?? true;
+            }),
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
