@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
+import Popper from '@material-ui/core/Popper';
 
 const rootId = 'asset_type_selector';
 
@@ -15,7 +16,7 @@ const AssetTypeSelector = ({
     title,
     locale,
     actions,
-    initValue,
+    value,
     required = true,
     onChange,
     validateAssetTypeId,
@@ -24,7 +25,7 @@ const AssetTypeSelector = ({
     ...rest
 }) => {
     const componentId = `${rootId}-${id}`;
-    const [value, setValue] = useState(initValue);
+    const [_value, setValue] = React.useState(value);
     const { assetTypesList, assetTypesListLoading } = useSelector(state => state.get('testTagAssetTypesReducer'));
 
     React.useEffect(() => {
@@ -35,9 +36,17 @@ const AssetTypeSelector = ({
     }, [assetTypesList]);
 
     const handleChange = (_event, assetType) => {
-        setValue(assetType);
+        !!!value && setValue(assetType.asset_type_id);
         onChange?.(assetType);
     };
+
+    React.useEffect(() => {
+        setValue(value);
+    }, [value]);
+
+    const customPopper = props => (
+        <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
+    );
 
     return (
         <FormControl className={classNames.formControl} fullWidth>
@@ -52,7 +61,7 @@ const AssetTypeSelector = ({
                 className={classNames.autocomplete}
                 fullWidth
                 options={assetTypesList ?? []}
-                value={assetTypesList?.find(assetType => assetType.asset_type_id === value?.asset_type_id) ?? null}
+                value={assetTypesList?.find(assetType => assetType.asset_type_id === _value) ?? null}
                 onChange={handleChange}
                 getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
                 getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
@@ -88,6 +97,7 @@ const AssetTypeSelector = ({
                         }}
                     />
                 )}
+                PopperComponent={customPopper}
                 disabled={disabled || assetTypesListLoading}
                 disableClearable
                 autoSelect
@@ -102,7 +112,7 @@ AssetTypeSelector.propTypes = {
     locale: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     required: PropTypes.bool,
-    initValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onChange: PropTypes.func,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
     validateAssetTypeId: PropTypes.func,

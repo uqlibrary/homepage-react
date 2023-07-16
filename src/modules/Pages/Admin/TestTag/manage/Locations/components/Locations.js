@@ -153,7 +153,7 @@ const ManageLocations = ({ actions }) => {
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'success');
+                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -179,7 +179,7 @@ const ManageLocations = ({ actions }) => {
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'success');
+                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -205,7 +205,7 @@ const ManageLocations = ({ actions }) => {
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'success');
+                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);

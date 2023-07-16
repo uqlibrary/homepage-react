@@ -78,24 +78,32 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         {pageLocale.newAssetTypePrompt}
                     </InputLabel>
                     <Select
-                        fullWidth
-                        className={classes.formSelect}
-                        id={`${componentId}-reassign-select`}
-                        data-testid={`${componentId}-reassign-select`}
-                        value={selectedAssetType}
-                        onChange={e => onAssetTypeChange(e.target.value)}
+                        id={`${componentId}-reassign`}
+                        data-testid={`${componentId}-reassign`}
+                        MenuProps={{
+                            id: `${componentId}-reassign-options`,
+                            'data-testid': `${componentId}-reassign-options`,
+                        }}
                         inputProps={{
                             id: `${componentId}-reassign-input`,
                             ['data-testid']: `${componentId}-reassign-input`,
                         }}
+                        SelectDisplayProps={{
+                            id: `${componentId}-reassign-select`,
+                            'data-testid': `${componentId}-reassign-select`,
+                        }}
+                        fullWidth
+                        className={classes.formSelect}
+                        value={selectedAssetType}
+                        onChange={e => onAssetTypeChange(e.target.value)}
                         required
                     >
-                        {data.map(item => (
+                        {data.map((item, index) => (
                             <MenuItem
                                 value={item.asset_type_id}
                                 key={item.asset_type_id}
-                                id={`${componentId}-reassign-option-${item.asset_type_id}`}
-                                data-testid={`${componentId}-reassign-option-${item.asset_type_id}`}
+                                id={`${componentId}-reassign-option-${index}`}
+                                data-testid={`${componentId}-reassign-option-${index}`}
                             >
                                 {item.asset_type_name}
                             </MenuItem>

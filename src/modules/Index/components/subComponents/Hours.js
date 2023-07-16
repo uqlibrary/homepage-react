@@ -328,6 +328,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             <Grid item xs={5}>
                                                 <a
                                                     aria-label={ariaLabelForLocation(item)}
+                                                    data-analyticsid={`hours-item-${index}`}
                                                     href={item.url}
                                                     className={
                                                         (cookies.location === item.campus && classes.selectedCampus) ||
@@ -371,6 +372,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                             <Button
                                 classes={{ root: classes.actionButtonsLeft }}
                                 data-testid="homepage-hours-weeklyhours-link"
+                                data-analyticsid={'hours-item-weeklyhours-link'}
                                 size="small"
                                 variant="contained"
                                 color={hoursLocale.actionButtons[0].color}
@@ -385,6 +387,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                             <Button
                                 classes={{ root: classes.actionButtonsRight }}
                                 data-testid="homepage-hours-bookit-link"
+                                data-analyticsid={'hours-item-bookit-link'}
                                 size="small"
                                 variant="contained"
                                 color={hoursLocale.actionButtons[1].color}

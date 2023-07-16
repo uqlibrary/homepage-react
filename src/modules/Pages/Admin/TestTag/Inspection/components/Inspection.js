@@ -1,11 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 
-import { useTheme } from '@material-ui/core';
-
-import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { useConfirmationState } from 'hooks';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -15,17 +11,24 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import clsx from 'clsx';
 import { InView } from 'react-intersection-observer';
 
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
+import ConfirmationAlert from '../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
+
 import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
 import { useValidation } from '../utils/hooks';
-import { useLocation, useForm } from '../../helpers/hooks';
+import { useLocation, useForm, useConfirmationAlert } from '../../helpers/hooks';
 import locale from '../../testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
 import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
+import { useConfirmationState } from 'hooks';
+
+const componentId = 'inspection';
 
 const moment = require('moment');
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
@@ -162,7 +165,6 @@ const Inspection = ({
     saveInspectionSuccess,
     saveInspectionError,
     saveAssetTypeSaving,
-    saveAssetTypeSuccess,
     saveAssetTypeError,
 }) => {
     const classes = useStyles();
@@ -172,9 +174,22 @@ const Inspection = ({
     const today = moment().format(inspectionLocale.config.dateFormat);
 
     const [selectedAsset, setSelectedAsset] = useState({});
-    const [isSaveErrorOpen, showSaveError, hideSaveError] = useConfirmationState();
-    const [isNetworkErrorOpen, showNetworkError, hideNetworkError] = useConfirmationState();
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
+
+    const onCloseConfirmationAlert = () => {
+        !!inspectionConfigError && actions.clearInspectionConfigError();
+        !!saveInspectionError && actions.clearSaveInspectionError();
+        !!saveAssetTypeError && actions.clearSaveAssetTypeError();
+        !!floorListError && actions.clearFloorsError();
+        !!roomListError && actions.clearRoomsError();
+    };
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage:
+            inspectionConfigError || saveInspectionError || saveAssetTypeError || floorListError || roomListError,
+        errorMessageFormatter: locale.config.alerts.error,
+    });
     const { isValid, validateValues } = useValidation({ testStatusEnum });
     const assignAssetDefaults = React.useCallback(
         (asset = {}, formValues = {}, location = {}) => {
@@ -201,28 +216,10 @@ const Inspection = ({
     const { location, setLocation } = useLocation();
 
     useEffect(() => {
-        if (!!saveInspectionError) {
-            showSaveError();
-        }
         if (!!saveInspectionSuccess) {
             showSaveSuccessConfirmation();
         }
-        if (!!inspectionConfigError || !!floorListError || !!roomListError || !!assetsListError) {
-            showNetworkError();
-        }
-    }, [
-        saveInspectionError,
-        showSaveError,
-        saveInspectionSuccess,
-        showSaveSuccessConfirmation,
-        showNetworkError,
-        inspectionConfigError,
-        floorListError,
-        roomListError,
-        assetsListError,
-    ]);
-
-    const [createdAssetTypeName, setCreatedAssetTypeName] = React.useState(null);
+    }, [saveInspectionSuccess, showSaveSuccessConfirmation]);
 
     const [inView, setInView] = React.useState(false);
 
@@ -259,6 +256,11 @@ const Inspection = ({
         resetForm();
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        resetForm();
+    }, []);
+
     useEffect(() => {
         if (!inspectionConfigLoaded) actions.loadInspectionConfig();
     }, [actions, inspectionConfigLoaded]);
@@ -272,16 +274,6 @@ const Inspection = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionConfigError, floorListError, roomListError, assetsListError, formValues, selectedAsset]);
 
-    const clearSaveError = () => {
-        actions.clearSaveInspection();
-        return hideSaveError();
-    };
-
-    const saveErrorLocale = {
-        ...inspectionLocale.form.saveError,
-        confirmationTitle: inspectionLocale.form.saveError.confirmationTitle(saveInspectionError),
-    };
-
     const saveForm = () => {
         /* istanbul ignore else */ if (isValid && !saveInspectionSaving) {
             const transformedData = transformer(
@@ -290,7 +282,6 @@ const Inspection = ({
                 selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
             );
             actions.saveInspection(transformedData);
-            setCreatedAssetTypeName(null);
         }
     };
 
@@ -319,18 +310,7 @@ const Inspection = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="testTag-network-error"
-                hideCancelButton
-                onAction={hideNetworkError}
-                onClose={hideNetworkError}
-                isOpen={isNetworkErrorOpen}
-                locale={inspectionLocale.form.networkError}
-                noMinContentWidth
-            />
-            <ConfirmationBox
-                actionButtonColor="secondary"
-                actionButtonVariant="contained"
-                confirmationBoxId="testTag-save-succeeded"
+                confirmationBoxId={`${componentId}-save-success`}
                 hideCancelButton
                 onAction={hideSuccessMessage}
                 onClose={hideSuccessMessage}
@@ -338,18 +318,8 @@ const Inspection = ({
                 locale={successDialog}
                 noMinContentWidth
             />
-            <ConfirmationBox
-                actionButtonColor="primary"
-                actionButtonVariant="contained"
-                confirmationBoxId="testTag-save-failed"
-                onClose={clearSaveError}
-                onAction={/* istanbul ignore next */ () => /* istanbul ignore next */ clearSaveError()}
-                isOpen={isSaveErrorOpen}
-                locale={saveErrorLocale}
-                hideCancelButton
-                noMinContentWidth
-            />
             <EventPanel
+                id={componentId}
                 actions={actions}
                 location={location}
                 setLocation={setLocation}
@@ -360,6 +330,7 @@ const Inspection = ({
                 isMobileView={isMobileView}
             />
             <AssetPanel
+                id={componentId}
                 actions={actions}
                 location={location}
                 resetForm={() => resetForm()}
@@ -371,24 +342,27 @@ const Inspection = ({
                 classes={classes}
                 setSelectedAsset={setSelectedAsset}
                 defaultNextTestDateValue={defaultNextTestDateValue}
-                saveInspectionSaving={saveInspectionSaving}
                 saveAssetTypeSaving={saveAssetTypeSaving}
-                saveAssetTypeSuccess={saveAssetTypeSuccess}
-                saveAssetTypeError={saveAssetTypeError}
                 isMobileView={isMobileView}
                 canAddAssetType
-                createdAssetTypeName={createdAssetTypeName}
-                setCreatedAssetTypeName={setCreatedAssetTypeName}
+                confirmationAlert={confirmationAlert}
+                openConfirmationAlert={openConfirmationAlert}
+                closeConfirmationAlert={closeConfirmationAlert}
             />
             <InView onChange={setInView} rootMargin="200% 0px 0px 0px" threshold={0}>
-                <AppBar component={'div'} className={appbarDynamicClasses}>
+                <AppBar
+                    component={'div'}
+                    className={appbarDynamicClasses}
+                    id={`${componentId}-app-bar`}
+                    data-testid={`${componentId}-app-bar`}
+                >
                     <Toolbar className={classes.toolbar}>
                         <Button
                             variant="outlined"
                             onClick={resetForm}
                             fullWidth={isMobileView}
-                            id="testntagFormResetButton"
-                            data-testid="testntagFormResetButton"
+                            id={`${componentId}-reset-button`}
+                            data-testid={`${componentId}-reset-button`}
                             color={inView ? 'default' : 'secondary'}
                         >
                             {inspectionLocale.form.buttons.reset}
@@ -401,15 +375,15 @@ const Inspection = ({
                             disabled={!isValid || saveInspectionSaving}
                             onClick={saveForm}
                             fullWidth={isMobileView}
-                            id="testntagFormSubmitButton"
-                            data-testid="testntagFormSubmitButton"
+                            id={`${componentId}-save-button`}
+                            data-testid={`${componentId}-save-button`}
                         >
                             {saveInspectionSaving ? (
                                 <CircularProgress
                                     color="inherit"
                                     size={25}
-                                    id="saveInspectionSpinner"
-                                    data-testid="saveInspectionSpinner"
+                                    id={`${componentId}-progress`}
+                                    data-testid={`${componentId}-progress`}
                                 />
                             ) : (
                                 inspectionLocale.form.buttons.save
@@ -418,6 +392,13 @@ const Inspection = ({
                     </Toolbar>
                 </AppBar>
             </InView>
+            <ConfirmationAlert
+                isOpen={confirmationAlert.visible}
+                message={confirmationAlert.message}
+                type={confirmationAlert.type}
+                closeAlert={closeConfirmationAlert}
+                autoHideDuration={confirmationAlert.autoHideDuration}
+            />
         </StandardAuthPage>
     );
 };

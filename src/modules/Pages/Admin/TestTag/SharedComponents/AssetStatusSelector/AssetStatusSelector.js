@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Popper from '@material-ui/core/Popper';
 
 import { isEmptyObject } from '../../helpers/helpers';
 
@@ -27,6 +28,11 @@ const AssetStatusSelector = ({
         setCurrentValue(newValue);
         onChange?.(newValue);
     };
+
+    const customPopper = props => (
+        <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
+    );
+
     return (
         <FormControl className={classNames?.formControl} fullWidth>
             <Autocomplete
@@ -57,6 +63,7 @@ const AssetStatusSelector = ({
                         }}
                     />
                 )}
+                PopperComponent={customPopper}
                 disableClearable
                 autoSelect
                 {...rest}

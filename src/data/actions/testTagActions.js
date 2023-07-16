@@ -210,6 +210,12 @@ export function loadSites() {
     };
 }
 
+export function clearSitesError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SITE_LIST_CLEAR_ERROR });
+    };
+}
+
 export function clearSites() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SITE_LIST_CLEAR });
@@ -240,6 +246,11 @@ export function clearFloors() {
         dispatch({ type: actions.TESTTAG_FLOOR_LIST_CLEAR });
     };
 }
+export function clearFloorsError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_FLOOR_LIST_CLEAR_ERROR });
+    };
+}
 
 export function loadRooms(floorId) {
     return dispatch => {
@@ -263,6 +274,11 @@ export function loadRooms(floorId) {
 export function clearRooms() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ROOM_LIST_CLEAR });
+    };
+}
+export function clearRoomsError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ROOM_LIST_CLEAR_ERROR });
     };
 }
 
@@ -350,43 +366,42 @@ export function clearSaveInspection() {
         dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR });
     };
 }
+export function clearSaveInspectionError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_INSPECTION_CLEAR_ERROR });
+    };
+}
 
 export function saveAssetTypeAndReload(request) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_SAVING });
-        let saveAssetComplete = false;
         return post(TEST_TAG_ASSETTYPE_ADD(), request)
-            .then(data => {
-                dispatch({
-                    type: actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS,
-                    payload: data,
-                });
-                saveAssetComplete = true;
-
-                // reload the onload route after the asset type list would have updated with a new asset
-                // to get the update into the dropdown
-                dispatch({ type: actions.TESTTAG_INSPECTION_CONFIG_LOADING });
-                return get(TEST_TAG_ONLOAD_INSPECT_API());
-            })
-            .then(data => {
-                dispatch({
-                    type: actions.TESTTAG_INSPECTION_CONFIG_LOADED,
-                    payload: data,
-                });
-            })
-            .catch(error => {
-                if (saveAssetComplete) {
+            .then(response => {
+                if (response.status.toLowerCase() === 'ok') {
                     dispatch({
-                        type: actions.TESTTAG_INSPECTION_CONFIG_FAILED,
-                        payload: error.message,
+                        type: actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS,
+                        payload: response?.data,
                     });
                 } else {
                     dispatch({
                         type: actions.TESTTAG_SAVE_ASSET_TYPE_FAILED,
-                        payload: error.message,
+                        payload: response.message,
                     });
                 }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_SAVE_ASSET_TYPE_FAILED,
+                    payload: error.message,
+                });
+                return Promise.reject(error);
             });
+    };
+}
+export function clearSaveAssetTypeError() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR_ERROR });
     };
 }
 export function clearSaveAssetType() {

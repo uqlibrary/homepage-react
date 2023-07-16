@@ -12,6 +12,7 @@ describe('TabPanel Renders component', () => {
             children: <div data-testid="panelChildId" />,
             value: 0,
             index: 0,
+            id: 'parentId',
             'data-testid': 'parentId',
         });
         expect(getByTestId('parentId')).toBeInTheDocument();
@@ -22,6 +23,7 @@ describe('TabPanel Renders component', () => {
             children: <div data-testid="panelChildId" />,
             value: 1,
             index: 0,
+            id: 'parentId',
             'data-testid': 'parentId',
         });
         expect(getByTestId('parentId')).toBeInTheDocument();

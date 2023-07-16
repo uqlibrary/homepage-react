@@ -80,13 +80,13 @@ describe('InspectionPanel', () => {
         });
 
         expect(getByText(locale.pages.inspect.form.inspection.title)).toBeInTheDocument();
-        expect(getByTestId('testResultTestingDevice')).toBeInTheDocument();
-        expect(getByTestId('testResultToggleButtons')).toBeInTheDocument();
+        expect(getByTestId('inspection_panel-inspection-device')).toBeInTheDocument();
+        expect(getByTestId('inspection_panel-inspection-result-toggle-buttons')).toBeInTheDocument();
         await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
     });
 
     it('allows entry of inspection notes text', async () => {
-        const testInputId = 'inspectionNotes-input';
+        const testInputId = 'inspection_panel-inspection-notes-input';
         const updateKey = 'inspection_notes';
         const newValue = 'some inspection notes';
 
@@ -113,7 +113,7 @@ describe('InspectionPanel', () => {
     });
 
     it('allows entry of fail reason text', async () => {
-        const testInputId = 'inspectionFailReason-input';
+        const testInputId = 'inspection_panel-fail-reason-input';
         const updateKey = 'inspection_fail_reason';
         const newValue = 'some fail reason';
 

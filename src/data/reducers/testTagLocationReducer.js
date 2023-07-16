@@ -25,14 +25,14 @@ const handlers = {
         ...state,
         siteListLoading: true,
         siteListLoaded: false,
-        siteListError: false,
+        siteListError: null,
     }),
     [actions.TESTTAG_SITE_LIST_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         siteListLoading: false,
         siteListLoaded: true,
-        siteListError: false,
+        siteListError: null,
         siteList: action.payload,
     }),
     [actions.TESTTAG_SITE_LIST_FAILED]: (state, action) => ({
@@ -41,6 +41,11 @@ const handlers = {
         siteListLoading: false,
         siteListLoaded: false,
         siteListError: action.payload,
+    }),
+    [actions.TESTTAG_SITE_LIST_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        siteListError: null,
     }),
     [actions.TESTTAG_SITE_LIST_CLEAR]: () => ({
         ...initialState,
@@ -51,15 +56,15 @@ const handlers = {
         ...state,
         buildingListLoading: true,
         buildingListLoaded: false,
-        buildingListError: false,
+        buildingListError: null,
     }),
     [actions.TESTTAG_BUILDING_LIST_LOADED]: (state, action) => {
         return {
             ...initialState,
             ...state,
             buildingListLoading: false,
-            buildingListError: true,
-            buildingListLoaded: false,
+            buildingListError: null,
+            buildingListLoaded: true,
             buildingList: action.payload,
         };
     },
@@ -70,12 +75,17 @@ const handlers = {
         buildingListLoaded: false,
         buildingListError: action.payload,
     }),
+    [actions.TESTTAG_BUILDING_LIST_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        roomListError: null,
+    }),
     [actions.TESTTAG_BUILDING_LIST_CLEAR]: state => ({
         ...initialState,
         ...state,
         buildingListLoading: false,
         buildingListLoaded: false,
-        buildingListError: false,
+        buildingListError: null,
         buildingList: null,
     }),
 
@@ -84,7 +94,7 @@ const handlers = {
         ...state,
         floorListLoading: true,
         floorListLoaded: false,
-        floorListError: false,
+        floorListError: null,
     }),
     [actions.TESTTAG_FLOOR_LIST_LOADED]: (state, action) => {
         return {
@@ -92,7 +102,7 @@ const handlers = {
             ...state,
             floorListLoading: false,
             floorListLoaded: true,
-            floorListError: false,
+            floorListError: null,
             floorList: action.payload,
         };
     },
@@ -102,6 +112,11 @@ const handlers = {
         floorListLoading: false,
         floorListLoaded: false,
         floorListError: action.payload,
+    }),
+    [actions.TESTTAG_FLOOR_LIST_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        floorListError: null,
     }),
     [actions.TESTTAG_FLOOR_LIST_CLEAR]: state => ({
         ...initialState,
@@ -122,7 +137,7 @@ const handlers = {
         ...state,
         roomListLoading: true,
         roomListLoaded: false,
-        roomListError: false,
+        roomListError: null,
     }),
     [actions.TESTTAG_ROOM_LIST_LOADED]: (state, action) => {
         return {
@@ -130,7 +145,7 @@ const handlers = {
             ...state,
             roomListLoading: false,
             roomListLoaded: true,
-            roomListError: false,
+            roomListError: null,
             roomList: action.payload,
         };
     },
@@ -140,6 +155,11 @@ const handlers = {
         roomListLoading: false,
         roomListLoaded: false,
         roomListError: action.payload,
+    }),
+    [actions.TESTTAG_ROOM_LIST_CLEAR_ERROR]: state => ({
+        ...initialState,
+        ...state,
+        roomListError: null,
     }),
     [actions.TESTTAG_ROOM_LIST_CLEAR]: state => ({
         ...initialState,

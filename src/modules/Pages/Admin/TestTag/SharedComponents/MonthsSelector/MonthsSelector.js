@@ -41,28 +41,39 @@ const MonthsSelector = ({
     return (
         <FormControl className={classNames.formControl} fullWidth={responsive && isMobileView}>
             {!!label && (
-                <InputLabel shrink required={required}>
+                <InputLabel shrink required={required} htmlFor={`${componentId}-input`}>
                     {label}
                 </InputLabel>
             )}
             <Select
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
+                MenuProps={{
+                    id: `${componentId}-options`,
+                    'data-testid': `${componentId}-options`,
+                }}
+                inputProps={{
+                    id: `${componentId}-input`,
+                    ['data-testid']: `${componentId}-input`,
+                }}
+                SelectDisplayProps={{
+                    id: `${componentId}-select`,
+                    'data-testid': `${componentId}-select`,
+                }}
                 fullWidth={responsive && isMobileView}
                 className={classNames.select}
                 value={currentValue}
                 onChange={onValueChange}
                 required={required}
                 disabled={disabled}
-                inputProps={{ id: `${componentId}-input`, 'data-testid': `${componentId}-input` }}
                 {...props}
             >
-                {options?.map(period => (
+                {options?.map((period, index) => (
                     <MenuItem
                         value={period.value}
                         key={period.value}
-                        id={`${componentId}-option-${period.value}`}
-                        data-testid={`${componentId}-option-${period.value}`}
+                        id={`${componentId}-option-${index}`}
+                        data-testid={`${componentId}-option-${index}`}
                     >
                         {period.label}
                     </MenuItem>

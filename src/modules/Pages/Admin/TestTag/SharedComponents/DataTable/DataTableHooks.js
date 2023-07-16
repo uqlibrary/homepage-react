@@ -27,8 +27,7 @@ export const useDataTableColumns = ({
         () => {
             const actionsCell = withActions
                 ? {
-                      field: 'actions',
-                      headerName: locale?.actions,
+                      field: '',
                       renderCell: params => {
                           const disableEdit = shouldDisableEdit?.(params.row) ?? false;
                           const disableDelete = shouldDisableDelete?.(params.row) ?? false;
