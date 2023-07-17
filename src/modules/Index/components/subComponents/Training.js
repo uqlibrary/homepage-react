@@ -390,6 +390,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                     href={`https://studenthub.uq.edu.au/students/events/detail/${eventDetail.entityId}`}
                                     id="training-event-detail-training-login-button"
                                     data-testid="training-event-detail-training-login-button"
+                                    data-analyticsid="training-event-detail-training-login-button"
                                 >
                                     Log in and book now
                                 </a>
