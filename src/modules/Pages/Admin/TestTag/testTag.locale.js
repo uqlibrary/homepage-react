@@ -696,7 +696,7 @@ export default {
                             columns: {
                                 asset_barcode: { label: 'Barcode' },
                                 asset_type_name: { label: 'Type' },
-                                asset_location: { label: 'Last room' },
+                                asset_location: { label: 'Location' },
                                 asset_status: { label: 'Status' },
                             },
                             locationTitle: 'Location',
