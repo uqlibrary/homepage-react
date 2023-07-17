@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const actionHandler = {
+export const actionHandler = {
     [locationType.site]: actions => {
         actions.loadSites();
     },
@@ -54,11 +54,11 @@ const actionHandler = {
     },
 };
 
-const locationDataFieldKeys = {
-    [locationType.site]: 'site_name',
-    [locationType.building]: 'building_name',
+export const locationDataFieldKeys = {
+    [locationType.site]: 'site_id_displayed',
+    [locationType.building]: 'building_id_displayed',
     [locationType.floor]: 'floor_id_displayed',
-    [locationType.room]: 'room_description',
+    [locationType.room]: 'room_id_displayed',
 };
 
 const ManageLocations = ({ actions }) => {
