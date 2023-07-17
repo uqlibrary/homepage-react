@@ -38,24 +38,24 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqtest1'));
         cy.data('user_inspections-user-name').click();
         // Select user with no records.
-        cy.data('user_inspections-user-name-option-3').click();
+        cy.data('user_inspections-user-name-option-2').click();
         cy.get('body').click();
         // Check the value of the dropdown.
-        cy.get('#user_inspections-user-name').should('contain', 'A Test User');
+        cy.data('user_inspections-user-name-select').should('contain', 'A Test User');
         // Select a second user.
         cy.wait(1000);
         cy.data('user_inspections-user-name').click();
-        cy.data('user_inspections-user-name-option-2').click();
+        cy.data('user_inspections-user-name-option-1').click();
         cy.get('body').click();
-        cy.get('#user_inspections-user-name')
-            .should('contain', 'JTest user')
+        cy.data('user_inspections-user-name-select')
+            .should('contain', 'SecondTesting user')
             .should('contain', 'A Test User');
         cy.wait(1000);
         // Select third user
-        cy.data('user_inspections-user-name').click();
-        cy.data('user_inspections-user-name-option-5').click();
+        cy.data('user_inspections-user-name-select').click();
+        cy.data('user_inspections-user-name-option-0').click();
         cy.get('body').click();
-        cy.get('#user_inspections-user-name')
+        cy.data('user_inspections-user-name-select')
             .should('contain', 'JTest user')
             .should('contain', 'SecondTesting user')
             .should('contain', '(and 1 more)');

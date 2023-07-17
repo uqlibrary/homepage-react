@@ -51,7 +51,6 @@ const AssetReportByFilters = ({
     taggedBuildingListLoaded,
     taggedBuildingListError,
     assetListLoading,
-    // assetListLoaded,
     assetListError,
 }) => {
     /* locale and styles */
