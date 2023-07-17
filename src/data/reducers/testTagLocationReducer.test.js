@@ -20,7 +20,7 @@ describe('testTagLocationReducer', () => {
                 floorList: null,
                 floorListLoaded: false,
                 floorListLoading: true,
-                floorListError: false,
+                floorListError: null,
                 roomList: null,
                 roomListLoaded: false,
                 roomListLoading: false,
@@ -39,7 +39,7 @@ describe('testTagLocationReducer', () => {
                 floorList: mockTestTagList,
                 floorListLoading: false,
                 floorListLoaded: true,
-                floorListError: false,
+                floorListError: null,
                 roomList: null,
                 roomListLoading: false,
                 roomListLoaded: false,
@@ -85,7 +85,7 @@ describe('testTagLocationReducer', () => {
                 roomList: null,
                 roomListLoading: true,
                 roomListLoaded: false,
-                roomListError: false,
+                roomListError: null,
             });
         });
 
@@ -104,7 +104,7 @@ describe('testTagLocationReducer', () => {
                 roomList: mockTestTagList,
                 roomListLoading: false,
                 roomListLoaded: true,
-                roomListError: false,
+                roomListError: null,
             });
         });
 

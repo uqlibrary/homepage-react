@@ -1,6 +1,6 @@
 import React from 'react';
 
-import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
+import TextField from '@material-ui/core/TextField';
 
 import locale from '../../../testTag.locale';
 import { createLocationString } from '../../../helpers/helpers';
@@ -13,13 +13,13 @@ export default {
                 fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
             },
             site_name: {
-                component: props => <DebouncedTextField {...props} required />,
+                component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             site_id_displayed: {
                 component: props => (
-                    <DebouncedTextField
+                    <TextField
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
@@ -42,16 +42,16 @@ export default {
             building_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canEdit: false, renderInTable: false },
+                fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
             },
             building_name: {
-                component: props => <DebouncedTextField {...props} required />,
+                component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
             building_id_displayed: {
                 component: props => (
-                    <DebouncedTextField
+                    <TextField
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
@@ -74,11 +74,11 @@ export default {
             floor_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canEdit: false, renderInTable: false, flex: 1 },
+                fieldParams: { canAdd: false, canEdit: false, renderInTable: false, flex: 1 },
             },
             floor_id_displayed: {
                 component: props => (
-                    <DebouncedTextField
+                    <TextField
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
@@ -101,15 +101,15 @@ export default {
             room_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canEdit: false, renderInTable: false },
+                fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
             },
             room_description: {
-                component: props => <DebouncedTextField {...props} />,
+                component: props => <TextField {...props} />,
                 fieldParams: { canEdit: true, flex: 1 },
             },
             room_id_displayed: {
                 component: props => (
-                    <DebouncedTextField
+                    <TextField
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required

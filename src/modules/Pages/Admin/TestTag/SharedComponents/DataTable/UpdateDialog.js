@@ -73,14 +73,19 @@ export const UpdateDialogue = ({
                 Object.keys(fields).filter(
                     field =>
                         !!(fields[field]?.fieldParams?.renderInUpdate ?? true) &&
-                        !!(fields[field]?.fieldParams?.canEdit ?? false),
+                        (!!(fields[field]?.fieldParams?.canEdit ?? true) ||
+                            !!(fields[field]?.fieldParams?.canAdd ?? true)),
                 ),
             );
         }
     }, [isOpen, fields, row, columns]);
 
     React.useEffect(() => {
-        setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field], data) ?? true));
+        setIsValid(
+            editableFields.every(field => {
+                return !dataFields[field]?.validate?.(data[field], data) ?? true;
+            }),
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
@@ -92,6 +97,10 @@ export const UpdateDialogue = ({
     const _onCancelAction = () => {
         onClose?.();
         onCancelAction?.();
+    };
+
+    const _onClickAction = e => {
+        e.stopPropagation();
     };
 
     const handleChange = event => {
@@ -160,8 +169,12 @@ export const UpdateDialogue = ({
                                                             dataFields[field]?.validate?.(data?.[field], data) ?? false,
                                                         checked: !!data?.[field],
                                                         onChange: handleChange,
+                                                        onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
+                                                            htmlFor: `${field}-input`,
+                                                            id: `${field}-label`,
+                                                            ['data-testid']: `${field}-label`,
                                                         },
                                                         inputProps: {
                                                             ['data-testid']: `${field}-input`,

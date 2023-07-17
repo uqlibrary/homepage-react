@@ -130,7 +130,7 @@ describe('LastInspectionPanel Renders component', () => {
             dateFormatPattern, // use defaults for disabled and forceOpen for cc
         });
         expect(getByText(formLocale.alertLocationMismatch)).toBeInTheDocument();
-        expect(getByTestId('lastInspectionPassChip')).toBeInTheDocument();
+        expect(getByTestId('last_inspection_panel-header-pass-chip')).toBeInTheDocument();
 
         assertFormText({ getByText, asset: testAsset });
     });
@@ -192,7 +192,7 @@ describe('LastInspectionPanel Renders component', () => {
             forceOpen: false,
         });
         expect(queryByText(formLocale.alertLocationMismatch)).not.toBeInTheDocument();
-        expect(getByTestId('lastInspectionFailChip')).toBeInTheDocument();
+        expect(getByTestId('last_inspection_panel-header-fail-chip')).toBeInTheDocument();
         assertFormText({ getByText, asset: testAsset });
     });
 
@@ -215,7 +215,7 @@ describe('LastInspectionPanel Renders component', () => {
         });
 
         act(() => {
-            fireEvent.click(getByTestId('headerExpandButton'));
+            fireEvent.click(getByTestId('last_inspection_panel-expand-button'));
         });
         expect(setStateMock).toHaveBeenCalledWith(false);
     });
@@ -239,7 +239,7 @@ describe('LastInspectionPanel Renders component', () => {
         });
 
         act(() => {
-            fireEvent.click(getByTestId('headerExpandButton'));
+            fireEvent.click(getByTestId('last_inspection_panel-expand-button'));
         });
         expect(setStateMock).not.toHaveBeenCalled();
     });
@@ -263,7 +263,7 @@ describe('LastInspectionPanel Renders component', () => {
         });
 
         expect(getByText(formLocale.alertLocationMismatch)).toBeInTheDocument();
-        expect(getByTestId('lastInspectionPassChip')).toBeInTheDocument();
+        expect(getByTestId('last_inspection_panel-header-pass-chip')).toBeInTheDocument();
         expect(queryByText(asset.last_location.site_id_displayed)).not.toBeInTheDocument();
         expect(queryByText(asset.last_location.site_name)).not.toBeInTheDocument();
         expect(queryByText(asset.last_location.building_id_displayed)).not.toBeInTheDocument();

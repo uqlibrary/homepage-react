@@ -15,13 +15,16 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Box from '@material-ui/core/Box';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ActionPanel from './ActionPanel';
-import DebouncedTextField from '../../SharedComponents/DebouncedTextField/DebouncedTextField';
 import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
 import locale from '../../testTag.locale';
 import { isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
+
+const componentId = 'inspection-panel';
+const componentIdLower = 'inspection_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 const moment = require('moment');
@@ -50,15 +53,6 @@ const InspectionPanel = ({
     disabled,
     isMobileView,
 }) => {
-    InspectionPanel.propTypes = {
-        formValues: PropTypes.object.isRequired,
-        selectedAsset: PropTypes.object,
-        handleChange: PropTypes.func.isRequired,
-        defaultNextTestDateValue: PropTypes.string.isRequired,
-        classes: PropTypes.any.isRequired,
-        disabled: PropTypes.bool.isRequired,
-        isMobileView: PropTypes.bool.isRequired,
-    };
     const pageLocale = locale.pages.inspect;
     const monthsOptions = locale.config.monthsOptions;
     const classesInternal = useStyles();
@@ -87,28 +81,37 @@ const InspectionPanel = ({
 
     return (
         <StandardCard
+            standardCardId={componentIdLower}
             title={`${pageLocale.form.inspection.title}`}
             style={{ marginBottom: 30 }}
             smallTitle
             variant="outlined"
             noPadding={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
         >
-            <Collapse
-                in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value}
-                timeout="auto"
-                data-testid="collapseActionPanel"
-            >
+            <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={3}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <InputLabel required htmlFor="testResultTestingDevice">
+                            <InputLabel required htmlFor={`${componentIdLower}-inspection-device-input`}>
                                 {pageLocale.form.inspection.deviceLabel}
                             </InputLabel>
                             <Select
+                                id={`${componentIdLower}-inspection-device`}
+                                data-testid={`${componentIdLower}-inspection-device`}
+                                MenuProps={{
+                                    id: `${componentIdLower}-inspection-device-options`,
+                                    'data-testid': `${componentIdLower}-inspection-device-options`,
+                                }}
+                                inputProps={{
+                                    id: `${componentIdLower}-inspection-device-input`,
+                                    ['data-testid']: `${componentIdLower}-inspection-device-input`,
+                                }}
+                                SelectDisplayProps={{
+                                    id: `${componentIdLower}-inspection-device-select`,
+                                    'data-testid': `${componentIdLower}-inspection-device-select`,
+                                }}
                                 fullWidth
                                 className={classes.formSelect}
-                                id="testResultTestingDevice"
-                                data-testid="testResultTestingDevice"
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => handleChange('inspection_device_id')(e.target.value)}
                                 required
@@ -130,8 +133,13 @@ const InspectionPanel = ({
                                     !!inspectionConfig &&
                                     !!inspectionConfig?.inspection_devices &&
                                     inspectionConfig?.inspection_devices?.length > 0 &&
-                                    inspectionConfig.inspection_devices.map(device => (
-                                        <MenuItem value={device.device_id} key={device.device_id}>
+                                    inspectionConfig.inspection_devices.map((device, index) => (
+                                        <MenuItem
+                                            value={device.device_id}
+                                            key={device.device_id}
+                                            id={`${componentIdLower}-inspection-device-option-${index}`}
+                                            data-testid={`${componentIdLower}-inspection-device-option-${index}`}
+                                        >
                                             {device.device_model_name}
                                         </MenuItem>
                                     ))}
@@ -140,14 +148,18 @@ const InspectionPanel = ({
                     </Grid>
                     <Grid item xs={12}>
                         <Box>
-                            <InputLabel shrink required htmlFor="testResultToggleButtons">
+                            <InputLabel
+                                shrink
+                                required
+                                htmlFor={`${componentIdLower}-inspection-result-toggle-buttons`}
+                            >
                                 {pageLocale.form.inspection.testResultLabel}
                             </InputLabel>
                             <ToggleButtonGroup
                                 value={formValues.inspection_status ?? testStatusEnum.NONE.value}
                                 exclusive
-                                id="testResultToggleButtons"
-                                data-testid="testResultToggleButtons"
+                                id={`${componentIdLower}-inspection-result-toggle-buttons`}
+                                data-testid={`${componentIdLower}-inspection-result-toggle-buttons`}
                                 size={isMobileView ? 'large' : 'small'}
                                 defaultChecked={false}
                                 onChange={(/* istanbul ignore next*/ _, child) => {
@@ -156,8 +168,8 @@ const InspectionPanel = ({
                                 style={{ display: 'flex' }}
                             >
                                 <ToggleButton
-                                    id={`testResultToggleButtons-${testStatusEnum.PASSED.value}`}
-                                    data-testid={`testResultToggleButtons-${testStatusEnum.PASSED.value}`}
+                                    id={`${componentIdLower}-inspection-result-${testStatusEnum.PASSED.value.toLowerCase()}-button`}
+                                    data-testid={`${componentIdLower}-inspection-result-${testStatusEnum.PASSED.value.toLowerCase()}-button`}
                                     value={testStatusEnum.PASSED.value}
                                     aria-label={testStatusEnum.PASSED.label}
                                     classes={{
@@ -170,8 +182,8 @@ const InspectionPanel = ({
                                     <DoneIcon /> {testStatusEnum.PASSED.label}
                                 </ToggleButton>
                                 <ToggleButton
-                                    id={`testResultToggleButtons-${testStatusEnum.FAILED.value}`}
-                                    data-testid={`testResultToggleButtons-${testStatusEnum.FAILED.value}`}
+                                    id={`${componentIdLower}-inspection-result-${testStatusEnum.FAILED.value.toLowerCase()}-button`}
+                                    data-testid={`${componentIdLower}-inspection-result-${testStatusEnum.FAILED.value.toLowerCase()}-button`}
                                     value={testStatusEnum.FAILED.value}
                                     aria-label={testStatusEnum.FAILED.label}
                                     classes={{
@@ -189,7 +201,7 @@ const InspectionPanel = ({
                     {formValues.inspection_status === testStatusEnum.PASSED.value && (
                         <Grid item xs={12}>
                             <MonthsSelector
-                                id="testResultNextDate"
+                                id={componentId}
                                 label={pageLocale.form.inspection.nextTestDateLabel}
                                 options={monthsOptions}
                                 currentValue={formNextTestDate}
@@ -208,19 +220,22 @@ const InspectionPanel = ({
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
                         <Grid item xs={12} sm={12}>
                             <FormControl className={classes.formControl} fullWidth>
-                                <DebouncedTextField
+                                <TextField
                                     {...pageLocale.form.inspection.failReason}
                                     multiline
                                     minRows={4}
                                     variant="standard"
-                                    InputProps={{ fullWidth: true }}
                                     required
                                     disabled={disabled}
                                     error={!isValidFailReason(formValues, testStatusEnum.FAILED.value)}
                                     value={formValues?.inspection_fail_reason ?? ''}
                                     onChange={handleFailReasonChange}
-                                    id="inspectionFailReason"
-                                    data-testid="inspectionFailReason"
+                                    id={`${componentIdLower}-fail-reason`}
+                                    InputProps={{ fullWidth: true }}
+                                    InputLabelProps={{ htmlFor: `${componentIdLower}-fail-reason` }}
+                                    inputProps={{
+                                        'data-testid': `${componentIdLower}-fail-reason-input`,
+                                    }}
                                 />
                             </FormControl>
                         </Grid>
@@ -228,17 +243,20 @@ const InspectionPanel = ({
 
                     <Grid item xs={12} sm={12}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <DebouncedTextField
+                            <TextField
                                 {...pageLocale.form.inspection.inspectionNotes}
                                 multiline
                                 minRows={4}
                                 variant="standard"
-                                InputProps={{ fullWidth: true }}
                                 disabled={disabled}
                                 value={formValues?.inspection_notes ?? ''}
                                 onChange={handleInspectionNotesChange}
-                                id="inspectionNotes"
-                                data-testid="inspectionNotes"
+                                id={`${componentIdLower}-inspection-notes`}
+                                InputProps={{ fullWidth: true }}
+                                InputLabelProps={{ htmlFor: `${componentIdLower}-inspection-notes` }}
+                                inputProps={{
+                                    'data-testid': `${componentIdLower}-inspection-notes-input`,
+                                }}
                             />
                         </FormControl>
                     </Grid>
@@ -254,6 +272,16 @@ const InspectionPanel = ({
             </Collapse>
         </StandardCard>
     );
+};
+
+InspectionPanel.propTypes = {
+    formValues: PropTypes.object.isRequired,
+    selectedAsset: PropTypes.object,
+    handleChange: PropTypes.func.isRequired,
+    defaultNextTestDateValue: PropTypes.string.isRequired,
+    classes: PropTypes.any.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    isMobileView: PropTypes.bool.isRequired,
 };
 
 export default React.memo(InspectionPanel);
