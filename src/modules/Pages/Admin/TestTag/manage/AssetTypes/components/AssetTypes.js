@@ -5,22 +5,23 @@ import { makeStyles } from '@material-ui/core/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 
-import DataTable from './../../../SharedComponents/DataTable/DataTable';
-
-import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
-import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
-import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
-import ActionDialogue from './ActionDialogue';
-
-import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
+import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
+import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
+import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import ActionDialogue from './ActionDialogue';
+
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+import locale from '../../../testTag.locale';
+import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
+
+const componentId = 'asset-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -34,13 +35,20 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) => {
+const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, assetTypesListError }) => {
     const pageLocale = locale.pages.manage.assetTypes;
-
     const classes = useStyles();
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
     const [confirmID, setConfirmID] = React.useState(null);
+
+    const onCloseConfirmationAlert = () => actions.clearAssetTypesError();
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: assetTypesListError,
+        errorMessageFormatter: locale.config.alerts.error,
+    });
 
     const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
 
@@ -66,11 +74,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
     };
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
         closeConfirmationAlert();
@@ -93,6 +96,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
         locale: pageLocale.form.columns,
         handleEditClick: onRowEdit,
         handleDeleteClick: onRowDelete,
+        actionDataFieldKeys: { valueKey: 'asset_type_name' },
     });
 
     const { row } = useDataTableRow(assetTypesList);
@@ -102,60 +106,59 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const openConfirmationAlert = (message, type, autoHide) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: !!autoHide ? 6000 : null,
-        });
-    };
     const handleAddClick = () => {
         closeConfirmationAlert();
         actionDispatch({ type: 'add' });
     };
 
     const onRowAdd = data => {
-        const Payload = data;
-        delete Payload.asset_type_id;
+        const payload = structuredClone(data);
+        delete payload.asset_type_id;
         setDialogueBusy(true);
         actions
-            .addAssetType(Payload)
+            .addAssetType(payload)
             .then(() => {
                 actions
                     .loadAssetTypes()
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(pageLocale.snackbars.addSuccess, 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.addFailed(error), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
     const onRowUpdate = data => {
+        const id = data?.asset_type_id;
         setDialogueBusy(true);
         actions
-            .saveAssetType(data)
+            .saveAssetType(id, data)
             .then(() => {
                 actions
                     .loadAssetTypes()
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(pageLocale.snackbars.updateSuccess, 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.updateFail(error), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
@@ -165,31 +168,35 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
     };
 
     const onActionDialogueProceed = (oldTypeID, newTypeID) => {
-        const Payload = {
+        const payload = {
             old_asset_type_id: oldTypeID,
             new_asset_type_id: newTypeID,
         };
         setDialogueBusy(true);
         actions
-            .deleteAndReassignAssetType(Payload)
-            .then(response => {
-                openConfirmationAlert(pageLocale.snackbars.reallocateSuccess(response), 'success', true);
+            .deleteAndReassignAssetType(payload)
+            .then(() => {
                 actions
                     .loadAssetTypes()
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.loadFailed(error), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.reallocateFail(error), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
     const onDeleteEmptyAssetType = () => {
+        setDialogueBusy(true);
         actions
             .deleteAssetType(confirmID)
             .then(() => {
@@ -197,23 +204,21 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     .loadAssetTypes()
                     .then(() => {
                         setDialogueBusy(false);
-                        openConfirmationAlert(pageLocale.snackbars.deleteSuccess, 'success', true);
                         actionDispatch({ type: 'clear' });
+                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
                     })
                     .catch(error => {
-                        openConfirmationAlert(pageLocale.snackbars.deleteFail(error), 'error', false);
+                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
                     });
             })
             .catch(error => {
-                openConfirmationAlert(pageLocale.snackbars.deleteFail(error), 'error', false);
+                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+            })
+            .finally(() => {
+                setDialogueBusy(false);
             });
     };
 
-    // const columns = useMemo(
-    //     () => getColumns({ data: assetTypesList, onRowEdit, onRowDelete }),
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //     [assetTypesList],
-    // );
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -221,6 +226,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
             <ActionDialogue
+                id={componentId}
                 data={assetTypesList}
                 row={actionState.row}
                 isOpen={actionState.isDelete}
@@ -233,7 +239,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <UpdateDialog
                         title={actionState.title}
                         action="add"
-                        updateDialogueBoxId="addRow"
+                        id={componentId}
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
                         fields={config?.fields ?? []}
@@ -247,7 +253,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <UpdateDialog
                         title={actionState.title}
                         action="edit"
-                        updateDialogueBoxId="editRow"
+                        id={componentId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
                         fields={config?.fields ?? []}
@@ -263,7 +269,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                         actionButtonColor="primary"
                         actionButtonVariant="contained"
                         cancelButtonColor="secondary"
-                        confirmationBoxId="testTag-network-error"
+                        confirmationBoxId={componentId}
                         onAction={onDeleteEmptyAssetType}
                         onClose={hideDeleteConfirm}
                         isOpen={isDeleteConfirmOpen}
@@ -274,6 +280,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                     <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId="asset_type_id"
@@ -282,6 +289,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {
+                                        id: componentId,
                                         label: pageLocale.header.addButtonLabel,
                                         onClick: handleAddClick,
                                     },
@@ -306,6 +314,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading }) =>
 ManageAssetTypes.propTypes = {
     actions: PropTypes.object,
     assetTypesList: PropTypes.array,
+    assetTypesListError: PropTypes.string,
     assetTypesActionType: PropTypes.string,
     assetTypesListLoading: PropTypes.bool,
     assetTypesActionError: PropTypes.bool,

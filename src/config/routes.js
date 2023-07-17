@@ -27,6 +27,7 @@ export const flattedPathConfigExact = [
     '/admin/promopanel',
     '/admin/testntag',
     '/admin/testntag/manage/assettypes',
+    '/admin/testntag/manage/users',
     '/book-exam-booth',
     '/exams',
     '/exams/',
@@ -227,6 +228,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
+            path: pathConfig.admin.testntagmanageinspectiondetails,
+            component: components.TestTagManageInspectionDetails,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
             path: pathConfig.admin.testntagreportrecalibrationssdue,
             component: components.TestTagReportRecalibrationsDue,
             exact: true,
@@ -247,6 +254,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.testntagreportassetsbyfilters,
             component: components.TestTagAssetReportByFilters,
+            exact: true,
+            pageTitle: locale.pages.admin.testntag.title,
+        },
+        {
+            path: pathConfig.admin.testntagmanageusers,
+            component: components.TestTagManageUsers,
             exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },

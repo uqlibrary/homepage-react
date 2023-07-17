@@ -15,10 +15,13 @@ import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
+
+const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -30,37 +33,39 @@ const useStyles = makeStyles(theme => ({
     gridRoot: {
         border: 0,
     },
+    inspectionOverdue: {
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
+    },
 }));
 
 const InspectionDevices = ({
+    componentId,
+    componentIdLower,
     actions,
     canManage = true,
     pageLocale,
     inspectionDevices,
     inspectionDevicesLoading,
-    inspectionDevicesLoaded,
     inspectionDevicesError,
 }) => {
+    const today = moment().format(locale.config.format.dateFormatNoTime);
+
     const classes = useStyles();
     const pagePermissions = [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports];
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({ message: message, visible: true, type: !!type ? type : 'info', autoHideDuration: 6000 });
-    };
+    const onCloseConfirmationAlert = () => actions.clearInspectionDevicesError();
+    const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: inspectionDevicesError,
+        errorMessageFormatter: locale.config.alerts.error,
+    });
 
     const closeDialog = () => actionDispatch({ type: 'clear' });
-
-    const handleApiError = response => {
-        openConfirmationAlert(`Request failed: ${response.message}`, 'error');
-    };
 
     const handleAddClick = () => {
         actionDispatch({
@@ -96,12 +101,12 @@ const InspectionDevices = ({
             .addInspectionDevice(wrappedRequest)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts?.addSuccess, 'success');
-                actions.clearInspectionDevices();
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
+                actions.loadInspectionDevices();
             })
             .catch(error => {
                 console.log(error);
-                handleApiError({ message: pageLocale.alerts?.addFail });
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -119,12 +124,12 @@ const InspectionDevices = ({
             .updateInspectionDevice(id, wrappedRequest)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts?.updateSuccess, 'success');
-                actions.clearInspectionDevices();
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
+                actions.loadInspectionDevices();
             })
             .catch(error => {
                 console.log(error);
-                handleApiError({ message: pageLocale.alerts?.updateFail });
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -141,12 +146,12 @@ const InspectionDevices = ({
             .deleteInspectionDevice(id)
             .then(() => {
                 closeDialog();
-                openConfirmationAlert(pageLocale.alerts?.deleteSuccess, 'success');
-                actions.clearInspectionDevices();
+                openConfirmationAlert(locale.config.alerts.success(), 'success');
+                actions.loadInspectionDevices();
             })
             .catch(error => {
                 console.log(error);
-                handleApiError({ message: pageLocale.alerts?.deleteFail });
+                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -158,15 +163,14 @@ const InspectionDevices = ({
         withActions: canManage,
         handleEditClick,
         handleDeleteClick,
+        actionDataFieldKeys: { valueKey: 'device_model_name' },
     });
 
     const { row } = useDataTableRow(inspectionDevices, transformRow);
 
     useEffect(() => {
-        if (!inspectionDevicesLoading && !inspectionDevicesLoaded && !inspectionDevicesError) {
-            actions.loadInspectionDevices();
-        }
-    }, [actions, inspectionDevicesError, inspectionDevicesLoaded, inspectionDevicesLoading]);
+        actions.loadInspectionDevices();
+    }, [actions]);
 
     return (
         <StandardAuthPage
@@ -182,7 +186,7 @@ const InspectionDevices = ({
                             <UpdateDialog
                                 title={actionState.title}
                                 action="add"
-                                updateDialogueBoxId="addRow"
+                                id={componentId}
                                 isOpen={actionState.isAdd}
                                 locale={pageLocale?.dialogAdd}
                                 fields={config.fields ?? []}
@@ -196,7 +200,7 @@ const InspectionDevices = ({
                             <UpdateDialog
                                 title={actionState.title}
                                 action="edit"
-                                updateDialogueBoxId="editRow"
+                                id={componentId}
                                 isOpen={actionState.isEdit}
                                 locale={pageLocale?.dialogEdit}
                                 fields={config?.fields ?? []}
@@ -211,7 +215,7 @@ const InspectionDevices = ({
                                 actionButtonColor="primary"
                                 actionButtonVariant="contained"
                                 cancelButtonColor="secondary"
-                                confirmationBoxId="deleteRow"
+                                confirmationBoxId={componentId}
                                 onCancelAction={closeDialog}
                                 onAction={onRowDelete}
                                 isOpen={actionState.isDelete}
@@ -224,8 +228,8 @@ const InspectionDevices = ({
                                                   <CircularProgress
                                                       color="inherit"
                                                       size={25}
-                                                      id="confirmationSpinner"
-                                                      data-testid="confirmationSpinner"
+                                                      id={`${componentIdLower}-progress`}
+                                                      data-testid={`${componentIdLower}-progress`}
                                                   />
                                               ),
                                           }
@@ -240,6 +244,7 @@ const InspectionDevices = ({
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId={'device_id'}
@@ -248,6 +253,7 @@ const InspectionDevices = ({
                                     ...(canManage
                                         ? {
                                               toolbar: {
+                                                  id: componentId,
                                                   label: pageLocale.form?.addDeviceButton,
                                                   onClick: handleAddClick,
                                               },
@@ -256,6 +262,11 @@ const InspectionDevices = ({
                                 }}
                                 loading={inspectionDevicesLoading}
                                 classes={{ root: classes.gridRoot }}
+                                getCellClassName={params =>
+                                    params.field === 'device_calibration_due_date' && params.value <= today
+                                        ? classes.inspectionOverdue
+                                        : ''
+                                }
                             />
                         </Grid>
                     </Grid>
@@ -273,6 +284,8 @@ const InspectionDevices = ({
 };
 
 InspectionDevices.propTypes = {
+    componentId: PropTypes.string.isRequired,
+    componentIdLower: PropTypes.string.isRequired, // container provided
     actions: PropTypes.object,
     canManage: PropTypes.bool,
     pageLocale: PropTypes.object.isRequired,

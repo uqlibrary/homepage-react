@@ -4,6 +4,8 @@ import { rtlRender, act, fireEvent, waitFor } from 'test-utils';
 
 import locale from '../../testTag.locale.js';
 
+import { componentId } from './ActionPanel';
+
 function setup(testProps = {}, renderer = rtlRender) {
     return renderer(<ActionPanel {...testProps} />);
 }
@@ -37,8 +39,8 @@ describe('ActionPanel', () => {
         const { getByText, getByTestId } = setup({ formValues, handleChange, classes, isMobileView, disabled });
 
         expect(getByText(locale.pages.inspect.form.action.title)).toBeInTheDocument();
-        expect(getByTestId('tab-repair')).toBeInTheDocument();
-        expect(getByTestId('tab-discard')).toBeInTheDocument();
+        expect(getByTestId(`${componentId}-repair-tab-button`)).toBeInTheDocument();
+        expect(getByTestId(`${componentId}-discard-tab-button`)).toBeInTheDocument();
     });
 
     it('allows selection of tabs', () => {
@@ -57,13 +59,13 @@ describe('ActionPanel', () => {
         const { getByTestId } = setup({ formValues: testValues, handleChange, classes, isMobileView, disabled });
 
         act(() => {
-            fireEvent.click(getByTestId('tab-discard'));
+            fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
         });
 
         expect(setStateMock).toHaveBeenCalledWith(1);
 
         act(() => {
-            fireEvent.click(getByTestId('tab-repair'));
+            fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
         });
 
         expect(setStateMock).toHaveBeenCalledWith(0);
@@ -83,21 +85,20 @@ describe('ActionPanel', () => {
         const { getByTestId } = setup({ formValues, handleChange, classes, isMobileView, disabled });
 
         act(() => {
-            fireEvent.click(getByTestId('tab-discard'));
+            fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
         });
 
         expect(setStateMock).toHaveBeenCalledWith(1);
 
         act(() => {
-            fireEvent.click(getByTestId('tab-repair'));
+            fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
         });
         // can only access the Repair tab if status === FAILED
         expect(setStateMock).not.toHaveBeenCalledWith(0);
     });
 
     it('allows entry of repair text', async () => {
-        const testId = 'repairerDetails';
-        const testInputId = 'repairerDetails-input';
+        const testInputId = `${componentId}-repairer-details-input`;
         const updateKey = 'repairer_contact_details';
         const newValue = 'repair details';
 
@@ -123,7 +124,6 @@ describe('ActionPanel', () => {
             disabled,
         });
 
-        expect(getByTestId(testId)).toBeInTheDocument();
         expect(getByTestId(testInputId)).toBeInTheDocument();
         act(() => {
             fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });
@@ -132,8 +132,7 @@ describe('ActionPanel', () => {
     });
 
     it('allows entry of discarded text', async () => {
-        const testId = 'discardReason';
-        const testInputId = 'discardReason-input';
+        const testInputId = `${componentId}-discard-reason-input`;
         const updateKey = 'discard_reason';
         const newValue = 'discard details';
         // eslint-disable-next-line no-unused-vars
@@ -159,10 +158,9 @@ describe('ActionPanel', () => {
         });
 
         act(() => {
-            fireEvent.click(getByTestId('tab-discard'));
+            fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
         });
 
-        expect(getByTestId(testId)).toBeInTheDocument();
         expect(getByTestId(testInputId)).toBeInTheDocument();
         act(() => {
             fireEvent.change(getByTestId(testInputId), { target: { value: newValue } });

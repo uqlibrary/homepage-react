@@ -19,10 +19,27 @@ export const transformRow = row => {
 };
 
 export const transformRequest = formValues => {
+    if (!!formValues.hasDiscardStatus) {
+        formValues.hasLocation = false;
+        formValues.hasAssetType = false;
+    } else {
+        formValues.hasDiscardStatus = false;
+    }
     return {
         asset: formValues.asset_list.reduce((cumulative, current) => [...cumulative, current.asset_id], []),
         ...(!!formValues.hasLocation ? { asset_room_id_last_seen: formValues.location.room } : {}),
         ...(!!formValues.hasAssetType ? { asset_type_id: formValues.asset_type.asset_type_id } : {}),
-        ...(!!formValues.hasStatus ? { is_discarding: 1 } : {}),
+        ...(!!formValues.hasDiscardStatus ? { is_discarding: 1, discard_reason: formValues.discard_reason } : {}),
     };
+};
+
+export const transformFilterRow = row => {
+    return row.map(line => {
+        if (!!line?.asset_id_displayed) return line;
+        return {
+            ...line,
+            asset_id_displayed: line?.asset_barcode ?? '',
+            asset_location: line?.asset_room_id_last_seen ?? '',
+        };
+    });
 };

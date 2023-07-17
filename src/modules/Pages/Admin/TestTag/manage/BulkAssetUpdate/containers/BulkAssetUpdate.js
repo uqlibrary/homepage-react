@@ -7,11 +7,11 @@ import * as actions from 'data/actions';
 const DEFAULT_FORM_VALUES = {
     asset_list: [],
     hasLocation: false,
-    hasStatus: false,
+    hasDiscardStatus: false,
     hasAssetType: false,
     location: undefined,
     asset_type: undefined,
-    asset_status: undefined,
+    discard_reason: undefined,
 };
 
 export const mapStateToProps = () => {

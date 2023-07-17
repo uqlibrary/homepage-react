@@ -8,7 +8,10 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 
+import { getDataFieldParams } from './utils';
+
 const defaultTheme = createTheme();
+const rootId = 'action_cell';
 
 const useStyles = makeStyles(
     theme => ({
@@ -25,8 +28,11 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClick, handleDeleteClick }) => {
+const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, disableDelete, dataFieldKeys }) => {
+    const componentId = `${rootId}-${id}`;
     const classes = useStyles();
+
+    const { dataFieldName, dataFieldValue } = getDataFieldParams(api.getRow(id), dataFieldKeys);
 
     const onEditClick = event => {
         event.stopPropagation();
@@ -40,25 +46,33 @@ const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClic
 
     return (
         <div className={classes.root}>
-            {withActions.includes('edit') && (
+            {!!handleEditClick && (
                 <IconButton
+                    id={`${componentId}-edit-button`}
+                    data-testid={`${componentId}-edit-button`}
+                    {...(!!dataFieldValue ? { ['data-field']: dataFieldName, ['data-value']: dataFieldValue } : {})}
+                    data-action="edit"
                     color="inherit"
                     className={classes.textPrimary}
                     size="small"
                     aria-label="edit"
-                    disabled={!!!handleEditClick}
+                    disabled={disableEdit}
                     onClick={onEditClick}
                 >
                     <EditIcon fontSize="small" />
                 </IconButton>
             )}
 
-            {withActions.includes('delete') && (
+            {!!handleDeleteClick && (
                 <IconButton
+                    id={`${componentId}-delete-button`}
+                    data-testid={`${componentId}-delete-button`}
+                    {...(!!dataFieldValue ? { ['data-field']: dataFieldName, ['data-value']: dataFieldValue } : {})}
+                    data-action="delete"
                     color="inherit"
                     size="small"
                     aria-label="delete"
-                    disabled={!!!handleDeleteClick}
+                    disabled={disableDelete}
                     onClick={onDeleteClick}
                 >
                     <DeleteIcon fontSize="small" />
@@ -68,12 +82,14 @@ const RowMenuCell = ({ api, id, withActions = ['edit', 'delete'], handleEditClic
     );
 };
 
-RowMenuCell.propTypes = {
+ActionCell.propTypes = {
     api: PropTypes.object.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    withActions: PropTypes.array,
     handleEditClick: PropTypes.func,
     handleDeleteClick: PropTypes.func,
+    disableEdit: PropTypes.bool,
+    disableDelete: PropTypes.bool,
+    dataFieldKeys: PropTypes.object,
 };
 
-export default React.memo(RowMenuCell);
+export default React.memo(ActionCell);

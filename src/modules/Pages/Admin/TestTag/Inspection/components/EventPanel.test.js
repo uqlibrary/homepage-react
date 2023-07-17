@@ -63,15 +63,15 @@ describe('EventPanel', () => {
 
         expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(setLocation).toHaveBeenCalledWith({ site: 1 });
-        expect(getByTestId('testntag-form-event-date')).toBeInTheDocument();
-        expect(getByTestId('testntag-form-siteid')).toBeInTheDocument();
-        expect(getByTestId('testntag-form-buildingid')).toBeInTheDocument();
-        expect(getByTestId('testntag-form-floorid')).toBeInTheDocument();
-        expect(getByTestId('testntag-form-roomid')).toBeInTheDocument();
+        expect(getByTestId('event_panel-event-date')).toBeInTheDocument();
+        expect(getByTestId('location_picker-event-panel-site')).toBeInTheDocument();
+        expect(getByTestId('location_picker-event-panel-building')).toBeInTheDocument();
+        expect(getByTestId('location_picker-event-panel-floor')).toBeInTheDocument();
+        expect(getByTestId('location_picker-event-panel-room')).toBeInTheDocument();
 
         // test expander
         act(() => {
-            fireEvent.click(getByTestId('testntagEventPanelExpander'));
+            fireEvent.click(getByTestId('event_panel-expand-button'));
         });
         expect(setStateMock).toHaveBeenCalledWith(false);
     });
@@ -113,8 +113,8 @@ describe('EventPanel', () => {
             },
         });
 
-        expect(getByTestId('testntag-form-floorid-input')).toHaveAttribute('value', 'Test Floor');
-        expect(getByTestId('testntag-form-roomid-input')).toHaveAttribute('value', 'Test Room');
+        expect(getByTestId('location_picker-event-panel-floor-input')).toHaveAttribute('value', 'Test Floor');
+        expect(getByTestId('location_picker-event-panel-room-input')).toHaveAttribute('value', 'Test Room');
     });
 
     it('shows error status on building id when hasInspection=true and location empty', () => {
@@ -131,7 +131,7 @@ describe('EventPanel', () => {
             handleChange,
             hasInspection: true,
         });
-        expect(getByTestId('testntag-form-buildingid-input')).toHaveAttribute('aria-invalid', 'true');
+        expect(getByTestId('location_picker-event-panel-building-input')).toHaveAttribute('aria-invalid', 'true');
     });
 
     it('shows error status on floor id when hasInspection=true and location empty', () => {
@@ -148,7 +148,7 @@ describe('EventPanel', () => {
             handleChange,
             hasInspection: true,
         });
-        expect(getByTestId('testntag-form-floorid-input')).toHaveAttribute('aria-invalid', 'true');
+        expect(getByTestId('location_picker-event-panel-floor-input')).toHaveAttribute('aria-invalid', 'true');
     });
 
     it('shows error status on room id when hasInspection=true and location empty', () => {
@@ -165,7 +165,7 @@ describe('EventPanel', () => {
             handleChange,
             hasInspection: true,
         });
-        expect(getByTestId('testntag-form-roomid-input')).toHaveAttribute('aria-invalid', 'true');
+        expect(getByTestId('location_picker-event-panel-room-input')).toHaveAttribute('aria-invalid', 'true');
     });
 
     it('shows loading spinners', async () => {
@@ -185,9 +185,9 @@ describe('EventPanel', () => {
                 testTagLocationReducer: { floorList: [], floorListLoading: true, roomList: [], roomListLoading: true },
             },
         });
-        expect(getByTestId('buildingSpinner')).toBeInTheDocument();
-        expect(getByTestId('floorSpinner')).toBeInTheDocument();
-        expect(getByTestId('roomSpinner')).toBeInTheDocument();
+        expect(getByTestId('location_picker-event-panel-building-progress')).toBeInTheDocument();
+        expect(getByTestId('location_picker-event-panel-floor-progress')).toBeInTheDocument();
+        expect(getByTestId('location_picker-event-panel-room-progress')).toBeInTheDocument();
     });
 
     it('should handle defaults (coverage)', () => {

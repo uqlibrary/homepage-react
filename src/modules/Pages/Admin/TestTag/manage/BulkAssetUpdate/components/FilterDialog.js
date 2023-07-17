@@ -9,15 +9,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
-import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
-// eslint-disable-next-line no-unused-vars
-export const useStyles = makeStyles(theme => ({
+import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
+import { transformFilterRow } from './utils';
+import { useConfirmationAlert } from '../../../helpers/hooks';
+
+const rootId = 'filter-dialog';
+const rootIdLower = 'filter_dialog';
+
+const useStyles = makeStyles(() => ({
     dialogPaper: {
         minHeight: '30vh',
         maxWidth: '100%',
@@ -27,35 +33,39 @@ export const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const transformRow = row => {
-    return row.map(line => {
-        if (!!line?.asset_id_displayed) return line;
-        return {
-            ...line,
-            asset_id_displayed: line?.asset_barcode ?? '',
-            asset_location: line?.asset_room_id_last_seen ?? '',
-        };
-    });
-};
-
 const FilterDialog = ({
     id,
     actions,
     isOpen = false,
     isBusy = false,
+    isMobileView = false,
+    confirmAlertTimeout = 6000,
+    locale,
     locationLocale,
     assetTypeLocale,
-    locale,
     config,
+    errorMessageFormatter,
     onCancel,
     onAction,
 }) => {
+    const componentId = `${rootIdLower}-${id}`;
     const classes = useStyles();
-    const { row, setRow } = useDataTableRow([], transformRow);
+    const { row, setRow } = useDataTableRow([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');
     const [selectedAssets, setSelectedAssets] = useState([]);
-    const { assetsMineList, assetsMineListLoading } = useSelector(state => state.get('testTagAssetsReducer'));
+    const { assetsMineList, assetsMineListLoading, assetsMineListError } = useSelector(state =>
+        state.get('testTagAssetsReducer'),
+    );
     const locationStore = useSelector(state => state.get('testTagLocationReducer'));
+
+    const onCloseConfirmationAlert = () => actions.clearAssetsMineError();
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: confirmAlertTimeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: assetsMineListError,
+        errorMessageFormatter,
+    });
+
     const { location, setLocation } = useLocation();
     const { lastSelectedLocation } = useSelectLocation({
         location,
@@ -112,105 +122,124 @@ const FilterDialog = ({
         setAssetTypeId(row?.asset_type_id ?? '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
-        console.log('handleAssetSelectionChange', selectedRowIds);
-        const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_id));
+        const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
+
+        console.log('handleAssetSelectionChange', row, selectedRowIds, assets);
         setSelectedAssets(assets);
     };
 
     return (
-        <Dialog
-            classes={{ paper: classes.dialogPaper }}
-            style={{ padding: 6 }}
-            open={isOpen}
-            data-testid={`dialogbox-${id}`}
-            fullWidth
-            aria-describedby="messageTitle"
-        >
-            <DialogTitle id="messageTitle" data-testid="messageTitle">
-                {locale?.title}
-            </DialogTitle>
-            <DialogContent>
-                <Grid container spacing={3}>
-                    <AutoLocationPicker
-                        actions={actions}
-                        location={location}
-                        setLocation={setLocation}
-                        locale={locationLocale}
-                        hasAllOption
-                    />
-                </Grid>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={4} padding={3} style={{ flex: 1 }}>
-                        <AssetTypeSelector
-                            id="bulkAssetUpdateFilterDialog"
-                            locale={assetTypeLocale}
+        <>
+            <Dialog
+                classes={{ paper: classes.dialogPaper }}
+                style={{ padding: 6 }}
+                open={isOpen}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
+                fullWidth
+                aria-describedby="messageTitle"
+            >
+                <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
+                    {locale?.title}
+                </DialogTitle>
+                <DialogContent>
+                    <Grid container spacing={3}>
+                        <AutoLocationPicker
+                            id={rootId}
                             actions={actions}
-                            onChange={handleAssetTypeChange}
-                            validateAssetTypeId={isValidAssetTypeId}
-                            required={false}
-                            autoSelect={false}
-                            autoHighlight={false}
-                            selectOnFocus
-                            disableClearable={false}
+                            location={location}
+                            setLocation={setLocation}
+                            locale={locationLocale}
+                            hasAllOption
                         />
                     </Grid>
-                </Grid>
-                <Grid container spacing={3}>
-                    <Grid item padding={3} style={{ flex: 1 }}>
-                        <DataTable
-                            rows={row}
-                            columns={columns}
-                            rowId={'asset_id'}
-                            loading={assetsMineListLoading}
-                            classes={{ root: classes.gridRoot }}
-                            checkboxSelection
-                            disableRowSelectionOnClick
-                            onSelectionModelChange={handleAssetSelectionChange}
-                            autoHeight={false}
-                        />
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={4} padding={3} style={{ flex: 1 }}>
+                            <AssetTypeSelector
+                                id={rootId}
+                                locale={assetTypeLocale}
+                                actions={actions}
+                                onChange={handleAssetTypeChange}
+                                validateAssetTypeId={isValidAssetTypeId}
+                                required={false}
+                                autoSelect={false}
+                                autoHighlight={false}
+                                selectOnFocus
+                                disableClearable={false}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container spacing={4} className={classes.actionButtons}>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-start">
-                        <Button
-                            variant="outlined"
-                            onClick={handleCancelAction}
-                            id="bulkUpdateCancelButton"
-                            data-testid="bulkUpdateBackButton"
-                            color={'default'}
-                        >
-                            {locale.button.cancel}
-                        </Button>
+                    <Grid container spacing={3}>
+                        <Grid item padding={3} style={{ flex: 1 }}>
+                            <DataTable
+                                id={rootId}
+                                rows={row}
+                                columns={columns}
+                                rowId={'asset_id_displayed'}
+                                loading={assetsMineListLoading}
+                                classes={{ root: classes.gridRoot }}
+                                checkboxSelection
+                                disableRowSelectionOnClick
+                                onSelectionModelChange={handleAssetSelectionChange}
+                                autoHeight={false}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-end">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleAddAction}
-                            id="bulkUpdateSubmitButton"
-                            data-testid="bulkUpdateAddButton"
-                            disabled={row.length === 0}
-                        >
-                            {locale.button.submit}
-                        </Button>
+                    <Grid container spacing={4} className={classes.actionButtons}>
+                        <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                            <Button
+                                variant="outlined"
+                                onClick={handleCancelAction}
+                                id={`${componentId}-cancel-button`}
+                                data-testid={`${componentId}-cancel-button`}
+                                color={'default'}
+                                fullWidth={isMobileView}
+                            >
+                                {locale.button.cancel}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} container justifyContent="flex-end">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleAddAction}
+                                id={`${componentId}-action-button`}
+                                data-testid={`${componentId}-action-button`}
+                                disabled={row.length === 0}
+                                fullWidth={isMobileView}
+                            >
+                                {locale.button.submit}
+                            </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
+
+            <ConfirmationAlert
+                isOpen={confirmationAlert.visible}
+                message={confirmationAlert.message}
+                type={confirmationAlert.type}
+                autoHideDuration={confirmationAlert.autoHideDuration}
+                closeAlert={closeConfirmationAlert}
+            />
+        </>
     );
 };
 
 FilterDialog.propTypes = {
+    id: PropTypes.string.isRequired,
+    config: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    dialogueContent: PropTypes.any,
-    isOpen: PropTypes.bool,
     locale: PropTypes.object.isRequired,
     locationLocale: PropTypes.object.isRequired,
+    confirmAlertTimeout: PropTypes.number,
+    dialogueContent: PropTypes.any,
     assetTypeLocale: PropTypes.object,
-    config: PropTypes.object.isRequired,
-    id: PropTypes.string,
+    errorMessageFormatter: PropTypes.func,
     onCancel: PropTypes.func,
     onAction: PropTypes.func,
+    isOpen: PropTypes.bool,
+    isMobileView: PropTypes.bool,
     isBusy: PropTypes.bool,
 };
 

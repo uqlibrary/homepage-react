@@ -1,7 +1,4 @@
-import { useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { useDispatch } from 'react-redux';
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
 const moment = require('moment');
 
@@ -43,15 +40,22 @@ export const useForm = (
     return { formValues, resetFormValues, handleChange };
 };
 
-export const useObjectList = (list = [], transform) => {
+export const useObjectList = (list = [], transform, options = {}) => {
     const [data, _setData] = useState(!!transform ? transform(list) : list);
+    const [_options] = useState({ key: 'id', ...options });
 
-    console.log('useObjectlist', data);
+    // use setData (no _) to transform data before updating state
     const setData = data => _setData(!!transform ? transform(data) : data);
 
     const addAt = (index, item) => {
-        if (!Array.isArray(item) && typeof item !== 'object') return;
-        setData([...data.slice(0, index), ...item, ...data.slice(index)].flat());
+        // Note: Dupes are not allowed
+        if (Array.isArray(item)) {
+            const ids = new Set(data.map(d => d[_options.key]));
+            setData([...data, ...item.filter(d => !ids.has(d[_options.key]))]);
+        } else if (typeof item === 'object') {
+            if (data.findIndex(d => d[_options.key] === item[_options.key]) >= 0) return;
+            setData([...data.slice(0, index), ...item, ...data.slice(index)].flat());
+        }
     };
 
     const addStart = item => {
@@ -78,16 +82,31 @@ export const useObjectList = (list = [], transform) => {
     return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear };
 };
 
-export function useActions(actions, deps) {
-    const dispatch = useDispatch();
-    return useMemo(
-        () => {
-            if (Array.isArray(actions)) {
-                return actions.map(a => bindActionCreators(a, dispatch));
-            }
-            return bindActionCreators(actions, dispatch);
-        },
+export function useConfirmationAlert({ duration, onClose = null, errorMessage = null, errorMessageFormatter }) {
+    const [confirmationAlert, setConfirmationAlert] = useState({ message: '', visible: false });
+
+    const closeConfirmationAlert = () => {
+        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
+        onClose?.();
+    };
+    const openConfirmationAlert = (message, type) => {
+        setConfirmationAlert({
+            message: message,
+            visible: true,
+            type: !!type ? type : 'info',
+            autoHideDuration: duration,
+        });
+    };
+
+    useEffect(() => {
+        if (!!errorMessage) {
+            openConfirmationAlert(
+                !!errorMessageFormatter ? errorMessageFormatter(errorMessage) : errorMessage,
+                'error',
+            );
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        deps ? [dispatch, ...deps] : [dispatch],
-    );
+    }, [errorMessage]);
+
+    return { confirmationAlert, openConfirmationAlert, closeConfirmationAlert };
 }

@@ -10,11 +10,10 @@ const dateFormat = locale.config.format.dateFormatNoTime;
 export default {
     fields: {
         device_id: {
-            fieldParams: { canEdit: false },
+            fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
         },
         device_department: {
-            component: props => <TextField {...props} />,
-            fieldParams: { canEdit: false, renderInAdd: false, renderInTable: false, flex: 1 },
+            fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
         },
         device_model_name: {
             component: props => <TextField {...props} required />,
@@ -38,7 +37,7 @@ export default {
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
-            fieldParams: { canEdit: true, flex: 1 },
+            fieldParams: { canEdit: true, minWidth: 140 },
         },
         device_calibrated_by_last: {
             component: props => <TextField {...props} required />,
@@ -62,7 +61,7 @@ export default {
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
-            fieldParams: { canEdit: true, flex: 1 },
+            fieldParams: { canEdit: true, minWidth: 140 },
         },
     },
 };

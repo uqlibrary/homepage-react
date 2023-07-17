@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useIsMobileView } from 'hooks';
+import { filterComponentProps } from './utils';
+
+const rootId = 'update_dialog';
 
 export const useStyles = makeStyles(theme => ({
     alternateActionButtonClass: {
@@ -36,11 +39,10 @@ export const useStyles = makeStyles(theme => ({
 
 export const UpdateDialogue = ({
     action,
-    confirmationBoxId = 'dialogBox',
     locale,
     isOpen,
     title,
-    updateDialogueBoxId = 'actionDialogBox',
+    id,
     hideActionButton = false,
     hideCancelButton = false,
     onAction,
@@ -53,6 +55,7 @@ export const UpdateDialogue = ({
     props,
     isBusy = false,
 } = {}) => {
+    const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const [dataColumns, setDataColumns] = React.useState({});
     const [dataFields, setDataFields] = React.useState({});
@@ -70,15 +73,21 @@ export const UpdateDialogue = ({
                 Object.keys(fields).filter(
                     field =>
                         !!(fields[field]?.fieldParams?.renderInUpdate ?? true) &&
-                        !!(fields[field]?.fieldParams?.canEdit ?? false),
+                        (!!(fields[field]?.fieldParams?.canEdit ?? true) ||
+                            !!(fields[field]?.fieldParams?.canAdd ?? true)),
                 ),
             );
         }
     }, [isOpen, fields, row, columns]);
 
     React.useEffect(() => {
-        setIsValid(editableFields.every(field => !dataFields[field]?.validate?.(data[field]) ?? true));
-    }, [data, dataFields, editableFields]);
+        setIsValid(
+            editableFields.every(field => {
+                return !dataFields[field]?.validate?.(data[field], data) ?? true;
+            }),
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
 
     const _onAction = () => {
         onClose?.();
@@ -90,11 +99,18 @@ export const UpdateDialogue = ({
         onCancelAction?.();
     };
 
+    const _onClickAction = e => {
+        e.stopPropagation();
+    };
+
     const handleChange = event => {
-        setData({
-            ...data,
-            [event.target.id]: event.target.value,
-        });
+        const isCheckbox = event.target.type === 'checkbox';
+        // eslint-disable-next-line no-nested-ternary
+        const value = !isCheckbox ? event.target.value : event.target.checked;
+        setData(prevState => ({
+            ...prevState,
+            [event.target.name]: value,
+        }));
     };
 
     return (
@@ -102,11 +118,17 @@ export const UpdateDialogue = ({
             classes={{ paper: classes.dialogPaper }}
             style={{ padding: 6 }}
             open={isOpen}
-            id={`dialogbox-${updateDialogueBoxId}`}
-            data-testid={`dialogbox-${updateDialogueBoxId}`}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
         >
-            <DialogTitle data-testid="message-title">{title}</DialogTitle>
-            <DialogContent style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}>
+            <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
+                {title}
+            </DialogTitle>
+            <DialogContent
+                id={`${componentId}-content`}
+                data-testid={`${componentId}-content`}
+                style={{ minWidth: !noMinContentWidth ? 300 : 'auto' }}
+            >
                 <Grid container padding={0} spacing={2}>
                     {isOpen &&
                         !!data &&
@@ -115,8 +137,10 @@ export const UpdateDialogue = ({
                             <React.Fragment key={field}>
                                 {((action === 'edit' && !!(dataFields[field]?.fieldParams?.renderInUpdate ?? true)) ||
                                     (action === 'add' && !!(dataFields[field]?.fieldParams?.renderInAdd ?? true))) && (
-                                    <Grid item xs={12} sm={6}>
-                                        {!!!dataFields[field]?.fieldParams?.canEdit && (
+                                    <Grid item xs={12}>
+                                        {((action === 'edit' && !!!(dataFields[field]?.fieldParams?.canEdit ?? true)) ||
+                                            (action === 'add' &&
+                                                !!!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
                                             <>
                                                 <Typography variant="body2">{dataColumns[field].label}</Typography>
                                                 <Typography variant="body1">
@@ -124,29 +148,42 @@ export const UpdateDialogue = ({
                                                         ? dataFields[field].computedValue(
                                                               props[dataFields[field].computedValueProp],
                                                           )
-                                                        : data?.[field]}
+                                                        : dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                          data?.[field]}
                                                 </Typography>
                                             </>
                                         )}
-                                        {!!dataFields[field]?.fieldParams?.canEdit && (
+                                        {((action === 'edit' && !!(dataFields[field]?.fieldParams?.canEdit ?? true)) ||
+                                            (action === 'add' &&
+                                                !!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
                                             <>
-                                                {dataFields[field]?.component({
-                                                    id: field,
-                                                    name: field,
-                                                    label: dataColumns[field].label,
-                                                    value:
-                                                        dataFields[field]?.valueFormatter?.(data?.[field]) ??
-                                                        data?.[field],
-                                                    error: dataFields[field]?.validate?.(data?.[field]) ?? false,
-                                                    onChange: handleChange,
-                                                    InputLabelProps: {
-                                                        shrink: true,
-                                                    },
-                                                    inputProps: {
-                                                        ['data-testid']: `${field}-input`,
-                                                    },
-                                                    fullWidth: true,
-                                                })}
+                                                {dataFields[field]?.component(
+                                                    filterComponentProps({
+                                                        id: `${field}-input`,
+                                                        name: field,
+                                                        label: dataColumns[field].label,
+                                                        value:
+                                                            dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                            data?.[field],
+                                                        error:
+                                                            dataFields[field]?.validate?.(data?.[field], data) ?? false,
+                                                        checked: !!data?.[field],
+                                                        onChange: handleChange,
+                                                        onClick: _onClickAction,
+                                                        InputLabelProps: {
+                                                            shrink: true,
+                                                            htmlFor: `${field}-input`,
+                                                            id: `${field}-label`,
+                                                            ['data-testid']: `${field}-label`,
+                                                        },
+                                                        inputProps: {
+                                                            ['data-testid']: `${field}-input`,
+                                                        },
+                                                        fullWidth: true,
+                                                        type: dataFields[field]?.fieldParams?.type ?? undefined,
+                                                    }),
+                                                    data,
+                                                )}
                                             </>
                                         )}
                                     </Grid>
@@ -156,7 +193,7 @@ export const UpdateDialogue = ({
                 </Grid>
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
-                <DialogActions>
+                <DialogActions id={`${componentId}-actions`} data-testid={`${componentId}-actions`}>
                     <Grid container spacing={3}>
                         {!hideCancelButton && (
                             <Grid item xs={12} sm>
@@ -164,8 +201,8 @@ export const UpdateDialogue = ({
                                     <Button
                                         variant={'outlined'}
                                         onClick={_onCancelAction}
-                                        id="confirm-cancel-action"
-                                        data-testid={`cancel-${confirmationBoxId}`}
+                                        id={`${componentId}-cancel-button`}
+                                        data-testid={`${componentId}-cancel-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy}
                                     >
@@ -182,8 +219,8 @@ export const UpdateDialogue = ({
                                         autoFocus
                                         color={'primary'}
                                         onClick={_onAction}
-                                        id="confirm-action"
-                                        data-testid={`confirm-${confirmationBoxId}`}
+                                        id={`${componentId}-action-button`}
+                                        data-testid={`${componentId}-action-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy || !isValid}
                                     >
@@ -191,8 +228,8 @@ export const UpdateDialogue = ({
                                             <CircularProgress
                                                 color="inherit"
                                                 size={25}
-                                                id="saveInspectionSpinner"
-                                                data-testid="saveInspectionSpinner"
+                                                id={`${componentId}-progress`}
+                                                data-testid={`${componentId}-progress`}
                                             />
                                         ) : (
                                             locale.confirmButtonLabel
@@ -213,12 +250,11 @@ UpdateDialogue.propTypes = {
     locale: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     columns: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
     title: PropTypes.string,
-    confirmationBoxId: PropTypes.string,
     row: PropTypes.object,
     isOpen: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
-    updateDialogueBoxId: PropTypes.string,
     hideActionButton: PropTypes.bool,
     hideCancelButton: PropTypes.bool,
     onAction: PropTypes.func,

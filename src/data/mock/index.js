@@ -49,10 +49,11 @@ import testTag_assets from './data/records/test_tag_assets';
 import test_tag_asset_types from './data/records/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
 import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspections_by_licenced_user';
-import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors'; 
+import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors';
 import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
 import test_tag_assets_report_assets from './data/records/test_tag_assets_report_assets';
 import test_tag_assets_mine from './data/records/test_tag_assets_mine';
+import test_tag_user_list from './data/records/test_tag_user_list';
 
 import { accounts, currentAuthor } from './data';
 
@@ -65,15 +66,6 @@ import {
     mockPublicPanel,
     promoPanelMocks,
 } from './data/promoPanels';
-
-import {
-    TEST_TAG_ONLOAD_DASHBOARD_API,
-    TEST_TAG_ONLOAD_INSPECT_API,
-    TEST_TAG_ASSETS_API,
-    TEST_TAG_ASSET_ACTION,
-    TEST_TAG_FLOOR_API,
-    TEST_TAG_ROOM_API,
-} from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -758,15 +750,15 @@ mock.onGet('exams/course/FREN1010/summary')
     // T&T BUILDINGS
 
     // T&T FLOORS
-    .onGet(/test_and_tag\/building\/\d+\/current/)
+    .onGet(/test-and-tag\/building\/\d+\/current/)
     .reply(config => {
         const r = /\d+/;
         const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
-        return [200, {data: testTag_floorList.data.find(floor => floor.building_id === id)}];
+        return [200, { data: testTag_floorList.data.find(floor => floor.building_id === id) }];
     })
 
     // T&T ROOMS
-    .onGet(/test_and_tag\/floor\/\d+\/current/)
+    .onGet(/test-and-tag\/floor\/\d+\/current/)
     .reply(config => {
         const r = /\d+/;
         const id = parseInt(config.url.match(r)?.[0], 10 ?? 0);
@@ -776,19 +768,19 @@ mock.onGet('exams/course/FREN1010/summary')
     // T&T LOCATIONS
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('site').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'site', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('building').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'building', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('floor').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'floor', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.TEST_TAG_ADD_LOCATION_API('room').apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPut(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
 
     // T&T MANAGE INSPECTION DEVICES
@@ -798,13 +790,29 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onPost(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => [200, {status: 'OK'}])
-    .onPut(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)))
     .reply(() => [200, {status: 'OK'}])
-    .onDelete(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)
+    .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)))
     .reply(() => [200, {status: 'OK'}])
 
+
+    .onGet(/test-and-tag\/asset\/search\/current\/.*[?]without_discards=1/)
+    .reply(config => {
+        const patternTmp = config.url.split('/').pop();
+        const pattern = patternTmp.split('?')[0];
+        // filter array to matching asset id's
+        return [
+            200,
+            {
+                data: testTag_assets.data.filter(asset =>
+                    asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()) && asset.asset_status !== 'DISCARDED'
+                ),
+            },
+        ];
+    })
+
     // ASSETS (with pattern matching)
-    .onGet(/test_and_tag\/asset\/search\/current\/*/)
+    .onGet(/test-and-tag\/asset\/search\/current\/*/)
     .reply(config => {
         const pattern = config.url.split('/').pop();
         // filter array to matching asset id's
@@ -817,6 +825,8 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
+
+
 
     .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
     .reply(() => [
@@ -840,7 +850,7 @@ mock.onGet('exams/course/FREN1010/summary')
         {
             status: 'ok',
             data: {
-                asset_id: 1,
+                asset_type_id: 99999,
                 asset_type_name: 'PWRC13-10',
                 asset_type_class: 'Cable',
                 asset_type_power_rating: '10',
@@ -857,9 +867,7 @@ mock.onGet('exams/course/FREN1010/summary')
             200,
             {
                 status: 'OK',
-                data: {
-                    asset_types: test_tag_asset_types.data,
-                }
+                data:test_tag_asset_types.data,
             }
         ]
     )
@@ -870,13 +878,13 @@ mock.onGet('exams/course/FREN1010/summary')
             status: 'OK',
         },
     ])
-    .onPut(routes.TEST_TAG_SAVE_ASSETTYPE_API().apiUrl)
-    .reply(() => [
+    .onPut(/test-and-tag\/asset-type\/\d+/)
+    .reply(withDelay([
         200,
         {
             status: 'OK', 
         },
-    ])
+    ]))
     .onPost(routes.TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API().apiUrl)
     .reply(() => [
         200,
@@ -888,19 +896,19 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         },
     ])
-    .onDelete(/test_and_tag\/asset_type\/4/)
-    .reply(() => {
-        return [200, { status: 'OK' }];
-    })
-    .onDelete(/test_and_tag\/asset_type\/5/)
+    .onDelete(/test-and-tag\/asset-type\/52/)
     .reply(() => {
         return [
             400,
             {
                 status: 'error',
-                message: '5 is a test error',
+                message: '52 is a test error',
             },
         ];
+    })
+    .onDelete(/test-and-tag\/asset-type\/\d+/)
+    .reply(() => {
+        return [200, { status: 'OK' }];
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
@@ -920,18 +928,53 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_licenced_inspectors])
     .onGet(routes.TEST_TAG_TAGGED_BUILDING_LIST().apiUrl)
     .reply(() => [200, test_tag_tagged_building_list])
-    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: null, locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: '4', inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
     .reply(() => [200, test_tag_assets_report_assets])
-    .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: null, inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
+    .onGet(/test-and-tag\/asset\/search\/mine.*/)
     .reply(() => [200, test_tag_assets_report_assets])
     .onGet(routes.TEST_TAG_ASSETS_MINE_API({}).apiUrl)
     .reply(() => [200, test_tag_assets_mine])
     .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)
     .reply(() => [200, {status: 'OK'}])
+    .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API('.*').apiUrl)))
+    .reply(() => [200, {status: 'OK'}])
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
     })
+    .onGet(routes.TEST_TAG_USER_LIST_API().apiUrl)
+    .reply(withDelay([200, test_tag_user_list]))
+    .onPut(/test-and-tag\/user\/5/)
+    .reply(withDelay([
+        403,
+        {},
+    ]))
+    .onPut(/test-and-tag\/user\/\d*/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
+    .onPost(/test-and-tag\/user/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
+    .onDelete(/test-and-tag\/user\/5/)
+    .reply(withDelay([
+        403,
+        {},
+    ]))
+    .onDelete(/test-and-tag\/user\/\d*/)
+    .reply(withDelay([
+        200,
+        {
+            status: 'OK', 
+        },
+    ]))
     // PROMO PANEL API
     .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
     .reply(withDelay([200, {}]))

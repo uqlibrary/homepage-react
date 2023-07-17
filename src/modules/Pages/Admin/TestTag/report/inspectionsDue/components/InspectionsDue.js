@@ -14,6 +14,7 @@ import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelec
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import { useConfirmationAlert } from '../../../helpers/hooks';
 
 import locale from '../../../testTag.locale';
 import config from './config';
@@ -21,6 +22,8 @@ import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';
 
 const moment = require('moment');
+
+const componentId = 'inspections-due';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -33,7 +36,8 @@ const useStyles = makeStyles(theme => ({
         border: 0,
     },
     inspectionOverdue: {
-        backgroundColor: theme.palette.error.light,
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
     },
 }));
 
@@ -44,6 +48,12 @@ const InspectionsDue = ({
     // inspectionsDueLoaded,
     inspectionsDueError,
 }) => {
+    console.log({
+        inspectionsDue,
+        inspectionsDueLoading,
+        // inspectionsDueLoaded,
+        inspectionsDueError,
+    });
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
     const classes = useStyles();
@@ -64,31 +74,17 @@ const InspectionsDue = ({
     const { row } = useDataTableRow(inspectionsDue, transformRow);
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
-    const [apiError, setApiError] = useState(inspectionsDueError);
 
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
-
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: 2000,
-            onClose: () => setApiError(null),
-        });
-    };
-
-    useEffect(() => {
-        if (!!apiError) openConfirmationAlert(apiError, 'error');
-    }, [apiError]);
+    const onCloseConfirmationAlert = () => actions.clearInspectionsDueError();
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: inspectionsDueError,
+        errorMessageFormatter: locale.config.alerts.error,
+    });
 
     useEffect(() => {
         const locationId = location[lastSelectedLocation];
-
-        // actions.clearInspectionsDue();
 
         actions.getInspectionsDue({
             period: monthRange,
@@ -99,7 +95,7 @@ const InspectionsDue = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lastSelectedLocation, location, monthRange]);
 
-    const today = moment().format(locale.pages.report.config.dateFormatNoTime);
+    const today = moment().format(locale.config.format.dateFormatNoTime);
 
     const onMonthRangeChange = value => {
         setMonthRange(value);
@@ -115,6 +111,7 @@ const InspectionsDue = ({
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
                         <AutoLocationPicker
+                            id={componentId}
                             actions={actions}
                             location={location}
                             setLocation={setLocation}
@@ -123,7 +120,7 @@ const InspectionsDue = ({
                         />
                         <Grid item>
                             <MonthsSelector
-                                id="testResultNextDate"
+                                id={componentId}
                                 label={pageLocale.form.filterToDateLabel}
                                 options={monthsOptions}
                                 currentValue={monthRange}
@@ -141,6 +138,7 @@ const InspectionsDue = ({
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId={'asset_barcode'}

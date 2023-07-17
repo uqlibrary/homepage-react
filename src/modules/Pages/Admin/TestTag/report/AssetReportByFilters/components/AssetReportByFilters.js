@@ -8,19 +8,22 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import Input from '@material-ui/core/Input';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
 
+import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
-import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
-import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
-const moment = require('moment');
+
+const componentId = 'assets-inspected';
+const componentIdLower = 'assets_inspected';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,13 +42,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: 0,
     },
 }));
-export const transformRow = row => {
-    return row.map(line => ({
-        ...line,
-        start_date: moment(line.start_date).format('DD/MM/YYYY'),
-        end_date: moment(line.end_date).format('DD/MM/YYYY'),
-    }));
-};
 
 const AssetReportByFilters = ({
     actions,
@@ -58,16 +54,6 @@ const AssetReportByFilters = ({
     // assetListLoaded,
     assetListError,
 }) => {
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250,
-            },
-        },
-    };
     /* locale and styles */
     const pageLocale = locale.pages.report.assetReportByFilters;
     const statusTypes = pageLocale.form.statusTypes;
@@ -79,8 +65,18 @@ const AssetReportByFilters = ({
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, error: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
-    const [apiError, setApiError] = useState(taggedBuildingListError || assetListError);
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const onCloseConfirmationAlert = () => {
+        if (!!taggedBuildingListError) actions.clearTaggedBuildingListError();
+        if (!!assetListError) actions.clearAssetReportByFiltersError();
+    };
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: taggedBuildingListError || assetListError,
+        errorMessageFormatter: locale.config.alerts.error,
+    });
+
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
@@ -90,17 +86,19 @@ const AssetReportByFilters = ({
         locale: pageLocale.form.columns,
         withActions: false,
     });
+
     /* HELPERS */
     const buildPayload = () => {
         return {
             ...config.defaults,
-            assetStatus: statusType > 0 ? statusTypes[statusType].status_type : null,
+            assetStatus: statusType > 0 ? statusTypes[statusType].value : null,
             locationType: 'building',
             locationId: taggedBuildingName > 0 ? taggedBuildingName : null,
             inspectionDateFrom: !!selectedStartDate.dateFormatted ? selectedStartDate.dateFormatted : null,
             inspectionDateTo: !!selectedEndDate.dateFormatted ? selectedEndDate.dateFormatted : null,
         };
     };
+
     const clearDateErrors = () => {
         setStartDateError({
             error: false,
@@ -136,28 +134,23 @@ const AssetReportByFilters = ({
     const handleTaggedBuildingChange = event => {
         setTaggedBuildingName(event.target.value);
     };
-    const handleStatusTypeChange = event => {
-        setStatusType(event.target.value);
+    const handleStatusTypeChange = selected => {
+        setStatusType(selected.id);
         // buildPayload();
     };
     const handleStartDateChange = date => {
-        setSelectedStartDate({ date: date, dateFormatted: !!date ? date.format('yyyy-MM-DD') : null });
-    };
-    const handleEndDateChange = date => {
-        setSelectedEndDate({ date: date, dateFormatted: !!date ? date.format('yyyy-MM-DD') : null });
-    };
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: 2000,
-            onClose: () => setApiError(null),
+        setSelectedStartDate({
+            date: date,
+            dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
     };
+    const handleEndDateChange = date => {
+        setSelectedEndDate({
+            date: date,
+            dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
+        });
+    };
+
     /* EFFECTS */
     useEffect(() => {
         actions.loadTaggedBuildingList();
@@ -173,9 +166,9 @@ const AssetReportByFilters = ({
         setBuildingList([
             {
                 building_id: -1,
-                building_name: 'All Buildings',
+                building_name: locale.pages.general.locationPicker.building.labelAll,
                 building_site_id: -1,
-                building_id_displayed: 'All',
+                building_id_displayed: locale.pages.general.locationPicker.allLabel,
                 building_current_flag: 1,
             },
             ...taggedBuildingList,
@@ -189,11 +182,6 @@ const AssetReportByFilters = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taggedBuildingList, taggedBuildingListLoaded]);
 
-    useEffect(() => {
-        if (!!apiError) openConfirmationAlert(apiError, 'error');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [apiError]);
-
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -201,55 +189,51 @@ const AssetReportByFilters = ({
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
             <div className={classes.root}>
-                <StandardCard title={pageLocale.form.title}>
+                <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
                         <Grid item xs={12} md={4}>
                             {/* Status Picker */}
-                            <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel id="asset-tagged-status-list">
-                                    {pageLocale.form.filterStatusLabel}
-                                </InputLabel>
-                                <Select
-                                    fullWidth
-                                    labelId="status-type-selector-label"
-                                    id="status-type-selector"
-                                    disabled={!!taggedBuildingListLoading || !!assetListLoading}
-                                    value={statusType}
-                                    onChange={handleStatusTypeChange}
-                                    input={<Input id="status-type-input" />}
-                                    MenuProps={MenuProps}
-                                >
-                                    {!!statusTypes &&
-                                        statusTypes.map(type => (
-                                            <MenuItem key={type.status_type_id} value={type.status_type_id}>
-                                                {type.status_type_rendered}
-                                            </MenuItem>
-                                        ))}
-                                </Select>
-                            </FormControl>
+                            <AssetStatusSelector
+                                id={componentId}
+                                label={pageLocale.form.filterStatusLabel}
+                                onChange={handleStatusTypeChange}
+                                options={statusTypes}
+                                initialOptionIndex={0}
+                                disabled={!!taggedBuildingListLoading || !!assetListLoading}
+                            />
                         </Grid>
                         <Grid item xs={12} md={4}>
                             {/* Building Picker */}
                             <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel id="asset-tagged-building-list">
-                                    {pageLocale.form.filterBuildingLabel}
-                                </InputLabel>
+                                <InputLabel shrink>{pageLocale.form.filterBuildingLabel}</InputLabel>
                                 <Select
+                                    id={`${componentIdLower}-building`}
+                                    data-testid={`${componentIdLower}-building`}
+                                    MenuProps={{
+                                        id: `${componentIdLower}-building-options`,
+                                        'data-testid': `${componentIdLower}-building-options`,
+                                    }}
+                                    inputProps={{
+                                        id: `${componentIdLower}-building-input`,
+                                        ['data-testid']: `${componentIdLower}-building-input`,
+                                    }}
+                                    SelectDisplayProps={{
+                                        id: `${componentIdLower}-building-select`,
+                                        'data-testid': `${componentIdLower}-building-select`,
+                                    }}
                                     fullWidth
-                                    labelId="building-name-selector-label"
-                                    id="building-name-selector"
                                     disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                     value={taggedBuildingName}
                                     onChange={handleTaggedBuildingChange}
-                                    input={<Input id="building-selector-input" />}
-                                    MenuProps={MenuProps}
                                 >
                                     {!!buildingList &&
                                         buildingList.length > 0 &&
-                                        buildingList.map(building => (
+                                        buildingList.map((building, index) => (
                                             <MenuItem
                                                 key={building.building_id < 0 ? 9999999999 : building.building_id}
                                                 value={building.building_id}
+                                                id={`${componentIdLower}-building-option-${index}`}
+                                                data-testid={`${componentIdLower}-building-option-${index}`}
                                             >
                                                 {building.building_name}
                                             </MenuItem>
@@ -260,39 +244,49 @@ const AssetReportByFilters = ({
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
                             <KeyboardDatePicker
+                                id={`${componentIdLower}-tagged-start`}
+                                data-testid={`${componentIdLower}-tagged-start`}
+                                inputProps={{
+                                    id: `${componentIdLower}-tagged-start-input`,
+                                    'data-testid': `${componentIdLower}-tagged-start-input`,
+                                }}
+                                format={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
-                                format="DD/MM/yyyy"
                                 margin="normal"
-                                id="inspections-start-date"
-                                label={pageLocale.form.filterTaggedDateFrom}
+                                label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                 value={selectedStartDate.date}
                                 onChange={handleStartDateChange}
                                 error={!!startDateError.error}
                                 helperText={!!startDateError.error && startDateError.error}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change start date',
+                                    'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                             />
                             <KeyboardDatePicker
+                                id={`${componentIdLower}-tagged-end`}
+                                data-testid={`${componentIdLower}-tagged-end`}
+                                inputProps={{
+                                    id: `${componentIdLower}-tagged-end-input`,
+                                    'data-testid': `${componentIdLower}-tagged-end-input`,
+                                }}
+                                format={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
-                                format="DD/MM/yyyy"
                                 margin="normal"
-                                id="inspections-end-date"
-                                label={pageLocale.form.filterTaggedDateTo}
+                                label={pageLocale.form.keyboardDatePicker.endDateLabel}
                                 value={selectedEndDate.date}
                                 onChange={handleEndDateChange}
                                 error={!!endDateError.error}
                                 helperText={!!endDateError.error && endDateError.error}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change end date',
+                                    'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                             />
                         </Grid>
@@ -301,6 +295,7 @@ const AssetReportByFilters = ({
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId={'asset_id'}
@@ -331,10 +326,10 @@ AssetReportByFilters.propTypes = {
     assetList: PropTypes.array,
     taggedBuildingListLoading: PropTypes.bool,
     taggedBuildingListLoaded: PropTypes.bool,
-    taggedBuildingListError: PropTypes.bool,
+    taggedBuildingListError: PropTypes.string,
     assetListLoading: PropTypes.bool,
     assetListLoaded: PropTypes.bool,
-    assetListError: PropTypes.bool,
+    assetListError: PropTypes.string,
 };
 
 export default React.memo(AssetReportByFilters);

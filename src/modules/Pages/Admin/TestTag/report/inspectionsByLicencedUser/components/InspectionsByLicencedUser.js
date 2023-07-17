@@ -8,20 +8,23 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import Input from '@material-ui/core/Input';
 import Typography from '@material-ui/core/Typography';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
+import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
+import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { getNameStyles, transformRow } from './utils';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
-import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+
+const componentId = 'user-inspections';
+const componentIdLower = 'user_inspections';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -54,16 +57,6 @@ const InspectionsByLicencedUser = ({
     licencedUsersError,
 }) => {
     const theme = useTheme();
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250,
-            },
-        },
-    };
     /* locale and styles */
     const pageLocale = locale.pages.report.inspectionsByLicencedUser;
     const classes = useStyles();
@@ -71,10 +64,20 @@ const InspectionsByLicencedUser = ({
     const [inspectorName, setInspectorName] = React.useState([]);
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, dateFormatted: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, dateFormatted: null });
-    const [apiError, setApiError] = useState(licencedUsersError || userInspectionsError);
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
-    const [confirmationAlert, setConfirmationAlert] = React.useState({ message: '', visible: false });
+
+    const onCloseConfirmationAlert = () => {
+        if (!!userInspectionsError) actions.clearInspectionsError();
+        if (!!licencedUsersError) actions.clearLicencedUsersError();
+    };
+    const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
+        duration: locale.config.alerts.timeout,
+        onClose: onCloseConfirmationAlert,
+        errorMessage: userInspectionsError || licencedUsersError,
+        errorMessageFormatter: locale.config.alerts.error,
+    });
+
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -107,13 +110,13 @@ const InspectionsByLicencedUser = ({
     const handleStartDateChange = date => {
         setSelectedStartDate({
             date: date,
-            dateFormatted: !!date ? date.format('yyyy-MM-DD') : null,
+            dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
     };
     const handleEndDateChange = date => {
         setSelectedEndDate({
             date: date,
-            dateFormatted: !!date ? date.format('yyyy-MM-DD') : null,
+            dateFormatted: !!date ? date.format(locale.config.format.dateFormatNoTime) : null,
         });
     };
     const handleInspectorChange = event => {
@@ -122,18 +125,7 @@ const InspectionsByLicencedUser = ({
     const handleInspectorClose = () => {
         reportSearch();
     };
-    const closeConfirmationAlert = () => {
-        setConfirmationAlert({ message: '', visible: false, type: confirmationAlert.type });
-    };
-    const openConfirmationAlert = (message, type) => {
-        setConfirmationAlert({
-            message: message,
-            visible: true,
-            type: !!type ? type : 'info',
-            autoHideDuration: 2000,
-            onClose: () => setApiError(null),
-        });
-    };
+
     const handleDateClose = () => {
         if (!!!selectedStartDate.date && !!!selectedEndDate.date) {
             clearDateErrors();
@@ -146,23 +138,23 @@ const InspectionsByLicencedUser = ({
                 } else {
                     setStartDateError({
                         error: true,
-                        message: 'Start date must be before End Date',
+                        message: pageLocale.form.errors.startDateBeforeEnd,
                     });
                     setEndDateError({
                         error: true,
-                        message: 'End date must be after Start Date',
+                        message: pageLocale.form.errors.endDateAfterStart,
                     });
                 }
             } else {
                 !!!selectedStartDate.date &&
                     setStartDateError({
                         error: true,
-                        message: 'A start date is required to search by date',
+                        message: pageLocale.form.errors.startDateRequired,
                     });
                 !!!selectedEndDate.date &&
                     setEndDateError({
                         error: true,
-                        message: 'An end date is required to search by date',
+                        message: pageLocale.form.errors.endDateRequired,
                     });
             }
         }
@@ -181,10 +173,6 @@ const InspectionsByLicencedUser = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        if (!!apiError) openConfirmationAlert(apiError, 'error');
-    }, [apiError]);
-
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -197,17 +185,28 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* Date Pickers go here */}
                             <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel id="inspector-name-selector-label">Inspector Name</InputLabel>
+                                <InputLabel>Inspector Name</InputLabel>
                                 <Select
+                                    id={`${componentIdLower}-user-name`}
+                                    data-testid={`${componentIdLower}-user-name`}
+                                    MenuProps={{
+                                        id: `${componentIdLower}-user-name-options`,
+                                        'data-testid': `${componentIdLower}-user-name-options`,
+                                    }}
+                                    inputProps={{
+                                        id: `${componentIdLower}-user-name-input`,
+                                        ['data-testid']: `${componentIdLower}-user-name-input`,
+                                    }}
+                                    SelectDisplayProps={{
+                                        id: `${componentIdLower}-user-name-select`,
+                                        'data-testid': `${componentIdLower}-user-name-select`,
+                                    }}
                                     fullWidth
-                                    labelId="inspector-name-selector-label"
-                                    id="inspector-name-selector"
                                     multiple
                                     disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                     value={inspectorName}
                                     onChange={handleInspectorChange}
                                     onClose={handleInspectorClose}
-                                    input={<Input id="inspector-selector-input" />}
                                     renderValue={selected => {
                                         return (
                                             <div className={classes.chips}>
@@ -218,20 +217,21 @@ const InspectionsByLicencedUser = ({
                                                         .map(value => value.user_name)
                                                         .concat(
                                                             selected.length > 2
-                                                                ? ` (and ${selected.length - 2} more)`
+                                                                ? pageLocale.form.selectedAndMore(selected.length - 2)
                                                                 : [],
                                                         )
                                                         .join(', ')}
                                             </div>
                                         );
                                     }}
-                                    MenuProps={MenuProps}
                                 >
-                                    {licencedUsers.map(user => (
+                                    {licencedUsers.map((user, index) => (
                                         <MenuItem
                                             key={user.user_id}
                                             value={user.user_id}
                                             style={getNameStyles(user, inspectorName, theme)}
+                                            id={`${componentIdLower}-user-name-option-${index}`}
+                                            data-testid={`${componentIdLower}-user-name-option-${index}`}
                                         >
                                             {user.user_name}
                                         </MenuItem>
@@ -242,15 +242,20 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
                             <KeyboardDatePicker
+                                id={`${componentIdLower}-tagged-start`}
+                                data-testid={`${componentIdLower}-tagged-start`}
+                                inputProps={{
+                                    id: `${componentIdLower}-tagged-start-input`,
+                                    'data-testid': `${componentIdLower}-tagged-start-input`,
+                                }}
+                                format={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
-                                format="DD/MM/yyyy"
                                 margin="normal"
-                                id="inspections-start-date"
-                                label="Period Start Date"
+                                label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                 value={selectedStartDate.date}
                                 onChange={handleStartDateChange}
                                 onBlur={handleDateClose}
@@ -258,22 +263,27 @@ const InspectionsByLicencedUser = ({
                                 error={startDateError.error}
                                 helperText={startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change start date',
+                                    'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                             />
                         </Grid>
                         <Grid item xs={12} md={4}>
                             {/* End Date */}
                             <KeyboardDatePicker
+                                id={`${componentIdLower}-tagged-end`}
+                                data-testid={`${componentIdLower}-tagged-end`}
+                                inputProps={{
+                                    id: `${componentIdLower}-tagged-end-input`,
+                                    'data-testid': `${componentIdLower}-tagged-end-input`,
+                                }}
+                                format={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
-                                format="DD/MM/yyyy"
                                 margin="normal"
-                                id="inspections-end-date"
-                                label="Period End Date"
+                                label={pageLocale.form.keyboardDatePicker.endDateLabel}
                                 value={selectedEndDate.date}
                                 onChange={handleEndDateChange}
                                 onClose={handleDateClose}
@@ -281,17 +291,24 @@ const InspectionsByLicencedUser = ({
                                 helperText={endDateError.error && endDateError.message}
                                 error={endDateError.error}
                                 KeyboardButtonProps={{
-                                    'aria-label': 'change end date',
+                                    'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                             />
                         </Grid>
                     </Grid>
                     <Grid container spacing={0}>
-                        <Typography component={'p'}>{totalInspections} Total Inspections.</Typography>
+                        <Typography
+                            component={'p'}
+                            id={`${componentIdLower}-total-text`}
+                            data-testid={`${componentIdLower}-total-text`}
+                        >
+                            {pageLocale.form.totalInspections(totalInspections)}
+                        </Typography>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
+                                id={componentId}
                                 rows={row}
                                 columns={columns}
                                 rowId={'user_uid'}
