@@ -38,6 +38,7 @@ const FilterDialog = ({
     actions,
     isOpen = false,
     isBusy = false,
+    isMobileView = false,
     confirmAlertTimeout = 6000,
     locale,
     locationLocale,
@@ -192,6 +193,7 @@ const FilterDialog = ({
                                 id={`${componentId}-cancel-button`}
                                 data-testid={`${componentId}-cancel-button`}
                                 color={'default'}
+                                fullWidth={isMobileView}
                             >
                                 {locale.button.cancel}
                             </Button>
@@ -204,6 +206,7 @@ const FilterDialog = ({
                                 id={`${componentId}-action-button`}
                                 data-testid={`${componentId}-action-button`}
                                 disabled={row.length === 0}
+                                fullWidth={isMobileView}
                             >
                                 {locale.button.submit}
                             </Button>
@@ -231,11 +234,12 @@ FilterDialog.propTypes = {
     locationLocale: PropTypes.object.isRequired,
     confirmAlertTimeout: PropTypes.number,
     dialogueContent: PropTypes.any,
-    isOpen: PropTypes.bool,
     assetTypeLocale: PropTypes.object,
     errorMessageFormatter: PropTypes.func,
     onCancel: PropTypes.func,
     onAction: PropTypes.func,
+    isOpen: PropTypes.bool,
+    isMobileView: PropTypes.bool,
     isBusy: PropTypes.bool,
 };
 

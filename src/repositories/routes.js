@@ -219,6 +219,32 @@ export const TEST_TAG_ADD_LOCATION_API = type => ({ apiUrl: `test-and-tag/${type
 export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test-and-tag/${type}/${id}` });
 
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test-and-tag/asset/search/current/${pattern}` });
+export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
+    const urlParams = {
+        ...(filter?.status?.discarded === false ? { without_discards: 1 } : {}),
+        // TODO: add more filters as required
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = [...qs].length > 0;
+    const apiUrl = `test-and-tag/asset/search/current/${pattern}${hasParams ? `?${qs.toString()}` : ''}`;
+    console.log(apiUrl);
+    return {
+        apiUrl,
+    };
+};
+export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId }) => {
+    const urlParams = {
+        ...(!!locationId && !!locationType ? { location_id: locationId, location_type: locationType } : {}),
+        ...(!!assetTypeId ? { asset_type_id: assetTypeId } : {}),
+    };
+    const qs = new URLSearchParams(urlParams);
+    const hasParams = [...qs].length > 0;
+    const apiUrl = `/test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+    return {
+        apiUrl,
+    };
+};
+
 export const TEST_TAG_ASSET_ACTION = () => ({ apiUrl: '/test-and-tag/action' });
 export const TEST_TAG_ASSETTYPE_ADD = () => ({ apiUrl: '/test-and-tag/asset-type' });
 export const TEST_TAG_INSPECTION_DEVICE_API = () => ({ apiUrl: '/test-and-tag/inspection-device/current/mine' });
@@ -285,18 +311,6 @@ export const TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST = ({
     const qs = new URLSearchParams(urlParams);
     const hasParams = Object.keys(urlParams).length > 0;
     const apiUrl = `test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
-    return {
-        apiUrl,
-    };
-};
-export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId }) => {
-    const urlParams = {
-        ...(!!locationId && !!locationType ? { location_id: locationId, location_type: locationType } : {}),
-        ...(!!assetTypeId ? { asset_type_id: assetTypeId } : {}),
-    };
-    const qs = new URLSearchParams(urlParams);
-    const hasParams = [...qs].length > 0;
-    const apiUrl = `/test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
     return {
         apiUrl,
     };
