@@ -335,12 +335,13 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={formValues.hasLocation}
+                                            checked={formValues.hasLocation && !formValues.hasStatus}
                                             onChange={handleCheckboxChange}
                                             name="hasLocation"
                                             id={`${componentIdLower}-location-checkbox`}
                                             data-testid={`${componentIdLower}-location-checkbox`}
                                             color="primary"
+                                            disabled={formValues.hasStatus}
                                         />
                                     }
                                     label={stepTwoLocale.checkbox.location}
@@ -348,23 +349,28 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                             <AutoLocationPicker
                                 id={componentId}
-                                disabled={!formValues.hasLocation}
+                                disabled={!formValues.hasLocation || formValues.hasStatus}
                                 actions={actions}
                                 location={location}
                                 setLocation={handleLocationUpdate}
                                 locale={locale.pages.general.locationPicker}
                                 inputProps={{
                                     site: {
-                                        error: formValues.hasLocation && location.site === -1,
+                                        required: formValues.hasLocation,
+                                        error: !formValues.hasStatus && formValues.hasLocation && location.site === -1,
                                     },
                                     building: {
                                         required: formValues.hasLocation && location.site !== -1,
                                         error:
-                                            formValues.hasLocation && location.site !== -1 && location.building === -1,
+                                            !formValues.hasStatus &&
+                                            formValues.hasLocation &&
+                                            location.site !== -1 &&
+                                            location.building === -1,
                                     },
                                     floor: {
                                         required: formValues.hasLocation && location.building !== -1,
                                         error:
+                                            !formValues.hasStatus &&
                                             formValues.hasLocation &&
                                             location.site !== -1 &&
                                             location.building !== -1 &&
@@ -373,6 +379,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     room: {
                                         required: formValues.hasLocation && location.floor !== -1,
                                         error:
+                                            !formValues.hasStatus &&
                                             formValues.hasLocation &&
                                             location.site !== -1 &&
                                             location.building !== -1 &&
@@ -389,7 +396,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    checked={formValues.hasStatus}
+                                                    checked={
+                                                        formValues.hasStatus &&
+                                                        !formValues.hasAssetType &&
+                                                        !formValues.hasLocation
+                                                    }
+                                                    disabled={formValues.hasAssetType || formValues.hasLocation}
                                                     onChange={handleCheckboxChange}
                                                     name="hasStatus"
                                                     id={`${componentIdLower}-status-checkbox`}
@@ -408,7 +420,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             options={locale.config.assetStatusOptions.filter(
                                                 option => option.value === locale.config.assetStatus.discarded,
                                             )}
-                                            disabled={!formValues.hasStatus}
+                                            disabled={
+                                                formValues.hasAssetType ||
+                                                formValues.hasLocation ||
+                                                !formValues.hasStatus
+                                            }
                                             required={formValues.hasStatus}
                                             classNames={{ formControl: classes.formControl }}
                                         />
@@ -421,12 +437,13 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    checked={formValues.hasAssetType}
+                                                    checked={formValues.hasAssetType && !formValues.hasStatus}
                                                     onChange={handleCheckboxChange}
                                                     name="hasAssetType"
                                                     id={`${componentIdLower}-asset-type-checkbox`}
                                                     data-testid={`${componentIdLower}-asset-type-checkbox`}
                                                     color="primary"
+                                                    disabled={formValues.hasStatus}
                                                 />
                                             }
                                             label={stepTwoLocale.checkbox.assetType}
@@ -438,7 +455,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             locale={pageLocale.form.assetType}
                                             actions={actions}
                                             onChange={handleChange('asset_type')}
-                                            disabled={!formValues.hasAssetType}
+                                            disabled={!formValues.hasAssetType || formValues.hasStatus}
                                             required={formValues.hasAssetType}
                                         />
                                     </Grid>

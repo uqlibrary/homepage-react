@@ -19,6 +19,12 @@ export const transformRow = row => {
 };
 
 export const transformRequest = formValues => {
+    if (!!formValues.hasStatus) {
+        formValues.hasLocation = false;
+        formValues.hasAssetType = false;
+    } else {
+        formValues.hasStatus = false;
+    }
     return {
         asset: formValues.asset_list.reduce((cumulative, current) => [...cumulative, current.asset_id], []),
         ...(!!formValues.hasLocation ? { asset_room_id_last_seen: formValues.location.room } : {}),

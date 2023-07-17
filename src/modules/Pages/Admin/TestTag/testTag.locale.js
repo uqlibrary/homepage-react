@@ -710,7 +710,7 @@ export default {
                             newAssetText: 'NEW ASSET',
                             assetSelector: {
                                 label: 'Asset ID',
-                                helperText: 'Scan or enter a new ID to add',
+                                helperText: 'Scan or enter barcode to search non-discarded assets',
                                 placeholder: 'Enter at least 3 characters',
                             },
                             button: {
