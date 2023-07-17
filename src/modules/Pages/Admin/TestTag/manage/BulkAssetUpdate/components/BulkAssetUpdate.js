@@ -265,6 +265,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     canAddNew={false}
                                     required={false}
                                     clearOnSelect
+                                    filter={{ status: { discarded: false } }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2} className={classes.centredGrid}>
