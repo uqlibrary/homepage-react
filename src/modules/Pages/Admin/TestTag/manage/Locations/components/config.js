@@ -12,11 +12,6 @@ export default {
             site_id: {
                 fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
             },
-            site_name: {
-                component: props => <TextField {...props} required />,
-                validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, flex: 1 },
-            },
             site_id_displayed: {
                 component: props => (
                     <TextField
@@ -26,6 +21,11 @@ export default {
                         helperText={locale.pages.general.helperText.maxChars(10)}
                     />
                 ),
+                validate: value => isEmptyStr(value), // should return true if a validation error exists
+                fieldParams: { canEdit: true, minWidth: 150 },
+            },
+            site_name: {
+                component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
@@ -44,11 +44,6 @@ export default {
                 computedValueProp: 'displayLocation',
                 fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
             },
-            building_name: {
-                component: props => <TextField {...props} required />,
-                validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, flex: 1 },
-            },
             building_id_displayed: {
                 component: props => (
                     <TextField
@@ -58,6 +53,11 @@ export default {
                         helperText={locale.pages.general.helperText.maxChars(10)}
                     />
                 ),
+                validate: value => isEmptyStr(value), // should return true if a validation error exists
+                fieldParams: { canEdit: true, minWidth: 150 },
+            },
+            building_name: {
+                component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, flex: 1 },
             },
@@ -103,10 +103,6 @@ export default {
                 computedValueProp: 'displayLocation',
                 fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
             },
-            room_description: {
-                component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
-            },
             room_id_displayed: {
                 component: props => (
                     <TextField
@@ -117,6 +113,10 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
+                fieldParams: { canEdit: true, minWidth: 150 },
+            },
+            room_description: {
+                component: props => <TextField {...props} />,
                 fieldParams: { canEdit: true, flex: 1 },
             },
             asset_count: {
