@@ -246,12 +246,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                     !trainingEventsLoading &&
                     !eventDetail && (
                         <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
-                            <div
-                                className={classes.flexContent}
-                                role="region"
-                                aria-live="assertive"
-                                aria-label="UQ training Events list"
-                            >
+                            <div className={classes.flexContent} role="region" aria-label="UQ training Events list">
                                 {standardisedTrainingEvents &&
                                     standardisedTrainingEvents.length > 0 &&
                                     standardisedTrainingEvents.map((event, index) => {
