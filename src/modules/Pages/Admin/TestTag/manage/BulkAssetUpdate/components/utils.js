@@ -8,8 +8,8 @@ export const transformRow = row => {
             asset_type_name: line?.asset_type?.asset_type_name ?? '',
             asset_location: !!line?.last_location
                 ? createLocationString({
-                      site: line.last_location.site_id_displayed,
-                      building: line.last_location.building_id_displayed,
+                      site: line.last_location.site_name,
+                      building: line.last_location.building_name,
                       floor: line.last_location.floor_id_displayed,
                       room: line.last_location.room_id_displayed,
                   })
@@ -39,7 +39,12 @@ export const transformFilterRow = row => {
         return {
             ...line,
             asset_id_displayed: line?.asset_barcode ?? '',
-            asset_location: line?.asset_room_id_last_seen ?? '',
+            asset_location: createLocationString({
+                site: line.site_name,
+                building: line.building_name,
+                floor: line.floor_id_displayed,
+                room: line.room_id_displayed,
+            }),
         };
     });
 };
