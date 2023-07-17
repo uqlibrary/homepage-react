@@ -19,17 +19,17 @@ export const transformRow = row => {
 };
 
 export const transformRequest = formValues => {
-    if (!!formValues.hasStatus) {
+    if (!!formValues.hasDiscardStatus) {
         formValues.hasLocation = false;
         formValues.hasAssetType = false;
     } else {
-        formValues.hasStatus = false;
+        formValues.hasDiscardStatus = false;
     }
     return {
         asset: formValues.asset_list.reduce((cumulative, current) => [...cumulative, current.asset_id], []),
         ...(!!formValues.hasLocation ? { asset_room_id_last_seen: formValues.location.room } : {}),
         ...(!!formValues.hasAssetType ? { asset_type_id: formValues.asset_type.asset_type_id } : {}),
-        ...(!!formValues.hasStatus ? { is_discarding: 1 } : {}),
+        ...(!!formValues.hasDiscardStatus ? { is_discarding: 1, discard_reason: formValues.discard_reason } : {}),
     };
 };
 
