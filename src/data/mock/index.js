@@ -67,16 +67,6 @@ import {
     promoPanelMocks,
 } from './data/promoPanels';
 
-import {
-    TEST_TAG_ONLOAD_DASHBOARD_API,
-    TEST_TAG_ONLOAD_INSPECT_API,
-    TEST_TAG_ASSETS_API,
-    TEST_TAG_ASSET_ACTION,
-    TEST_TAG_FLOOR_API,
-    TEST_TAG_ROOM_API,
-    TEST_TAG_USER_LIST_API
-} from 'repositories/routes';
-
 const moment = require('moment');
 
 const mock = new MockAdapter(api, { delayResponse: 1000 });
@@ -805,6 +795,22 @@ mock.onGet('exams/course/FREN1010/summary')
     .onDelete(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API('.*').apiUrl)))
     .reply(() => [200, {status: 'OK'}])
 
+
+    .onGet(/test-and-tag\/asset\/search\/current\/.*[?]without_discards=1/)
+    .reply(config => {
+        const patternTmp = config.url.split('/').pop();
+        const pattern = patternTmp.split('?')[0];
+        // filter array to matching asset id's
+        return [
+            200,
+            {
+                data: testTag_assets.data.filter(asset =>
+                    asset.asset_id_displayed.toUpperCase().startsWith(pattern.toUpperCase()) && asset.asset_status !== 'DISCARDED'
+                ),
+            },
+        ];
+    })
+
     // ASSETS (with pattern matching)
     .onGet(/test-and-tag\/asset\/search\/current\/*/)
     .reply(config => {
@@ -819,6 +825,8 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
+
+
 
     .onPost(routes.TEST_TAG_ASSET_ACTION().apiUrl)
     .reply(() => [

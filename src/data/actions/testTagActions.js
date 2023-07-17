@@ -8,6 +8,7 @@ import {
     TEST_TAG_ROOM_API,
     TEST_TAG_ASSETS_API,
     TEST_TAG_ASSETS_MINE_API,
+    TEST_TAG_ASSETS_FILTERED_API,
     TEST_TAG_ASSET_ACTION,
     TEST_TAG_ASSETTYPE_ADD,
     TEST_TAG_ASSETTYPE_API,
@@ -287,6 +288,24 @@ export function loadAssets(pattern) {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSETS_LOADING });
         return get(TEST_TAG_ASSETS_API(pattern))
+            .then(response => {
+                dispatch({
+                    type: actions.TESTTAG_ASSETS_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TESTTAG_ASSETS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+export function loadAssetsFiltered(pattern, filter) {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSETS_LOADING });
+        return get(TEST_TAG_ASSETS_FILTERED_API(pattern, filter))
             .then(response => {
                 dispatch({
                     type: actions.TESTTAG_ASSETS_LOADED,

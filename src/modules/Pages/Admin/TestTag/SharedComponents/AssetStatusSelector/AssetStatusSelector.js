@@ -66,6 +66,7 @@ const AssetStatusSelector = ({
                 PopperComponent={customPopper}
                 disableClearable
                 autoSelect
+                disabled={disabled}
                 {...rest}
             />
         </FormControl>
