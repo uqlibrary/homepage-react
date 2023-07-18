@@ -967,7 +967,7 @@ export default {
                         endDateLabel: 'Period end date',
                         endDateAriaLabel: 'change end date',
                     },
-                    totalInspections: count => `${count} total inspections.`,
+                    totalInspections: count => `Total Inspections: ${count}`,
                 },
             },
             assetReportByFilters: {
