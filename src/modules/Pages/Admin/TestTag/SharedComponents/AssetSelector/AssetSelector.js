@@ -14,7 +14,7 @@ const rootId = 'asset_selector';
 
 const MINIMUM_ASSET_ID_PATTERN_LENGTH = 5;
 
-const filter = createFilterOptions();
+const filterOptions = createFilterOptions();
 
 export const maskNumber = (number, department) => {
     const prefix = /^\d+$/.test(number) ? department : '';
@@ -39,6 +39,7 @@ const AssetSelector = ({
     onReset,
     onSearch,
     validateAssetId,
+    filter,
 }) => {
     const componentId = `${rootId}-${id}`;
     const previousValueRef = React.useRef(null);
@@ -60,7 +61,9 @@ const AssetSelector = ({
             setCurrentValue(assetPartial);
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
                 onSearch?.(assetPartial);
-                dispatch(actions.loadAssets(assetPartial));
+                dispatch(
+                    !!filter ? actions.loadAssetsFiltered(assetPartial, filter) : actions.loadAssets(assetPartial),
+                );
             }
         }),
     ).current;
@@ -121,7 +124,7 @@ const AssetSelector = ({
                     clearInput();
                 }}
                 filterOptions={(options, params) => {
-                    const filtered = filter(options, params);
+                    const filtered = filterOptions(options, params);
                     // Suggest the creation of a new value
                     // if (params.inputValue !== '') {
                     canAddNew &&
@@ -217,6 +220,7 @@ AssetSelector.propTypes = {
     onSearch: PropTypes.func,
     onReset: PropTypes.func,
     validateAssetId: PropTypes.func,
+    filter: PropTypes.shape({ status: PropTypes.shape({ discarded: PropTypes.bool }) }),
 };
 
 export default React.memo(AssetSelector);

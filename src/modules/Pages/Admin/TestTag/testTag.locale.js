@@ -231,8 +231,8 @@ export default {
                     newAssetText: 'NEW ASSET',
                     assetSelector: {
                         label: 'Asset ID',
-                        helperText: 'Enter a new ID to add',
-                        placeholder: 'Enter at least 5 characters',
+                        helperText: 'Scan or enter a barcode',
+                        placeholder: 'Enter at least 3 characters',
                     },
                     assetType: {
                         props: {
@@ -696,7 +696,7 @@ export default {
                             columns: {
                                 asset_barcode: { label: 'Barcode' },
                                 asset_type_name: { label: 'Type' },
-                                asset_location: { label: 'Last room' },
+                                asset_location: { label: 'Location' },
                                 asset_status: { label: 'Status' },
                             },
                             locationTitle: 'Location',
@@ -710,7 +710,7 @@ export default {
                             newAssetText: 'NEW ASSET',
                             assetSelector: {
                                 label: 'Asset ID',
-                                helperText: 'Scan or enter a new ID to add',
+                                helperText: 'Scan or enter barcode to search non-discarded assets',
                                 placeholder: 'Enter at least 3 characters',
                             },
                             button: {
@@ -721,15 +721,18 @@ export default {
                         },
                         two: {
                             title: 'Step 2: Choose bulk update action',
-                            subtext: count => `You have selected ${count} assets to bulk update.`,
+                            subtext: count => <>You have selected {count} assets to bulk update.</>,
                             button: {
                                 previous: 'Back',
                                 submit: 'Bulk Update',
                             },
                             checkbox: {
                                 location: 'Update Location',
-                                status: 'Update Status',
+                                status: 'Discard Asset',
                                 assetType: 'Update Asset Type',
+                            },
+                            discardReason: {
+                                label: 'Discarding Reason',
                             },
                             dialogBulkUpdateConfirm: {
                                 confirmButtonLabel: 'Proceed',

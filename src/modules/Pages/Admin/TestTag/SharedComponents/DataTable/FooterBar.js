@@ -13,6 +13,7 @@ const FooterBar = ({
     onActionClick,
     cancelButtonProps,
     nextButtonProps,
+    ...props
 }) => {
     const componentId = `${rootId}-${id}`;
     FooterBar.propTypes = {
@@ -26,7 +27,7 @@ const FooterBar = ({
     };
 
     return (
-        <GridFooterContainer id={`${componentId}`} data-testid={`${componentId}`}>
+        <GridFooterContainer id={`${componentId}`} data-testid={`${componentId}`} {...props}>
             {!!onAltClick && (
                 <Button
                     color="primary"
