@@ -55,6 +55,13 @@ const LocationPicker = ({
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
 
+    function getBuildingLabel(option) {
+        const prefix = !!option.building_id_displayed
+            ? `${option.building_id_displayed} - `
+            : /* istanbul ignore next */ '';
+        return `${prefix}${option.building_name ?? /* istanbul ignore next */ ''}`;
+    }
+
     return (
         <>
             {!!title && (
@@ -154,7 +161,7 @@ const LocationPicker = ({
                                     actions.loadFloors(newValue.building_id);
                                 }
                             }}
-                            getOptionLabel={option => `${option?.building_name ?? /* istanbul ignore next */ ''}`}
+                            getOptionLabel={option => getBuildingLabel(option)}
                             renderInput={params => (
                                 <TextField
                                     {...params}
