@@ -307,6 +307,7 @@ const BookExamBooth = ({
                                             aria-label={locale.submitButton.aria}
                                             color="primary"
                                             data-testid={'booth-search-submit-button'}
+                                            data-analyticsid={'submit_booth_search'}
                                             id={'booth-search-submit-button'}
                                             onClick={_getAddress}
                                             size="large"

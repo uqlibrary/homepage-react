@@ -9,7 +9,7 @@ import {
     hasTestOrAction,
 } from './helpers';
 
-export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {} } = {}) => {
+export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {}, user = {} } = {}) => {
     const [isValid, setIsValid] = useState(false);
 
     const validateValues = (formValues, lastInspection) => {
@@ -17,7 +17,7 @@ export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {} }
             isValidEventDate(formValues.action_date) &&
             isValidAssetId(formValues.asset_id_displayed) &&
             isValidAssetTypeId(formValues.asset_type_id) &&
-            isValidInspection(formValues, testStatusEnum) &&
+            isValidInspection(formValues, user, testStatusEnum) &&
             ((!!!formValues.isRepair && !!!formValues.isDiscarded) ||
                 (!!formValues.isRepair !== !!formValues.isDiscarded &&
                     (isValidRepair({

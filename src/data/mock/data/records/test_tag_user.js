@@ -2,6 +2,7 @@ export default {
     status: 'ok', 
     data: {
         "department_display_name": "Library",
+        "department_visual_inspection_device_id": 3,
         "user_current_flag": "1",
         "user_department": "UQL",
         "user_id": 2,

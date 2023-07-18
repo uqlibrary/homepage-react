@@ -104,7 +104,7 @@ const AssetSelector = ({
                 className={classNames.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
-                value={currentValue ?? previousValueRef.current}
+                value={currentValue ?? previousValueRef.current ?? ''}
                 onChange={(event, newValue) => {
                     if (typeof newValue === 'string') {
                         onChange?.(

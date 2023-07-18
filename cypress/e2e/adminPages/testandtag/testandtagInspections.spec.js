@@ -390,6 +390,33 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('inspection_panel-inspection-result-passed-button').should('be.disabled');
                 cy.data('inspection_panel-inspection-result-failed-button').should('be.disabled');
             });
+
+            it('should show error for a PASS inspection if visual device is selected', () => {
+                cy.data('inspection_panel-inspection-result-passed-button').should('be.disabled');
+                cy.data('inspection_panel-inspection-result-failed-button').should('be.disabled');
+                selectAssetId('NEW ASSET');
+                selectAssetType('PowerBoard');
+
+                cy.data('inspection_panel-inspection-result-passed-button').should('not.be.disabled');
+                cy.data('inspection_panel-inspection-result-failed-button').should('not.be.disabled');
+                cy.data('inspection_panel-inspection-device-select').click();
+                selectListbox('Visual Inspection');
+                cy.data('inspection_panel-inspection-device-select').should('contain', 'Visual Inspection');
+                cy.data('inspection_panel-inspection-device-validation-text').should('not.exist');
+                cy.data('inspection_panel-inspection-result-passed-button').click();
+                cy.data('inspection_panel-inspection-device-validation-text')
+                    .should('exist')
+                    .should('contain', 'Visual Inspection can not be used for a PASS inspection');
+                cy.data('inspection_panel-inspection-result-failed-button').click();
+                cy.data('inspection_panel-inspection-device-validation-text').should('not.exist');
+                cy.data('inspection_panel-inspection-result-passed-button').click();
+                cy.data('inspection_panel-inspection-device-validation-text')
+                    .should('exist')
+                    .should('contain', 'Visual Inspection can not be used for a PASS inspection');
+                cy.data('inspection_panel-inspection-device-select').click();
+                selectListbox('AV 025');
+                cy.data('inspection_panel-inspection-device-validation-text').should('not.exist');
+            });
         });
 
         describe('Action panel functionality', () => {

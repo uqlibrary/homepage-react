@@ -151,6 +151,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Inspection = ({
+    user,
     actions,
     defaultFormValues,
     defaultNextTestDateValue,
@@ -190,7 +191,7 @@ const Inspection = ({
             inspectionConfigError || saveInspectionError || saveAssetTypeError || floorListError || roomListError,
         errorMessageFormatter: locale.config.alerts.error,
     });
-    const { isValid, validateValues } = useValidation({ testStatusEnum });
+    const { isValid, validateValues } = useValidation({ testStatusEnum, user });
     const assignAssetDefaults = React.useCallback(
         (asset = {}, formValues = {}, location = {}) => {
             return {
@@ -256,9 +257,9 @@ const Inspection = ({
         resetForm();
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         resetForm();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -404,6 +405,7 @@ const Inspection = ({
 };
 
 Inspection.propTypes = {
+    user: PropTypes.object,
     actions: PropTypes.object,
     defaultFormValues: PropTypes.object,
     defaultNextTestDateValue: PropTypes.string,

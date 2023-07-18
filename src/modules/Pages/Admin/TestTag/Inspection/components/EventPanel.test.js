@@ -36,7 +36,7 @@ function setup(testProps = {}) {
         },
     ];
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData.data, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
         testTagLocationReducer: { floorList, floorListLoading: false, roomList, roomListLoading: false },
         ...state,
     };
@@ -200,7 +200,7 @@ describe('EventPanel', () => {
         const setStateMock = jest.fn();
         const spyState = useState => [useState, setStateMock];
         jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
-        const testConfig = structuredClone(configData.data); // deep copy
+        const testConfig = structuredClone(configData); // deep copy
 
         testConfig.sites.forEach(site => {
             delete site.site_id_displayed;
@@ -219,7 +219,7 @@ describe('EventPanel', () => {
 
         expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(setLocation).toHaveBeenCalledWith({ site: 1 });
-        configData.data.sites.forEach(site => {
+        configData.sites.forEach(site => {
             expect(queryByText(site.site_id_displayed)).not.toBeInTheDocument();
             expect(queryByText(site.site_name)).not.toBeInTheDocument();
         });
