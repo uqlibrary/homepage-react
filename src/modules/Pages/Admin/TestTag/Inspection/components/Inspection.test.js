@@ -48,7 +48,7 @@ function setup(testProps = {}, renderer = renderWithRouter) {
         actions = {},
         defaultFormValues = DEFAULT_FORM_VALUES,
         assetsListError = null,
-        inspectionConfig = configData.data,
+        inspectionConfig = configData,
         inspectionConfigLoading = false,
         inspectionConfigError = null,
         floorListError = null,
@@ -60,13 +60,13 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     } = testProps;
 
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData.data, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
         testTagUserReducer: {
             userLoading: false,
             userLoaded: true,
             userError: false,
-            user: userData.data,
-            privilege: getUserPermissions(userData.data.privileges ?? {}),
+            user: userData,
+            privilege: getUserPermissions(userData.privileges ?? {}),
         },
         ...state,
     };
@@ -115,7 +115,7 @@ describe('TestTag', () => {
 
         expect(getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
         expect(
-            getByText(locale.pages.inspect.header.pageSubtitle?.(configData.data.user.department_display_name)),
+            getByText(locale.pages.inspect.header.pageSubtitle?.(configData.user.department_display_name)),
         ).toBeInTheDocument();
         expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();

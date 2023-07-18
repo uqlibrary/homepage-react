@@ -38,7 +38,7 @@ function setup(testProps = {}) {
     const { state = {}, actions = {}, focusElementRef = {}, classes = {}, isMobileView = false, ...props } = testProps;
 
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData.data, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
         testTagAssetsReducer: { assetsList: assetData, assetsListLoading: false },
         ...state,
     };
