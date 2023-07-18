@@ -9,6 +9,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Collapse from '@material-ui/core/Collapse';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -21,10 +22,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import ActionPanel from './ActionPanel';
 import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
 import locale from '../../testTag.locale';
-import { isValidTestingDeviceId, isValidFailReason, statusEnum } from '../utils/helpers';
+import {
+    isValidTestingDeviceId,
+    isValidTestingDeviceForPassInspection,
+    isValidFailReason,
+    statusEnum,
+} from '../utils/helpers';
 
-const componentId = 'inspection-panel';
-const componentIdLower = 'inspection_panel';
+const rootId = 'inspection-panel';
+const rootIdLower = 'inspection_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 const moment = require('moment');
@@ -45,6 +51,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const InspectionPanel = ({
+    id,
     formValues,
     selectedAsset,
     handleChange,
@@ -53,9 +60,14 @@ const InspectionPanel = ({
     disabled,
     isMobileView,
 }) => {
+    const componentId = `${!!id ? `${id}-` : ''}${rootId}`;
+    const componentIdLower = `${!!id ? `${id}-` : ''}${rootIdLower}`;
+
     const pageLocale = locale.pages.inspect;
     const monthsOptions = locale.config.monthsOptions;
     const classesInternal = useStyles();
+
+    const { user } = useSelector(state => state.get('testTagUserReducer'));
 
     const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
         state.get?.('testTagOnLoadInspectionReducer'),
@@ -79,6 +91,20 @@ const InspectionPanel = ({
     const handleFailReasonChange = e => handleChange('inspection_fail_reason')(e);
     const handleInspectionNotesChange = e => handleChange('inspection_notes')(e);
 
+    const invalidTestingDevice = !isValidTestingDeviceId(
+        formValues.inspection_device_id,
+        user?.department_visual_inspection_device_id,
+        formValues.inspection_status,
+        testStatusEnum,
+    );
+
+    const invalidTestingDeviceForPassStatus = !isValidTestingDeviceForPassInspection(
+        formValues.inspection_device_id,
+        user?.department_visual_inspection_device_id,
+        formValues.inspection_status,
+        testStatusEnum,
+    );
+
     return (
         <StandardCard
             standardCardId={componentIdLower}
@@ -90,8 +116,8 @@ const InspectionPanel = ({
         >
             <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <FormControl className={classes.formControl} fullWidth>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <FormControl className={classes.formControl} fullWidth error={invalidTestingDevice}>
                             <InputLabel required htmlFor={`${componentIdLower}-inspection-device-input`}>
                                 {pageLocale.form.inspection.deviceLabel}
                             </InputLabel>
@@ -113,15 +139,12 @@ const InspectionPanel = ({
                                 fullWidth
                                 className={classes.formSelect}
                                 value={formValues.inspection_device_id ?? ''}
-                                onChange={e => handleChange('inspection_device_id')(e.target.value)}
+                                onChange={e => {
+                                    console.log('CLICK', e.target.value);
+                                    handleChange('inspection_device_id')(e.target.value);
+                                }}
                                 required
-                                error={
-                                    !isValidTestingDeviceId(
-                                        formValues.inspection_device_id,
-                                        formValues.inspection_status,
-                                        testStatusEnum,
-                                    )
-                                }
+                                error={invalidTestingDevice}
                                 disabled={disabled}
                             >
                                 {!!inspectionConfigLoading && (
@@ -144,6 +167,18 @@ const InspectionPanel = ({
                                         </MenuItem>
                                     ))}
                             </Select>
+                            {invalidTestingDeviceForPassStatus && (
+                                <FormHelperText
+                                    id={`${componentIdLower}-inspection-device-validation-text`}
+                                    data-testid={`${componentIdLower}-inspection-device-validation-text`}
+                                >
+                                    {pageLocale.form.inspection.deviceInvalidForPass(
+                                        inspectionConfig.inspection_devices.find(
+                                            device => device.device_id === user?.department_visual_inspection_device_id,
+                                        )?.device_model_name,
+                                    )}
+                                </FormHelperText>
+                            )}
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
@@ -199,7 +234,7 @@ const InspectionPanel = ({
                         </Box>
                     </Grid>
                     {formValues.inspection_status === testStatusEnum.PASSED.value && (
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={4}>
                             <MonthsSelector
                                 id={componentId}
                                 label={pageLocale.form.inspection.nextTestDateLabel}
@@ -275,6 +310,7 @@ const InspectionPanel = ({
 };
 
 InspectionPanel.propTypes = {
+    id: PropTypes.string,
     formValues: PropTypes.object.isRequired,
     selectedAsset: PropTypes.object,
     handleChange: PropTypes.func.isRequired,

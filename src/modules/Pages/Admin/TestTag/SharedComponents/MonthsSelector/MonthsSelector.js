@@ -39,7 +39,7 @@ const MonthsSelector = ({
     };
 
     return (
-        <FormControl className={classNames.formControl} fullWidth={responsive && isMobileView}>
+        <FormControl className={classNames.formControl} fullWidth>
             {!!label && (
                 <InputLabel shrink required={required} htmlFor={`${componentId}-input`}>
                     {label}

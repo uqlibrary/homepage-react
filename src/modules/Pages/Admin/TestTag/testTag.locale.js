@@ -271,6 +271,7 @@ export default {
                 inspection: {
                     title: 'Inspection',
                     deviceLabel: 'Testing device',
+                    deviceInvalidForPass: device => `${device} can not be used for a PASS inspection`,
                     testResultLabel: 'Inspection Result',
                     nextTestDateLabel: 'Next inspection due',
                     nextTestDateFormatted: dateStr => `Next inspection due ${dateStr}`,
