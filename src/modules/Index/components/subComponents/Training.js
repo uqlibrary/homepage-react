@@ -246,12 +246,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                     !trainingEventsLoading &&
                     !eventDetail && (
                         <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
-                            <div
-                                className={classes.flexContent}
-                                role="region"
-                                aria-live="assertive"
-                                aria-label="UQ training Events list"
-                            >
+                            <div className={classes.flexContent} role="region" aria-label="UQ training Events list">
                                 {standardisedTrainingEvents &&
                                     standardisedTrainingEvents.length > 0 &&
                                     standardisedTrainingEvents.map((event, index) => {
@@ -390,6 +385,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                     href={`https://studenthub.uq.edu.au/students/events/detail/${eventDetail.entityId}`}
                                     id="training-event-detail-training-login-button"
                                     data-testid="training-event-detail-training-login-button"
+                                    data-analyticsid="training-event-detail-training-login-button"
                                 >
                                     Log in and book now
                                 </a>

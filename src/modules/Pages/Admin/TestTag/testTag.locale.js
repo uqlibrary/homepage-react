@@ -244,6 +244,9 @@ export default {
                             cancelButtonLabel: 'Cancel',
                             confirmationTitle: 'Add new Asset Type',
                         },
+                        loadError: 'Unable to load list of Asset Types',
+                        saveError:
+                            'Unable to save your new Asset Type. Please ensure the Asset Type name you have entered does not already exist in your department',
                     },
                     ownerLabel: 'Asset owner',
                 },
@@ -271,6 +274,7 @@ export default {
                 inspection: {
                     title: 'Inspection',
                     deviceLabel: 'Testing device',
+                    deviceInvalidForPass: device => `${device} can not be used for a PASS inspection`,
                     testResultLabel: 'Inspection Result',
                     nextTestDateLabel: 'Next inspection due',
                     nextTestDateFormatted: dateStr => `Next inspection due ${dateStr}`,
@@ -375,16 +379,14 @@ export default {
                     confirmationTitle: 'Remove unused Asset Type',
                 },
                 snackbars: {
-                    loadFailed: error => `Error loading Asset Types. ${error}`,
+                    loadFailed: 'Unable to load Asset Types',
                     addSuccess: 'Asset type added',
-                    addFailed: error => `Error adding Asset Type. ${error}`,
+                    addFailed: 'Unable to add the Asset Type',
                     updateSuccess: 'Asset type updated',
-                    updateFail: error => `Error updating Asset Type. ${error}`,
-                    reallocateSuccess: response =>
-                        `Asset Type Deleted and reallocated. ${response.effected_assets} asset reallocated, and ${response.effected_asset_types} asset type(s) removed`,
-                    reallocateFail: error => `Error Reallocating Asset Type. ${error}`,
+                    updateFailed: 'Unable to update the Asset Type',
+                    reallocateFailed: 'Unable to reallocate and delete the Asset Type',
                     deleteSuccess: 'Asset Type Deleted',
-                    deleteFail: error => `Error deleting asset types. ${error}`,
+                    deleteFailed: 'Unable to delete the Asset Type',
                 },
                 form: {
                     locationTypeTitle: 'Asset type',
@@ -528,13 +530,13 @@ export default {
                     confirmationMessage: 'Are you sure you wish to delete this Location?',
                     confirmationTitle: 'Delete unused Location',
                 },
-                alerts: {
-                    addSuccess: location => `${location} added successfully`,
-                    addFail: location => `${location} could not be saved`,
-                    updateSuccess: location => `${location} updated successfully`,
-                    updateFail: location => `${location} could not be updated`,
-                    deleteSuccess: location => `${location} deleted successfully`,
-                    deleteFail: location => `${location} could not be deleted`,
+                snackbar: {
+                    addSuccess: 'Added the Location successfully',
+                    addFail: 'Unable to save the Location',
+                    updateSuccess: 'updated successfully',
+                    updateFail: 'Unable to update the Location',
+                    deleteSuccess: 'deleted successfully',
+                    deleteFail: 'Unable to delete the Location',
                 },
             },
             inspectiondevices: {
@@ -590,13 +592,13 @@ export default {
                     confirmationMessage: 'Are you sure you wish to delete this Device?',
                     confirmationTitle: 'Delete Device',
                 },
-                alerts: {
+                snackbar: {
                     addSuccess: 'Device added successfully',
-                    addFail: 'Device could not be saved',
+                    addFail: 'Unable to add the Inspection Device',
                     updateSuccess: 'Device updated successfully',
-                    updateFail: 'Device could not be updated',
+                    updateFail: 'Unable to update the Inspection Device',
                     deleteSuccess: 'Device deleted successfully',
-                    deleteFail: 'Device could not be deleted',
+                    deleteFail: 'Unable to delete the Inspection Device',
                 },
             },
             inspectiondetails: {
@@ -654,9 +656,9 @@ export default {
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Edit asset details',
                 },
-                alerts: {
+                snackbar: {
                     updateSuccess: 'Asset updated successfully',
-                    updateFail: 'Asset could not be updated',
+                    updateFail: 'Unable to update the Asset',
                 },
             },
             bulkassetupdate: {
@@ -743,7 +745,7 @@ export default {
                             },
                             snackbars: {
                                 success: 'Bulk Asset update successful',
-                                failed: error => `Error attempting to bulk update assets. ${error}`,
+                                failed: 'Unable to bulk update Assets',
                             },
                         },
                     },
@@ -820,9 +822,13 @@ export default {
                     cancelButtonLabel: 'Cancel',
                     confirmationTitle: 'Edit User',
                 },
-                alerts: {
+                snackbar: {
                     addSuccess: 'User added successfully',
+                    addFail: 'Unable to add the User',
+                    updateSuccess: 'User updated successfully',
+                    updateFail: 'Unable to update the User',
                     deleteSuccess: 'User deleted successfully',
+                    deleteFail: 'Unable to delete the User',
                 },
                 dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',
@@ -967,7 +973,7 @@ export default {
                         endDateLabel: 'Period end date',
                         endDateAriaLabel: 'change end date',
                     },
-                    totalInspections: count => `${count} total inspections.`,
+                    totalInspections: count => `Total Inspections: ${count}`,
                 },
             },
             assetReportByFilters: {

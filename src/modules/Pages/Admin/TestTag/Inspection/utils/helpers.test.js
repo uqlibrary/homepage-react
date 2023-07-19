@@ -6,6 +6,7 @@ import {
     isValidRoomId,
     isValidAssetTypeId,
     isValidTestingDeviceId,
+    isValidTestingDeviceForPassInspection,
     isValidFailReason,
     isValidInspection,
     hasTestOrAction,
@@ -90,14 +91,28 @@ describe('Helper functions', () => {
         checkStandardArguments(isValidAssetTypeId, false);
     });
     it('isValidTestingDeviceId function validates testing device ids', () => {
-        expect(isValidTestingDeviceId(1, 'PASSED', testStatusEnum)).toBe(true);
-        expect(isValidTestingDeviceId(1, 'FAILED', testStatusEnum)).toBe(true);
-        expect(isValidTestingDeviceId(-1, undefined, testStatusEnum)).toBe(true);
-        expect(isValidTestingDeviceId(-1, null, testStatusEnum)).toBe(true);
-        expect(isValidTestingDeviceId(1, undefined, testStatusEnum)).toBe(false);
-        expect(isValidTestingDeviceId(1, null, testStatusEnum)).toBe(false);
-        expect(isValidTestingDeviceId('text', 'PASSED', testStatusEnum)).toBe(false);
-        checkStandardArguments(val => isValidTestingDeviceId(val, 'PASSED', testStatusEnum), false);
+        expect(isValidTestingDeviceId(1, 3, 'PASSED', testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceId(1, 3, 'FAILED', testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceId(-1, 3, undefined, testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceId(-1, 3, null, testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceId(1, 3, undefined, testStatusEnum)).toBe(false);
+        expect(isValidTestingDeviceId(1, 3, null, testStatusEnum)).toBe(false);
+        expect(isValidTestingDeviceId('text', 3, 'PASSED', testStatusEnum)).toBe(false);
+        expect(isValidTestingDeviceId(3, 3, 'PASSED', testStatusEnum)).toBe(false);
+        expect(isValidTestingDeviceId(3, 3, 'FAILED', testStatusEnum)).toBe(true);
+        checkStandardArguments(val => isValidTestingDeviceId(val, 3, 'PASSED', testStatusEnum), false);
+    });
+    it('isValidTestingDeviceForPassInspection function validates testing device ids and status', () => {
+        expect(isValidTestingDeviceForPassInspection(1, 3, 'PASSED', testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceForPassInspection(1, 3, 'FAILED', testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceForPassInspection(-1, 3, undefined, testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceForPassInspection(-1, 3, null, testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceForPassInspection(1, 3, undefined, testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceForPassInspection(1, 3, null, testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceForPassInspection('text', 3, 'PASSED', testStatusEnum)).toBe(true);
+        expect(isValidTestingDeviceForPassInspection(3, 3, 'PASSED', testStatusEnum)).toBe(false);
+        expect(isValidTestingDeviceForPassInspection(3, 3, 'FAILED', testStatusEnum)).toBe(true);
+        checkStandardArguments(val => isValidTestingDeviceForPassInspection(val, 3, 'PASSED', testStatusEnum), true);
     });
     it('isValidFailReason function validates failed values', () => {
         const validObject1 = { inspection_fail_reason: 'reason', inspection_status: FAIL };
@@ -155,16 +170,29 @@ describe('Helper functions', () => {
             inspection_device_id: 1,
             room_id: 1,
         };
-        expect(isValidInspection({}, testStatusEnum)).toBe(true); // no inspection = valid
+        const userPass = { department_visual_inspection_device_id: 3 };
+        const userFail = { department_visual_inspection_device_id: 1 };
+        // no inspection = valid
+        expect(isValidInspection({}, userPass, testStatusEnum)).toBe(true);
+        // no inspection = valid
+        expect(isValidInspection({}, userFail, testStatusEnum)).toBe(true);
         expect(isValidInspection({})).toBe(false);
-        expect(isValidInspection(validObject1, testStatusEnum)).toBe(true);
-        expect(isValidInspection(validObject2, testStatusEnum)).toBe(true);
-        expect(isValidInspection(invalidPassObject1, testStatusEnum)).toBe(false);
-        expect(isValidInspection(invalidPassObject2, testStatusEnum)).toBe(false);
-        expect(isValidInspection(invalidPassObject3, testStatusEnum)).toBe(false);
-        expect(isValidInspection(invalidPassObject4, testStatusEnum)).toBe(false);
-        expect(isValidInspection(invalidPassObject5, testStatusEnum)).toBe(false);
-        expect(isValidInspection(invalidPassObject6, testStatusEnum)).toBe(false);
+        expect(isValidInspection(validObject1, userPass, testStatusEnum)).toBe(true);
+        expect(isValidInspection(validObject1, userFail, testStatusEnum)).toBe(false);
+        expect(isValidInspection(validObject2, userPass, testStatusEnum)).toBe(true);
+        expect(isValidInspection(validObject2, userFail, testStatusEnum)).toBe(true);
+        expect(isValidInspection(invalidPassObject1, userPass, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject2, userPass, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject3, userPass, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject4, userPass, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject5, userPass, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject6, userPass, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject1, userFail, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject2, userFail, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject3, userFail, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject4, userFail, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject5, userFail, testStatusEnum)).toBe(false);
+        expect(isValidInspection(invalidPassObject6, userFail, testStatusEnum)).toBe(false);
     });
     it('hasTestOrAction validates for valid submission', () => {
         const validObject1 = { inspection_status: testStatusEnum.PASSED.value };

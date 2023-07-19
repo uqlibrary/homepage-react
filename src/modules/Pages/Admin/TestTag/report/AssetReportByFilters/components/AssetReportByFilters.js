@@ -182,6 +182,16 @@ const AssetReportByFilters = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taggedBuildingList, taggedBuildingListLoaded]);
 
+    function getBuildingLabel(option) {
+        const prefix =
+            option.building_id !== -1 && !!option.building_id_displayed
+                ? `${option.building_id_displayed} - `
+                : /* istanbul ignore next */ '';
+        const postfix =
+            option.building_id !== -1 && !!option.site_name ? ` (${option.site_name})` : /* istanbul ignore next */ '';
+        return `${prefix}${option.building_name ?? /* istanbul ignore next */ ''}${postfix}`;
+    }
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -235,7 +245,7 @@ const AssetReportByFilters = ({
                                                 id={`${componentIdLower}-building-option-${index}`}
                                                 data-testid={`${componentIdLower}-building-option-${index}`}
                                             >
-                                                {building.building_name}
+                                                {getBuildingLabel(building)}
                                             </MenuItem>
                                         ))}
                                 </Select>

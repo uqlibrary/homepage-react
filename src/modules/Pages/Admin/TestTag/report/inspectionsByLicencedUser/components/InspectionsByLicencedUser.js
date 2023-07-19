@@ -8,7 +8,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import Typography from '@material-ui/core/Typography';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -22,6 +21,8 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { getNameStyles, transformRow } from './utils';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
+
+import FooterRow from './FooterRow';
 
 const componentId = 'user-inspections';
 const componentIdLower = 'user_inspections';
@@ -296,15 +297,6 @@ const InspectionsByLicencedUser = ({
                             />
                         </Grid>
                     </Grid>
-                    <Grid container spacing={0}>
-                        <Typography
-                            component={'p'}
-                            id={`${componentIdLower}-total-text`}
-                            data-testid={`${componentIdLower}-total-text`}
-                        >
-                            {pageLocale.form.totalInspections(totalInspections)}
-                        </Typography>
-                    </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
@@ -316,6 +308,11 @@ const InspectionsByLicencedUser = ({
                                 classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
                                 disableColumnMenu
+                                components={{
+                                    Footer: () => (
+                                        <FooterRow count={totalInspections} columns={columns} locale={pageLocale} />
+                                    ),
+                                }}
                             />
                         </Grid>
                     </Grid>

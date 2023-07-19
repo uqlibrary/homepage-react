@@ -164,7 +164,8 @@ export const UpdateDialogue = ({
                                                         label: dataColumns[field].label,
                                                         value:
                                                             dataFields[field]?.valueFormatter?.(data?.[field]) ??
-                                                            data?.[field],
+                                                            data?.[field] ??
+                                                            '',
                                                         error:
                                                             dataFields[field]?.validate?.(data?.[field], data) ?? false,
                                                         checked: !!data?.[field],

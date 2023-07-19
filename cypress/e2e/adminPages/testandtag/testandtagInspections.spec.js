@@ -110,7 +110,10 @@ describe('Test and Tag Admin Inspection page', () => {
                 // Building
                 cy.data('location_picker-event-panel-building').click();
                 cy.get('#location_picker-event-panel-building-option-0').click();
-                cy.data('location_picker-event-panel-building-input').should('have.value', 'J.K. Murray Library');
+                cy.data('location_picker-event-panel-building-input').should(
+                    'have.value',
+                    '8102 - J.K. Murray Library',
+                );
 
                 // Floor
                 cy.wait(1500);
@@ -128,7 +131,10 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('location_picker-event-panel-site').click();
                 cy.get('#location_picker-event-panel-site-option-0').click();
                 cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-event-panel-building-input').should('not.have.value', 'J.K. Murray Library');
+                cy.data('location_picker-event-panel-building-input').should(
+                    'not.have.value',
+                    '8102 - J.K. Murray Library',
+                );
                 cy.data('location_picker-event-panel-floor-input').should('not.have.value', '1');
                 cy.data('location_picker-event-panel-room-input').should('not.have.value', '101');
             });
@@ -138,17 +144,23 @@ describe('Test and Tag Admin Inspection page', () => {
                 // set location so that we can test it clears later
                 selectLocation({ building: 'Forgan Smith Building', floor: '2', room: 'W212' });
                 cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-event-panel-building-input').should('have.value', 'Forgan Smith Building');
+                cy.data('location_picker-event-panel-building-input').should(
+                    'have.value',
+                    '0001 - Forgan Smith Building',
+                );
                 cy.data('location_picker-event-panel-floor-input').should('have.value', '2');
                 cy.data('location_picker-event-panel-room-input').should('have.value', 'W212');
                 selectLocation({ floor: '3' });
                 cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-event-panel-building-input').should('have.value', 'Forgan Smith Building');
+                cy.data('location_picker-event-panel-building-input').should(
+                    'have.value',
+                    '0001 - Forgan Smith Building',
+                );
                 cy.data('location_picker-event-panel-floor-input').should('have.value', '3');
                 cy.data('location_picker-event-panel-room-input').should('have.value', '');
                 selectLocation({ building: 'Duhig' });
                 cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
-                cy.data('location_picker-event-panel-building-input').should('have.value', 'Duhig Tower');
+                cy.data('location_picker-event-panel-building-input').should('have.value', '0002 - Duhig Tower');
                 cy.data('location_picker-event-panel-floor-input').should('have.value', '');
                 cy.data('location_picker-event-panel-room-input').should('have.value', '');
                 selectLocation({ site: 'Gatton' });
@@ -389,6 +401,33 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('inspection-reset-button').click();
                 cy.data('inspection_panel-inspection-result-passed-button').should('be.disabled');
                 cy.data('inspection_panel-inspection-result-failed-button').should('be.disabled');
+            });
+
+            it('should show error for a PASS inspection if visual device is selected', () => {
+                cy.data('inspection_panel-inspection-result-passed-button').should('be.disabled');
+                cy.data('inspection_panel-inspection-result-failed-button').should('be.disabled');
+                selectAssetId('NEW ASSET');
+                selectAssetType('PowerBoard');
+
+                cy.data('inspection_panel-inspection-result-passed-button').should('not.be.disabled');
+                cy.data('inspection_panel-inspection-result-failed-button').should('not.be.disabled');
+                cy.data('inspection_panel-inspection-device-select').click();
+                selectListbox('Visual Inspection');
+                cy.data('inspection_panel-inspection-device-select').should('contain', 'Visual Inspection');
+                cy.data('inspection_panel-inspection-device-validation-text').should('not.exist');
+                cy.data('inspection_panel-inspection-result-passed-button').click();
+                cy.data('inspection_panel-inspection-device-validation-text')
+                    .should('exist')
+                    .should('contain', 'Visual Inspection can not be used for a PASS inspection');
+                cy.data('inspection_panel-inspection-result-failed-button').click();
+                cy.data('inspection_panel-inspection-device-validation-text').should('not.exist');
+                cy.data('inspection_panel-inspection-result-passed-button').click();
+                cy.data('inspection_panel-inspection-device-validation-text')
+                    .should('exist')
+                    .should('contain', 'Visual Inspection can not be used for a PASS inspection');
+                cy.data('inspection_panel-inspection-device-select').click();
+                selectListbox('AV 025');
+                cy.data('inspection_panel-inspection-device-validation-text').should('not.exist');
             });
         });
 
