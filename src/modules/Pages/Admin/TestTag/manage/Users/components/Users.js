@@ -70,7 +70,8 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 actions.loadUserList();
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -90,7 +91,8 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 closeDialog();
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.updateFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -126,7 +128,8 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 actions.loadUserList();
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.deleteFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);

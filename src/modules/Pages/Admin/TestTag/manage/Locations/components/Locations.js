@@ -153,7 +153,7 @@ const ManageLocations = ({ actions }) => {
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.addFail), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -173,13 +173,12 @@ const ManageLocations = ({ actions }) => {
                 .updateLocation({ type: selectedLocation, request: wrappedRequest })
                 .then(() => {
                     closeDialog();
-
                     openConfirmationAlert(locale.config.alerts.success(), 'success');
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -199,13 +198,12 @@ const ManageLocations = ({ actions }) => {
                 .deleteLocation({ type: selectedLocation, id })
                 .then(() => {
                     closeDialog();
-
                     openConfirmationAlert(locale.config.alerts.success(), 'success');
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.deleteFail), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);

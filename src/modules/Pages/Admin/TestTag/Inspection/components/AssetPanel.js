@@ -114,13 +114,13 @@ const AssetPanel = ({
                         handleChange('asset_type_id')(response.data.asset_type_id);
                     })
                     .catch(error => {
-                        console.log(error);
-                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                        console.error(error);
+                        openConfirmationAlert(locale.config.alerts.error(pageLocale.assetType.loadError), 'error');
                     });
             })
             .catch(error => {
-                console.log(error);
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.assetType.saveError), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -133,7 +133,6 @@ const AssetPanel = ({
 
     return (
         <StandardCard standardCardId={componentIdLower} title={pageLocale.title} style={{ marginTop: '30px' }}>
-            {console.log(formValues)}
             <UpdateDialog
                 title={actionState.title}
                 action="add"

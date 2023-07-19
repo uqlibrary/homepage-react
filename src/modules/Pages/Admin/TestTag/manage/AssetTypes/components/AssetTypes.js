@@ -123,14 +123,16 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success');
                     })
                     .catch(error => {
-                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
+                        console.error(error);
+                        openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
                     });
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbars.addFailed), 'error', false);
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -148,14 +150,16 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success');
                     })
                     .catch(error => {
-                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
+                        console.error(error);
+                        openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
                     });
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbars.updateFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -181,14 +185,16 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success');
                     })
                     .catch(error => {
-                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
+                        console.error(error);
+                        openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
                     });
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbars.reallocateFailed), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -205,14 +211,16 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                     .then(() => {
                         setDialogueBusy(false);
                         actionDispatch({ type: 'clear' });
-                        openConfirmationAlert(locale.config.alerts.success(), 'success', true);
+                        openConfirmationAlert(locale.config.alerts.success(), 'success');
                     })
                     .catch(error => {
-                        openConfirmationAlert(locale.config.alerts.error(error.message), 'error', false);
+                        console.error(error);
+                        openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
                     });
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.failed(error.message), 'error', false);
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbars.deleteFailed), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);

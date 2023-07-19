@@ -10,7 +10,10 @@ import {
 
 import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
 import userData from '../../../../../../data/mock/data/testing/testTagUser';
-// import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
+import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
+import assetTypeData from '../../../../../../data/mock/data/testing/testTagAssetTypes';
+import floorData from '../../../../../../data/mock/data/testing/testTagFloors';
+import roomData from '../../../../../../data/mock/data/testing/testTagRooms';
 import locale from '../../testTag.locale.js';
 import { getUserPermissions } from '../../helpers/auth';
 import { screen } from 'test-utils';
@@ -23,7 +26,7 @@ const currentRetestList = [
 ];
 
 const currentAssetOwnersList = [{ value: 'UQL-WSS', label: 'UQL-WSS' }];
-const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
+const DEFAULT_NEXT_TEST_DATE_VALUE = '12';
 const DEFAULT_FORM_VALUES = {
     asset_id_displayed: undefined,
     user_id: undefined,
@@ -42,6 +45,16 @@ const DEFAULT_FORM_VALUES = {
     discard_reason: undefined,
 };
 
+const selectOptionFromListByIndex = (index, actions) => {
+    expect(actions.getByRole('listbox')).not.toEqual(null);
+    act(() => {
+        const options = actions.getAllByRole('option');
+
+        fireEvent.mouseDown(options[index]);
+        options[index].click();
+    });
+};
+
 function setup(testProps = {}, renderer = renderWithRouter) {
     const {
         state = {},
@@ -51,22 +64,45 @@ function setup(testProps = {}, renderer = renderWithRouter) {
         inspectionConfig = configData,
         inspectionConfigLoading = false,
         inspectionConfigError = null,
+
         floorListError = null,
         roomListError = null,
         saveInspectionSaving = false,
         saveInspectionSuccess = null,
         saveInspectionError = null,
+        user = { ...userData },
         ...props
     } = testProps;
 
     const _state = {
-        testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
+        testTagOnLoadInspectionReducer: {
+            inspectionConfig: configData,
+            inspectionConfigLoading: false,
+            inspectionConfigLoaded: true,
+        },
         testTagUserReducer: {
             userLoading: false,
             userLoaded: true,
             userError: false,
             user: userData,
             privilege: getUserPermissions(userData.privileges ?? {}),
+        },
+        testTagLocationReducer: {
+            siteList: configData.sites,
+            siteListLoaded: true,
+            floorList: floorData[0],
+            floorListLoaded: true,
+            roomList: roomData[0],
+            roomListLoaded: true,
+        },
+        testTagAssetsReducer: {
+            assetsList: assetData,
+            assetsListLoading: false,
+        },
+        testTagAssetTypesReducer: {
+            assetTypesList: assetTypeData,
+            assetTypesListLoading: false,
+            assetTypesListError: null,
         },
         ...state,
     };
@@ -88,6 +124,7 @@ function setup(testProps = {}, renderer = renderWithRouter) {
                 saveInspectionSaving={saveInspectionSaving}
                 saveInspectionSuccess={saveInspectionSuccess}
                 saveInspectionError={saveInspectionError}
+                user={user}
                 {...props}
             />
         </WithReduxStore>,
@@ -361,72 +398,97 @@ describe('TestTag', () => {
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     });
 
-    /*
     it('can save inspection', async () => {
-        const mockLoadAssets = jest.fn(() => [...assetData]);
+        const mockLoadAssets = jest.fn(() => assetData);
+        const mockLoadAssetTypes = jest.fn(() => assetTypeData);
+        const mockLoadInspectionConfig = jest.fn(() => configData);
         const mockFn = jest.fn();
         const saveActionFn = jest.fn();
+        const mockLoadFloors = jest.fn(() => floorData[0]);
+        const mockLoadRooms = jest.fn(() => roomData[0]);
         const { getByText, getByTestId, queryByTestId, getByRole, getAllByRole } = setup({
             actions: {
-                loadConfig: mockFn,
+                loadInspectionConfig: mockLoadInspectionConfig,
                 loadAssets: mockLoadAssets,
+                loadAssetsFiltered: mockLoadAssets,
+                loadAssetTypes: mockLoadAssetTypes,
                 saveInspection: saveActionFn,
                 clearAssets: mockFn,
+                clearFloors: mockFn,
+                clearRooms: mockFn,
+                loadFloors: mockLoadFloors,
+                loadRooms: mockLoadRooms,
                 clearSaveInspection: mockFn,
             },
+            defaultFormValues: { ...DEFAULT_FORM_VALUES, user_id: 3, asset_department_owned_by: 'UQL' },
         });
 
-        expect(getByText(locale.pages.inspect.form.pageTitle)).toBeInTheDocument();
+        expect(getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
 
-        expect(getByTestId('testntagFormAssetTypeInput')).toHaveAttribute('disabled', '');
+        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('disabled', '');
 
         act(() => {
-            fireEvent.change(getByTestId('testntagFormAssetIdInput'), { target: { value: 'UQL310000' } });
+            fireEvent.click(getByTestId('asset_selector-asset-panel-input'));
+            fireEvent.change(getByTestId('asset_selector-asset-panel-input'), { target: { value: 'UQL310000' } });
         });
+
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
 
         await waitFor(() =>
-            expect(getByTestId('testntagFormAssetTypeInput')).not.toHaveAttribute('disabled', 'disabled'),
+            expect(getByTestId('asset_type_selector-asset-panel-input')).not.toHaveAttribute('disabled', 'disabled'),
+        );
+        await waitFor(() => expect(getByTestId('last_inspection_panel')).toBeInTheDocument());
+
+        expect(queryByTestId('months_selector-inspection-panel-next-date-label')).not.toBeInTheDocument();
+
+        act(() => {
+            fireEvent.click(getByTestId('inspection_panel-inspection-result-passed-button'));
+        });
+        await waitFor(() =>
+            expect(getByTestId('months_selector-inspection-panel-next-date-label')).toBeInTheDocument(),
         );
 
-        expect(queryByTestId('testResultNextDate')).not.toBeInTheDocument();
+        expect(getByTestId('inspection_panel-inspection-notes-input')).not.toHaveAttribute('disabled');
 
         act(() => {
-            fireEvent.click(getByTestId('testResultToggleButtons-PASSED'));
+            fireEvent.change(getByTestId('inspection_panel-inspection-notes-input'), {
+                target: { value: 'notes' },
+            });
         });
-
-        await waitFor(() => expect(getByTestId('testResultNextDate')).toBeInTheDocument());
 
         act(() => {
-            fireEvent.change(getByTestId('inspectionNotes-input'), { target: { value: 'notes' } });
+            fireEvent.mouseDown(getByTestId('location_picker-event-panel-building-input'));
         });
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
 
-        fireEvent.mouseDown(getByTestId('testntag-form-buildingid'));
-        expect(getByRole('listbox')).not.toEqual(null);
         act(() => {
-            const options = getAllByRole('option');
-
-            fireEvent.mouseDown(options[0]);
-            options[0].click();
+            fireEvent.mouseDown(getByTestId('location_picker-event-panel-floor-input'));
         });
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+        act(() => {
+            fireEvent.mouseDown(getByTestId('location_picker-event-panel-room-input'));
+        });
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
 
         const expected = {
             asset_id_displayed: 'UQL310000',
             user_id: 3,
-            asset_department_owned_by: 'UQL-WSS',
+            asset_department_owned_by: 'UQL',
             asset_type_id: 1,
-            action_date: '2016-12-05 14:22',
+            action_date: '2017-06-30 00:00',
             room_id: 1,
             with_inspection: {
                 inspection_status: 'PASSED',
                 inspection_device_id: 1,
                 inspection_fail_reason: undefined,
                 inspection_notes: 'notes',
-                inspection_date_next: '2018-12-05 14:22',
+                inspection_date_next: '2018-06-30 00:00',
             },
             with_repair: undefined,
             with_discard: undefined,
         };
 
+        expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
         act(() => {
             fireEvent.click(getByTestId('inspection-save-button'));
         });
@@ -494,7 +556,6 @@ describe('TestTag', () => {
         // });
         // expect(actionFn).toHaveBeenCalledWith(expected);
     });
-    */
 
     // it('renders saving spinner', () => {
     //     const resetForm = jest.fn();
