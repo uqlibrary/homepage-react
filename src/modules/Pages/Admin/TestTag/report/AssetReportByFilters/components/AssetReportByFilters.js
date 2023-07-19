@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -15,6 +11,7 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
+import LocationPicker from '../../../SharedComponents/LocationPicker/LocationPicker';
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
@@ -131,8 +128,8 @@ const AssetReportByFilters = ({
         }
     };
     /* UI HANDLERS */
-    const handleTaggedBuildingChange = event => {
-        setTaggedBuildingName(event.target.value);
+    const handleTaggedBuildingChange = location => {
+        setTaggedBuildingName(location.building);
     };
     const handleStatusTypeChange = selected => {
         setStatusType(selected.id);
@@ -182,16 +179,6 @@ const AssetReportByFilters = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taggedBuildingList, taggedBuildingListLoaded]);
 
-    function getBuildingLabel(option) {
-        const prefix =
-            option.building_id !== -1 && !!option.building_id_displayed
-                ? `${option.building_id_displayed} - `
-                : /* istanbul ignore next */ '';
-        const postfix =
-            option.building_id !== -1 && !!option.site_name ? ` (${option.site_name})` : /* istanbul ignore next */ '';
-        return `${prefix}${option.building_name ?? /* istanbul ignore next */ ''}${postfix}`;
-    }
-
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -214,42 +201,20 @@ const AssetReportByFilters = ({
                         </Grid>
                         <Grid item xs={12} md={4}>
                             {/* Building Picker */}
-                            <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel shrink>{pageLocale.form.filterBuildingLabel}</InputLabel>
-                                <Select
-                                    id={`${componentIdLower}-building`}
-                                    data-testid={`${componentIdLower}-building`}
-                                    MenuProps={{
-                                        id: `${componentIdLower}-building-options`,
-                                        'data-testid': `${componentIdLower}-building-options`,
-                                    }}
-                                    inputProps={{
-                                        id: `${componentIdLower}-building-input`,
-                                        ['data-testid']: `${componentIdLower}-building-input`,
-                                    }}
-                                    SelectDisplayProps={{
-                                        id: `${componentIdLower}-building-select`,
-                                        'data-testid': `${componentIdLower}-building-select`,
-                                    }}
-                                    fullWidth
-                                    disabled={!!taggedBuildingListLoading || !!assetListLoading}
-                                    value={taggedBuildingName}
-                                    onChange={handleTaggedBuildingChange}
-                                >
-                                    {!!buildingList &&
-                                        buildingList.length > 0 &&
-                                        buildingList.map((building, index) => (
-                                            <MenuItem
-                                                key={building.building_id < 0 ? 9999999999 : building.building_id}
-                                                value={building.building_id}
-                                                id={`${componentIdLower}-building-option-${index}`}
-                                                data-testid={`${componentIdLower}-building-option-${index}`}
-                                            >
-                                                {getBuildingLabel(building)}
-                                            </MenuItem>
-                                        ))}
-                                </Select>
-                            </FormControl>
+                            <LocationPicker
+                                id={componentIdLower}
+                                locale={{
+                                    building: { label: pageLocale.form.filterBuildingLabel },
+                                }}
+                                hide={['site', 'floor', 'room']}
+                                buildingList={buildingList}
+                                buildingListLoading={taggedBuildingListLoading}
+                                withGrid={false}
+                                setLocation={handleTaggedBuildingChange}
+                                location={{ building: taggedBuildingName }}
+                                hasAllOption
+                                disabled={!!taggedBuildingListLoading || !!assetListLoading}
+                            />
                         </Grid>
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
