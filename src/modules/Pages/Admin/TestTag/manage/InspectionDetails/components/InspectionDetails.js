@@ -104,7 +104,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
             })
             .catch(error => {
                 console.error(error);
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);

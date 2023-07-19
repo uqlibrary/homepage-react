@@ -105,8 +105,8 @@ const InspectionDevices = ({
                 actions.loadInspectionDevices();
             })
             .catch(error => {
-                console.log(error);
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.addFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -128,8 +128,8 @@ const InspectionDevices = ({
                 actions.loadInspectionDevices();
             })
             .catch(error => {
-                console.log(error);
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
@@ -150,8 +150,8 @@ const InspectionDevices = ({
                 actions.loadInspectionDevices();
             })
             .catch(error => {
-                console.log(error);
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.deleteFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
