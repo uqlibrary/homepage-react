@@ -20,6 +20,7 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
+import { actionReducer, emptyActionState } from './utils';
 
 const componentId = 'asset-types';
 
@@ -50,28 +51,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         errorMessageFormatter: locale.config.alerts.error,
     });
 
-    const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
-
-    const actionReducer = (_, action) => {
-        switch (action.type) {
-            case 'add':
-                return {
-                    title: 'Add Asset Type',
-                    isAdd: true,
-                    isEdit: false,
-                    isDelete: false,
-                    row: { asset_type_id: 'auto' },
-                };
-            case 'edit':
-                return { title: 'Edit Asset Type', isAdd: false, isEdit: true, isDelete: false, row: action.row };
-            case 'clear':
-                return { ...emptyActionState };
-            case 'delete':
-                return { isAdd: false, isEdit: false, isDelete: true, row: action.row };
-            default:
-                throw `Unknown action '${action.type}'`;
-        }
-    };
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
     const onRowEdit = ({ id, api }) => {

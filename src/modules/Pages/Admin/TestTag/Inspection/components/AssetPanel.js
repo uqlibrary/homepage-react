@@ -17,28 +17,12 @@ import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers
 import { transformAddAssetTypeRequest } from '../utils/transformers';
 import configAssetPanel from '../../manage/AssetTypes/components/config';
 import locale from '../../testTag.locale';
+import { actionReducer, emptyActionState } from '../utils/hooks';
 
 const componentId = 'asset-panel';
 const componentIdLower = 'asset_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
-
-const emptyActionState = { isAdd: false, rows: {}, row: {}, title: '' };
-
-const actionReducer = (_, action) => {
-    switch (action.type) {
-        case 'add':
-            return {
-                title: action.title,
-                isAdd: true,
-                row: { asset_type_id: 'auto' },
-            };
-        case 'clear':
-            return { ...emptyActionState };
-        default:
-            throw `Unknown action '${action.type}'`;
-    }
-};
 
 const AssetPanel = ({
     actions,
