@@ -20,6 +20,7 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
+import { actionReducer, emptyActionState } from './utils';
 
 const componentId = 'asset-types';
 
@@ -50,28 +51,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         errorMessageFormatter: locale.config.alerts.error,
     });
 
-    const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, rows: {}, row: {}, title: '' };
-
-    const actionReducer = (_, action) => {
-        switch (action.type) {
-            case 'add':
-                return {
-                    title: 'Add Asset Type',
-                    isAdd: true,
-                    isEdit: false,
-                    isDelete: false,
-                    row: { asset_type_id: 'auto' },
-                };
-            case 'edit':
-                return { title: 'Edit Asset Type', isAdd: false, isEdit: true, isDelete: false, row: action.row };
-            case 'clear':
-                return { ...emptyActionState };
-            case 'delete':
-                return { isAdd: false, isEdit: false, isDelete: true, row: action.row };
-            default:
-                throw `Unknown action '${action.type}'`;
-        }
-    };
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
 
     const onRowEdit = ({ id, api }) => {
@@ -111,7 +90,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         actionDispatch({ type: 'add' });
     };
 
-    const onRowAdd = data => {
+    const onRowAdd = React.useCallback(data => {
         const payload = structuredClone(data);
         delete payload.asset_type_id;
         setDialogueBusy(true);
@@ -137,9 +116,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const onRowUpdate = data => {
+    const onRowUpdate = React.useCallback(data => {
         const id = data?.asset_type_id;
         setDialogueBusy(true);
         actions
@@ -164,14 +144,15 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const onActionDialogueCancel = () => {
+    const onActionDialogueCancel = React.useCallback(() => {
         setDialogueBusy(false);
         actionDispatch({ type: 'clear' });
-    };
+    }, []);
 
-    const onActionDialogueProceed = (oldTypeID, newTypeID) => {
+    const onActionDialogueProceed = React.useCallback((oldTypeID, newTypeID) => {
         const payload = {
             old_asset_type_id: oldTypeID,
             new_asset_type_id: newTypeID,
@@ -199,7 +180,8 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const onDeleteEmptyAssetType = () => {
         setDialogueBusy(true);
@@ -227,6 +209,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             });
     };
 
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -253,7 +239,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         fields={config?.fields ?? []}
                         columns={pageLocale.form.columns}
                         row={actionState?.row}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
+                        onCancelAction={closeDialog}
                         onAction={onRowAdd}
                         props={actionState?.props}
                         isBusy={dialogueBusy}
@@ -267,7 +253,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         fields={config?.fields ?? []}
                         columns={pageLocale.form.columns}
                         row={actionState?.row}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
+                        onCancelAction={closeDialog}
                         onAction={onRowUpdate}
                         props={actionState?.props}
                         isBusy={dialogueBusy}

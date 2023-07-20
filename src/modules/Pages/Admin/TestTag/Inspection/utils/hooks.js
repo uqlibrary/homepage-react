@@ -38,3 +38,20 @@ export const useValidation = (/* istanbul ignore next */ { testStatusEnum = {}, 
 
     return { isValid, validateValues };
 };
+
+export const emptyActionState = { isAdd: false, rows: {}, row: {}, title: '' };
+
+export const actionReducer = (_, action) => {
+    switch (action.type) {
+        case 'add':
+            return {
+                title: action.title,
+                isAdd: true,
+                row: { asset_type_id: 'auto' },
+            };
+        case 'clear':
+            return { ...emptyActionState };
+        default:
+            throw `Unknown action '${action.type}'`;
+    }
+};

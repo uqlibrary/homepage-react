@@ -55,10 +55,11 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     });
 
     const classes = useStyles();
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
-    const closeDialog = () => actionDispatch({ type: 'clear' });
-
-    const onRowAdd = data => {
+    const onRowAdd = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformAddRequest(request, userDepartment);
@@ -76,9 +77,10 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const onRowEdit = data => {
+    const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const userID = request.user_id;
@@ -97,7 +99,8 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
@@ -116,7 +119,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         });
     };
 
-    const onRowDelete = data => {
+    const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
         const id = data.row.user_id;
 
@@ -134,7 +137,8 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const handleAddClick = () => {
         actionDispatch({
             type: 'add',

@@ -17,28 +17,12 @@ import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers
 import { transformAddAssetTypeRequest } from '../utils/transformers';
 import configAssetPanel from '../../manage/AssetTypes/components/config';
 import locale from '../../testTag.locale';
+import { actionReducer, emptyActionState } from '../utils/hooks';
 
 const componentId = 'asset-panel';
 const componentIdLower = 'asset_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
-
-const emptyActionState = { isAdd: false, rows: {}, row: {}, title: '' };
-
-const actionReducer = (_, action) => {
-    switch (action.type) {
-        case 'add':
-            return {
-                title: action.title,
-                isAdd: true,
-                row: { asset_type_id: 'auto' },
-            };
-        case 'clear':
-            return { ...emptyActionState };
-        default:
-            throw `Unknown action '${action.type}'`;
-    }
-};
 
 const AssetPanel = ({
     actions,
@@ -95,9 +79,11 @@ const AssetPanel = ({
         return children;
     };
 
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
-    const onRowAdd = data => {
+    const onRowAdd = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformAddAssetTypeRequest(request);
@@ -125,7 +111,8 @@ const AssetPanel = ({
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleAssetTypeChange = assetType => {
         handleChange('asset_type_id')(assetType.asset_type_id);
