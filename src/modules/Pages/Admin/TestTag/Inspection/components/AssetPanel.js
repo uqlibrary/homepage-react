@@ -79,9 +79,11 @@ const AssetPanel = ({
         return children;
     };
 
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
-    const onRowAdd = data => {
+    const onRowAdd = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformAddAssetTypeRequest(request);
@@ -109,7 +111,8 @@ const AssetPanel = ({
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleAssetTypeChange = assetType => {
         handleChange('asset_type_id')(assetType.asset_type_id);

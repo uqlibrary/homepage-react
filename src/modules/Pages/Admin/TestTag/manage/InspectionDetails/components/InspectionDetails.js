@@ -53,7 +53,9 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
 
     const [searchPattern, setSearchPattern] = React.useState('');
 
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
     const onSearch = pattern => {
         setSearchPattern(pattern);
@@ -73,7 +75,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         });
     };
 
-    const onRowEdit = data => {
+    const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         console.log(data);
         const id = data.asset_id;
@@ -92,7 +94,8 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const { columns } = useDataTableColumns({
         config,

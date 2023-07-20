@@ -90,7 +90,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         actionDispatch({ type: 'add' });
     };
 
-    const onRowAdd = data => {
+    const onRowAdd = React.useCallback(data => {
         const payload = structuredClone(data);
         delete payload.asset_type_id;
         setDialogueBusy(true);
@@ -116,9 +116,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const onRowUpdate = data => {
+    const onRowUpdate = React.useCallback(data => {
         const id = data?.asset_type_id;
         setDialogueBusy(true);
         actions
@@ -143,14 +144,15 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const onActionDialogueCancel = () => {
+    const onActionDialogueCancel = React.useCallback(() => {
         setDialogueBusy(false);
         actionDispatch({ type: 'clear' });
-    };
+    }, []);
 
-    const onActionDialogueProceed = (oldTypeID, newTypeID) => {
+    const onActionDialogueProceed = React.useCallback((oldTypeID, newTypeID) => {
         const payload = {
             old_asset_type_id: oldTypeID,
             new_asset_type_id: newTypeID,
@@ -178,7 +180,8 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const onDeleteEmptyAssetType = () => {
         setDialogueBusy(true);
@@ -206,6 +209,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
             });
     };
 
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -232,7 +239,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         fields={config?.fields ?? []}
                         columns={pageLocale.form.columns}
                         row={actionState?.row}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
+                        onCancelAction={closeDialog}
                         onAction={onRowAdd}
                         props={actionState?.props}
                         isBusy={dialogueBusy}
@@ -246,7 +253,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         fields={config?.fields ?? []}
                         columns={pageLocale.form.columns}
                         row={actionState?.row}
-                        onCancelAction={() => actionDispatch({ type: 'clear' })}
+                        onCancelAction={closeDialog}
                         onAction={onRowUpdate}
                         props={actionState?.props}
                         isBusy={dialogueBusy}
