@@ -194,7 +194,7 @@ export const UpdateDialogue = ({
                 </Grid>
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
-                <DialogActions id={`${componentId}-actions`} data-testid={`${componentId}-actions`}>
+                <DialogActions id={`${rootId}-actions`} data-testid={`${rootId}-actions`}>
                     <Grid container spacing={3}>
                         {!hideCancelButton && (
                             <Grid item xs={12} sm>
@@ -202,8 +202,8 @@ export const UpdateDialogue = ({
                                     <Button
                                         variant={'outlined'}
                                         onClick={_onCancelAction}
-                                        id={`${componentId}-cancel-button`}
-                                        data-testid={`${componentId}-cancel-button`}
+                                        id={`${rootId}-cancel-button`}
+                                        data-testid={`${rootId}-cancel-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy}
                                     >
@@ -220,8 +220,8 @@ export const UpdateDialogue = ({
                                         autoFocus
                                         color={'primary'}
                                         onClick={_onAction}
-                                        id={`${componentId}-action-button`}
-                                        data-testid={`${componentId}-action-button`}
+                                        id={`${rootId}-action-button`}
+                                        data-testid={`${rootId}-action-button`}
                                         fullWidth={isMobileView}
                                         disabled={isBusy || !isValid}
                                     >
@@ -229,8 +229,8 @@ export const UpdateDialogue = ({
                                             <CircularProgress
                                                 color="inherit"
                                                 size={25}
-                                                id={`${componentId}-progress`}
-                                                data-testid={`${componentId}-progress`}
+                                                id={`${rootId}-progress`}
+                                                data-testid={`${rootId}-progress`}
                                             />
                                         ) : (
                                             locale.confirmButtonLabel
