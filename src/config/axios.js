@@ -134,7 +134,6 @@ api.interceptors.response.use(
         return Promise.resolve(response.data);
     },
     error => {
-        let reportableToSentry = true;
         let errorMessage = null;
         if (!!error && !!error.config) {
             if (
@@ -157,7 +156,6 @@ api.interceptors.response.use(
             }
 
             if (!!error.message && !!error.response && !!error.response.status && error.response.status === 500) {
-                reportableToSentry = false;
                 errorMessage =
                     !!error.response?.data && error.response?.data.length > 0
                         ? { message: error.response.data.join(' ') }
@@ -179,7 +177,6 @@ api.interceptors.response.use(
                     };
                 }
                 if (error.response.status === 403) {
-                    reportableToSentry = false;
                     if (!!error?.response?.request?.responseUrl && error.response.request.responseUrl !== 'account') {
                         // if the api was account, we default to the global.js errorMessages entry
                         // as it is the most common case for a 403
@@ -192,16 +189,13 @@ api.interceptors.response.use(
             }
         }
 
-        if (
+        const isNonReportable =
             document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
-            error.response.status === 403 || // their login has expired - no action required
-            error.response.status === 500 || // api should handle these
-            error.response.status === 502 // connection timed out - it happens, FE can't do anything about it
-        ) {
-            reportableToSentry = false;
-        }
+            error?.response?.status === 403 || // their login has expired - no action required
+            error?.response?.status === 500 || // api should handle these
+            error?.response?.status === 502; // connection timed out - it happens, FE can't do anything about it
 
-        if (!!reportableToSentry) {
+        if (!isNonReportable) {
             reportToSentry(error);
         }
 

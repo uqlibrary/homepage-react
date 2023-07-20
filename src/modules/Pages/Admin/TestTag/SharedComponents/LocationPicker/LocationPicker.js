@@ -25,6 +25,22 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const GridWrapper = ({ withGrid = true, divisor, children }) => {
+    GridWrapper.propTypes = {
+        withGrid: PropTypes.bool,
+        divisor: PropTypes.number,
+        children: PropTypes.node,
+    };
+
+    return withGrid ? (
+        <Grid item xs={12} sm={6} md={12 / divisor}>
+            {children}
+        </Grid>
+    ) : (
+        children
+    );
+};
+
 const LocationPicker = ({
     id,
     title,
@@ -45,15 +61,22 @@ const LocationPicker = ({
     hide = [],
     disabled = false,
     inputProps = {},
+    withGrid = true,
 }) => {
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const divisor = 4 - hide.length;
-    const fieldsToHide = hide.filter(item => item.indexOf('site') === -1);
 
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
+
+    function getBuildingLabel(building) {
+        const prefix = !!building.building_id_displayed
+            ? `${building.building_id_displayed} - `
+            : /* istanbul ignore next */ '';
+        return `${prefix}${building.building_name ?? /* istanbul ignore next */ ''}`;
+    }
 
     return (
         <>
@@ -64,72 +87,73 @@ const LocationPicker = ({
                     </Typography>
                 </Grid>
             )}
-
-            <Grid item xs={12} sm={6} md={12 / divisor}>
-                <FormControl className={classes.formControl} fullWidth>
-                    <Autocomplete
-                        id={`${componentId}-site`}
-                        data-testid={`${componentId}-site`}
-                        aria-controls={`${componentId}-site-popup`}
-                        fullWidth
-                        options={siteList}
-                        value={
-                            !hasAllOption && location.site === -1
-                                ? ''
-                                : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
-                        }
-                        onChange={(_, newValue) => {
-                            setLocation({
-                                site: newValue.site_id,
-                                building: -1,
-                                floor: -1,
-                                room: -1,
-                            });
-                            actions.clearFloors();
-                        }}
-                        getOptionLabel={option => `${option?.site_name ?? /* istanbul ignore next */ ''}`}
-                        renderInput={params => (
-                            <TextField
-                                {...params}
-                                label={locale.site.label}
-                                variant="standard"
-                                InputLabelProps={{
-                                    ...inputLabelProps,
-                                    htmlFor: `${componentId}-site-input`,
-                                }}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    endAdornment: (
-                                        <React.Fragment>
-                                            {!!siteListLoading ? (
-                                                <CircularProgress
-                                                    color="inherit"
-                                                    size={20}
-                                                    id={`${componentId}-site-progress`}
-                                                    data-testid={`${componentId}-site-progress`}
-                                                />
-                                            ) : null}
-                                            {params.InputProps.endAdornment}
-                                        </React.Fragment>
-                                    ),
-                                }}
-                                inputProps={{
-                                    ...params.inputProps,
-                                    id: `${componentId}-site-input`,
-                                    'data-testid': `${componentId}-site-input`,
-                                }}
-                                {...(inputProps?.site ?? {})}
-                            />
-                        )}
-                        PopperComponent={customPopper}
-                        disabled={disabled || !!!siteList}
-                        disableClearable
-                        loading={siteListLoading}
-                    />
-                </FormControl>
-            </Grid>
-            {!fieldsToHide.includes('building') && (
-                <Grid item xs={12} sm={6} md={12 / divisor}>
+            {!hide.includes('site') && (
+                <GridWrapper withGrid={withGrid} divisor={divisor}>
+                    <FormControl className={classes.formControl} fullWidth>
+                        <Autocomplete
+                            id={`${componentId}-site`}
+                            data-testid={`${componentId}-site`}
+                            aria-controls={`${componentId}-site-popup`}
+                            fullWidth
+                            options={siteList}
+                            value={
+                                !hasAllOption && location.site === -1
+                                    ? ''
+                                    : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
+                            }
+                            onChange={(_, newValue) => {
+                                setLocation({
+                                    site: newValue.site_id,
+                                    building: -1,
+                                    floor: -1,
+                                    room: -1,
+                                });
+                                actions?.clearFloors?.();
+                            }}
+                            getOptionLabel={option => `${option?.site_name ?? /* istanbul ignore next */ ''}`}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    label={locale.site.label}
+                                    variant="standard"
+                                    InputLabelProps={{
+                                        ...inputLabelProps,
+                                        htmlFor: `${componentId}-site-input`,
+                                    }}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {!!siteListLoading ? (
+                                                    <CircularProgress
+                                                        color="inherit"
+                                                        size={20}
+                                                        id={`${componentId}-site-progress`}
+                                                        data-testid={`${componentId}-site-progress`}
+                                                    />
+                                                ) : null}
+                                                {params.InputProps.endAdornment}
+                                            </React.Fragment>
+                                        ),
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        id: `${componentId}-site-input`,
+                                        'data-testid': `${componentId}-site-input`,
+                                    }}
+                                    {...(inputProps?.site ?? {})}
+                                />
+                            )}
+                            PopperComponent={customPopper}
+                            disabled={disabled || !!!siteList}
+                            disableClearable
+                            loading={siteListLoading}
+                        />
+                    </FormControl>
+                </GridWrapper>
+            )}
+            {!hide.includes('building') && (
+                <GridWrapper withGrid={withGrid} divisor={divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id={`${componentId}-building`}
@@ -138,7 +162,7 @@ const LocationPicker = ({
                             fullWidth
                             options={buildingList}
                             value={
-                                !hasAllOption && location.building === -1
+                                buildingList?.length === 0 || (!hasAllOption && location.building === -1)
                                     ? ''
                                     : buildingList?.find(building => building.building_id === location.building)
                             }
@@ -149,12 +173,12 @@ const LocationPicker = ({
                                     room: -1,
                                 });
 
-                                actions.clearFloors();
+                                actions?.clearFloors?.();
                                 if (newValue.building_id !== -1) {
-                                    actions.loadFloors(newValue.building_id);
+                                    actions?.loadFloors?.(newValue.building_id);
                                 }
                             }}
-                            getOptionLabel={option => `${option?.building_name ?? /* istanbul ignore next */ ''}`}
+                            getOptionLabel={option => getBuildingLabel(option)}
                             renderInput={params => (
                                 <TextField
                                     {...params}
@@ -189,16 +213,16 @@ const LocationPicker = ({
                                 />
                             )}
                             PopperComponent={customPopper}
-                            disabled={disabled || location.site === -1 || !!!siteList}
+                            disabled={disabled || (!hide.includes('site') && (location.site === -1 || !!!siteList))}
                             disableClearable
                             loading={siteListLoading}
                         />
                     </FormControl>
-                </Grid>
+                </GridWrapper>
             )}
 
-            {!fieldsToHide.includes('floor') && (
-                <Grid item xs={12} sm={6} md={12 / divisor}>
+            {!hide.includes('floor') && (
+                <GridWrapper withGrid={withGrid} divisor={divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id={`${componentId}-floor`}
@@ -214,8 +238,8 @@ const LocationPicker = ({
                             onChange={(_, newValue) => {
                                 setLocation({ floor: newValue.floor_id, room: -1 });
 
-                                actions.clearRooms();
-                                if (newValue.floor_id !== -1) actions.loadRooms(newValue.floor_id);
+                                actions?.clearRooms?.();
+                                if (newValue.floor_id !== -1) actions?.loadRooms?.(newValue.floor_id);
                             }}
                             getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
                             renderInput={params => (
@@ -249,15 +273,18 @@ const LocationPicker = ({
                                 />
                             )}
                             PopperComponent={customPopper}
-                            disabled={disabled || location.building === -1 || floorListLoading}
+                            disabled={
+                                disabled ||
+                                (!hide.includes('building') && (location.building === -1 || floorListLoading))
+                            }
                             disableClearable
                             loading={!!floorListLoading}
                         />
                     </FormControl>
-                </Grid>
+                </GridWrapper>
             )}
-            {!fieldsToHide.includes('room') && (
-                <Grid item xs={12} sm={6} md={12 / divisor}>
+            {!hide.includes('room') && (
+                <GridWrapper withGrid={withGrid} divisor={divisor}>
                     <FormControl className={classes.formControl} fullWidth>
                         <Autocomplete
                             id={`${componentId}-room`}
@@ -305,12 +332,14 @@ const LocationPicker = ({
                                 />
                             )}
                             PopperComponent={customPopper}
-                            disabled={disabled || location.floor === -1 || roomListLoading}
+                            disabled={
+                                disabled || (!hide.includes('floor') && (location.floor === -1 || roomListLoading))
+                            }
                             disableClearable
                             loading={!!roomListLoading}
                         />
                     </FormControl>
-                </Grid>
+                </GridWrapper>
             )}
         </>
     );
@@ -318,6 +347,7 @@ const LocationPicker = ({
 
 LocationPicker.propTypes = {
     id: PropTypes.string.isRequired,
+    locale: PropTypes.object.isRequired,
     siteList: PropTypes.array,
     siteListLoading: PropTypes.bool,
     buildingList: PropTypes.array,
@@ -328,7 +358,6 @@ LocationPicker.propTypes = {
     roomList: PropTypes.array,
     roomListLoading: PropTypes.bool,
     // roomListError,
-    locale: PropTypes.object.isRequired,
     actions: PropTypes.object,
     location: PropTypes.object,
     setLocation: PropTypes.func,
@@ -337,6 +366,7 @@ LocationPicker.propTypes = {
     inputProps: PropTypes.object,
     hasAllOption: PropTypes.bool,
     disabled: PropTypes.bool,
+    withGrid: PropTypes.bool,
     title: PropTypes.string,
 };
 
