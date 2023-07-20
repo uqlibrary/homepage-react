@@ -64,8 +64,9 @@ const InspectionDevices = ({
         errorMessage: inspectionDevicesError,
         errorMessageFormatter: locale.config.alerts.error,
     });
-
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
     const handleAddClick = () => {
         actionDispatch({
@@ -91,7 +92,7 @@ const InspectionDevices = ({
         });
     };
 
-    const onRowAdd = data => {
+    const onRowAdd = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformAddRequest(request, user);
@@ -111,9 +112,10 @@ const InspectionDevices = ({
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const onRowEdit = data => {
+    const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         const id = data.device_id;
         const request = structuredClone(data);
@@ -134,7 +136,8 @@ const InspectionDevices = ({
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const onRowDelete = data => {
         setDialogueBusy(true);

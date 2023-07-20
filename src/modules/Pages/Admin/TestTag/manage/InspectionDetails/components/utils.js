@@ -49,3 +49,20 @@ export const transformUpdateRequest = request => {
             return request;
     }
 };
+
+export const emptyActionState = { isEdit: false, rows: {}, row: {}, title: '' };
+
+export const actionReducer = (_, action) => {
+    switch (action.type) {
+        case 'edit':
+            return {
+                title: action.title,
+                isEdit: true,
+                row: action.row,
+            };
+        case 'clear':
+            return { ...emptyActionState };
+        default:
+            throw `Unknown action '${action.type}'`;
+    }
+};

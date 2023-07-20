@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
+import { AUTH_URL_LOGIN } from 'config';
 
 import localeGeneral from '../../testTag.locale';
 import { loadUser } from 'data/actions';
+import notfoundLocale from 'modules/Pages/NotFound/components/notfound.locale';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
@@ -23,6 +25,9 @@ const StandardAuthPage = ({
     const { userLoading, userLoaded, userError, user, privilege } = useSelector(state =>
         state.get('testTagUserReducer'),
     );
+    const { account, accountLoading } = useSelector(state => state.get('accountReducer'));
+    const isLoggedOut = accountLoading === false && !account;
+
     React.useEffect(() => {
         if (!userLoading && !userLoaded && !userError) {
             dispatch(loadUser());
@@ -44,6 +49,19 @@ const StandardAuthPage = ({
                 : /* istanbul ignore next */ '',
         [user, locale],
     );
+
+    if (isLoggedOut) {
+        // This only fires redirects if it's NOT one of the following three environments.
+        /* istanbul ignore next */
+        if (
+            process.env.NODE_ENV !== 'test' &&
+            process.env.NODE_ENV !== 'cc' &&
+            process.env.NODE_ENV !== 'development'
+        ) {
+            window.location.assign(`${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`);
+        }
+        return <StandardPage standardPageId="authentication-required" {...notfoundLocale.authenticationRequired} />;
+    }
     return (
         <StandardPage title={title} {...props}>
             {userLoading && <ContentLoader message={localeGeneral.pages.general.checkingAuth} />}

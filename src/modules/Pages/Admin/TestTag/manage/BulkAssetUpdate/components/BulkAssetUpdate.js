@@ -438,6 +438,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             onChange={handleChange('asset_type')}
                                             disabled={!formValues.hasAssetType || formValues.hasDiscardStatus}
                                             required={formValues.hasAssetType}
+                                            value={formValues.asset_type?.asset_type_id}
+                                            validateAssetTypeId={isValidAssetTypeId}
+                                            error={formValues.hasAssetType && isEmptyObject(formValues.asset_type)}
                                         />
                                     </Grid>
                                 </Grid>

@@ -136,7 +136,10 @@ const ManageLocations = ({ actions }) => {
         shouldDisableDelete,
         actionDataFieldKeys: { valueKey: locationDataFieldKeys[selectedLocation] },
     });
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
     const onRowAdd = React.useCallback(
         data => {

@@ -121,6 +121,24 @@ export const UpdateDialogue = ({
             id={`${componentId}`}
             data-testid={`${componentId}`}
         >
+            {console.log({
+                action,
+                locale,
+                isOpen,
+                title,
+                id,
+                hideActionButton,
+                hideCancelButton,
+                onAction,
+                onCancelAction,
+                onClose,
+                noMinContentWidth,
+                fields,
+                columns,
+                row,
+                props,
+                isBusy,
+            })}
             <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {title}
             </DialogTitle>

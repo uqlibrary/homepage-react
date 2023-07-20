@@ -18,7 +18,7 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
-import { transformRow, transformUpdateRequest } from './utils';
+import { transformRow, transformUpdateRequest, emptyActionState, actionReducer } from './utils';
 
 const componentId = 'inspection-details';
 
@@ -33,23 +33,6 @@ const useStyles = makeStyles(theme => ({
         border: 0,
     },
 }));
-
-const emptyActionState = { isEdit: false, rows: {}, row: {}, title: '' };
-
-const actionReducer = (_, action) => {
-    switch (action.type) {
-        case 'edit':
-            return {
-                title: action.title,
-                isEdit: true,
-                row: action.row,
-            };
-        case 'clear':
-            return { ...emptyActionState };
-        default:
-            throw `Unknown action '${action.type}'`;
-    }
-};
 
 const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListError }) => {
     const pageLocale = locale.pages.manage.inspectiondetails;
@@ -70,7 +53,9 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
 
     const [searchPattern, setSearchPattern] = React.useState('');
 
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
     const onSearch = pattern => {
         setSearchPattern(pattern);
@@ -90,7 +75,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         });
     };
 
-    const onRowEdit = data => {
+    const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         console.log(data);
         const id = data.asset_id;
@@ -109,7 +94,8 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const { columns } = useDataTableColumns({
         config,
