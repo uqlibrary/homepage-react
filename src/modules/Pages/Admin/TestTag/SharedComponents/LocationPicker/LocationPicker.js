@@ -155,7 +155,6 @@ const LocationPicker = ({
             {!hide.includes('building') && (
                 <GridWrapper withGrid={withGrid} divisor={divisor}>
                     <FormControl className={classes.formControl} fullWidth>
-                        {console.log(hasAllOption, buildingList, buildingListLoading, location.building)}
                         <Autocomplete
                             id={`${componentId}-building`}
                             data-testid={`${componentId}-building`}
