@@ -10,7 +10,13 @@ export default {
     site: {
         fields: {
             site_id: {
-                fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
+                fieldParams: {
+                    canEdit: false,
+                    sortable: false,
+                    renderInTable: false,
+                    renderInAdd: false,
+                    renderInUpdate: false,
+                },
             },
             site_id_displayed: {
                 component: props => (
@@ -22,27 +28,33 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, minWidth: 150 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 150 },
             },
             site_name: {
                 component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, flex: 1 },
+                fieldParams: { canEdit: true, sortable: false, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false },
+                fieldParams: { canEdit: false, sortable: false, renderInAdd: false, renderInUpdate: false },
             },
         },
     },
     building: {
         fields: {
             building_id: {
-                fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
+                fieldParams: {
+                    canEdit: false,
+                    sortable: false,
+                    renderInTable: false,
+                    renderInAdd: false,
+                    renderInUpdate: false,
+                },
             },
             building_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
+                fieldParams: { canAdd: false, canEdit: false, sortable: false, renderInTable: false },
             },
             building_id_displayed: {
                 component: props => (
@@ -54,27 +66,33 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, minWidth: 150 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 150 },
             },
             building_name: {
                 component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, flex: 1 },
+                fieldParams: { canEdit: true, sortable: false, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false },
+                fieldParams: { canEdit: false, sortable: false, renderInAdd: false, renderInUpdate: false },
             },
         },
     },
     floor: {
         fields: {
             floor_id: {
-                fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
+                fieldParams: {
+                    canEdit: false,
+                    sortable: false,
+                    renderInTable: false,
+                    renderInAdd: false,
+                    renderInUpdate: false,
+                },
             },
             floor_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canAdd: false, canEdit: false, renderInTable: false, flex: 1 },
+                fieldParams: { canAdd: false, canEdit: false, sortable: false, renderInTable: false, flex: 1 },
             },
             floor_id_displayed: {
                 component: props => (
@@ -86,22 +104,28 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, flex: 1 },
+                fieldParams: { canEdit: true, sortable: false, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false },
+                fieldParams: { canEdit: false, sortable: false, renderInAdd: false, renderInUpdate: false },
             },
         },
     },
     room: {
         fields: {
             room_id: {
-                fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
+                fieldParams: {
+                    canEdit: false,
+                    sortable: false,
+                    renderInTable: false,
+                    renderInAdd: false,
+                    renderInUpdate: false,
+                },
             },
             room_location: {
                 computedValue: displayLocation => createLocationString(displayLocation),
                 computedValueProp: 'displayLocation',
-                fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
+                fieldParams: { canAdd: false, canEdit: false, sortable: false, renderInTable: false },
             },
             room_id_displayed: {
                 component: props => (
@@ -113,14 +137,14 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, minWidth: 150 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 150 },
             },
             room_description: {
                 component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, flex: 1 },
+                fieldParams: { canEdit: true, sortable: false, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false },
+                fieldParams: { canEdit: false, sortable: false, renderInAdd: false, renderInUpdate: false },
             },
         },
     },

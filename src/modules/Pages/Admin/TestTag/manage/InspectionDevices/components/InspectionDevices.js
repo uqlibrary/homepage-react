@@ -18,7 +18,6 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
-import config from './config';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 
 const moment = require('moment');
@@ -44,6 +43,7 @@ const InspectionDevices = ({
     componentIdLower,
     actions,
     canManage = true,
+    config,
     pageLocale,
     inspectionDevices,
     inspectionDevicesLoading,
@@ -286,10 +286,11 @@ const InspectionDevices = ({
 InspectionDevices.propTypes = {
     componentId: PropTypes.string.isRequired,
     componentIdLower: PropTypes.string.isRequired, // container provided
-    actions: PropTypes.object,
-    canManage: PropTypes.bool,
+    config: PropTypes.object.isRequired,
     pageLocale: PropTypes.object.isRequired,
     inspectionDevices: PropTypes.any,
+    actions: PropTypes.object,
+    canManage: PropTypes.bool,
     inspectionDevicesLoading: PropTypes.bool,
     inspectionDevicesLoaded: PropTypes.bool,
     inspectionDevicesError: PropTypes.bool,
