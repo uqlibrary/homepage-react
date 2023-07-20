@@ -221,7 +221,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 selectListbox('Add new asset type');
                 // popup has loaded as it has header
                 cy.data('asset_type_name-label').should('contain', 'Asset type name');
-                cy.data('update_dialog-asset-panel-action-button').should('be.disabled');
+                cy.data('update_dialog-action-button').should('be.disabled');
                 cy.data('asset_type_name-input').type('an asset type');
 
                 // the popup is accessible
@@ -232,7 +232,7 @@ describe('Test and Tag Admin Inspection page', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
 
-                cy.data('update_dialog-asset-panel-action-button')
+                cy.data('update_dialog-action-button')
                     .should('not.be.disabled')
                     .should('contain', 'Add')
                     .click();
