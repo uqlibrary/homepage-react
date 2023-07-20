@@ -7,13 +7,27 @@ import { isEmptyStr } from '../../../helpers/helpers';
 import locale from '../../../testTag.locale';
 const dateFormat = locale.config.format.dateFormatNoTime;
 
+// Note: sortable values are set wholesale in the container components of
+// manage/InspectionDevices and report/RecalibrationsDue
 export default {
     fields: {
         device_id: {
-            fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
+            fieldParams: {
+                canEdit: false,
+
+                renderInTable: false,
+                renderInAdd: false,
+                renderInUpdate: false,
+            },
         },
         device_department: {
-            fieldParams: { canEdit: false, renderInTable: false, renderInAdd: false, renderInUpdate: false },
+            fieldParams: {
+                canEdit: false,
+
+                renderInTable: false,
+                renderInAdd: false,
+                renderInUpdate: false,
+            },
         },
         device_model_name: {
             component: props => <TextField {...props} required />,

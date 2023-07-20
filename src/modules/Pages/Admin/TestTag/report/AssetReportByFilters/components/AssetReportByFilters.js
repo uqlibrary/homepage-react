@@ -277,8 +277,6 @@ const AssetReportByFilters = ({
                                 rowKey={'asset_id'}
                                 loading={!!assetListLoading}
                                 classes={{ root: classes.gridRoot }}
-                                disableColumnFilter
-                                disableColumnMenu
                             />
                         </Grid>
                     </Grid>
