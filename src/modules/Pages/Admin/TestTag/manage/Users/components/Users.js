@@ -164,6 +164,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     React.useEffect(() => {
         actions.loadUserList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actions]);
 
     return (

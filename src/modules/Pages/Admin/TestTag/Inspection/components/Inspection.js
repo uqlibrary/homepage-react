@@ -266,7 +266,8 @@ const Inspection = ({
 
     useEffect(() => {
         if (!inspectionConfigLoaded) actions.loadInspectionConfig();
-    }, [actions, inspectionConfigLoaded]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inspectionConfigLoaded]);
 
     useEffect(() => {
         (!!!inspectionConfigError || /* istanbul ignore next */ inspectionConfigError.length === 0) &&
