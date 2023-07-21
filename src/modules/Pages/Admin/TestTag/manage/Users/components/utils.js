@@ -82,6 +82,7 @@ export const actionReducer = (_, action) => {
                     user_uid: '',
                     user_name: '',
                     user_current_flag_cb: true,
+                    user_licence_number: '',
                 },
                 title,
                 props: { ...props },
