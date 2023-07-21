@@ -49,6 +49,12 @@ const EventPanel = ({
         handleChange('room_id')(useRoomId ? update.room : -1);
     };
 
+    const updateEventDate = newDate => {
+        const manualDate = moment(newDate).isBefore(moment(), 'day');
+        handleChange('action_date')(newDate);
+        handleChange('isManualDate')(manualDate);
+    };
+
     useEffect(() => {
         if (!inspectionConfigLoading && !!inspectionConfig && inspectionConfig?.sites?.length > 0) {
             setLocation({ site: inspectionConfig.sites[0].site_id });
@@ -98,7 +104,7 @@ const EventPanel = ({
                             disableFuture
                             showTodayButton
                             value={actionDate}
-                            onChange={handleChange('action_date')}
+                            onChange={updateEventDate}
                             required
                             autoFocus
                             fullWidth={isMobileView}
