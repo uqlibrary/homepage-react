@@ -266,7 +266,7 @@ const InspectionDevices = ({
                                 loading={inspectionDevicesLoading}
                                 classes={{ root: classes.gridRoot }}
                                 getCellClassName={params =>
-                                    params.field === 'device_calibration_due_date' && params.value <= today
+                                    params.field === 'device_calibration_due_date' && params.value < today
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
