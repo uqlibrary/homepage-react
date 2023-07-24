@@ -172,7 +172,6 @@ const Inspection = ({
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
     const inspectionLocale = locale.pages.inspect;
-    const today = moment().format(inspectionLocale.config.dateFormat);
 
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
@@ -194,8 +193,10 @@ const Inspection = ({
     const { isValid, validateValues } = useValidation({ testStatusEnum, user });
     const assignAssetDefaults = React.useCallback(
         (asset = {}, formValues = {}, location = {}) => {
+            const today = moment().format(inspectionLocale.config.dateFormat);
             return {
                 ...defaultFormValues,
+                isManualDate: formValues?.isManualDate ?? false,
                 asset_id_displayed: asset?.asset_id_displayed ?? undefined,
                 asset_type_id: asset?.asset_type?.asset_type_id ?? undefined,
                 room_id: location?.room ?? undefined,
@@ -206,7 +207,8 @@ const Inspection = ({
                         : inspectionConfig?.inspection_devices?.[0]?.device_id ?? /* istanbul ignore next */ undefined,
             };
         },
-        [inspectionConfig?.inspection_devices, defaultFormValues, today],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [inspectionConfig?.inspection_devices, defaultFormValues],
     );
 
     const { formValues, resetFormValues, handleChange } = useForm({
@@ -264,7 +266,8 @@ const Inspection = ({
 
     useEffect(() => {
         if (!inspectionConfigLoaded) actions.loadInspectionConfig();
-    }, [actions, inspectionConfigLoaded]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inspectionConfigLoaded]);
 
     useEffect(() => {
         (!!!inspectionConfigError || /* istanbul ignore next */ inspectionConfigError.length === 0) &&
@@ -280,8 +283,10 @@ const Inspection = ({
             const transformedData = transformer(
                 formValues,
                 saveInspectionTransformer(testStatusEnum.PASSED.value, testStatusEnum.FAILED.value),
-                selectedAsset?.last_inspection ?? /* istanbul ignore next */ {},
+                { lastInspection: selectedAsset?.last_inspection, dateFormat: inspectionLocale.config.dateFormat } ??
+                    /* istanbul ignore next */ {},
             );
+            console.log(formValues, transformedData);
             actions.saveInspection(transformedData);
         }
     };
@@ -308,6 +313,7 @@ const Inspection = ({
             locale={inspectionLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
+            {console.log(formValues)}
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"

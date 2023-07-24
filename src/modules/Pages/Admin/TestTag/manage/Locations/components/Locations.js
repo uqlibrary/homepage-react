@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
@@ -62,6 +62,11 @@ export const locationDataFieldKeys = {
 };
 
 const ManageLocations = ({ actions }) => {
+    useEffect(() => {
+        actions.clearSites();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
