@@ -1,7 +1,18 @@
 import { mutateObject, mutateClearObject } from '../utils/transformers';
 import { isEmptyStr } from '../../helpers/helpers';
+const moment = require('moment');
 
 export const saveInspectionTransformer = (passValue, failValue) => ({
+    action_date: ({ data, params }) => {
+        const { dateFormat } = params;
+        const now = moment().format(dateFormat);
+        const newDate = !data.isManualDate ? now : `${data.action_date.split(' ')[0]} ${now.split(' ')[1]}`;
+        delete data.isManualDate;
+
+        return {
+            action_date: newDate,
+        };
+    },
     inspection_status: ({ state, data }) => ({
         with_inspection: {
             ...state.with_inspection,
@@ -81,7 +92,8 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
             return { with_inspection: state.with_inspection };
         }
     },
-    with_repair: ({ state, params: lastInspection }) => {
+    with_repair: ({ state, params = {} }) => {
+        const { lastInspection } = params;
         // repair option only for FAILED inspections
         if (
             state.with_repair?.isRepair &&
@@ -95,7 +107,8 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
             return { with_repair: undefined, with_discard: state.with_discard };
         }
     },
-    with_discard: ({ state, params: lastInspection }) => {
+    with_discard: ({ state, params = {} }) => {
+        const { lastInspection } = params;
         if (
             state.with_discard?.isDiscarded &&
             (!isEmptyStr(state.with_inspection?.inspection_status) ||

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
@@ -38,6 +38,11 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
     const pageLocale = locale.pages.manage.inspectiondetails;
     const classes = useStyles();
 
+    useEffect(() => {
+        actions.clearAssets();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const onCloseConfirmationAlert = () => actions.clearAssetsError();
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
         duration: locale.config.alerts.timeout,
@@ -61,10 +66,6 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         setSearchPattern(pattern);
     };
 
-    const repeatCurrentSearch = () => {
-        actions.loadAssets(searchPattern);
-    };
-
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
         console.log('edit clicked', row);
@@ -75,27 +76,30 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         });
     };
 
-    const onRowEdit = React.useCallback(data => {
-        setDialogueBusy(true);
-        console.log(data);
-        const id = data.asset_id;
-        const wrappedRequest = transformUpdateRequest(data);
-        actions
-            .updateInspectionDetails(id, wrappedRequest)
-            .then(() => {
-                closeDialog();
-                openConfirmationAlert(locale.config.alerts.success(), 'success');
-                repeatCurrentSearch();
-            })
-            .catch(error => {
-                console.error(error);
-                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
-            })
-            .finally(() => {
-                setDialogueBusy(false);
-            });
+    const onRowEdit = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            console.log(data);
+            const id = data.asset_id;
+            const wrappedRequest = transformUpdateRequest(data);
+            actions
+                .updateInspectionDetails(id, wrappedRequest)
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(locale.config.alerts.success(), 'success');
+                    actions.loadAssets(searchPattern); // call last search
+                })
+                .catch(error => {
+                    console.error(error);
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        [searchPattern],
+    );
 
     const { columns } = useDataTableColumns({
         config,

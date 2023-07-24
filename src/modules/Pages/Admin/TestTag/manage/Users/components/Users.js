@@ -59,26 +59,29 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         actionDispatch({ type: 'clear' });
     }, []);
 
-    const onRowAdd = React.useCallback(data => {
-        setDialogueBusy(true);
-        const request = structuredClone(data);
-        const wrappedRequest = transformAddRequest(request, userDepartment);
-        actions
-            .addUser(wrappedRequest)
-            .then(() => {
-                closeDialog();
-                openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadUserList();
-            })
-            .catch(error => {
-                console.error(error);
-                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
-            })
-            .finally(() => {
-                setDialogueBusy(false);
-            });
+    const onRowAdd = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const request = structuredClone(data);
+            const wrappedRequest = transformAddRequest(request, userDepartment);
+            actions
+                .addUser(wrappedRequest)
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(locale.config.alerts.success(), 'success');
+                    actions.loadUserList();
+                })
+                .catch(error => {
+                    console.error(error);
+                    openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        [userDepartment],
+    );
 
     const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
@@ -161,6 +164,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     React.useEffect(() => {
         actions.loadUserList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actions]);
 
     return (
