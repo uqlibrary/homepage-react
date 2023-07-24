@@ -30,6 +30,15 @@ const handlers = {
         assetTypesListLoading: false,
         assetTypesListError: action.payload,
     }),
+
+    [actions.TESTTAG_ASSET_TYPES_LIST_CLEAR]: state => ({
+        ...initialState,
+        ...state,
+        assetTypesList: [],
+        assetTypesListLoading: false,
+        assetTypesListError: null,
+    }),
+
     [actions.TESTTAG_ASSET_TYPES_SAVING]: state => ({
         ...initialState,
         ...state,

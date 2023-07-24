@@ -50,7 +50,6 @@ const InspectionDevices = ({
     inspectionDevicesError,
 }) => {
     const today = moment().format(locale.config.format.dateFormatNoTime);
-
     const classes = useStyles();
     const pagePermissions = [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports];
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
@@ -92,28 +91,31 @@ const InspectionDevices = ({
         });
     };
 
-    const onRowAdd = React.useCallback(data => {
-        setDialogueBusy(true);
-        const request = structuredClone(data);
-        const wrappedRequest = transformAddRequest(request, user);
-        console.log('add', wrappedRequest);
+    const onRowAdd = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const request = structuredClone(data);
+            const wrappedRequest = transformAddRequest(request, user);
+            console.log('add', wrappedRequest);
 
-        actions
-            .addInspectionDevice(wrappedRequest)
-            .then(() => {
-                closeDialog();
-                openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadInspectionDevices();
-            })
-            .catch(error => {
-                console.error(error);
-                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.addFail), 'error');
-            })
-            .finally(() => {
-                setDialogueBusy(false);
-            });
+            actions
+                .addInspectionDevice(wrappedRequest)
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(locale.config.alerts.success(), 'success');
+                    actions.loadInspectionDevices();
+                })
+                .catch(error => {
+                    console.error(error);
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.addFail), 'error');
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        [user],
+    );
 
     const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
@@ -139,7 +141,7 @@ const InspectionDevices = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const onRowDelete = data => {
+    const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
         const id = data.row.device_id;
 
@@ -159,7 +161,9 @@ const InspectionDevices = ({
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -173,7 +177,8 @@ const InspectionDevices = ({
 
     useEffect(() => {
         actions.loadInspectionDevices();
-    }, [actions]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <StandardAuthPage
@@ -266,7 +271,7 @@ const InspectionDevices = ({
                                 loading={inspectionDevicesLoading}
                                 classes={{ root: classes.gridRoot }}
                                 getCellClassName={params =>
-                                    params.field === 'device_calibration_due_date' && params.value <= today
+                                    params.field === 'device_calibration_due_date' && params.value < today
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
