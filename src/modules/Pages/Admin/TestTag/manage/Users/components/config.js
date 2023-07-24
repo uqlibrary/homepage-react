@@ -39,34 +39,28 @@ export default {
             fieldParams: { canEdit: true, sortable: false, flex: 1 },
         },
         can_inspect_cb: {
-            component: props => (
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            color="primary"
-                            checked={props.value}
-                            helperText={
-                                props.error
-                                    ? locale.pages.manage.users.helperText.user_uid
-                                    : locale.pages.general.helperText.maxChars(20)
-                            }
-                            {...props}
-                        />
-                    }
-                    label={'Inspect'}
-                />
-            ),
+            component: props => {
+                const errorStyle = props.error ? { color: 'red' } : { color: 'primary' };
+                return (
+                    <FormControlLabel
+                        control={<Checkbox {...errorStyle} color="primary" checked={props.value} {...props} />}
+                        label={'Inspect'}
+                    />
+                );
+            },
             fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
             validate: (value, row) => {
                 return isEmptyStr(row.user_licence_number) && value;
             },
         },
         user_licence_number: {
-            component: (props, data) => {
+            component: (props, data, row) => {
                 return (
                     <TextField
                         required={data?.can_inspect_cb}
-                        disabled={!data?.can_inspect_cb}
+                        disabled={
+                            !data?.can_inspect_cb || (data?.can_inspect_cb && !isEmptyStr(row?.user_licence_number))
+                        }
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 45 }}
                         helperText={
@@ -80,7 +74,7 @@ export default {
 
             fieldParams: {
                 canAdd: true,
-                canEdit: false,
+                canEdit: true,
                 sortable: false,
                 renderInUpdate: true,
                 renderInAdd: true,
