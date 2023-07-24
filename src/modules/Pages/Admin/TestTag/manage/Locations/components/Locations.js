@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
@@ -62,6 +62,11 @@ export const locationDataFieldKeys = {
 };
 
 const ManageLocations = ({ actions }) => {
+    useEffect(() => {
+        actions.clearSites();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const pageLocale = locale.pages.manage.locations;
     const classes = useStyles();
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
@@ -136,7 +141,10 @@ const ManageLocations = ({ actions }) => {
         shouldDisableDelete,
         actionDataFieldKeys: { valueKey: locationDataFieldKeys[selectedLocation] },
     });
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
     const onRowAdd = React.useCallback(
         data => {
@@ -153,7 +161,7 @@ const ManageLocations = ({ actions }) => {
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.addFail), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -173,13 +181,12 @@ const ManageLocations = ({ actions }) => {
                 .updateLocation({ type: selectedLocation, request: wrappedRequest })
                 .then(() => {
                     closeDialog();
-
                     openConfirmationAlert(locale.config.alerts.success(), 'success');
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);
@@ -199,13 +206,12 @@ const ManageLocations = ({ actions }) => {
                 .deleteLocation({ type: selectedLocation, id })
                 .then(() => {
                     closeDialog();
-
                     openConfirmationAlert(locale.config.alerts.success(), 'success');
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
                     console.error(error);
-                    openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.deleteFail), 'error');
                 })
                 .finally(() => {
                     setDialogueBusy(false);

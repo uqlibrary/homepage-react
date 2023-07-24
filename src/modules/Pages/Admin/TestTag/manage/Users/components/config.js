@@ -25,7 +25,7 @@ export default {
                 />
             ),
             validate: value => isEmptyStr(value) || isInvalidUUID(value),
-            fieldParams: { canEdit: true, canAdd: true },
+            fieldParams: { canEdit: true, sortable: false, canAdd: true },
         },
         user_name: {
             component: props => (
@@ -36,13 +36,31 @@ export default {
                 />
             ),
             validate: value => isEmptyStr(value),
-            fieldParams: { canEdit: true, flex: 1 },
+            fieldParams: { canEdit: true, sortable: false, flex: 1 },
+        },
+        can_inspect_cb: {
+            component: props => {
+                const errorStyle = props.error ? { color: 'red' } : { color: 'primary' };
+                return (
+                    <FormControlLabel
+                        control={<Checkbox {...errorStyle} color="primary" checked={props.value} {...props} />}
+                        label={'Inspect'}
+                    />
+                );
+            },
+            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
+            validate: (value, row) => {
+                return isEmptyStr(row.user_licence_number) && value;
+            },
         },
         user_licence_number: {
-            component: (props, data) => {
+            component: (props, data, row) => {
                 return (
                     <TextField
                         required={data?.can_inspect_cb}
+                        disabled={
+                            !data?.can_inspect_cb || (data?.can_inspect_cb && !isEmptyStr(row?.user_licence_number))
+                        }
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 45 }}
                         helperText={
@@ -56,7 +74,8 @@ export default {
 
             fieldParams: {
                 canAdd: true,
-                canEdit: false,
+                canEdit: true,
+                sortable: false,
                 renderInUpdate: true,
                 renderInAdd: true,
                 renderInTable: false,
@@ -68,7 +87,7 @@ export default {
             },
         },
         can_admin: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
         },
         can_admin_cb: {
             component: props => (
@@ -77,22 +96,13 @@ export default {
                     label={'Admin'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
         },
         can_inspect: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
-        },
-        can_inspect_cb: {
-            component: props => (
-                <FormControlLabel
-                    control={<Checkbox color="primary" checked={props.value} {...props} />}
-                    label={'Inspect'}
-                />
-            ),
-            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
         },
         can_alter: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
         },
         can_alter_cb: {
             component: props => (
@@ -101,10 +111,10 @@ export default {
                     label={'Alter'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
         },
         can_see_reports: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
         },
         can_see_reports_cb: {
             component: props => (
@@ -113,10 +123,10 @@ export default {
                     label={'Report'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
         },
         user_current_flag: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
         },
         user_current_flag_cb: {
             component: props => (
@@ -125,10 +135,17 @@ export default {
                     label={'Is Current'}
                 />
             ),
-            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
         },
         actions_count: {
-            fieldParams: { canEdit: false, canAdd: false, renderInUpdate: false, renderInAdd: false, minWidth: 110 },
+            fieldParams: {
+                canEdit: false,
+                sortable: false,
+                canAdd: false,
+                renderInUpdate: false,
+                renderInAdd: false,
+                minWidth: 110,
+            },
         },
     },
 };

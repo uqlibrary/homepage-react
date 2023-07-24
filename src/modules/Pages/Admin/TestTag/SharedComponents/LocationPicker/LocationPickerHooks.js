@@ -35,13 +35,25 @@ export const useSelectLocation = ({
     store,
     condition,
 }) => {
-    const [selectedLocation, setSelectedLocation] = useState(initial ?? locationType.site);
-    const [lastSelectedLocation, setLastSelectedLocation] = useState(initial ?? locationType.site);
+    const [selectedLocation, setSelectedLocation] = useState(initial);
+    const [lastSelectedLocation, setLastSelectedLocation] = useState(initial);
 
-    const { siteList, siteListLoaded, floorList, floorListLoaded, roomList, roomListLoaded } = store;
+    const {
+        siteList,
+        siteListLoading,
+        siteListLoaded,
+        floorList,
+        floorListLoading,
+        floorListLoaded,
+        roomList,
+        roomListLoading,
+        roomListLoaded,
+    } = store;
 
     useEffect(() => {
         if (condition?.() ?? true) {
+            if (siteListLoading || floorListLoading || roomListLoading) return;
+
             if (roomListLoaded) {
                 if (location.room !== -1) {
                     setLastSelectedLocation(locationType.room);

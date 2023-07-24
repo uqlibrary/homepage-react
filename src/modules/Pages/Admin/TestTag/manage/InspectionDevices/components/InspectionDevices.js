@@ -18,7 +18,6 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
-import config from './config';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 
 const moment = require('moment');
@@ -44,13 +43,13 @@ const InspectionDevices = ({
     componentIdLower,
     actions,
     canManage = true,
+    config,
     pageLocale,
     inspectionDevices,
     inspectionDevicesLoading,
     inspectionDevicesError,
 }) => {
     const today = moment().format(locale.config.format.dateFormatNoTime);
-
     const classes = useStyles();
     const pagePermissions = [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports];
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
@@ -64,8 +63,9 @@ const InspectionDevices = ({
         errorMessage: inspectionDevicesError,
         errorMessageFormatter: locale.config.alerts.error,
     });
-
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
     const handleAddClick = () => {
         actionDispatch({
@@ -91,29 +91,33 @@ const InspectionDevices = ({
         });
     };
 
-    const onRowAdd = data => {
-        setDialogueBusy(true);
-        const request = structuredClone(data);
-        const wrappedRequest = transformAddRequest(request, user);
-        console.log('add', wrappedRequest);
+    const onRowAdd = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const request = structuredClone(data);
+            const wrappedRequest = transformAddRequest(request, user);
+            console.log('add', wrappedRequest);
 
-        actions
-            .addInspectionDevice(wrappedRequest)
-            .then(() => {
-                closeDialog();
-                openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadInspectionDevices();
-            })
-            .catch(error => {
-                console.log(error);
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
-            })
-            .finally(() => {
-                setDialogueBusy(false);
-            });
-    };
+            actions
+                .addInspectionDevice(wrappedRequest)
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(locale.config.alerts.success(), 'success');
+                    actions.loadInspectionDevices();
+                })
+                .catch(error => {
+                    console.error(error);
+                    openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.addFail), 'error');
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [user],
+    );
 
-    const onRowEdit = data => {
+    const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         const id = data.device_id;
         const request = structuredClone(data);
@@ -128,15 +132,16 @@ const InspectionDevices = ({
                 actions.loadInspectionDevices();
             })
             .catch(error => {
-                console.log(error);
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const onRowDelete = data => {
+    const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
         const id = data.row.device_id;
 
@@ -150,13 +155,15 @@ const InspectionDevices = ({
                 actions.loadInspectionDevices();
             })
             .catch(error => {
-                console.log(error);
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.deleteFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
@@ -170,7 +177,8 @@ const InspectionDevices = ({
 
     useEffect(() => {
         actions.loadInspectionDevices();
-    }, [actions]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <StandardAuthPage
@@ -263,7 +271,7 @@ const InspectionDevices = ({
                                 loading={inspectionDevicesLoading}
                                 classes={{ root: classes.gridRoot }}
                                 getCellClassName={params =>
-                                    params.field === 'device_calibration_due_date' && params.value <= today
+                                    params.field === 'device_calibration_due_date' && params.value < today
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
@@ -286,10 +294,11 @@ const InspectionDevices = ({
 InspectionDevices.propTypes = {
     componentId: PropTypes.string.isRequired,
     componentIdLower: PropTypes.string.isRequired, // container provided
-    actions: PropTypes.object,
-    canManage: PropTypes.bool,
+    config: PropTypes.object.isRequired,
     pageLocale: PropTypes.object.isRequired,
     inspectionDevices: PropTypes.any,
+    actions: PropTypes.object,
+    canManage: PropTypes.bool,
     inspectionDevicesLoading: PropTypes.bool,
     inspectionDevicesLoaded: PropTypes.bool,
     inspectionDevicesError: PropTypes.bool,

@@ -207,7 +207,7 @@ describe('saveInspectionTransformer functions work as expected', () => {
                     with_discard: { discard_reason: 'reason' },
                 },
                 params: {
-                    inspect_status: 'FAILED',
+                    lastInspection: { inspect_status: 'FAILED' },
                 },
             }),
         ).toEqual({
@@ -246,7 +246,7 @@ describe('saveInspectionTransformer functions work as expected', () => {
                     with_discard: { discard_reason: 'reason' },
                 },
                 params: {
-                    inspect_status: 'FAILED',
+                    lastInspection: { inspect_status: 'FAILED' },
                 },
             }),
         ).toEqual({
@@ -309,7 +309,7 @@ describe('saveInspectionTransformer functions work as expected', () => {
                     },
                 },
                 params: {
-                    inspect_status: 'FAILED',
+                    lastInspection: { inspect_status: 'FAILED' },
                 },
             }),
         ).toEqual({

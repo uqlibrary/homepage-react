@@ -144,8 +144,6 @@ const InspectionsDue = ({
                                 rowId={'asset_barcode'}
                                 loading={inspectionsDueLoading}
                                 classes={{ root: classes.gridRoot }}
-                                disableColumnFilter
-                                disableColumnMenu
                                 getCellClassName={params =>
                                     params.field === 'asset_next_test_due_date' && params.value <= today
                                         ? classes.inspectionOverdue

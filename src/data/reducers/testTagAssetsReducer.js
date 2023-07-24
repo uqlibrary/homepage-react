@@ -68,8 +68,12 @@ const handlers = {
         ...state,
         assetsMineListError: null,
     }),
-    [actions.TESTTAG_ASSETS_MINE_CLEAR]: () => ({
+    [actions.TESTTAG_ASSETS_MINE_CLEAR]: state => ({
         ...initialState,
+        ...state,
+        assetsMineList: [],
+        assetsMineListLoading: false,
+        assetsMineListError: null,
     }),
 };
 

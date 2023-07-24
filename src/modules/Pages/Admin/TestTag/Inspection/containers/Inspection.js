@@ -18,6 +18,7 @@ const DEFAULT_FORM_VALUES = {
     inspection_fail_reason: undefined,
     inspection_notes: undefined,
     inspection_date_next: undefined,
+    isManualDate: false,
     isRepair: false,
     repairer_contact_details: undefined,
     isDiscarded: false,
@@ -31,6 +32,7 @@ export const mapStateToProps = state => {
         ...state.get('testTagAssetsReducer'),
         ...state.get('testTagSaveInspectionReducer'),
         ...state.get('testTagSaveAssetTypeReducer'),
+        ...state.get('testTagUserReducer'),
     };
 };
 

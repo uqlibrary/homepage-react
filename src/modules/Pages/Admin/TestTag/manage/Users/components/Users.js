@@ -55,29 +55,35 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     });
 
     const classes = useStyles();
+    const closeDialog = React.useCallback(() => {
+        actionDispatch({ type: 'clear' });
+    }, []);
 
-    const closeDialog = () => actionDispatch({ type: 'clear' });
+    const onRowAdd = React.useCallback(
+        data => {
+            setDialogueBusy(true);
+            const request = structuredClone(data);
+            const wrappedRequest = transformAddRequest(request, userDepartment);
+            actions
+                .addUser(wrappedRequest)
+                .then(() => {
+                    closeDialog();
+                    openConfirmationAlert(locale.config.alerts.success(), 'success');
+                    actions.loadUserList();
+                })
+                .catch(error => {
+                    console.error(error);
+                    openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
+                })
+                .finally(() => {
+                    setDialogueBusy(false);
+                });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [userDepartment],
+    );
 
-    const onRowAdd = data => {
-        setDialogueBusy(true);
-        const request = structuredClone(data);
-        const wrappedRequest = transformAddRequest(request, userDepartment);
-        actions
-            .addUser(wrappedRequest)
-            .then(() => {
-                closeDialog();
-                openConfirmationAlert(locale.config.alerts.success(), 'success');
-                actions.loadUserList();
-            })
-            .catch(error => {
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
-            })
-            .finally(() => {
-                setDialogueBusy(false);
-            });
-    };
-
-    const onRowEdit = data => {
+    const onRowEdit = React.useCallback(data => {
         setDialogueBusy(true);
         const request = structuredClone(data);
         const userID = request.user_id;
@@ -90,12 +96,14 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 closeDialog();
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.updateFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
@@ -114,7 +122,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         });
     };
 
-    const onRowDelete = data => {
+    const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
         const id = data.row.user_id;
 
@@ -126,12 +134,14 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 actions.loadUserList();
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.deleteFail), 'error');
             })
             .finally(() => {
                 setDialogueBusy(false);
             });
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const handleAddClick = () => {
         actionDispatch({
             type: 'add',
@@ -154,6 +164,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     React.useEffect(() => {
         actions.loadUserList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actions]);
 
     return (

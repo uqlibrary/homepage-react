@@ -65,7 +65,6 @@ export const useDataTableColumns = ({
                         field: key,
                         headerName: localeFiltered[key].label,
                         editable: false,
-                        sortable: false,
                         ...configFiltered.fields[key].fieldParams,
                     });
             });

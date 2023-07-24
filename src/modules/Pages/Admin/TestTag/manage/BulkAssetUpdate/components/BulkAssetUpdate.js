@@ -59,6 +59,11 @@ const componentId = 'bulk-asset-update';
 const componentIdLower = 'bulk_asset_update';
 
 const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
+    useEffect(() => {
+        actions.clearAssetsMine();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
     const stepTwoLocale = pageLocale.form.step.two;
@@ -168,7 +173,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                 resetForm();
             })
             .catch(error => {
-                openConfirmationAlert(locale.config.alerts.error(error.message), 'error');
+                console.error(error);
+                openConfirmationAlert(locale.config.alerts.failed(stepTwoLocale.snackbars.failed), 'error');
                 setConfirmDialogueBusy(false);
             });
     };
@@ -437,6 +443,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             onChange={handleChange('asset_type')}
                                             disabled={!formValues.hasAssetType || formValues.hasDiscardStatus}
                                             required={formValues.hasAssetType}
+                                            value={formValues.asset_type?.asset_type_id}
+                                            validateAssetTypeId={isValidAssetTypeId}
+                                            error={formValues.hasAssetType && isEmptyObject(formValues.asset_type)}
                                         />
                                     </Grid>
                                 </Grid>

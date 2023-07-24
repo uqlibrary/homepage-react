@@ -566,6 +566,11 @@ export function loadAssetTypes() {
             });
     };
 }
+export function clearAssetTypes() {
+    return dispatch => {
+        dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_CLEAR });
+    };
+}
 export function clearAssetTypesError() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_ASSET_TYPES_LIST_CLEAR_ERROR });
