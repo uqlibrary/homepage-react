@@ -287,7 +287,7 @@ const Inspection = ({
                     /* istanbul ignore next */ {},
             );
             console.log(formValues, transformedData);
-            // actions.saveInspection(transformedData);
+            actions.saveInspection(transformedData);
         }
     };
 

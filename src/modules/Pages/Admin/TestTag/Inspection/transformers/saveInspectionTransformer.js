@@ -92,7 +92,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
             return { with_inspection: state.with_inspection };
         }
     },
-    with_repair: ({ state, params }) => {
+    with_repair: ({ state, params = {} }) => {
         const { lastInspection } = params;
         // repair option only for FAILED inspections
         if (
@@ -107,7 +107,7 @@ export const saveInspectionTransformer = (passValue, failValue) => ({
             return { with_repair: undefined, with_discard: state.with_discard };
         }
     },
-    with_discard: ({ state, params }) => {
+    with_discard: ({ state, params = {} }) => {
         const { lastInspection } = params;
         if (
             state.with_discard?.isDiscarded &&
