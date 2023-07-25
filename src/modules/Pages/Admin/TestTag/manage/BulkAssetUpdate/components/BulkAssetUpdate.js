@@ -326,7 +326,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         <FilterDialog
                             id={componentId}
                             locale={pageLocale.form.filterDialog}
-                            assetTypeLocale={pageLocale.form.assetType}
+                            assetTypeLocale={pageLocale.form.filterDialog.form.assetType}
                             locationLocale={locale.pages.general.locationPicker}
                             confirmAlertTimeout={locale.config.alerts.timeout}
                             errorMessageFormatter={locale.config.alerts.error}
@@ -445,7 +445,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             required={formValues.hasAssetType}
                                             value={formValues.asset_type?.asset_type_id}
                                             validateAssetTypeId={isValidAssetTypeId}
-                                            error={formValues.hasAssetType && isEmptyObject(formValues.asset_type)}
                                         />
                                     </Grid>
                                 </Grid>
