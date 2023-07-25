@@ -218,7 +218,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('asset_type_selector-asset-panel-input')
                     .should('not.be.disabled')
                     .click();
-                selectListbox('Add new asset type');
+                selectListbox('ADD NEW ASSET TYPE');
                 // popup has loaded as it has header
                 cy.data('asset_type_name-label').should('contain', 'Asset type name');
                 cy.data('update_dialog-action-button').should('be.disabled');

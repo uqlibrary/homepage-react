@@ -119,7 +119,7 @@ const FilterDialog = ({
     };
     const handleAssetTypeChange = row => {
         console.log('handleAssetTypeChange', row);
-        setAssetTypeId(row?.asset_type_id ?? '');
+        setAssetTypeId(row?.asset_type_id === -1 ? '' : row?.asset_type_id ?? '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
         const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
@@ -161,11 +161,13 @@ const FilterDialog = ({
                                 actions={actions}
                                 onChange={handleAssetTypeChange}
                                 validateAssetTypeId={isValidAssetTypeId}
+                                hasAllOption
+                                value={-1}
                                 required={false}
                                 autoSelect={false}
                                 autoHighlight={false}
                                 selectOnFocus
-                                disableClearable={false}
+                                disableClearable
                             />
                         </Grid>
                     </Grid>

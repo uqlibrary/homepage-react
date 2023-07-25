@@ -681,7 +681,9 @@ export default {
                     },
 
                     assetType: {
-                        label: 'Asset type',
+                        props: {
+                            label: 'Asset type',
+                        },
                     },
 
                     assetStatus: {
@@ -702,7 +704,13 @@ export default {
                                 asset_status: { label: 'Status' },
                             },
                             locationTitle: 'Location',
-                            assetTypeTitle: 'Asset Type',
+                            assetType: {
+                                props: {
+                                    label: 'Asset type',
+                                },
+                                title: 'Asset Type',
+                                labelAll: 'All Asset Types',
+                            },
                         },
                     },
                     step: {

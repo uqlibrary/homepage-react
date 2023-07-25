@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Popper from '@material-ui/core/Popper';
 
 const rootId = 'asset_type_selector';
+export const ADD_NEW_ID = 99999;
+
+const filterOptions = createFilterOptions();
 
 const AssetTypeSelector = ({
     id,
@@ -18,22 +21,34 @@ const AssetTypeSelector = ({
     actions,
     value,
     required = true,
+    canAddNew = false,
+    hasAllOption = false,
+    disabled = false,
     onChange,
     validateAssetTypeId,
     classNames = {},
-    disabled = false,
     ...rest
 }) => {
     const componentId = `${rootId}-${id}`;
-    const [_value, setValue] = React.useState(value);
-    const { assetTypesList, assetTypesListLoading } = useSelector(state => state.get('testTagAssetTypesReducer'));
+    const [_value, setValue] = React.useState(value ?? '');
+    const [_assetTypeList, setAssetTypeList] = useState([]);
+    const { assetTypesList, assetTypesListLoading, assetTypesListError } = useSelector(state =>
+        state.get('testTagAssetTypesReducer'),
+    );
 
     React.useEffect(() => {
-        if (assetTypesList.length === 0) {
+        if (assetTypesList.length === 0 && !!!assetTypesListError) {
             actions.loadAssetTypes();
+        } else if (!!!assetTypesListError) {
+            setAssetTypeList(
+                !!hasAllOption
+                    ? [{ asset_type_id: -1, asset_type_name: locale.labelAll }, ...assetTypesList]
+                    : assetTypesList,
+            );
+            if (!!hasAllOption) setValue(-1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assetTypesList]);
+    }, [hasAllOption, assetTypesList]);
 
     const handleChange = (_event, assetType) => {
         !!!value && setValue(assetType.asset_type_id);
@@ -60,8 +75,8 @@ const AssetTypeSelector = ({
                 data-testid={`${componentId}`}
                 className={classNames.autocomplete}
                 fullWidth
-                options={assetTypesList ?? []}
-                value={assetTypesList?.find(assetType => assetType.asset_type_id === _value) ?? null}
+                options={_assetTypeList ?? []}
+                value={_assetTypeList?.find(assetType => assetType.asset_type_id === _value) ?? null}
                 onChange={handleChange}
                 getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
                 getOptionSelected={(option, value) => option.asset_type_id === value.asset_type_id}
@@ -69,7 +84,7 @@ const AssetTypeSelector = ({
                 renderInput={params => (
                     <TextField
                         {...params}
-                        {...locale}
+                        {...locale.props}
                         required={required}
                         error={(!disabled && required && !validateAssetTypeId?.(value)) ?? false}
                         variant="standard"
@@ -97,6 +112,16 @@ const AssetTypeSelector = ({
                         }}
                     />
                 )}
+                filterOptions={(options, params) => {
+                    const filtered = filterOptions(options, params);
+                    canAddNew &&
+                        filtered.push({
+                            asset_type_name: locale.addNewLabel.toUpperCase(),
+                            asset_type_id: ADD_NEW_ID,
+                        });
+
+                    return filtered;
+                }}
                 PopperComponent={customPopper}
                 disabled={disabled || assetTypesListLoading}
                 disableClearable
@@ -112,11 +137,13 @@ AssetTypeSelector.propTypes = {
     locale: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     required: PropTypes.bool,
+    canAddNew: PropTypes.bool,
+    hasAllOption: PropTypes.bool,
+    disabled: PropTypes.bool,
     value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onChange: PropTypes.func,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
     validateAssetTypeId: PropTypes.func,
-    disabled: PropTypes.bool,
     title: PropTypes.string,
 };
 

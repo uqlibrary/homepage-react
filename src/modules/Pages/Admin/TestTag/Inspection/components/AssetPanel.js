@@ -4,14 +4,13 @@ import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
-import Button from '@material-ui/core/Button';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import InspectionPanel from './InspectionPanel';
 import LastInspectionPanel from './LastInspectionPanel';
 import AssetSelector from '../../SharedComponents/AssetSelector/AssetSelector';
 import UpdateDialog from '../../SharedComponents/DataTable/UpdateDialog';
-import AssetTypeSelector from '../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import AssetTypeSelector, { ADD_NEW_ID } from '../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 import { transformAddAssetTypeRequest } from '../utils/transformers';
@@ -56,29 +55,6 @@ const AssetPanel = ({
         });
     };
 
-    // we group them all together to place a footer item at the bottom of the list
-    const renderGroup = params => {
-        const addButton = (
-            <li
-                key={`${componentIdLower}-asset-type-option-999999`}
-                id={`${componentIdLower}-asset-type-option-999999`}
-                data-testid={`${componentIdLower}-asset-type-option-999999`}
-                data-option-index="0"
-                role="option"
-                aria-selected="false"
-                className="MuiAutocomplete-option"
-                data-focus="true"
-            >
-                <Button className={classes.addNewLabel} onClick={() => handleAddClick()}>
-                    {pageLocale.assetType.addNewLabel}
-                </Button>
-            </li>
-        );
-        const children = [params.children];
-        !!canAddAssetType && children.push(addButton);
-        return children;
-    };
-
     const closeDialog = React.useCallback(() => {
         actionDispatch({ type: 'clear' });
     }, []);
@@ -115,7 +91,9 @@ const AssetPanel = ({
     }, []);
 
     const handleAssetTypeChange = assetType => {
-        handleChange('asset_type_id')(assetType.asset_type_id);
+        if (assetType.asset_type_id === ADD_NEW_ID) {
+            handleAddClick();
+        } else handleChange('asset_type_id')(assetType.asset_type_id);
     };
 
     return (
@@ -152,7 +130,7 @@ const AssetPanel = ({
                     <FormControl className={classes.formControl} fullWidth>
                         <AssetTypeSelector
                             id={componentId}
-                            locale={pageLocale.assetType.props}
+                            locale={pageLocale.assetType}
                             actions={actions}
                             value={formValues?.asset_type_id}
                             onChange={handleAssetTypeChange}
@@ -162,7 +140,7 @@ const AssetPanel = ({
                                 saveAssetTypeSaving ||
                                 !isValidAssetId(formValues?.asset_id_displayed)
                             }
-                            renderGroup={renderGroup}
+                            canAddNew={canAddAssetType}
                             groupBy={() => false}
                             autoSelect={false}
                         />
