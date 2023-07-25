@@ -184,6 +184,7 @@ export const UpdateDialogue = ({
                                                         type: dataFields[field]?.fieldParams?.type ?? undefined,
                                                     }),
                                                     data,
+                                                    row,
                                                 )}
                                             </>
                                         )}

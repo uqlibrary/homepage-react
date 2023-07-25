@@ -49,6 +49,7 @@ export const transformAddRequest = (request, dept) => {
     request.user_department = dept;
     // Prime Privileges
     request.privileges = {};
+    request.user_licence_number = request?.can_inspect_cb ? request?.user_licence_number : '';
     request.privileges.can_admin = request?.can_admin_cb ? 1 : 0;
     request.privileges.can_inspect = request?.can_inspect_cb ? 1 : 0;
     request.privileges.can_alter = request?.can_alter_cb ? 1 : 0;
