@@ -62,7 +62,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.data('asset_type_power_rating-input').type('240V');
         cy.data('asset_type-input').type('Generic');
         cy.data('asset_type_notes-input').type('Notes for asset type');
-        cy.data('update_dialog-asset-types-action-button').click();
+        cy.data('update_dialog-action-button').click();
         cy.get('.MuiAlert-message').should('contain', 'Request successfully completed');
         // Editing an asset type
         cy.data('action_cell-1-edit-button').click();
@@ -71,15 +71,15 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.data('asset_type_power_rating-input').type('240V');
         cy.data('asset_type-input').type('Generic');
         cy.data('asset_type_notes-input').type('Notes for asset type');
-        cy.data('update_dialog-asset-types-action-button').click();
+        cy.data('update_dialog-action-button').click();
         cy.get('.MuiAlert-message').should('contain', 'Request successfully completed');
         // Cancel button - Add.
         cy.data('add_toolbar-asset-types-add-button').click();
-        cy.data('update_dialog-asset-types-cancel-button').click();
+        cy.data('update_dialog-cancel-button').click();
         cy.get('.MuiAlert-message').should('not.exist');
         // Cancel button - Edit.
         cy.data('action_cell-1-edit-button').click();
-        cy.data('update_dialog-asset-types-cancel-button').click();
+        cy.data('update_dialog-cancel-button').click();
         cy.get('.MuiAlert-message').should('not.exist');
     });
     it('Delete and Reassign work correctly', () => {

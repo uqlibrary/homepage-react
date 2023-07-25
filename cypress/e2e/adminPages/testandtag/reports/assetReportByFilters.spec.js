@@ -22,7 +22,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.get('h2').contains(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         forcePageRefresh();
         cy.wait(1000);
-        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000004'));
         // cy.checkA11y('[data-testid="StandardPage"]', {
         //     reportName: 'Test and Tag AssetsByFilters Report',
         //     scopeName: 'Content',
@@ -34,7 +34,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.get('h2').contains(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         forcePageRefresh();
         cy.wait(1000);
-        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000004'));
         // Status Dropdown.
         cy.data('asset_status_selector-assets-inspected-input').should('have.value', 'All');
         cy.data('asset_status_selector-assets-inspected-input').click();
@@ -43,20 +43,23 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.data('asset_status_selector-assets-inspected-input').click();
         cy.get('#asset_status_selector-assets-inspected-option-0').click();
         cy.data('asset_status_selector-assets-inspected-input').should('have.value', 'All');
-        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000004'));
         // Building Dropdown - all
         cy.wait(1500);
-        cy.data('assets_inspected-building').should('contain', 'All buildings');
-        cy.data('assets_inspected-building').click();
-        cy.data('assets_inspected-building-option-1').click();
+        cy.data('location_picker-assets_inspected-building-input').should('have.value', 'All - All buildings');
+        cy.data('location_picker-assets_inspected-building-input').click();
+        cy.get('#location_picker-assets_inspected-building-option-5').click();
         cy.wait(1500);
-        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000004'));
         // // Building Dropdown - selected
-        cy.data('assets_inspected-building').should('contain', 'Hawken Engineering Building');
-        cy.data('assets_inspected-building').click();
-        cy.data('assets_inspected-building-option-0').click();
-        cy.data('assets_inspected-building').should('contain', 'All buildings');
-        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        cy.data('location_picker-assets_inspected-building-input').should(
+            'have.value',
+            '0050 - Hawken Engineering Building',
+        );
+        cy.data('location_picker-assets_inspected-building-input').click();
+        cy.get('#location_picker-assets_inspected-building-option-0').click();
+        cy.data('location_picker-assets_inspected-building-input').should('have.value', 'All - All buildings');
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000004'));
     });
     it('UI for date pickers function correctly', () => {
         const currentYear = new Date().getFullYear();
@@ -65,7 +68,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.get('h2').contains(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         forcePageRefresh();
         cy.wait(1000);
-        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000004'));
         // Select a Tagged from Date.
         cy.get('[data-testid="assets_inspected-tagged-start"] button').click();
         cy.get('.MuiPickersCalendar-week')
@@ -74,7 +77,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.get('body').type('{esc}');
         cy.wait(1000);
         cy.data('assets_inspected-tagged-start-input').should('have.value', `${currentYear}-${currentMonth}-11`);
-        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000003'));
+        cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000004'));
         // Select a Tagged to Date.
         cy.get('[data-testid="assets_inspected-tagged-end"] button').click();
         cy.get('.MuiPickersCalendar-week')
