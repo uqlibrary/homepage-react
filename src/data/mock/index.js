@@ -48,6 +48,10 @@ import testTag_assets from './data/records/test_tag_assets';
 // Test and Tag Asset Types
 import test_tag_asset_types from './data/records/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
+import test_tag_pending_inspections_site from './data/records/test_tag_pending_inspections_site';
+import test_tag_pending_inspections_building from './data/records/test_tag_pending_inspections_building';
+import test_tag_pending_inspections_floor from './data/records/test_tag_pending_inspections_floor';
+import test_tag_pending_inspections_room from './data/records/test_tag_pending_inspections_room';
 import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspections_by_licenced_user';
 import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors';
 import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
@@ -912,6 +916,14 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'site'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections_site])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'building'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections_building])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'floor'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections_floor])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'room'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections_room])
     .onGet(
         new RegExp(
             panelRegExp(
