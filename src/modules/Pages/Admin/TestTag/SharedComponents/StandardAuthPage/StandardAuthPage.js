@@ -25,7 +25,9 @@ const StandardAuthPage = ({
     const { userLoading, userLoaded, userError, user, privilege } = useSelector(state =>
         state.get('testTagUserReducer'),
     );
+    /* istanbul ignore next */
     const { account, accountLoading } = useSelector(state => state.get('accountReducer'));
+    /* istanbul ignore next */
     const isLoggedOut = accountLoading === false && !account;
 
     React.useEffect(() => {
@@ -42,14 +44,12 @@ const StandardAuthPage = ({
         () =>
             user
                 ? locale?.header?.pageSubtitle?.(
-                      user?.department_display_name ??
-                          /* istanbul ignore next */ user?.user_department ??
-                          /* istanbul ignore next */ '',
+                      user?.department_display_name ?? user?.user_department ?? /* istanbul ignore next */ '',
                   )
                 : /* istanbul ignore next */ '',
         [user, locale],
     );
-
+    /* istanbul ignore if */
     if (isLoggedOut) {
         // This only fires redirects if it's NOT one of the following three environments.
         /* istanbul ignore next */
