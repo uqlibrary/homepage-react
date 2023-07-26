@@ -786,7 +786,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
-
+    .onDelete(/test-and-tag\/site|building|floor\/2/)
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(/test-and-tag\/site|building|floor\/.*/)
+    .reply(() => [400, { message: '52 is a test error', status: 'error' }])
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => {
