@@ -9,17 +9,19 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 
-import { Box } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import InspectionIcon from '@material-ui/icons/Search';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
+import AssetIcon from '@material-ui/icons/Power';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import ConfirmationAlert from '../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
-import Panel from './Panel';
 import { pathConfig } from '../../../../../../config/pathConfig';
 import locale from '../../testTag.locale';
 import { PERMISSIONS, ROLES } from '../../config/auth';
@@ -41,12 +43,17 @@ const useStyles = makeStyles(theme => ({
     centreAlignParent: {
         display: 'flex',
         flexDirection: 'column',
+        [theme.breakpoints.down('sm')]: {
+            minHeight: '12rem',
+            height: '100%',
+        },
     },
     centreAlign: {
         display: 'flex',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: '-30px',
     },
     overDueText: {
         color: theme.palette.error.main,
@@ -54,6 +61,10 @@ const useStyles = makeStyles(theme => ({
     },
     dueText: {
         textAlign: 'center',
+    },
+    testButton: {
+        textAlign: 'center',
+        width: '100%',
     },
 }));
 
@@ -96,26 +107,33 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     data-testid={`${componentId}-${pageLocale.panel.inspections.id}-skeleton`}
                                 />
                             ) : (
-                                <Panel
+                                <StandardCard
                                     title={pageLocale.panel.inspections.title}
-                                    icon={
-                                        <Avatar aria-label="inspections" style={{ backgroundColor: '#388E3C' }}>
-                                            <InspectionIcon />
-                                        </Avatar>
-                                    }
+                                    headerProps={{
+                                        avatar: (
+                                            <Avatar aria-label="inspections" style={{ backgroundColor: '#388E3C' }}>
+                                                <InspectionIcon />
+                                            </Avatar>
+                                        ),
+                                    }}
+                                    smallTitle
+                                    subCard
                                     className={clsx([classes.card, classes.centreAlignParent])}
                                     contentProps={{ className: classes.centreAlign }}
-                                    id={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
-                                    data-testid={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
+                                    standardCardId={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
                                 >
-                                    <Link
+                                    <Button
+                                        className={classes.testButton}
+                                        variant="contained"
+                                        color="primary"
+                                        component={Link}
                                         to={pathConfig.admin.testntaginspect}
                                         id={`${componentId}-${pageLocale.panel.inspections.id}-link`}
                                         data-testid={`${componentId}-${pageLocale.panel.inspections.id}-link`}
                                     >
                                         {pageLocale.panel.inspections.link}
-                                    </Link>
-                                </Panel>
+                                    </Button>
+                                </StandardCard>
                             )}
                         </Grid>
                     </AuthWrapper>
@@ -129,16 +147,19 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 data-testid={`${componentId}-${pageLocale.panel.assets.id}-skeleton`}
                             />
                         ) : (
-                            <Panel
+                            <StandardCard
                                 title={pageLocale.panel.assets.title}
-                                icon={
-                                    <Avatar aria-label="assets" style={{ backgroundColor: '#FFA726' }}>
-                                        <InspectionIcon />
-                                    </Avatar>
-                                }
+                                smallTitle
+                                subCard
+                                headerProps={{
+                                    avatar: (
+                                        <Avatar aria-label="assets" style={{ backgroundColor: '#FFA726' }}>
+                                            <AssetIcon />
+                                        </Avatar>
+                                    ),
+                                }}
                                 className={classes.card}
-                                id={`${componentId}-${pageLocale.panel.assets.id}-panel`}
-                                data-testid={`${componentId}-${pageLocale.panel.assets.id}-panel`}
+                                standardCardId={`${componentId}-${pageLocale.panel.assets.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
@@ -171,21 +192,22 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             ),
                                         )}
                                     >
-                                        {pageLocale.panel.assets.subtext(
+                                        {pageLocale.panel.assets.subtextLink(
                                             <Link
                                                 to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.reinspectionPeriodLength}`}
                                                 id={`${componentId}-${pageLocale.panel.assets.id}-link`}
                                                 data-testid={`${componentId}-${pageLocale.panel.assets.id}-link`}
                                             >
-                                                {pageLocale.config.pluraliser(
-                                                    `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
-                                                    dashboardConfig?.reinspectionPeriodLength,
-                                                )}
+                                                {pageLocale.panel.assets.subtextLinkStart}
                                             </Link>,
+                                            pageLocale.config.pluraliser(
+                                                `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
+                                                dashboardConfig?.reinspectionPeriodLength,
+                                            ),
                                         )}
                                     </AuthWrapper>
                                 </Typography>
-                            </Panel>
+                            </StandardCard>
                         )}
                     </Grid>
                     <Grid item xs={12} md className={classes.flexParent}>
@@ -198,16 +220,19 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-skeleton`}
                             />
                         ) : (
-                            <Panel
+                            <StandardCard
                                 title={pageLocale.panel.inspectionDevices.title}
-                                icon={
-                                    <Avatar aria-label="inspection devices" style={{ backgroundColor: '#0288D2' }}>
-                                        <InspectionDeviceIcon />
-                                    </Avatar>
-                                }
+                                smallTitle
+                                subCard
+                                headerProps={{
+                                    avatar: (
+                                        <Avatar aria-label="inspection devices" style={{ backgroundColor: '#0288D2' }}>
+                                            <InspectionDeviceIcon />
+                                        </Avatar>
+                                    ),
+                                }}
                                 className={classes.card}
-                                id={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
-                                data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
+                                standardCardId={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
@@ -240,21 +265,22 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             ),
                                         )}
                                     >
-                                        {pageLocale.panel.inspectionDevices.subtext(
+                                        {pageLocale.panel.inspectionDevices.subtextLink(
                                             <Link
                                                 to={`${pathConfig.admin.testntagreportrecalibrationssdue}`}
                                                 id={`${componentId}-${pageLocale.panel.inspectionDevices.id}-link`}
                                                 data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-link`}
                                             >
-                                                {pageLocale.config.pluraliser(
-                                                    `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
-                                                    dashboardConfig?.calibrationPeriodLength,
-                                                )}
+                                                {pageLocale.panel.inspectionDevices.subtextLinkStart}
                                             </Link>,
+                                            pageLocale.config.pluraliser(
+                                                `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
+                                                dashboardConfig?.calibrationPeriodLength,
+                                            ),
                                         )}
                                     </AuthWrapper>
                                 </Typography>
-                            </Panel>
+                            </StandardCard>
                         )}
                     </Grid>
                 </Grid>
@@ -270,12 +296,12 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     data-testid={`${componentId}-${pageLocale.panel.management.id}-skeleton`}
                                 />
                             ) : (
-                                <Panel
+                                <StandardCard
                                     title={pageLocale.panel.management.title}
+                                    smallTitle
+                                    subCard
                                     className={classes.card}
-                                    headerProps={{ titleTypographyProps: { variant: 'body2' } }}
-                                    id={`${componentId}-${pageLocale.panel.management.id}-panel`}
-                                    data-testid={`${componentId}-${pageLocale.panel.management.id}-panel`}
+                                    standardCardId={`${componentId}-${pageLocale.panel.management.id}-panel`}
                                 >
                                     <List component="nav" aria-label="management actions">
                                         {pageLocale.panel.management.links.map(link => {
@@ -314,7 +340,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             }
                                         })}
                                     </List>
-                                </Panel>
+                                </StandardCard>
                             )}
                         </Grid>
                     </AuthWrapper>
@@ -329,12 +355,12 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     data-testid={`${componentId}-${pageLocale.panel.reporting.id}-skeleton`}
                                 />
                             ) : (
-                                <Panel
+                                <StandardCard
                                     title={pageLocale.panel.reporting.title}
+                                    smallTitle
+                                    subCard
                                     className={classes.card}
-                                    headerProps={{ titleTypographyProps: { variant: 'body2' } }}
-                                    id={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
-                                    data-testid={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
+                                    standardCardId={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
                                 >
                                     <List component="nav" aria-label="reporting actions">
                                         {pageLocale.panel.reporting.links.map(link => {
@@ -373,7 +399,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             }
                                         })}
                                     </List>
-                                </Panel>
+                                </StandardCard>
                             )}
                         </Grid>
                     </AuthWrapper>
