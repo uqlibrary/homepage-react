@@ -71,11 +71,46 @@ describe('LocationPickerHooks', () => {
             renderHook(props => useSelectLocation(props), { initialProps: { actions, condition: mockConditionFn } });
             expect(mockLoadSitesFn).not.toHaveBeenCalled();
         });
-        it('should return if site, floor or rooms are loading', () => {
+        it('should return if site list is loading', () => {
             const mockLoadSitesFn = jest.fn();
             const actions = { loadSites: mockLoadSitesFn };
-            renderHook(props => useSelectLocation(props), { initialProps: { actions } });
+            const { result } = renderHook(props => useSelectLocation(props), {
+                initialProps: { actions, store: { siteListLoading: true } },
+            });
             expect(mockLoadSitesFn).toHaveBeenCalled();
+            expect(result.current.selectedLocation).toEqual('site');
+            expect(result.current.lastSelectedLocation).toEqual('site');
+        });
+        it('should return if floor list is loading', () => {
+            const mockLoadSitesFn = jest.fn();
+            const actions = { loadSites: mockLoadSitesFn };
+            const { result } = renderHook(props => useSelectLocation(props), {
+                initialProps: { actions, store: { floorListLoading: true } },
+            });
+            expect(mockLoadSitesFn).toHaveBeenCalled();
+            expect(result.current.selectedLocation).toEqual('site');
+            expect(result.current.lastSelectedLocation).toEqual('site');
+        });
+        it('should return if room list is loading', () => {
+            const mockLoadSitesFn = jest.fn();
+            const actions = { loadSites: mockLoadSitesFn };
+            const { result } = renderHook(props => useSelectLocation(props), {
+                initialProps: { actions, store: { roomListLoading: true } },
+            });
+            expect(mockLoadSitesFn).toHaveBeenCalled();
+            expect(result.current.selectedLocation).toEqual('site');
+            expect(result.current.lastSelectedLocation).toEqual('site');
+        });
+        it('should return list of sites when loaded', () => {
+            const mockLoadSitesFn = jest.fn(() => [{ site_id: 1 }, { site_id: 2 }]);
+            const mockSetRow = jest.fn();
+            const actions = { loadSites: mockLoadSitesFn };
+            const { result } = renderHook(props => useSelectLocation(props), {
+                initialProps: { actions, store: { siteListLoading: true } },
+            });
+            expect(mockLoadSitesFn).toHaveBeenCalled();
+            expect(result.current.selectedLocation).toEqual('site');
+            expect(result.current.lastSelectedLocation).toEqual('site');
         });
     });
 });
