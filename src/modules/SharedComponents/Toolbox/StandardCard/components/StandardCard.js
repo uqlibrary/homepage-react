@@ -133,8 +133,9 @@ export class Cards extends Component {
                 )}
                 <CardContent
                     data-testid={`${standardCardId}-content`}
-                    className={`${(this.props.noPadding && classes.cardContentNoPadding) || ''} ${this.props
-                        ?.contentProps?.className ?? ''}`}
+                    className={`${(this.props.noPadding && classes.cardContentNoPadding) || ''}${
+                        this.props?.contentProps?.className ? ` ${this.props?.contentProps?.className}` : ''
+                    }`}
                     style={{ ...customText }}
                 >
                     {children}
