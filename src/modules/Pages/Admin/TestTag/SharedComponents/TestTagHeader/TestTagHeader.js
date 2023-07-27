@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     },
     link: {
         display: 'flex',
-        fontSize: '0.8rem',
+        fontSize: '0.875rem',
     },
     icon: {
         marginRight: theme.spacing(0.5),
@@ -66,6 +66,7 @@ const TestTagHeader = (
                     aria-label="breadcrumb"
                     id={`${componentId}-navigation`}
                     data-testid={`${componentId}-navigation`}
+                    separator={<>&rsaquo;</>}
                 >
                     <Link
                         color="inherit"
@@ -81,7 +82,7 @@ const TestTagHeader = (
                         />
                         Dashboard
                     </Link>
-                    {breadcrumbs.map(breadcrumb => {
+                    {breadcrumbs.map((breadcrumb, index) => {
                         const normalisedTitle = breadcrumb.title.replace(/ /g, '-').toLowerCase();
                         return breadcrumb.link ? (
                             <Link
@@ -113,7 +114,7 @@ const TestTagHeader = (
                                 id={`${componentId}-navigation-current-page`}
                                 data-testid={`${componentId}-navigation-current-page`}
                             >
-                                {breadcrumb?.icon ? (
+                                {breadcrumb?.icon && index < breadcrumbs.length - 1 ? (
                                     <Icon
                                         className={classes.icon}
                                         id={`${componentId}-navigation-current-page-icon`}
