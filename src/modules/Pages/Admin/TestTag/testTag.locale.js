@@ -6,11 +6,12 @@ import { pathConfig } from '../../../../config/pathConfig';
 import InspectionIcon from '@material-ui/icons/Search';
 import UsersIcon from '@material-ui/icons/People';
 import AssetTypeIcon from '@material-ui/icons/DevicesOther';
-import LocationIcon from '@material-ui/icons/MyLocation';
+import LocationIcon from '@material-ui/icons/LocationCity';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
-import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
+import InspectionByUserIcon from '@material-ui/icons/VerifiedUser';
+import AssetIcon from '@material-ui/icons/Power';
 
 import { PERMISSIONS } from './config/auth';
 
@@ -93,97 +94,109 @@ export default {
             panel: {
                 inspections: {
                     id: 'new-inspection',
-                    title: 'INSPECTIONS',
+                    title: 'Inspections',
                     link: 'Begin test and tagging of assets',
                 },
                 assets: {
                     id: 'assets-due-inspection',
-                    title: 'ASSET INSPECTIONS',
+                    title: 'Assets',
                     subtext: duration => <>* due in the next {duration}.</>,
+                    subtextLinkStart: 'View asset inspections due',
+                    subtextLink: (link, duration) => (
+                        <>
+                            {link} in the next {duration}
+                        </>
+                    ),
                     upcomingText: 'upcoming *',
                     overdueText: 'overdue',
                 },
                 inspectionDevices: {
                     id: 'devices-due-recalibration',
-                    title: 'INSPECTION DEVICE RECALIBRATIONS',
+                    title: 'Inspection devices',
                     subtext: duration => <>* due in the next {duration}.</>,
+                    subtextLinkStart: 'View inspection device calibrations due',
+                    subtextLink: (link, duration) => (
+                        <>
+                            {link} in the next {duration}
+                        </>
+                    ),
                     upcomingText: 'upcoming *',
                     overdueText: 'overdue',
                 },
                 management: {
                     id: 'management',
-                    title: 'MANAGEMENT',
+                    title: 'Management',
                     links: [
                         {
-                            id: 'users',
-                            title: 'USERS',
-                            icon: <UsersIcon />,
-                            permissions: [PERMISSIONS.can_admin],
-                            path: pathConfig.admin.testntagmanageusers,
-                        },
-                        {
                             id: 'asset-types',
-                            title: 'ASSET TYPES',
+                            title: 'Asset Types',
                             icon: <AssetTypeIcon />,
                             path: pathConfig.admin.testntagmanageassettypes,
                         },
                         {
-                            id: 'locations',
-                            title: 'LOCATIONS',
-                            icon: <LocationIcon />,
-                            permissions: [PERMISSIONS.can_admin],
-                            path: pathConfig.admin.testntagmanagelocations,
-                        },
-                        {
-                            id: 'inspection-devices',
-                            title: 'INSPECTION DEVICES',
-                            icon: <InspectionDeviceIcon />,
-                            path: pathConfig.admin.testntagmanageinspectiondevices,
-                        },
-                        {
                             id: 'bulk-asset-update',
-                            title: 'BULK ASSET UPDATE',
+                            title: 'Bulk Asset Update',
                             icon: <BulkUpdateIcon />,
                             path: pathConfig.admin.testntagmanagebulkassetupdate,
                         },
                         {
                             id: 'inspections',
-                            title: 'INSPECTIONS',
+                            title: 'Inspections',
                             icon: <InspectionIcon />,
                             path: pathConfig.admin.testntagmanageinspectiondetails,
+                        },
+                        {
+                            id: 'inspection-devices',
+                            title: 'Inspection Devices',
+                            icon: <InspectionDeviceIcon />,
+                            path: pathConfig.admin.testntagmanageinspectiondevices,
+                        },
+                        {
+                            id: 'locations',
+                            title: 'Locations',
+                            icon: <LocationIcon />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: pathConfig.admin.testntagmanagelocations,
+                        },
+                        {
+                            id: 'users',
+                            title: 'Users',
+                            icon: <UsersIcon />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: pathConfig.admin.testntagmanageusers,
                         },
                     ],
                 },
                 reporting: {
                     id: 'reporting',
-                    title: 'REPORTING',
+                    title: 'Reporting',
                     links: [
                         {
-                            id: 'devices-due-recalibration',
-                            title: 'INSPECTION DEVICES DUE RECALIBRATION',
-                            icon: <InspectionDeviceIcon />,
-                            permissions: [PERMISSIONS.can_see_reports],
-                            path: pathConfig.admin.testntagreportrecalibrationssdue,
-                        },
-                        {
                             id: 'assets-due-inspection',
-                            title: 'ASSETS DUE NEXT INSPECTION',
-                            icon: <InspectionIcon />,
+                            title: 'Assets due for inspection',
+                            icon: <AssetIcon />,
                             permissions: [PERMISSIONS.can_see_reports],
                             path: pathConfig.admin.testntagreportinspectionsdue,
                         },
                         {
                             id: 'assets-inspected',
-                            title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
+                            title: 'Assets inspected by building, status, and date range',
                             icon: <AssetsInspectedByDateIcon />,
                             path: pathConfig.admin.testntagreportassetsbyfilters,
                         },
                         {
                             id: 'inspections-by-user',
-                            title: 'INSPECTIONS BY LICENCED USER',
+                            title: 'Inspections by licenced user',
                             icon: <InspectionByUserIcon />,
                             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
                             permissions: [PERMISSIONS.can_admin],
+                        },
+                        {
+                            id: 'devices-due-recalibration',
+                            title: 'Inspection devices due for recalibration',
+                            icon: <InspectionDeviceIcon />,
+                            permissions: [PERMISSIONS.can_see_reports],
+                            path: pathConfig.admin.testntagreportrecalibrationssdue,
                         },
                     ],
                 },
@@ -897,7 +910,7 @@ export default {
                 breadcrumbs: [
                     {
                         title: 'Report - Asset Inspections Due',
-                        icon: <InspectionIcon fontSize={'small'} />,
+                        icon: <AssetIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
