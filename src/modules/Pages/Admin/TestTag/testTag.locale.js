@@ -84,7 +84,7 @@ export default {
                 pluraliser: (text, count) => (
                     <>
                         {text}
-                        {count > 1 ? 'S' : ''}
+                        {count > 1 ? 's' : ''}
                     </>
                 ),
             },
@@ -104,7 +104,7 @@ export default {
                     subtextLinkStart: 'View asset inspections due',
                     subtextLink: (link, duration) => (
                         <>
-                            {link} in the next {duration}
+                            {link} in the next {duration}.
                         </>
                     ),
                     upcomingText: 'upcoming *',
@@ -117,7 +117,7 @@ export default {
                     subtextLinkStart: 'View inspection device calibrations due',
                     subtextLink: (link, duration) => (
                         <>
-                            {link} in the next {duration}
+                            {link} in the next {duration}.
                         </>
                     ),
                     upcomingText: 'upcoming *',
@@ -129,39 +129,39 @@ export default {
                     links: [
                         {
                             id: 'asset-types',
-                            title: 'Asset Types',
-                            icon: <AssetTypeIcon />,
+                            title: 'Asset types',
+                            icon: <AssetTypeIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanageassettypes,
                         },
                         {
                             id: 'bulk-asset-update',
-                            title: 'Bulk Asset Update',
-                            icon: <BulkUpdateIcon />,
+                            title: 'Bulk asset update',
+                            icon: <BulkUpdateIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanagebulkassetupdate,
                         },
                         {
                             id: 'inspections',
                             title: 'Inspections',
-                            icon: <InspectionIcon />,
+                            icon: <InspectionIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanageinspectiondetails,
                         },
                         {
                             id: 'inspection-devices',
-                            title: 'Inspection Devices',
-                            icon: <InspectionDeviceIcon />,
+                            title: 'Inspection devices',
+                            icon: <InspectionDeviceIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanageinspectiondevices,
                         },
                         {
                             id: 'locations',
                             title: 'Locations',
-                            icon: <LocationIcon />,
+                            icon: <LocationIcon style={{ color: '#2b2a29' }} />,
                             permissions: [PERMISSIONS.can_admin],
                             path: pathConfig.admin.testntagmanagelocations,
                         },
                         {
                             id: 'users',
                             title: 'Users',
-                            icon: <UsersIcon />,
+                            icon: <UsersIcon style={{ color: '#2b2a29' }} />,
                             permissions: [PERMISSIONS.can_admin],
                             path: pathConfig.admin.testntagmanageusers,
                         },
@@ -174,27 +174,27 @@ export default {
                         {
                             id: 'assets-due-inspection',
                             title: 'Assets due for inspection',
-                            icon: <AssetIcon />,
+                            icon: <AssetIcon style={{ color: '#2b2a29' }} />,
                             permissions: [PERMISSIONS.can_see_reports],
                             path: pathConfig.admin.testntagreportinspectionsdue,
                         },
                         {
                             id: 'assets-inspected',
                             title: 'Assets inspected by building, status, and date range',
-                            icon: <AssetsInspectedByDateIcon />,
+                            icon: <AssetsInspectedByDateIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagreportassetsbyfilters,
                         },
                         {
                             id: 'inspections-by-user',
                             title: 'Inspections by licenced user',
-                            icon: <InspectionByUserIcon />,
+                            icon: <InspectionByUserIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
                             permissions: [PERMISSIONS.can_admin],
                         },
                         {
                             id: 'devices-due-recalibration',
                             title: 'Inspection devices due for recalibration',
-                            icon: <InspectionDeviceIcon />,
+                            icon: <InspectionDeviceIcon style={{ color: '#2b2a29' }} />,
                             permissions: [PERMISSIONS.can_see_reports],
                             path: pathConfig.admin.testntagreportrecalibrationssdue,
                         },

@@ -9,7 +9,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 
 import Box from '@material-ui/core/Box';
@@ -38,7 +37,6 @@ const useStyles = makeStyles(theme => ({
     },
     card: {
         flex: 1,
-        color: theme.palette.text.secondary,
     },
     centreAlignParent: {
         display: 'flex',
@@ -122,17 +120,13 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     contentProps={{ className: classes.centreAlign }}
                                     standardCardId={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
                                 >
-                                    <Button
-                                        className={classes.testButton}
-                                        variant="contained"
-                                        color="primary"
-                                        component={Link}
+                                    <Link
                                         to={pathConfig.admin.testntaginspect}
                                         id={`${componentId}-${pageLocale.panel.inspections.id}-link`}
                                         data-testid={`${componentId}-${pageLocale.panel.inspections.id}-link`}
                                     >
                                         {pageLocale.panel.inspections.link}
-                                    </Button>
+                                    </Link>
                                 </StandardCard>
                             )}
                         </Grid>
@@ -182,12 +176,14 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
+                                <Typography variant={'body1'} style={{ paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
+                                                `${
+                                                    dashboardConfig?.reinspectionPeriodLength
+                                                } ${dashboardConfig?.reinspectionPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.reinspectionPeriodLength,
                                             ),
                                         )}
@@ -201,7 +197,9 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                 {pageLocale.panel.assets.subtextLinkStart}
                                             </Link>,
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
+                                                `${
+                                                    dashboardConfig?.reinspectionPeriodLength
+                                                } ${dashboardConfig?.reinspectionPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.reinspectionPeriodLength,
                                             ),
                                         )}
@@ -255,12 +253,14 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
+                                <Typography variant={'body1'} style={{ paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.inspectionDevices.subtext(
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
+                                                `${
+                                                    dashboardConfig?.calibrationPeriodLength
+                                                } ${dashboardConfig?.calibrationPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.calibrationPeriodLength,
                                             ),
                                         )}
@@ -274,7 +274,9 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                 {pageLocale.panel.inspectionDevices.subtextLinkStart}
                                             </Link>,
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
+                                                `${
+                                                    dashboardConfig?.calibrationPeriodLength
+                                                } ${dashboardConfig?.calibrationPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.calibrationPeriodLength,
                                             ),
                                         )}
@@ -312,7 +314,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
                                                         <ListItem
-                                                            button
                                                             component={Link}
                                                             to={link.path}
                                                             id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
@@ -326,7 +327,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             } else {
                                                 return (
                                                     <ListItem
-                                                        button
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                         component={Link}
                                                         to={link.path}
@@ -371,7 +371,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
                                                         <ListItem
-                                                            button
                                                             component={Link}
                                                             to={link.path}
                                                             id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
@@ -385,7 +384,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             } else {
                                                 return (
                                                     <ListItem
-                                                        button
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                         component={Link}
                                                         to={link.path}
