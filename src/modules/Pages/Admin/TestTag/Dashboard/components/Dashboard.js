@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -9,7 +9,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 
 import Box from '@material-ui/core/Box';
@@ -38,7 +37,6 @@ const useStyles = makeStyles(theme => ({
     },
     card: {
         flex: 1,
-        color: theme.palette.text.secondary,
     },
     centreAlignParent: {
         display: 'flex',
@@ -69,6 +67,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboardConfigError }) => {
+    const theme = useTheme();
     const pageLocale = locale.pages.dashboard;
     const classes = useStyles();
 
@@ -109,10 +108,11 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                             ) : (
                                 <StandardCard
                                     title={pageLocale.panel.inspections.title}
+                                    primaryHeader
                                     headerProps={{
                                         avatar: (
-                                            <Avatar aria-label="inspections" style={{ backgroundColor: '#388E3C' }}>
-                                                <InspectionIcon />
+                                            <Avatar aria-label="inspections" style={{ backgroundColor: 'white' }}>
+                                                <InspectionIcon style={{ color: theme.palette.primary.light }} />
                                             </Avatar>
                                         ),
                                     }}
@@ -122,17 +122,13 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     contentProps={{ className: classes.centreAlign }}
                                     standardCardId={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
                                 >
-                                    <Button
-                                        className={classes.testButton}
-                                        variant="contained"
-                                        color="primary"
-                                        component={Link}
+                                    <Link
                                         to={pathConfig.admin.testntaginspect}
                                         id={`${componentId}-${pageLocale.panel.inspections.id}-link`}
                                         data-testid={`${componentId}-${pageLocale.panel.inspections.id}-link`}
                                     >
                                         {pageLocale.panel.inspections.link}
-                                    </Button>
+                                    </Link>
                                 </StandardCard>
                             )}
                         </Grid>
@@ -151,10 +147,11 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 title={pageLocale.panel.assets.title}
                                 smallTitle
                                 subCard
+                                primaryHeader
                                 headerProps={{
                                     avatar: (
-                                        <Avatar aria-label="assets" style={{ backgroundColor: '#FFA726' }}>
-                                            <AssetIcon />
+                                        <Avatar aria-label="assets" style={{ backgroundColor: 'white' }}>
+                                            <AssetIcon style={{ color: theme.palette.primary.light }} />
                                         </Avatar>
                                     ),
                                 }}
@@ -182,12 +179,14 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
+                                <Typography variant={'body1'} style={{ paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
+                                                `${
+                                                    dashboardConfig?.reinspectionPeriodLength
+                                                } ${dashboardConfig?.reinspectionPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.reinspectionPeriodLength,
                                             ),
                                         )}
@@ -201,7 +200,9 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                 {pageLocale.panel.assets.subtextLinkStart}
                                             </Link>,
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
+                                                `${
+                                                    dashboardConfig?.reinspectionPeriodLength
+                                                } ${dashboardConfig?.reinspectionPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.reinspectionPeriodLength,
                                             ),
                                         )}
@@ -224,10 +225,11 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 title={pageLocale.panel.inspectionDevices.title}
                                 smallTitle
                                 subCard
+                                primaryHeader
                                 headerProps={{
                                     avatar: (
-                                        <Avatar aria-label="inspection devices" style={{ backgroundColor: '#0288D2' }}>
-                                            <InspectionDeviceIcon />
+                                        <Avatar aria-label="inspection devices" style={{ backgroundColor: 'white' }}>
+                                            <InspectionDeviceIcon style={{ color: theme.palette.primary.light }} />
                                         </Avatar>
                                     ),
                                 }}
@@ -255,12 +257,14 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
+                                <Typography variant={'body1'} style={{ paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.inspectionDevices.subtext(
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
+                                                `${
+                                                    dashboardConfig?.calibrationPeriodLength
+                                                } ${dashboardConfig?.calibrationPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.calibrationPeriodLength,
                                             ),
                                         )}
@@ -274,7 +278,9 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                 {pageLocale.panel.inspectionDevices.subtextLinkStart}
                                             </Link>,
                                             pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
+                                                `${
+                                                    dashboardConfig?.calibrationPeriodLength
+                                                } ${dashboardConfig?.calibrationPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.calibrationPeriodLength,
                                             ),
                                         )}
@@ -301,6 +307,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     smallTitle
                                     subCard
                                     className={classes.card}
+                                    primaryHeader
                                     standardCardId={`${componentId}-${pageLocale.panel.management.id}-panel`}
                                 >
                                     <List component="nav" aria-label="management actions">
@@ -312,7 +319,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
                                                         <ListItem
-                                                            button
                                                             component={Link}
                                                             to={link.path}
                                                             id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
@@ -326,7 +332,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             } else {
                                                 return (
                                                     <ListItem
-                                                        button
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                         component={Link}
                                                         to={link.path}
@@ -360,6 +365,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     smallTitle
                                     subCard
                                     className={classes.card}
+                                    primaryHeader
                                     standardCardId={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
                                 >
                                     <List component="nav" aria-label="reporting actions">
@@ -371,7 +377,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
                                                         <ListItem
-                                                            button
                                                             component={Link}
                                                             to={link.path}
                                                             id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
@@ -385,7 +390,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             } else {
                                                 return (
                                                     <ListItem
-                                                        button
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                         component={Link}
                                                         to={link.path}
