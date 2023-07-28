@@ -1,9 +1,9 @@
 import orange from '@material-ui/core/colors/orange';
 import red from '@material-ui/core/colors/red';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import createTheme from '@material-ui/core/styles/createTheme';
 import createPalette from '@material-ui/core/styles/createPalette';
 
-export const mui1theme = createMuiTheme({
+export const mui1theme = createTheme({
     palette: createPalette({
         primary: {
             light: '#51247A', // uqpurple
