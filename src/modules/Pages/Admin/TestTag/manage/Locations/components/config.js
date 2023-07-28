@@ -28,12 +28,12 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, sortable: false, minWidth: 150 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 120 },
             },
             site_name: {
                 component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, sortable: false, flex: 1 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 150, flex: 1 },
             },
             asset_count: {
                 fieldParams: { canEdit: false, sortable: false, renderInAdd: false, renderInUpdate: false },
@@ -66,12 +66,12 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, sortable: false, minWidth: 150 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 120 },
             },
             building_name: {
                 component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, sortable: false, flex: 1 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 150, flex: 1 },
             },
             asset_count: {
                 fieldParams: { canEdit: false, sortable: false, renderInAdd: false, renderInUpdate: false },
@@ -104,7 +104,7 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, sortable: false, flex: 1 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 120, flex: 1 },
             },
             asset_count: {
                 fieldParams: { canEdit: false, sortable: false, renderInAdd: false, renderInUpdate: false },
@@ -137,11 +137,11 @@ export default {
                     />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, sortable: false, minWidth: 150 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 120 },
             },
             room_description: {
                 component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, sortable: false, flex: 1 },
+                fieldParams: { canEdit: true, sortable: false, minWidth: 150, flex: 1 },
             },
             asset_count: {
                 fieldParams: { canEdit: false, sortable: false, renderInAdd: false, renderInUpdate: false },

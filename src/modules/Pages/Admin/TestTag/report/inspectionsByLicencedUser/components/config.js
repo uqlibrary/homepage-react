@@ -4,17 +4,16 @@ export default {
     },
     fields: {
         // user_id: { fieldParams: { minWidth: 50, flex: 1 } },
-        user_uid: { fieldParams: { minWidth: 120, flex: 1 } },
-        user_name: { fieldParams: { minWidth: 120, flex: 1 } },
-        user_licence_number: { fieldParams: { minWidth: 120, flex: 1 } },
-        user_department: { fieldParams: { minWidth: 50 } },
+        user_uid: { fieldParams: { minWidth: 100 } },
+        user_name: { fieldParams: { minWidth: 150, flex: 1 } },
+        user_licence_number: { fieldParams: { minWidth: 120 } },
+        user_department: { fieldParams: { minWidth: 100 } },
         start_date: {
             fieldParams: {
-                minWidth: 100,
-                flex: 1,
+                minWidth: 150,
             },
         },
-        end_date: { fieldParams: { minWidth: 100, flex: 1 } },
+        end_date: { fieldParams: { minWidth: 150 } },
         total_for_user: { fieldParams: { width: 100 } },
     },
 };

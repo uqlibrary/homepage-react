@@ -76,7 +76,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     });
 
     const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
@@ -265,7 +265,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                 {step === 1 && (
                     <StandardCard title={stepOneLocale.title} standardCardId={`standard_card-${componentId}-step-1`}>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} md={4}>
                                 <AssetSelector
                                     id={componentId}
                                     locale={stepOneLocale}
@@ -279,10 +279,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     filter={{ status: { discarded: false } }}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={2} className={classes.centredGrid}>
+                            <Grid item xs={12} md={2} className={classes.centredGrid}>
                                 or
                             </Grid>
-                            <Grid item xs={12} sm={6} className={classes.centredGridNoJustify}>
+                            <Grid item xs={12} md={6} className={classes.centredGridNoJustify}>
                                 <Button
                                     variant="outlined"
                                     id={`${componentIdLower}-feature-button`}

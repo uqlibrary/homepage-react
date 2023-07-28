@@ -13,11 +13,11 @@ export default {
         asset_id_displayed: {
             fieldParams: { canEdit: false, sortable: false, minWidth: 100 },
         },
-        asset_type: { fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, flex: 1 } },
+        asset_type: { fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, minWidth: 150, flex: 1 } },
         asset_status: { fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, minWidth: 150 } },
-        user_name: { fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, flex: 1 } },
+        user_name: { fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, minWidth: 160 } },
         inspect_date: {
-            fieldParams: { canEdit: false, sortable: false, minWidth: 140 },
+            fieldParams: { canEdit: false, sortable: false, minWidth: 180 },
         },
         inspect_notes: {
             component: props => {

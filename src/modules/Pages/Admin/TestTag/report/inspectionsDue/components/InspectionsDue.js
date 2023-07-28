@@ -45,12 +45,6 @@ const InspectionsDue = ({
     // inspectionsDueLoaded,
     inspectionsDueError,
 }) => {
-    console.log({
-        inspectionsDue,
-        inspectionsDueLoading,
-        // inspectionsDueLoaded,
-        inspectionsDueError,
-    });
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
     const classes = useStyles();

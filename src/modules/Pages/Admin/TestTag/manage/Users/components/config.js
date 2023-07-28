@@ -25,7 +25,7 @@ export default {
                 />
             ),
             validate: value => isEmptyStr(value) || isInvalidUUID(value),
-            fieldParams: { canEdit: true, sortable: false, canAdd: true },
+            fieldParams: { canEdit: true, sortable: false, canAdd: true, minWidth: 100 },
         },
         user_name: {
             component: props => (
@@ -36,7 +36,7 @@ export default {
                 />
             ),
             validate: value => isEmptyStr(value),
-            fieldParams: { canEdit: true, sortable: false, flex: 1 },
+            fieldParams: { canEdit: true, sortable: false, minWidth: 150, flex: 1 },
         },
         can_inspect_cb: {
             component: props => {

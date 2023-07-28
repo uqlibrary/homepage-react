@@ -32,12 +32,12 @@ export default {
         device_model_name: {
             component: props => <TextField {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
-            fieldParams: { canEdit: true, flex: 1 },
+            fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
         },
         device_serial_number: {
             component: props => <TextField {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
-            fieldParams: { canEdit: true, flex: 1 },
+            fieldParams: { canEdit: true, minWidth: 150 },
         },
         device_calibrated_date_last: {
             component: props => (
@@ -56,7 +56,7 @@ export default {
         device_calibrated_by_last: {
             component: props => <TextField {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
-            fieldParams: { canEdit: true, flex: 1 },
+            fieldParams: { canEdit: true, minWidth: 160 },
         },
         device_calibration_due_date: {
             component: props => (
