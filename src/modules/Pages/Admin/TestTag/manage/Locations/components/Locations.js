@@ -34,9 +34,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
 }));
 
 export const actionHandler = {
@@ -315,7 +312,6 @@ const ManageLocations = ({ actions }) => {
                                     },
                                 }}
                                 loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
-                                classes={{ root: classes.gridRoot }}
                             />
                         </Grid>
                     </Grid>

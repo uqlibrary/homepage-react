@@ -29,9 +29,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
     inspectionOverdue: {
         backgroundColor: theme.palette.error.main,
         color: 'white',
@@ -269,7 +266,6 @@ const InspectionDevices = ({
                                         : {}),
                                 }}
                                 loading={inspectionDevicesLoading}
-                                classes={{ root: classes.gridRoot }}
                                 getCellClassName={params =>
                                     params.field === 'device_calibration_due_date' && params.value < today
                                         ? classes.inspectionOverdue

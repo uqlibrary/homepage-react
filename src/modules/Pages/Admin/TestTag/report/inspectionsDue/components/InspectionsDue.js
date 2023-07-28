@@ -32,9 +32,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
     inspectionOverdue: {
         backgroundColor: theme.palette.error.main,
         color: 'white',
@@ -143,7 +140,6 @@ const InspectionsDue = ({
                                 columns={columns}
                                 rowId={'asset_barcode'}
                                 loading={inspectionsDueLoading}
-                                classes={{ root: classes.gridRoot }}
                                 getCellClassName={params =>
                                     params.field === 'asset_next_test_due_date' && params.value <= today
                                         ? classes.inspectionOverdue

@@ -29,9 +29,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
     inspectionOverdue: {
         backgroundColor: theme.palette.error.light,
     },
@@ -276,7 +273,6 @@ const AssetReportByFilters = ({
                                 rowId={'asset_id'}
                                 rowKey={'asset_id'}
                                 loading={!!assetListLoading}
-                                classes={{ root: classes.gridRoot }}
                             />
                         </Grid>
                     </Grid>

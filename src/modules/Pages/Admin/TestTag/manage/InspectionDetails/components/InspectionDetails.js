@@ -29,9 +29,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(0),
     },
-    gridRoot: {
-        border: 0,
-    },
 }));
 
 const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListError }) => {
@@ -155,7 +152,6 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                                 id={componentId}
                                 rowId={'asset_id_displayed'}
                                 loading={assetsListLoading}
-                                classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
                                 disableColumnMenu
                             />

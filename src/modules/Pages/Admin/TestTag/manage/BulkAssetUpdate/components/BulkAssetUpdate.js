@@ -45,9 +45,6 @@ const useStyles = makeStyles(theme => ({
     actionButtons: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
     centredGrid: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
     centredGridNoJustify: {
         display: 'flex',
@@ -305,7 +302,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     rows={list.data}
                                     columns={columns}
                                     rowId={'asset_id'}
-                                    classes={{ root: classes.gridRoot }}
                                     handleDeleteClick={handleDeleteClick}
                                     components={{ Footer: FooterBar }}
                                     componentsProps={{

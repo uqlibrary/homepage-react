@@ -28,9 +28,6 @@ const useStyles = makeStyles(() => ({
         minHeight: '30vh',
         maxWidth: '100%',
     },
-    gridRoot: {
-        border: 0,
-    },
 }));
 
 const FilterDialog = ({
@@ -179,7 +176,6 @@ const FilterDialog = ({
                                 columns={columns}
                                 rowId={'asset_id_displayed'}
                                 loading={assetsMineListLoading}
-                                classes={{ root: classes.gridRoot }}
                                 checkboxSelection
                                 disableRowSelectionOnClick
                                 onSelectionModelChange={handleAssetSelectionChange}

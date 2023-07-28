@@ -34,9 +34,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
     inspectionOverdue: {
         backgroundColor: theme.palette.error.light,
     },
@@ -305,7 +302,6 @@ const InspectionsByLicencedUser = ({
                                 columns={columns}
                                 rowId={'user_uid'}
                                 loading={userInspectionsLoading}
-                                classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
                                 disableColumnMenu
                                 components={{

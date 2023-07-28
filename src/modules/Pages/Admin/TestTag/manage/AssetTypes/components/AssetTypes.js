@@ -31,9 +31,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(0),
     },
-    gridRoot: {
-        border: 0,
-    },
 }));
 
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, assetTypesListError }) => {
@@ -288,7 +285,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                         onClick: handleAddClick,
                                     },
                                 }}
-                                classes={{ root: classes.gridRoot }}
                             />
                         </Grid>
                     </Grid>

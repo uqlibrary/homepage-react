@@ -1,14 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+
 import Box from '@material-ui/core/Box';
 import { DataGrid } from '@mui/x-data-grid';
 
 const rootId = 'data_table';
 
-const DataTable = ({ rows = [], columns = [], id, rowId, autoHeight = true, height, ...rest }) => {
+const useStyles = makeStyles(() => ({
+    root: {
+        border: 0,
+        '& .MuiDataGrid-main': {
+            border: '1px solid rgba(224, 224, 224, 1)',
+            borderRadius: 0,
+        },
+    },
+
+    columnHeader: {
+        '&:focus': {
+            outline: 'none !important',
+        },
+    },
+    cell: {
+        '&:focus': {
+            outline: 'none !important',
+        },
+    },
+}));
+const DataTable = ({ rows = [], columns = [], id, rowId, autoHeight = true, height, classes = {}, ...rest }) => {
     const componentId = `${rootId}-${id}`;
     delete rest.editMode;
     delete rest.getRowId;
+    const internalClasses = useStyles();
 
     return (
         <Box display={'flex'} {...(autoHeight === false ? { height: height ?? 400 } : {})} width={'100%'}>
@@ -17,11 +40,20 @@ const DataTable = ({ rows = [], columns = [], id, rowId, autoHeight = true, heig
                     rows={rows}
                     columns={columns}
                     editMode="row"
+                    disableDensitySelector
                     disableColumnMenu
                     disableColumnFilter
+                    disableColumnSelector
+                    disableSelectionOnClick
                     getRowId={row => row?.[rowId]}
                     autoHeight={autoHeight}
                     rowsPerPageOptions={[10, 25, 50, 100]}
+                    classes={{
+                        root: internalClasses.root,
+                        columnHeader: internalClasses.columnHeader,
+                        cell: internalClasses.cell,
+                        ...classes,
+                    }}
                     {...rest}
                 />
             </Box>
@@ -35,6 +67,7 @@ DataTable.propTypes = {
     id: PropTypes.string.isRequired,
     rowId: PropTypes.string.isRequired,
     toolbarComponent: PropTypes.object,
+    classes: PropTypes.object,
     autoHeight: PropTypes.bool,
     height: PropTypes.number,
 };
