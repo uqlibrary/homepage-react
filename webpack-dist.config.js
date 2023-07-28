@@ -116,6 +116,7 @@ const webpackConfig = {
             filename: 'index.html',
             title: config.title,
             gtm: config.gtm,
+            reusablejs: config.reusablejs,
             inject: true,
             template: resolve(__dirname, './public', 'index.html'),
         }),
