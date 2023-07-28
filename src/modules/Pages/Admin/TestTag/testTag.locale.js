@@ -790,7 +790,7 @@ export default {
                             label: 'ID',
                         },
                         user_uid: {
-                            label: 'UUID',
+                            label: 'User ID',
                         },
                         user_name: {
                             label: 'Name',
@@ -829,7 +829,7 @@ export default {
                             label: 'Current',
                         },
                         actions_count: {
-                            label: 'Inspections',
+                            label: 'No. Inspections',
                         },
                     },
                 },

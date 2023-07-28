@@ -144,7 +144,7 @@ export default {
                 canAdd: false,
                 renderInUpdate: false,
                 renderInAdd: false,
-                minWidth: 110,
+                minWidth: 140,
             },
         },
     },
