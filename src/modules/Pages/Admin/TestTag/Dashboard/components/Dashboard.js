@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -67,6 +67,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboardConfigError }) => {
+    const theme = useTheme();
     const pageLocale = locale.pages.dashboard;
     const classes = useStyles();
 
@@ -107,10 +108,11 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                             ) : (
                                 <StandardCard
                                     title={pageLocale.panel.inspections.title}
+                                    primaryHeader
                                     headerProps={{
                                         avatar: (
-                                            <Avatar aria-label="inspections" style={{ backgroundColor: '#388E3C' }}>
-                                                <InspectionIcon />
+                                            <Avatar aria-label="inspections" style={{ backgroundColor: 'white' }}>
+                                                <InspectionIcon style={{ color: theme.palette.primary.light }} />
                                             </Avatar>
                                         ),
                                     }}
@@ -145,10 +147,11 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 title={pageLocale.panel.assets.title}
                                 smallTitle
                                 subCard
+                                primaryHeader
                                 headerProps={{
                                     avatar: (
-                                        <Avatar aria-label="assets" style={{ backgroundColor: '#FFA726' }}>
-                                            <AssetIcon />
+                                        <Avatar aria-label="assets" style={{ backgroundColor: 'white' }}>
+                                            <AssetIcon style={{ color: theme.palette.primary.light }} />
                                         </Avatar>
                                     ),
                                 }}
@@ -222,10 +225,11 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 title={pageLocale.panel.inspectionDevices.title}
                                 smallTitle
                                 subCard
+                                primaryHeader
                                 headerProps={{
                                     avatar: (
-                                        <Avatar aria-label="inspection devices" style={{ backgroundColor: '#0288D2' }}>
-                                            <InspectionDeviceIcon />
+                                        <Avatar aria-label="inspection devices" style={{ backgroundColor: 'white' }}>
+                                            <InspectionDeviceIcon style={{ color: theme.palette.primary.light }} />
                                         </Avatar>
                                     ),
                                 }}
@@ -303,6 +307,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     smallTitle
                                     subCard
                                     className={classes.card}
+                                    primaryHeader
                                     standardCardId={`${componentId}-${pageLocale.panel.management.id}-panel`}
                                 >
                                     <List component="nav" aria-label="management actions">
@@ -360,6 +365,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     smallTitle
                                     subCard
                                     className={classes.card}
+                                    primaryHeader
                                     standardCardId={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
                                 >
                                     <List component="nav" aria-label="reporting actions">
