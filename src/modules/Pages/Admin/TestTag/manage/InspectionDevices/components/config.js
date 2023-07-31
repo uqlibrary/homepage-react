@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField';
 
 import { isEmptyStr } from '../../../helpers/helpers';
 import locale from '../../../testTag.locale';
+import { WarningOutlined } from '@material-ui/icons';
+import { Tooltip } from '@material-ui/core';
 const dateFormat = locale.config.format.dateFormatNoTime;
 
 // Note: sortable values are set wholesale in the container components of
@@ -59,7 +61,29 @@ export default {
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
-            fieldParams: { canEdit: true, minWidth: 160 },
+            fieldParams: {
+                canEdit: true,
+                minWidth: 160,
+                renderCell: params => {
+                    const date = params.value;
+                    const dateObject = moment(date, locale.pages.inspect.config.dateFormatNoTime);
+                    const currentDate = moment();
+                    const isPastDate = dateObject.isBefore(currentDate);
+                    return (
+                        <>
+                            {date}
+                            {isPastDate && (
+                                <Tooltip
+                                    style={{ padding: '5px', height: 20 }}
+                                    title={locale.pages.report.inspectionsDue.tooltips.overdue}
+                                >
+                                    <WarningOutlined />
+                                </Tooltip>
+                            )}
+                        </>
+                    );
+                },
+            },
         },
         device_calibrated_date_last: {
             component: props => (
