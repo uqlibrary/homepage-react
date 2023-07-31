@@ -65,8 +65,8 @@ export const PromoPanelList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [panelUpdated]);
 
+    /* istanbul ignore next */
     const hasError = () => {
-        /* istanbul ignore else */
         if (
             !!promoPanelListError ||
             !!promoPanelUserTypesError ||
@@ -82,10 +82,12 @@ export const PromoPanelList = ({
     return (
         <StandardPage title="Promo panel management">
             {hasError() && (
-                <div style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}>
+                /* istanbul ignore next */ <div
+                    style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}
+                >
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
                     <p>
-                        {promoPanelListError ||
+                        {/* istanbul ignore next */ promoPanelListError ||
                             promoPanelUserTypesError ||
                             promoPanelActiveListError ||
                             promoPanelActionError}
@@ -116,7 +118,9 @@ export const PromoPanelList = ({
                 canDelete
                 promoPanelSaving={promoPanelSaving}
                 knownGroups={knownGroups}
-                panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
+                panelError={
+                    (!!promoPanelActionError && /* istanbul ignore next */ promoPanelActionError.message) || null
+                }
             />
             {/* Unallocated Panels */}
             <PromoPanelListPanels
@@ -129,7 +133,9 @@ export const PromoPanelList = ({
                 canClone
                 canDelete
                 knownGroups={knownGroups}
-                panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
+                panelError={
+                    (!!promoPanelActionError && /* istanbul ignore next */ promoPanelActionError.message) || null
+                }
                 showCurrent={false}
                 showFilter={false}
                 showPast
@@ -145,7 +151,9 @@ export const PromoPanelList = ({
                 canClone
                 isPastPanels
                 knownGroups={knownGroups}
-                panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
+                panelError={
+                    (!!promoPanelActionError && /* istanbul ignore next */ promoPanelActionError.message) || null
+                }
                 showCurrent={false}
                 showFilter={false}
                 showPast

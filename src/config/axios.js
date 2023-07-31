@@ -159,8 +159,7 @@ api.interceptors.response.use(
                 errorMessage =
                     !!error.response?.data && error.response?.data.length > 0
                         ? { message: error.response.data.join(' ') }
-                        : ((error.response || {}).data || {}).message ||
-                          locale.global.errorMessages[error.response.status];
+                        : error.response?.data?.message || locale.global.errorMessages[error.response.status];
                 if (!alertDisplayAllowed(error)) {
                     // we dont display an error banner for these (the associated panel displays an error)
                 } else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {
@@ -169,23 +168,26 @@ api.interceptors.response.use(
                     store.dispatch(showAppAlert(error.response.data));
                 }
             } else if (!!error.response && !!error.response.status) {
-                errorMessage = locale.global.errorMessages[error.response.status];
+                errorMessage =
+                    !!error.response?.data && error.response?.data.length > 0
+                        ? { message: error.response.data.join(' ') }
+                        : error.response?.data?.message || locale.global.errorMessages[error.response.status];
                 if ([410, 422].includes(error.response.status)) {
                     errorMessage = {
                         ...errorMessage,
                         ...error.response.data,
                     };
                 }
-                if (error.response.status === 403) {
-                    if (!!error?.response?.request?.responseUrl && error.response.request.responseUrl !== 'account') {
-                        // if the api was account, we default to the global.js errorMessages entry
-                        // as it is the most common case for a 403
-                        errorMessage = {
-                            ...error.response,
-                            message: 'Your submission failed. Please try again or notify support',
-                        };
-                    }
-                }
+                // if (error.response.status === 403) {
+                //     if (!!error?.response?.request?.responseUrl && error.response.request.responseUrl !== 'account') {
+                //         // if the api was account, we default to the global.js errorMessages entry
+                //         // as it is the most common case for a 403
+                //         errorMessage = {
+                //             ...error.response,
+                //             message: 'Your submission failed. Please try again or notify support',
+                //         };
+                //     }
+                // }
             }
         }
 
