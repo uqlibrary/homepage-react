@@ -891,6 +891,9 @@ export default {
                         device_serial_number: {
                             label: 'Serial',
                         },
+                        device_calibration_due_date: {
+                            label: 'Next calibration',
+                        },
                         device_department: {
                             label: 'Department',
                         },
@@ -899,9 +902,6 @@ export default {
                         },
                         device_calibrated_by_last: {
                             label: 'Last calibrated by',
-                        },
-                        device_calibration_due_date: {
-                            label: 'Next calibration',
                         },
                     },
                 },
