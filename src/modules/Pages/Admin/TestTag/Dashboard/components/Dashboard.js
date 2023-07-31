@@ -291,7 +291,10 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
+                    <AuthWrapper
+                        requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+                        inclusive={false}
+                    >
                         <Grid item xs={12} md className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton

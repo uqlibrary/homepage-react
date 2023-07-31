@@ -5,17 +5,11 @@ import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 import locale from '../../../testTag.locale';
 import config from '../../../manage/InspectionDevices/components/config';
+import { PERMISSIONS } from '../../../config/auth';
 
 export const mapStateToProps = state => {
     const componentId = 'recalibrations-due';
     const componentIdLower = 'recalibrations-due';
-
-    // special case to set sortable, as this component
-    // reuses the InspectionDevices component. Reports require
-    // sortable, but manage pages don't.
-    Object.keys(config.fields).forEach(key => {
-        config.fields[key].fieldParams.sortable = true;
-    });
 
     return {
         ...state.get('testTagInspectionDevicesReducer'),
@@ -24,6 +18,7 @@ export const mapStateToProps = state => {
         config,
         componentId,
         componentIdLower,
+        requiredPermissions: [PERMISSIONS.can_see_reports],
     };
 };
 

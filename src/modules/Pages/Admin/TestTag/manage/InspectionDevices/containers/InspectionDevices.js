@@ -5,17 +5,11 @@ import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import locale from '../../../testTag.locale';
 import config from '../components/config';
+import { PERMISSIONS } from '../../../config/auth';
 
 export const mapStateToProps = state => {
     const componentId = 'inspection-devices';
     const componentIdLower = 'inspection_devices';
-
-    // special case to set sortable, as this component
-    // is also used for a report. Reports require
-    // sortable, but manage pages don't.
-    Object.keys(config.fields).forEach(key => {
-        config.fields[key].fieldParams.sortable = false;
-    });
 
     return {
         ...state.get('testTagInspectionDevicesReducer'),
@@ -23,6 +17,7 @@ export const mapStateToProps = state => {
         pageLocale: locale.pages.manage.inspectiondevices,
         componentId,
         componentIdLower,
+        requiredPermissions: [PERMISSIONS.can_inspect, PERMISSIONS.can_alter],
     };
 };
 

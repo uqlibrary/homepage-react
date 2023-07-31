@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTheme } from '@material-ui/core/styles';
 
 import { GridToolbarContainer } from '@mui/x-data-grid';
 
@@ -10,8 +11,13 @@ const rootId = 'add_toolbar';
 
 const AddToolbar = ({ id, label, onClick, startIcon = <AddIcon /> }) => {
     const componentId = `${rootId}-${id}`;
+    const theme = useTheme();
     return (
-        <GridToolbarContainer id={`${componentId}`} data-testid={`${componentId}`}>
+        <GridToolbarContainer
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
+            style={{ marginBottom: theme.spacing(2) }}
+        >
             <Button
                 color="primary"
                 variant="contained"
