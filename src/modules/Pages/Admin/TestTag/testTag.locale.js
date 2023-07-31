@@ -868,7 +868,7 @@ export default {
             config: {
                 dateFormat: 'YYYY-MM-DD HH:mm',
                 dateFormatNoTime: 'YYYY-MM-DD',
-                dateFormatDisplay: 'Do MMMM, YYYY',
+                dateFormatDisplay: 'DD MMMM YYYY',
             },
             recalibrationsDue: {
                 breadcrumbs: [
@@ -937,6 +937,9 @@ export default {
                     },
                     filterToDateLabel: 'Within date range',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
+                },
+                tooltips: {
+                    overdue: 'Overdue',
                 },
             },
             inspectionsByLicencedUser: {
