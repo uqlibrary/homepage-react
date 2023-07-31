@@ -6,6 +6,9 @@ export default {
         inspectionDateFrom: null,
         inspectionDateTo: null,
     },
+    sort: {
+        defaultSortColumn: 'asset_barcode',
+    },
     fields: {
         asset_barcode: { fieldParams: { minWidth: 120 } },
         building_name: { fieldParams: { minWidth: 180, flex: 1 } },

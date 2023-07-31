@@ -27,11 +27,29 @@ const useStyles = makeStyles(() => ({
         },
     },
 }));
-const DataTable = ({ rows = [], columns = [], id, rowId, autoHeight = true, height, classes = {}, ...rest }) => {
+const DataTable = ({
+    rows = [],
+    columns = [],
+    id,
+    rowId,
+    autoHeight = true,
+    height,
+    defaultSortColumn,
+    defaultSortDirection = 'asc',
+    classes = {},
+    ...rest
+}) => {
     const componentId = `${rootId}-${id}`;
     delete rest.editMode;
     delete rest.getRowId;
     const internalClasses = useStyles();
+
+    const [sortModel, setSortModel] = React.useState([
+        {
+            field: defaultSortColumn ?? '',
+            sort: defaultSortDirection,
+        },
+    ]);
 
     return (
         <Box display={'flex'} {...(autoHeight === false ? { height: height ?? 400 } : {})} width={'100%'}>
@@ -54,6 +72,13 @@ const DataTable = ({ rows = [], columns = [], id, rowId, autoHeight = true, heig
                         cell: internalClasses.cell,
                         ...classes,
                     }}
+                    {...(defaultSortColumn
+                        ? {
+                              sortModel,
+                              onSortModelChange: model => setSortModel(model),
+                              sortingOrder: ['asc', 'desc'],
+                          }
+                        : {})}
                     {...rest}
                 />
             </Box>
@@ -66,6 +91,8 @@ DataTable.propTypes = {
     columns: PropTypes.array,
     id: PropTypes.string.isRequired,
     rowId: PropTypes.string.isRequired,
+    defaultSortColumn: PropTypes.string,
+    defaultSortDirection: PropTypes.oneOf(['asc', 'desc']),
     toolbarComponent: PropTypes.object,
     classes: PropTypes.object,
     autoHeight: PropTypes.bool,

@@ -273,6 +273,7 @@ const AssetReportByFilters = ({
                                 rowId={'asset_id'}
                                 rowKey={'asset_id'}
                                 loading={!!assetListLoading}
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

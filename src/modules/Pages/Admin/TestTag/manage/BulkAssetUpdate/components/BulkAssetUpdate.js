@@ -317,6 +317,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             className: classes.actionButtons,
                                         },
                                     }}
+                                    {...(config.form.sort ?? {})}
                                 />
                             </Grid>
                         </Grid>

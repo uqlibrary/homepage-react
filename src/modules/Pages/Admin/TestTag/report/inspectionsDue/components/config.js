@@ -2,6 +2,9 @@ export default {
     defaults: {
         monthsPeriod: '3',
     },
+    sort: {
+        defaultSortColumn: 'asset_barcode',
+    },
     fields: {
         asset_barcode: { fieldParams: { minWidth: 130 } },
         asset_location: { fieldParams: { flex: 1, minWidth: 150 } },

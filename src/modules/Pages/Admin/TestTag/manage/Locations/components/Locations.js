@@ -312,6 +312,8 @@ const ManageLocations = ({ actions }) => {
                                     },
                                 }}
                                 loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
+                                key={selectedLocation}
+                                {...(config[selectedLocation].sort ?? {})}
                             />
                         </Grid>
                     </Grid>

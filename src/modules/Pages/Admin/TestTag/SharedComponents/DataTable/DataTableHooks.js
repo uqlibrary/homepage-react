@@ -23,6 +23,11 @@ export const useDataTableColumns = ({
     shouldDisableEdit,
     shouldDisableDelete,
 }) => {
+    /*
+    here, add logic to allow tooltips on action buttons. will need to use locale
+    and a new tooltip key to determine if we include a tt or not.
+    all locales will need tooltips added, unless we use a global setting instead?
+    */
     const columns = useMemo(
         () => {
             const actionsCell = withActions

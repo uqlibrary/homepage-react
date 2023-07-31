@@ -225,7 +225,6 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                             columns={columns}
                             rowId="user_id"
                             loading={userListLoading}
-                            /* editRowsModel={editRowsModel}*/
                             components={{ Toolbar: AddToolbar }}
                             componentsProps={{
                                 toolbar: {
@@ -234,6 +233,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                                     id: componentId,
                                 },
                             }}
+                            {...(config.sort ?? {})}
                         />
                     </Grid>
                 </Grid>

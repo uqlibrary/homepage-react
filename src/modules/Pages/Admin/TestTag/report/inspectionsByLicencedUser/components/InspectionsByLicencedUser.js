@@ -309,6 +309,7 @@ const InspectionsByLicencedUser = ({
                                         <FooterRow count={totalInspections} columns={columns} locale={pageLocale} />
                                     ),
                                 }}
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

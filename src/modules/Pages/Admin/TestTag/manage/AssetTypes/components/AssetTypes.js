@@ -285,6 +285,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                         onClick: handleAddClick,
                                     },
                                 }}
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

@@ -10,6 +10,9 @@ const dateFormat = locale.config.format.dateFormatNoTime;
 // Note: sortable values are set wholesale in the container components of
 // manage/InspectionDevices and report/RecalibrationsDue
 export default {
+    sort: {
+        defaultSortColumn: 'device_model_name',
+    },
     fields: {
         device_id: {
             fieldParams: {
@@ -51,12 +54,12 @@ export default {
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
-            fieldParams: { canEdit: true, minWidth: 140 },
+            fieldParams: { canEdit: true, minWidth: 160 },
         },
         device_calibrated_by_last: {
             component: props => <TextField {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
-            fieldParams: { canEdit: true, minWidth: 160 },
+            fieldParams: { canEdit: true, minWidth: 180 },
         },
         device_calibration_due_date: {
             component: props => (
@@ -75,7 +78,7 @@ export default {
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
-            fieldParams: { canEdit: true, minWidth: 140 },
+            fieldParams: { canEdit: true, minWidth: 160 },
         },
     },
 };

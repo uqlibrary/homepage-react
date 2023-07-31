@@ -2,6 +2,9 @@ export default {
     defaults: {
         monthsPeriod: '3',
     },
+    sort: {
+        defaultSortColumn: 'user_uid',
+    },
     fields: {
         // user_id: { fieldParams: { minWidth: 50, flex: 1 } },
         user_uid: { fieldParams: { minWidth: 100 } },
@@ -14,6 +17,6 @@ export default {
             },
         },
         end_date: { fieldParams: { minWidth: 150 } },
-        total_for_user: { fieldParams: { width: 100 } },
+        total_for_user: { fieldParams: { minWidth: 100 } },
     },
 };

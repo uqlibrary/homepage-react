@@ -181,6 +181,7 @@ const FilterDialog = ({
                                 onSelectionModelChange={handleAssetSelectionChange}
                                 autoHeight={false}
                                 disableSelectionOnClick={false}
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

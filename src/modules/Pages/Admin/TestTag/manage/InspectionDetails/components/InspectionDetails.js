@@ -155,6 +155,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                                 loading={assetsListLoading}
                                 disableColumnFilter
                                 disableColumnMenu
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

@@ -139,6 +139,7 @@ const InspectionsDue = ({
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>
