@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import locale from '../../../testTag.locale';
 import config from '../components/config';
+import { PERMISSIONS } from '../../../config/auth';
 
 export const mapStateToProps = state => {
     const componentId = 'inspection-devices';
@@ -23,6 +24,7 @@ export const mapStateToProps = state => {
         pageLocale: locale.pages.manage.inspectiondevices,
         componentId,
         componentIdLower,
+        requiredPermissions: [PERMISSIONS.can_inspect, PERMISSIONS.can_alter],
     };
 };
 

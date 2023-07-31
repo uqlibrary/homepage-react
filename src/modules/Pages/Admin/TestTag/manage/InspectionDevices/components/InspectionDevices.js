@@ -17,7 +17,6 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 
 const moment = require('moment');
@@ -45,10 +44,10 @@ const InspectionDevices = ({
     inspectionDevices,
     inspectionDevicesLoading,
     inspectionDevicesError,
+    requiredPermissions,
 }) => {
     const today = moment().format(locale.config.format.dateFormatNoTime);
     const classes = useStyles();
-    const pagePermissions = [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports];
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { user } = useSelector(state => state.get('testTagUserReducer'));
@@ -181,8 +180,8 @@ const InspectionDevices = ({
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
+            requiredPermissions={requiredPermissions}
             inclusive={false}
-            requiredPermissions={pagePermissions}
         >
             <div className={classes.root}>
                 <StandardCard noHeader>
@@ -298,6 +297,7 @@ InspectionDevices.propTypes = {
     inspectionDevicesLoading: PropTypes.bool,
     inspectionDevicesLoaded: PropTypes.bool,
     inspectionDevicesError: PropTypes.bool,
+    requiredPermissions: PropTypes.array,
 };
 
 export default React.memo(InspectionDevices);

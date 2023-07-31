@@ -214,7 +214,8 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
-            requiredPermissions={[PERMISSIONS.can_admin]}
+            requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+            inclusive={false}
         >
             <ActionDialogue
                 id={componentId}
@@ -276,7 +277,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                 columns={columns}
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}
-                                /* editRowsModel={editRowsModel}*/
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {

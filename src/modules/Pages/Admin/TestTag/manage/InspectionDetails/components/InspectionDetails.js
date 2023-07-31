@@ -111,7 +111,8 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
-            requiredPermissions={[PERMISSIONS.can_inspect]}
+            requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+            inclusive={false}
         >
             <div className={classes.root}>
                 <StandardCard noHeader>
