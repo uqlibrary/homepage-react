@@ -16,16 +16,14 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const FooterRow = ({ count, columns, locale }) => {
+const FooterRow = ({ count, locale }) => {
     const classes = useStyles();
-    const headerCellWidths = columns.map(column => column.width);
-    const footerCellWidth = headerCellWidths.reduce((sum, width) => sum + width, 0);
 
     return (
         <div
             className={classes.footerContainer}
             style={{
-                width: footerCellWidth,
+                width: '100%',
             }}
         >
             <div

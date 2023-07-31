@@ -14,6 +14,7 @@ const AddToolbar = ({ id, label, onClick, startIcon = <AddIcon /> }) => {
         <GridToolbarContainer id={`${componentId}`} data-testid={`${componentId}`}>
             <Button
                 color="primary"
+                variant="contained"
                 startIcon={startIcon}
                 onClick={onClick}
                 id={`${componentId}-add-button`}

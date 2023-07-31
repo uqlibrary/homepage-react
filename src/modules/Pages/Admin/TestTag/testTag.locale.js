@@ -790,7 +790,7 @@ export default {
                             label: 'ID',
                         },
                         user_uid: {
-                            label: 'UUID',
+                            label: 'User ID',
                         },
                         user_name: {
                             label: 'Name',
@@ -829,7 +829,7 @@ export default {
                             label: 'Current',
                         },
                         actions_count: {
-                            label: 'Inspections',
+                            label: 'No. Inspections',
                         },
                     },
                 },
@@ -868,7 +868,7 @@ export default {
             config: {
                 dateFormat: 'YYYY-MM-DD HH:mm',
                 dateFormatNoTime: 'YYYY-MM-DD',
-                dateFormatDisplay: 'Do MMMM, YYYY',
+                dateFormatDisplay: 'DD MMMM YYYY',
             },
             recalibrationsDue: {
                 breadcrumbs: [
@@ -891,6 +891,9 @@ export default {
                         device_serial_number: {
                             label: 'Serial',
                         },
+                        device_calibration_due_date: {
+                            label: 'Next calibration',
+                        },
                         device_department: {
                             label: 'Department',
                         },
@@ -899,9 +902,6 @@ export default {
                         },
                         device_calibrated_by_last: {
                             label: 'Last calibrated by',
-                        },
-                        device_calibration_due_date: {
-                            label: 'Next calibration',
                         },
                     },
                 },
@@ -937,6 +937,9 @@ export default {
                     },
                     filterToDateLabel: 'Within date range',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
+                },
+                tooltips: {
+                    overdue: 'Overdue',
                 },
             },
             inspectionsByLicencedUser: {
