@@ -7,7 +7,7 @@ echo "Pre-commit hook running..."
 
 THIS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-if [[ "$THIS_BRANCH" == "staging" || "$THIS_BRANCH" == "reusable-staging" ]] ; then
+if [[ "$THIS_BRANCH" == "staging" ]] ; then
   if [ ! -e ".git/MERGE_MODE" ]; then
     printf "\e[31m\n"
     echo "You are trying to commit directly on the $THIS_BRANCH branch."
