@@ -70,6 +70,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
+        actionTooltips: pageLocale.form.actionTooltips,
         handleEditClick: onRowEdit,
         handleDeleteClick: onRowDelete,
         actionDataFieldKeys: { valueKey: 'asset_type_name' },

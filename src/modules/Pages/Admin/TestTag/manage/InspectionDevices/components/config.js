@@ -102,7 +102,7 @@ export default {
         device_calibrated_by_last: {
             component: props => <TextField {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
-            fieldParams: { canEdit: true, minWidth: 180 },
+            fieldParams: { canEdit: true, minWidth: 180, flex: 1 },
         },
     },
 };

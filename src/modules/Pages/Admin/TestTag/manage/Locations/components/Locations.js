@@ -137,6 +137,7 @@ const ManageLocations = ({ actions }) => {
         handleDeleteClick,
         shouldDisableDelete,
         actionDataFieldKeys: { valueKey: locationDataFieldKeys[selectedLocation] },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     const closeDialog = React.useCallback(() => {

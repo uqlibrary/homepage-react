@@ -167,6 +167,7 @@ const InspectionDevices = ({
         handleEditClick,
         handleDeleteClick,
         actionDataFieldKeys: { valueKey: 'device_model_name' },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     const { row } = useDataTableRow(inspectionDevices, transformRow);

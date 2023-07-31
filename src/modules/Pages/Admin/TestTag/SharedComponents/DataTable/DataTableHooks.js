@@ -22,12 +22,8 @@ export const useDataTableColumns = ({
     actionDataFieldKeys,
     shouldDisableEdit,
     shouldDisableDelete,
+    actionTooltips,
 }) => {
-    /*
-    here, add logic to allow tooltips on action buttons. will need to use locale
-    and a new tooltip key to determine if we include a tt or not.
-    all locales will need tooltips added, unless we use a global setting instead?
-    */
     const columns = useMemo(
         () => {
             const actionsCell = withActions
@@ -42,6 +38,7 @@ export const useDataTableColumns = ({
                                   {...(!!handleEditClick ? { handleEditClick: handleEditClick } : {})}
                                   {...(!!handleDeleteClick ? { handleDeleteClick: handleDeleteClick } : {})}
                                   {...(!!actionDataFieldKeys ? { dataFieldKeys: actionDataFieldKeys } : {})}
+                                  {...(!!actionTooltips ? { tooltips: actionTooltips } : {})}
                                   disableEdit={disableEdit}
                                   disableDelete={disableDelete}
                               />

@@ -405,6 +405,10 @@ export default {
                     locationTypeTitle: 'Asset type',
                     actions: 'Actions',
                     addLocationButton: 'Add asset type',
+                    actionTooltips: {
+                        edit: 'Edit asset type',
+                        delete: 'Delete asset type',
+                    },
                     columns: {
                         asset_type_id: {
                             label: 'Id',
@@ -526,6 +530,11 @@ export default {
                             },
                         },
                     },
+
+                    actionTooltips: {
+                        edit: 'Edit this location',
+                        delete: 'Delete this location',
+                    },
                 },
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
@@ -587,6 +596,11 @@ export default {
                         device_calibration_due_date: {
                             label: 'Next calibration',
                         },
+                    },
+
+                    actionTooltips: {
+                        edit: 'Edit this device',
+                        delete: 'Delete this device',
                     },
                 },
                 dialogAdd: {
@@ -662,6 +676,10 @@ export default {
                         label: 'Asset ID',
                         helperText: 'Scan or enter a new ID to search',
                         placeholder: 'Enter at least 3 characters',
+                    },
+
+                    actionTooltips: {
+                        edit: 'Edit this test',
                     },
                 },
                 dialogEdit: {
@@ -740,6 +758,9 @@ export default {
                                 clear: 'Clear',
                                 next: 'Next',
                                 findAndAdd: 'Find and add by feature',
+                            },
+                            actionTooltips: {
+                                delete: 'Remove from list',
                             },
                         },
                         two: {
@@ -831,6 +852,10 @@ export default {
                         actions_count: {
                             label: 'No. Inspections',
                         },
+                    },
+                    actionTooltips: {
+                        edit: 'Edit this user',
+                        delete: 'Delete this user',
                     },
                 },
                 dialogAdd: {

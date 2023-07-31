@@ -132,6 +132,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         locale: pageLocale.form.columns,
         handleDeleteClick,
         actionDataFieldKeys: { valueKey: 'asset_id_displayed' },
+        actionTooltips: stepOneLocale.actionTooltips,
     });
 
     const handleNextStepButton = () => {

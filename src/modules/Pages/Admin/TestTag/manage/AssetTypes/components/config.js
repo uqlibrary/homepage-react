@@ -53,6 +53,7 @@ export default {
             fieldParams: {
                 minWidth: 200,
                 canEdit: true,
+                flex: 1,
             },
         },
         asset_count: {

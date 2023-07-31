@@ -145,6 +145,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         shouldDisableDelete,
         shouldDisableEdit,
         actionDataFieldKeys: { valueKey: 'user_uid' },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     React.useEffect(() => {
