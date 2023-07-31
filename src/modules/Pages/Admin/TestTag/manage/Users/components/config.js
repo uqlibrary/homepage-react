@@ -9,6 +9,9 @@ import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
 import locale from '../../../testTag.locale';
 
 export default {
+    sort: {
+        defaultSortColumn: 'user_uid',
+    },
     fields: {
         user_uid: {
             label: 'UUID',
@@ -25,7 +28,7 @@ export default {
                 />
             ),
             validate: value => isEmptyStr(value) || isInvalidUUID(value),
-            fieldParams: { canEdit: true, sortable: false, canAdd: true },
+            fieldParams: { canEdit: true, canAdd: true, minWidth: 120 },
         },
         user_name: {
             component: props => (
@@ -36,7 +39,7 @@ export default {
                 />
             ),
             validate: value => isEmptyStr(value),
-            fieldParams: { canEdit: true, sortable: false, flex: 1 },
+            fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
         },
         can_inspect_cb: {
             component: props => {
@@ -48,7 +51,7 @@ export default {
                     />
                 );
             },
-            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
             validate: (value, row) => {
                 return isEmptyStr(row.user_licence_number) && value;
             },
@@ -87,7 +90,7 @@ export default {
             },
         },
         can_admin: {
-            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
         },
         can_admin_cb: {
             component: props => (
@@ -96,13 +99,13 @@ export default {
                     label={'Admin'}
                 />
             ),
-            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_inspect: {
-            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_alter: {
-            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
         },
         can_alter_cb: {
             component: props => (
@@ -111,10 +114,10 @@ export default {
                     label={'Alter'}
                 />
             ),
-            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_see_reports: {
-            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
         },
         can_see_reports_cb: {
             component: props => (
@@ -123,10 +126,10 @@ export default {
                     label={'Report'}
                 />
             ),
-            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         user_current_flag: {
-            fieldParams: { canEdit: false, sortable: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         user_current_flag_cb: {
             component: props => (
@@ -135,16 +138,15 @@ export default {
                     label={'Is Current'}
                 />
             ),
-            fieldParams: { canEdit: true, sortable: false, renderInTable: false, type: 'checkbox' },
+            fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         actions_count: {
             fieldParams: {
                 canEdit: false,
-                sortable: false,
                 canAdd: false,
                 renderInUpdate: false,
                 renderInAdd: false,
-                minWidth: 140,
+                minWidth: 160,
             },
         },
     },

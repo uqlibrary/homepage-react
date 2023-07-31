@@ -29,9 +29,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(0),
     },
-    gridRoot: {
-        border: 0,
-    },
 }));
 
 const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListError }) => {
@@ -106,6 +103,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         locale: pageLocale.form.columns,
         handleEditClick,
         actionDataFieldKeys: { valueKey: 'asset_id_displayed' },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     const { row } = useDataTableRow(assetsList, transformRow);
@@ -114,7 +112,8 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
-            requiredPermissions={[PERMISSIONS.can_inspect]}
+            requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+            inclusive={false}
         >
             <div className={classes.root}>
                 <StandardCard noHeader>
@@ -155,9 +154,9 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                                 id={componentId}
                                 rowId={'asset_id_displayed'}
                                 loading={assetsListLoading}
-                                classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
                                 disableColumnMenu
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

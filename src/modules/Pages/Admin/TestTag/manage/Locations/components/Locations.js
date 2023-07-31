@@ -34,9 +34,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
 }));
 
 export const actionHandler = {
@@ -140,6 +137,7 @@ const ManageLocations = ({ actions }) => {
         handleDeleteClick,
         shouldDisableDelete,
         actionDataFieldKeys: { valueKey: locationDataFieldKeys[selectedLocation] },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     const closeDialog = React.useCallback(() => {
@@ -315,7 +313,8 @@ const ManageLocations = ({ actions }) => {
                                     },
                                 }}
                                 loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
-                                classes={{ root: classes.gridRoot }}
+                                key={selectedLocation}
+                                {...(config[selectedLocation].sort ?? {})}
                             />
                         </Grid>
                     </Grid>
