@@ -92,6 +92,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
+        row.isSelf = row?.user_uid === userUID;
         actionDispatch({
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
@@ -136,14 +137,14 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     const { row } = useDataTableRow(userList, transformRow);
     const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0 || userUID === row?.user_uid;
-    const shouldDisableEdit = row => userUID === row?.user_uid;
+    // const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
         handleEditClick,
         handleDeleteClick,
         shouldDisableDelete,
-        shouldDisableEdit,
+        // shouldDisableEdit,
         actionDataFieldKeys: { valueKey: 'user_uid' },
         actionTooltips: pageLocale.form.actionTooltips,
     });
