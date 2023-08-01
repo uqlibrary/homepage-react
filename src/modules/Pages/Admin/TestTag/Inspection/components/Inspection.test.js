@@ -243,7 +243,7 @@ describe('TestTag', () => {
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
         expect(getByText('UQL000705')).toBeInTheDocument();
-        expect(getByText('Tested By: NOT LICENCED')).toBeInTheDocument();
+        expect(getByText('NOT LICENCED')).toBeInTheDocument();
         expect(getByText('2022-12-12')).toBeInTheDocument();
         expect(getByText('2023Dec12')).toBeInTheDocument();
         act(() => {
@@ -280,7 +280,7 @@ describe('TestTag', () => {
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(getByTestId('saved-licence-number').textContent).toBe('1234567890');
         expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
@@ -316,7 +316,7 @@ describe('TestTag', () => {
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(getByTestId('saved-licence-number').textContent).toBe('1234567890');
         expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
@@ -352,7 +352,7 @@ describe('TestTag', () => {
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(getByTestId('saved-licence-number').textContent).toBe('1234567890');
         expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
@@ -387,7 +387,7 @@ describe('TestTag', () => {
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
         expect(getByText('UQL000705')).toBeInTheDocument();
-        expect(getByText('Tested By: NOT LICENCED')).toBeInTheDocument();
+        expect(getByText('NOT LICENCED')).toBeInTheDocument();
         expect(getByText('2022-12-12')).toBeInTheDocument();
         expect(getByText('N/A')).toBeInTheDocument();
         act(() => {
