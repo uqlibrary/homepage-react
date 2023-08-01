@@ -63,7 +63,7 @@ export default {
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
             fieldParams: {
                 canEdit: true,
-                minWidth: 160,
+                minWidth: 180,
                 renderCell: params => {
                     const date = params.value;
                     const dateObject = moment(date, locale.pages.inspect.config.dateFormatNoTime);
