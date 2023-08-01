@@ -34,6 +34,7 @@ import { isValidRoomId, isValidAssetId, isValidAssetTypeId } from '../../../Insp
 import { isEmptyObject, isEmptyStr } from '../../../helpers/helpers';
 import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/hooks';
 import { transformRow, transformRequest } from './utils';
+import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -415,39 +416,44 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 }}
                             />
                         </Grid>
+
                         <Grid container spacing={3}>
-                            <Grid item xs={12} sm={6} padding={3}>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={formValues.hasAssetType && !formValues.hasDiscardStatus}
-                                                    onChange={handleCheckboxChange}
-                                                    name="hasAssetType"
-                                                    id={`${componentIdLower}-asset-type-checkbox`}
-                                                    data-testid={`${componentIdLower}-asset-type-checkbox`}
-                                                    color="primary"
-                                                    disabled={formValues.hasDiscardStatus}
-                                                />
-                                            }
-                                            label={stepTwoLocale.checkbox.assetType}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <AssetTypeSelector
-                                            id={componentId}
-                                            locale={pageLocale.form.assetType}
-                                            actions={actions}
-                                            onChange={handleChange('asset_type')}
-                                            disabled={!formValues.hasAssetType || formValues.hasDiscardStatus}
-                                            required={formValues.hasAssetType}
-                                            value={formValues.asset_type?.asset_type_id}
-                                            validateAssetTypeId={isValidAssetTypeId}
-                                        />
+                            <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
+                                <Grid item xs={12} sm={6} padding={3}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={
+                                                            formValues.hasAssetType && !formValues.hasDiscardStatus
+                                                        }
+                                                        onChange={handleCheckboxChange}
+                                                        name="hasAssetType"
+                                                        id={`${componentIdLower}-asset-type-checkbox`}
+                                                        data-testid={`${componentIdLower}-asset-type-checkbox`}
+                                                        color="primary"
+                                                        disabled={formValues.hasDiscardStatus}
+                                                    />
+                                                }
+                                                label={stepTwoLocale.checkbox.assetType}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <AssetTypeSelector
+                                                id={componentId}
+                                                locale={pageLocale.form.assetType}
+                                                actions={actions}
+                                                onChange={handleChange('asset_type')}
+                                                disabled={!formValues.hasAssetType || formValues.hasDiscardStatus}
+                                                required={formValues.hasAssetType}
+                                                value={formValues.asset_type?.asset_type_id}
+                                                validateAssetTypeId={isValidAssetTypeId}
+                                            />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
+                            </AuthWrapper>
                             <Grid item xs={12} sm={6} padding={3}>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>

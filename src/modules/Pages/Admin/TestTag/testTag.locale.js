@@ -139,18 +139,21 @@ export default {
                             title: 'Bulk asset update',
                             icon: <BulkUpdateIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanagebulkassetupdate,
+                            permissions: [PERMISSIONS.can_inspect, PERMISSIONS.can_alter],
                         },
                         {
                             id: 'inspections',
                             title: 'Inspections',
                             icon: <InspectionIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanageinspectiondetails,
+                            permissions: [PERMISSIONS.can_inspect],
                         },
                         {
                             id: 'inspection-devices',
                             title: 'Inspection devices',
                             icon: <InspectionDeviceIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanageinspectiondevices,
+                            permissions: [PERMISSIONS.can_inspect, PERMISSIONS.can_alter],
                         },
                         {
                             id: 'locations',
@@ -176,7 +179,6 @@ export default {
                             id: 'assets-due-inspection',
                             title: 'Assets due for inspection',
                             icon: <AssetIcon style={{ color: '#2b2a29' }} />,
-                            permissions: [PERMISSIONS.can_see_reports],
                             path: pathConfig.admin.testntagreportinspectionsdue,
                         },
                         {
@@ -190,13 +192,11 @@ export default {
                             title: 'Inspections by licenced user',
                             icon: <InspectionByUserIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
-                            permissions: [PERMISSIONS.can_admin],
                         },
                         {
                             id: 'devices-due-recalibration',
                             title: 'Inspection devices due for recalibration',
                             icon: <InspectionDeviceIcon style={{ color: '#2b2a29' }} />,
-                            permissions: [PERMISSIONS.can_see_reports],
                             path: pathConfig.admin.testntagreportrecalibrationssdue,
                         },
                     ],
@@ -680,17 +680,17 @@ export default {
                     },
 
                     actionTooltips: {
-                        edit: 'Edit this test',
+                        edit: 'Edit this inspection',
                     },
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Edit asset details',
+                    confirmationTitle: 'Edit inspection details',
                 },
                 snackbar: {
-                    updateSuccess: 'Asset updated successfully',
-                    updateFail: 'Unable to update the Asset',
+                    updateSuccess: 'Inspection updated successfully',
+                    updateFail: 'Unable to update the inspection',
                 },
             },
             bulkassetupdate: {
