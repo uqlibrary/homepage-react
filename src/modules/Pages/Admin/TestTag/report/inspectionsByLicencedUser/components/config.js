@@ -3,10 +3,10 @@ export default {
         monthsPeriod: '3',
     },
     sort: {
-        defaultSortColumn: 'user_uid',
+        defaultSortColumn: 'total_for_user',
+        defaultSortDirection: 'desc',
     },
     fields: {
-        // user_id: { fieldParams: { minWidth: 50, flex: 1 } },
         user_uid: { fieldParams: { minWidth: 100 } },
         user_name: { fieldParams: { minWidth: 150, flex: 1 } },
         user_licence_number: { fieldParams: { minWidth: 140 } },
