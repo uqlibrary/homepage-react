@@ -31,13 +31,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TestTagHeader = (
-    /* istanbul ignore next*/ {
-        departmentText = '',
-        requiredText = '',
-        breadcrumbs = [],
-        className = '',
-        ...props
-    } = {},
+    /* istanbul ignore next*/ { departmentText = '', breadcrumbs = [], className = '', ...props } = {},
 ) => {
     const classes = useStyles();
 
@@ -51,16 +45,6 @@ const TestTagHeader = (
                 )}
             </Typography>
 
-            {!!requiredText && requiredText.length > 0 && (
-                <Typography
-                    variant={'body1'}
-                    component={'p'}
-                    id={`${componentId}-required-text`}
-                    data-testid={`${componentId}-required-text`}
-                >
-                    {requiredText}
-                </Typography>
-            )}
             {!!breadcrumbs && breadcrumbs?.length > 0 && (
                 <Breadcrumbs
                     aria-label="breadcrumb"
@@ -139,7 +123,6 @@ TestTagHeader.propTypes = {
     departmentText: PropTypes.string,
     breadcrumbs: PropTypes.array,
     className: PropTypes.string,
-    requiredText: PropTypes.string,
 };
 
 export default React.memo(TestTagHeader);

@@ -333,7 +333,7 @@ const Inspection = ({
                 actionDate={formValues?.action_date ?? /* istanbul ignore next */ ''}
                 handleChange={handleChange}
                 classes={classes}
-                hasInspection={formValues?.inspection_status !== undefined}
+                hasInspection
                 isMobileView={isMobileView}
             />
             <AssetPanel

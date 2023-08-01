@@ -291,6 +291,64 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
+                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
+                        <Grid item xs={12} md className={classes.flexParent}>
+                            {dashboardConfigLoading && !dashboardConfigError ? (
+                                <Skeleton
+                                    animation="wave"
+                                    height={300}
+                                    width={'100%'}
+                                    id={`${componentId}-${pageLocale.panel.reporting.id}-skeleton`}
+                                    data-testid={`${componentId}-${pageLocale.panel.reporting.id}-skeleton`}
+                                />
+                            ) : (
+                                <StandardCard
+                                    title={pageLocale.panel.reporting.title}
+                                    smallTitle
+                                    subCard
+                                    className={classes.card}
+                                    primaryHeader
+                                    standardCardId={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
+                                >
+                                    <List component="nav" aria-label="reporting actions">
+                                        {pageLocale.panel.reporting.links.map(link => {
+                                            if (!!link?.permissions) {
+                                                return (
+                                                    <AuthWrapper
+                                                        requiredPermissions={link.permissions}
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                    >
+                                                        <ListItem
+                                                            component={Link}
+                                                            to={link.path}
+                                                            id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                            data-testid={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                        >
+                                                            {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+                                                            <ListItemText primary={link.title} />
+                                                        </ListItem>
+                                                    </AuthWrapper>
+                                                );
+                                            } else {
+                                                return (
+                                                    <ListItem
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                        component={Link}
+                                                        to={link.path}
+                                                        id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                        data-testid={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                    >
+                                                        {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+                                                        <ListItemText primary={link.title} />
+                                                    </ListItem>
+                                                );
+                                            }
+                                        })}
+                                    </List>
+                                </StandardCard>
+                            )}
+                        </Grid>
+                    </AuthWrapper>
                     <AuthWrapper
                         requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
                         inclusive={false}
@@ -340,64 +398,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                         to={link.path}
                                                         id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
                                                         data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
-                                                    >
-                                                        {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
-                                                        <ListItemText primary={link.title} />
-                                                    </ListItem>
-                                                );
-                                            }
-                                        })}
-                                    </List>
-                                </StandardCard>
-                            )}
-                        </Grid>
-                    </AuthWrapper>
-                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
-                        <Grid item xs={12} md className={classes.flexParent}>
-                            {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton
-                                    animation="wave"
-                                    height={300}
-                                    width={'100%'}
-                                    id={`${componentId}-${pageLocale.panel.reporting.id}-skeleton`}
-                                    data-testid={`${componentId}-${pageLocale.panel.reporting.id}-skeleton`}
-                                />
-                            ) : (
-                                <StandardCard
-                                    title={pageLocale.panel.reporting.title}
-                                    smallTitle
-                                    subCard
-                                    className={classes.card}
-                                    primaryHeader
-                                    standardCardId={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
-                                >
-                                    <List component="nav" aria-label="reporting actions">
-                                        {pageLocale.panel.reporting.links.map(link => {
-                                            if (!!link?.permissions) {
-                                                return (
-                                                    <AuthWrapper
-                                                        requiredPermissions={link.permissions}
-                                                        key={`listItem${link.title.replace(' ', '')}`}
-                                                    >
-                                                        <ListItem
-                                                            component={Link}
-                                                            to={link.path}
-                                                            id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
-                                                            data-testid={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
-                                                        >
-                                                            {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
-                                                            <ListItemText primary={link.title} />
-                                                        </ListItem>
-                                                    </AuthWrapper>
-                                                );
-                                            } else {
-                                                return (
-                                                    <ListItem
-                                                        key={`listItem${link.title.replace(' ', '')}`}
-                                                        component={Link}
-                                                        to={link.path}
-                                                        id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
-                                                        data-testid={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
                                                     >
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />

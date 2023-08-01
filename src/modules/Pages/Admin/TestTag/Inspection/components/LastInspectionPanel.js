@@ -69,6 +69,12 @@ const useTestPanelStyles = makeStyles(theme => ({
     expandOpen: {
         transform: 'rotate(180deg)',
     },
+    problemIconInline: {
+        color: theme.palette.warning.main,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 }));
 
 const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabled = false, forceOpen = false }) => {
@@ -248,12 +254,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         {!!mismatchingLocation && (
                             <Grid item xs={12} lg={6}>
                                 <ReportProblemOutlinedIcon
-                                    style={{
-                                        color: theme.palette.warning.main,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
+                                    className={classes.problemIconInline}
                                     fontSize="small"
                                     id={`${componentId}-mismatch-icon`}
                                     data-testid={`${componentId}-mismatch-icon`}

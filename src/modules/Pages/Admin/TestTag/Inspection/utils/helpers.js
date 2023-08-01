@@ -68,16 +68,15 @@ export const isValidInspection = (inspection, user, testStatusEnum) => {
         ),
     );
     return (
-        inspection.inspection_status === undefined ||
-        (isValidRoomId(inspection.room_id) &&
-            isValidTestingDeviceId(
-                inspection.inspection_device_id,
-                user?.department_visual_inspection_device_id,
-                inspection.inspection_status,
-                testStatusEnum,
-            ) &&
-            (isValidNextTestDate(inspection, testStatusEnum.PASSED.value) ||
-                isValidFailReason(inspection, testStatusEnum.FAILED.value)))
+        isValidRoomId(inspection.room_id) &&
+        isValidTestingDeviceId(
+            inspection.inspection_device_id,
+            user?.department_visual_inspection_device_id,
+            inspection.inspection_status,
+            testStatusEnum,
+        ) &&
+        (isValidNextTestDate(inspection, testStatusEnum.PASSED.value) ||
+            isValidFailReason(inspection, testStatusEnum.FAILED.value))
     );
 };
 export const hasTestOrAction = formValues =>

@@ -139,6 +139,7 @@ const EventPanel = ({
                         setLocation={updateLocation}
                         inputProps={{
                             site: {
+                                required: hasInspection,
                                 error: location.site === -1,
                             },
                             building: {
