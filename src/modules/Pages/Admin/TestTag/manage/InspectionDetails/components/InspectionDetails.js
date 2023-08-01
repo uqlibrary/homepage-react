@@ -112,7 +112,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
-            requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+            requiredPermissions={[PERMISSIONS.can_inspect]}
             inclusive={false}
         >
             <div className={classes.root}>
