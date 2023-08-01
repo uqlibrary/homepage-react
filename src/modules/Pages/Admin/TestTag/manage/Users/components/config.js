@@ -90,7 +90,7 @@ export default {
             },
         },
         can_admin: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_admin_cb: {
             component: props => (
@@ -105,7 +105,7 @@ export default {
             fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_alter: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_alter_cb: {
             component: props => (
@@ -117,7 +117,7 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_see_reports: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_see_reports_cb: {
             component: props => (
@@ -146,7 +146,7 @@ export default {
                 canAdd: false,
                 renderInUpdate: false,
                 renderInAdd: false,
-                minWidth: 160,
+                minWidth: 170,
             },
         },
     },
