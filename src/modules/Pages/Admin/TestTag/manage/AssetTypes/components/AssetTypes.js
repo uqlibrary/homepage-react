@@ -215,8 +215,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
-            requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
-            inclusive={false}
+            requiredPermissions={[PERMISSIONS.can_inspect]}
         >
             <ActionDialogue
                 id={componentId}

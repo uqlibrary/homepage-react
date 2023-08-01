@@ -132,6 +132,7 @@ export default {
                             title: 'Asset types',
                             icon: <AssetTypeIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanageassettypes,
+                            permissions: [PERMISSIONS.can_inspect],
                         },
                         {
                             id: 'bulk-asset-update',
