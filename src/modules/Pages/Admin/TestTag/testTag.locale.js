@@ -993,19 +993,16 @@ export default {
                         user_licence_number: {
                             label: 'Licence #',
                         },
-                        user_department: {
-                            label: 'Dept.',
-                        },
                         start_date: {
-                            label: 'Start date',
+                            label: 'First tag',
                             type: 'dateTime',
                         },
                         end_date: {
-                            label: 'End date',
+                            label: 'Last tag',
                             type: 'dateTime',
                         },
                         total_for_user: {
-                            label: 'Total',
+                            label: 'Total Inspections',
                         },
                     },
                     filterToDateLabel: 'Within date range',
