@@ -67,10 +67,12 @@ const useStyles = makeStyles(theme => ({
             },
         },
     },
+    appbarWrapper: {
+        marginTop: theme.spacing(2),
+    },
     appbarPositionVisible: {
         position: 'relative',
         backgroundColor: 'white',
-        marginTop: theme.spacing(2),
         boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
     },
     appbarPositionClipped: {
@@ -291,16 +293,6 @@ const Inspection = ({
         }
     };
 
-    const appbarDynamicClasses = React.useMemo(
-        () =>
-            clsx({
-                [classes.appbarPositionVisible]: inView,
-                [classes.appbarPositionClipped]: !inView,
-                'layout-card': !inView && !isMobileView,
-            }),
-        [classes.appbarPositionClipped, classes.appbarPositionVisible, inView, isMobileView],
-    );
-
     const successDialog = React.useMemo(() => getSuccessDialog(saveInspectionSuccess, classes, inspectionLocale), [
         classes,
         inspectionLocale,
@@ -313,7 +305,6 @@ const Inspection = ({
             locale={inspectionLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
-            {console.log(formValues)}
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
@@ -356,10 +347,20 @@ const Inspection = ({
                 openConfirmationAlert={openConfirmationAlert}
                 closeConfirmationAlert={closeConfirmationAlert}
             />
-            <InView onChange={setInView} rootMargin="200% 0px 0px 0px" threshold={0}>
+            <InView
+                as="div"
+                className={classes.appbarWrapper}
+                onChange={setInView}
+                rootMargin="200% 0px 0px 0px"
+                threshold={0}
+            >
                 <AppBar
                     component={'div'}
-                    className={appbarDynamicClasses}
+                    className={clsx({
+                        [classes.appbarPositionVisible]: inView,
+                        [classes.appbarPositionClipped]: !inView,
+                        'layout-card': !inView && !isMobileView,
+                    })}
                     id={`${componentId}-app-bar`}
                     data-testid={`${componentId}-app-bar`}
                 >
