@@ -985,7 +985,7 @@ export default {
                             label: 'User ID',
                         },
                         user_uid: {
-                            label: 'UUID',
+                            label: 'User ID',
                         },
                         user_name: {
                             label: 'Name',
