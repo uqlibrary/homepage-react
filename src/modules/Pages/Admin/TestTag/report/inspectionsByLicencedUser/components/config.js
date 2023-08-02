@@ -7,7 +7,7 @@ export default {
         defaultSortDirection: 'desc',
     },
     fields: {
-        user_uid: { fieldParams: { minWidth: 100 } },
+        user_uid: { fieldParams: { minWidth: 110 } },
         user_name: { fieldParams: { minWidth: 150, flex: 1 } },
         user_licence_number: { fieldParams: { minWidth: 140 } },
         user_department: { fieldParams: { minWidth: 100 } },

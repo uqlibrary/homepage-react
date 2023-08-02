@@ -9,7 +9,7 @@ export const getNameStyles = (name, inspectorName, theme) => ({
 export const transformRow = row => {
     return row.map(line => ({
         ...line,
-        start_date: moment(line.start_date).format(locale.config.format.dateFormatNoTime),
-        end_date: moment(line.end_date).format(locale.config.format.dateFormatNoTime),
+        start_date: !!line?.start_date ? moment(line.start_date).format(locale.config.format.dateFormatNoTime) : '--',
+        end_date: !!line?.start_date ? moment(line.end_date).format(locale.config.format.dateFormatNoTime) : '--',
     }));
 };
