@@ -44,7 +44,6 @@ const EventPanel = ({
     );
 
     const updateLocation = (update, useRoomId = false) => {
-        console.log('updateLocation', update, useRoomId);
         setLocation(update);
         handleChange('room_id')(useRoomId ? update.room : -1);
     };
@@ -61,7 +60,7 @@ const EventPanel = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionConfig, inspectionConfigLoading]);
-    // console.log('pageLocale=', pageLocale);
+
     return (
         <StandardCard
             standardCardId={componentIdLower}
@@ -98,7 +97,7 @@ const EventPanel = ({
                                 'data-testid': `${componentIdLower}-event-date-dialog`,
                             }}
                             InputLabelProps={{ shrink: true, htmlFor: `${componentIdLower}-event-date-input` }}
-                            format={pageLocale.config.dateFormatNoTime}
+                            format={pageLocale.config.dateFormatDisplay}
                             minDate={startDate}
                             autoOk
                             disableFuture
@@ -164,7 +163,7 @@ const EventPanel = ({
                             },
                         }}
                         autoFocus={location?.room === -1}
-                        focusTarget={'building'}
+                        focusTarget={'site'}
                     />
                 </Grid>
             </Collapse>
