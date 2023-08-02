@@ -14,10 +14,11 @@ export default {
     },
     fields: {
         user_uid: {
-            label: 'UUID',
-            component: props => (
+            label: 'User ID',
+            component: (props, data) => (
                 <TextField
                     {...props}
+                    disabled={data?.isSelf}
                     required
                     inputProps={{ ...props.inputProps, maxLength: 20 }}
                     helperText={
@@ -90,22 +91,31 @@ export default {
             },
         },
         can_admin: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_admin_cb: {
-            component: props => (
-                <FormControlLabel
-                    control={<Checkbox color="primary" checked={props.value} {...props} />}
-                    label={'Admin'}
-                />
-            ),
+            component: (props, data, row) => {
+                return (
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                color="primary"
+                                disabled={row?.can_admin_cb && data?.isSelf}
+                                checked={props.value}
+                                {...props}
+                            />
+                        }
+                        label={'Admin'}
+                    />
+                );
+            },
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_inspect: {
             fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_alter: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_alter_cb: {
             component: props => (
@@ -117,7 +127,7 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_see_reports: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         can_see_reports_cb: {
             component: props => (
@@ -132,9 +142,9 @@ export default {
             fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
         },
         user_current_flag_cb: {
-            component: props => (
+            component: (props, data) => (
                 <FormControlLabel
-                    control={<Checkbox color="primary" checked={props.value} {...props} />}
+                    control={<Checkbox color="primary" disabled={data?.isSelf} checked={props.value} {...props} />}
                     label={'Is Current'}
                 />
             ),
@@ -146,7 +156,7 @@ export default {
                 canAdd: false,
                 renderInUpdate: false,
                 renderInAdd: false,
-                minWidth: 160,
+                minWidth: 170,
             },
         },
     },

@@ -21,7 +21,7 @@ export default {
             component: props => <TextField {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: {
-                minWidth: 170,
+                minWidth: 180,
                 canEdit: true,
 
                 flex: 1,
@@ -58,7 +58,7 @@ export default {
         },
         asset_count: {
             fieldParams: {
-                minWidth: 100,
+                minWidth: 120,
                 canEdit: false,
 
                 renderInAdd: false,

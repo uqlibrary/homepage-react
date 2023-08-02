@@ -350,7 +350,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                         </Grid>
                     </AuthWrapper>
                     <AuthWrapper
-                        requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+                        requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter, PERMISSIONS.can_admin]}
                         inclusive={false}
                     >
                         <Grid item xs={12} md className={classes.flexParent}>

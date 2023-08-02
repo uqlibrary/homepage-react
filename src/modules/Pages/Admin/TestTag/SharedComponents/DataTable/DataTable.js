@@ -32,9 +32,19 @@ const useStyles = makeStyles(() => ({
         '&:focus': {
             outline: 'none !important',
         },
+        '&:focus-within': {
+            outline: 'none !important',
+        },
+        '& .MuiDataGrid-iconButtonContainer': {
+            paddingLeft: '4px',
+            paddingRight: '4px',
+        },
     },
     cell: {
         '&:focus': {
+            outline: 'none !important',
+        },
+        '&:focus-within': {
             outline: 'none !important',
         },
     },
@@ -75,6 +85,8 @@ const DataTable = ({
                     disableColumnFilter
                     disableColumnSelector
                     disableSelectionOnClick
+                    hideFooterRowCount
+                    hideFooterSelectedRowCount
                     getRowId={row => row?.[rowId]}
                     autoHeight={autoHeight}
                     rowsPerPageOptions={[10, 25, 50, 100]}
