@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -160,7 +160,7 @@ const Inspection = ({
     assetsListError,
     inspectionConfig,
     // inspectionConfigLoading,
-    inspectionConfigLoaded,
+    // inspectionConfigLoaded,
     inspectionConfigError,
     floorListError,
     roomListError,
@@ -237,24 +237,12 @@ const Inspection = ({
         setSelectedAsset(asset);
     };
 
-    const assetIdElementRef = React.useRef();
-
     const resetForm = (scroll = true) => {
         actions.clearAssets();
         actions.clearSaveInspection();
         !!scroll && scrollToTopOfPage();
         assignCurrentAsset({});
     };
-    useLayoutEffect(() => {
-        /* istanbul ignore else */ if (
-            formValues?.asset_id_displayed === undefined &&
-            assetIdElementRef.current &&
-            !!inspectionConfig
-        ) {
-            assetIdElementRef.current.focus();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValues?.asset_id_displayed]);
 
     const hideSuccessMessage = () => {
         hideSaveSuccessConfirmation();
@@ -263,13 +251,9 @@ const Inspection = ({
 
     useEffect(() => {
         resetForm();
+        actions.loadInspectionConfig();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    useEffect(() => {
-        if (!inspectionConfigLoaded) actions.loadInspectionConfig();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inspectionConfigLoaded]);
 
     useEffect(() => {
         (!!!inspectionConfigError || /* istanbul ignore next */ inspectionConfigError.length === 0) &&
@@ -336,7 +320,6 @@ const Inspection = ({
                 selectedAsset={selectedAsset}
                 assignCurrentAsset={assignCurrentAsset}
                 handleChange={handleChange}
-                focusElementRef={assetIdElementRef}
                 classes={classes}
                 setSelectedAsset={setSelectedAsset}
                 defaultNextTestDateValue={defaultNextTestDateValue}

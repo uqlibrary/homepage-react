@@ -44,6 +44,8 @@ const GridWrapper = ({ withGrid = true, divisor, children }) => {
 const LocationPicker = ({
     id,
     title,
+    autoFocus = false,
+    focusTarget,
     siteList,
     siteListLoading,
     buildingList,
@@ -67,6 +69,8 @@ const LocationPicker = ({
     const classes = useStyles();
     const divisor = 4 - hide.length;
 
+    const focusElementRef = React.useRef();
+
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
@@ -77,6 +81,27 @@ const LocationPicker = ({
             : /* istanbul ignore next */ '';
         return `${prefix}${building.building_name ?? /* istanbul ignore next */ ''}`;
     }
+
+    React.useLayoutEffect(() => {
+        /* istanbul ignore else */
+        if (
+            autoFocus &&
+            !!focusTarget &&
+            ((focusTarget === 'site' && (siteList?.length ?? 0) > 0 && location.site === -1) ||
+                (focusTarget === 'building' && (buildingList?.length ?? 0) > 0 && location.building === -1) ||
+                (focusTarget === 'floor' && (floorList?.length ?? 0) > 0 && location.floor === -1) ||
+                (focusTarget === 'room' && (roomList?.length ?? 0) > 0 && location.room === -1))
+        ) {
+            focusElementRef?.current?.focus();
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoFocus, focusTarget, siteList, buildingList, floorList, roomList]);
+
+    const siteDisabled = disabled || !!!siteList;
+    const buildingDisabled = disabled || (!hide.includes('site') && (location.site === -1 || !!!siteList));
+    const floorDisabled = disabled || (!hide.includes('building') && (location.building === -1 || floorListLoading));
+    const roomDisabled = disabled || (!hide.includes('floor') && (location.floor === -1 || roomListLoading));
 
     return (
         <>
@@ -141,11 +166,14 @@ const LocationPicker = ({
                                         id: `${componentId}-site-input`,
                                         'data-testid': `${componentId}-site-input`,
                                     }}
+                                    inputRef={
+                                        !siteDisabled && autoFocus && focusTarget === 'site' ? focusElementRef : null
+                                    }
                                     {...(inputProps?.site ?? {})}
                                 />
                             )}
                             PopperComponent={customPopper}
-                            disabled={disabled || !!!siteList}
+                            disabled={siteDisabled}
                             disableClearable
                             loading={siteListLoading}
                         />
@@ -209,11 +237,16 @@ const LocationPicker = ({
                                         id: `${componentId}-building-input`,
                                         'data-testid': `${componentId}-building-input`,
                                     }}
+                                    inputRef={
+                                        !buildingDisabled && autoFocus && focusTarget === 'building'
+                                            ? focusElementRef
+                                            : null
+                                    }
                                     {...(inputProps?.building ?? {})}
                                 />
                             )}
                             PopperComponent={customPopper}
-                            disabled={disabled || (!hide.includes('site') && (location.site === -1 || !!!siteList))}
+                            disabled={buildingDisabled}
                             disableClearable
                             loading={siteListLoading}
                         />
@@ -269,14 +302,14 @@ const LocationPicker = ({
                                         id: `${componentId}-floor-input`,
                                         'data-testid': `${componentId}-floor-input`,
                                     }}
+                                    inputRef={
+                                        !floorDisabled && autoFocus && focusTarget === 'floor' ? focusElementRef : null
+                                    }
                                     {...(inputProps?.floor ?? {})}
                                 />
                             )}
                             PopperComponent={customPopper}
-                            disabled={
-                                disabled ||
-                                (!hide.includes('building') && (location.building === -1 || floorListLoading))
-                            }
+                            disabled={floorDisabled}
                             disableClearable
                             loading={!!floorListLoading}
                         />
@@ -328,13 +361,14 @@ const LocationPicker = ({
                                         id: `${componentId}-room-input`,
                                         'data-testid': `${componentId}-room-input`,
                                     }}
+                                    inputRef={
+                                        !roomDisabled && autoFocus && focusTarget === 'room' ? focusElementRef : null
+                                    }
                                     {...(inputProps?.room ?? {})}
                                 />
                             )}
                             PopperComponent={customPopper}
-                            disabled={
-                                disabled || (!hide.includes('floor') && (location.floor === -1 || roomListLoading))
-                            }
+                            disabled={roomDisabled}
                             disableClearable
                             loading={!!roomListLoading}
                         />
@@ -348,6 +382,8 @@ const LocationPicker = ({
 LocationPicker.propTypes = {
     id: PropTypes.string.isRequired,
     locale: PropTypes.object.isRequired,
+    focusTarget: PropTypes.oneOf(['site', 'building', 'floor', 'room']),
+    autoFocus: PropTypes.bool,
     siteList: PropTypes.array,
     siteListLoading: PropTypes.bool,
     buildingList: PropTypes.array,

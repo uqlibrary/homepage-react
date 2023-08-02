@@ -106,7 +106,6 @@ const EventPanel = ({
                             value={actionDate}
                             onChange={updateEventDate}
                             required
-                            autoFocus
                             fullWidth={isMobileView}
                             KeyboardButtonProps={{
                                 'aria-label': 'Event date',
@@ -164,6 +163,8 @@ const EventPanel = ({
                                     location.room === -1,
                             },
                         }}
+                        autoFocus={location?.room === -1}
+                        focusTarget={'building'}
                     />
                 </Grid>
             </Collapse>
@@ -175,9 +176,9 @@ EventPanel.propTypes = {
     actions: PropTypes.any.isRequired,
     location: PropTypes.object.isRequired,
     setLocation: PropTypes.func.isRequired,
-    actionDate: PropTypes.any,
     handleChange: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
+    actionDate: PropTypes.any,
     hasInspection: PropTypes.bool,
     isMobileView: PropTypes.bool,
 };
