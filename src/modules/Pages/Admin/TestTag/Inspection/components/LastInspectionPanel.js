@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Grid, useTheme } from '@material-ui/core';
+import { useTheme } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Typography from '@material-ui/core/Typography';
@@ -148,11 +151,20 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                                 component={'span'}
                             />
                             {!!mismatchingLocation && (
-                                <ReportProblemOutlinedIcon
-                                    style={{ color: theme.palette.warning.main }}
-                                    id={`${componentId}-header-mismatch-icon`}
-                                    data-testid={`${componentId}-header-mismatch-icon`}
-                                />
+                                <Tooltip
+                                    title={formLocale.alertLocationMismatch}
+                                    id={`${componentId}-header-mismatch-tooltip`}
+                                    data-testid={`${componentId}-header-mismatch-tooltip`}
+                                    placement="bottom"
+                                    TransitionProps={{ timeout: 300 }}
+                                >
+                                    <ReportProblemOutlinedIcon
+                                        style={{ color: theme.palette.warning.main }}
+                                        id={`${componentId}-header-mismatch-icon`}
+                                        data-testid={`${componentId}-header-mismatch-icon`}
+                                        aria-label={formLocale.alertLocationMismatch}
+                                    />
+                                </Tooltip>
                             )}
                         </>
                     )}
@@ -258,6 +270,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                                     fontSize="small"
                                     id={`${componentId}-mismatch-icon`}
                                     data-testid={`${componentId}-mismatch-icon`}
+                                    aria-label={formLocale.alertLocationMismatch}
                                 />
                                 <Typography
                                     component={'span'}
