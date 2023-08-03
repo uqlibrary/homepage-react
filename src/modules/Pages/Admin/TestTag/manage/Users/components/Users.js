@@ -2,7 +2,6 @@ import React, { useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -24,18 +23,6 @@ import config from './config';
 
 const componentId = 'user-management';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
-        marginTop: theme.spacing(0),
-    },
-    gridRoot: {
-        border: 0,
-    },
-}));
-
 const Users = ({ actions, userListLoading, userList, userListError }) => {
     const pageLocale = locale.pages.manage.users;
 
@@ -53,8 +40,6 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
         errorMessage: userListError,
         errorMessageFormatter: locale.config.alerts.error,
     });
-
-    const classes = useStyles();
     const closeDialog = React.useCallback(() => {
         actionDispatch({ type: 'clear' });
     }, []);
@@ -107,6 +92,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
+        row.isSelf = row?.user_uid === userUID;
         actionDispatch({
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
@@ -151,15 +137,16 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     const { row } = useDataTableRow(userList, transformRow);
     const shouldDisableDelete = row => (row?.actions_count ?? 0) > 0 || userUID === row?.user_uid;
-    const shouldDisableEdit = row => userUID === row?.user_uid;
+    // const shouldDisableEdit = row => userUID === row?.user_uid;
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
         handleEditClick,
         handleDeleteClick,
         shouldDisableDelete,
-        shouldDisableEdit,
+        // shouldDisableEdit,
         actionDataFieldKeys: { valueKey: 'user_uid' },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     React.useEffect(() => {
@@ -240,7 +227,6 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                             columns={columns}
                             rowId="user_id"
                             loading={userListLoading}
-                            /* editRowsModel={editRowsModel}*/
                             components={{ Toolbar: AddToolbar }}
                             componentsProps={{
                                 toolbar: {
@@ -249,7 +235,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                                     id: componentId,
                                 },
                             }}
-                            classes={{ root: classes.gridRoot }}
+                            {...(config.sort ?? {})}
                         />
                     </Grid>
                 </Grid>

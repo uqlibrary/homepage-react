@@ -32,9 +32,6 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
     inspectionOverdue: {
         backgroundColor: theme.palette.error.main,
         color: 'white',
@@ -48,12 +45,6 @@ const InspectionsDue = ({
     // inspectionsDueLoaded,
     inspectionsDueError,
 }) => {
-    console.log({
-        inspectionsDue,
-        inspectionsDueLoading,
-        // inspectionsDueLoaded,
-        inspectionsDueError,
-    });
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
     const classes = useStyles();
@@ -143,12 +134,12 @@ const InspectionsDue = ({
                                 columns={columns}
                                 rowId={'asset_barcode'}
                                 loading={inspectionsDueLoading}
-                                classes={{ root: classes.gridRoot }}
                                 getCellClassName={params =>
                                     params.field === 'asset_next_test_due_date' && params.value <= today
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

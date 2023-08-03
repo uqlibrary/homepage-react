@@ -63,7 +63,7 @@ describe('Test and Tag Admin Inspection page', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h1').contains('UQ Asset Test and Tag');
-            cy.get('h2').contains('Creating a new Inspection for Library');
+            cy.get('h2').contains('Testing assets for Library');
             cy.waitUntil(() => cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia'));
             cy.wait(1000);
             cy.checkA11y('[data-testid="StandardPage"]', {
@@ -77,13 +77,14 @@ describe('Test and Tag Admin Inspection page', () => {
             it('should show correct dates', () => {
                 cy.data('event_panel-event-date-input').should(
                     'have.value',
-                    today.format(locale.pages.inspect.config.dateFormatNoTime),
+                    today.format(locale.pages.inspect.config.dateFormatDisplay),
                 );
             });
 
             it('should allow entry of new date', () => {
-                const invalidDate = today.add(1, 'day').format(locale.pages.inspect.config.dateFormatNoTime);
-                const validDate = today.subtract(1, 'day').format(locale.pages.inspect.config.dateFormatNoTime);
+                const invalidDate = today.add(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
+                const validDate = today.subtract(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
+                console.log(invalidDate, validDate);
                 cy.data('event_panel-event-date-button').click();
                 cy.get('[role="dialog"]').should('exist');
                 cy.get('button')
@@ -94,7 +95,9 @@ describe('Test and Tag Admin Inspection page', () => {
 
                 cy.data('event_panel-event-date-input').clear();
                 cy.data('event_panel-event-date-input').type(invalidDate);
-                cy.get('#event_panel-event-date-helper-text').contains('Date should not be after maximal date');
+                cy.get('#event_panel-event-date-helper-text').contains(
+                    locale.pages.inspect.form.event.date.maxDateMessage,
+                );
                 cy.data('event_panel-event-date-input').clear();
                 cy.data('event_panel-event-date-input').type(validDate);
                 cy.get('#event_panel-event-date-helper-text').should('not.exist');
@@ -418,13 +421,13 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('inspection_panel-inspection-result-passed-button').click();
                 cy.data('inspection_panel-inspection-device-validation-text')
                     .should('exist')
-                    .should('contain', 'Visual Inspection can not be used for a PASS inspection');
+                    .should('contain', 'Visual Inspection can not be used for a PASS test');
                 cy.data('inspection_panel-inspection-result-failed-button').click();
                 cy.data('inspection_panel-inspection-device-validation-text').should('not.exist');
                 cy.data('inspection_panel-inspection-result-passed-button').click();
                 cy.data('inspection_panel-inspection-device-validation-text')
                     .should('exist')
-                    .should('contain', 'Visual Inspection can not be used for a PASS inspection');
+                    .should('contain', 'Visual Inspection can not be used for a PASS test');
                 cy.data('inspection_panel-inspection-device-select').click();
                 selectListbox('AV 025');
                 cy.data('inspection_panel-inspection-device-validation-text').should('not.exist');

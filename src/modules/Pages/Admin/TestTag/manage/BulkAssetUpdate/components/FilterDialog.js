@@ -28,9 +28,6 @@ const useStyles = makeStyles(() => ({
         minHeight: '30vh',
         maxWidth: '100%',
     },
-    gridRoot: {
-        border: 0,
-    },
 }));
 
 const FilterDialog = ({
@@ -154,7 +151,7 @@ const FilterDialog = ({
                         />
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} sm={4} padding={3} style={{ flex: 1 }}>
+                        <Grid item xs={12} sm={6} md={4} padding={3} style={{ flex: 1 }}>
                             <AssetTypeSelector
                                 id={rootId}
                                 locale={assetTypeLocale}
@@ -179,11 +176,12 @@ const FilterDialog = ({
                                 columns={columns}
                                 rowId={'asset_id_displayed'}
                                 loading={assetsMineListLoading}
-                                classes={{ root: classes.gridRoot }}
                                 checkboxSelection
                                 disableRowSelectionOnClick
                                 onSelectionModelChange={handleAssetSelectionChange}
                                 autoHeight={false}
+                                disableSelectionOnClick={false}
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>
