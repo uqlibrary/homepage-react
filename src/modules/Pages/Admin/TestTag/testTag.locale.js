@@ -611,7 +611,7 @@ export default {
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new Device',
+                    confirmationTitle: 'Add new device',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
@@ -866,7 +866,7 @@ export default {
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new User',
+                    confirmationTitle: 'Add new user',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
