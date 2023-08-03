@@ -10,7 +10,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';

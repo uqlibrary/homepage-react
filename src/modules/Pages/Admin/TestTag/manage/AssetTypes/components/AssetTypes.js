@@ -11,7 +11,7 @@ import { useConfirmationState } from 'hooks';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import ActionDialogue from './ActionDialogue';
 

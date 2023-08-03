@@ -265,22 +265,24 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         </Grid>
                         {!!mismatchingLocation && (
                             <Grid item xs={12} lg={6}>
-                                <ReportProblemOutlinedIcon
-                                    className={classes.problemIconInline}
-                                    fontSize="small"
-                                    id={`${componentId}-mismatch-icon`}
-                                    data-testid={`${componentId}-mismatch-icon`}
-                                    aria-label={formLocale.alertLocationMismatch}
-                                />
-                                <Typography
-                                    component={'span'}
-                                    className={classes.pastTestLabel}
-                                    style={{ color: theme.palette.warning.main }}
-                                    id={`${componentId}-mismatch-text`}
-                                    data-testid={`${componentId}-mismatch-text`}
-                                >
-                                    {formLocale.alertLocationMismatch}
-                                </Typography>
+                                <Box display={'flex'}>
+                                    <ReportProblemOutlinedIcon
+                                        className={classes.problemIconInline}
+                                        fontSize="small"
+                                        id={`${componentId}-mismatch-icon`}
+                                        data-testid={`${componentId}-mismatch-icon`}
+                                        aria-label={formLocale.alertLocationMismatch}
+                                    />
+                                    <Typography
+                                        component={'span'}
+                                        className={classes.pastTestLabel}
+                                        style={{ color: theme.palette.warning.main, paddingLeft: theme.spacing(1) }}
+                                        id={`${componentId}-mismatch-text`}
+                                        data-testid={`${componentId}-mismatch-text`}
+                                    >
+                                        {formLocale.alertLocationMismatch}
+                                    </Typography>
+                                </Box>
                             </Grid>
                         )}
                     </Grid>

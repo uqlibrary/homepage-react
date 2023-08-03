@@ -10,7 +10,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
