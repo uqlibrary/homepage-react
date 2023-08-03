@@ -31,7 +31,6 @@ const AssetPanel = ({
     location,
     assignCurrentAsset,
     handleChange,
-    focusElementRef,
     defaultNextTestDateValue,
     classes,
     saveAssetTypeSaving,
@@ -47,6 +46,15 @@ const AssetPanel = ({
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
+    const [shouldAutoFocus, setShouldAutoFocus] = React.useState(false);
+
+    React.useLayoutEffect(() => {
+        setShouldAutoFocus(
+            formValues?.room_id !== undefined &&
+                formValues?.room_id !== -1 &&
+                formValues?.asset_id_displayed === undefined,
+        );
+    }, [formValues?.room_id, formValues?.asset_id_displayed]);
 
     const handleAddClick = () => {
         actionDispatch({
@@ -119,7 +127,7 @@ const AssetPanel = ({
                         locale={pageLocale}
                         user={user}
                         classNames={{ formControl: classes.formControl }}
-                        inputRef={focusElementRef}
+                        autoFocus={shouldAutoFocus}
                         onChange={assignCurrentAsset}
                         onReset={resetForm}
                         validateAssetId={isValidAssetId}
@@ -178,7 +186,6 @@ AssetPanel.propTypes = {
     location: PropTypes.object.isRequired,
     assignCurrentAsset: PropTypes.func.isRequired,
     handleChange: PropTypes.func.isRequired,
-    focusElementRef: PropTypes.any.isRequired,
     defaultNextTestDateValue: PropTypes.string.isRequired,
     classes: PropTypes.object.isRequired,
     saveAssetTypeSaving: PropTypes.bool,
