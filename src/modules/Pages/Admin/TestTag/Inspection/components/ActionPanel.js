@@ -97,7 +97,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 <Tab
                     label="Discard"
                     key="Discard"
-                    {...a11yProps(2)}
+                    {...a11yProps(1)}
                     disabled={disabled || isDiscardDisabled}
                     id={`${componentId}-discard-tab-button`}
                     data-testid={`${componentId}-discard-tab-button`}
@@ -105,7 +105,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 <Tab
                     label="Repair"
                     key="Repair"
-                    {...a11yProps(1)}
+                    {...a11yProps(2)}
                     disabled={disabled || isRepairDisabled}
                     id={`${componentId}-repair-tab-button`}
                     data-testid={`${componentId}-repair-tab-button`}

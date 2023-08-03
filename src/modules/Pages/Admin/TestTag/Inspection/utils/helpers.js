@@ -56,17 +56,6 @@ export const isValidFailReason = (inspection, failedValue) =>
 export const isValidInspection = (inspection, user, testStatusEnum) => {
     /* istanbul ignore next */
     if (!!!testStatusEnum) return false;
-    console.log(
-        inspection,
-        user,
-        testStatusEnum,
-        isValidTestingDeviceId(
-            inspection.inspection_device_id,
-            user?.department_visual_inspection_device_id,
-            inspection.inspection_status,
-            testStatusEnum,
-        ),
-    );
     return (
         isValidRoomId(inspection.room_id) &&
         isValidTestingDeviceId(

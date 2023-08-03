@@ -142,7 +142,6 @@ const InspectionPanel = ({
                                 className={classes.formSelect}
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => {
-                                    console.log('CLICK', e.target.value);
                                     handleChange('inspection_device_id')(e.target.value);
                                 }}
                                 required

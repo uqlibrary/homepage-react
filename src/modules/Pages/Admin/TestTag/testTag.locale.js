@@ -208,7 +208,7 @@ export default {
                 dateFormat: 'YYYY-MM-DD HH:mm',
                 dateFormatNoTime: 'YYYY-MM-DD',
                 dateFormatDisplay: 'DD MMMM YYYY',
-                currentLabel: 'Current',
+                currentLabel: 'CURRENT',
                 passLabel: 'Pass',
                 failedLabel: 'Fail',
                 repairLabel: 'REPAIR',
@@ -233,7 +233,12 @@ export default {
                     },
                     date: {
                         label: 'Event date',
+                        maxDateMessage: 'Date can not be in the future',
+                        inputProps: {
+                            maxLength: 17,
+                        },
                     },
+
                     location: {
                         title: 'Location',
                     },

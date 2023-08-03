@@ -89,6 +89,7 @@ const EventPanel = ({
                             id={`${componentIdLower}-event-date`}
                             data-testid={`${componentIdLower}-event-date`}
                             inputProps={{
+                                ...pageLocale.form.event.date.inputProps,
                                 id: `${componentIdLower}-event-date-input`,
                                 'data-testid': `${componentIdLower}-event-date-input`,
                             }}
@@ -98,6 +99,8 @@ const EventPanel = ({
                             }}
                             InputLabelProps={{ shrink: true, htmlFor: `${componentIdLower}-event-date-input` }}
                             format={pageLocale.config.dateFormatDisplay}
+                            rifmFormatter={val => val.replace(/[^a-zA-Z0-9\s]+/gi, '')}
+                            refuse={/[^a-zA-Z0-9\s]+/gi}
                             minDate={startDate}
                             autoOk
                             disableFuture
