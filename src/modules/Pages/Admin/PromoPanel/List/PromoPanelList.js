@@ -65,14 +65,13 @@ export const PromoPanelList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [panelUpdated]);
 
-    /* istanbul ignore next */
+    function getApiErrorMessage() {
+        /* istanbul ignore next */
+        return promoPanelListError || promoPanelUserTypesError || promoPanelActiveListError || promoPanelActionError;
+    }
+
     const hasError = () => {
-        if (
-            !!promoPanelListError ||
-            !!promoPanelUserTypesError ||
-            !!promoPanelActiveListError ||
-            !!promoPanelActionError
-        ) {
+        if (!!getApiErrorMessage()) {
             scrollToTopOfPage();
             return true;
         }
@@ -82,16 +81,12 @@ export const PromoPanelList = ({
     return (
         <StandardPage title="Promo panel management">
             {hasError() && (
-                /* istanbul ignore next */ <div
+                <div
                     style={{ backgroundColor: '#933', padding: 10, textAlign: 'center', color: 'white' }}
+                    data-testid="admin-promopanel-list-api-error"
                 >
                     <p>There was an error loading data from the server. Please refresh and try again.</p>
-                    <p>
-                        {/* istanbul ignore next */ promoPanelListError ||
-                            promoPanelUserTypesError ||
-                            promoPanelActiveListError ||
-                            promoPanelActionError}
-                    </p>
+                    <p>{getApiErrorMessage()}</p>
                 </div>
             )}
             <PromoPanelListActive

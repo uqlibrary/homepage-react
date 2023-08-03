@@ -76,5 +76,19 @@ describe('Promo Panel List', () => {
             testId('99-delete-button').click();
             testId('confirm-panel-delete-confirm').click();
         });
+        it('handles an api error', () => {
+            cy.visit('http://localhost:2020/admin/promopanel?user=s2222222');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Promo panel management');
+            // error block appears
+            testId('admin-promopanel-list-api-error')
+                .should('be.visible')
+                .should('contain', 'There was an error loading data from the server. Please refresh and try again.');
+            // page is valid
+            testId('standard-card-default-and-scheduled-panels')
+                .should('be.visible')
+                .should('contain', 'Default and scheduled panels');
+        });
     });
 });

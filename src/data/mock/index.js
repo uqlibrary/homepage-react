@@ -1131,7 +1131,11 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl)
     .reply(() => {
-        return [200, activePanels];
+        if (user === 's2222222') {
+            return [500, ['an api error occurred']];
+        } else {
+            return [200, activePanels];
+        }
     })
     .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl)
     .reply(() => {
