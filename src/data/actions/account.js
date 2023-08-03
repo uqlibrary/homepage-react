@@ -141,32 +141,6 @@ export function logout(reload = false) {
     };
 }
 
-// we directly get the account in homepage -  sadly, it caused fewer problems than reusing the session storage from
-// reusable - but we do check if reusable has timed out or not
-/* istanbul ignore next */
-function sessionStorageShowsLoggedOut() {
-    const storedUserDetailsRaw = !!sessionStorage && sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME);
-    if (storedUserDetailsRaw === null) {
-        return true;
-    }
-    const storedUserDetails = !!storedUserDetailsRaw && JSON.parse(storedUserDetailsRaw);
-    const now = new Date().getTime();
-    if (!storedUserDetails.hasOwnProperty('storageExpiryDate') || storedUserDetails.storageExpiryDate < now) {
-        return true;
-    }
-    if (!storedUserDetails.hasOwnProperty('status') && storedUserDetails.status !== 'loggedin') {
-        return true;
-    }
-    if (
-        !!storedUserDetails.hasOwnProperty('account') ||
-        !storedUserDetails.account.storedUserDetails.hasOwnProperty('id')
-    ) {
-        return true;
-    }
-
-    return false;
-}
-
 /**
  * Loads the user's account and author details into the application
  * @returns {function(*)}
@@ -199,12 +173,7 @@ export function loadCurrentAccount() {
 
                     // if the UQL cookie times out, we want to log the user out
                     const watchforAccountExpiry = setInterval(() => {
-                        if (
-                            getSessionCookie() === undefined ||
-                            getLibraryGroupCookie() === undefined ||
-                            sessionStorageShowsLoggedOut()
-                        ) {
-                            console.log('check cookie ', getSessionCookie());
+                        if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
                             logout(true);
                             clearInterval(watchforAccountExpiry);
                         }
