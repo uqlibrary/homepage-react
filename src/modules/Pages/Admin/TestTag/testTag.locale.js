@@ -767,6 +767,7 @@ export default {
                             actionTooltips: {
                                 delete: 'Remove from list',
                             },
+                            tableSizeChanged: size => `${size} total assets chosen`,
                         },
                         two: {
                             title: 'Step 2: Choose bulk update action',

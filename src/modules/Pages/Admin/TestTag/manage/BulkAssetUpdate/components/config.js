@@ -7,8 +7,8 @@ export default {
         fields: {
             asset_id: { fieldParams: { renderInTable: false } },
             asset_id_displayed: { fieldParams: { minWidth: 120 } },
-            asset_type_name: { fieldParams: { flex: 1, minWidth: 180 } },
-            asset_location: { fieldParams: { minWidth: 470 } },
+            asset_type_name: { fieldParams: { flex: 1, minWidth: 140 } },
+            asset_location: { fieldParams: { minWidth: 200, flex: 1 } },
             asset_status: { fieldParams: { sortable: false } },
         },
     },
