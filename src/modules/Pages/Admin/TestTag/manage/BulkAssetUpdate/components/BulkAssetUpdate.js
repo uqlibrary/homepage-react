@@ -70,7 +70,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-    const [confirmDialogueBusy, setConfirmDialogueBusy] = React.useState(false);
+    const [confirmDialogueBusy, setConfirmDialogueBusy] = useState(false);
     const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
@@ -202,6 +202,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         handleChange(e.target.name)(checked);
     };
 
+    const handlePageSizeChange = total => {
+        if (total > 0) {
+            openConfirmationAlert(stepOneLocale.tableSizeChanged(total), 'success');
+        }
+    };
+
     const validFormValues = React.useMemo(() => {
         const validLocation =
             !formValues.hasLocation ||
@@ -315,10 +321,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             onAltClick: resetForm,
                                             onActionClick: handleNextStepButton,
                                             nextButtonProps: { disabled: list.data.length === 0 },
-                                            withPagination: false,
                                             className: classes.actionButtons,
                                         },
                                     }}
+                                    autoPageSize
+                                    onPageSizeChange={handlePageSizeChange}
                                     {...(config.form.sort ?? {})}
                                 />
                             </Grid>
