@@ -9,7 +9,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import InspectionPanel from './InspectionPanel';
 import LastInspectionPanel from './LastInspectionPanel';
 import AssetSelector from '../../SharedComponents/AssetSelector/AssetSelector';
-import UpdateDialog from '../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../SharedComponents/UpdateDialog/UpdateDialog';
 import AssetTypeSelector, { ADD_NEW_ID } from '../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
@@ -158,7 +158,7 @@ const AssetPanel = ({
             <LastInspectionPanel
                 asset={selectedAsset ?? {}}
                 currentLocation={location}
-                dateFormatPattern={locale.config.format.dateFormatDisplay}
+                dateFormatPattern={locale.pages.inspect.config.dateFormatDisplay}
                 disabled={!!!selectedAsset?.last_inspection?.inspect_status ?? /* istanbul ignore next */ true}
                 forceOpen={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
             />

@@ -12,7 +12,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { useIsMobileView } from 'hooks';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { filterComponentProps } from './utils';
 
 const rootId = 'update_dialog';
@@ -34,6 +35,14 @@ export const useStyles = makeStyles(theme => ({
     dialogPaper: {
         minHeight: '30vh',
         maxHeight: '50vh',
+    },
+    footerActions: {
+        padding: '8px 16px',
+    },
+    footerMobileMargin: {
+        [theme.breakpoints.only('xs')]: {
+            marginTop: theme.spacing(2),
+        },
     },
 }));
 
@@ -61,8 +70,9 @@ export const UpdateDialogue = ({
     const [dataFields, setDataFields] = React.useState({});
     const [editableFields, setEditableFields] = React.useState([]);
     const [data, setData] = React.useState({});
-    const isMobileView = useIsMobileView();
     const [isValid, setIsValid] = React.useState(false);
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.only('xs')) || false;
 
     React.useEffect(() => {
         if (isOpen) {
@@ -196,9 +206,9 @@ export const UpdateDialogue = ({
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
                 <DialogActions id={`${rootId}-actions`} data-testid={`${rootId}-actions`}>
-                    <Grid container spacing={3}>
+                    <Grid container className={classes.footerActions}>
                         {!hideCancelButton && (
-                            <Grid item xs={12} sm>
+                            <Grid item xs={12} sm={6}>
                                 <Box justifyContent="flex-start" display={'flex'}>
                                     <Button
                                         variant={'outlined'}
@@ -214,8 +224,8 @@ export const UpdateDialogue = ({
                             </Grid>
                         )}
                         {!hideActionButton && (
-                            <Grid item xs={12} sm>
-                                <Box justifyContent="flex-end" display={'flex'}>
+                            <Grid item xs={12} sm={6}>
+                                <Box justifyContent="flex-end" display={'flex'} className={classes.footerMobileMargin}>
                                     <Button
                                         variant="contained"
                                         autoFocus
