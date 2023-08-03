@@ -9,5 +9,5 @@ export const isEmptyObject = obj =>
 
 export const createLocationString = ({ site, building, floor, room }) =>
     // [site, building, floor, room].filter(item => !!item).join(' / ');
-    `Floor ${floor ?? ''}-${room ?? ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`;
+    `${floor ?? ''}-${room ?? ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`;
 export const isInvalidUUID = str => str?.length > 20 || !/^[a-z0-9]*$/.test(str);
