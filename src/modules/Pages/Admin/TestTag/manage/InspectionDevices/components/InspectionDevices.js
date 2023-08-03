@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     },
     tableMarginTop: {
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(1),
     },
     inspectionOverdue: {
         backgroundColor: theme.palette.error.main,
@@ -246,7 +246,7 @@ const InspectionDevices = ({
                             />
                         </>
                     )}
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
+                    <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}

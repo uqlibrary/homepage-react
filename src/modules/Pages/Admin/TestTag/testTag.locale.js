@@ -611,7 +611,7 @@ export default {
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new Device',
+                    confirmationTitle: 'Add new device',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
@@ -767,6 +767,7 @@ export default {
                             actionTooltips: {
                                 delete: 'Remove from list',
                             },
+                            tableSizeChanged: size => `${size} total assets chosen`,
                         },
                         two: {
                             title: 'Step 2: Choose bulk update action',
@@ -866,7 +867,7 @@ export default {
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new User',
+                    confirmationTitle: 'Add new user',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',

@@ -78,7 +78,6 @@ const FilterDialog = ({
     });
     useEffect(() => {
         if (!assetsMineListLoading) {
-            console.log('effect setrow', assetsMineList, assetsMineListLoading);
             setRow(assetsMineList);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,27 +100,17 @@ const FilterDialog = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lastSelectedLocation, location.floor, location.room, assetTypeId, isOpen, isBusy]);
 
-    // useEffect(() => {
-    //     console.log(location, lastSelectedLocation);
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [location]);
-
     const handleCancelAction = () => {
-        console.log('cancel');
         onCancel?.();
     };
     const handleAddAction = () => {
-        console.log('add');
         onAction?.(selectedAssets);
     };
     const handleAssetTypeChange = row => {
-        console.log('handleAssetTypeChange', row);
         setAssetTypeId(row?.asset_type_id === -1 ? '' : row?.asset_type_id ?? '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
         const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
-
-        console.log('handleAssetSelectionChange', row, selectedRowIds, assets);
         setSelectedAssets(assets);
     };
 
