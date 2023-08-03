@@ -25,6 +25,7 @@ export const maskNumber = (number, department) => {
 const AssetSelector = ({
     id,
     locale,
+    autoFocus = false,
     selectedAsset,
     masked = true,
     required = true,
@@ -34,7 +35,6 @@ const AssetSelector = ({
     minAssetIdLength = MINIMUM_ASSET_ID_PATTERN_LENGTH,
     user,
     classNames,
-    inputRef,
     onChange,
     onReset,
     onSearch,
@@ -43,30 +43,13 @@ const AssetSelector = ({
 }) => {
     const componentId = `${rootId}-${id}`;
     const previousValueRef = React.useRef(null);
+    const inputRef = React.useRef();
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
     const [currentValue, setCurrentValue] = useState(selectedAsset ?? null);
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
-
-    React.useEffect(() => {
-        previousValueRef.current = selectedAsset;
-        setCurrentValue(selectedAsset);
-    }, [selectedAsset]);
-
-    const debounceAssetsSearch = React.useRef(
-        debounce(500, (pattern, user) => {
-            const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
-            setCurrentValue(assetPartial);
-            if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
-                onSearch?.(assetPartial);
-                dispatch(
-                    !!filter ? actions.loadAssetsFiltered(assetPartial, filter) : actions.loadAssets(assetPartial),
-                );
-            }
-        }),
-    ).current;
 
     const clearInput = useCallback(() => {
         if (clearOnSelect) {
@@ -76,6 +59,11 @@ const AssetSelector = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        previousValueRef.current = selectedAsset;
+        setCurrentValue(selectedAsset);
+    }, [selectedAsset]);
 
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
@@ -91,6 +79,25 @@ const AssetSelector = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
+
+    React.useLayoutEffect(() => {
+        if (autoFocus) {
+            inputRef?.current?.focus();
+        }
+    }, [autoFocus]);
+
+    const debounceAssetsSearch = React.useRef(
+        debounce(500, (pattern, user) => {
+            const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
+            setCurrentValue(assetPartial);
+            if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
+                onSearch?.(assetPartial);
+                dispatch(
+                    !!filter ? actions.loadAssetsFiltered(assetPartial, filter) : actions.loadAssets(assetPartial),
+                );
+            }
+        }),
+    ).current;
 
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
@@ -162,10 +169,18 @@ const AssetSelector = ({
                         {...locale.assetSelector}
                         required={required}
                         error={!validateAssetId?.(selectedAsset ?? currentValue) ?? false}
-                        inputRef={inputRef}
                         variant="standard"
-                        onFocus={() => setIsOpen(true)}
-                        onBlur={() => setIsOpen(false)}
+                        onFocus={() => {
+                            setIsOpen(true);
+                        }}
+                        onBlur={() => {
+                            setIsOpen(false);
+                        }}
+                        onChange={e => {
+                            !isOpen && setIsOpen(true);
+                            previousValueRef.current = e.target.value;
+                            debounceAssetsSearch(e.target.value, user);
+                        }}
                         InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
@@ -183,17 +198,13 @@ const AssetSelector = ({
                                 </React.Fragment>
                             ),
                         }}
-                        onChange={e => {
-                            !isOpen && setIsOpen(true);
-                            previousValueRef.current = e.target.value;
-                            debounceAssetsSearch(e.target.value, user);
-                        }}
                         inputProps={{
                             ...params.inputProps,
                             id: `${componentId}-input`,
                             'data-testid': `${componentId}-input`,
                             maxLength: 12,
                         }}
+                        inputRef={inputRef}
                     />
                 )}
                 loading={!!assetsListLoading}
@@ -208,6 +219,7 @@ AssetSelector.propTypes = {
     selectedAsset: PropTypes.string,
     label: PropTypes.string,
     minAssetIdLength: PropTypes.number,
+    autoFocus: PropTypes.bool,
     masked: PropTypes.bool,
     required: PropTypes.bool,
     canAddNew: PropTypes.bool,
@@ -215,7 +227,6 @@ AssetSelector.propTypes = {
     clearOnSelect: PropTypes.bool,
     user: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
-    inputRef: PropTypes.any,
     onChange: PropTypes.func,
     onSearch: PropTypes.func,
     onReset: PropTypes.func,

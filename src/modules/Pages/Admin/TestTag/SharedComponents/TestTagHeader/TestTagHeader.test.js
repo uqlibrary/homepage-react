@@ -23,10 +23,8 @@ describe('TestTagHeader Renders component', () => {
     it('should render header text', () => {
         const { getByText, getByTestId } = setup({
             departmentText: 'UQL',
-            requiredText: 'is required',
         });
         expect(getByTestId('test_tag_header')).toBeInTheDocument();
         expect(getByText('UQL')).toBeInTheDocument();
-        expect(getByText('is required')).toBeInTheDocument();
     });
 });

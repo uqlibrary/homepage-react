@@ -42,8 +42,8 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
             if (!!formValues.isRepair) {
                 handleChange('isRepair')(false);
             }
-            if (selectedTabValue === 0) {
-                setSelectedTabValue(1);
+            if (selectedTabValue === 1) {
+                setSelectedTabValue(0);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,93 +95,23 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 data-testid={`${componentId}-tabs`}
             >
                 <Tab
-                    label="Repair"
-                    key="Repair"
-                    {...a11yProps(1)}
-                    disabled={disabled || isRepairDisabled}
-                    id={`${componentId}-repair-tab-button`}
-                    data-testid={`${componentId}-repair-tab-button`}
-                />
-                <Tab
                     label="Discard"
                     key="Discard"
-                    {...a11yProps(2)}
+                    {...a11yProps(1)}
                     disabled={disabled || isDiscardDisabled}
                     id={`${componentId}-discard-tab-button`}
                     data-testid={`${componentId}-discard-tab-button`}
                 />
+                <Tab
+                    label="Repair"
+                    key="Repair"
+                    {...a11yProps(2)}
+                    disabled={disabled || isRepairDisabled}
+                    id={`${componentId}-repair-tab-button`}
+                    data-testid={`${componentId}-repair-tab-button`}
+                />
             </Tabs>
             <TabPanel id={componentId} value={selectedTabValue} index={0}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <FormControl className={classes.formControl} fullWidth={isMobileView}>
-                            <InputLabel shrink>{pageLocale.form.action.repair.label}</InputLabel>
-                            <Select
-                                id={`${componentId}-is-repair`}
-                                data-testid={`${componentId}-is-repair`}
-                                MenuProps={{
-                                    id: `${componentId}-is-repair-options`,
-                                    'data-testid': `${componentId}-is-repair-options`,
-                                }}
-                                inputProps={{
-                                    id: `${componentId}-is-repair-input`,
-                                    ['data-testid']: `${componentId}-is-repair-input`,
-                                }}
-                                SelectDisplayProps={{
-                                    id: `${componentId}-is-repair-select`,
-                                    'data-testid': `${componentId}-is-repair-select`,
-                                }}
-                                fullWidth
-                                className={classes.formSelect}
-                                value={formValues.isRepair ? 2 : 1}
-                                onChange={e => handleChange('isRepair')(e.target.value === 2)}
-                                style={{ minWidth: 200 }}
-                                disabled={disabled || isRepairDisabled}
-                            >
-                                {pageLocale.form.action.repair.options.map((option, index) => (
-                                    <MenuItem
-                                        value={option.value}
-                                        key={option.value}
-                                        id={`${componentId}-is-repair-option-${index}`}
-                                        data-testid={`${componentId}-is-repair-option-${index}`}
-                                    >
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormControl className={classes.formControl} fullWidth required>
-                            <TextField
-                                {...pageLocale.form.action.repair.repairerDetails}
-                                required
-                                error={
-                                    !!formValues.isRepair &&
-                                    !isValidRepair({
-                                        formValues,
-                                        lastInspection: selectedAsset?.last_inspection ?? {},
-                                        passed: testStatusEnum.FAILED.value,
-                                    })
-                                }
-                                multiline
-                                minRows={4}
-                                variant="standard"
-                                id={`${componentId}-repairer-details-input`}
-                                InputProps={{ fullWidth: true }}
-                                InputLabelProps={{ htmlFor: `${componentId}-repairer-details-input` }}
-                                inputProps={{
-                                    'data-testid': `${componentId}-repairer-details-input`,
-                                }}
-                                disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
-                                value={formValues?.repairer_contact_details ?? ''}
-                                onChange={handleRepairerDetailsChange}
-                            />
-                        </FormControl>
-                    </Grid>
-                </Grid>
-            </TabPanel>
-            <TabPanel id={componentId} value={selectedTabValue} index={1}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <Alert severity="warning">{pageLocale.form.action.discard.alertMessage}</Alert>
@@ -252,6 +182,76 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 disabled={disabled || isDiscardDisabled || !!!formValues.isDiscarded}
                                 value={formValues?.discard_reason ?? ''}
                                 onChange={handleDiscardReasonChange}
+                            />
+                        </FormControl>
+                    </Grid>
+                </Grid>
+            </TabPanel>
+            <TabPanel id={componentId} value={selectedTabValue} index={1}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <FormControl className={classes.formControl} fullWidth={isMobileView}>
+                            <InputLabel shrink>{pageLocale.form.action.repair.label}</InputLabel>
+                            <Select
+                                id={`${componentId}-is-repair`}
+                                data-testid={`${componentId}-is-repair`}
+                                MenuProps={{
+                                    id: `${componentId}-is-repair-options`,
+                                    'data-testid': `${componentId}-is-repair-options`,
+                                }}
+                                inputProps={{
+                                    id: `${componentId}-is-repair-input`,
+                                    ['data-testid']: `${componentId}-is-repair-input`,
+                                }}
+                                SelectDisplayProps={{
+                                    id: `${componentId}-is-repair-select`,
+                                    'data-testid': `${componentId}-is-repair-select`,
+                                }}
+                                fullWidth
+                                className={classes.formSelect}
+                                value={formValues.isRepair ? 2 : 1}
+                                onChange={e => handleChange('isRepair')(e.target.value === 2)}
+                                style={{ minWidth: 200 }}
+                                disabled={disabled || isRepairDisabled}
+                            >
+                                {pageLocale.form.action.repair.options.map((option, index) => (
+                                    <MenuItem
+                                        value={option.value}
+                                        key={option.value}
+                                        id={`${componentId}-is-repair-option-${index}`}
+                                        data-testid={`${componentId}-is-repair-option-${index}`}
+                                    >
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl className={classes.formControl} fullWidth required>
+                            <TextField
+                                {...pageLocale.form.action.repair.repairerDetails}
+                                required
+                                error={
+                                    !!formValues.isRepair &&
+                                    !isValidRepair({
+                                        formValues,
+                                        lastInspection: selectedAsset?.last_inspection ?? {},
+                                        passed: testStatusEnum.FAILED.value,
+                                    })
+                                }
+                                multiline
+                                minRows={4}
+                                variant="standard"
+                                id={`${componentId}-repairer-details-input`}
+                                InputProps={{ fullWidth: true }}
+                                InputLabelProps={{ htmlFor: `${componentId}-repairer-details-input` }}
+                                inputProps={{
+                                    'data-testid': `${componentId}-repairer-details-input`,
+                                }}
+                                disabled={disabled || isRepairDisabled || !!!formValues.isRepair}
+                                value={formValues?.repairer_contact_details ?? ''}
+                                onChange={handleRepairerDetailsChange}
                             />
                         </FormControl>
                     </Grid>

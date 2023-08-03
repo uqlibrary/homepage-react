@@ -37,8 +37,10 @@ const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
     toggleButtonRoot: {
-        color: `${theme.palette.text.main} !important`,
-        backgroundColor: `${theme.palette.grey[300]} !important`,
+        color: 'rgba(0, 0, 0, 0.87)',
+        '& :disabled': {
+            color: `${theme.palette.text.main} !important`,
+        },
     },
     toggleButtonSuccess: {
         color: `${theme.palette.primary.contrastText} !important`,
@@ -140,7 +142,6 @@ const InspectionPanel = ({
                                 className={classes.formSelect}
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => {
-                                    console.log('CLICK', e.target.value);
                                     handleChange('inspection_device_id')(e.target.value);
                                 }}
                                 required
