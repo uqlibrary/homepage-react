@@ -636,7 +636,7 @@ export default {
             inspectiondetails: {
                 breadcrumbs: [
                     {
-                        title: 'Manage - Edit test notes',
+                        title: 'Manage - Test notes',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
@@ -690,11 +690,11 @@ export default {
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Edit test details',
+                    confirmationTitle: 'Edit test notes',
                 },
                 snackbar: {
-                    updateSuccess: 'Test updated successfully',
-                    updateFail: 'Unable to update the test',
+                    updateSuccess: 'Test notes updated successfully',
+                    updateFail: 'Unable to update the test notes',
                 },
             },
             bulkassetupdate: {
