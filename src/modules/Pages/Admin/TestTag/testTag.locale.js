@@ -143,7 +143,7 @@ export default {
                         },
                         {
                             id: 'inspections',
-                            title: 'Test details',
+                            title: 'Test notes',
                             icon: <InspectionIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanageinspectiondetails,
                             permissions: [PERMISSIONS.can_inspect],
@@ -636,12 +636,12 @@ export default {
             inspectiondetails: {
                 breadcrumbs: [
                     {
-                        title: 'Manage - Test details',
+                        title: 'Manage - Edit test notes',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Test details management for ${dept}`,
+                    pageSubtitle: dept => `Test note management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -684,7 +684,7 @@ export default {
                     },
 
                     actionTooltips: {
-                        edit: 'Edit this test',
+                        edit: 'Edit test notes',
                     },
                 },
                 dialogEdit: {
