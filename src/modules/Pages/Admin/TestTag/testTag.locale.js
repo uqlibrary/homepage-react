@@ -748,6 +748,10 @@ export default {
                                 title: 'Asset Type',
                                 labelAll: 'All Asset Types',
                             },
+                            testNoteSearch: {
+                                label: 'Search test notes',
+                                helperText: 'The whole string will be used in the search',
+                            },
                         },
                     },
                     step: {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
+import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -154,6 +155,17 @@ const FilterDialog = ({
                                 autoHighlight={false}
                                 selectOnFocus
                                 disableClearable
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4} padding={3} style={{ flex: 1 }}>
+                            <TextField
+                                inputProps={{
+                                    id: `${componentId}-search-text`,
+                                    'data-testid': `${componentId}-search-text`,
+                                    maxLength: 50,
+                                }}
+                                fullWidth
+                                {...locale.form.testNoteSearch}
                             />
                         </Grid>
                     </Grid>
