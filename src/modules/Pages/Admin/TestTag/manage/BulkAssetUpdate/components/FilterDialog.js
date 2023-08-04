@@ -168,7 +168,6 @@ const FilterDialog = ({
                                 checkboxSelection
                                 disableRowSelectionOnClick
                                 onSelectionModelChange={handleAssetSelectionChange}
-                                autoHeight={false}
                                 disableSelectionOnClick={false}
                                 {...(config.sort ?? {})}
                             />
