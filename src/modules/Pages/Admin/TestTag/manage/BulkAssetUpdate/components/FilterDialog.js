@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -16,6 +15,7 @@ import { useLocation, useSelectLocation } from '../../../SharedComponents/Locati
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
+import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { transformFilterRow } from './utils';
@@ -50,6 +50,7 @@ const FilterDialog = ({
     const classes = useStyles();
     const { row, setRow } = useDataTableRow([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');
+    const [searchNotes, setSearchNotes] = useState('');
     const [selectedAssets, setSelectedAssets] = useState([]);
     const { assetsMineList, assetsMineListLoading, assetsMineListError } = useSelector(state =>
         state.get('testTagAssetsReducer'),
@@ -96,10 +97,11 @@ const FilterDialog = ({
                       }
                     : {}),
                 ...(!!assetTypeId ? { assetTypeId } : {}),
+                textSearch: searchNotes,
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lastSelectedLocation, location.floor, location.room, assetTypeId, isOpen, isBusy]);
+    }, [lastSelectedLocation, location.floor, location.room, assetTypeId, searchNotes, isOpen, isBusy]);
 
     const handleCancelAction = () => {
         onCancel?.();
@@ -113,6 +115,11 @@ const FilterDialog = ({
     const handleAssetSelectionChange = selectedRowIds => {
         const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
         setSelectedAssets(assets);
+    };
+
+    const handleSearchNotesChange = e => {
+        console.log(e, e.target.value);
+        setSearchNotes(e.target.value);
     };
 
     return (
@@ -158,13 +165,15 @@ const FilterDialog = ({
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} padding={3} style={{ flex: 1 }}>
-                            <TextField
+                            <DebouncedTextField
+                                id={`${componentId}-search-notes`}
                                 inputProps={{
-                                    id: `${componentId}-search-text`,
-                                    'data-testid': `${componentId}-search-text`,
                                     maxLength: 50,
                                 }}
                                 fullWidth
+                                onChange={handleSearchNotesChange}
+                                value={searchNotes}
+                                interval={500}
                                 {...locale.form.testNoteSearch}
                             />
                         </Grid>
