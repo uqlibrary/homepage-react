@@ -736,6 +736,7 @@ export default {
                             columns: {
                                 asset_barcode: { label: 'Barcode' },
                                 asset_type_name: { label: 'Type' },
+                                inspect_comment: { label: 'Last test notes' },
                                 asset_location: { label: 'Location' },
                                 asset_status: { label: 'Status' },
                             },
