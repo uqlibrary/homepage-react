@@ -76,14 +76,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const hideForAdmin = account => {
-    return (
-        (isSpotlightsAdminUser(account) ||
-            isTestTagAdminUser(account) ||
-            isAlertsAdminUser(account) ||
-            isPromoPanelAdminUser(account)) &&
-        window.location.pathname.includes('/admin/')
-    );
+const hideForAdmin = () => {
+    return window.location.pathname.includes('/admin/');
 };
 
 export const App = ({ account, actions }) => {
@@ -109,7 +103,7 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
-    console.log('Account: ', account);
+    console.log('Hide for admin', hideForAdmin(account));
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
@@ -118,7 +112,7 @@ export const App = ({ account, actions }) => {
                     searchlabel="library.uq.edu.au"
                     searchurl="http://library.uq.edu.au"
                 />
-                {!hideForAdmin(account) && <cultural-advice-popup />}
+                {!hideForAdmin() && <cultural-advice-popup />}
 
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
@@ -155,7 +149,7 @@ export const App = ({ account, actions }) => {
                 <div id="full-footer-block">
                     <connect-footer />
                     <uq-footer />
-                    {!hideForAdmin(account) && <proactive-chat />}
+                    {!hideForAdmin() && <proactive-chat />}
                 </div>
             </div>
         </Grid>
