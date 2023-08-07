@@ -35,10 +35,10 @@ export default {
             site_name: {
                 component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
+                fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 120 },
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 130 },
             },
         },
     },
@@ -75,10 +75,10 @@ export default {
             building_name: {
                 component: props => <TextField {...props} required />,
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
-                fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
+                fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 120 },
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 130 },
             },
         },
     },
@@ -113,7 +113,7 @@ export default {
                 fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 120 },
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 130 },
             },
         },
     },
@@ -131,7 +131,8 @@ export default {
                 },
             },
             room_location: {
-                computedValue: displayLocation => createLocationString(displayLocation),
+                computedValue: displayLocation =>
+                    `${locale.pages.general.locationPicker.floor.label} ${createLocationString(displayLocation)}`,
                 computedValueProp: 'displayLocation',
                 fieldParams: { canAdd: false, canEdit: false, renderInTable: false },
             },
@@ -149,10 +150,10 @@ export default {
             },
             room_description: {
                 component: props => <TextField {...props} />,
-                fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
+                fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 120 },
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 130 },
             },
         },
     },
