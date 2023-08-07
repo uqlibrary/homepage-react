@@ -232,14 +232,16 @@ export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
         apiUrl,
     };
 };
-export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId }) => {
+export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId, textSearch }) => {
     const urlParams = {
         ...(!!locationId && !!locationType ? { location_id: locationId, location_type: locationType } : {}),
         ...(!!assetTypeId ? { asset_type_id: assetTypeId } : {}),
+        ...(!!textSearch ? { inspect_comment: textSearch } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `/test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
+    console.log(apiUrl);
     return {
         apiUrl,
     };

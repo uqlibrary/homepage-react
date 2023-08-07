@@ -221,7 +221,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             (!isEmptyObject(formValues.asset_type) && isValidAssetTypeId(formValues.asset_type?.asset_type_id ?? 0));
 
         const isValid =
-            (formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetType) &&
+            (formValues.hasLocation ||
+                formValues.hasDiscardStatus ||
+                formValues.hasAssetType ||
+                formValues.hasClearNotes) &&
             validLocation &&
             validDiscardStatus &&
             validAssetType;
@@ -234,6 +237,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         formValues.hasLocation,
         formValues.hasDiscardStatus,
         formValues.location,
+        formValues.hasClearNotes,
     ]);
 
     return (
@@ -470,9 +474,14 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                                     checked={
                                                         formValues.hasDiscardStatus &&
                                                         !formValues.hasAssetType &&
-                                                        !formValues.hasLocation
+                                                        !formValues.hasLocation &&
+                                                        !formValues.hasClearNotes
                                                     }
-                                                    disabled={formValues.hasAssetType || formValues.hasLocation}
+                                                    disabled={
+                                                        formValues.hasAssetType ||
+                                                        formValues.hasLocation ||
+                                                        formValues.hasClearNotes
+                                                    }
                                                     onChange={handleCheckboxChange}
                                                     name="hasDiscardStatus"
                                                     id={`${componentIdLower}-status-checkbox`}
@@ -503,6 +512,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             disabled={
                                                 formValues.hasAssetType ||
                                                 formValues.hasLocation ||
+                                                formValues.hasClearNotes ||
                                                 !formValues.hasDiscardStatus
                                             }
                                             value={formValues?.discard_reason ?? ''}
@@ -511,6 +521,24 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                         />
                                     </Grid>
                                 </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={6}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={!formValues.hasDiscardStatus && formValues.hasClearNotes}
+                                            disabled={formValues.hasDiscardStatus}
+                                            onChange={handleCheckboxChange}
+                                            name="hasClearNotes"
+                                            id={`${componentIdLower}-notes-checkbox`}
+                                            data-testid={`${componentIdLower}-notes-checkbox`}
+                                            color="primary"
+                                        />
+                                    }
+                                    label={stepTwoLocale.checkbox.notes}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container spacing={4} className={classes.actionButtons}>
