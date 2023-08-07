@@ -9,7 +9,6 @@ import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { getHomepageLink } from 'helpers/access';
-import { isSpotlightsAdminUser, isTestTagAdminUser, isAlertsAdminUser, isPromoPanelAdminUser } from 'helpers/access';
 
 browserUpdate({
     required: {
