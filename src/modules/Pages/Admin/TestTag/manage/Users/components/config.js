@@ -20,11 +20,11 @@ export default {
                     {...props}
                     disabled={data?.isSelf}
                     required
-                    inputProps={{ ...props.inputProps, maxLength: 15 }}
+                    inputProps={{ ...props.inputProps, maxLength: 20 }}
                     helperText={
                         props.error
                             ? locale.pages.manage.users.helperText.user_uid
-                            : locale.pages.general.helperText.maxChars(15)
+                            : locale.pages.general.helperText.maxChars(20)
                     }
                 />
             ),
