@@ -8,6 +8,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Clear from '@material-ui/icons/Clear';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
@@ -118,8 +121,8 @@ const FilterDialog = ({
     };
 
     const handleSearchNotesChange = e => {
-        console.log(e, e.target.value);
-        setSearchNotes(e.target.value);
+        const value = e?.target?.value?.trim() ?? '';
+        setSearchNotes(value);
     };
 
     return (
@@ -148,7 +151,7 @@ const FilterDialog = ({
                         />
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} sm={6} md={4} padding={3} style={{ flex: 1 }}>
+                        <Grid item xs={12} sm={6} md={4}>
                             <AssetTypeSelector
                                 id={rootId}
                                 locale={assetTypeLocale}
@@ -161,10 +164,10 @@ const FilterDialog = ({
                                 autoSelect={false}
                                 autoHighlight={false}
                                 selectOnFocus
-                                disableClearable
+                                disableClearable={false}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} padding={3} style={{ flex: 1 }}>
+                        <Grid item xs={12} sm={6} md={4}>
                             <DebouncedTextField
                                 id={`${componentId}-search-notes`}
                                 inputProps={{
@@ -174,6 +177,25 @@ const FilterDialog = ({
                                 onChange={handleSearchNotesChange}
                                 value={searchNotes}
                                 interval={500}
+                                InputProps={{
+                                    ...(!!searchNotes
+                                        ? {
+                                              endAdornment: (
+                                                  <InputAdornment position="end">
+                                                      <IconButton
+                                                          id={`${componentId}-clear-search-notes`}
+                                                          data-testid={`${componentId}-clear-search-notes`}
+                                                          aria-label={locale.form.ariaClearNotes}
+                                                          size="small"
+                                                          onClick={handleSearchNotesChange}
+                                                      >
+                                                          <Clear />
+                                                      </IconButton>
+                                                  </InputAdornment>
+                                              ),
+                                          }
+                                        : {}),
+                                }}
                                 {...locale.form.testNoteSearch}
                             />
                         </Grid>
@@ -185,7 +207,7 @@ const FilterDialog = ({
                                 rows={row}
                                 columns={columns}
                                 rowId={'asset_id_displayed'}
-                                loading={assetsMineListLoading}
+                                loading={!!assetsMineListLoading}
                                 checkboxSelection
                                 disableRowSelectionOnClick
                                 onSelectionModelChange={handleAssetSelectionChange}

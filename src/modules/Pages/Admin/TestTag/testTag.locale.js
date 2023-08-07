@@ -748,9 +748,10 @@ export default {
                                 title: 'Asset Type',
                                 labelAll: 'All Asset Types',
                             },
+                            ariaClearNotes: 'Clear test notes search',
                             testNoteSearch: {
                                 label: 'Search test notes',
-                                helperText: 'The whole string will be used in the search',
+                                helperText: 'Max 50 characters, search will match entered phrase',
                             },
                         },
                     },
@@ -775,7 +776,7 @@ export default {
                             tableSizeChanged: size => `${size} total assets chosen`,
                         },
                         two: {
-                            title: 'Step 2: Choose bulk update action',
+                            title: 'Step 2: Choose bulk update actions',
                             subtext: count => <>You have selected {count} assets to bulk update.</>,
                             button: {
                                 previous: 'Back',
@@ -785,6 +786,7 @@ export default {
                                 location: 'Update Location',
                                 status: 'Discard Asset',
                                 assetType: 'Update Asset Type',
+                                notes: 'Clear test notes',
                             },
                             discardReason: {
                                 label: 'Discarding Reason',

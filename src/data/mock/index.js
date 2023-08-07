@@ -930,10 +930,20 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_tagged_building_list])
     .onGet(routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST({assetStatus: 'OUTFORREPAIR', locationType: 'building', locationId: '4', inspectionDateFrom: null, inspectionDateTo:null}).apiUrl)
     .reply(() => [200, test_tag_assets_report_assets])
+    // .onGet(/test-and-tag\/asset\/search\/mine.*/)
+    // .reply(config => {
+    //    const url = new URL(`${config.baseURL}${config.url}`);
+    //    const params = url.searchParams;
+    //    const location = params.has('location_type') ? `${params.get('location_type')}_id` : 'room_id';
+    //    const locationId = params.has('location_type') ? parseInt(params.get('location_id'),10) : undefined;
+    //    console.log(config, params.toString(), params.get('asset_type_id'), params.get('inspect_comment'), location, locationId)
+      
+    //     return [200, {data: test_tag_assets_mine.data.filter(asset=> asset.asset_type_id === (params.get('asset_type_id') ?? asset.asset_type_id) &&
+    //         asset[location] === (locationId ?? asset[location]) && 
+    //         asset.inspect_comment.indexOf(params.get('inspect_comment') ?? asset.inspect_comment) > -1)}]
+    // })
     .onGet(/test-and-tag\/asset\/search\/mine.*/)
     .reply(() => [200, test_tag_assets_mine])
-    // .onGet(routes.TEST_TAG_ASSETS_MINE_API({locationId: '.*', locationType: '.*', assetTypeId: '.*'}).apiUrl)
-    // .reply(() => [200, test_tag_assets_mine])
     .onPut(routes.TEST_TAG_BULK_UPDATE_API().apiUrl)
     .reply(() => [200, {status: 'OK'}])
     .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API('.*').apiUrl)))

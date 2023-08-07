@@ -139,7 +139,7 @@ export default {
           "asset_type": "USB-C power bricks and adapters",
           "asset_type_notes": "Must be tested when connected to a device as they cannot be turned on indply",
           "room_id": 1,
-          "room_id_displayed": "W212",
+          "room_id_displayed": "W218",
           "floor_id": 1,
           "floor_id_displayed": "1",
           "building_id": 1,
