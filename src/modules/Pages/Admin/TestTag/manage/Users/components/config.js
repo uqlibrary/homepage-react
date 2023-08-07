@@ -91,7 +91,7 @@ export default {
             },
         },
         can_admin: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 110 },
         },
         can_admin_cb: {
             component: (props, data, row) => {
@@ -112,10 +112,10 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_inspect: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 115 },
         },
         can_alter: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 95 },
         },
         can_alter_cb: {
             component: props => (
@@ -127,7 +127,7 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         can_see_reports: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 110 },
         },
         can_see_reports_cb: {
             component: props => (
@@ -139,7 +139,7 @@ export default {
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
         },
         user_current_flag: {
-            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 120 },
+            fieldParams: { canEdit: false, renderInUpdate: false, renderInAdd: false, minWidth: 115 },
         },
         user_current_flag_cb: {
             component: (props, data) => (
@@ -156,7 +156,7 @@ export default {
                 canAdd: false,
                 renderInUpdate: false,
                 renderInAdd: false,
-                minWidth: 170,
+                minWidth: 130,
             },
         },
     },
