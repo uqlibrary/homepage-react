@@ -9,6 +9,7 @@ import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { getHomepageLink } from 'helpers/access';
+import { isSpotlightsAdminUser, isTestTagAdminUser, isAlertsAdminUser, isPromoPanelAdminUser } from 'helpers/access';
 
 browserUpdate({
     required: {
@@ -75,6 +76,16 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const hideForAdmin = account => {
+    return (
+        (isSpotlightsAdminUser(account) ||
+            isTestTagAdminUser(account) ||
+            isAlertsAdminUser(account) ||
+            isPromoPanelAdminUser(account)) &&
+        window.location.pathname.includes('/admin/')
+    );
+};
+
 export const App = ({ account, actions }) => {
     useEffect(() => {
         actions.loadCurrentAccount();
@@ -98,6 +109,7 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
+    console.log('Account: ', account);
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
@@ -106,7 +118,8 @@ export const App = ({ account, actions }) => {
                     searchlabel="library.uq.edu.au"
                     searchurl="http://library.uq.edu.au"
                 />
-                <cultural-advice-popup />
+                {!hideForAdmin(account) && <cultural-advice-popup />}
+
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
                         <askus-button />
@@ -142,7 +155,7 @@ export const App = ({ account, actions }) => {
                 <div id="full-footer-block">
                     <connect-footer />
                     <uq-footer />
-                    <proactive-chat />
+                    {!hideForAdmin(account) && <proactive-chat />}
                 </div>
             </div>
         </Grid>
