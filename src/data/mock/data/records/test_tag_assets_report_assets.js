@@ -27,7 +27,7 @@ export default {
             "building_id_displayed": "8102",
             "site_id": 2,
             "site_name": "Gatton",
-            "site_id_displayed": "29"
+            "site_id_displayed": "29",
         },
         {
             "asset_id": 500,

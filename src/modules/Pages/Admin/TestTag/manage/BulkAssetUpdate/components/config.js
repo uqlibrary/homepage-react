@@ -19,7 +19,8 @@ export default {
         fields: {
             asset_id: { fieldParams: { renderInTable: false } },
             asset_barcode: { fieldParams: { minWidth: 120 } },
-            asset_type_name: { fieldParams: { flex: 1, minWidth: 250 } },
+            asset_type_name: { fieldParams: { flex: 1, minWidth: 150 } },
+            inspect_comment: { fieldParams: { minWidth: 100, flex: 1 } },
             asset_location: { fieldParams: { flex: 1, minWidth: 200 } },
             asset_status: { fieldParams: { minWidth: 150 } },
         },

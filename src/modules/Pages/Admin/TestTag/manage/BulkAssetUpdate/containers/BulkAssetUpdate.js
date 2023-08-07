@@ -12,6 +12,7 @@ const DEFAULT_FORM_VALUES = {
     location: undefined,
     asset_type: undefined,
     discard_reason: undefined,
+    hasClearNotes: false,
 };
 
 export const mapStateToProps = () => {

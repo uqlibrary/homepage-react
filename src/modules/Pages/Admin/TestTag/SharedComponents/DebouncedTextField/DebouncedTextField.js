@@ -32,11 +32,12 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
             id={`${componentId}-input`}
             data-fieldtype={rootId}
             InputLabelProps={{ htmlFor: `${componentId}-input` }}
+            {...rest}
             inputProps={{
+                ...rest.inputProps,
                 'data-testid': `${componentId}-input`,
                 'data-fieldtype': rootId,
             }}
-            {...rest}
         />
     );
 };
