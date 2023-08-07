@@ -103,7 +103,6 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
-    console.log('Hide for admin', hideForAdmin(account));
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
