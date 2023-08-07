@@ -76,6 +76,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const hideForAdmin = () => {
+    console.log('Should Hide?', window.location.pathname.includes('/admin/'));
     return window.location.pathname.includes('/admin/');
 };
 

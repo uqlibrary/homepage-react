@@ -53,7 +53,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
         closeConfirmationAlert();
-        actionDispatch({ type: 'edit', row });
+        actionDispatch({ type: 'edit', title: pageLocale.editAsset.title, row });
     };
 
     const onRowDelete = ({ id, api }) => {
@@ -85,7 +85,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
 
     const handleAddClick = () => {
         closeConfirmationAlert();
-        actionDispatch({ type: 'add' });
+        actionDispatch({ type: 'add', title: pageLocale.addAsset.title });
     };
 
     const onRowAdd = React.useCallback(data => {

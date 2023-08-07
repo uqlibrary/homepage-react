@@ -434,7 +434,7 @@ export default {
                             label: 'Notes',
                         },
                         asset_count: {
-                            label: 'Usage',
+                            label: 'No. tests',
                         },
                     },
                 },
@@ -449,7 +449,7 @@ export default {
                     confirmationTitle: type => `Edit ${type}`,
                 },
                 actionDialogue: {
-                    confirmationTitle: 'Delete and Reassign',
+                    confirmationTitle: 'Delete and reassign',
                     deleteReassignTargetPrompt: target => `Delete ${target ?? 'NONE'} and reassign all assets to:`,
                     newAssetTypePrompt: 'New asset type',
                     deleteReassignWarningPrompt: count => `This will affect ${count ?? 0} assets`,
