@@ -477,13 +477,13 @@ export default {
                                 label: 'Site ID',
                             },
                             site_name: {
-                                label: 'Description',
+                                label: 'Site name',
                             },
                             site_id_displayed: {
-                                label: 'Display name',
+                                label: 'Site ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         building: {
@@ -494,13 +494,13 @@ export default {
                                 label: 'Location',
                             },
                             building_name: {
-                                label: 'Description',
+                                label: 'Building name',
                             },
                             building_id_displayed: {
-                                label: 'Display name',
+                                label: 'Building ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         floor: {
@@ -508,13 +508,13 @@ export default {
                                 label: 'Floor ID',
                             },
                             floor_location: {
-                                label: 'Location',
+                                label: 'Floor name',
                             },
                             floor_id_displayed: {
-                                label: 'Display name',
+                                label: 'Floor ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         room: {
@@ -525,13 +525,13 @@ export default {
                                 label: 'Location',
                             },
                             room_description: {
-                                label: 'Description',
+                                label: 'Room name',
                             },
                             room_id_displayed: {
-                                label: 'Display name',
+                                label: 'Room ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                     },
