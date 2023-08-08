@@ -17,6 +17,8 @@ export const useDataTableColumns = ({
     locale,
     handleEditClick,
     handleDeleteClick,
+    editIcon,
+    deleteIcon,
     filterKey = null,
     withActions = true,
     actionDataFieldKeys,
@@ -37,6 +39,8 @@ export const useDataTableColumns = ({
                                   {...params}
                                   {...(!!handleEditClick ? { handleEditClick: handleEditClick } : {})}
                                   {...(!!handleDeleteClick ? { handleDeleteClick: handleDeleteClick } : {})}
+                                  {...(!!editIcon ? { editIcon } : {})}
+                                  {...(!!deleteIcon ? { deleteIcon } : {})}
                                   {...(!!actionDataFieldKeys ? { dataFieldKeys: actionDataFieldKeys } : {})}
                                   {...(!!actionTooltips ? { tooltips: actionTooltips } : {})}
                                   disableEdit={disableEdit}
