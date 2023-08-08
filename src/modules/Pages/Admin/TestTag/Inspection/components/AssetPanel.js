@@ -91,6 +91,7 @@ const AssetPanel = ({
     }, []);
 
     const handleAssetTypeChange = assetType => {
+        console.log('assetType.asset_type_id', assetType.asset_type_id);
         if (assetType.asset_type_id === ADD_NEW_ID) {
             handleAddClick();
         } else handleChange('asset_type_id')(assetType.asset_type_id);
