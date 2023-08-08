@@ -971,7 +971,7 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(withDelay([200, test_tag_user_list]))
     .onPut(/test-and-tag\/user\/5/)
     .reply(withDelay([
-        403,
+        400,
         {},
     ]))
     .onPut(/test-and-tag\/user\/\d*/)
@@ -990,7 +990,7 @@ mock.onGet('exams/course/FREN1010/summary')
     ]))
     .onDelete(/test-and-tag\/user\/5/)
     .reply(withDelay([
-        403,
+        400,
         {},
     ]))
     .onDelete(/test-and-tag\/user\/\d*/)
