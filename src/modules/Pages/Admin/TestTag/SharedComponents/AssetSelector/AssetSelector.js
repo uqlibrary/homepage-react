@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -25,6 +25,7 @@ export const maskNumber = (number, department) => {
 const AssetSelector = ({
     id,
     locale,
+    autoFocus = false,
     selectedAsset,
     masked = true,
     required = true,
@@ -34,7 +35,6 @@ const AssetSelector = ({
     minAssetIdLength = MINIMUM_ASSET_ID_PATTERN_LENGTH,
     user,
     classNames,
-    inputRef,
     onChange,
     onReset,
     onSearch,
@@ -43,6 +43,7 @@ const AssetSelector = ({
 }) => {
     const componentId = `${rootId}-${id}`;
     const previousValueRef = React.useRef(null);
+    const inputRef = React.useRef();
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
@@ -50,16 +51,16 @@ const AssetSelector = ({
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
-    React.useEffect(() => {
-        previousValueRef.current = selectedAsset;
-        setCurrentValue(selectedAsset);
-    }, [selectedAsset]);
+    const clearInput = () => {
+        setCurrentValue(null);
+        previousValueRef.current = null;
+        dispatch(actions.clearAssets());
+    };
 
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
             setCurrentValue(assetPartial);
-            /* istanbul ignore else */
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
                 onSearch?.(assetPartial);
                 dispatch(
@@ -69,15 +70,14 @@ const AssetSelector = ({
         }),
     ).current;
 
-    const clearInput = useCallback(() => {
-        // istanbul ignore else
-        if (clearOnSelect) {
-            setCurrentValue(null);
-            previousValueRef.current = null;
-            dispatch(actions.clearAssets());
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const customPopper = props => (
+        <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
+    );
+
+    React.useEffect(() => {
+        previousValueRef.current = selectedAsset;
+        setCurrentValue(selectedAsset);
+    }, [selectedAsset]);
 
     React.useEffect(() => {
         !!assetsList && setFormAssetList(...[assetsList]);
@@ -85,7 +85,7 @@ const AssetSelector = ({
             onChange?.(assetsList[0]);
             setCurrentValue(assetsList[0]);
             setIsOpen(false);
-            clearInput();
+            clearOnSelect && clearInput();
         }
         /* istanbul ignore else */ if (assetsList?.length < 1) {
             onReset?.(false);
@@ -94,9 +94,16 @@ const AssetSelector = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assetsList]);
 
-    const customPopper = props => (
-        <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
-    );
+    React.useLayoutEffect(() => {
+        if (autoFocus) {
+            inputRef?.current?.focus();
+        }
+    }, [autoFocus]);
+
+    React.useEffect(() => {
+        clearInput();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <FormControl className={classNames?.formControl} fullWidth>
@@ -123,7 +130,7 @@ const AssetSelector = ({
                         onChange?.(newValue);
                     }
                     setIsOpen(false);
-                    clearInput();
+                    clearOnSelect && clearInput();
                 }}
                 filterOptions={(options, params) => {
                     const filtered = filterOptions(options, params);
@@ -163,11 +170,19 @@ const AssetSelector = ({
                         {...params}
                         {...locale.assetSelector}
                         required={required}
-                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? /* istanbul ignore next */ false}
-                        inputRef={inputRef}
+                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? false}
                         variant="standard"
-                        onFocus={() => setIsOpen(true)}
-                        onBlur={() => setIsOpen(false)}
+                        onFocus={() => {
+                            setIsOpen(true);
+                        }}
+                        onBlur={() => {
+                            setIsOpen(false);
+                        }}
+                        onChange={e => {
+                            !isOpen && setIsOpen(true);
+                            previousValueRef.current = e.target.value;
+                            debounceAssetsSearch(e.target.value, user);
+                        }}
                         InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,
@@ -185,17 +200,13 @@ const AssetSelector = ({
                                 </React.Fragment>
                             ),
                         }}
-                        onChange={e => {
-                            !isOpen && setIsOpen(true);
-                            previousValueRef.current = e.target.value;
-                            debounceAssetsSearch(e.target.value, user);
-                        }}
                         inputProps={{
                             ...params.inputProps,
                             id: `${componentId}-input`,
                             'data-testid': `${componentId}-input`,
                             maxLength: 12,
                         }}
+                        inputRef={inputRef}
                     />
                 )}
                 loading={!!assetsListLoading}
@@ -210,6 +221,7 @@ AssetSelector.propTypes = {
     selectedAsset: PropTypes.string,
     label: PropTypes.string,
     minAssetIdLength: PropTypes.number,
+    autoFocus: PropTypes.bool,
     masked: PropTypes.bool,
     required: PropTypes.bool,
     canAddNew: PropTypes.bool,
@@ -217,7 +229,6 @@ AssetSelector.propTypes = {
     clearOnSelect: PropTypes.bool,
     user: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
-    inputRef: PropTypes.any,
     onChange: PropTypes.func,
     onSearch: PropTypes.func,
     onReset: PropTypes.func,

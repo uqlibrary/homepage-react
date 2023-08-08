@@ -19,6 +19,8 @@ import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 
+const moment = require('moment');
+
 const componentId = 'assets-inspected';
 const componentIdLower = 'assets_inspected';
 
@@ -29,11 +31,9 @@ const useStyles = makeStyles(theme => ({
     tableMarginTop: {
         marginTop: theme.spacing(2),
     },
-    gridRoot: {
-        border: 0,
-    },
     inspectionOverdue: {
-        backgroundColor: theme.palette.error.light,
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
     },
     datePickerRoot: {
         marginTop: 0,
@@ -54,6 +54,8 @@ const AssetReportByFilters = ({
     /* locale and styles */
     const pageLocale = locale.pages.report.assetReportByFilters;
     const statusTypes = pageLocale.form.statusTypes;
+
+    const today = moment().format(locale.config.format.dateFormatNoTime);
 
     const classes = useStyles();
     /* State */
@@ -188,7 +190,7 @@ const AssetReportByFilters = ({
             <div className={classes.root}>
                 <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={6} lg={3}>
                             {/* Status Picker */}
                             <AssetStatusSelector
                                 id={componentId}
@@ -199,7 +201,7 @@ const AssetReportByFilters = ({
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                             />
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={6} lg={3}>
                             {/* Building Picker */}
                             <LocationPicker
                                 id={componentIdLower}
@@ -216,7 +218,7 @@ const AssetReportByFilters = ({
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                             />
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={6} lg={3}>
                             {/* Start Date */}
                             <KeyboardDatePicker
                                 id={`${componentIdLower}-tagged-start`}
@@ -241,6 +243,8 @@ const AssetReportByFilters = ({
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                             />
+                        </Grid>
+                        <Grid item xs={12} md={6} lg={3}>
                             <KeyboardDatePicker
                                 id={`${componentIdLower}-tagged-end`}
                                 data-testid={`${componentIdLower}-tagged-end`}
@@ -276,7 +280,12 @@ const AssetReportByFilters = ({
                                 rowId={'asset_id'}
                                 rowKey={'asset_id'}
                                 loading={!!assetListLoading}
-                                classes={{ root: classes.gridRoot }}
+                                getCellClassName={params =>
+                                    params.field === 'asset_next_test_due_date' && params.value <= today
+                                        ? classes.inspectionOverdue
+                                        : ''
+                                }
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

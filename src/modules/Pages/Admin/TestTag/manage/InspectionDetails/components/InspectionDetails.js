@@ -10,7 +10,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
@@ -28,9 +28,6 @@ const useStyles = makeStyles(theme => ({
     },
     tableMarginTop: {
         marginTop: theme.spacing(0),
-    },
-    gridRoot: {
-        border: 0,
     },
 }));
 
@@ -106,6 +103,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         locale: pageLocale.form.columns,
         handleEditClick,
         actionDataFieldKeys: { valueKey: 'asset_id_displayed' },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     const { row } = useDataTableRow(assetsList, transformRow);
@@ -115,6 +113,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
+            inclusive={false}
         >
             <div className={classes.root}>
                 <StandardCard noHeader>
@@ -155,9 +154,9 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                                 id={componentId}
                                 rowId={'asset_id_displayed'}
                                 loading={assetsListLoading}
-                                classes={{ root: classes.gridRoot }}
                                 disableColumnFilter
                                 disableColumnMenu
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>

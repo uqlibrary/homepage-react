@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     },
     link: {
         display: 'flex',
-        fontSize: '0.8rem',
+        fontSize: '0.875rem',
     },
     icon: {
         marginRight: theme.spacing(0.5),
@@ -31,13 +31,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TestTagHeader = (
-    /* istanbul ignore next*/ {
-        departmentText = '',
-        requiredText = '',
-        breadcrumbs = [],
-        className = '',
-        ...props
-    } = {},
+    /* istanbul ignore next*/ { departmentText = '', breadcrumbs = [], className = '', ...props } = {},
 ) => {
     const classes = useStyles();
 
@@ -51,21 +45,12 @@ const TestTagHeader = (
                 )}
             </Typography>
 
-            {!!requiredText && requiredText.length > 0 && (
-                <Typography
-                    variant={'body1'}
-                    component={'p'}
-                    id={`${componentId}-required-text`}
-                    data-testid={`${componentId}-required-text`}
-                >
-                    {requiredText}
-                </Typography>
-            )}
             {!!breadcrumbs && breadcrumbs?.length > 0 && (
                 <Breadcrumbs
                     aria-label="breadcrumb"
                     id={`${componentId}-navigation`}
                     data-testid={`${componentId}-navigation`}
+                    separator={<>&rsaquo;</>}
                 >
                     <Link
                         color="inherit"
@@ -81,7 +66,7 @@ const TestTagHeader = (
                         />
                         Dashboard
                     </Link>
-                    {breadcrumbs.map(breadcrumb => {
+                    {breadcrumbs.map((breadcrumb, index) => {
                         const normalisedTitle = breadcrumb.title.replace(/ /g, '-').toLowerCase();
                         return breadcrumb.link ? (
                             <Link
@@ -113,7 +98,7 @@ const TestTagHeader = (
                                 id={`${componentId}-navigation-current-page`}
                                 data-testid={`${componentId}-navigation-current-page`}
                             >
-                                {breadcrumb?.icon ? (
+                                {breadcrumb?.icon && index < breadcrumbs.length - 1 ? (
                                     <Icon
                                         className={classes.icon}
                                         id={`${componentId}-navigation-current-page-icon`}
@@ -138,7 +123,6 @@ TestTagHeader.propTypes = {
     departmentText: PropTypes.string,
     breadcrumbs: PropTypes.array,
     className: PropTypes.string,
-    requiredText: PropTypes.string,
 };
 
 export default React.memo(TestTagHeader);

@@ -35,7 +35,7 @@ const formValues = {
     user_id: 3,
 };
 
-function setup(testProps = {}) {
+function setup(testProps = {}, renderer = render) {
     const { state = {}, actions = {}, focusElementRef = {}, classes = {}, isMobileView = false, ...props } = testProps;
 
     const _state = {
@@ -48,7 +48,7 @@ function setup(testProps = {}) {
         },
         ...state,
     };
-    return render(
+    return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <AssetPanel
                 id="test"
@@ -130,7 +130,7 @@ describe('AssetPanel', () => {
         // eslint-disable-next-line no-unused-vars
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const actionFn = jest.fn();
-        const { getByTestId } = setup({
+        const { getByTestId, rerender } = setup({
             actions: { loadAssetTypes: actionFn },
             formValues,
             location,
@@ -141,12 +141,31 @@ describe('AssetPanel', () => {
             isValid: false,
             state: {
                 testTagOnLoadInspectionReducer: { inspectionConfig: {}, inspectionConfigLoading: true },
-                testTagAssetsReducer: { assetsList: [], assetsListLoading: true },
+                testTagAssetsReducer: { assetsList: [], assetsListLoading: false },
                 testTagAssetTypesReducer: { assetTypesList: [], assetTypesListLoading: true },
             },
         });
-        expect(getByTestId('asset_selector-asset-panel-progress')).toBeInTheDocument();
         expect(getByTestId('asset_type_selector-asset-panel-progress')).toBeInTheDocument();
+        setup(
+            {
+                actions: { loadAssetTypes: actionFn },
+                formValues,
+                location,
+                resetForm,
+                assignCurrentAsset,
+                handleChange,
+                saveInspectionSaving: false,
+                isValid: false,
+                state: {
+                    testTagOnLoadInspectionReducer: { inspectionConfig: {}, inspectionConfigLoading: true },
+                    testTagAssetsReducer: { assetsList: [], assetsListLoading: true },
+                    testTagAssetTypesReducer: { assetTypesList: [], assetTypesListLoading: true },
+                },
+                estTagAssetTypesReducer: { assetTypesList: [], assetTypesListLoading: true },
+            },
+            rerender,
+        );
+        expect(getByTestId('asset_selector-asset-panel-progress')).toBeInTheDocument();
     });
 
     it('shows dialog to add new asset type', async () => {

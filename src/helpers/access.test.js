@@ -151,13 +151,13 @@ describe('access', () => {
         );
 
         expectHomePageOfLinkIs(
-            'https://homepage-development.library.uq.edu.au/reusable-staging/#/',
-            'https://homepage-development.library.uq.edu.au/reusable-staging/#/',
+            'https://homepage-development.library.uq.edu.au/master/#/',
+            'https://homepage-development.library.uq.edu.au/master/#/',
         );
 
         expectHomePageOfLinkIs(
-            'https://homepage-development.library.uq.edu.au/reusable-staging/#/admin/masquerade',
-            'https://homepage-development.library.uq.edu.au/reusable-staging/#/',
+            'https://homepage-development.library.uq.edu.au/master/#/admin/masquerade',
+            'https://homepage-development.library.uq.edu.au/master/#/',
         );
 
         expectHomePageOfLinkIs(

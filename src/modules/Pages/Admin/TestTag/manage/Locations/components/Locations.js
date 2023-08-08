@@ -10,7 +10,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
@@ -33,9 +33,6 @@ const useStyles = makeStyles(theme => ({
     },
     tableMarginTop: {
         marginTop: theme.spacing(2),
-    },
-    gridRoot: {
-        border: 0,
     },
 }));
 
@@ -140,6 +137,7 @@ const ManageLocations = ({ actions }) => {
         handleDeleteClick,
         shouldDisableDelete,
         actionDataFieldKeys: { valueKey: locationDataFieldKeys[selectedLocation] },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     const closeDialog = React.useCallback(() => {
@@ -315,7 +313,8 @@ const ManageLocations = ({ actions }) => {
                                     },
                                 }}
                                 loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
-                                classes={{ root: classes.gridRoot }}
+                                key={selectedLocation}
+                                {...(config[selectedLocation].sort ?? {})}
                             />
                         </Grid>
                     </Grid>

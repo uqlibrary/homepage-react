@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -13,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Alert from '@material-ui/lab/Alert';
 import { useTheme } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
@@ -34,6 +34,7 @@ import { isValidRoomId, isValidAssetId, isValidAssetTypeId } from '../../../Insp
 import { isEmptyObject, isEmptyStr } from '../../../helpers/helpers';
 import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/hooks';
 import { transformRow, transformRequest } from './utils';
+import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -44,9 +45,6 @@ const useStyles = makeStyles(theme => ({
     },
     actionButtons: {
         marginTop: theme.spacing(2),
-    },
-    gridRoot: {
-        border: 0,
     },
     centredGrid: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
     centredGridNoJustify: {
@@ -59,11 +57,6 @@ const componentId = 'bulk-asset-update';
 const componentIdLower = 'bulk_asset_update';
 
 const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
-    useEffect(() => {
-        actions.clearAssetsMine();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
     const stepTwoLocale = pageLocale.form.step.two;
@@ -72,14 +65,14 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-    const [confirmDialogueBusy, setConfirmDialogueBusy] = React.useState(false);
+    const [confirmDialogueBusy, setConfirmDialogueBusy] = useState(false);
     const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
     const { formValues, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
     });
 
     const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
@@ -122,6 +115,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setStep(1);
     };
 
+    useEffect(() => {
+        resetForm();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const handleDeleteClick = useCallback(
         ({ id, api }) => {
             const row = api.getRow(id);
@@ -134,7 +132,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         config: config.form,
         locale: pageLocale.form.columns,
         handleDeleteClick,
+        deleteIcon: <RemoveCircleOutlineIcon size="small" />,
         actionDataFieldKeys: { valueKey: 'asset_id_displayed' },
+        actionTooltips: stepOneLocale.actionTooltips,
     });
 
     const handleNextStepButton = () => {
@@ -203,6 +203,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         handleChange(e.target.name)(checked);
     };
 
+    // const handlePageSizeChange = total => {
+    //     if (total > 0) {
+    //         openConfirmationAlert(stepOneLocale.tableSizeChanged(total), 'success');
+    //     }
+    // };
+
     const validFormValues = React.useMemo(() => {
         const validLocation =
             !formValues.hasLocation ||
@@ -216,7 +222,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             (!isEmptyObject(formValues.asset_type) && isValidAssetTypeId(formValues.asset_type?.asset_type_id ?? 0));
 
         const isValid =
-            (formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetType) &&
+            (formValues.hasLocation ||
+                formValues.hasDiscardStatus ||
+                formValues.hasAssetType ||
+                formValues.hasClearNotes) &&
             validLocation &&
             validDiscardStatus &&
             validAssetType;
@@ -229,13 +238,15 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         formValues.hasLocation,
         formValues.hasDiscardStatus,
         formValues.location,
+        formValues.hasClearNotes,
     ]);
 
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
-            requiredPermissions={[PERMISSIONS.can_inspect]}
+            requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+            inclusive={false}
         >
             <div className={classes.root}>
                 <ConfirmationBox
@@ -268,7 +279,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                 {step === 1 && (
                     <StandardCard title={stepOneLocale.title} standardCardId={`standard_card-${componentId}-step-1`}>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} md={4}>
                                 <AssetSelector
                                     id={componentId}
                                     locale={stepOneLocale}
@@ -282,10 +293,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     filter={{ status: { discarded: false } }}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={2} className={classes.centredGrid}>
+                            <Grid item xs={12} md={2} className={classes.centredGrid}>
                                 or
                             </Grid>
-                            <Grid item xs={12} sm={6} className={classes.centredGridNoJustify}>
+                            <Grid item xs={12} md={6} className={classes.centredGridNoJustify}>
                                 <Button
                                     variant="outlined"
                                     id={`${componentIdLower}-feature-button`}
@@ -298,6 +309,19 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 </Button>
                             </Grid>
                         </Grid>
+                        {list.data.length > 0 && (
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <Alert
+                                        severity="info"
+                                        id={`${componentIdLower}-count-alert`}
+                                        data-testid={`${componentIdLower}-count-alert`}
+                                    >
+                                        {stepTwoLocale.subtext(list.data.length, locale.pages.general.pluraliser)}
+                                    </Alert>
+                                </Grid>
+                            </Grid>
+                        )}
                         <Grid container spacing={3}>
                             <Grid item padding={3} style={{ flex: 1 }}>
                                 <DataTable
@@ -305,7 +329,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     rows={list.data}
                                     columns={columns}
                                     rowId={'asset_id'}
-                                    classes={{ root: classes.gridRoot }}
                                     handleDeleteClick={handleDeleteClick}
                                     components={{ Footer: FooterBar }}
                                     componentsProps={{
@@ -316,10 +339,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             onAltClick: resetForm,
                                             onActionClick: handleNextStepButton,
                                             nextButtonProps: { disabled: list.data.length === 0 },
-                                            withPagination: false,
                                             className: classes.actionButtons,
                                         },
                                     }}
+                                    autoPageSize
+                                    {...(config.form.sort ?? {})}
                                 />
                             </Grid>
                         </Grid>
@@ -344,12 +368,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                     <StandardCard title={stepTwoLocale.title} standardCardId={`standard_card-${componentId}-step-2`}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <Alert severity="warning">
-                                    {stepTwoLocale.subtext(
-                                        <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
-                                            {list.data.length}
-                                        </Typography>,
-                                    )}
+                                <Alert
+                                    severity="warning"
+                                    id={`${componentIdLower}-summary-alert`}
+                                    data-testid={`${componentIdLower}-summary-alert`}
+                                >
+                                    {stepTwoLocale.subtext(list.data.length, locale.pages.general.pluraliser)}
                                 </Alert>
                             </Grid>
                         </Grid>
@@ -416,39 +440,44 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 }}
                             />
                         </Grid>
+
                         <Grid container spacing={3}>
-                            <Grid item xs={12} sm={6} padding={3}>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={formValues.hasAssetType && !formValues.hasDiscardStatus}
-                                                    onChange={handleCheckboxChange}
-                                                    name="hasAssetType"
-                                                    id={`${componentIdLower}-asset-type-checkbox`}
-                                                    data-testid={`${componentIdLower}-asset-type-checkbox`}
-                                                    color="primary"
-                                                    disabled={formValues.hasDiscardStatus}
-                                                />
-                                            }
-                                            label={stepTwoLocale.checkbox.assetType}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <AssetTypeSelector
-                                            id={componentId}
-                                            locale={pageLocale.form.assetType}
-                                            actions={actions}
-                                            onChange={handleChange('asset_type')}
-                                            disabled={!formValues.hasAssetType || formValues.hasDiscardStatus}
-                                            required={formValues.hasAssetType}
-                                            value={formValues.asset_type?.asset_type_id}
-                                            validateAssetTypeId={isValidAssetTypeId}
-                                        />
+                            <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
+                                <Grid item xs={12} sm={6} padding={3}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={
+                                                            formValues.hasAssetType && !formValues.hasDiscardStatus
+                                                        }
+                                                        onChange={handleCheckboxChange}
+                                                        name="hasAssetType"
+                                                        id={`${componentIdLower}-asset-type-checkbox`}
+                                                        data-testid={`${componentIdLower}-asset-type-checkbox`}
+                                                        color="primary"
+                                                        disabled={formValues.hasDiscardStatus}
+                                                    />
+                                                }
+                                                label={stepTwoLocale.checkbox.assetType}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <AssetTypeSelector
+                                                id={componentId}
+                                                locale={pageLocale.form.assetType}
+                                                actions={actions}
+                                                onChange={handleChange('asset_type')}
+                                                disabled={!formValues.hasAssetType || formValues.hasDiscardStatus}
+                                                required={formValues.hasAssetType}
+                                                value={formValues.asset_type?.asset_type_id}
+                                                validateAssetTypeId={isValidAssetTypeId}
+                                            />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
+                            </AuthWrapper>
                             <Grid item xs={12} sm={6} padding={3}>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>
@@ -458,9 +487,14 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                                     checked={
                                                         formValues.hasDiscardStatus &&
                                                         !formValues.hasAssetType &&
-                                                        !formValues.hasLocation
+                                                        !formValues.hasLocation &&
+                                                        !formValues.hasClearNotes
                                                     }
-                                                    disabled={formValues.hasAssetType || formValues.hasLocation}
+                                                    disabled={
+                                                        formValues.hasAssetType ||
+                                                        formValues.hasLocation ||
+                                                        formValues.hasClearNotes
+                                                    }
                                                     onChange={handleCheckboxChange}
                                                     name="hasDiscardStatus"
                                                     id={`${componentIdLower}-status-checkbox`}
@@ -491,6 +525,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             disabled={
                                                 formValues.hasAssetType ||
                                                 formValues.hasLocation ||
+                                                formValues.hasClearNotes ||
                                                 !formValues.hasDiscardStatus
                                             }
                                             value={formValues?.discard_reason ?? ''}
@@ -499,6 +534,24 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                         />
                                     </Grid>
                                 </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={6}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={!formValues.hasDiscardStatus && formValues.hasClearNotes}
+                                            disabled={formValues.hasDiscardStatus}
+                                            onChange={handleCheckboxChange}
+                                            name="hasClearNotes"
+                                            id={`${componentIdLower}-notes-checkbox`}
+                                            data-testid={`${componentIdLower}-notes-checkbox`}
+                                            color="primary"
+                                        />
+                                    }
+                                    label={stepTwoLocale.checkbox.notes}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container spacing={4} className={classes.actionButtons}>

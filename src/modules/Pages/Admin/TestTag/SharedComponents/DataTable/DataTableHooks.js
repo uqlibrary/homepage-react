@@ -17,11 +17,14 @@ export const useDataTableColumns = ({
     locale,
     handleEditClick,
     handleDeleteClick,
+    editIcon,
+    deleteIcon,
     filterKey = null,
     withActions = true,
     actionDataFieldKeys,
     shouldDisableEdit,
     shouldDisableDelete,
+    actionTooltips,
 }) => {
     const columns = useMemo(
         () => {
@@ -36,7 +39,10 @@ export const useDataTableColumns = ({
                                   {...params}
                                   {...(!!handleEditClick ? { handleEditClick: handleEditClick } : {})}
                                   {...(!!handleDeleteClick ? { handleDeleteClick: handleDeleteClick } : {})}
+                                  {...(!!editIcon ? { editIcon } : {})}
+                                  {...(!!deleteIcon ? { deleteIcon } : {})}
                                   {...(!!actionDataFieldKeys ? { dataFieldKeys: actionDataFieldKeys } : {})}
+                                  {...(!!actionTooltips ? { tooltips: actionTooltips } : {})}
                                   disableEdit={disableEdit}
                                   disableDelete={disableDelete}
                               />

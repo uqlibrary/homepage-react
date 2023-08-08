@@ -35,6 +35,14 @@ import {
     TEST_TAG_DELETE_USER_API,
 } from 'repositories/routes';
 
+const checkExpireSession = (dispatch, error) => {
+    const triggerLogoutStatus = [401, 403];
+    if (!!error?.status && triggerLogoutStatus.includes(error.status)) {
+        // They are no longer allowed. Log them out
+        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+    }
+};
+
 export function loadUser() {
     return dispatch => {
         dispatch({ type: actions.TESTTAG_USER_LOADING });
@@ -50,6 +58,7 @@ export function loadUser() {
                     type: actions.TESTTAG_USER_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -69,6 +78,7 @@ export function loadDashboard() {
                     type: actions.TESTTAG_DASHBOARD_CONFIG_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -93,6 +103,7 @@ export function loadInspectionConfig() {
                     type: actions.TESTTAG_INSPECTION_CONFIG_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -131,6 +142,7 @@ export function addLocation({ type, request }) {
                     type: actions.TESTTAG_LOCATION_ADD_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -159,6 +171,7 @@ export function updateLocation({ type, request }) {
                     type: actions.TESTTAG_LOCATION_UPDATE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -187,6 +200,7 @@ export function deleteLocation({ type, id }) {
                     type: actions.TESTTAG_LOCATION_DELETE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -207,6 +221,7 @@ export function loadSites() {
                     type: actions.TESTTAG_SITE_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -238,6 +253,7 @@ export function loadFloors(buildingId) {
                     type: actions.TESTTAG_FLOOR_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -268,6 +284,7 @@ export function loadRooms(floorId) {
                     type: actions.TESTTAG_ROOM_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -300,6 +317,7 @@ export function loadAssets(pattern) {
                     type: actions.TESTTAG_ASSETS_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -318,6 +336,7 @@ export function loadAssetsFiltered(pattern, filter) {
                     type: actions.TESTTAG_ASSETS_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -347,6 +366,7 @@ export function loadAssetsMine(filters) {
                     type: actions.TESTTAG_ASSETS_MINE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -378,6 +398,7 @@ export function saveInspection(request) {
                     type: actions.TESTTAG_SAVE_INSPECTION_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -415,6 +436,7 @@ export function saveAssetTypeAndReload(request) {
                     type: actions.TESTTAG_SAVE_ASSET_TYPE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -446,6 +468,7 @@ export function loadInspectionDevices() {
                     type: actions.TESTTAG_INSPECTION_DEVICES_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -484,6 +507,7 @@ export function addInspectionDevice(request) {
                     type: actions.TESTTAG_INSPECTION_DEVICES_ADD_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -512,6 +536,7 @@ export function updateInspectionDevice(id, request) {
                     type: actions.TESTTAG_INSPECTION_DEVICES_UPDATE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -540,6 +565,7 @@ export function deleteInspectionDevice(id) {
                     type: actions.TESTTAG_INSPECTION_DEVICES_DELETE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -563,6 +589,7 @@ export function loadAssetTypes() {
                     type: actions.TESTTAG_ASSET_TYPES_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -594,6 +621,7 @@ export function addAssetType(request) {
                     type: actions.TESTTAG_ASSET_TYPES_ADD_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -615,6 +643,7 @@ export function saveAssetType(id, request) {
                     type: actions.TESTTAG_ASSET_TYPES_SAVE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -636,6 +665,7 @@ export const deleteAndReassignAssetType = request => {
                     type: actions.TESTTAG_ASSET_TYPES_REASSIGN_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -656,6 +686,7 @@ export function deleteAssetType(id) {
                     type: actions.TESTTAG_ASSET_TYPES_DELETE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -685,6 +716,7 @@ export function updateInspectionDetails(id, request) {
                     type: actions.TESTTAG_INSPECTION_DETAILS_UPDATE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -708,6 +740,7 @@ export function getInspectionsDue({ locationId, locationType, period, periodType
                     type: actions.TESTTAG_INSPECTIONS_DUE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 // return Promise.reject(error);
             });
     };
@@ -740,6 +773,7 @@ export function getInspectionsByLicencedUser({ startDate, endDate, userRange }) 
                     type: actions.TESTTAG_INSPECTIONS_BY_LICENCED_USER_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -760,6 +794,7 @@ export function getLicencedUsers() {
                     type: actions.TESTTAG_LICENCED_INSPECTORS_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -787,6 +822,7 @@ export function loadTaggedBuildingList() {
                     type: actions.TESTTAG_TAGGED_BUILDING_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -813,6 +849,7 @@ export function bulkAssetUpdate(request) {
                     type: actions.TESTTAG_BULK_ASSET_UPDATE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -848,6 +885,7 @@ export function loadAssetReportByFilters({
                     type: actions.TESTTAG_ASSET_REPORT_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -881,6 +919,7 @@ export function loadUserList() {
                     type: actions.TESTTAG_USER_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -915,6 +954,7 @@ export function updateUser(id, request) {
                     type: actions.TESTTAG_USER_LIST_UPDATE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -943,6 +983,7 @@ export function addUser(request) {
                     type: actions.TESTTAG_USER_LIST_ADD_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };
@@ -971,6 +1012,7 @@ export function deleteUser(id) {
                     type: actions.TESTTAG_USER_LIST_DELETE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
                 return Promise.reject(error);
             });
     };

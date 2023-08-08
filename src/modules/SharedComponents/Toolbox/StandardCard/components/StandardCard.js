@@ -60,6 +60,8 @@ export class Cards extends Component {
         subCard: PropTypes.bool,
         style: PropTypes.object,
         headerAction: PropTypes.any,
+        headerProps: PropTypes.object,
+        contentProps: PropTypes.object,
         variant: PropTypes.string,
         className: PropTypes.string,
     };
@@ -126,11 +128,14 @@ export class Cards extends Component {
                                 (accentHeader && classes.cardHeaderAccent),
                         }}
                         action={cardHeaderAction}
+                        {...this.props.headerProps}
                     />
                 )}
                 <CardContent
                     data-testid={`${standardCardId}-content`}
-                    className={`${(this.props.noPadding && classes.cardContentNoPadding) || ''}`}
+                    className={`${(this.props.noPadding && classes.cardContentNoPadding) || ''}${
+                        this.props?.contentProps?.className ? ` ${this.props?.contentProps?.className}` : ''
+                    }`}
                     style={{ ...customText }}
                 >
                     {children}

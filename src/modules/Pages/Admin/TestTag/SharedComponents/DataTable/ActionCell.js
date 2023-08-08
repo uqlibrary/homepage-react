@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { getDataFieldParams } from './utils';
 
@@ -28,7 +29,21 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
-const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, disableDelete, dataFieldKeys }) => {
+const defaultEditIcon = <EditIcon fontSize="small" />;
+const defaultDeleteIcon = <DeleteIcon fontSize="small" />;
+
+const ActionCell = ({
+    api,
+    id,
+    handleEditClick,
+    handleDeleteClick,
+    disableEdit,
+    disableDelete,
+    editIcon = defaultEditIcon,
+    deleteIcon = defaultDeleteIcon,
+    dataFieldKeys,
+    tooltips,
+}) => {
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
 
@@ -44,39 +59,70 @@ const ActionCell = ({ api, id, handleEditClick, handleDeleteClick, disableEdit, 
         handleDeleteClick?.({ id, api });
     };
 
+    const editButton = (
+        <IconButton
+            id={`${componentId}-edit-button`}
+            data-testid={`${componentId}-edit-button`}
+            {...(!!dataFieldValue ? { ['data-field']: dataFieldName, ['data-value']: dataFieldValue } : {})}
+            data-action="edit"
+            color="inherit"
+            className={classes.textPrimary}
+            size="small"
+            aria-label="edit"
+            disabled={disableEdit}
+            onClick={onEditClick}
+        >
+            {editIcon}
+        </IconButton>
+    );
+
+    const deleteButton = (
+        <IconButton
+            id={`${componentId}-delete-button`}
+            data-testid={`${componentId}-delete-button`}
+            {...(!!dataFieldValue ? { ['data-field']: dataFieldName, ['data-value']: dataFieldValue } : {})}
+            data-action="delete"
+            color="inherit"
+            size="small"
+            aria-label="delete"
+            disabled={disableDelete}
+            onClick={onDeleteClick}
+        >
+            {deleteIcon}
+        </IconButton>
+    );
+
     return (
         <div className={classes.root}>
             {!!handleEditClick && (
-                <IconButton
-                    id={`${componentId}-edit-button`}
-                    data-testid={`${componentId}-edit-button`}
-                    {...(!!dataFieldValue ? { ['data-field']: dataFieldName, ['data-value']: dataFieldValue } : {})}
-                    data-action="edit"
-                    color="inherit"
-                    className={classes.textPrimary}
-                    size="small"
-                    aria-label="edit"
-                    disabled={disableEdit}
-                    onClick={onEditClick}
-                >
-                    <EditIcon fontSize="small" />
-                </IconButton>
+                <>
+                    {!!tooltips && !!tooltips?.edit && (
+                        <Tooltip
+                            title={tooltips.edit}
+                            id={'tooltip-edit'}
+                            data-testid={'tooltip-edit'}
+                            TransitionProps={{ timeout: 300 }}
+                        >
+                            {editButton}
+                        </Tooltip>
+                    )}
+                    {(!!!tooltips || !!!tooltips?.edit) && editButton}
+                </>
             )}
-
             {!!handleDeleteClick && (
-                <IconButton
-                    id={`${componentId}-delete-button`}
-                    data-testid={`${componentId}-delete-button`}
-                    {...(!!dataFieldValue ? { ['data-field']: dataFieldName, ['data-value']: dataFieldValue } : {})}
-                    data-action="delete"
-                    color="inherit"
-                    size="small"
-                    aria-label="delete"
-                    disabled={disableDelete}
-                    onClick={onDeleteClick}
-                >
-                    <DeleteIcon fontSize="small" />
-                </IconButton>
+                <>
+                    {!!tooltips && !!tooltips?.delete && (
+                        <Tooltip
+                            title={tooltips.delete}
+                            id={'tooltip-delete'}
+                            data-testid={'tooltip-delete'}
+                            TransitionProps={{ timeout: 300 }}
+                        >
+                            {deleteButton}
+                        </Tooltip>
+                    )}
+                    {(!!!tooltips || !!!tooltips?.delete) && deleteButton}
+                </>
             )}
         </div>
     );
@@ -89,7 +135,10 @@ ActionCell.propTypes = {
     handleDeleteClick: PropTypes.func,
     disableEdit: PropTypes.bool,
     disableDelete: PropTypes.bool,
+    editIcon: PropTypes.node,
+    deleteIcon: PropTypes.node,
     dataFieldKeys: PropTypes.object,
+    tooltips: PropTypes.object,
 };
 
 export default React.memo(ActionCell);

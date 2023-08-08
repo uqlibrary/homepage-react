@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -11,15 +11,16 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import clsx from 'clsx';
 
-import { Box } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import InspectionIcon from '@material-ui/icons/Search';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
+import AssetIcon from '@material-ui/icons/Power';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import ConfirmationAlert from '../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
-import Panel from './Panel';
 import { pathConfig } from '../../../../../../config/pathConfig';
 import locale from '../../testTag.locale';
 import { PERMISSIONS, ROLES } from '../../config/auth';
@@ -36,17 +37,21 @@ const useStyles = makeStyles(theme => ({
     },
     card: {
         flex: 1,
-        color: theme.palette.text.secondary,
     },
     centreAlignParent: {
         display: 'flex',
         flexDirection: 'column',
+        [theme.breakpoints.down('sm')]: {
+            minHeight: '12rem',
+            height: '100%',
+        },
     },
     centreAlign: {
         display: 'flex',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: '-30px',
     },
     overDueText: {
         color: theme.palette.error.main,
@@ -55,9 +60,14 @@ const useStyles = makeStyles(theme => ({
     dueText: {
         textAlign: 'center',
     },
+    testButton: {
+        textAlign: 'center',
+        width: '100%',
+    },
 }));
 
 const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboardConfigError }) => {
+    const theme = useTheme();
     const pageLocale = locale.pages.dashboard;
     const classes = useStyles();
 
@@ -96,17 +106,21 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     data-testid={`${componentId}-${pageLocale.panel.inspections.id}-skeleton`}
                                 />
                             ) : (
-                                <Panel
+                                <StandardCard
                                     title={pageLocale.panel.inspections.title}
-                                    icon={
-                                        <Avatar aria-label="inspections" style={{ backgroundColor: '#388E3C' }}>
-                                            <InspectionIcon />
-                                        </Avatar>
-                                    }
+                                    primaryHeader
+                                    headerProps={{
+                                        avatar: (
+                                            <Avatar aria-label="inspections" style={{ backgroundColor: 'white' }}>
+                                                <InspectionIcon style={{ color: theme.palette.primary.light }} />
+                                            </Avatar>
+                                        ),
+                                    }}
+                                    smallTitle
+                                    subCard
                                     className={clsx([classes.card, classes.centreAlignParent])}
                                     contentProps={{ className: classes.centreAlign }}
-                                    id={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
-                                    data-testid={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
+                                    standardCardId={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
                                 >
                                     <Link
                                         to={pathConfig.admin.testntaginspect}
@@ -115,7 +129,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     >
                                         {pageLocale.panel.inspections.link}
                                     </Link>
-                                </Panel>
+                                </StandardCard>
                             )}
                         </Grid>
                     </AuthWrapper>
@@ -129,16 +143,20 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 data-testid={`${componentId}-${pageLocale.panel.assets.id}-skeleton`}
                             />
                         ) : (
-                            <Panel
+                            <StandardCard
                                 title={pageLocale.panel.assets.title}
-                                icon={
-                                    <Avatar aria-label="assets" style={{ backgroundColor: '#FFA726' }}>
-                                        <InspectionIcon />
-                                    </Avatar>
-                                }
+                                smallTitle
+                                subCard
+                                primaryHeader
+                                headerProps={{
+                                    avatar: (
+                                        <Avatar aria-label="assets" style={{ backgroundColor: 'white' }}>
+                                            <AssetIcon style={{ color: theme.palette.primary.light }} />
+                                        </Avatar>
+                                    ),
+                                }}
                                 className={classes.card}
-                                id={`${componentId}-${pageLocale.panel.assets.id}-panel`}
-                                data-testid={`${componentId}-${pageLocale.panel.assets.id}-panel`}
+                                standardCardId={`${componentId}-${pageLocale.panel.assets.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
@@ -161,31 +179,36 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
+                                <Typography variant={'body1'} style={{ paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
-                                            pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
+                                            locale.pages.general.pluraliser(
+                                                `${
+                                                    dashboardConfig?.reinspectionPeriodLength
+                                                } ${dashboardConfig?.reinspectionPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.reinspectionPeriodLength,
                                             ),
                                         )}
                                     >
-                                        {pageLocale.panel.assets.subtext(
+                                        {pageLocale.panel.assets.subtextLink(
                                             <Link
                                                 to={`${pathConfig.admin.testntagreportinspectionsdue}?period=${dashboardConfig?.reinspectionPeriodLength}`}
                                                 id={`${componentId}-${pageLocale.panel.assets.id}-link`}
                                                 data-testid={`${componentId}-${pageLocale.panel.assets.id}-link`}
                                             >
-                                                {pageLocale.config.pluraliser(
-                                                    `${dashboardConfig?.reinspectionPeriodLength} ${dashboardConfig?.reinspectionPeriodType}`,
-                                                    dashboardConfig?.reinspectionPeriodLength,
-                                                )}
+                                                {pageLocale.panel.assets.subtextLinkStart}
                                             </Link>,
+                                            locale.pages.general.pluraliser(
+                                                `${
+                                                    dashboardConfig?.reinspectionPeriodLength
+                                                } ${dashboardConfig?.reinspectionPeriodType?.toLowerCase()}`,
+                                                dashboardConfig?.reinspectionPeriodLength,
+                                            ),
                                         )}
                                     </AuthWrapper>
                                 </Typography>
-                            </Panel>
+                            </StandardCard>
                         )}
                     </Grid>
                     <Grid item xs={12} md className={classes.flexParent}>
@@ -198,16 +221,20 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-skeleton`}
                             />
                         ) : (
-                            <Panel
+                            <StandardCard
                                 title={pageLocale.panel.inspectionDevices.title}
-                                icon={
-                                    <Avatar aria-label="inspection devices" style={{ backgroundColor: '#0288D2' }}>
-                                        <InspectionDeviceIcon />
-                                    </Avatar>
-                                }
+                                smallTitle
+                                subCard
+                                primaryHeader
+                                headerProps={{
+                                    avatar: (
+                                        <Avatar aria-label="inspection devices" style={{ backgroundColor: 'white' }}>
+                                            <InspectionDeviceIcon style={{ color: theme.palette.primary.light }} />
+                                        </Avatar>
+                                    ),
+                                }}
                                 className={classes.card}
-                                id={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
-                                data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
+                                standardCardId={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
@@ -230,94 +257,40 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                                <Typography variant={'body1'} style={{ textAlign: 'center', paddingTop: 5 }}>
+                                <Typography variant={'body1'} style={{ paddingTop: 5 }}>
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.inspectionDevices.subtext(
-                                            pageLocale.config.pluraliser(
-                                                `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
+                                            locale.pages.general.pluraliser(
+                                                `${
+                                                    dashboardConfig?.calibrationPeriodLength
+                                                } ${dashboardConfig?.calibrationPeriodType?.toLowerCase()}`,
                                                 dashboardConfig?.calibrationPeriodLength,
                                             ),
                                         )}
                                     >
-                                        {pageLocale.panel.inspectionDevices.subtext(
+                                        {pageLocale.panel.inspectionDevices.subtextLink(
                                             <Link
                                                 to={`${pathConfig.admin.testntagreportrecalibrationssdue}`}
                                                 id={`${componentId}-${pageLocale.panel.inspectionDevices.id}-link`}
                                                 data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-link`}
                                             >
-                                                {pageLocale.config.pluraliser(
-                                                    `${dashboardConfig?.calibrationPeriodLength} ${dashboardConfig?.calibrationPeriodType}`,
-                                                    dashboardConfig?.calibrationPeriodLength,
-                                                )}
+                                                {pageLocale.panel.inspectionDevices.subtextLinkStart}
                                             </Link>,
+                                            locale.pages.general.pluraliser(
+                                                `${
+                                                    dashboardConfig?.calibrationPeriodLength
+                                                } ${dashboardConfig?.calibrationPeriodType?.toLowerCase()}`,
+                                                dashboardConfig?.calibrationPeriodLength,
+                                            ),
                                         )}
                                     </AuthWrapper>
                                 </Typography>
-                            </Panel>
+                            </StandardCard>
                         )}
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid item xs={12} md className={classes.flexParent}>
-                            {dashboardConfigLoading && !dashboardConfigError ? (
-                                <Skeleton
-                                    animation="wave"
-                                    height={300}
-                                    width={'100%'}
-                                    id={`${componentId}-${pageLocale.panel.management.id}-skeleton`}
-                                    data-testid={`${componentId}-${pageLocale.panel.management.id}-skeleton`}
-                                />
-                            ) : (
-                                <Panel
-                                    title={pageLocale.panel.management.title}
-                                    className={classes.card}
-                                    headerProps={{ titleTypographyProps: { variant: 'body2' } }}
-                                    id={`${componentId}-${pageLocale.panel.management.id}-panel`}
-                                    data-testid={`${componentId}-${pageLocale.panel.management.id}-panel`}
-                                >
-                                    <List component="nav" aria-label="management actions">
-                                        {pageLocale.panel.management.links.map(link => {
-                                            if (!!link?.permissions) {
-                                                return (
-                                                    <AuthWrapper
-                                                        requiredPermissions={link.permissions}
-                                                        key={`listItem${link.title.replace(' ', '')}`}
-                                                    >
-                                                        <ListItem
-                                                            button
-                                                            component={Link}
-                                                            to={link.path}
-                                                            id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
-                                                            data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
-                                                        >
-                                                            {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
-                                                            <ListItemText primary={link.title} />
-                                                        </ListItem>
-                                                    </AuthWrapper>
-                                                );
-                                            } else {
-                                                return (
-                                                    <ListItem
-                                                        button
-                                                        key={`listItem${link.title.replace(' ', '')}`}
-                                                        component={Link}
-                                                        to={link.path}
-                                                        id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
-                                                        data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
-                                                    >
-                                                        {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
-                                                        <ListItemText primary={link.title} />
-                                                    </ListItem>
-                                                );
-                                            }
-                                        })}
-                                    </List>
-                                </Panel>
-                            )}
-                        </Grid>
-                    </AuthWrapper>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
                         <Grid item xs={12} md className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
@@ -329,12 +302,13 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     data-testid={`${componentId}-${pageLocale.panel.reporting.id}-skeleton`}
                                 />
                             ) : (
-                                <Panel
+                                <StandardCard
                                     title={pageLocale.panel.reporting.title}
+                                    smallTitle
+                                    subCard
                                     className={classes.card}
-                                    headerProps={{ titleTypographyProps: { variant: 'body2' } }}
-                                    id={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
-                                    data-testid={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
+                                    primaryHeader
+                                    standardCardId={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
                                 >
                                     <List component="nav" aria-label="reporting actions">
                                         {pageLocale.panel.reporting.links.map(link => {
@@ -345,7 +319,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                     >
                                                         <ListItem
-                                                            button
                                                             component={Link}
                                                             to={link.path}
                                                             id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
@@ -359,7 +332,6 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             } else {
                                                 return (
                                                     <ListItem
-                                                        button
                                                         key={`listItem${link.title.replace(' ', '')}`}
                                                         component={Link}
                                                         to={link.path}
@@ -373,7 +345,68 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             }
                                         })}
                                     </List>
-                                </Panel>
+                                </StandardCard>
+                            )}
+                        </Grid>
+                    </AuthWrapper>
+                    <AuthWrapper
+                        requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter, PERMISSIONS.can_admin]}
+                        inclusive={false}
+                    >
+                        <Grid item xs={12} md className={classes.flexParent}>
+                            {dashboardConfigLoading && !dashboardConfigError ? (
+                                <Skeleton
+                                    animation="wave"
+                                    height={300}
+                                    width={'100%'}
+                                    id={`${componentId}-${pageLocale.panel.management.id}-skeleton`}
+                                    data-testid={`${componentId}-${pageLocale.panel.management.id}-skeleton`}
+                                />
+                            ) : (
+                                <StandardCard
+                                    title={pageLocale.panel.management.title}
+                                    smallTitle
+                                    subCard
+                                    className={classes.card}
+                                    primaryHeader
+                                    standardCardId={`${componentId}-${pageLocale.panel.management.id}-panel`}
+                                >
+                                    <List component="nav" aria-label="management actions">
+                                        {pageLocale.panel.management.links.map(link => {
+                                            if (!!link?.permissions) {
+                                                return (
+                                                    <AuthWrapper
+                                                        requiredPermissions={link.permissions}
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                    >
+                                                        <ListItem
+                                                            component={Link}
+                                                            to={link.path}
+                                                            id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                            data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                        >
+                                                            {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+                                                            <ListItemText primary={link.title} />
+                                                        </ListItem>
+                                                    </AuthWrapper>
+                                                );
+                                            } else {
+                                                return (
+                                                    <ListItem
+                                                        key={`listItem${link.title.replace(' ', '')}`}
+                                                        component={Link}
+                                                        to={link.path}
+                                                        id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                        data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                    >
+                                                        {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+                                                        <ListItemText primary={link.title} />
+                                                    </ListItem>
+                                                );
+                                            }
+                                        })}
+                                    </List>
+                                </StandardCard>
                             )}
                         </Grid>
                     </AuthWrapper>

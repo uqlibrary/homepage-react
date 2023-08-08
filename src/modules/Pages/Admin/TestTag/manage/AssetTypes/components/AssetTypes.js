@@ -11,7 +11,7 @@ import { useConfirmationState } from 'hooks';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import ActionDialogue from './ActionDialogue';
 
@@ -30,9 +30,6 @@ const useStyles = makeStyles(theme => ({
     },
     tableMarginTop: {
         marginTop: theme.spacing(0),
-    },
-    gridRoot: {
-        border: 0,
     },
 }));
 
@@ -56,7 +53,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
         closeConfirmationAlert();
-        actionDispatch({ type: 'edit', row });
+        actionDispatch({ type: 'edit', title: pageLocale.editAsset.title, row });
     };
 
     const onRowDelete = ({ id, api }) => {
@@ -73,6 +70,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const { columns } = useDataTableColumns({
         config,
         locale: pageLocale.form.columns,
+        actionTooltips: pageLocale.form.actionTooltips,
         handleEditClick: onRowEdit,
         handleDeleteClick: onRowDelete,
         actionDataFieldKeys: { valueKey: 'asset_type_name' },
@@ -87,7 +85,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
 
     const handleAddClick = () => {
         closeConfirmationAlert();
-        actionDispatch({ type: 'add' });
+        actionDispatch({ type: 'add', title: pageLocale.addAsset.title });
     };
 
     const onRowAdd = React.useCallback(data => {
@@ -217,7 +215,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
-            requiredPermissions={[PERMISSIONS.can_admin]}
+            requiredPermissions={[PERMISSIONS.can_inspect]}
         >
             <ActionDialogue
                 id={componentId}
@@ -279,7 +277,6 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                 columns={columns}
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}
-                                /* editRowsModel={editRowsModel}*/
                                 components={{ Toolbar: AddToolbar }}
                                 componentsProps={{
                                     toolbar: {
@@ -288,7 +285,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                         onClick: handleAddClick,
                                     },
                                 }}
-                                classes={{ root: classes.gridRoot }}
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>
