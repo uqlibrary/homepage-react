@@ -88,7 +88,7 @@ describe('InspectionPanel', () => {
         await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
     });
 
-    it('warns when department testing device is chosen for a PASS inspection', async () => {
+    it('warns when department testing device is chosen for a PASS test', async () => {
         const updateKeyDate = 'inspection_date_next';
         const updateKeyTestDeviceId = 'inspection_device_id';
         const updateKeyDeviceId = 3;
@@ -143,7 +143,7 @@ describe('InspectionPanel', () => {
         ).toBeInTheDocument();
         expect(
             rerendered.getByTestId('testRerender-inspection_panel-inspection-device-validation-text'),
-        ).toHaveTextContent('Visual inspection can not be used for a PASS inspection');
+        ).toHaveTextContent('Visual inspection can not be used for a PASS test');
     });
 
     it('allows entry of inspection notes text', async () => {

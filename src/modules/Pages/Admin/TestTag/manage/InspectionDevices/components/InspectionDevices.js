@@ -11,13 +11,12 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
-import { PERMISSIONS } from '../../../config/auth';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 
 const moment = require('moment');
@@ -27,10 +26,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     },
     tableMarginTop: {
-        marginTop: theme.spacing(2),
-    },
-    gridRoot: {
-        border: 0,
+        marginTop: theme.spacing(1),
     },
     inspectionOverdue: {
         backgroundColor: theme.palette.error.main,
@@ -48,10 +44,10 @@ const InspectionDevices = ({
     inspectionDevices,
     inspectionDevicesLoading,
     inspectionDevicesError,
+    requiredPermissions,
 }) => {
     const today = moment().format(locale.config.format.dateFormatNoTime);
     const classes = useStyles();
-    const pagePermissions = [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports];
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { user } = useSelector(state => state.get('testTagUserReducer'));
@@ -171,6 +167,7 @@ const InspectionDevices = ({
         handleEditClick,
         handleDeleteClick,
         actionDataFieldKeys: { valueKey: 'device_model_name' },
+        actionTooltips: pageLocale.form.actionTooltips,
     });
 
     const { row } = useDataTableRow(inspectionDevices, transformRow);
@@ -184,8 +181,8 @@ const InspectionDevices = ({
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
             locale={pageLocale}
+            requiredPermissions={requiredPermissions}
             inclusive={false}
-            requiredPermissions={pagePermissions}
         >
             <div className={classes.root}>
                 <StandardCard noHeader>
@@ -249,7 +246,7 @@ const InspectionDevices = ({
                             />
                         </>
                     )}
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
+                    <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
@@ -269,12 +266,12 @@ const InspectionDevices = ({
                                         : {}),
                                 }}
                                 loading={inspectionDevicesLoading}
-                                classes={{ root: classes.gridRoot }}
                                 getCellClassName={params =>
                                     params.field === 'device_calibration_due_date' && params.value < today
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
+                                {...(config.sort ?? {})}
                             />
                         </Grid>
                     </Grid>
@@ -302,6 +299,7 @@ InspectionDevices.propTypes = {
     inspectionDevicesLoading: PropTypes.bool,
     inspectionDevicesLoaded: PropTypes.bool,
     inspectionDevicesError: PropTypes.bool,
+    requiredPermissions: PropTypes.array,
 };
 
 export default React.memo(InspectionDevices);

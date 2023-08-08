@@ -13,6 +13,8 @@ const deployment = {
         environment: 'development',
         basePath: '',
         publicPath: '',
+        // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-development/[BRANCH_NAME]/uq-lib-reusable.min.js', // dev
+        reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
     },
     staging: {
         url: () => 'https://homepage-staging.library.uq.edu.au/',
@@ -27,6 +29,7 @@ const deployment = {
         environment: 'staging',
         basePath: '',
         publicPath: '/',
+        reusablejs: 'http://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js',
     },
     production: {
         url: () => 'https://homepage-production.library.uq.edu.au/',
@@ -41,6 +44,7 @@ const deployment = {
         environment: 'production',
         basePath: '',
         publicPath: '/',
+        reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
     },
 };
 

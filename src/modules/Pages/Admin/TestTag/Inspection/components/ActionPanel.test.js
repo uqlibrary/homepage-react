@@ -62,13 +62,13 @@ describe('ActionPanel', () => {
             fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
         });
 
-        expect(setStateMock).toHaveBeenCalledWith(1);
+        expect(setStateMock).toHaveBeenCalledWith(0);
 
         act(() => {
             fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
         });
 
-        expect(setStateMock).toHaveBeenCalledWith(0);
+        expect(setStateMock).toHaveBeenCalledWith(1);
     });
 
     it('allows selection of only discard tab', () => {
@@ -88,13 +88,13 @@ describe('ActionPanel', () => {
             fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
         });
 
-        expect(setStateMock).toHaveBeenCalledWith(1);
+        expect(setStateMock).toHaveBeenCalledWith(0);
 
         act(() => {
             fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
         });
         // can only access the Repair tab if status === FAILED
-        expect(setStateMock).not.toHaveBeenCalledWith(0);
+        expect(setStateMock).not.toHaveBeenCalledWith(1);
     });
 
     it('allows entry of repair text', async () => {
@@ -122,6 +122,10 @@ describe('ActionPanel', () => {
             classes,
             isMobileView,
             disabled,
+        });
+
+        act(() => {
+            fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
         });
 
         expect(getByTestId(testInputId)).toBeInTheDocument();

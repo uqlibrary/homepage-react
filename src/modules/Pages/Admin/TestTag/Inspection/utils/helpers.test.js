@@ -172,10 +172,10 @@ describe('Helper functions', () => {
         };
         const userPass = { department_visual_inspection_device_id: 3 };
         const userFail = { department_visual_inspection_device_id: 1 };
-        // no inspection = valid
-        expect(isValidInspection({}, userPass, testStatusEnum)).toBe(true);
-        // no inspection = valid
-        expect(isValidInspection({}, userFail, testStatusEnum)).toBe(true);
+        // no inspection = invalid
+        expect(isValidInspection({}, userPass, testStatusEnum)).toBe(false);
+        // no inspection = invalid
+        expect(isValidInspection({}, userFail, testStatusEnum)).toBe(false);
         expect(isValidInspection({})).toBe(false);
         expect(isValidInspection(validObject1, userPass, testStatusEnum)).toBe(true);
         expect(isValidInspection(validObject1, userFail, testStatusEnum)).toBe(false);
@@ -320,7 +320,7 @@ describe('Helper functions', () => {
                 value: 'DISCARDED',
             },
             FAILED: {
-                label: 'FAIL',
+                label: 'Fail',
                 value: 'FAILED',
             },
             NONE: {
@@ -332,7 +332,7 @@ describe('Helper functions', () => {
                 value: 'OUTFORREPAIR',
             },
             PASSED: {
-                label: 'PASS',
+                label: 'Pass',
                 value: 'PASSED',
             },
         };

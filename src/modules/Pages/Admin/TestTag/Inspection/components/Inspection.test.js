@@ -16,7 +16,6 @@ import floorData from '../../../../../../data/mock/data/testing/testTagFloors';
 import roomData from '../../../../../../data/mock/data/testing/testTagRooms';
 import locale from '../../testTag.locale.js';
 import { getUserPermissions } from '../../helpers/auth';
-import { screen } from 'test-utils';
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -169,7 +168,7 @@ describe('TestTag', () => {
         const clearSaveInspectionFn = jest.fn();
         const clearSaveInspectionErrorFn = jest.fn();
         const saveErrorTitle = 'Some error';
-        const { getByRole, getByText, queryByRole, getByTitle } = setup({
+        const { getByText, getByTitle, getByTestId, queryByTestId } = setup({
             actions: {
                 loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
@@ -179,8 +178,8 @@ describe('TestTag', () => {
             },
             saveInspectionError: saveErrorTitle,
         });
-        screen.debug(undefined, 150000);
-        await waitFor(() => expect(getByRole('alert')).toBeInTheDocument());
+
+        await waitFor(() => expect(getByTestId('confirmation_alert-error-alert')).toBeInTheDocument());
         expect(getByText(locale.config.alerts.error(saveErrorTitle))).toBeInTheDocument();
 
         act(() => {
@@ -189,7 +188,7 @@ describe('TestTag', () => {
         expect(clearSaveInspectionErrorFn).toHaveBeenCalled();
         expect(clearSaveInspectionFn).toHaveBeenCalled();
 
-        await waitFor(() => expect(queryByRole('alert')).not.toBeInTheDocument());
+        await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
         expect(clearAssetsFn).toHaveBeenCalled();
     });
 
@@ -200,7 +199,7 @@ describe('TestTag', () => {
         const clearSaveInspectionFn = jest.fn();
         const clearInspectionConfigError = jest.fn();
         const inspectionConfigError = 'network error';
-        const { getByRole, getByText, getByTitle, queryByRole } = setup({
+        const { getByText, getByTitle, getByTestId, queryByTestId } = setup({
             actions: {
                 loadAssetTypes: mockFn,
                 loadInspectionConfig: loadConfigFn,
@@ -210,12 +209,12 @@ describe('TestTag', () => {
             },
             inspectionConfigError,
         });
-        await waitFor(() => expect(getByRole('alert')).toBeInTheDocument());
+        await waitFor(() => expect(getByTestId('confirmation_alert-error-alert')).toBeInTheDocument());
         expect(getByText(locale.config.alerts.error(inspectionConfigError))).toBeInTheDocument();
         act(() => {
             fireEvent.click(getByTitle('Close'));
         });
-        await waitFor(() => expect(queryByRole('alert')).not.toBeInTheDocument());
+        await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
         expect(clearInspectionConfigError).toHaveBeenCalled();
     });
 
@@ -243,7 +242,7 @@ describe('TestTag', () => {
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
         expect(getByText('UQL000705')).toBeInTheDocument();
-        expect(getByText('Tested By: NOT LICENCED')).toBeInTheDocument();
+        expect(getByText('NOT LICENCED')).toBeInTheDocument();
         expect(getByText('2022-12-12')).toBeInTheDocument();
         expect(getByText('2023Dec12')).toBeInTheDocument();
         act(() => {
@@ -280,7 +279,7 @@ describe('TestTag', () => {
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(getByTestId('saved-licence-number').textContent).toBe('1234567890');
         expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
@@ -316,7 +315,7 @@ describe('TestTag', () => {
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(getByTestId('saved-licence-number').textContent).toBe('1234567890');
         expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
@@ -352,7 +351,7 @@ describe('TestTag', () => {
 
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
-        expect(getByTestId('testTagDialogTaggedBy').textContent).toBe('TAG PLACED BY:1234567890');
+        expect(getByTestId('saved-licence-number').textContent).toBe('1234567890');
         expect(getByText('UQL000705')).toBeInTheDocument();
         expect(queryByText('2022-12-12')).not.toBeInTheDocument();
         expect(queryByText('2023Dec12')).not.toBeInTheDocument();
@@ -387,7 +386,7 @@ describe('TestTag', () => {
         await waitFor(() => expect(getByRole('dialog')).toBeInTheDocument());
         expect(getByText('Asset saved')).toBeInTheDocument();
         expect(getByText('UQL000705')).toBeInTheDocument();
-        expect(getByText('Tested By: NOT LICENCED')).toBeInTheDocument();
+        expect(getByText('NOT LICENCED')).toBeInTheDocument();
         expect(getByText('2022-12-12')).toBeInTheDocument();
         expect(getByText('N/A')).toBeInTheDocument();
         act(() => {
@@ -420,7 +419,11 @@ describe('TestTag', () => {
                 loadRooms: mockLoadRooms,
                 clearSaveInspection: mockFn,
             },
-            defaultFormValues: { ...DEFAULT_FORM_VALUES, user_id: 3, asset_department_owned_by: 'UQL' },
+            defaultFormValues: {
+                ...DEFAULT_FORM_VALUES,
+                user_id: 3,
+                asset_department_owned_by: 'UQL',
+            },
         });
 
         expect(getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
@@ -429,10 +432,8 @@ describe('TestTag', () => {
 
         act(() => {
             fireEvent.click(getByTestId('asset_selector-asset-panel-input'));
-            fireEvent.change(getByTestId('asset_selector-asset-panel-input'), { target: { value: 'UQL310000' } });
         });
-
-        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+        selectOptionFromListByIndex(4, { getByRole, getAllByRole }); // UQL310000
 
         await waitFor(() =>
             expect(getByTestId('asset_type_selector-asset-panel-input')).not.toHaveAttribute('disabled', 'disabled'),

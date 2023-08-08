@@ -6,11 +6,12 @@ import { pathConfig } from '../../../../config/pathConfig';
 import InspectionIcon from '@material-ui/icons/Search';
 import UsersIcon from '@material-ui/icons/People';
 import AssetTypeIcon from '@material-ui/icons/DevicesOther';
-import LocationIcon from '@material-ui/icons/MyLocation';
+import LocationIcon from '@material-ui/icons/LocationCity';
 import InspectionDeviceIcon from '@material-ui/icons/Build';
 import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
 import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
-import InspectionByUserIcon from '@material-ui/icons/PermContactCalendar';
+import InspectionByUserIcon from '@material-ui/icons/VerifiedUser';
+import AssetIcon from '@material-ui/icons/Power';
 
 import { PERMISSIONS } from './config/auth';
 
@@ -83,7 +84,7 @@ export default {
                 pluraliser: (text, count) => (
                     <>
                         {text}
-                        {count > 1 ? 'S' : ''}
+                        {count > 1 ? 's' : ''}
                     </>
                 ),
             },
@@ -93,97 +94,110 @@ export default {
             panel: {
                 inspections: {
                     id: 'new-inspection',
-                    title: 'INSPECTIONS',
+                    title: 'Test',
                     link: 'Begin test and tagging of assets',
                 },
                 assets: {
                     id: 'assets-due-inspection',
-                    title: 'ASSET INSPECTIONS',
+                    title: 'Assets',
                     subtext: duration => <>* due in the next {duration}.</>,
+                    subtextLinkStart: 'View asset tests due',
+                    subtextLink: (link, duration) => (
+                        <>
+                            {link} in the next {duration}.
+                        </>
+                    ),
                     upcomingText: 'upcoming *',
                     overdueText: 'overdue',
                 },
                 inspectionDevices: {
                     id: 'devices-due-recalibration',
-                    title: 'INSPECTION DEVICE RECALIBRATIONS',
+                    title: 'Testing devices',
                     subtext: duration => <>* due in the next {duration}.</>,
+                    subtextLinkStart: 'View testing device calibrations due',
+                    subtextLink: (link, duration) => (
+                        <>
+                            {link} in the next {duration}.
+                        </>
+                    ),
                     upcomingText: 'upcoming *',
                     overdueText: 'overdue',
                 },
                 management: {
                     id: 'management',
-                    title: 'MANAGEMENT',
+                    title: 'Management',
                     links: [
                         {
-                            id: 'users',
-                            title: 'USERS',
-                            icon: <UsersIcon />,
-                            permissions: [PERMISSIONS.can_admin],
-                            path: pathConfig.admin.testntagmanageusers,
+                            id: 'asset-types',
+                            title: 'Asset types',
+                            icon: <AssetTypeIcon style={{ color: '#2b2a29' }} />,
+                            path: pathConfig.admin.testntagmanageassettypes,
+                            permissions: [PERMISSIONS.can_inspect],
                         },
                         {
-                            id: 'asset-types',
-                            title: 'ASSET TYPES',
-                            icon: <AssetTypeIcon />,
-                            path: pathConfig.admin.testntagmanageassettypes,
+                            id: 'bulk-asset-update',
+                            title: 'Bulk asset update',
+                            icon: <BulkUpdateIcon style={{ color: '#2b2a29' }} />,
+                            path: pathConfig.admin.testntagmanagebulkassetupdate,
+                            permissions: [PERMISSIONS.can_inspect, PERMISSIONS.can_alter],
+                        },
+                        {
+                            id: 'inspections',
+                            title: 'Test notes',
+                            icon: <InspectionIcon style={{ color: '#2b2a29' }} />,
+                            path: pathConfig.admin.testntagmanageinspectiondetails,
+                            permissions: [PERMISSIONS.can_inspect],
+                        },
+                        {
+                            id: 'inspection-devices',
+                            title: 'Testing devices',
+                            icon: <InspectionDeviceIcon style={{ color: '#2b2a29' }} />,
+                            path: pathConfig.admin.testntagmanageinspectiondevices,
+                            permissions: [PERMISSIONS.can_inspect, PERMISSIONS.can_alter],
                         },
                         {
                             id: 'locations',
-                            title: 'LOCATIONS',
-                            icon: <LocationIcon />,
+                            title: 'Locations',
+                            icon: <LocationIcon style={{ color: '#2b2a29' }} />,
                             permissions: [PERMISSIONS.can_admin],
                             path: pathConfig.admin.testntagmanagelocations,
                         },
                         {
-                            id: 'inspection-devices',
-                            title: 'INSPECTION DEVICES',
-                            icon: <InspectionDeviceIcon />,
-                            path: pathConfig.admin.testntagmanageinspectiondevices,
-                        },
-                        {
-                            id: 'bulk-asset-update',
-                            title: 'BULK ASSET UPDATE',
-                            icon: <BulkUpdateIcon />,
-                            path: pathConfig.admin.testntagmanagebulkassetupdate,
-                        },
-                        {
-                            id: 'inspections',
-                            title: 'INSPECTIONS',
-                            icon: <InspectionIcon />,
-                            path: pathConfig.admin.testntagmanageinspectiondetails,
+                            id: 'users',
+                            title: 'Users',
+                            icon: <UsersIcon style={{ color: '#2b2a29' }} />,
+                            permissions: [PERMISSIONS.can_admin],
+                            path: pathConfig.admin.testntagmanageusers,
                         },
                     ],
                 },
                 reporting: {
                     id: 'reporting',
-                    title: 'REPORTING',
+                    title: 'Reporting',
                     links: [
                         {
-                            id: 'devices-due-recalibration',
-                            title: 'INSPECTION DEVICES DUE RECALIBRATION',
-                            icon: <InspectionDeviceIcon />,
-                            permissions: [PERMISSIONS.can_see_reports],
-                            path: pathConfig.admin.testntagreportrecalibrationssdue,
-                        },
-                        {
                             id: 'assets-due-inspection',
-                            title: 'ASSETS DUE NEXT INSPECTION',
-                            icon: <InspectionIcon />,
-                            permissions: [PERMISSIONS.can_see_reports],
+                            title: 'Assets due for testing',
+                            icon: <AssetIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagreportinspectionsdue,
                         },
                         {
                             id: 'assets-inspected',
-                            title: 'ASSETS INSPECTED BY BUILDING, STATUS, AND DATE RANGE',
-                            icon: <AssetsInspectedByDateIcon />,
+                            title: 'Assets tested by building, status, and date range',
+                            icon: <AssetsInspectedByDateIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagreportassetsbyfilters,
                         },
                         {
                             id: 'inspections-by-user',
-                            title: 'INSPECTIONS BY LICENCED USER',
-                            icon: <InspectionByUserIcon />,
+                            title: 'Tests by licenced user',
+                            icon: <InspectionByUserIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
-                            permissions: [PERMISSIONS.can_admin],
+                        },
+                        {
+                            id: 'devices-due-recalibration',
+                            title: 'Testing devices due for recalibration',
+                            icon: <InspectionDeviceIcon style={{ color: '#2b2a29' }} />,
+                            path: pathConfig.admin.testntagreportrecalibrationssdue,
                         },
                     ],
                 },
@@ -193,10 +207,10 @@ export default {
             config: {
                 dateFormat: 'YYYY-MM-DD HH:mm',
                 dateFormatNoTime: 'YYYY-MM-DD',
-                dateFormatDisplay: 'Do MMMM, YYYY',
+                dateFormatDisplay: 'DD MMMM YYYY',
                 currentLabel: 'CURRENT',
-                passLabel: 'PASS',
-                failedLabel: 'FAIL',
+                passLabel: 'Pass',
+                failedLabel: 'Fail',
                 repairLabel: 'REPAIR',
                 discardedLabel: 'DISCARD',
                 noneLabel: 'NONE',
@@ -204,13 +218,12 @@ export default {
 
             breadcrumbs: [
                 {
-                    title: 'Create a new Inspection',
+                    title: 'Test asset',
                     icon: <InspectionIcon fontSize={'small'} />,
                 },
             ],
             header: {
-                pageSubtitle: dept => `Creating a new Inspection for ${dept}`,
-                requiredText: 'All fields are required unless otherwise indicated.',
+                pageSubtitle: dept => `Testing assets for ${dept}`,
             },
             form: {
                 event: {
@@ -220,7 +233,12 @@ export default {
                     },
                     date: {
                         label: 'Event date',
+                        maxDateMessage: 'Date can not be in the future',
+                        inputProps: {
+                            maxLength: 17,
+                        },
                     },
+
                     location: {
                         title: 'Location',
                     },
@@ -242,70 +260,70 @@ export default {
                         addDialog: {
                             confirmButtonLabel: 'Add',
                             cancelButtonLabel: 'Cancel',
-                            confirmationTitle: 'Add new Asset Type',
+                            confirmationTitle: 'Add new asset type',
                         },
-                        loadError: 'Unable to load list of Asset Types',
+                        loadError: 'Unable to load list of asset types',
                         saveError:
-                            'Unable to save your new Asset Type. Please ensure the Asset Type name you have entered does not already exist in your department',
+                            'Unable to save your new asset type. Please ensure the asset type name you have entered does not already exist in your department',
                     },
                     ownerLabel: 'Asset owner',
                 },
                 lastInspectionPanel: {
-                    title: suffix => `Previous Inspection ${suffix}`,
+                    title: suffix => `Previous test ${suffix}`,
                     aria: {
                         collapseButtonLabel: 'Show more',
                     },
                     statusLabel: 'Status: ',
-                    statusUnavailableLabel: 'Unavailable',
+                    statusUnavailableLabel: 'unavailable',
                     statusUnknownLabel: 'UNKNOWN',
-                    testDateLabel: 'Inspection Date: ',
+                    testDateLabel: 'Test date: ',
                     siteLabel: 'Site: ',
                     buildingLabel: 'Building: ',
                     floorLabel: 'Floor: ',
                     roomLabel: 'Room: ',
                     alertLocationMismatch: 'Locations do not match',
-                    failReasonLabel: 'Fail Reason: ',
-                    testNotesLabel: 'Inspection Notes: ',
-                    nextTestDateLabel: 'Next Inspection Date: ',
+                    failReasonLabel: 'Fail reason: ',
+                    testNotesLabel: 'Test notes: ',
+                    nextTestDateLabel: 'Next test date: ',
                     noneLabel: 'None',
-                    repairDetailsLabel: 'Repair Details: ',
-                    discardReasonLabel: 'Discard Reason: ',
+                    repairDetailsLabel: 'Repair details: ',
+                    discardReasonLabel: 'Discard reason: ',
                 },
                 inspection: {
-                    title: 'Inspection',
+                    title: 'Test details',
                     deviceLabel: 'Testing device',
-                    deviceInvalidForPass: device => `${device} can not be used for a PASS inspection`,
-                    testResultLabel: 'Inspection Result',
-                    nextTestDateLabel: 'Next inspection due',
-                    nextTestDateFormatted: dateStr => `Next inspection due ${dateStr}`,
+                    deviceInvalidForPass: device => `${device} can not be used for a PASS test`,
+                    testResultLabel: 'Test result',
+                    nextTestDateLabel: 'Next test due',
+                    nextTestDateFormatted: dateStr => `Next test due ${dateStr}`,
                     failReason: {
-                        label: 'Fail Reason',
+                        label: 'Fail reason',
                     },
                     inspectionNotes: {
-                        label: 'Inspection Notes',
+                        label: 'Test notes',
                     },
                 },
                 action: {
                     title: 'Action',
                     repair: {
-                        label: 'Send for Repair?',
+                        label: 'Send for repair?',
                         options: [
                             { label: 'NO', value: 1 },
                             { label: 'YES', value: 2 },
                         ],
                         repairerDetails: {
-                            label: 'Repairer Details',
+                            label: 'Repairer details',
                         },
                     },
                     discard: {
                         alertMessage: 'IMPORTANT: Only complete this section if you are actually discarding the asset.',
-                        label: 'Discard this Asset?',
+                        label: 'Discard this asset?',
                         options: [
                             { label: 'NO', value: 1 },
                             { label: 'YES', value: 2 },
                         ],
                         discardReason: {
-                            label: 'Discarding Reason',
+                            label: 'Discarding reason',
                         },
                     },
                 },
@@ -354,44 +372,48 @@ export default {
             assetTypes: {
                 breadcrumbs: [
                     {
-                        title: 'Manage - Asset Types',
+                        title: 'Manage - Asset types',
                         icon: <AssetTypeIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset Type management for ${dept}`,
-                    addButtonLabel: 'Add Asset Type',
+                    pageSubtitle: dept => `Asset type management for ${dept}`,
+                    addButtonLabel: 'Add asset type',
                 },
                 addAsset: {
-                    title: 'Add new Asset Type',
+                    title: 'Add new asset type',
                     cancelButtonLabel: 'Cancel',
                     confirmButtonLabel: 'Add',
                 },
                 editAsset: {
-                    title: 'Edit Asset Type',
+                    title: 'Edit asset type',
                     cancelButtonLabel: 'Cancel',
                     confirmButtonLabel: 'Update',
                 },
                 deleteConfirm: {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
-                    confirmationMessage: 'Are you sure you wish to remove this Asset Type?',
-                    confirmationTitle: 'Remove unused Asset Type',
+                    confirmationMessage: 'Are you sure you wish to remove this asset type?',
+                    confirmationTitle: 'Remove unused asset type',
                 },
                 snackbars: {
-                    loadFailed: 'Unable to load Asset Types',
+                    loadFailed: 'Unable to load asset types',
                     addSuccess: 'Asset type added',
-                    addFailed: 'Unable to add the Asset Type',
+                    addFailed: 'Unable to add the asset type',
                     updateSuccess: 'Asset type updated',
-                    updateFailed: 'Unable to update the Asset Type',
-                    reallocateFailed: 'Unable to reallocate and delete the Asset Type',
-                    deleteSuccess: 'Asset Type Deleted',
-                    deleteFailed: 'Unable to delete the Asset Type',
+                    updateFailed: 'Unable to update the asset type',
+                    reallocateFailed: 'Unable to reallocate and delete the asset type',
+                    deleteSuccess: 'Asset type Deleted',
+                    deleteFailed: 'Unable to delete the asset type',
                 },
                 form: {
                     locationTypeTitle: 'Asset type',
                     actions: 'Actions',
                     addLocationButton: 'Add asset type',
+                    actionTooltips: {
+                        edit: 'Edit asset type',
+                        delete: 'Delete asset type',
+                    },
                     columns: {
                         asset_type_id: {
                             label: 'Id',
@@ -412,7 +434,7 @@ export default {
                             label: 'Notes',
                         },
                         asset_count: {
-                            label: 'Usage',
+                            label: 'No. tests',
                         },
                     },
                 },
@@ -427,9 +449,9 @@ export default {
                     confirmationTitle: type => `Edit ${type}`,
                 },
                 actionDialogue: {
-                    confirmationTitle: 'Delete and Reassign',
+                    confirmationTitle: 'Delete and reassign',
                     deleteReassignTargetPrompt: target => `Delete ${target ?? 'NONE'} and reassign all assets to:`,
-                    newAssetTypePrompt: 'New Asset Type',
+                    newAssetTypePrompt: 'New asset type',
                     deleteReassignWarningPrompt: count => `This will affect ${count ?? 0} assets`,
                     cancelButtonLabel: 'Cancel',
                     confirmButtonLabel: 'Proceed',
@@ -455,13 +477,13 @@ export default {
                                 label: 'Site ID',
                             },
                             site_name: {
-                                label: 'Description',
+                                label: 'Site name',
                             },
                             site_id_displayed: {
-                                label: 'Display name',
+                                label: 'Site ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         building: {
@@ -472,13 +494,13 @@ export default {
                                 label: 'Location',
                             },
                             building_name: {
-                                label: 'Description',
+                                label: 'Building name',
                             },
                             building_id_displayed: {
-                                label: 'Display name',
+                                label: 'Building ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         floor: {
@@ -486,13 +508,13 @@ export default {
                                 label: 'Floor ID',
                             },
                             floor_location: {
-                                label: 'Location',
+                                label: 'Floor name',
                             },
                             floor_id_displayed: {
-                                label: 'Display name',
+                                label: 'Floor ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         room: {
@@ -503,15 +525,20 @@ export default {
                                 label: 'Location',
                             },
                             room_description: {
-                                label: 'Description',
+                                label: 'Room name',
                             },
                             room_id_displayed: {
-                                label: 'Display name',
+                                label: 'Room ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
+                    },
+
+                    actionTooltips: {
+                        edit: 'Edit this location',
+                        delete: 'Delete this location',
                     },
                 },
                 dialogAdd: {
@@ -527,27 +554,27 @@ export default {
                 dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
-                    confirmationMessage: 'Are you sure you wish to delete this Location?',
-                    confirmationTitle: 'Delete unused Location',
+                    confirmationMessage: 'Are you sure you wish to delete this location?',
+                    confirmationTitle: 'Delete unused location',
                 },
                 snackbar: {
-                    addSuccess: 'Added the Location successfully',
-                    addFail: 'Unable to save the Location',
+                    addSuccess: 'Added the location successfully',
+                    addFail: 'Unable to save the location',
                     updateSuccess: 'updated successfully',
-                    updateFail: 'Unable to update the Location',
+                    updateFail: 'Unable to update the location',
                     deleteSuccess: 'deleted successfully',
-                    deleteFail: 'Unable to delete the Location',
+                    deleteFail: 'Unable to delete the location',
                 },
             },
             inspectiondevices: {
                 breadcrumbs: [
                     {
-                        title: 'Manage - Inspection Devices',
+                        title: 'Manage - Testing devices',
                         icon: <InspectionDeviceIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Inspection Device management for ${dept}`,
+                    pageSubtitle: dept => `Testing device management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -575,11 +602,16 @@ export default {
                             label: 'Next calibration',
                         },
                     },
+
+                    actionTooltips: {
+                        edit: 'Edit this device',
+                        delete: 'Delete this device',
+                    },
                 },
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new Device',
+                    confirmationTitle: 'Add new device',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
@@ -593,23 +625,23 @@ export default {
                     confirmationTitle: 'Delete Device',
                 },
                 snackbar: {
-                    addSuccess: 'Device added successfully',
-                    addFail: 'Unable to add the Inspection Device',
-                    updateSuccess: 'Device updated successfully',
-                    updateFail: 'Unable to update the Inspection Device',
-                    deleteSuccess: 'Device deleted successfully',
-                    deleteFail: 'Unable to delete the Inspection Device',
+                    addSuccess: 'Testing device added successfully',
+                    addFail: 'Unable to add the testing device',
+                    updateSuccess: 'Testing device updated successfully',
+                    updateFail: 'Unable to update the testing device',
+                    deleteSuccess: 'Testing device deleted successfully',
+                    deleteFail: 'Unable to delete the testing device',
                 },
             },
             inspectiondetails: {
                 breadcrumbs: [
                     {
-                        title: 'Manage - Inspection Details',
+                        title: 'Manage - Test notes',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Inspection Details management for ${dept}`,
+                    pageSubtitle: dept => `Test note management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -627,13 +659,13 @@ export default {
                             label: 'Status',
                         },
                         user_name: {
-                            label: 'Last inspected by',
+                            label: 'Last tested by',
                         },
                         inspect_date: {
-                            label: 'Last inspection date',
+                            label: 'Last test date',
                         },
                         inspect_notes: {
-                            label: 'Inspection notes',
+                            label: 'Test notes',
                         },
                         inspect_fail_reason: {
                             label: 'Fail reason',
@@ -650,27 +682,31 @@ export default {
                         helperText: 'Scan or enter a new ID to search',
                         placeholder: 'Enter at least 3 characters',
                     },
+
+                    actionTooltips: {
+                        edit: 'Edit test notes',
+                    },
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Edit asset details',
+                    confirmationTitle: 'Edit test notes',
                 },
                 snackbar: {
-                    updateSuccess: 'Asset updated successfully',
-                    updateFail: 'Unable to update the Asset',
+                    updateSuccess: 'Test notes updated successfully',
+                    updateFail: 'Unable to update the test notes',
                 },
             },
             bulkassetupdate: {
                 config: {},
                 breadcrumbs: [
                     {
-                        title: 'Manage - Bulk Asset Update',
+                        title: 'Manage - Bulk asset update',
                         icon: <BulkUpdateIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Bulk Asset management for ${dept}`,
+                    pageSubtitle: dept => `Bulk asset management for ${dept}`,
                 },
                 form: {
                     columns: {
@@ -700,6 +736,7 @@ export default {
                             columns: {
                                 asset_barcode: { label: 'Barcode' },
                                 asset_type_name: { label: 'Type' },
+                                inspect_comment: { label: 'Last test notes' },
                                 asset_location: { label: 'Location' },
                                 asset_status: { label: 'Status' },
                             },
@@ -710,6 +747,11 @@ export default {
                                 },
                                 title: 'Asset Type',
                                 labelAll: 'All Asset Types',
+                            },
+                            ariaClearNotes: 'Clear test notes search',
+                            testNoteSearch: {
+                                label: 'Search test notes',
+                                helperText: 'Max 50 characters, search will match entered phrase',
                             },
                         },
                     },
@@ -728,9 +770,13 @@ export default {
                                 next: 'Next',
                                 findAndAdd: 'Find and add by feature',
                             },
+                            actionTooltips: {
+                                delete: 'Remove from list',
+                            },
+                            tableSizeChanged: size => `${size} total assets chosen`,
                         },
                         two: {
-                            title: 'Step 2: Choose bulk update action',
+                            title: 'Step 2: Choose bulk update actions',
                             subtext: count => <>You have selected {count} assets to bulk update.</>,
                             button: {
                                 previous: 'Back',
@@ -740,6 +786,7 @@ export default {
                                 location: 'Update Location',
                                 status: 'Discard Asset',
                                 assetType: 'Update Asset Type',
+                                notes: 'Clear test notes',
                             },
                             discardReason: {
                                 label: 'Discarding Reason',
@@ -777,7 +824,7 @@ export default {
                             label: 'ID',
                         },
                         user_uid: {
-                            label: 'UUID',
+                            label: 'User ID',
                         },
                         user_name: {
                             label: 'Name',
@@ -816,14 +863,18 @@ export default {
                             label: 'Current',
                         },
                         actions_count: {
-                            label: 'Inspections',
+                            label: 'No. Tests',
                         },
+                    },
+                    actionTooltips: {
+                        edit: 'Edit this user',
+                        delete: 'Delete this user',
                     },
                 },
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new User',
+                    confirmationTitle: 'Add new user',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
@@ -855,17 +906,17 @@ export default {
             config: {
                 dateFormat: 'YYYY-MM-DD HH:mm',
                 dateFormatNoTime: 'YYYY-MM-DD',
-                dateFormatDisplay: 'Do MMMM, YYYY',
+                dateFormatDisplay: 'DD MMMM YYYY',
             },
             recalibrationsDue: {
                 breadcrumbs: [
                     {
-                        title: 'Report - Inspection Devices Due Recalibration',
+                        title: 'Report - Testing devices due recalibration',
                         icon: <InspectionDeviceIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Inspection Devices Due Recalibration report for ${dept}`,
+                    pageSubtitle: dept => `Testing devices due recalibration report for ${dept}`,
                 },
                 form: {
                     columns: {
@@ -878,6 +929,9 @@ export default {
                         device_serial_number: {
                             label: 'Serial',
                         },
+                        device_calibration_due_date: {
+                            label: 'Next calibration',
+                        },
                         device_department: {
                             label: 'Department',
                         },
@@ -887,21 +941,18 @@ export default {
                         device_calibrated_by_last: {
                             label: 'Last calibrated by',
                         },
-                        device_calibration_due_date: {
-                            label: 'Next calibration',
-                        },
                     },
                 },
             },
             inspectionsDue: {
                 breadcrumbs: [
                     {
-                        title: 'Report - Asset Inspections Due',
-                        icon: <InspectionIcon fontSize={'small'} />,
+                        title: 'Report - Asset tests due',
+                        icon: <AssetIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset Inspections Due report for ${dept}`,
+                    pageSubtitle: dept => `Asset tests due report for ${dept}`,
                 },
                 form: {
                     title: 'Filter',
@@ -925,16 +976,19 @@ export default {
                     filterToDateLabel: 'Within date range',
                     filterToDateFormatted: value => `Including assets up to ${value}`,
                 },
+                tooltips: {
+                    overdue: 'Overdue',
+                },
             },
             inspectionsByLicencedUser: {
                 breadcrumbs: [
                     {
-                        title: 'Report - Inspections by Licenced Users',
+                        title: 'Report - Tests by licenced users',
                         icon: <InspectionByUserIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Inspections by Licenced Users report for ${dept}`,
+                    pageSubtitle: dept => `Tests by licenced users report for ${dept}`,
                 },
                 form: {
                     title: 'Filter',
@@ -943,7 +997,7 @@ export default {
                             label: 'User ID',
                         },
                         user_uid: {
-                            label: 'UUID',
+                            label: 'User ID',
                         },
                         user_name: {
                             label: 'Name',
@@ -951,19 +1005,16 @@ export default {
                         user_licence_number: {
                             label: 'Licence #',
                         },
-                        user_department: {
-                            label: 'Dept.',
-                        },
                         start_date: {
-                            label: 'Start date',
+                            label: 'First tag',
                             type: 'dateTime',
                         },
                         end_date: {
-                            label: 'End date',
+                            label: 'Last tag',
                             type: 'dateTime',
                         },
                         total_for_user: {
-                            label: 'Total',
+                            label: 'Total Inspections',
                         },
                     },
                     filterToDateLabel: 'Within date range',
@@ -981,18 +1032,18 @@ export default {
                         endDateLabel: 'Period end date',
                         endDateAriaLabel: 'change end date',
                     },
-                    totalInspections: count => `Total Inspections: ${count}`,
+                    totalInspections: count => `Total tests: ${count}`,
                 },
             },
             assetReportByFilters: {
                 breadcrumbs: [
                     {
-                        title: 'Report - Asset Inspections',
+                        title: 'Report - Asset tests',
                         icon: <AssetsInspectedByDateIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Asset Inspections report for ${dept}`,
+                    pageSubtitle: dept => `Asset tests report for ${dept}`,
                 },
                 form: {
                     title: 'Filters',
@@ -1007,10 +1058,10 @@ export default {
                             label: 'Asset type',
                         },
                         asset_test_date: {
-                            label: 'Last inspection',
+                            label: 'Last test',
                         },
                         asset_next_test_due_date: {
-                            label: 'Next inspection',
+                            label: 'Next test',
                         },
                         asset_status: {
                             label: 'Status',

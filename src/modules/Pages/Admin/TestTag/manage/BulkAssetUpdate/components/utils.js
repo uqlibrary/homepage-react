@@ -30,6 +30,7 @@ export const transformRequest = formValues => {
         ...(!!formValues.hasLocation ? { asset_room_id_last_seen: formValues.location.room } : {}),
         ...(!!formValues.hasAssetType ? { asset_type_id: formValues.asset_type.asset_type_id } : {}),
         ...(!!formValues.hasDiscardStatus ? { is_discarding: 1, discard_reason: formValues.discard_reason } : {}),
+        ...(!!formValues.hasClearNotes ? { clear_comments: 1 } : {}),
     };
 };
 

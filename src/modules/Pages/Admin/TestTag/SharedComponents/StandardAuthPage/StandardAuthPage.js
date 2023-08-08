@@ -70,11 +70,7 @@ const StandardAuthPage = ({
             )}
             {userLoaded && !userError && shouldHaveAccess && (
                 <>
-                    <TestTagHeader
-                        departmentText={headerDepartmentText}
-                        requiredText={locale?.header?.requiredText}
-                        breadcrumbs={locale?.breadcrumbs ?? []}
-                    />
+                    <TestTagHeader departmentText={headerDepartmentText} breadcrumbs={locale?.breadcrumbs ?? []} />
                     {children}
                 </>
             )}

@@ -44,7 +44,6 @@ const EventPanel = ({
     );
 
     const updateLocation = (update, useRoomId = false) => {
-        console.log('updateLocation', update, useRoomId);
         setLocation(update);
         handleChange('room_id')(useRoomId ? update.room : -1);
     };
@@ -61,7 +60,7 @@ const EventPanel = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inspectionConfig, inspectionConfigLoading]);
-    // console.log('pageLocale=', pageLocale);
+
     return (
         <StandardCard
             standardCardId={componentIdLower}
@@ -90,6 +89,7 @@ const EventPanel = ({
                             id={`${componentIdLower}-event-date`}
                             data-testid={`${componentIdLower}-event-date`}
                             inputProps={{
+                                ...pageLocale.form.event.date.inputProps,
                                 id: `${componentIdLower}-event-date-input`,
                                 'data-testid': `${componentIdLower}-event-date-input`,
                             }}
@@ -98,7 +98,9 @@ const EventPanel = ({
                                 'data-testid': `${componentIdLower}-event-date-dialog`,
                             }}
                             InputLabelProps={{ shrink: true, htmlFor: `${componentIdLower}-event-date-input` }}
-                            format={pageLocale.config.dateFormatNoTime}
+                            format={pageLocale.config.dateFormatDisplay}
+                            rifmFormatter={val => val.replace(/[^a-zA-Z0-9\s]+/gi, '')}
+                            refuse={/[^a-zA-Z0-9\s]+/gi}
                             minDate={startDate}
                             autoOk
                             disableFuture
@@ -106,7 +108,6 @@ const EventPanel = ({
                             value={actionDate}
                             onChange={updateEventDate}
                             required
-                            autoFocus
                             fullWidth={isMobileView}
                             KeyboardButtonProps={{
                                 'aria-label': 'Event date',
@@ -139,6 +140,7 @@ const EventPanel = ({
                         setLocation={updateLocation}
                         inputProps={{
                             site: {
+                                required: hasInspection,
                                 error: location.site === -1,
                             },
                             building: {
@@ -163,6 +165,8 @@ const EventPanel = ({
                                     location.room === -1,
                             },
                         }}
+                        autoFocus={location?.room === -1}
+                        focusTarget={'site'}
                     />
                 </Grid>
             </Collapse>
@@ -174,9 +178,9 @@ EventPanel.propTypes = {
     actions: PropTypes.any.isRequired,
     location: PropTypes.object.isRequired,
     setLocation: PropTypes.func.isRequired,
-    actionDate: PropTypes.any,
     handleChange: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
+    actionDate: PropTypes.any,
     hasInspection: PropTypes.bool,
     isMobileView: PropTypes.bool,
 };
