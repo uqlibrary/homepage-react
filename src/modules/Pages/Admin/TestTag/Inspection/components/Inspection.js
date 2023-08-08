@@ -289,6 +289,7 @@ const Inspection = ({
             locale={inspectionLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
+            {console.log(formValues)}
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
