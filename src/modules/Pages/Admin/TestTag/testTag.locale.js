@@ -78,16 +78,14 @@ export default {
                 maxChars: count => `Max ${count} characters`,
                 minChars: count => `Min ${count} characters`,
             },
+            pluraliser: (text, count) => (
+                <>
+                    {text}
+                    {count > 1 ? 's' : ''}
+                </>
+            ),
         },
         dashboard: {
-            config: {
-                pluraliser: (text, count) => (
-                    <>
-                        {text}
-                        {count > 1 ? 's' : ''}
-                    </>
-                ),
-            },
             header: {
                 pageSubtitle: dept => `Dashboard for ${dept}`,
             },
@@ -777,7 +775,15 @@ export default {
                         },
                         two: {
                             title: 'Step 2: Choose bulk update actions',
-                            subtext: count => <>You have selected {count} assets to bulk update.</>,
+                            subtext: (count, pluraliser) => (
+                                <>
+                                    You have selected{' '}
+                                    <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
+                                        {count}
+                                    </Typography>{' '}
+                                    {pluraliser('asset', count)} to bulk update.
+                                </>
+                            ),
                             button: {
                                 previous: 'Back',
                                 submit: 'Bulk Update',
@@ -967,7 +973,7 @@ export default {
                             label: 'Last test',
                         },
                         asset_next_test_due_date: {
-                            label: 'Next test',
+                            label: 'Test due',
                         },
                         asset_location: {
                             label: 'Location',
@@ -1061,7 +1067,7 @@ export default {
                             label: 'Last test',
                         },
                         asset_next_test_due_date: {
-                            label: 'Next test',
+                            label: 'Test due',
                         },
                         asset_status: {
                             label: 'Status',
