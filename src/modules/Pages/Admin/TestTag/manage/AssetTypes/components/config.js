@@ -58,7 +58,7 @@ export default {
         },
         asset_count: {
             fieldParams: {
-                minWidth: 120,
+                minWidth: 130,
                 canEdit: false,
 
                 renderInAdd: false,

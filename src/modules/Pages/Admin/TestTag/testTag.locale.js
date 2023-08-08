@@ -143,7 +143,7 @@ export default {
                         },
                         {
                             id: 'inspections',
-                            title: 'Test details',
+                            title: 'Test notes',
                             icon: <InspectionIcon style={{ color: '#2b2a29' }} />,
                             path: pathConfig.admin.testntagmanageinspectiondetails,
                             permissions: [PERMISSIONS.can_inspect],
@@ -434,7 +434,7 @@ export default {
                             label: 'Notes',
                         },
                         asset_count: {
-                            label: 'Usage',
+                            label: 'No. tests',
                         },
                     },
                 },
@@ -449,7 +449,7 @@ export default {
                     confirmationTitle: type => `Edit ${type}`,
                 },
                 actionDialogue: {
-                    confirmationTitle: 'Delete and Reassign',
+                    confirmationTitle: 'Delete and reassign',
                     deleteReassignTargetPrompt: target => `Delete ${target ?? 'NONE'} and reassign all assets to:`,
                     newAssetTypePrompt: 'New asset type',
                     deleteReassignWarningPrompt: count => `This will affect ${count ?? 0} assets`,
@@ -477,13 +477,13 @@ export default {
                                 label: 'Site ID',
                             },
                             site_name: {
-                                label: 'Description',
+                                label: 'Site name',
                             },
                             site_id_displayed: {
-                                label: 'Display name',
+                                label: 'Site ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         building: {
@@ -494,13 +494,13 @@ export default {
                                 label: 'Location',
                             },
                             building_name: {
-                                label: 'Description',
+                                label: 'Building name',
                             },
                             building_id_displayed: {
-                                label: 'Display name',
+                                label: 'Building ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         floor: {
@@ -508,13 +508,13 @@ export default {
                                 label: 'Floor ID',
                             },
                             floor_location: {
-                                label: 'Location',
+                                label: 'Floor name',
                             },
                             floor_id_displayed: {
-                                label: 'Display name',
+                                label: 'Floor ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                         room: {
@@ -525,13 +525,13 @@ export default {
                                 label: 'Location',
                             },
                             room_description: {
-                                label: 'Description',
+                                label: 'Room name',
                             },
                             room_id_displayed: {
-                                label: 'Display name',
+                                label: 'Room ID',
                             },
                             asset_count: {
-                                label: 'Usage',
+                                label: 'No. tests',
                             },
                         },
                     },
@@ -611,7 +611,7 @@ export default {
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new Device',
+                    confirmationTitle: 'Add new device',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
@@ -636,12 +636,12 @@ export default {
             inspectiondetails: {
                 breadcrumbs: [
                     {
-                        title: 'Manage - Test details',
+                        title: 'Manage - Test notes',
                         icon: <InspectionIcon fontSize={'small'} />,
                     },
                 ],
                 header: {
-                    pageSubtitle: dept => `Test details management for ${dept}`,
+                    pageSubtitle: dept => `Test note management for ${dept}`,
                 },
                 form: {
                     actions: 'Actions',
@@ -684,17 +684,17 @@ export default {
                     },
 
                     actionTooltips: {
-                        edit: 'Edit this test',
+                        edit: 'Edit test notes',
                     },
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Edit test details',
+                    confirmationTitle: 'Edit test notes',
                 },
                 snackbar: {
-                    updateSuccess: 'Test updated successfully',
-                    updateFail: 'Unable to update the test',
+                    updateSuccess: 'Test notes updated successfully',
+                    updateFail: 'Unable to update the test notes',
                 },
             },
             bulkassetupdate: {
@@ -736,6 +736,7 @@ export default {
                             columns: {
                                 asset_barcode: { label: 'Barcode' },
                                 asset_type_name: { label: 'Type' },
+                                inspect_comment: { label: 'Last test notes' },
                                 asset_location: { label: 'Location' },
                                 asset_status: { label: 'Status' },
                             },
@@ -746,6 +747,11 @@ export default {
                                 },
                                 title: 'Asset Type',
                                 labelAll: 'All Asset Types',
+                            },
+                            ariaClearNotes: 'Clear test notes search',
+                            testNoteSearch: {
+                                label: 'Search test notes',
+                                helperText: 'Max 50 characters, search will match entered phrase',
                             },
                         },
                     },
@@ -770,7 +776,7 @@ export default {
                             tableSizeChanged: size => `${size} total assets chosen`,
                         },
                         two: {
-                            title: 'Step 2: Choose bulk update action',
+                            title: 'Step 2: Choose bulk update actions',
                             subtext: count => <>You have selected {count} assets to bulk update.</>,
                             button: {
                                 previous: 'Back',
@@ -780,6 +786,7 @@ export default {
                                 location: 'Update Location',
                                 status: 'Discard Asset',
                                 assetType: 'Update Asset Type',
+                                notes: 'Clear test notes',
                             },
                             discardReason: {
                                 label: 'Discarding Reason',
@@ -867,7 +874,7 @@ export default {
                 dialogAdd: {
                     confirmButtonLabel: 'Add',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Add new User',
+                    confirmationTitle: 'Add new user',
                 },
                 dialogEdit: {
                     confirmButtonLabel: 'Update',

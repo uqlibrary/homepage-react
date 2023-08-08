@@ -11,7 +11,7 @@ import { useConfirmationState } from 'hooks';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import ActionDialogue from './ActionDialogue';
 
@@ -53,7 +53,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const onRowEdit = ({ id, api }) => {
         const row = api.getRow(id);
         closeConfirmationAlert();
-        actionDispatch({ type: 'edit', row });
+        actionDispatch({ type: 'edit', title: pageLocale.editAsset.title, row });
     };
 
     const onRowDelete = ({ id, api }) => {
@@ -85,7 +85,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
 
     const handleAddClick = () => {
         closeConfirmationAlert();
-        actionDispatch({ type: 'add' });
+        actionDispatch({ type: 'add', title: pageLocale.addAsset.title });
     };
 
     const onRowAdd = React.useCallback(data => {

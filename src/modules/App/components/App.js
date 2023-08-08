@@ -75,6 +75,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const hideForAdmin = () => {
+    return window.location.href.includes('/admin/');
+};
+
 export const App = ({ account, actions }) => {
     useEffect(() => {
         actions.loadCurrentAccount();
@@ -106,7 +110,8 @@ export const App = ({ account, actions }) => {
                     searchlabel="library.uq.edu.au"
                     searchurl="http://library.uq.edu.au"
                 />
-                <cultural-advice-popup />
+                {!hideForAdmin() && <cultural-advice-popup />}
+
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
                         <askus-button />
@@ -142,7 +147,7 @@ export const App = ({ account, actions }) => {
                 <div id="full-footer-block">
                     <connect-footer />
                     <uq-footer />
-                    <proactive-chat />
+                    {!hideForAdmin() && <proactive-chat />}
                 </div>
             </div>
         </Grid>

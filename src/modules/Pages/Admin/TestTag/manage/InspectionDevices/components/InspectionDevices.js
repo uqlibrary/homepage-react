@@ -11,7 +11,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import StandardAuthPage from '../../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AddToolbar from '../../../SharedComponents/DataTable/AddToolbar';
-import UpdateDialog from '../../../SharedComponents/DataTable/UpdateDialog';
+import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     },
     tableMarginTop: {
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(1),
     },
     inspectionOverdue: {
         backgroundColor: theme.palette.error.main,
@@ -246,7 +246,7 @@ const InspectionDevices = ({
                             />
                         </>
                     )}
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
+                    <Grid container spacing={3}>
                         <Grid item padding={3} style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
