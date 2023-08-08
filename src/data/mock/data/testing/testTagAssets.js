@@ -3,7 +3,7 @@ export default [
         "asset_id": 100000,
         "asset_id_displayed": "UQL100000",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
+        "asset_department_owned_by": "UQL",
         "asset_status": "CURRENT",
         "last_location": {
             "room_id": 1,
@@ -65,7 +65,7 @@ export default [
         "asset_id": 100100,
         "asset_id_displayed": "UQL100100",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
+        "asset_department_owned_by": "UQL",
         "asset_status": "CURRENT",
         "last_location": {
             "room_id": 1,
@@ -127,7 +127,7 @@ export default [
         "asset_id": 200000,
         "asset_id_displayed": "UQL200000",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
+        "asset_department_owned_by": "UQL",
         "asset_status": "OUTFORREPAIR",
         "last_location": {
             "room_id": 1,
@@ -189,7 +189,7 @@ export default [
         "asset_id": 300000,
         "asset_id_displayed": "UQL300000",
         "asset_next_test_due_date": "",
-        "asset_department_owned_by": "UQL-WSS",
+        "asset_department_owned_by": "UQL",
         "asset_status": "DISCARDED",
         "last_location": {
             "room_id": 6,
@@ -251,7 +251,7 @@ export default [
         "asset_id": 310000,
         "asset_id_displayed": "UQL310000",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
+        "asset_department_owned_by": "UQL",
         "asset_status": "CURRENT",
         "last_location": {
             "room_id": 4,
@@ -313,7 +313,7 @@ export default [
         "asset_id": 310040,
         "asset_id_displayed": "UQL310040",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
+        "asset_department_owned_by": "UQL",
         "asset_status": "CURRENT",
         "last_location": {
             "room_id": 49,
@@ -375,7 +375,7 @@ export default [
         "asset_id": 310050,
         "asset_id_displayed": "UQL310050",
         "asset_next_test_due_date": "2027-10-01 00:00",
-        "asset_department_owned_by": "UQL-WSS",
+        "asset_department_owned_by": "UQL",
         "asset_status": "FAILED",
         "last_location": {
             "room_id": 7,

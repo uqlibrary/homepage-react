@@ -24,7 +24,7 @@ const currentRetestList = [
     { value: '60', label: '5 years' },
 ];
 
-const currentAssetOwnersList = [{ value: 'UQL-WSS', label: 'UQL-WSS' }];
+const currentAssetOwnersList = [{ value: 'UQL', label: 'UQL' }];
 const DEFAULT_NEXT_TEST_DATE_VALUE = '12';
 const DEFAULT_FORM_VALUES = {
     asset_id_displayed: undefined,
@@ -48,7 +48,6 @@ const selectOptionFromListByIndex = (index, actions) => {
     expect(actions.getByRole('listbox')).not.toEqual(null);
     act(() => {
         const options = actions.getAllByRole('option');
-
         fireEvent.mouseDown(options[index]);
         options[index].click();
     });
@@ -105,6 +104,8 @@ function setup(testProps = {}, renderer = renderWithRouter) {
         },
         ...state,
     };
+
+    console.log('STATE', _state);
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
@@ -430,21 +431,29 @@ describe('TestTag', () => {
 
         expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('disabled', '');
 
+        await waitFor(() => expect(queryByTestId('location_picker-event-panel-site-progress')).not.toBeInTheDocument());
+
         act(() => {
             fireEvent.click(getByTestId('asset_selector-asset-panel-input'));
         });
-        selectOptionFromListByIndex(4, { getByRole, getAllByRole }); // UQL310000
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole }); // NEW ASSET
 
         await waitFor(() =>
-            expect(getByTestId('asset_type_selector-asset-panel-input')).not.toHaveAttribute('disabled', 'disabled'),
+            expect(getByTestId('asset_type_selector-asset-panel-input')).not.toHaveAttribute('disabled'),
         );
         await waitFor(() => expect(getByTestId('last_inspection_panel')).toBeInTheDocument());
 
         expect(queryByTestId('months_selector-inspection-panel-next-date-label')).not.toBeInTheDocument();
 
         act(() => {
+            fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
+        });
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+
+        act(() => {
             fireEvent.click(getByTestId('inspection_panel-inspection-result-passed-button'));
         });
+
         await waitFor(() =>
             expect(getByTestId('months_selector-inspection-panel-next-date-label')).toBeInTheDocument(),
         );
@@ -472,7 +481,7 @@ describe('TestTag', () => {
         selectOptionFromListByIndex(0, { getByRole, getAllByRole });
 
         const expected = {
-            asset_id_displayed: 'UQL310000',
+            asset_id_displayed: 'NEW ASSET',
             user_id: 3,
             asset_department_owned_by: 'UQL',
             asset_type_id: 1,
@@ -498,7 +507,7 @@ describe('TestTag', () => {
         // const selectedAsset = { ...assetData[0] };
         // const formValues = {
         //     action_date: '2016-12-05 14:22',
-        //     asset_department_owned_by: 'UQL-WSS',
+        //     asset_department_owned_by: 'UQL',
         //     asset_id_displayed: 'UQL310000',
         //     asset_type_id: 1,
         //     discard_reason: undefined,
@@ -520,7 +529,7 @@ describe('TestTag', () => {
         // const expected = {
         //     asset_id_displayed: 'UQL310000',
         //     user_id: 3,
-        //     asset_department_owned_by: 'UQL-WSS',
+        //     asset_department_owned_by: 'UQL',
         //     asset_type_id: 1,
         //     action_date: '2016-12-05 14:22',
         //     room_id: 1,

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -51,40 +51,11 @@ const AssetSelector = ({
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const clearInput = useCallback(() => {
-        if (clearOnSelect) {
-            setCurrentValue(null);
-            previousValueRef.current = null;
-            dispatch(actions.clearAssets());
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    React.useEffect(() => {
-        previousValueRef.current = selectedAsset;
-        setCurrentValue(selectedAsset);
-    }, [selectedAsset]);
-
-    React.useEffect(() => {
-        !!assetsList && setFormAssetList(...[assetsList]);
-        /* istanbul ignore else */ if (assetsList?.length === 1) {
-            onChange?.(assetsList[0]);
-            setCurrentValue(assetsList[0]);
-            setIsOpen(false);
-            clearInput();
-        }
-        /* istanbul ignore else */ if (assetsList?.length < 1) {
-            onReset?.(false);
-            setIsOpen(false);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assetsList]);
-
-    React.useLayoutEffect(() => {
-        if (autoFocus) {
-            inputRef?.current?.focus();
-        }
-    }, [autoFocus]);
+    const clearInput = () => {
+        setCurrentValue(null);
+        previousValueRef.current = null;
+        dispatch(actions.clearAssets());
+    };
 
     const debounceAssetsSearch = React.useRef(
         debounce(500, (pattern, user) => {
@@ -102,6 +73,37 @@ const AssetSelector = ({
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
+
+    React.useEffect(() => {
+        previousValueRef.current = selectedAsset;
+        setCurrentValue(selectedAsset);
+    }, [selectedAsset]);
+
+    React.useEffect(() => {
+        !!assetsList && setFormAssetList(...[assetsList]);
+        /* istanbul ignore else */ if (assetsList?.length === 1) {
+            onChange?.(assetsList[0]);
+            setCurrentValue(assetsList[0]);
+            setIsOpen(false);
+            clearOnSelect && clearInput();
+        }
+        /* istanbul ignore else */ if (assetsList?.length < 1) {
+            onReset?.(false);
+            setIsOpen(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assetsList]);
+
+    React.useLayoutEffect(() => {
+        if (autoFocus) {
+            inputRef?.current?.focus();
+        }
+    }, [autoFocus]);
+
+    React.useEffect(() => {
+        clearInput();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <FormControl className={classNames.formControl} fullWidth>
@@ -128,7 +130,7 @@ const AssetSelector = ({
                         onChange?.(newValue);
                     }
                     setIsOpen(false);
-                    clearInput();
+                    clearOnSelect && clearInput();
                 }}
                 filterOptions={(options, params) => {
                     const filtered = filterOptions(options, params);

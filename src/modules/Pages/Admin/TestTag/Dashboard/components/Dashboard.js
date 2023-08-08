@@ -183,7 +183,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.assets.subtext(
-                                            pageLocale.config.pluraliser(
+                                            locale.pages.general.pluraliser(
                                                 `${
                                                     dashboardConfig?.reinspectionPeriodLength
                                                 } ${dashboardConfig?.reinspectionPeriodType?.toLowerCase()}`,
@@ -199,7 +199,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             >
                                                 {pageLocale.panel.assets.subtextLinkStart}
                                             </Link>,
-                                            pageLocale.config.pluraliser(
+                                            locale.pages.general.pluraliser(
                                                 `${
                                                     dashboardConfig?.reinspectionPeriodLength
                                                 } ${dashboardConfig?.reinspectionPeriodType?.toLowerCase()}`,
@@ -261,7 +261,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                     <AuthWrapper
                                         requiredPermissions={[PERMISSIONS.can_see_reports]}
                                         fallback={pageLocale.panel.inspectionDevices.subtext(
-                                            pageLocale.config.pluraliser(
+                                            locale.pages.general.pluraliser(
                                                 `${
                                                     dashboardConfig?.calibrationPeriodLength
                                                 } ${dashboardConfig?.calibrationPeriodType?.toLowerCase()}`,
@@ -277,7 +277,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                             >
                                                 {pageLocale.panel.inspectionDevices.subtextLinkStart}
                                             </Link>,
-                                            pageLocale.config.pluraliser(
+                                            locale.pages.general.pluraliser(
                                                 `${
                                                     dashboardConfig?.calibrationPeriodLength
                                                 } ${dashboardConfig?.calibrationPeriodType?.toLowerCase()}`,

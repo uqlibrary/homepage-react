@@ -29,6 +29,9 @@ const useStyles = makeStyles(
     { defaultTheme },
 );
 
+const defaultEditIcon = <EditIcon fontSize="small" />;
+const defaultDeleteIcon = <DeleteIcon fontSize="small" />;
+
 const ActionCell = ({
     api,
     id,
@@ -36,6 +39,8 @@ const ActionCell = ({
     handleDeleteClick,
     disableEdit,
     disableDelete,
+    editIcon = defaultEditIcon,
+    deleteIcon = defaultDeleteIcon,
     dataFieldKeys,
     tooltips,
 }) => {
@@ -67,7 +72,7 @@ const ActionCell = ({
             disabled={disableEdit}
             onClick={onEditClick}
         >
-            <EditIcon fontSize="small" />
+            {editIcon}
         </IconButton>
     );
 
@@ -83,7 +88,7 @@ const ActionCell = ({
             disabled={disableDelete}
             onClick={onDeleteClick}
         >
-            <DeleteIcon fontSize="small" />
+            {deleteIcon}
         </IconButton>
     );
 
@@ -130,6 +135,8 @@ ActionCell.propTypes = {
     handleDeleteClick: PropTypes.func,
     disableEdit: PropTypes.bool,
     disableDelete: PropTypes.bool,
+    editIcon: PropTypes.node,
+    deleteIcon: PropTypes.node,
     dataFieldKeys: PropTypes.object,
     tooltips: PropTypes.object,
 };

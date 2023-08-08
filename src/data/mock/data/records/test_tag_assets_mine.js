@@ -35,7 +35,7 @@ export default {
           "asset_id": 2,
           "asset_type_id_id": 1,
           "asset_test_date": "2023-07-23",
-          "asset_next_test_due_date": "2023-08-16",
+          "asset_next_test_due_date": "2022-08-16",
           "asset_barcode": "UQL000002",
           "asset_room_id_last_seen": 1,
           "asset_department_owned_by": "UQL",
