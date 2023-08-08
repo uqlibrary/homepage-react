@@ -967,7 +967,7 @@ export default {
                             label: 'Last test',
                         },
                         asset_next_test_due_date: {
-                            label: 'Next test',
+                            label: 'Test due',
                         },
                         asset_location: {
                             label: 'Location',
@@ -1061,7 +1061,7 @@ export default {
                             label: 'Last test',
                         },
                         asset_next_test_due_date: {
-                            label: 'Next test',
+                            label: 'Test due',
                         },
                         asset_status: {
                             label: 'Status',
