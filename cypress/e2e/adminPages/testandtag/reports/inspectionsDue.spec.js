@@ -68,13 +68,13 @@ describe('Test and Tag Report - Inspections due', () => {
         // Check if number of results are correct
         cy.get('.MuiTablePagination-caption').should('contain', '1-2 of 2');
         // does it change relevant pending/overdue colors?
-        getFieldValue('asset_next_test_due_date', 1, 4)
+        getFieldValue('asset_next_test_due_date', 1, 2)
             .invoke('attr', 'class')
             .then(className => {
                 const pattern = /inspectionOverdue/;
                 expect(className).to.match(pattern);
             });
-        getFieldValue('asset_next_test_due_date', 0, 4)
+        getFieldValue('asset_next_test_due_date', 0, 2)
             .invoke('attr', 'class')
             .then(className => {
                 const pattern = /inspectionOverdue/;

@@ -13,10 +13,6 @@ describe('Test and Tag Manage Locations', () => {
         cy.go('back');
     };
 
-    const changeRowsPerPage = rows => {
-        cy.get('.MuiTablePagination-input').click();
-        cy.get(`.MuiTablePagination-menuItem[data-value="${rows}"]`).click();
-    };
     it('page is accessible and renders base', () => {
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -77,7 +73,7 @@ describe('Test and Tag Manage Locations', () => {
         cy.waitUntil(() => getFieldValue('floor_id_displayed', 0, 0).should('contain', '2'));
         cy.data('add_toolbar-locations-add-button').click();
         cy.data('floor_id_displayed-input').should('have.attr', 'required');
-        cy.data('update_dialog-locations-content').should('contain', 'St Lucia / Forgan Smith Building');
+        cy.data('update_dialog-locations-content').should('contain', 'Forgan Smith Building, St Lucia');
         cy.data('floor_id_displayed-input').type('cypresstest');
         // Limit size to 10
         cy.data('floor_id_displayed-input').should('have.value', 'cypresstes');
@@ -98,7 +94,7 @@ describe('Test and Tag Manage Locations', () => {
         cy.data('room_id_displayed-input').should('have.attr', 'required');
         // description not required.
         cy.data('room_description-input').should('not.have.attr', 'required');
-        cy.data('update_dialog-locations-content').should('contain', 'St Lucia / Forgan Smith Building / 2');
+        cy.data('update_dialog-locations-content').should('contain', 'Floor 2 Forgan Smith Building');
         cy.data('room_id_displayed-input').type('cypresstest');
         cy.data('room_description-input').type('Room Description');
         // Limit size to 10
@@ -177,5 +173,22 @@ describe('Test and Tag Manage Locations', () => {
         cy.data('confirmation_alert-success-alert')
             .should('exist')
             .should('be.visible');
+    });
+
+    it('Delete location functions correctly', () => {
+        cy.viewport(1300, 1000);
+        cy.get('h1').contains(locale.pages.general.pageTitle);
+        cy.get('h2').contains(locale.pages.manage.locations.header.pageSubtitle('Library'));
+        forcePageRefresh();
+        cy.wait(1000);
+        cy.waitUntil(() => getFieldValue('site_id_displayed', 0, 0).should('contain', '01'));
+        cy.waitUntil(() => getFieldValue('site_name', 0, 1).should('contain', 'St Lucia'));
+        cy.data('action_cell-2-delete-button').click();
+        cy.data('message-title').should('contain', locale.pages.manage.locations.dialogDeleteConfirm.confirmationTitle);
+        cy.data('confirm-locations').click();
+        cy.data('confirmation_alert-success-alert').should('be.visible');
+        cy.data('action_cell-2-delete-button').click();
+        cy.data('cancel-locations').click();
+        cy.data('confirmation_alert-success-alert').should('not.exist');
     });
 });

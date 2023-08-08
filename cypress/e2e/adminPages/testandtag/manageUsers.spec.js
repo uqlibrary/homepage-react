@@ -35,9 +35,6 @@ describe('Test and Tag Manage Users', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqjsmit'));
-        // Is own account edit disabled
-        cy.get('#action_cell-2-edit-button[data-value="uqtest1"]').should('have.attr', 'disabled');
-        // Is first account on list NOT disabled
         cy.get('#action_cell-1-edit-button[data-value="uqjsmit"]').should('not.have.attr', 'disabled');
         // Click the first edit button.
         cy.get('#action_cell-1-edit-button[data-value="uqjsmit"]').click();

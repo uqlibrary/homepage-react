@@ -24,7 +24,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.get('h2').contains(locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
         forcePageRefresh();
         cy.wait(1000);
-        cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', 'Power Cord - C13'));
+        cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', '[E2E_testing] Name'));
         // cy.checkA11y('[data-testid="StandardPage"]', {
         //     reportName: 'Test and Tag Manage Assets Form',
         //     scopeName: 'Content',
@@ -37,7 +37,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.get('h2').contains(locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
         forcePageRefresh();
         cy.wait(1000);
-        cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', 'Power Cord - C13'));
+        cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', '[E2E_testing] Name'));
         // Change Rows to 25
         changeRowsPerPage(25);
         cy.get('.MuiTablePagination-caption').should('contain', '1-25 of 60');
@@ -54,7 +54,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.get('h2').contains(locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
         forcePageRefresh();
         cy.wait(1000);
-        cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', 'Power Cord - C13'));
+        cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', '[E2E_testing] Name'));
         // Adding an asset type
         cy.data('add_toolbar-asset-types-add-button').click();
         cy.data('asset_type_name-input').type('Test Asset');
@@ -88,10 +88,13 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.get('h2').contains(locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
         forcePageRefresh();
         cy.wait(1000);
-        cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', 'Power Cord - C13'));
+        cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', '[E2E_testing] Name'));
         // Delete an asset type - contains assets.
         cy.data('action_cell-1-delete-button').click();
-        cy.data('action_dialogue-asset-types-title').should('contain', 'Delete and Reassign');
+        cy.data('action_dialogue-asset-types-title').should(
+            'contain',
+            locale.pages.manage.assetTypes.actionDialogue.confirmationTitle,
+        );
         cy.data('action_dialogue-asset-types-alert').should(
             'contain',
             locale.pages.manage.assetTypes.actionDialogue.deleteReassignWarningPrompt(76),
@@ -100,7 +103,10 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.data('action_dialogue-asset-types-cancel-button').click();
         // Reopen and confirm
         cy.data('action_cell-1-delete-button').click();
-        cy.data('action_dialogue-asset-types-title').should('contain', 'Delete and Reassign');
+        cy.data('action_dialogue-asset-types-title').should(
+            'contain',
+            locale.pages.manage.assetTypes.actionDialogue.confirmationTitle,
+        );
         cy.data('action_dialogue-asset-types-alert').should(
             'contain',
             locale.pages.manage.assetTypes.actionDialogue.deleteReassignWarningPrompt(76),
