@@ -19,6 +19,8 @@ import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 
+const moment = require('moment');
+
 const componentId = 'assets-inspected';
 const componentIdLower = 'assets_inspected';
 
@@ -30,7 +32,8 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2),
     },
     inspectionOverdue: {
-        backgroundColor: theme.palette.error.light,
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
     },
     datePickerRoot: {
         marginTop: 0,
@@ -51,6 +54,8 @@ const AssetReportByFilters = ({
     /* locale and styles */
     const pageLocale = locale.pages.report.assetReportByFilters;
     const statusTypes = pageLocale.form.statusTypes;
+
+    const today = moment().format(locale.config.format.dateFormatNoTime);
 
     const classes = useStyles();
     /* State */
@@ -275,6 +280,11 @@ const AssetReportByFilters = ({
                                 rowId={'asset_id'}
                                 rowKey={'asset_id'}
                                 loading={!!assetListLoading}
+                                getCellClassName={params =>
+                                    params.field === 'asset_next_test_due_date' && params.value <= today
+                                        ? classes.inspectionOverdue
+                                        : ''
+                                }
                                 {...(config.sort ?? {})}
                             />
                         </Grid>

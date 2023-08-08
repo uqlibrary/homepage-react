@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -13,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Alert from '@material-ui/lab/Alert';
 import { useTheme } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
@@ -132,6 +132,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         config: config.form,
         locale: pageLocale.form.columns,
         handleDeleteClick,
+        deleteIcon: <RemoveCircleOutlineIcon size="small" />,
         actionDataFieldKeys: { valueKey: 'asset_id_displayed' },
         actionTooltips: stepOneLocale.actionTooltips,
     });
@@ -202,11 +203,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         handleChange(e.target.name)(checked);
     };
 
-    const handlePageSizeChange = total => {
-        if (total > 0) {
-            openConfirmationAlert(stepOneLocale.tableSizeChanged(total), 'success');
-        }
-    };
+    // const handlePageSizeChange = total => {
+    //     if (total > 0) {
+    //         openConfirmationAlert(stepOneLocale.tableSizeChanged(total), 'success');
+    //     }
+    // };
 
     const validFormValues = React.useMemo(() => {
         const validLocation =
@@ -308,6 +309,19 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 </Button>
                             </Grid>
                         </Grid>
+                        {list.data.length > 0 && (
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <Alert
+                                        severity="info"
+                                        id={`${componentIdLower}-count-alert`}
+                                        data-testid={`${componentIdLower}-count-alert`}
+                                    >
+                                        {stepTwoLocale.subtext(list.data.length, locale.pages.general.pluraliser)}
+                                    </Alert>
+                                </Grid>
+                            </Grid>
+                        )}
                         <Grid container spacing={3}>
                             <Grid item padding={3} style={{ flex: 1 }}>
                                 <DataTable
@@ -329,7 +343,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                         },
                                     }}
                                     autoPageSize
-                                    onPageSizeChange={handlePageSizeChange}
                                     {...(config.form.sort ?? {})}
                                 />
                             </Grid>
@@ -355,12 +368,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                     <StandardCard title={stepTwoLocale.title} standardCardId={`standard_card-${componentId}-step-2`}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <Alert severity="warning">
-                                    {stepTwoLocale.subtext(
-                                        <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
-                                            {list.data.length}
-                                        </Typography>,
-                                    )}
+                                <Alert
+                                    severity="warning"
+                                    id={`${componentIdLower}-summary-alert`}
+                                    data-testid={`${componentIdLower}-summary-alert`}
+                                >
+                                    {stepTwoLocale.subtext(list.data.length, locale.pages.general.pluraliser)}
                                 </Alert>
                             </Grid>
                         </Grid>
