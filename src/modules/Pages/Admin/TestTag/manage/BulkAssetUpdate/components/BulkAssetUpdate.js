@@ -57,11 +57,6 @@ const componentId = 'bulk-asset-update';
 const componentIdLower = 'bulk_asset_update';
 
 const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
-    useEffect(() => {
-        actions.clearAssetsMine();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
     const stepTwoLocale = pageLocale.form.step.two;
@@ -119,6 +114,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         list.clear();
         setStep(1);
     };
+
+    useEffect(() => {
+        resetForm();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleDeleteClick = useCallback(
         ({ id, api }) => {
