@@ -25,6 +25,7 @@ export const useDataTableColumns = ({
     shouldDisableEdit,
     shouldDisableDelete,
     actionTooltips,
+    getTooltips,
 }) => {
     const columns = useMemo(
         () => {
@@ -32,8 +33,16 @@ export const useDataTableColumns = ({
                 ? {
                       field: '',
                       renderCell: params => {
-                          const disableEdit = shouldDisableEdit?.(params.row) ?? false;
-                          const disableDelete = shouldDisableDelete?.(params.row) ?? false;
+                          const disableEdit = shouldDisableEdit?.(params.row, filterKey) ?? false;
+                          const disableDelete = shouldDisableDelete?.(params.row, filterKey) ?? false;
+
+                          const tooltips =
+                              getTooltips?.({
+                                  row: params.row,
+                                  filterKey,
+                                  tooltips: actionTooltips,
+                              }) ?? actionTooltips;
+
                           return (
                               <ActionCell
                                   {...params}
@@ -42,7 +51,7 @@ export const useDataTableColumns = ({
                                   {...(!!editIcon ? { editIcon } : {})}
                                   {...(!!deleteIcon ? { deleteIcon } : {})}
                                   {...(!!actionDataFieldKeys ? { dataFieldKeys: actionDataFieldKeys } : {})}
-                                  {...(!!actionTooltips ? { tooltips: actionTooltips } : {})}
+                                  {...(!!actionTooltips ? { tooltips } : {})}
                                   disableEdit={disableEdit}
                                   disableDelete={disableDelete}
                               />
