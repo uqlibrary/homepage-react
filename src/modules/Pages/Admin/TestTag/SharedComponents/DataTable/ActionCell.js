@@ -98,12 +98,12 @@ const ActionCell = ({
                 <>
                     {!!tooltips && !!tooltips?.edit && (
                         <Tooltip
-                            title={tooltips.edit}
+                            title={disableEdit ? tooltips?.editDisabled ?? '' : tooltips?.edit}
                             id={'tooltip-edit'}
                             data-testid={'tooltip-edit'}
                             TransitionProps={{ timeout: 300 }}
                         >
-                            {editButton}
+                            <span>{editButton}</span>
                         </Tooltip>
                     )}
                     {(!!!tooltips || !!!tooltips?.edit) && editButton}
@@ -113,12 +113,12 @@ const ActionCell = ({
                 <>
                     {!!tooltips && !!tooltips?.delete && (
                         <Tooltip
-                            title={tooltips.delete}
+                            title={disableDelete ? tooltips?.deleteDisabled ?? '' : tooltips.delete}
                             id={'tooltip-delete'}
                             data-testid={'tooltip-delete'}
                             TransitionProps={{ timeout: 300 }}
                         >
-                            {deleteButton}
+                            <span>{deleteButton}</span>
                         </Tooltip>
                     )}
                     {(!!!tooltips || !!!tooltips?.delete) && deleteButton}
@@ -138,7 +138,12 @@ ActionCell.propTypes = {
     editIcon: PropTypes.node,
     deleteIcon: PropTypes.node,
     dataFieldKeys: PropTypes.object,
-    tooltips: PropTypes.object,
+    tooltips: PropTypes.shape({
+        edit: PropTypes.string,
+        delete: PropTypes.string,
+        editDisabled: PropTypes.string,
+        deleteDisabled: PropTypes.string,
+    }),
 };
 
 export default React.memo(ActionCell);
