@@ -124,7 +124,7 @@ export function addLocation({ type, request }) {
         dispatch({ type: actions.TESTTAG_LOCATION_ADDING });
         return post(TEST_TAG_ADD_LOCATION_API(type), request)
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_LOCATION_ADDED,
                         payload: response,
@@ -153,7 +153,7 @@ export function updateLocation({ type, request }) {
         dispatch({ type: actions.TESTTAG_LOCATION_UPDATING });
         return put(TEST_TAG_MODIFY_LOCATION_API({ type, id: request[`${type}_id`] }), request)
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_LOCATION_UPDATED,
                         payload: response,
@@ -182,7 +182,7 @@ export function deleteLocation({ type, id }) {
         dispatch({ type: actions.TESTTAG_LOCATION_DELETING });
         return destroy(TEST_TAG_MODIFY_LOCATION_API({ type, id: id }))
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_LOCATION_DELETED,
                         payload: response,
@@ -417,7 +417,7 @@ export function saveAssetTypeAndReload(request) {
         dispatch({ type: actions.TESTTAG_SAVE_ASSET_TYPE_SAVING });
         return post(TEST_TAG_ASSETTYPE_ADD(), request)
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS,
                         payload: response?.data,
@@ -488,7 +488,7 @@ export function addInspectionDevice(request) {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_ADDING });
         return post(TEST_TAG_ADD_INSPECTION_DEVICE_API(), request)
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_INSPECTION_DEVICES_ADDED,
                         payload: response,
@@ -517,7 +517,7 @@ export function updateInspectionDevice(id, request) {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_UPDATING });
         return put(TEST_TAG_MODIFY_INSPECTION_DEVICE_API(id), request)
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_INSPECTION_DEVICES_UPDATED,
                         payload: response,
@@ -546,7 +546,7 @@ export function deleteInspectionDevice(id) {
         dispatch({ type: actions.TESTTAG_INSPECTION_DEVICES_DELETING });
         return destroy(TEST_TAG_MODIFY_INSPECTION_DEVICE_API(id))
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_INSPECTION_DEVICES_DELETED,
                         payload: response,
@@ -697,7 +697,7 @@ export function updateInspectionDetails(id, request) {
         dispatch({ type: actions.TESTTAG_INSPECTION_DETAILS_UPDATING });
         return put(TEST_TAG_MODIFY_INSPECTION_DETAILS_API(id), request)
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_INSPECTION_DETAILS_UPDATED,
                         payload: response,
@@ -935,7 +935,7 @@ export function updateUser(id, request) {
         dispatch({ type: actions.TESTTAG_USER_LIST_UPDATING });
         return put(TEST_TAG_UPDATE_USER_API(id), request)
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_USER_LIST_UPDATED,
                         payload: response,
@@ -964,7 +964,7 @@ export function addUser(request) {
         dispatch({ type: actions.TESTTAG_USER_LIST_ADDING });
         return post(TEST_TAG_ADD_USER_API(), request)
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_USER_LIST_ADDED,
                         payload: response,
@@ -993,7 +993,7 @@ export function deleteUser(id) {
         dispatch({ type: actions.TESTTAG_USER_LIST_DELETING });
         return destroy(TEST_TAG_DELETE_USER_API(id))
             .then(response => {
-                if (response.status.toLowerCase() === 'ok') {
+                if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.TESTTAG_USER_LIST_DELETED,
                         payload: response,
