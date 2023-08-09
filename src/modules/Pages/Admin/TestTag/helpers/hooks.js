@@ -82,7 +82,7 @@ export const useObjectList = (list = [], transform, options = {}) => {
     return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear };
 };
 
-export function useConfirmationAlert({ duration, onClose = null, errorMessage = null, errorMessageFormatter }) {
+export const useConfirmationAlert = ({ duration, onClose = null, errorMessage = null, errorMessageFormatter }) => {
     const [confirmationAlert, setConfirmationAlert] = useState({ message: '', visible: false });
 
     const closeConfirmationAlert = () => {
@@ -109,4 +109,4 @@ export function useConfirmationAlert({ duration, onClose = null, errorMessage = 
     }, [errorMessage]);
 
     return { confirmationAlert, openConfirmationAlert, closeConfirmationAlert };
-}
+};
