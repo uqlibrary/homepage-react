@@ -100,11 +100,6 @@ const AssetSelector = ({
         }
     }, [autoFocus]);
 
-    React.useEffect(() => {
-        clearInput();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
         <FormControl className={classNames?.formControl} fullWidth>
             <Autocomplete
