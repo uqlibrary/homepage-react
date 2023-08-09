@@ -735,6 +735,9 @@ mock.onGet('exams/course/FREN1010/summary')
     // dashboard CONFIG
     .onGet(routes.TEST_TAG_ONLOAD_DASHBOARD_API().apiUrl)
     .reply(config => {
+        if (config?.headers['X-Uql-Token'] === 'uqpf') {
+            return[400, {status: 'Test Error'}]
+        }
         return [200, testTag_dashboardOnLoad];
     })
 
