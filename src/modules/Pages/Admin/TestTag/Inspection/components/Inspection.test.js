@@ -434,9 +434,10 @@ describe('TestTag', () => {
         await waitFor(() => expect(queryByTestId('location_picker-event-panel-site-progress')).not.toBeInTheDocument());
 
         act(() => {
-            fireEvent.click(getByTestId('asset_selector-asset-panel-input'));
+            fireEvent.mouseDown(getByTestId('asset_selector-asset-panel-input'));
+            fireEvent.change(getByTestId('asset_selector-asset-panel-input'), { target: { value: 'UQL310000' } });
         });
-        selectOptionFromListByIndex(0, { getByRole, getAllByRole }); // NEW ASSET
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
 
         await waitFor(() =>
             expect(getByTestId('asset_type_selector-asset-panel-input')).not.toHaveAttribute('disabled'),
@@ -481,7 +482,7 @@ describe('TestTag', () => {
         selectOptionFromListByIndex(0, { getByRole, getAllByRole });
 
         const expected = {
-            asset_id_displayed: 'NEW ASSET',
+            asset_id_displayed: 'UQL100000',
             user_id: 3,
             asset_department_owned_by: 'UQL',
             asset_type_id: 1,
