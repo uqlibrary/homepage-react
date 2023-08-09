@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import Alert from '@material-ui/lab/Alert';
 import { pathConfig } from '../../../../config/pathConfig';
 
 import InspectionIcon from '@material-ui/icons/Search';
@@ -618,13 +619,24 @@ export default {
                 dialogEdit: {
                     confirmButtonLabel: 'Update',
                     cancelButtonLabel: 'Cancel',
-                    confirmationTitle: 'Edit Device',
+                    confirmationTitle: 'Edit device',
                 },
                 dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
-                    confirmationMessage: 'Are you sure you wish to delete this Device?',
-                    confirmationTitle: 'Delete Device',
+                    confirmationMessage: 'Are you sure you wish to delete this device?',
+                    confirmationTitle: 'Delete device',
+                },
+                dialogDeleteConfirmWithAlert: {
+                    confirmButtonLabel: 'Proceed',
+                    cancelButtonLabel: 'Cancel',
+                    confirmationMessage: (
+                        <Alert severity="warning" id={'confirm-delete-alert'} data-testid={'confirm-delete-alert'}>
+                            This device has been used to test assets. Only delete this device if you are sure it is no
+                            longer needed.
+                        </Alert>
+                    ),
+                    confirmationTitle: 'Are you sure you wish to delete this device?',
                 },
                 snackbar: {
                     addSuccess: 'Testing device added successfully',

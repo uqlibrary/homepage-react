@@ -81,10 +81,17 @@ const InspectionDevices = ({
 
     const handleDeleteClick = ({ id, api }) => {
         const row = api.getRow(id);
+        const noInspections = row.has_inspections === 0;
+
+        !noInspections && setDialogueBusy(true);
+
         actionDispatch({
             type: 'delete',
+            locale: noInspections ? pageLocale?.dialogDeleteConfirm : pageLocale?.dialogDeleteConfirmWithAlert,
             row,
         });
+
+        !noInspections && setTimeout(() => setDialogueBusy(false), 3000);
     };
 
     const onRowAdd = React.useCallback(
@@ -226,9 +233,9 @@ const InspectionDevices = ({
                                 isOpen={actionState.isDelete}
                                 locale={
                                     !dialogueBusy
-                                        ? pageLocale?.dialogDeleteConfirm
+                                        ? actionState.props?.locale ?? {}
                                         : {
-                                              ...pageLocale?.dialogDeleteConfirm,
+                                              ...(actionState.props?.locale ?? {}),
                                               confirmButtonLabel: (
                                                   <CircularProgress
                                                       color="inherit"

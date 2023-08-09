@@ -8,7 +8,8 @@ export default {
             "device_calibrated_date_last": "2022-10-17 00:00:00",
             "device_calibrated_by_last": "Test and Tag Supplies Pty Ltd",
             "device_calibration_due_date": "2023-10-17 00:00:00",
-            "device_current_flag": 1
+            "device_current_flag": 1,
+            "has_inspections": 1
         },
         {
             "device_id": 2,
@@ -18,7 +19,8 @@ export default {
             "device_calibrated_date_last": "2022-10-17 00:00:00",
             "device_calibrated_by_last": "Test and Tag Supplies Pty Ltd",
             "device_calibration_due_date": "2023-10-17 00:00:00",
-            "device_current_flag": 1
+            "device_current_flag": 1,
+            "has_inspections": 0
         },
         {
             "device_id": 3,
@@ -28,7 +30,8 @@ export default {
             "device_calibrated_date_last": "2022-12-12 00:00:00",
             "device_calibrated_by_last": "",
             "device_calibration_due_date": "2099-12-31 00:00:00",
-            "device_current_flag": 1
+            "device_current_flag": 1,
+            "has_inspections": 1
         },
         {
             "device_id": 4,
@@ -38,7 +41,8 @@ export default {
             "device_calibrated_date_last": "2022-11-29 00:00:00",
             "device_calibrated_by_last": "Factory calibrated",
             "device_calibration_due_date": "2023-11-29 00:00:00",
-            "device_current_flag": 1
+            "device_current_flag": 1,
+            "has_inspections": 0
         }
     ]
 };
