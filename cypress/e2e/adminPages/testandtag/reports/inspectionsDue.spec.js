@@ -80,5 +80,12 @@ describe('Test and Tag Report - Inspections due', () => {
                 const pattern = /inspectionOverdue/;
                 expect(className).not.to.match(pattern);
             });
+        // Change Date (currently throws error on mock)
+        cy.data('months_selector-inspections-due-select').click();
+        cy.data('months_selector-inspections-due-option-1').click();
+        cy.data('confirmation_alert-error-alert').should('be.visible');
+        cy.data('confirmation_alert-error-alert')
+            .find('button')
+            .click();
     });
 });
