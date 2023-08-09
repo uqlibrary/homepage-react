@@ -1,6 +1,6 @@
 import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
-describe('Test and Tag Manage Asset Types', () => {
+describe('Test and Tag manage inspection devices', () => {
     beforeEach(() => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/manage/inspectiondevices?user=uqtesttag');
