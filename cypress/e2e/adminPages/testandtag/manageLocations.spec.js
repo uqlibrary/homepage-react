@@ -185,7 +185,7 @@ describe('Test and Tag Manage Locations', () => {
         cy.waitUntil(() => getFieldValue('site_name', 0, 1).should('contain', 'St Lucia'));
         // Check if populated sites are disabled
         cy.data('action_cell-1-delete-button').should('have.attr', 'disabled');
-        cy.data('action_cell-2-delete-button').should('have.attr', 'disabled');
+        cy.data('action_cell-2-delete-button').should('not.have.attr', 'disabled');
         // delete non populated site
         cy.data('action_cell-3-delete-button').click();
         cy.data('message-title').should('contain', locale.pages.manage.locations.dialogDeleteConfirm.confirmationTitle);
