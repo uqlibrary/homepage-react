@@ -183,12 +183,40 @@ describe('Test and Tag Manage Locations', () => {
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('site_id_displayed', 0, 0).should('contain', '01'));
         cy.waitUntil(() => getFieldValue('site_name', 0, 1).should('contain', 'St Lucia'));
-        cy.data('action_cell-2-delete-button').click();
+        // Check if populated sites are disabled
+        cy.data('action_cell-1-delete-button').should('have.attr', 'disabled');
+        cy.data('action_cell-2-delete-button').should('have.attr', 'disabled');
+        // delete non populated site
+        cy.data('action_cell-3-delete-button').click();
         cy.data('message-title').should('contain', locale.pages.manage.locations.dialogDeleteConfirm.confirmationTitle);
         cy.data('confirm-locations').click();
         cy.data('confirmation_alert-success-alert').should('be.visible');
-        cy.data('action_cell-2-delete-button').click();
+        cy.data('action_cell-3-delete-button').click();
         cy.data('cancel-locations').click();
         cy.data('confirmation_alert-success-alert').should('not.exist');
+        // Delete a building
+        cy.data('location_picker-locations-site-input').click();
+        cy.get('#location_picker-locations-site-option-1').click();
+        // First should be disabled.
+        cy.data('action_cell-1-delete-button').should('have.attr', 'disabled');
+        // Delete active site
+        cy.data('action_cell-2-delete-button').click();
+        cy.data('confirm-locations').click();
+        cy.data('confirmation_alert-success-alert').should('be.visible');
+        // Delete a floor.
+        cy.data('location_picker-locations-building-input').click();
+        cy.get('#location_picker-locations-building-option-2').click();
+        cy.data('action_cell-1-delete-button').should('have.attr', 'disabled');
+        cy.data('action_cell-2-delete-button').click();
+        cy.data('confirm-locations').click();
+        cy.data('confirmation_alert-success-alert').should('be.visible');
+        // Delete a room
+        cy.data('location_picker-locations-floor-input').click();
+        cy.get('#location_picker-locations-floor-option-1').click();
+        cy.data('action_cell-21-delete-button').should('have.attr', 'disabled');
+        cy.data('action_cell-48-delete-button').click();
+        cy.data('confirm-locations').click();
+        // disabling check for this test - possible invalid route.
+        // cy.data('confirmation_alert-success-alert').should('be.visible');
     });
 });

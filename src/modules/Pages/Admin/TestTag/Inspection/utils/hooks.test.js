@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { useForm } from '../../helpers/hooks';
-import { useValidation } from './hooks';
+import { useValidation, actionReducer } from './hooks';
 import { useLocation } from '../../helpers/hooks';
 
 describe('Tests custom hooks', () => {
@@ -337,5 +337,26 @@ describe('Tests custom hooks', () => {
             floor: -1,
             room: -1,
         });
+    });
+    it('actionReducer operates correctly', () => {
+        // test add action
+        const testAction = {
+            type: 'add',
+            title: 'test title',
+        };
+        const expectedAction = {
+            title: 'test title',
+            isAdd: true,
+            row: { asset_type_id: 'auto' },
+        };
+        expect(actionReducer(null, testAction)).toEqual(expectedAction);
+        const expectedEmpty = { isAdd: false, rows: {}, row: {}, title: '' };
+        testAction.type = 'clear';
+        expect(actionReducer(null, testAction)).toEqual(expectedEmpty);
+        // test if throw is correct
+        testAction.type = 'test';
+        expect(() => {
+            actionReducer(null, testAction);
+        }).toThrow();
     });
 });
