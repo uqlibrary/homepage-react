@@ -537,10 +537,7 @@ export default {
                     actionTooltips: {
                         edit: 'Edit this location',
                         delete: 'Delete this location',
-                        deleteDisabled: 'Tests are using this location and it can not be deleted',
-                        siteDeleteDisabled: 'Site has buildings that must be deleted first',
-                        buildingDeleteDisabled: 'Building has floors that must be deleted first',
-                        floorDeleteDisabled: 'Floor has rooms that must be deleted first',
+                        deleteDisabled: 'Assets are using this location and it can not be deleted',
                     },
                 },
                 dialogAdd: {
