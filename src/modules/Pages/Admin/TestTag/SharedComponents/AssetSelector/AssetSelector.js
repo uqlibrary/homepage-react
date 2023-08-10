@@ -61,6 +61,7 @@ const AssetSelector = ({
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
             setCurrentValue(assetPartial);
+            /* istanbul ignore else */
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
                 onSearch?.(assetPartial);
                 dispatch(
@@ -165,7 +166,7 @@ const AssetSelector = ({
                         {...params}
                         {...locale.assetSelector}
                         required={required}
-                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? false}
+                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? /* istanbul ignore next */ false}
                         variant="standard"
                         onFocus={() => {
                             setIsOpen(true);

@@ -80,7 +80,9 @@ const AssetTypeSelector = ({
                         {...params}
                         {...locale.props}
                         required={required}
-                        error={(!disabled && required && !validateAssetTypeId?.(value)) ?? false}
+                        error={
+                            (!disabled && required && !validateAssetTypeId?.(value)) ?? /* istanbul ignore next */ false
+                        }
                         variant="standard"
                         InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
