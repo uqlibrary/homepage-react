@@ -38,7 +38,7 @@ export default {
                 fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 130 },
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
             },
         },
     },
@@ -78,7 +78,7 @@ export default {
                 fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 130 },
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
             },
         },
     },
@@ -113,7 +113,7 @@ export default {
                 fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 130 },
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
             },
         },
     },
@@ -153,7 +153,7 @@ export default {
                 fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
             },
             asset_count: {
-                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 130 },
+                fieldParams: { canEdit: false, renderInAdd: false, renderInUpdate: false, minWidth: 140 },
             },
         },
     },

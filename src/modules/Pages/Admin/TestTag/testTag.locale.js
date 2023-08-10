@@ -482,7 +482,7 @@ export default {
                                 label: 'Site ID',
                             },
                             asset_count: {
-                                label: 'No. tests',
+                                label: 'No. assets',
                             },
                         },
                         building: {
@@ -499,7 +499,7 @@ export default {
                                 label: 'Building ID',
                             },
                             asset_count: {
-                                label: 'No. tests',
+                                label: 'No. assets',
                             },
                         },
                         floor: {
@@ -513,7 +513,7 @@ export default {
                                 label: 'Floor ID',
                             },
                             asset_count: {
-                                label: 'No. tests',
+                                label: 'No. assets',
                             },
                         },
                         room: {
@@ -530,7 +530,7 @@ export default {
                                 label: 'Room ID',
                             },
                             asset_count: {
-                                label: 'No. tests',
+                                label: 'No. assets',
                             },
                         },
                     },
@@ -538,10 +538,7 @@ export default {
                     actionTooltips: {
                         edit: 'Edit this location',
                         delete: 'Delete this location',
-                        deleteDisabled: 'Tests are using this location and it can not be deleted',
-                        siteDeleteDisabled: 'Site has buildings that must be deleted first',
-                        buildingDeleteDisabled: 'Building has floors that must be deleted first',
-                        floorDeleteDisabled: 'Floor has rooms that must be deleted first',
+                        deleteDisabled: 'Assets are using this location and it can not be deleted',
                     },
                 },
                 dialogAdd: {
@@ -557,8 +554,23 @@ export default {
                 dialogDeleteConfirm: {
                     confirmButtonLabel: 'Proceed',
                     cancelButtonLabel: 'Cancel',
-                    confirmationMessage: 'Are you sure you wish to delete this location?',
-                    confirmationTitle: 'Delete unused location',
+                    confirmationMessage: '',
+                    confirmationMessageFormatter: ({ location, locationName }) => (
+                        <>
+                            <div>
+                                Are you sure you wish to delete the {location} "<strong>{locationName}</strong>"?
+                            </div>
+                            <br />
+                            <Alert severity="warning" id={'confirm-delete-alert'} data-testid={'confirm-delete-alert'}>
+                                Deleting a location will also delete any and all child locations. For example, deleting
+                                a site will also delete all of the site's buildings, floors and rooms.
+                                <br />
+                                <br />
+                                <strong>THIS ACTION CAN NOT BE UNDONE.</strong>
+                            </Alert>
+                        </>
+                    ),
+                    confirmationTitle: 'Delete unused location and all children',
                 },
                 snackbar: {
                     addSuccess: 'Added the location successfully',
