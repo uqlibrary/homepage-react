@@ -116,13 +116,24 @@ const ManageLocations = ({ actions }) => {
     const handleDeleteClick = React.useCallback(
         ({ id, api }) => {
             const row = api.getRow(id);
+
+            setDialogueBusy(true);
             actionDispatch({
                 type: 'delete',
                 row,
                 selectedLocation,
                 location,
                 displayLocation: locationDisplayedAs,
+                locale: {
+                    ...pageLocale.dialogDeleteConfirm,
+                    confirmationMessage: pageLocale.dialogDeleteConfirm.confirmationMessageFormatter({
+                        locationName: row[`${selectedLocation}_name`] ?? row[`${selectedLocation}_id_displayed`],
+                        location: selectedLocation,
+                    }),
+                },
             });
+
+            setTimeout(() => setDialogueBusy(false), 3000);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [location, selectedLocation, locationDisplayedAs],
@@ -267,9 +278,9 @@ const ManageLocations = ({ actions }) => {
                         isOpen={actionState.isDelete}
                         locale={
                             !dialogueBusy
-                                ? pageLocale.dialogDeleteConfirm
+                                ? actionState.props?.locale ?? {}
                                 : {
-                                      ...pageLocale.dialogDeleteConfirm,
+                                      ...(actionState.props?.locale ?? {}),
                                       confirmButtonLabel: (
                                           <CircularProgress
                                               color="inherit"
