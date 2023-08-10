@@ -481,7 +481,7 @@ export default {
                                 label: 'Site ID',
                             },
                             asset_count: {
-                                label: 'No. tests',
+                                label: 'No. assets',
                             },
                         },
                         building: {
@@ -498,7 +498,7 @@ export default {
                                 label: 'Building ID',
                             },
                             asset_count: {
-                                label: 'No. tests',
+                                label: 'No. assets',
                             },
                         },
                         floor: {
@@ -512,7 +512,7 @@ export default {
                                 label: 'Floor ID',
                             },
                             asset_count: {
-                                label: 'No. tests',
+                                label: 'No. assets',
                             },
                         },
                         room: {
@@ -529,7 +529,7 @@ export default {
                                 label: 'Room ID',
                             },
                             asset_count: {
-                                label: 'No. tests',
+                                label: 'No. assets',
                             },
                         },
                     },
