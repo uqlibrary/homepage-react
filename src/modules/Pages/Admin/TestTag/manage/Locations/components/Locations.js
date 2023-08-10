@@ -22,13 +22,7 @@ import { useLocationDisplayName } from './hooks';
 import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
-import {
-    emptyActionState,
-    actionReducer,
-    transformAddRequest,
-    transformUpdateRequest,
-    getAssociatedCollectionKeyBySelectedLocation,
-} from './utils';
+import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 
 const componentId = 'locations';
@@ -122,41 +116,29 @@ const ManageLocations = ({ actions }) => {
     const handleDeleteClick = React.useCallback(
         ({ id, api }) => {
             const row = api.getRow(id);
+
+            setDialogueBusy(true);
             actionDispatch({
                 type: 'delete',
                 row,
                 selectedLocation,
                 location,
                 displayLocation: locationDisplayedAs,
+                locale: {
+                    ...pageLocale.dialogDeleteConfirm,
+                    confirmationMessage: pageLocale.dialogDeleteConfirm.confirmationMessageFormatter({
+                        locationName: row[`${selectedLocation}_name`] ?? row[`${selectedLocation}_id_displayed`],
+                        location: selectedLocation,
+                    }),
+                },
             });
+
+            setTimeout(() => setDialogueBusy(false), 3000);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [location, selectedLocation, locationDisplayedAs],
     );
-    const shouldDisableDelete = (row, filterKey) => {
-        const nextLocation = getAssociatedCollectionKeyBySelectedLocation(location, filterKey);
-        return (row?.asset_count ?? 1) > 0 || row?.[`${nextLocation}s`]?.length > 0;
-    };
-
-    const getTooltips = ({ row, filterKey, tooltips: originalTooltips }) => {
-        // We want to show a different delete button disabled tooltip message, depending
-        // upon which location we're looking at and if the disabled reason is different
-        // from the default in the locale file (in actionTooltips: deleteDisabled).
-        // Locations is the only place where we can have different versions of the
-        // delete button tooltip message, so we have to do it dynamically here.
-        const nextLocation = getAssociatedCollectionKeyBySelectedLocation(location, filterKey);
-
-        const hasChildren = (row?.[`${nextLocation}s`]?.length ?? 0) > 0;
-
-        if ((row?.asset_count ?? 1) === 0 && hasChildren) {
-            return {
-                ...originalTooltips,
-                deleteDisabled: originalTooltips[`${filterKey}DeleteDisabled`],
-            };
-        }
-
-        return originalTooltips;
-    };
+    const shouldDisableDelete = row => (row?.asset_count ?? 1) > 0;
 
     const { columns } = useDataTableColumns({
         config,
@@ -167,7 +149,6 @@ const ManageLocations = ({ actions }) => {
         shouldDisableDelete,
         actionDataFieldKeys: { valueKey: locationDataFieldKeys[selectedLocation] },
         actionTooltips: pageLocale.form.actionTooltips,
-        getTooltips,
     });
 
     const closeDialog = React.useCallback(() => {
@@ -297,9 +278,9 @@ const ManageLocations = ({ actions }) => {
                         isOpen={actionState.isDelete}
                         locale={
                             !dialogueBusy
-                                ? pageLocale.dialogDeleteConfirm
+                                ? actionState.props?.locale ?? {}
                                 : {
-                                      ...pageLocale.dialogDeleteConfirm,
+                                      ...(actionState.props?.locale ?? {}),
                                       confirmButtonLabel: (
                                           <CircularProgress
                                               color="inherit"
