@@ -95,4 +95,56 @@ describe('Backend routes method', () => {
     //         'https://api.library.uq.edu.au/staging/search_suggestions?type=exam_paper&prefix=test',
     //     );
     // });
+
+    it('Should return valid path for Test Tag Asset Types (mine)', () => {
+        const testParams = {
+            locationId: 1,
+            locationType: 'site',
+            assetTypeId: 1,
+            textSearch: 'test',
+        };
+        let AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
+        expect(AssetsMine.apiUrl).toEqual(
+            '/test-and-tag/asset/search/mine?location_id=1&location_type=site&asset_type_id=1&inspect_comment=test',
+        );
+        delete testParams.textSearch;
+        AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
+        expect(AssetsMine.apiUrl).toEqual(
+            '/test-and-tag/asset/search/mine?location_id=1&location_type=site&asset_type_id=1',
+        );
+        delete testParams.locationType;
+        AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
+        expect(AssetsMine.apiUrl).toEqual('/test-and-tag/asset/search/mine?asset_type_id=1');
+    });
+    it('Should return valid path for Test Tag Assets Filtered', () => {
+        const testFilter = {
+            status: { discarded: true },
+        };
+        let AssetsFiltered = routes.TEST_TAG_ASSETS_FILTERED_API('test');
+        expect(AssetsFiltered.apiUrl).toEqual('test-and-tag/asset/search/current/test');
+        AssetsFiltered = routes.TEST_TAG_ASSETS_FILTERED_API('test', testFilter);
+        expect(AssetsFiltered.apiUrl).toEqual('test-and-tag/asset/search/current/test');
+        testFilter.status.discarded = false;
+        AssetsFiltered = routes.TEST_TAG_ASSETS_FILTERED_API('test', testFilter);
+        expect(AssetsFiltered.apiUrl).toEqual('test-and-tag/asset/search/current/test?without_discards=1');
+    });
+    it('Should return valid path for TnT Inspections Due', () => {
+        const testFilter = {
+            locationId: 1,
+            locationType: 'site',
+            period: 3,
+            periodType: 'MONTH',
+        };
+        let inspectionsDue = routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API(testFilter);
+        expect(inspectionsDue.apiUrl).toEqual(
+            'test-and-tag/report/pending-inspections?site_id=1&period_length=3&period_type=MONTH',
+        );
+        delete testFilter.period;
+        delete testFilter.periodType;
+        inspectionsDue = routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API(testFilter);
+        expect(inspectionsDue.apiUrl).toEqual('test-and-tag/report/pending-inspections?site_id=1');
+        delete testFilter.locationId;
+        inspectionsDue = routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API(testFilter);
+        expect(inspectionsDue.apiUrl).toEqual('test-and-tag/report/pending-inspections');
+    });
 });
