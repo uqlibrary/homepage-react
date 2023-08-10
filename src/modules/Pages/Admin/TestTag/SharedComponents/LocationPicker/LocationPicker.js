@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
 import Popper from '@material-ui/core/Popper';
 
 const rootId = 'location_picker';
@@ -25,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const GridWrapper = ({ withGrid = true, divisor, children }) => {
+export const GridWrapper = ({ withGrid = true, divisor, children }) => {
     GridWrapper.propTypes = {
         withGrid: PropTypes.bool,
         divisor: PropTypes.number,
@@ -43,7 +42,6 @@ const GridWrapper = ({ withGrid = true, divisor, children }) => {
 
 const LocationPicker = ({
     id,
-    title,
     autoFocus = false,
     focusTarget,
     siteList,
@@ -52,7 +50,6 @@ const LocationPicker = ({
     buildingListLoading,
     floorList,
     floorListLoading,
-    // floorListError,
     roomList,
     roomListLoading,
     hasAllOption = false,
@@ -65,6 +62,28 @@ const LocationPicker = ({
     inputProps = {},
     withGrid = true,
 }) => {
+    console.log({
+        id,
+        autoFocus,
+        focusTarget,
+        siteList,
+        siteListLoading,
+        buildingList,
+        buildingListLoading,
+        floorList,
+        floorListLoading,
+        roomList,
+        roomListLoading,
+        hasAllOption,
+        locale,
+        actions,
+        location,
+        setLocation,
+        hide,
+        disabled,
+        inputProps,
+        withGrid,
+    });
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const divisor = 4 - hide.length;
@@ -105,13 +124,6 @@ const LocationPicker = ({
 
     return (
         <>
-            {!!title && (
-                <Grid item xs={12}>
-                    <Typography variant="h6" component={'h3'}>
-                        {title}
-                    </Typography>
-                </Grid>
-            )}
             {!hide.includes('site') && (
                 <GridWrapper withGrid={withGrid} divisor={divisor}>
                     <FormControl className={classes.formControl} fullWidth>
@@ -390,10 +402,8 @@ LocationPicker.propTypes = {
     buildingListLoading: PropTypes.bool,
     floorList: PropTypes.array,
     floorListLoading: PropTypes.bool,
-    // floorListError,
     roomList: PropTypes.array,
     roomListLoading: PropTypes.bool,
-    // roomListError,
     actions: PropTypes.object,
     location: PropTypes.object,
     setLocation: PropTypes.func,
@@ -403,7 +413,6 @@ LocationPicker.propTypes = {
     hasAllOption: PropTypes.bool,
     disabled: PropTypes.bool,
     withGrid: PropTypes.bool,
-    title: PropTypes.string,
 };
 
 export default React.memo(LocationPicker);
