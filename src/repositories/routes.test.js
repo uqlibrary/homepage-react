@@ -115,6 +115,9 @@ describe('Backend routes method', () => {
         delete testParams.locationType;
         AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
         expect(AssetsMine.apiUrl).toEqual('/test-and-tag/asset/search/mine?asset_type_id=1');
+        delete testParams.assetTypeId;
+        AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
+        expect(AssetsMine.apiUrl).toEqual('/test-and-tag/asset/search/mine');
     });
     it('Should return valid path for Test Tag Assets Filtered', () => {
         const testFilter = {
