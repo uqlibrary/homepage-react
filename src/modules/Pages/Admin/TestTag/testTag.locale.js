@@ -560,17 +560,25 @@ export default {
                             <div>
                                 Are you sure you wish to delete the {location} "<strong>{locationName}</strong>"?
                             </div>
-                            <br />
-                            <Alert severity="warning" id={'confirm-delete-alert'} data-testid={'confirm-delete-alert'}>
-                                Deleting a location will also delete any and all child locations. For example, deleting
-                                a site will also delete all of the site's buildings, floors and rooms.
-                                <br />
-                                <br />
-                                <strong>THIS ACTION CAN NOT BE UNDONE.</strong>
-                            </Alert>
+                            {location !== 'room' && (
+                                <>
+                                    <br />
+                                    <Alert
+                                        severity="warning"
+                                        id={'confirm-delete-alert'}
+                                        data-testid={'confirm-delete-alert'}
+                                    >
+                                        Deleting a location will also delete any and all child locations. For example,
+                                        deleting a site will also delete all of the site's buildings, floors and rooms.
+                                        <br />
+                                        <br />
+                                        <strong>THIS ACTION CAN NOT BE UNDONE.</strong>
+                                    </Alert>
+                                </>
+                            )}
                         </>
                     ),
-                    confirmationTitle: 'Delete unused location and all children',
+                    confirmationTitle: 'Delete unused location',
                 },
                 snackbar: {
                     addSuccess: 'Added the location successfully',
