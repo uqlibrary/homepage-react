@@ -157,9 +157,11 @@ api.interceptors.response.use(
 
             if (!!error.message && !!error.response && !!error.response.status && error.response.status === 500) {
                 errorMessage =
-                    !!error.response?.data && error.response?.data.length > 0
-                        ? { message: error.response.data.join(' ') }
-                        : error.response?.data?.message || locale.global.errorMessages[error.response.status];
+                    error.response.data?.length > 0
+                        ? { message: error.response.data?.join(' ') }
+                        : (error.response.request.responseUrl.startsWith('test-and-tag') &&
+                              error.response?.data?.message) ||
+                          locale.global.errorMessages[error.response.status];
                 if (!alertDisplayAllowed(error)) {
                     // we don't display an error banner for these (the associated panel displays an error)
                 } else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {
@@ -169,9 +171,11 @@ api.interceptors.response.use(
                 }
             } else if (!!error.response && !!error.response.status) {
                 errorMessage =
-                    !!error.response?.data && error.response?.data.length > 0
-                        ? { message: error.response.data.join(' ') }
-                        : error.response?.data?.message || locale.global.errorMessages[error.response.status];
+                    error.response.data?.length > 0
+                        ? { message: error.response.data?.join(' ') }
+                        : (error.response.request.responseUrl.startsWith('test-and-tag') &&
+                              error.response.data?.message) ||
+                          locale.global.errorMessages[error.response.status];
                 if ([410, 422].includes(error.response.status)) {
                     errorMessage = {
                         ...errorMessage,
