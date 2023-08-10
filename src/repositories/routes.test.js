@@ -150,4 +150,36 @@ describe('Backend routes method', () => {
         inspectionsDue = routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API(testFilter);
         expect(inspectionsDue.apiUrl).toEqual('test-and-tag/report/pending-inspections');
     });
+    it('Should return valid path for TnT Asset report by filters', () => {
+        const testFilter = {
+            assetStatus: 'discarded',
+            locationType: 'site',
+            locationId: 1,
+            inspectionDateFrom: '1999-01-01',
+            inspectionDateTo: '2000-01-01',
+        };
+        let reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual(
+            'test-and-tag/asset/search/mine?asset_status=discarded&location_type=site&location_id=1&inspection_date_from=1999-01-01&inspection_date_to=2000-01-01',
+        );
+        delete testFilter.inspectionDateTo;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual(
+            'test-and-tag/asset/search/mine?asset_status=discarded&location_type=site&location_id=1&inspection_date_from=1999-01-01',
+        );
+        delete testFilter.inspectionDateFrom;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual(
+            'test-and-tag/asset/search/mine?asset_status=discarded&location_type=site&location_id=1',
+        );
+        delete testFilter.assetStatus;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine?location_type=site&location_id=1');
+        delete testFilter.locationId;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine?location_type=site');
+        delete testFilter.locationType;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine');
+    });
 });

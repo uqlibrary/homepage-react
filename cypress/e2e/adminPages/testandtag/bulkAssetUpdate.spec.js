@@ -35,7 +35,7 @@ describe('Test and Tag bulk asset update', () => {
         forcePageRefresh();
     };
 
-    it('page is accessible and renders base', () => {
+    it('Page is accessible and renders base', () => {
         checkBaseline();
         // cy.checkA11y('[data-testid="StandardPage"]', {
         //     reportName: 'Test and Tag Manage Inspection devices',
@@ -43,7 +43,7 @@ describe('Test and Tag bulk asset update', () => {
         //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         // });
     });
-    it('asset id search functions correctly', () => {
+    it('Asset id search functions correctly', () => {
         checkBaseline();
         // Search for an asset
         cy.data('asset_selector-bulk-asset-update-input').type('5');
@@ -60,12 +60,12 @@ describe('Test and Tag bulk asset update', () => {
         cy.data('action_cell-6-delete-button').click();
         cy.data('bulk_asset_update-count-alert').should('not.exist');
     });
-    it('asset search by feature works correctly', () => {
+    it('Asset search by feature works correctly', () => {
         checkBaseline();
         // Search for an asset by feature (default)
         selectAllRows();
     });
-    it('updates locations of assets', () => {
+    it('Updates locations of assets', () => {
         checkBaseline();
         // Select all rows.
         selectAllRows();
@@ -92,5 +92,70 @@ describe('Test and Tag bulk asset update', () => {
         // Commit
         cy.data('confirm-bulk-asset-update').click();
         cy.data('confirmation_alert-success-alert').should('be.visible');
+    });
+    it('Updates Asset Type', () => {
+        checkBaseline();
+        // Select all rows.
+        selectAllRows();
+        // Update location
+        cy.get('#bulk_asset_update-asset-type-checkbox').click();
+        cy.data('asset_type_selector-bulk-asset-update-input').should('have.attr', 'required');
+        cy.data('asset_type_selector-bulk-asset-update-input').click();
+        cy.get('#asset_type_selector-bulk-asset-update-option-1').click();
+        // Commit the change.
+        cy.data('bulk_asset_update-submit-button').click();
+        // Confirmation showing?
+        cy.data('dialogbox-bulk-asset-update')
+            .should('exist')
+            .should('be.visible');
+        // Commit
+        cy.data('confirm-bulk-asset-update').click();
+        cy.data('confirmation_alert-success-alert').should('be.visible');
+    });
+    it('Clear Test notes', () => {
+        checkBaseline();
+        // Select all rows.
+        selectAllRows();
+        // Update location
+        cy.get('#bulk_asset_update-notes-checkbox').click();
+        // Commit the change.
+        cy.data('bulk_asset_update-submit-button').click();
+        // Confirmation showing?
+        cy.data('dialogbox-bulk-asset-update')
+            .should('exist')
+            .should('be.visible');
+        // Commit
+        cy.data('confirm-bulk-asset-update').click();
+        cy.data('confirmation_alert-success-alert').should('be.visible');
+    });
+    it('Discard Asset', () => {
+        checkBaseline();
+        // Select all rows.
+        selectAllRows();
+        // Update location
+        cy.get('#bulk_asset_update-status-checkbox').click();
+        cy.data('bulk-asset-update-discard-reason-input').should('have.attr', 'required');
+        cy.data('bulk-asset-update-discard-reason-input').type('Cypress test');
+        // Commit the change.
+        cy.data('bulk_asset_update-submit-button').click();
+        // Confirmation showing?
+        cy.data('dialogbox-bulk-asset-update')
+            .should('exist')
+            .should('be.visible');
+        // Commit
+        cy.data('confirm-bulk-asset-update').click();
+        cy.data('confirmation_alert-success-alert').should('be.visible');
+    });
+    it('Cancel Asset changes', () => {
+        checkBaseline();
+        // Select all rows.
+        selectAllRows();
+        cy.get('#bulk_asset_update-notes-checkbox').click();
+        cy.data('bulk_asset_update-submit-button').click();
+        // Cancel
+        cy.data('cancel-bulk-asset-update').click();
+        cy.data('bulk_asset_update-back-button').click();
+        cy.data('footer_bar-bulk-asset-update-alt-button').click();
+        cy.data('confirmation_alert-success-alert').should('not.exist');
     });
 });
