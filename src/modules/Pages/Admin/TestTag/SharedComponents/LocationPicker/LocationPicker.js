@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const GridWrapper = ({ withGrid = true, divisor, children }) => {
+export const GridWrapper = ({ withGrid = true, divisor = 1, children }) => {
     GridWrapper.propTypes = {
         withGrid: PropTypes.bool,
         divisor: PropTypes.number,
@@ -38,6 +38,11 @@ export const GridWrapper = ({ withGrid = true, divisor, children }) => {
     ) : (
         children
     );
+};
+
+export const getBuildingLabel = building => {
+    const prefix = !!building.building_id_displayed ? `${building.building_id_displayed} - ` : '';
+    return `${prefix}${building.building_name ?? ''}`;
 };
 
 const LocationPicker = ({
@@ -94,22 +99,23 @@ const LocationPicker = ({
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
 
-    function getBuildingLabel(building) {
-        const prefix = !!building.building_id_displayed
-            ? `${building.building_id_displayed} - `
-            : /* istanbul ignore next */ '';
-        return `${prefix}${building.building_name ?? /* istanbul ignore next */ ''}`;
-    }
-
     React.useLayoutEffect(() => {
         /* istanbul ignore else */
         if (
             autoFocus &&
             !!focusTarget &&
-            ((focusTarget === 'site' && (siteList?.length ?? 0) > 0 && location.site === -1) ||
-                (focusTarget === 'building' && (buildingList?.length ?? 0) > 0 && location.building === -1) ||
-                (focusTarget === 'floor' && (floorList?.length ?? 0) > 0 && location.floor === -1) ||
-                (focusTarget === 'room' && (roomList?.length ?? 0) > 0 && location.room === -1))
+            ((focusTarget === 'site' &&
+                (siteList?.length ?? /* istanbul ignore next */ 0) > 0 &&
+                location.site === -1) ||
+                (focusTarget === 'building' &&
+                    (buildingList?.length ?? /* istanbul ignore next */ 0) > 0 &&
+                    location.building === -1) ||
+                (focusTarget === 'floor' &&
+                    (floorList?.length ?? /* istanbul ignore next */ 0) > 0 &&
+                    location.floor === -1) ||
+                (focusTarget === 'room' &&
+                    (roomList?.length ?? /* istanbul ignore next */ 0) > 0 &&
+                    location.room === -1))
         ) {
             focusElementRef?.current?.focus();
         }
@@ -214,7 +220,7 @@ const LocationPicker = ({
                                 });
 
                                 actions?.clearFloors?.();
-                                if (newValue.building_id !== -1) {
+                                /* istandbul ignore else */ if (newValue.building_id !== -1) {
                                     actions?.loadFloors?.(newValue.building_id);
                                 }
                             }}
@@ -284,7 +290,9 @@ const LocationPicker = ({
                                 setLocation({ floor: newValue.floor_id, room: -1 });
 
                                 actions?.clearRooms?.();
-                                if (newValue.floor_id !== -1) actions?.loadRooms?.(newValue.floor_id);
+                                /* istandbul ignore else */ if (newValue.floor_id !== -1) {
+                                    actions?.loadRooms?.(newValue.floor_id);
+                                }
                             }}
                             getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
                             renderInput={params => (
