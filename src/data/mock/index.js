@@ -37,6 +37,7 @@ import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_user from './data/records/test_tag_user';
 import testTag_user_UQPF from './data/records/test_tag_userUQPF';
+import test_tag_user_permissions from './data/records/test_tag_user_permissions';
 import testTag_dashboardOnLoad from './data/records/test_tag_dashboardOnLoad';
 import testTag_inspectionOnLoad from './data/records/test_tag_inspectionOnLoad';
 import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
@@ -80,7 +81,19 @@ user = user || 'vanilla';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
-    Cookies.set(SESSION_COOKIE_NAME, user === 'uqpf' ? 'uqpf' : 'abc123');
+    const userCookie = () => {
+        switch (user) {
+            case 'uqpf':
+            case 'uqttadmin':
+            case 'uqttreport':
+            case 'uqttinspect':
+            case 'uqttalter':
+                return user;
+            default:
+                return 'abc123';
+        }
+    }
+    Cookies.set(SESSION_COOKIE_NAME, userCookie());
     Cookies.set(SESSION_USER_GROUP_COOKIE_NAME, 'LIBRARYSTAFFB');
 }
 mockData.accounts.uqrdav10 = mockData.uqrdav10.account;
@@ -725,12 +738,31 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        return [200, config?.headers['X-Uql-Token'] === 'uqpf' ? testTag_user_UQPF : testTag_user];
+        const userVal = () => {
+            switch (user) {
+                case 'uqpf':
+                    return testTag_user_UQPF;
+                case 'uqttadmin':
+                    return test_tag_user_permissions.uqttadmin;
+                case 'uqttreport':
+                    return test_tag_user_permissions.uqttreport;
+                case 'uqttinspect':
+                        return test_tag_user_permissions.uqttinspect;
+                case 'uqttalter':
+                        return test_tag_user_permissions.uqttalter;    
+                default:
+                        return testTag_user;
+            }
+        }
+        return [200, userVal()];
     })
 
     // dashboard CONFIG
     .onGet(routes.TEST_TAG_ONLOAD_DASHBOARD_API().apiUrl)
     .reply(config => {
+        if (user === 'uqpf') {
+            return[400, {status: 'Test Error'}]
+        }
         return [200, testTag_dashboardOnLoad];
     })
 
@@ -782,7 +814,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_LOCATION_API({type: 'room', id: '.*'}).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
-
+    .onDelete(/test-and-tag\/site|building|floor\/2/)
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(/test-and-tag\/site|building|floor\/.*/)
+    .reply(() => [400, { message: '52 is a test error', status: 'error' }])
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => {
@@ -912,6 +947,14 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType:'month'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'site'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections_site])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'building'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections_building])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'floor'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections_floor])
+    .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'room'}).apiUrl)
+    .reply(() => [200, test_tag_pending_inspections_room])
     .onGet(
         new RegExp(
             panelRegExp(
@@ -956,7 +999,7 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(withDelay([200, test_tag_user_list]))
     .onPut(/test-and-tag\/user\/5/)
     .reply(withDelay([
-        403,
+        400,
         {},
     ]))
     .onPut(/test-and-tag\/user\/\d*/)
@@ -975,7 +1018,7 @@ mock.onGet('exams/course/FREN1010/summary')
     ]))
     .onDelete(/test-and-tag\/user\/5/)
     .reply(withDelay([
-        403,
+        400,
         {},
     ]))
     .onDelete(/test-and-tag\/user\/\d*/)
