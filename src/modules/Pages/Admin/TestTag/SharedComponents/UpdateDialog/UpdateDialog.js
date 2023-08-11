@@ -64,6 +64,24 @@ export const UpdateDialogue = ({
     props,
     isBusy = false,
 } = {}) => {
+    console.log({
+        action,
+        locale,
+        isOpen,
+        title,
+        id,
+        hideActionButton,
+        hideCancelButton,
+        onAction,
+        onCancelAction,
+        onClose,
+        noMinContentWidth,
+        fields,
+        columns,
+        row,
+        props,
+        isBusy,
+    });
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const [dataColumns, setDataColumns] = React.useState({});
