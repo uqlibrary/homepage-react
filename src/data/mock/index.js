@@ -742,8 +742,8 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        const user = () => {
-            switch (config?.headers['X-Uql-Token']) {
+        const userVal = () => {
+            switch (user) {
                 case 'uqpf':
                     return testTag_user_UQPF;
                 case 'uqttadmin':
@@ -758,13 +758,13 @@ mock.onGet('exams/course/FREN1010/summary')
                         return testTag_user;
             }
         }
-        return [200, user()];
+        return [200, userVal()];
     })
 
     // dashboard CONFIG
     .onGet(routes.TEST_TAG_ONLOAD_DASHBOARD_API().apiUrl)
     .reply(config => {
-        if (config?.headers['X-Uql-Token'] === 'uqpf') {
+        if (user === 'uqpf') {
             return[400, {status: 'Test Error'}]
         }
         return [200, testTag_dashboardOnLoad];
