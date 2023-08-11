@@ -220,7 +220,7 @@ const LocationPicker = ({
                                 });
 
                                 actions?.clearFloors?.();
-                                /* istandbul ignore else */ if (newValue.building_id !== -1) {
+                                /* istanbul ignore else */ if (newValue.building_id !== -1) {
                                     actions?.loadFloors?.(newValue.building_id);
                                 }
                             }}
@@ -290,7 +290,7 @@ const LocationPicker = ({
                                 setLocation({ floor: newValue.floor_id, room: -1 });
 
                                 actions?.clearRooms?.();
-                                /* istandbul ignore else */ if (newValue.floor_id !== -1) {
+                                /* istanbul ignore else */ if (newValue.floor_id !== -1) {
                                     actions?.loadRooms?.(newValue.floor_id);
                                 }
                             }}

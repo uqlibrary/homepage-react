@@ -23,7 +23,7 @@ import userData from '../../../../../../data/mock/data/testing/testTagUser';
 const contentText = 'This is the protected content';
 
 function setup(testProps = {}, renderer = render) {
-    const { state = {}, title = 'Test title', ...props } = testProps;
+    const { state = {}, ...props } = testProps;
 
     const _state = {
         testTagUserReducer: {
@@ -37,7 +37,7 @@ function setup(testProps = {}, renderer = render) {
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <StandardAuthPage title={title} {...props}>
+            <StandardAuthPage {...props}>
                 <>{contentText}</>
             </StandardAuthPage>
         </WithReduxStore>,
@@ -101,6 +101,7 @@ describe('StandardAuthPage', () => {
         const { getByTestId, getByText } = setup({
             locale: { header: { pageSubtitle: mockSubtitleFn } },
             inclusive: false,
+            title: 'Test title',
             requiredPermissions: [
                 PERMISSIONS.can_admin,
                 PERMISSIONS.can_alter,
@@ -128,6 +129,7 @@ describe('StandardAuthPage', () => {
             },
             locale: { header: { pageSubtitle: mockSubtitleFn } },
             inclusive: false,
+            title: 'Test title',
             requiredPermissions: [
                 PERMISSIONS.can_admin,
                 PERMISSIONS.can_alter,
@@ -144,6 +146,7 @@ describe('StandardAuthPage', () => {
         const mockSubtitleFn = jest.fn(dept => `Subtitle for ${dept}`);
         const { getByTestId, getByText } = setup({
             locale: { header: { pageSubtitle: mockSubtitleFn } },
+            title: 'Test title',
             requiredPermissions: [PERMISSIONS.can_inspect],
         });
         expect(mockSubtitleFn).toHaveBeenCalledWith('Library');

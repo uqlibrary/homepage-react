@@ -18,9 +18,9 @@ const StandardAuthPage = ({
     locale = null,
     requiredPermissions = [],
     inclusive = true,
-    children = null,
+    children,
     ...props
-} = {}) => {
+}) => {
     const dispatch = useDispatch();
     const { userLoading, userLoaded, userError, user, privilege } = useSelector(state =>
         state.get('testTagUserReducer'),
@@ -79,12 +79,12 @@ const StandardAuthPage = ({
 };
 
 StandardAuthPage.propTypes = {
+    children: PropTypes.any.isRequired,
     title: PropTypes.string,
     user: PropTypes.object,
     locale: PropTypes.object,
     requiredPermissions: PropTypes.array,
     inclusive: PropTypes.bool,
-    children: PropTypes.any,
 };
 
 export default React.memo(StandardAuthPage);
