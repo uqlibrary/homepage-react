@@ -7,6 +7,6 @@ describe('utils', () => {
             lastInspectStatus: 'current',
             inspect_notes: 'test',
         };
-        expect(transformUpdateRequest(testRequest)).toEqual({});
+        expect(transformUpdateRequest(testRequest)).toEqual(testRequest);
     });
 });

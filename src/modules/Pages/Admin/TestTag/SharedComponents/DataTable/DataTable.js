@@ -85,6 +85,7 @@ const DataTable = ({
                     disableColumnFilter
                     disableColumnSelector
                     disableSelectionOnClick
+                    disableVirtualization={!!process?.env ?? false}
                     hideFooterRowCount
                     hideFooterSelectedRowCount
                     getRowId={row => row?.[rowId]}

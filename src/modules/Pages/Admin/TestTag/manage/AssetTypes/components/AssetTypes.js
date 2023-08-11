@@ -79,7 +79,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const { row } = useDataTableRow(assetTypesList);
 
     React.useEffect(() => {
-        actions.loadAssetTypes();
+        actions.loadAssetTypes().catch(error => {
+            console.error(error);
+            openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -278,6 +281,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}
                                 components={{ Toolbar: AddToolbar }}
+                                disableVirtualization
                                 componentsProps={{
                                     toolbar: {
                                         id: componentId,
