@@ -37,6 +37,7 @@ import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_user from './data/records/test_tag_user';
 import testTag_user_UQPF from './data/records/test_tag_userUQPF';
+import test_tag_user_permissions from './data/records/test_tag_user_permissions';
 import testTag_dashboardOnLoad from './data/records/test_tag_dashboardOnLoad';
 import testTag_inspectionOnLoad from './data/records/test_tag_inspectionOnLoad';
 import testTag_onLoadUQPF from './data/records/test_tag_onLoadUQPF';
@@ -84,7 +85,19 @@ user = user || 'vanilla';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
-    Cookies.set(SESSION_COOKIE_NAME, user === 'uqpf' ? 'uqpf' : 'abc123');
+    const userCookie = () => {
+        switch (user) {
+            case 'uqpf':
+            case 'uqttadmin':
+            case 'uqttreport':
+            case 'uqttinspect':
+            case 'uqttalter':
+                return user;
+            default:
+                return 'abc123';
+        }
+    }
+    Cookies.set(SESSION_COOKIE_NAME, userCookie());
     Cookies.set(SESSION_USER_GROUP_COOKIE_NAME, 'LIBRARYSTAFFB');
 }
 mockData.accounts.uqrdav10 = mockData.uqrdav10.account;
@@ -729,7 +742,23 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        return [200, config?.headers['X-Uql-Token'] === 'uqpf' ? testTag_user_UQPF : testTag_user];
+        const user = () => {
+            switch (config?.headers['X-Uql-Token']) {
+                case 'uqpf':
+                    return testTag_user_UQPF;
+                case 'uqttadmin':
+                    return test_tag_user_permissions.uqttadmin;
+                case 'uqttreport':
+                    return test_tag_user_permissions.uqttreport;
+                case 'uqttinspect':
+                        return test_tag_user_permissions.uqttinspect;
+                case 'uqttalter':
+                        return test_tag_user_permissions.uqttalter;    
+                default:
+                        return testTag_user;
+            }
+        }
+        return [200, user()];
     })
 
     // dashboard CONFIG
