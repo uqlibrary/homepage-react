@@ -63,25 +63,7 @@ export const UpdateDialogue = ({
     row,
     props,
     isBusy = false,
-} = {}) => {
-    console.log({
-        action,
-        locale,
-        isOpen,
-        title,
-        id,
-        hideActionButton,
-        hideCancelButton,
-        onAction,
-        onCancelAction,
-        onClose,
-        noMinContentWidth,
-        fields,
-        columns,
-        row,
-        props,
-        isBusy,
-    });
+}) => {
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const [dataColumns, setDataColumns] = React.useState({});
@@ -93,6 +75,7 @@ export const UpdateDialogue = ({
     const isMobileView = useMediaQuery(theme.breakpoints.only('xs')) || false;
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (isOpen) {
             setDataColumns(columns);
             setDataFields(fields);

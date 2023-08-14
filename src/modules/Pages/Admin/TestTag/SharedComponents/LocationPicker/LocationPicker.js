@@ -67,28 +67,6 @@ const LocationPicker = ({
     inputProps = {},
     withGrid = true,
 }) => {
-    console.log({
-        id,
-        autoFocus,
-        focusTarget,
-        siteList,
-        siteListLoading,
-        buildingList,
-        buildingListLoading,
-        floorList,
-        floorListLoading,
-        roomList,
-        roomListLoading,
-        hasAllOption,
-        locale,
-        actions,
-        location,
-        setLocation,
-        hide,
-        disabled,
-        inputProps,
-        withGrid,
-    });
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const divisor = 4 - hide.length;
