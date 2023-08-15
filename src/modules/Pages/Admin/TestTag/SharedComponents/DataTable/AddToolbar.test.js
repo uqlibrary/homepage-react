@@ -13,7 +13,13 @@ describe('AddToolbar', () => {
         const onClickFn = jest.fn();
         const { getByTestId } = setup({ onClick: onClickFn });
 
-        expect(getByTestId('footer_bar-test')).toBeInTheDocument();
-        expect(getByTestId('footer_bar-test-add-button')).toHaveTextContent('test button');
+        expect(getByTestId('add_toolbar-test')).toBeInTheDocument();
+        expect(getByTestId('add_toolbar-test-add-button')).toHaveTextContent('test button');
+
+        act(() => {
+            fireEvent.click(getByTestId('add_toolbar-test-add-button'));
+        });
+
+        expect(onClickFn).toHaveBeenCalled();
     });
 });
