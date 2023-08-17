@@ -126,6 +126,17 @@ function alertDisplayAllowed(error) {
     return true;
 }
 
+function backendhasSanitisedErrorMessages(response) {
+    return response.request?.responseUrl?.startsWith('test-and-tag');
+}
+
+function routeRequiresLogin(error) {
+    if (error?.response?.request?.responseUrl === 'account') {
+        return true;
+    }
+    return error?.response?.request?.responseUrl?.startsWith('learning_resources/reading_list/summary');
+}
+
 api.interceptors.response.use(
     response => {
         if (!isGet) {
@@ -136,12 +147,7 @@ api.interceptors.response.use(
     error => {
         let errorMessage = null;
         if (!!error && !!error.config) {
-            if (
-                !!error.response &&
-                !!error.response.status &&
-                error.response.status === 403 &&
-                error?.response?.request?.responseUrl === 'account'
-            ) {
+            if (error?.response?.status === 403 && routeRequiresLogin(error)) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
@@ -155,12 +161,11 @@ api.interceptors.response.use(
                 }
             }
 
-            if (!!error.message && !!error.response && !!error.response.status && error.response.status === 500) {
+            if (error?.response?.status === 500) {
                 errorMessage =
                     error.response.data?.length > 0
                         ? { message: error.response.data?.join(' ') }
-                        : (error.response.request.responseUrl.startsWith('test-and-tag') &&
-                              error.response?.data?.message) ||
+                        : (backendhasSanitisedErrorMessages(error.response) && error.response.data?.message) ||
                           locale.global.errorMessages[error.response.status];
                 if (!alertDisplayAllowed(error)) {
                     // we dont display an error banner for these (the associated panel displays an error)
@@ -169,12 +174,11 @@ api.interceptors.response.use(
                 } else {
                     store.dispatch(showAppAlert(error.response.data));
                 }
-            } else if (!!error.response && !!error.response.status) {
+            } else if (!!error?.response?.status) {
                 errorMessage =
                     error.response.data?.length > 0
                         ? { message: error.response.data?.join(' ') }
-                        : (error.response.request.responseUrl.startsWith('test-and-tag') &&
-                              error.response.data?.message) ||
+                        : (backendhasSanitisedErrorMessages(error.response) && error.response.data?.message) ||
                           locale.global.errorMessages[error.response.status];
                 if ([410, 422].includes(error.response.status)) {
                     errorMessage = {
@@ -182,16 +186,6 @@ api.interceptors.response.use(
                         ...error.response.data,
                     };
                 }
-                // if (error.response.status === 403) {
-                //     if (!!error?.response?.request?.responseUrl && error.response.request.responseUrl !== 'account') {
-                //         // if the api was account, we default to the global.js errorMessages entry
-                //         // as it is the most common case for a 403
-                //         errorMessage = {
-                //             ...error.response,
-                //             message: 'Your submission failed. Please try again or notify support',
-                //         };
-                //     }
-                // }
             }
         }
 
