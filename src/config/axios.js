@@ -147,7 +147,7 @@ api.interceptors.response.use(
     error => {
         let errorMessage = null;
         if (!!error && !!error.config) {
-            if (error?.response?.status === 403 && routeRequiresLogin(error)) {
+            if ([401, 403].includes(error?.response?.status) && routeRequiresLogin(error)) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
