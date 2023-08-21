@@ -1,5 +1,9 @@
+import React from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
+import { rtlRender } from 'test-utils';
 import { useDataTableRow, useDataTableColumns } from './DataTableHooks';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 
 describe('DataTableHooks', () => {
     describe('useDataTableRow', () => {
@@ -124,15 +128,22 @@ describe('DataTableHooks', () => {
                 },
             };
 
-            const shouldDisableEdit = jest.fn();
-            const shouldDisableDelete = jest.fn();
+            const handleEditClick = jest.fn();
+            const handleDeleteClick = jest.fn();
+            const shouldDisableEdit = jest.fn(() => false);
+            const shouldDisableDelete = jest.fn(() => false);
             const getTooltips = jest.fn();
 
             const { result } = renderHook(() =>
                 useDataTableColumns({
-                    config,
-                    locale,
+                    filterKey: 'subkey',
+                    config: { subkey: config },
+                    locale: { subkey: locale },
+                    editIcon: <EditIcon data-testid="testEditIcon" />,
+                    deleteIcon: <DeleteIcon data-testid="testDeleteIcon" />,
                     getTooltips,
+                    handleEditClick,
+                    handleDeleteClick,
                     shouldDisableEdit,
                     shouldDisableDelete,
                     actionTooltips: {},
@@ -143,8 +154,17 @@ describe('DataTableHooks', () => {
 
             expect(columns.length).toBe(Object.keys(locale).length);
             expect(columns[4]).toEqual(expect.objectContaining({ field: '', renderCell: expect.anything() }));
-            // here - need a few more for coverage
-            columns[4].renderCell({ row: {} });
+            // fire the returned renderCell function
+            const { getByTestId } = rtlRender(
+                <>{columns[4].renderCell({ id: 3, row: {}, api: { getRow: jest.fn(id => ({ id })) } })}</>,
+            );
+            // check we received a rendered output
+            expect(shouldDisableEdit).toHaveBeenCalledWith({}, 'subkey');
+            expect(shouldDisableDelete).toHaveBeenCalledWith({}, 'subkey');
+            expect(getByTestId('testEditIcon')).toBeInTheDocument();
+            expect(getByTestId('testDeleteIcon')).toBeInTheDocument();
+            expect(getByTestId('action_cell-3-edit-button')).toBeInTheDocument();
+            expect(getByTestId('action_cell-3-delete-button')).toBeInTheDocument();
         });
     });
 });
