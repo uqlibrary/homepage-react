@@ -106,17 +106,6 @@ function setup(testProps = {}, renderer = renderWithRouter) {
         </WithReduxStore>,
     );
 }
-
-const selectOptionFromListByIndex = (index, actions) => {
-    expect(actions.getByRole('listbox')).not.toEqual(null);
-    act(() => {
-        const options = actions.getAllByRole('option');
-
-        fireEvent.mouseDown(options[index]);
-        options[index].click();
-    });
-};
-
 describe('Manage Users', () => {
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
@@ -244,7 +233,7 @@ describe('Manage Users', () => {
         expect(actions.updateUser).rejects.toEqual('Test Error');
     });
 
-    it('Delete or Reassign Asset Type functions correctly', async () => {
+    it('Delete or Reassign User functions correctly', async () => {
         const { getByText, getByTestId } = setup({ actions: actions });
         expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
         expect(getByText('uqjsmit')).toBeInTheDocument();
@@ -267,56 +256,5 @@ describe('Manage Users', () => {
             fireEvent.click(getByTestId('confirm-user-management'));
         });
         expect(actions.deleteUser).rejects.toEqual('Test Error');
-        //     // simulate successful delete, load error.
-        //     actions.deleteAssetType = jest.fn(() => Promise.resolve());
-        //     actions.loadAssetTypes = jest.fn(() => Promise.reject('ATD ERROR TEST'));
-        //     await act(async () => {
-        //         await fireEvent.click(getByTestId('action_cell-1-delete-button'));
-        //     });
-        //     await waitFor(() => {
-        //         expect(getByTestId('confirm-asset-types')).toBeInTheDocument();
-        //         fireEvent.click(getByTestId('confirm-asset-types'));
-        //     });
-        //     expect(actions.loadAssetTypes).rejects.toEqual('ATD ERROR TEST');
-        //     // Delete and Reassign
-        //     actions.loadAssetTypes = jest.fn(() => Promise.resolve());
-        //     await act(async () => {
-        //         await fireEvent.click(getByTestId('action_cell-2-delete-button'));
-        //         act(() => {
-        //             fireEvent.mouseDown(getByTestId('action_dialogue-asset-types-reassign-select'));
-        //         });
-        //     });
-        //     selectOptionFromListByIndex(0, { getByRole, getAllByRole });
-        //     await act(async () => {
-        //         fireEvent.click(getByTestId('action_dialogue-asset-types-action-button'));
-        //     });
-        //     expect(actions.deleteAndReassignAssetType).toHaveBeenCalledWith({ new_asset_type_id: 1, old_asset_type_id: 2 });
-        //     // Simulate a reassign error
-        //     actions.deleteAndReassignAssetType = jest.fn(() => Promise.reject('DAR ERROR TEST'));
-        //     await act(async () => {
-        //         await fireEvent.click(getByTestId('action_cell-2-delete-button'));
-        //         act(() => {
-        //             fireEvent.mouseDown(getByTestId('action_dialogue-asset-types-reassign-select'));
-        //         });
-        //     });
-        //     selectOptionFromListByIndex(0, { getByRole, getAllByRole });
-        //     await act(async () => {
-        //         fireEvent.click(getByTestId('action_dialogue-asset-types-action-button'));
-        //     });
-        //     expect(actions.deleteAndReassignAssetType).rejects.toEqual('DAR ERROR TEST');
-        //     // Simulate a reassign success, load error
-        //     actions.deleteAndReassignAssetType = jest.fn(() => Promise.resolve());
-        //     actions.loadAssetTypes = jest.fn(() => Promise.reject('DAR LOAD ERROR TEST'));
-        //     await act(async () => {
-        //         await fireEvent.click(getByTestId('action_cell-2-delete-button'));
-        //         act(() => {
-        //             fireEvent.mouseDown(getByTestId('action_dialogue-asset-types-reassign-select'));
-        //         });
-        //     });
-        //     selectOptionFromListByIndex(0, { getByRole, getAllByRole });
-        //     await act(async () => {
-        //         fireEvent.click(getByTestId('action_dialogue-asset-types-action-button'));
-        //     });
-        //     expect(actions.loadAssetTypes).rejects.toEqual('DAR LOAD ERROR TEST');
     });
 });

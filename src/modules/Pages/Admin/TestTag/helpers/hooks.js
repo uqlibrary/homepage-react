@@ -21,7 +21,6 @@ export const useForm = (
     const [formValues, setFormValues] = useState({ ...defaultValues });
 
     const handleChange = prop => event => {
-        console.log('handleChange', { prop, event });
         let propValue = event?.target?.value ?? event;
         if (prop.indexOf('date') > -1) {
             console.log('handleChange thinks this is a date', prop, prop.indexOf('date'), propValue);
@@ -49,6 +48,7 @@ export const useObjectList = (list = [], transform, options = {}) => {
 
     const addAt = (index, item) => {
         // Note: Dupes are not allowed
+        /* istanbul ignore else */
         if (Array.isArray(item)) {
             const ids = new Set(data.map(d => d[_options.key]));
             setData([...data, ...item.filter(d => !ids.has(d[_options.key]))]);
