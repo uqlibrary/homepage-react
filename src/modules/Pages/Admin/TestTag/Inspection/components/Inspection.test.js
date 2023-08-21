@@ -14,6 +14,8 @@ import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
 import assetTypeData from '../../../../../../data/mock/data/testing/testTagAssetTypes';
 import floorData from '../../../../../../data/mock/data/testing/testTagFloors';
 import roomData from '../../../../../../data/mock/data/testing/testTagRooms';
+import * as repositories from 'repositories';
+
 import locale from '../../testTag.locale.js';
 import { getUserPermissions } from '../../helpers/auth';
 
@@ -105,8 +107,6 @@ function setup(testProps = {}, renderer = renderWithRouter) {
         ...state,
     };
 
-    console.log('STATE', _state);
-
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <Inspection
@@ -131,7 +131,7 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     );
 }
 
-describe('TestTag', () => {
+describe('Inspection component', () => {
     beforeAll(() => {
         window.HTMLElement.prototype.scrollIntoView = jest.fn();
     });
@@ -168,6 +168,9 @@ describe('TestTag', () => {
         const clearAssetsFn = jest.fn();
         const clearSaveInspectionFn = jest.fn();
         const clearSaveInspectionErrorFn = jest.fn();
+        const clearSaveAssetTypeErrorFn = jest.fn();
+        const clearFloorsErrorFn = jest.fn();
+        const clearRoomsErrorFn = jest.fn();
         const saveErrorTitle = 'Some error';
         const { getByText, getByTitle, getByTestId, queryByTestId } = setup({
             actions: {
@@ -176,8 +179,14 @@ describe('TestTag', () => {
                 clearAssets: clearAssetsFn,
                 clearSaveInspection: clearSaveInspectionFn,
                 clearSaveInspectionError: clearSaveInspectionErrorFn,
+                clearSaveAssetTypeError: clearSaveAssetTypeErrorFn,
+                clearFloorsError: clearFloorsErrorFn,
+                clearRoomsError: clearRoomsErrorFn,
             },
             saveInspectionError: saveErrorTitle,
+            saveAssetTypeError: saveErrorTitle,
+            floorListError: saveErrorTitle,
+            roomListError: saveErrorTitle,
         });
 
         await waitFor(() => expect(getByTestId('confirmation_alert-error-alert')).toBeInTheDocument());
@@ -188,6 +197,9 @@ describe('TestTag', () => {
         });
         expect(clearSaveInspectionErrorFn).toHaveBeenCalled();
         expect(clearSaveInspectionFn).toHaveBeenCalled();
+        expect(clearSaveAssetTypeErrorFn).toHaveBeenCalled();
+        expect(clearFloorsErrorFn).toHaveBeenCalled();
+        expect(clearRoomsErrorFn).toHaveBeenCalled();
 
         await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
         expect(clearAssetsFn).toHaveBeenCalled();
@@ -398,193 +410,144 @@ describe('TestTag', () => {
         await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument());
     });
 
-    it('can save inspection', async () => {
-        const mockLoadAssets = jest.fn(() => assetData);
-        const mockLoadAssetTypes = jest.fn(() => assetTypeData);
-        const mockLoadInspectionConfig = jest.fn(() => configData);
-        const mockFn = jest.fn();
-        const saveActionFn = jest.fn();
-        const mockLoadFloors = jest.fn(() => floorData[0]);
-        const mockLoadRooms = jest.fn(() => roomData[0]);
-        const { getByText, getByTestId, queryByTestId, getByRole, getAllByRole } = setup({
-            actions: {
-                loadInspectionConfig: mockLoadInspectionConfig,
-                loadAssets: mockLoadAssets,
-                loadAssetsFiltered: mockLoadAssets,
-                loadAssetTypes: mockLoadAssetTypes,
-                saveInspection: saveActionFn,
-                clearAssets: mockFn,
-                clearFloors: mockFn,
-                clearRooms: mockFn,
-                loadFloors: mockLoadFloors,
-                loadRooms: mockLoadRooms,
-                clearSaveInspection: mockFn,
-            },
-            defaultFormValues: {
-                ...DEFAULT_FORM_VALUES,
+    describe('API', () => {
+        beforeEach(() => {
+            mockApi = setupMockAdapter();
+        });
+        afterEach(() => {
+            mockApi.reset();
+        });
+
+        it('can save inspection', () => {
+            const patternExact = 'UQL100000';
+            mockApi
+                .onGet(repositories.routes.TEST_TAG_ASSETS_API(patternExact).apiUrl)
+                .reply(200, { data: [assetData[0]] });
+
+            const mockLoadAssets = jest.fn(() => assetData);
+            const mockLoadAssetTypes = jest.fn(() => assetTypeData);
+            const mockLoadInspectionConfig = jest.fn(() => configData);
+            const mockFn = jest.fn();
+            const saveActionFn = jest.fn();
+            const mockLoadFloors = jest.fn(() => floorData[0]);
+            const mockLoadRooms = jest.fn(() => roomData[0]);
+            const { getByText, getByTestId, queryByTestId, getByRole, getAllByRole } = setup({
+                actions: {
+                    loadInspectionConfig: mockLoadInspectionConfig,
+                    loadAssets: mockLoadAssets,
+                    loadAssetsFiltered: mockLoadAssets,
+                    loadAssetTypes: mockLoadAssetTypes,
+                    saveInspection: saveActionFn,
+                    clearAssets: mockFn,
+                    clearFloors: mockFn,
+                    clearRooms: mockFn,
+                    loadFloors: mockLoadFloors,
+                    loadRooms: mockLoadRooms,
+                    clearSaveInspection: mockFn,
+                },
+                defaultFormValues: {
+                    ...DEFAULT_FORM_VALUES,
+                    user_id: 3,
+                    asset_department_owned_by: 'UQL',
+                },
+            });
+
+            expect(getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
+
+            expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('disabled', '');
+
+            expect(queryByTestId('location_picker-event-panel-site-progress')).not.toBeInTheDocument();
+            act(() => {
+                fireEvent.mouseDown(getByTestId('asset_selector-asset-panel-input'));
+                fireEvent.change(getByTestId('asset_selector-asset-panel-input'), {
+                    target: { value: 'UQL100000' },
+                });
+            });
+            selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+
+            expect(getByTestId('asset_type_selector-asset-panel-input')).not.toHaveAttribute('disabled');
+            expect(getByTestId('last_inspection_panel')).toBeInTheDocument();
+
+            expect(queryByTestId('months_selector-inspection-panel-next-date-label')).not.toBeInTheDocument();
+
+            act(() => {
+                fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
+            });
+            selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+
+            act(() => {
+                fireEvent.click(getByTestId('inspection_panel-inspection-result-passed-button'));
+            });
+
+            expect(getByTestId('inspection_panel-inspection-result-passed-button')).toHaveClass('Mui-selected');
+
+            expect(getByTestId('months_selector-inspection-panel-next-date-label')).toBeInTheDocument();
+            expect(getByTestId('inspection_panel-inspection-notes-input')).not.toHaveAttribute('disabled');
+            act(() => {
+                fireEvent.change(getByTestId('inspection_panel-inspection-notes-input'), {
+                    target: { value: 'notes' },
+                });
+            });
+
+            act(() => {
+                fireEvent.mouseDown(getByTestId('location_picker-event-panel-building-input'));
+            });
+            selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+
+            act(() => {
+                fireEvent.mouseDown(getByTestId('location_picker-event-panel-floor-input'));
+            });
+            selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+            act(() => {
+                fireEvent.mouseDown(getByTestId('location_picker-event-panel-room-input'));
+            });
+            selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+
+            const expected = {
+                asset_id_displayed: 'UQL100000',
                 user_id: 3,
                 asset_department_owned_by: 'UQL',
-            },
-        });
+                asset_type_id: 1,
+                action_date: '2017-06-30 00:00',
+                room_id: 1,
+                with_inspection: {
+                    inspection_status: 'PASSED',
+                    inspection_device_id: 1,
+                    inspection_fail_reason: undefined,
+                    inspection_notes: 'notes',
+                    inspection_date_next: '2018-06-30 00:00',
+                },
+                with_repair: undefined,
+                with_discard: undefined,
+            };
 
-        expect(getByText(locale.pages.general.pageTitle)).toBeInTheDocument();
-
-        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('disabled', '');
-
-        await waitFor(() => expect(queryByTestId('location_picker-event-panel-site-progress')).not.toBeInTheDocument());
-
-        act(() => {
-            fireEvent.mouseDown(getByTestId('asset_selector-asset-panel-input'));
-            fireEvent.change(getByTestId('asset_selector-asset-panel-input'), { target: { value: 'UQL310000' } });
-        });
-        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
-
-        await waitFor(() =>
-            expect(getByTestId('asset_type_selector-asset-panel-input')).not.toHaveAttribute('disabled'),
-        );
-        await waitFor(() => expect(getByTestId('last_inspection_panel')).toBeInTheDocument());
-
-        expect(queryByTestId('months_selector-inspection-panel-next-date-label')).not.toBeInTheDocument();
-
-        act(() => {
-            fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
-        });
-        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
-
-        act(() => {
-            fireEvent.click(getByTestId('inspection_panel-inspection-result-passed-button'));
-        });
-
-        await waitFor(() =>
-            expect(getByTestId('months_selector-inspection-panel-next-date-label')).toBeInTheDocument(),
-        );
-
-        expect(getByTestId('inspection_panel-inspection-notes-input')).not.toHaveAttribute('disabled');
-
-        act(() => {
-            fireEvent.change(getByTestId('inspection_panel-inspection-notes-input'), {
-                target: { value: 'notes' },
+            expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
+            act(() => {
+                fireEvent.click(getByTestId('inspection-save-button'));
             });
+
+            expect(saveActionFn).toHaveBeenCalledWith(expected);
         });
-
-        act(() => {
-            fireEvent.mouseDown(getByTestId('location_picker-event-panel-building-input'));
-        });
-        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
-
-        act(() => {
-            fireEvent.mouseDown(getByTestId('location_picker-event-panel-floor-input'));
-        });
-        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
-        act(() => {
-            fireEvent.mouseDown(getByTestId('location_picker-event-panel-room-input'));
-        });
-        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
-
-        const expected = {
-            asset_id_displayed: 'UQL100000',
-            user_id: 3,
-            asset_department_owned_by: 'UQL',
-            asset_type_id: 1,
-            action_date: '2017-06-30 00:00',
-            room_id: 1,
-            with_inspection: {
-                inspection_status: 'PASSED',
-                inspection_device_id: 1,
-                inspection_fail_reason: undefined,
-                inspection_notes: 'notes',
-                inspection_date_next: '2018-06-30 00:00',
-            },
-            with_repair: undefined,
-            with_discard: undefined,
-        };
-
-        expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled');
-        act(() => {
-            fireEvent.click(getByTestId('inspection-save-button'));
-        });
-        expect(saveActionFn).toHaveBeenCalledWith(expected);
-
-        // const selectedAsset = { ...assetData[0] };
-        // const formValues = {
-        //     action_date: '2016-12-05 14:22',
-        //     asset_department_owned_by: 'UQL',
-        //     asset_id_displayed: 'UQL310000',
-        //     asset_type_id: 1,
-        //     discard_reason: undefined,
-        //     inspection_date_next: '2018-12-05 14:22',
-        //     inspection_device_id: 1,
-        //     inspection_fail_reason: undefined,
-        //     inspection_notes: 'notes',
-        //     inspection_status: 'PASSED',
-        //     isDiscarded: false,
-        //     isRepair: false,
-        //     repairer_contact_details: undefined,
-        //     room_id: 1,
-        //     user_id: 3,
-        // };
-
-        // // eslint-disable-next-line no-unused-vars
-        // const handleChange = jest.fn(prop => jest.fn(event => {}));
-        // const actionFn = jest.fn();
-        // const expected = {
-        //     asset_id_displayed: 'UQL310000',
-        //     user_id: 3,
-        //     asset_department_owned_by: 'UQL',
-        //     asset_type_id: 1,
-        //     action_date: '2016-12-05 14:22',
-        //     room_id: 1,
-        //     with_inspection: {
-        //         inspection_status: 'PASSED',
-        //         inspection_device_id: 1,
-        //         inspection_fail_reason: undefined,
-        //         inspection_notes: 'notes',
-        //         inspection_date_next: '2018-12-05 14:22',
-        //     },
-        //     with_repair: undefined,
-        //     with_discard: undefined,
-        // };
-
-        // const { getByTestId } = setup({
-        //     defaultFormValues: formValues,
-        //     actions: { saveInspection: actionFn },
-        //     formValues,
-        //     location,
-        //     resetForm,
-        //     selectedAsset,
-        //     assignCurrentAsset,
-        //     handleChange,
-        //     saveInspectionSaving: false,
-        //     isValid: true,
-        // });
-
-        // // screen.debug(undefined, 100000);
-
-        // expect(getByTestId('inspection-save-button')).not.toHaveAttribute('disabled', '');
-
-        // act(() => {
-        //     fireEvent.click(getByTestId('inspection-save-button'));
-        // });
-        // expect(actionFn).toHaveBeenCalledWith(expected);
     });
 
-    // it('renders saving spinner', () => {
-    //     const resetForm = jest.fn();
-    //     const assignCurrentAsset = jest.fn();
-    //     const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-    //     // eslint-disable-next-line no-unused-vars
-    //     const handleChange = jest.fn(prop => jest.fn(event => {}));
+    it('renders saving spinner', () => {
+        const resetForm = jest.fn();
+        const assignCurrentAsset = jest.fn();
+        const location = { formSiteId: 1, formBuildingId: 1, formFloorId: 1, formRoomId: 1 };
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
 
-    //     const { getByTestId } = setup({
-    //         formValues,
-    //         location,
-    //         resetForm,
-    //         assignCurrentAsset,
-    //         handleChange,
-    //         saveInspectionSaving: true,
-    //         isValid: true,
-    //     });
+        const { getByTestId } = setup({
+            formValues: DEFAULT_FORM_VALUES,
+            location,
+            resetForm,
+            assignCurrentAsset,
+            handleChange,
+            saveInspectionSaving: true,
+            isValid: true,
+            actions: { clearAssets: jest.fn(), clearSaveInspection: jest.fn(), loadInspectionConfig: jest.fn() },
+        });
 
-    //     expect(getByTestId('saveInspectionSpinner')).toBeInTheDocument();
-    // });
+        expect(getByTestId('inspection-progress')).toBeInTheDocument();
+    });
 });
