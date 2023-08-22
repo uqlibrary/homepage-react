@@ -11,8 +11,6 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import preview from 'jest-preview';
 
-import preview from 'jest-preview';
-
 import { getStore } from '../src/config/store';
 import Immutable from 'immutable';
 import { createMemoryHistory } from 'history';
