@@ -3,10 +3,12 @@ import Dashboard from '../components/Dashboard';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
+import locale from '../../testTag.locale';
 
 export const mapStateToProps = state => {
     return {
         ...state.get('testTagOnLoadDashboardReducer'),
+        locale,
     };
 };
 
