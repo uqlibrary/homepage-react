@@ -89,13 +89,14 @@ const DataTable = ({
                     disableColumnFilter
                     disableColumnSelector
                     disableSelectionOnClick
+                    disableVirtualization={!!process?.env ?? false}
                     hideFooterRowCount
                     hideFooterSelectedRowCount
                     disableVirtualization={
                         !!process?.env ?? /* istanbul ignore next */ false
                     } /* required for jest tests */
                     getRowId={row => row?.[rowId]}
-                    autoHeight={autoHeight}
+                    autoHeight
                     rowsPerPageOptions={[10, 25, 50, 100]}
                     classes={{
                         root: internalClasses.root,

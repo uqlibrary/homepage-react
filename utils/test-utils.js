@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import preview from 'jest-preview';
 
 import preview from 'jest-preview';
 

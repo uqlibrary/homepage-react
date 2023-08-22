@@ -19,6 +19,18 @@ describe('DebouncedTextField Renders component', () => {
         expect(getByTestId('testing-input')).toBeInTheDocument();
         expect(getByTestId('testing-input')).toHaveAttribute('value', '');
     });
+    it('renders component with undefined value', () => {
+        const onChange = jest.fn();
+        const value = undefined;
+
+        const { getByTestId } = setup({
+            onChange,
+            value,
+            id: 'testing',
+        });
+        expect(getByTestId('testing-input')).toBeInTheDocument();
+        expect(getByTestId('testing-input')).toHaveAttribute('value', '');
+    });
     it('renders component with value', () => {
         const onChange = jest.fn();
         const value = 'some value';
