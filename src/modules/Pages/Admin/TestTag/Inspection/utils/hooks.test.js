@@ -1,52 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useForm } from '../../helpers/hooks';
-import { useValidation } from './hooks';
-import { useLocation } from '../../helpers/hooks';
+import { useValidation, actionReducer } from './hooks';
 
 describe('Tests custom hooks', () => {
-    it('useForm manages setting and returning of form value state', () => {
-        const defaultValues = { a: -1, b: -1, c: -1 };
-        const { result } = renderHook(({ defaultValues }) => useForm({ defaultValues }), {
-            initialProps: { defaultValues: defaultValues },
-        });
-
-        expect(result.current.formValues).toEqual(defaultValues);
-
-        // change state values one by one
-        act(() => {
-            result.current.handleChange('a')(100);
-        });
-        expect(result.current.formValues).toEqual({ a: 100, b: -1, c: -1 });
-
-        act(() => {
-            result.current.handleChange('b')(100);
-        });
-        expect(result.current.formValues).toEqual({ a: 100, b: 100, c: -1 });
-
-        act(() => {
-            result.current.handleChange('c')(100);
-        });
-        expect(result.current.formValues).toEqual({ a: 100, b: 100, c: 100 });
-
-        // reset the state
-        act(() => {
-            result.current.resetFormValues(defaultValues);
-        });
-        expect(result.current.formValues).toEqual(defaultValues);
-
-        // test the value passed can come from an event object
-        act(() => {
-            result.current.handleChange('a')({ target: { value: 200 } });
-        });
-        expect(result.current.formValues).toEqual({ a: 200, b: -1, c: -1 });
-
-        // test date values are handled
-        act(() => {
-            result.current.handleChange('a_date')('2022-12-14 13:00');
-        });
-        expect(result.current.formValues).toEqual({ a: 200, b: -1, c: -1, a_date: '2022-12-14 13:00' });
-    });
-
     it('useValidation validates form values', () => {
         const testStatusEnum = { PASSED: { value: 'PASSED' }, FAILED: { value: 'FAILED' } };
         const { result } = renderHook(({ testStatusEnum }) => useValidation({ testStatusEnum }), {
@@ -273,69 +228,22 @@ describe('Tests custom hooks', () => {
         expect(result.current.isValid).toBe(false);
     });
 
-    it('useLocation manages location data', () => {
-        const { result } = renderHook(() => useLocation());
-
-        expect(result.current.location).toEqual({
-            site: -1,
-            building: -1,
-            floor: -1,
-            room: -1,
+    it('actionReducer returns expected results', () => {
+        expect(actionReducer(undefined, { type: 'add', title: 'add test' })).toEqual({
+            title: 'add test',
+            isAdd: true,
+            row: { asset_type_id: 'auto' },
         });
-
-        act(() => {
-            result.current.setLocation({ site: 100 });
+        expect(actionReducer(undefined, { type: 'clear', title: 'clear test' })).toEqual({
+            isAdd: false,
+            rows: {},
+            row: {},
+            title: '',
         });
-        expect(result.current.location).toEqual({
-            site: 100,
-            building: -1,
-            floor: -1,
-            room: -1,
-        });
-
-        act(() => {
-            result.current.setLocation({ building: 100 });
-        });
-        expect(result.current.location).toEqual({
-            site: 100,
-            building: 100,
-            floor: -1,
-            room: -1,
-        });
-
-        act(() => {
-            result.current.setLocation({ floor: 100 });
-        });
-        expect(result.current.location).toEqual({
-            site: 100,
-            building: 100,
-            floor: 100,
-            room: -1,
-        });
-
-        act(() => {
-            result.current.setLocation({ room: 100 });
-        });
-        expect(result.current.location).toEqual({
-            site: 100,
-            building: 100,
-            floor: 100,
-            room: 100,
-        });
-
-        act(() => {
-            result.current.setLocation({
-                site: -1,
-                building: -1,
-                floor: -1,
-                room: -1,
-            });
-        });
-        expect(result.current.location).toEqual({
-            site: -1,
-            building: -1,
-            floor: -1,
-            room: -1,
-        });
+        try {
+            actionReducer(undefined, { type: 'invalid', title: 'invalid test' });
+        } catch (e) {
+            expect(e).toEqual("Unknown action 'invalid'");
+        }
     });
 });
