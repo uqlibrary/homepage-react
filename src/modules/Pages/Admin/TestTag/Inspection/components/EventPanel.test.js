@@ -75,6 +75,29 @@ describe('EventPanel', () => {
         });
         expect(setStateMock).toHaveBeenCalledWith(false);
     });
+    it('renders date in desired format', () => {
+        const actions = {};
+        const location = { site: -1, building: -1, floor: -1, room: -1 };
+        const setLocation = jest.fn();
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
+
+        const { getByText, getByTestId } = setup({ actions, location, setLocation, handleChange });
+
+        expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
+
+        expect(getByTestId('event_panel-event-date-input')).toHaveAttribute('value', '01 December 2017');
+
+        act(() => {
+            fireEvent.click(getByTestId('event_panel-event-date-input'));
+            fireEvent.change(getByTestId('event_panel-event-date-input'), { target: { value: '01 November 2017' } });
+        });
+
+        expect(getByTestId('event_panel-event-date-input')).toHaveAttribute('value', '01 November 2017');
+
+        expect(handleChange).toHaveBeenCalledWith('action_date');
+        expect(handleChange).toHaveBeenLastCalledWith('isManualDate');
+    });
 
     it('shows location text in floor and room elements', () => {
         const actions = {};

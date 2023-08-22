@@ -6,6 +6,27 @@
 
 Global test setup is done in /src/test.setup.js:
 
+We use [Jest Preview](https://github.com/nvh95/jest-preview) to visualise Jest tests in the browser. To do this, first make sure you have a terminal running the Preview server (will open a Chrome tab):
+
+```shell
+name@machine homepage-react % npm run jest-preview
+```
+
+then import the preview library in your test file:
+
+```javascript
+import { preview } from 'test-utils';
+```
+
+then somewhere in your test, where you'd like to see what the rendered output looks like in the browser, call:
+
+```javascript
+preview.debug();
+```
+
+
+
+## Obsolete testing using Enzyme 
 - getElement - globally available function which creates a shallow or mounted component
 
 Template for modules unit tests:

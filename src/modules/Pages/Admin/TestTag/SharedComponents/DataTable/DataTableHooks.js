@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ActionCell from './ActionCell';
 
-export const useDataTableRow = (data = [], transform) => {
+export const useDataTableRow = (data, transform) => {
     const [row, _setRow] = useState(!!transform ? transform(data) : data);
     const setRow = data => _setRow(!!transform ? transform(data) : data);
     useEffect(() => {

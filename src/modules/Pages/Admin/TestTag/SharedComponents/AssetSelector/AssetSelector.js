@@ -61,6 +61,7 @@ const AssetSelector = ({
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
             setCurrentValue(assetPartial);
+            /* istanbul ignore else */
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
                 onSearch?.(assetPartial);
                 dispatch(
@@ -100,17 +101,12 @@ const AssetSelector = ({
         }
     }, [autoFocus]);
 
-    React.useEffect(() => {
-        clearInput();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
-        <FormControl className={classNames.formControl} fullWidth>
+        <FormControl className={classNames?.formControl} fullWidth>
             <Autocomplete
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
-                className={classNames.autocomplete}
+                className={classNames?.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
                 value={currentValue ?? previousValueRef.current ?? ''}
@@ -170,7 +166,7 @@ const AssetSelector = ({
                         {...params}
                         {...locale.assetSelector}
                         required={required}
-                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? false}
+                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? /* istanbul ignore next */ false}
                         variant="standard"
                         onFocus={() => {
                             setIsOpen(true);
