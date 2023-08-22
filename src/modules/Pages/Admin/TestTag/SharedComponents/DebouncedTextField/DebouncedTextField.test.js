@@ -9,10 +9,11 @@ function setup(testProps = {}, renderer = rtlRender) {
 describe('DebouncedTextField Renders component', () => {
     it('renders component without value', () => {
         const onChange = jest.fn();
+        const value = '';
 
         const { getByTestId } = setup({
             onChange,
-
+            value,
             id: 'testing',
         });
         expect(getByTestId('testing-input')).toBeInTheDocument();

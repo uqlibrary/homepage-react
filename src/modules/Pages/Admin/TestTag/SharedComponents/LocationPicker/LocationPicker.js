@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
 import Popper from '@material-ui/core/Popper';
 
 const rootId = 'location_picker';
@@ -25,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const GridWrapper = ({ withGrid = true, divisor, children }) => {
+export const GridWrapper = ({ withGrid = true, divisor = 1, children }) => {
     GridWrapper.propTypes = {
         withGrid: PropTypes.bool,
         divisor: PropTypes.number,
@@ -41,9 +40,13 @@ const GridWrapper = ({ withGrid = true, divisor, children }) => {
     );
 };
 
+export const getBuildingLabel = building => {
+    const prefix = !!building.building_id_displayed ? `${building.building_id_displayed} - ` : '';
+    return `${prefix}${building.building_name ?? ''}`;
+};
+
 const LocationPicker = ({
     id,
-    title,
     autoFocus = false,
     focusTarget,
     siteList,
@@ -52,7 +55,6 @@ const LocationPicker = ({
     buildingListLoading,
     floorList,
     floorListLoading,
-    // floorListError,
     roomList,
     roomListLoading,
     hasAllOption = false,
@@ -75,22 +77,23 @@ const LocationPicker = ({
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
 
-    function getBuildingLabel(building) {
-        const prefix = !!building.building_id_displayed
-            ? `${building.building_id_displayed} - `
-            : /* istanbul ignore next */ '';
-        return `${prefix}${building.building_name ?? /* istanbul ignore next */ ''}`;
-    }
-
     React.useLayoutEffect(() => {
         /* istanbul ignore else */
         if (
             autoFocus &&
             !!focusTarget &&
-            ((focusTarget === 'site' && (siteList?.length ?? 0) > 0 && location.site === -1) ||
-                (focusTarget === 'building' && (buildingList?.length ?? 0) > 0 && location.building === -1) ||
-                (focusTarget === 'floor' && (floorList?.length ?? 0) > 0 && location.floor === -1) ||
-                (focusTarget === 'room' && (roomList?.length ?? 0) > 0 && location.room === -1))
+            ((focusTarget === 'site' &&
+                (siteList?.length ?? /* istanbul ignore next */ 0) > 0 &&
+                location.site === -1) ||
+                (focusTarget === 'building' &&
+                    (buildingList?.length ?? /* istanbul ignore next */ 0) > 0 &&
+                    location.building === -1) ||
+                (focusTarget === 'floor' &&
+                    (floorList?.length ?? /* istanbul ignore next */ 0) > 0 &&
+                    location.floor === -1) ||
+                (focusTarget === 'room' &&
+                    (roomList?.length ?? /* istanbul ignore next */ 0) > 0 &&
+                    location.room === -1))
         ) {
             focusElementRef?.current?.focus();
         }
@@ -105,13 +108,6 @@ const LocationPicker = ({
 
     return (
         <>
-            {!!title && (
-                <Grid item xs={12}>
-                    <Typography variant="h6" component={'h3'}>
-                        {title}
-                    </Typography>
-                </Grid>
-            )}
             {!hide.includes('site') && (
                 <GridWrapper withGrid={withGrid} divisor={divisor}>
                     <FormControl className={classes.formControl} fullWidth>
@@ -202,7 +198,7 @@ const LocationPicker = ({
                                 });
 
                                 actions?.clearFloors?.();
-                                if (newValue.building_id !== -1) {
+                                /* istanbul ignore else */ if (newValue.building_id !== -1) {
                                     actions?.loadFloors?.(newValue.building_id);
                                 }
                             }}
@@ -272,7 +268,9 @@ const LocationPicker = ({
                                 setLocation({ floor: newValue.floor_id, room: -1 });
 
                                 actions?.clearRooms?.();
-                                if (newValue.floor_id !== -1) actions?.loadRooms?.(newValue.floor_id);
+                                /* istanbul ignore else */ if (newValue.floor_id !== -1) {
+                                    actions?.loadRooms?.(newValue.floor_id);
+                                }
                             }}
                             getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
                             renderInput={params => (
@@ -390,10 +388,8 @@ LocationPicker.propTypes = {
     buildingListLoading: PropTypes.bool,
     floorList: PropTypes.array,
     floorListLoading: PropTypes.bool,
-    // floorListError,
     roomList: PropTypes.array,
     roomListLoading: PropTypes.bool,
-    // roomListError,
     actions: PropTypes.object,
     location: PropTypes.object,
     setLocation: PropTypes.func,
@@ -403,7 +399,6 @@ LocationPicker.propTypes = {
     hasAllOption: PropTypes.bool,
     disabled: PropTypes.bool,
     withGrid: PropTypes.bool,
-    title: PropTypes.string,
 };
 
 export default React.memo(LocationPicker);

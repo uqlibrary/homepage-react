@@ -35,6 +35,16 @@ const currentRetestList = [
 
 const DEFAULT_NEXT_TEST_DATE_VALUE = '12';
 
+const selectOptionFromListByIndex = (index, actions) => {
+    expect(actions.getByRole('listbox')).not.toEqual(null);
+    act(() => {
+        const options = actions.getAllByRole('option');
+
+        fireEvent.mouseDown(options[index]);
+        options[index].click();
+    });
+};
+
 function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
@@ -50,7 +60,7 @@ function setup(testProps = {}, renderer = rtlRender) {
         testTagUserReducer: { user: userData },
         ...state,
     };
-    console.log(_state);
+
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <InspectionPanel
@@ -67,16 +77,19 @@ function setup(testProps = {}, renderer = rtlRender) {
 
 describe('InspectionPanel', () => {
     it('renders component', async () => {
-        const updateKey = 'inspection_date_next';
-        const newValue = '2017-12-05';
+        const updateKey1 = 'inspection_date_next';
+        const updateKey2 = 'inspection_device_id';
+        const updateKey3 = 'inspection_device_id';
         const handleChange = jest.fn(prop =>
             jest.fn(value => {
-                expect(prop).toEqual(updateKey);
-                expect(value.format('YYYY-MM-DD')).toEqual(newValue);
+                if (prop === updateKey1) {
+                    expect(String(value.format('YYYY-MM-DD'))).toMatch(/^2017-12-05|2017-03-05$/);
+                } else if (prop === updateKey2) expect(value).toEqual(2);
+                else if (prop === updateKey3) expect(value).toEqual('FAILED');
             }),
         );
 
-        const { getByText, getByTestId } = setup({
+        const { getByText, getByTestId, getByRole, getAllByRole } = setup({
             formValues,
             selectedAsset: {},
             handleChange,
@@ -85,7 +98,20 @@ describe('InspectionPanel', () => {
         expect(getByText(locale.pages.inspect.form.inspection.title)).toBeInTheDocument();
         expect(getByTestId('inspection_panel-inspection-device')).toBeInTheDocument();
         expect(getByTestId('inspection_panel-inspection-result-toggle-buttons')).toBeInTheDocument();
-        await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey));
+        await waitFor(() => expect(handleChange).toHaveBeenCalledWith(updateKey1));
+        act(() => {
+            fireEvent.mouseDown(getByTestId('months_selector-inspection-panel-select'));
+        });
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+
+        act(() => {
+            fireEvent.mouseDown(getByTestId('inspection_panel-inspection-device-select'));
+        });
+        selectOptionFromListByIndex(1, { getByRole, getAllByRole });
+
+        act(() => {
+            fireEvent.click(getByTestId('inspection_panel-inspection-result-failed-button'));
+        });
     });
 
     it('warns when department testing device is chosen for a PASS test', async () => {

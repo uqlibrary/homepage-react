@@ -237,7 +237,9 @@
         "test:unit:ci2:skipcoverage": "npm run test:unit -- --ci --runInBand --no-coverage --passWithNoTests SharedComponents",
         "test:unit:update": "npm run test:unit -- --updateSnapshot",
         "test:unit:watch": "npm run test:unit -- --watch --onlyChanged",
-        "postinstall": "vendor-copy"
+        "postinstall": "vendor-copy",
+        "test:debug": "npm-run-all -p test jest-preview",
+        "jest-preview": "jest-preview"
     },
     "engines": {
         "npm": "^8",

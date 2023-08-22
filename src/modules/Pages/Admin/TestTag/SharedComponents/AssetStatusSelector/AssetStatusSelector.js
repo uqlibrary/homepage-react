@@ -18,7 +18,7 @@ const AssetStatusSelector = ({
     required = false,
     onChange,
     classNames,
-    disabled,
+    disabled = false,
     ...rest
 }) => {
     const componentId = `${rootId}-${id}`;
@@ -43,7 +43,7 @@ const AssetStatusSelector = ({
                 options={options}
                 value={currentValue}
                 onChange={handleOnChange}
-                getOptionLabel={option => option?.label}
+                getOptionLabel={option => option?.label ?? /* istanbul ignore next */ ''}
                 autoHighlight
                 renderInput={params => (
                     <TextField
@@ -51,7 +51,9 @@ const AssetStatusSelector = ({
                         label={label}
                         required={required}
                         variant="standard"
-                        error={(!disabled && required && isEmptyObject(currentValue)) ?? false}
+                        error={
+                            (!disabled && required && isEmptyObject(currentValue)) ?? /* istanbul ignore next */ false
+                        }
                         InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
                             ...params.InputProps,

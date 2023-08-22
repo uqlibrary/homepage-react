@@ -249,7 +249,7 @@ export default {
                     assetSelector: {
                         label: 'Asset ID',
                         helperText: 'Scan or enter a barcode',
-                        placeholder: 'Enter at least 3 characters',
+                        placeholder: 'Enter at 3-5 characters',
                     },
                     assetType: {
                         props: {

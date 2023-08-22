@@ -77,7 +77,7 @@ const TestTagHeader = (
                                 id={`${componentId}-navigation-${normalisedTitle}`}
                                 data-testid={`${componentId}-navigation-${normalisedTitle}`}
                             >
-                                {breadcrumb?.icon ? (
+                                {breadcrumb?.icon && index < breadcrumbs.length - 1 ? (
                                     <Icon
                                         className={classes.icon}
                                         id={`${componentId}-navigation-${normalisedTitle}-icon`}

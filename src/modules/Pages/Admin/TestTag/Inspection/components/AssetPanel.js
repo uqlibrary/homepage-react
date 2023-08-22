@@ -99,6 +99,7 @@ const AssetPanel = ({
     }, []);
 
     const handleAssetTypeChange = assetType => {
+        console.log('assetType.asset_type_id', assetType.asset_type_id);
         if (assetType.asset_type_id === ADD_NEW_ID) {
             handleAddClick();
         } else handleChange('asset_type_id')(assetType.asset_type_id);
@@ -112,7 +113,7 @@ const AssetPanel = ({
                 id={componentId}
                 isOpen={actionState.isAdd}
                 locale={locale.pages.manage.assetTypes.dialogAdd}
-                fields={configAssetPanel.fields ?? []}
+                fields={configAssetPanel.fields}
                 columns={locale.pages.manage.assetTypes.form.columns}
                 row={actionState?.row}
                 onCancelAction={closeDialog}

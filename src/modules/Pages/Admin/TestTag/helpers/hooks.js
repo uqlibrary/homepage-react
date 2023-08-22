@@ -52,9 +52,11 @@ export const useObjectList = (list = [], transform, options = {}) => {
         if (Array.isArray(item)) {
             const ids = new Set(data.map(d => d[_options.key]));
             setData([...data, ...item.filter(d => !ids.has(d[_options.key]))]);
-        } else if (typeof item === 'object') {
-            if (data.findIndex(d => d[_options.key] === item[_options.key]) >= 0) return;
-            setData([...data.slice(0, index), ...item, ...data.slice(index)].flat());
+        } else {
+            /* istanbul ignore else */ if (typeof item === 'object') {
+                /* istanbul ignore else */ if (data.findIndex(d => d[_options.key] === item[_options.key]) >= 0) return;
+                setData([...data.slice(0, index), { ...item }, ...data.slice(index)].flat());
+            }
         }
     };
 

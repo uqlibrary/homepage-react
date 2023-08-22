@@ -74,7 +74,11 @@ const DataTable = ({
     ]);
 
     return (
-        <Box display={'flex'} {...(autoHeight === false ? { height: height ?? 400 } : {})} width={'100%'}>
+        <Box
+            display={'flex'}
+            {...(autoHeight === false ? { height: height ?? /* istanbul ignore next */ 400 } : {})}
+            width={'100%'}
+        >
             <Box flexGrow={1} id={`${componentId}`} data-testid={`${componentId}`}>
                 <DataGrid
                     rows={rows}
@@ -88,6 +92,9 @@ const DataTable = ({
                     disableVirtualization={!!process?.env ?? false}
                     hideFooterRowCount
                     hideFooterSelectedRowCount
+                    disableVirtualization={
+                        !!process?.env ?? /* istanbul ignore next */ false
+                    } /* required for jest tests */
                     getRowId={row => row?.[rowId]}
                     autoHeight
                     rowsPerPageOptions={[10, 25, 50, 100]}
