@@ -1,6 +1,6 @@
 import React from 'react';
 import Users from './Users';
-import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
+import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore, preview } from 'test-utils';
 import Immutable from 'immutable';
 
 import { getUserPermissions } from '../../../helpers/auth';
@@ -39,7 +39,7 @@ const userList = [
         user_name: 'JTest user',
         user_uid: 'uqtest1',
         privileges: {
-            can_admin: 0,
+            can_admin: 1,
             can_inspect: 1,
             can_alter: 1,
             can_see_reports: 1,
@@ -231,6 +231,11 @@ describe('Manage Users', () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
         });
         expect(actions.updateUser).rejects.toEqual('Test Error');
+        // Check state of editable fields for self admin
+        await act(async () => {
+            await fireEvent.click(getByTestId('action_cell-5-edit-button'));
+        });
+        expect(getByTestId('can_admin_cb-input')).toHaveAttribute('disabled');
     });
 
     it('Delete or Reassign User functions correctly', async () => {
