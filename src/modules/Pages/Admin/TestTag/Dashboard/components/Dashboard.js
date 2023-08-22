@@ -22,7 +22,6 @@ import ConfirmationAlert from '../../SharedComponents/ConfirmationAlert/Confirma
 import StandardAuthPage from '../../SharedComponents/StandardAuthPage/StandardAuthPage';
 import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
 import { pathConfig } from '../../../../../../config/pathConfig';
-import locale from '../../testTag.locale';
 import { PERMISSIONS, ROLES } from '../../config/auth';
 import { useConfirmationAlert } from '../../helpers/hooks';
 
@@ -66,7 +65,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboardConfigError }) => {
+const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, dashboardConfigError }) => {
     const theme = useTheme();
     const pageLocale = locale.pages.dashboard;
     const classes = useStyles();
@@ -161,20 +160,40 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
                                         <Box borderRight={1} borderColor="grey.500">
-                                            <Typography component={'div'} variant={'h4'} className={classes.dueText}>
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h4'}
+                                                className={classes.dueText}
+                                                data-testid={`${componentId}-${pageLocale.panel.assets.id}-upcoming-amount`}
+                                            >
                                                 {`${dashboardConfig?.retest?.soon}`}
                                             </Typography>
-                                            <Typography component={'div'} variant={'h6'} className={classes.dueText}>
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h6'}
+                                                className={classes.dueText}
+                                                data-testid={`${componentId}-${pageLocale.panel.assets.id}-upcoming-text`}
+                                            >
                                                 {pageLocale.panel.assets.upcomingText}
                                             </Typography>
                                         </Box>
                                     </Grid>
 
                                     <Grid item xs={6}>
-                                        <Typography component={'div'} variant={'h4'} className={retestClass}>
+                                        <Typography
+                                            component={'div'}
+                                            variant={'h4'}
+                                            className={retestClass}
+                                            data-testid={`${componentId}-${pageLocale.panel.assets.id}-overdue-amount`}
+                                        >
                                             {`${dashboardConfig?.retest?.overdue}`}
                                         </Typography>
-                                        <Typography component={'div'} variant={'h6'} className={retestClass}>
+                                        <Typography
+                                            component={'div'}
+                                            variant={'h6'}
+                                            className={retestClass}
+                                            data-testid={`${componentId}-${pageLocale.panel.assets.id}-overdue-text`}
+                                        >
                                             {pageLocale.panel.assets.overdueText}
                                         </Typography>
                                     </Grid>
@@ -239,20 +258,40 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
                                 <Grid container style={{ marginBottom: 5 }}>
                                     <Grid item xs={6}>
                                         <Box borderRight={1} borderColor="grey.500">
-                                            <Typography component={'div'} variant={'h4'} className={classes.dueText}>
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h4'}
+                                                className={classes.dueText}
+                                                data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-upcoming-amount`}
+                                            >
                                                 {`${dashboardConfig?.recalibration?.soon}`}
                                             </Typography>
-                                            <Typography component={'div'} variant={'h6'} className={classes.dueText}>
+                                            <Typography
+                                                component={'div'}
+                                                variant={'h6'}
+                                                className={classes.dueText}
+                                                data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-upcoming-text`}
+                                            >
                                                 {pageLocale.panel.inspectionDevices.upcomingText}
                                             </Typography>
                                         </Box>
                                     </Grid>
 
                                     <Grid item xs={6}>
-                                        <Typography component={'div'} variant={'h4'} className={recalibrationClass}>
+                                        <Typography
+                                            component={'div'}
+                                            variant={'h4'}
+                                            className={recalibrationClass}
+                                            data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-overdue-amount`}
+                                        >
                                             {`${dashboardConfig?.recalibration?.overdue}`}
                                         </Typography>
-                                        <Typography component={'div'} variant={'h6'} className={recalibrationClass}>
+                                        <Typography
+                                            component={'div'}
+                                            variant={'h6'}
+                                            className={recalibrationClass}
+                                            data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-overdue-text`}
+                                        >
                                             {pageLocale.panel.inspectionDevices.overdueText}
                                         </Typography>
                                     </Grid>
@@ -424,6 +463,7 @@ const Dashboard = ({ actions, dashboardConfig, dashboardConfigLoading, dashboard
 };
 
 Dashboard.propTypes = {
+    locale: PropTypes.object,
     actions: PropTypes.object,
     dashboardConfig: PropTypes.object,
     dashboardConfigLoading: PropTypes.bool,
