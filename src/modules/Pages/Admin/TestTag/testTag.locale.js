@@ -925,6 +925,7 @@ export default {
                     confirmationTitle: 'Edit User',
                 },
                 snackbar: {
+                    loadFail: 'unable to load user list',
                     addSuccess: 'User added successfully',
                     addFail: 'Unable to add the User',
                     updateSuccess: 'User updated successfully',

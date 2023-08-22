@@ -185,6 +185,7 @@
         "vendor-copy": "^2.0.1"
     },
     "scripts": {
+        "jest-preview": "jest-preview",
         "analyse": "webpack --config=./webpack-dist.config --profile --json > stats.json",
         "build": "webpack -p --config=./webpack-dist.config",
         "build:dev": "webpack --config=./webpack.config",

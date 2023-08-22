@@ -40,5 +40,12 @@ export default {
         }
       ]
     },
+    {
+      "site_id": 3,
+      "site_id_displayed": "99",
+      "site_name": "Newsite",
+      "asset_count": 0,
+      "buildings": []
+    },
   ]
 };

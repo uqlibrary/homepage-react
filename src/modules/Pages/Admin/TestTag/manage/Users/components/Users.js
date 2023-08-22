@@ -150,7 +150,10 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     });
 
     React.useEffect(() => {
-        actions.loadUserList();
+        actions.loadUserList().catch(error => {
+            console.error(error);
+            openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actions]);
 
@@ -168,7 +171,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                     updateDialogueBoxId="addRow"
                     isOpen={actionState.isAdd}
                     locale={pageLocale?.dialogAdd}
-                    fields={config.fields ?? []}
+                    fields={config.fields ?? /* istanbul ignore next */ []}
                     columns={pageLocale.form.columns}
                     row={actionState?.row}
                     onCancelAction={closeDialog}
@@ -183,7 +186,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                     updateDialogueBoxId="editRow"
                     isOpen={actionState.isEdit}
                     locale={pageLocale?.dialogEdit}
-                    fields={config?.fields ?? []}
+                    fields={config?.fields ?? /* istanbul ignore next */ []}
                     columns={pageLocale.form.columns}
                     row={actionState?.row}
                     onCancelAction={closeDialog}
@@ -235,7 +238,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                                     id: componentId,
                                 },
                             }}
-                            {...(config.sort ?? {})}
+                            {...(config.sort ?? /* istanbul ignore next */ {})}
                         />
                     </Grid>
                 </Grid>
