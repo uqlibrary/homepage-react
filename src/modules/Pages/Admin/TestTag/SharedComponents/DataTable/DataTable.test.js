@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, within, act, fireEvent, preview } from 'test-utils';
+import { render, within, act, fireEvent } from 'test-utils';
 
 import DataTable from './DataTable';
 
@@ -67,7 +67,7 @@ describe('DataTable', () => {
             autoHeight: false,
             height: 500,
         });
-        preview.debug();
+
         expect(getByTestId('data_table-test')).toBeInTheDocument();
         expect(getByText('label 1')).toBeInTheDocument();
         expect(getByText('label 2')).toBeInTheDocument();
