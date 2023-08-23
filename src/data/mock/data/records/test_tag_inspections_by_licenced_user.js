@@ -58,8 +58,8 @@ export default {
                 "user_name" : "Sixth Testing user",
                 "user_department": "UQL",
                 "total_for_user": 11,
-                "start_date": "2023-06-06 11:54:00",
-                "end_date": "2022-06-06 11:54:00"
+                "start_date": "2022-06-06 11:54:00",
+                "end_date": "2023-06-06 11:54:00"
             }
         ],
         "total_inspections": 253
