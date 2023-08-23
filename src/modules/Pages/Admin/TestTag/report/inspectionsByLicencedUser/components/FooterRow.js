@@ -39,7 +39,6 @@ const FooterRow = ({ count, locale }) => {
 
 FooterRow.propTypes = {
     count: PropTypes.number,
-    columns: PropTypes.array,
     locale: PropTypes.object,
 };
 
