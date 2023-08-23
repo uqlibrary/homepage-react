@@ -19,7 +19,7 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
 import { useConfirmationAlert } from '../../../helpers/hooks';
-import config from './config';
+import config from './configure';
 
 const componentId = 'user-management';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import Users from './Users';
-import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore, preview } from 'test-utils';
+import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
 import { getUserPermissions } from '../../../helpers/auth';
