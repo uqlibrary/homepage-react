@@ -2,7 +2,7 @@ import { createLocationString } from '../../../helpers/helpers';
 
 export const transformRow = row => {
     return row.map(line => {
-        if (!!row.asset_location) return row;
+        if (!!line.asset_location) return line;
         return {
             ...line,
             asset_location: createLocationString({
