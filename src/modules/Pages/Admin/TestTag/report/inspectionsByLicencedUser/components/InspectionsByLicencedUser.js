@@ -254,7 +254,10 @@ const InspectionsByLicencedUser = ({
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                 value={selectedStartDate.date}
-                                onChange={handleStartDateChange}
+                                onChange={startDate =>
+                                    (!!!startDate || (!!startDate && startDate.isValid())) &&
+                                    handleStartDateChange(startDate)
+                                }
                                 error={startDateError.error}
                                 helperText={startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
@@ -281,7 +284,9 @@ const InspectionsByLicencedUser = ({
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.endDateLabel}
                                 value={selectedEndDate.date}
-                                onChange={handleEndDateChange}
+                                onChange={endDate =>
+                                    (!!!endDate || (!!endDate && endDate.isValid())) && handleEndDateChange(endDate)
+                                }
                                 helperText={endDateError.error && endDateError.message}
                                 error={endDateError.error}
                                 KeyboardButtonProps={{
