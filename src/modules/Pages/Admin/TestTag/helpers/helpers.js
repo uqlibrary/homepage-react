@@ -8,6 +8,6 @@ export const isEmptyObject = obj =>
     !!!obj || obj.constructor !== Object || (Object.keys(obj).length === 0 && obj.constructor === Object);
 
 export const createLocationString = ({ site, building, floor, room }) =>
-    `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`;
+    `${floor ?? ''}${!!room ? `-${room}` : ''} ${building ?? ''}${building ? ',' : ''} ${site ?? ''}`.trim();
 
 export const isInvalidUUID = str => str?.length > 20 || !/^[a-z0-9]*$/.test(str);

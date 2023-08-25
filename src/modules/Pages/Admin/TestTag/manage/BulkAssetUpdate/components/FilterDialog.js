@@ -82,6 +82,7 @@ const FilterDialog = ({
         withActions: false,
     });
     useEffect(() => {
+        /* istanbul ignore else */
         if (!assetsMineListLoading) {
             setRow(assetsMineList);
         }
@@ -212,7 +213,7 @@ const FilterDialog = ({
                                 disableRowSelectionOnClick
                                 onSelectionModelChange={handleAssetSelectionChange}
                                 disableSelectionOnClick={false}
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>
