@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -43,10 +43,10 @@ const useStyles = makeStyles(theme => ({
 const AssetReportByFilters = ({
     actions,
     taggedBuildingList,
-    assetList,
     taggedBuildingListLoading,
     taggedBuildingListLoaded,
     taggedBuildingListError,
+    assetList,
     assetListLoading,
     assetListError,
 }) => {
@@ -59,10 +59,27 @@ const AssetReportByFilters = ({
     const classes = useStyles();
     /* State */
     const [taggedBuildingName, setTaggedBuildingName] = React.useState(-1);
-    const [buildingList, setBuildingList] = React.useState([]);
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, error: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
+
+    const buildingList = useMemo(() => {
+        /* istanbul ignore else */
+        if (taggedBuildingList.length > 0 && taggedBuildingListLoaded) {
+            return [
+                {
+                    building_id: -1,
+                    building_name: locale.pages.general.locationPicker.building.labelAll,
+                    building_site_id: -1,
+                    building_id_displayed: locale.pages.general.locationPicker.allLabel,
+                    building_current_flag: 1,
+                },
+                ...taggedBuildingList,
+            ];
+        }
+        /* istanbul ignore next */
+        return [];
+    }, [taggedBuildingList, taggedBuildingListLoaded]);
 
     const onCloseConfirmationAlert = () => {
         if (!!taggedBuildingListError) actions.clearTaggedBuildingListError();
@@ -108,33 +125,12 @@ const AssetReportByFilters = ({
         });
     };
 
-    const fetchReport = () => {
-        if (!!selectedStartDate.date && !!selectedEndDate.date) {
-            if (selectedEndDate.date >= selectedStartDate.date) {
-                clearDateErrors();
-                actions.loadAssetReportByFilters(buildPayload());
-            } else {
-                setStartDateError({
-                    error: true,
-                    message: pageLocale.errors.startDate,
-                });
-                setEndDateError({
-                    error: true,
-                    message: pageLocale.errors.endDate,
-                });
-            }
-        } else {
-            clearDateErrors();
-            actions.loadAssetReportByFilters(buildPayload());
-        }
-    };
     /* UI HANDLERS */
     const handleTaggedBuildingChange = location => {
         setTaggedBuildingName(location.building);
     };
     const handleStatusTypeChange = selected => {
         setStatusType(selected.id);
-        // buildPayload();
     };
     const handleStartDateChange = date => {
         setSelectedStartDate({
@@ -152,33 +148,37 @@ const AssetReportByFilters = ({
     /* EFFECTS */
     useEffect(() => {
         actions.loadTaggedBuildingList();
+        buildPayload();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        !!!assetListLoading && fetchReport();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate]);
-
-    useEffect(() => {
-        setBuildingList([
-            {
-                building_id: -1,
-                building_name: locale.pages.general.locationPicker.building.labelAll,
-                building_site_id: -1,
-                building_id_displayed: locale.pages.general.locationPicker.allLabel,
-                building_current_flag: 1,
-            },
-            ...taggedBuildingList,
-        ]);
-    }, [taggedBuildingList]);
-
-    useEffect(() => {
-        if (taggedBuildingList.length > 0 && taggedBuildingListLoaded) {
-            buildPayload();
+        /* istanbul ignore else */
+        if (!!!assetListLoading) {
+            let shouldCallReport = true;
+            if (!!selectedStartDate.date && !!selectedEndDate.date) {
+                if (selectedEndDate.date >= selectedStartDate.date) {
+                    clearDateErrors();
+                } else {
+                    shouldCallReport = false;
+                    setStartDateError({
+                        error: true,
+                        message: pageLocale.errors.startDate,
+                    });
+                    setEndDateError({
+                        error: true,
+                        message: pageLocale.errors.endDate,
+                    });
+                }
+            } else {
+                clearDateErrors();
+            }
+            if (shouldCallReport) {
+                actions.loadAssetReportByFilters(buildPayload());
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [taggedBuildingList, taggedBuildingListLoaded]);
+    }, [statusType, taggedBuildingName, selectedStartDate, selectedEndDate]);
 
     return (
         <StandardAuthPage
@@ -235,12 +235,16 @@ const AssetReportByFilters = ({
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                 value={selectedStartDate.date}
-                                onChange={handleStartDateChange}
+                                onChange={startDate =>
+                                    (!!!startDate || (!!startDate && startDate.isValid())) &&
+                                    handleStartDateChange(startDate)
+                                }
                                 error={!!startDateError.error}
-                                helperText={!!startDateError.error && startDateError.error}
+                                helperText={!!startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
+                                autoOk
                             />
                         </Grid>
                         <Grid item xs={12} md={6} lg={3}>
@@ -260,12 +264,15 @@ const AssetReportByFilters = ({
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.endDateLabel}
                                 value={selectedEndDate.date}
-                                onChange={handleEndDateChange}
+                                onChange={endDate =>
+                                    (!!!endDate || (!!endDate && endDate.isValid())) && handleEndDateChange(endDate)
+                                }
                                 error={!!endDateError.error}
-                                helperText={!!endDateError.error && endDateError.error}
+                                helperText={!!endDateError.error && endDateError.message}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
+                                autoOk
                             />
                         </Grid>
                     </Grid>
@@ -284,7 +291,7 @@ const AssetReportByFilters = ({
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>
