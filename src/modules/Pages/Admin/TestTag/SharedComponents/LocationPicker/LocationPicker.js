@@ -394,7 +394,6 @@ LocationPicker.propTypes = {
     location: PropTypes.object,
     setLocation: PropTypes.func,
     hide: PropTypes.array,
-    withAllOption: PropTypes.bool,
     inputProps: PropTypes.object,
     hasAllOption: PropTypes.bool,
     disabled: PropTypes.bool,

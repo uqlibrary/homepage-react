@@ -84,15 +84,6 @@ const InspectionsByLicencedUser = ({
     const { row } = useDataTableRow(userInspections, transformRow);
 
     /* HELPERS */
-    const reportSearch = () => {
-        actions
-            .getInspectionsByLicencedUser({
-                startDate: selectedStartDate.dateFormatted,
-                endDate: selectedEndDate.dateFormatted,
-                userRange: inspectorName.toString(),
-            })
-            .catch(e => console.log('ERROR!', e));
-    };
     const clearDateErrors = () => {
         setStartDateError({
             error: false,
@@ -120,20 +111,17 @@ const InspectionsByLicencedUser = ({
     const handleInspectorChange = event => {
         setInspectorName(event.target.value);
     };
-    const handleInspectorClose = () => {
-        reportSearch();
-    };
 
-    const handleDateClose = () => {
+    useEffect(() => {
+        let shouldCallReport = true;
         if (!!!selectedStartDate.date && !!!selectedEndDate.date) {
             clearDateErrors();
-            reportSearch();
         } else {
             if (!!selectedStartDate.date && !!selectedEndDate.date) {
                 if (selectedEndDate.date >= selectedStartDate.date) {
                     clearDateErrors();
-                    reportSearch();
                 } else {
+                    shouldCallReport = false;
                     setStartDateError({
                         error: true,
                         message: pageLocale.form.errors.startDateBeforeEnd,
@@ -144,19 +132,31 @@ const InspectionsByLicencedUser = ({
                     });
                 }
             } else {
-                !!!selectedStartDate.date &&
+                if (!!!selectedStartDate.date) {
+                    shouldCallReport = false;
                     setStartDateError({
                         error: true,
                         message: pageLocale.form.errors.startDateRequired,
                     });
-                !!!selectedEndDate.date &&
+                }
+                if (!!!selectedEndDate.date) {
+                    shouldCallReport = false;
                     setEndDateError({
                         error: true,
                         message: pageLocale.form.errors.endDateRequired,
                     });
+                }
             }
         }
-    };
+        if (shouldCallReport) {
+            actions.getInspectionsByLicencedUser({
+                startDate: selectedStartDate.dateFormatted,
+                endDate: selectedEndDate.dateFormatted,
+                userRange: inspectorName.toString(),
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inspectorName, selectedStartDate, selectedEndDate]);
 
     /* EFFECTS */
     useEffect(() => {
@@ -204,7 +204,6 @@ const InspectionsByLicencedUser = ({
                                     disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                     value={inspectorName}
                                     onChange={handleInspectorChange}
-                                    onClose={handleInspectorClose}
                                     renderValue={selected => {
                                         return (
                                             <div className={classes.chips}>
@@ -223,7 +222,7 @@ const InspectionsByLicencedUser = ({
                                         );
                                     }}
                                 >
-                                    {licencedUsers.map((user, index) => (
+                                    {licencedUsers?.map((user, index) => (
                                         <MenuItem
                                             key={user.user_id}
                                             value={user.user_id}
@@ -255,14 +254,16 @@ const InspectionsByLicencedUser = ({
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                 value={selectedStartDate.date}
-                                onChange={handleStartDateChange}
-                                onBlur={handleDateClose}
-                                onClose={handleDateClose}
+                                onChange={startDate =>
+                                    (!!!startDate || (!!startDate && startDate.isValid())) &&
+                                    handleStartDateChange(startDate)
+                                }
                                 error={startDateError.error}
                                 helperText={startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
+                                autoOk
                             />
                         </Grid>
                         <Grid item xs={12} md={4}>
@@ -283,14 +284,15 @@ const InspectionsByLicencedUser = ({
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.endDateLabel}
                                 value={selectedEndDate.date}
-                                onChange={handleEndDateChange}
-                                onClose={handleDateClose}
-                                onBlur={handleDateClose}
+                                onChange={endDate =>
+                                    (!!!endDate || (!!endDate && endDate.isValid())) && handleEndDateChange(endDate)
+                                }
                                 helperText={endDateError.error && endDateError.message}
                                 error={endDateError.error}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
+                                autoOk
                             />
                         </Grid>
                     </Grid>
@@ -309,7 +311,7 @@ const InspectionsByLicencedUser = ({
                                         <FooterRow count={totalInspections} columns={columns} locale={pageLocale} />
                                     ),
                                 }}
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>

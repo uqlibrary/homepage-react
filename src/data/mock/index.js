@@ -959,6 +959,44 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_pending_inspections_floor])
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'room'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections_room])
+    // .onGet(
+    //     new RegExp(
+    //         panelRegExp(routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API('.*').apiUrl),
+    //     ),
+    // )
+    // .reply(config => {
+    //     const url = new URL(`${config.baseURL}${config.url}`);
+    //     const params = url.searchParams;
+    //     const userRange = params.has('user_range')
+    //         ? params
+    //               .get('user_range')
+    //               .split(',')
+    //               .map(item => parseInt(item, 10))
+    //         : null;
+    //     const dateStart = params.has('start_date') ? params.get('start_date') : null;
+    //     const dateEnd = params.has('start_date') ? params.get('end_date') : null;
+    //     const data =
+    //         !!userRange || !!dateStart || !!dateEnd
+    //             ? test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+    //                   user =>
+    //                       (!!userRange ? userRange.includes(user.user_id) : user.user_id !== '') &&
+    //                       (!!dateStart ? user.start_date >= dateStart : user.start_date !== '') &&
+    //                       (!!dateEnd ? user.start_date <= dateEnd : user.end_date !== ''),
+    //               )
+    //             : test_tag_inspections_by_licenced_user.data.user_inspections;
+
+    //     const total = data.reduce((prev, curr) => prev + curr.total_for_user, 0);
+
+    //     return [
+    //         200,
+    //         {
+    //             data: {
+    //                 user_inspections: data,
+    //                 total_inspections: total,
+    //             },
+    //         },
+    //     ];
+    // })
     .onGet(
         new RegExp(
             panelRegExp(

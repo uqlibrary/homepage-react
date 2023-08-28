@@ -38,7 +38,7 @@
         "@testing-library/jest-dom": "^5.1.1",
         "@testing-library/react": "^12.1.5",
         "@testing-library/react-hooks": "^8.0.1",
-        "@testing-library/user-event": "^12.6.0",
+        "@testing-library/user-event": "^12.8.3",
         "@types/enzyme": "^3.1.16",
         "@types/file-saver": "^2.0.1",
         "@types/highcharts": "^5.0.36",
@@ -136,7 +136,7 @@
         "@material-ui/core": "^4.12.4",
         "@material-ui/icons": "^4.11.2",
         "@material-ui/lab": "^4.0.0-alpha.58",
-        "@material-ui/pickers": "^3.3.10",
+        "@material-ui/pickers": "^3.3.11",
         "@material-ui/styles": "^4.11.4",
         "@material-ui/system": "^4.11.3",
         "@mui/x-data-grid": "^4.0.2",
@@ -238,8 +238,7 @@
         "test:unit:update": "npm run test:unit -- --updateSnapshot",
         "test:unit:watch": "npm run test:unit -- --watch --onlyChanged",
         "postinstall": "vendor-copy",
-        "test:debug": "npm-run-all -p test jest-preview",
-        "jest-preview": "jest-preview"
+        "test:debug": "npm-run-all -p test jest-preview"
     },
     "engines": {
         "npm": "^8",

@@ -14,7 +14,6 @@ import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
 import assetTypeData from '../../../../../../data/mock/data/testing/testTagAssetTypes';
 import floorData from '../../../../../../data/mock/data/testing/testTagFloors';
 import roomData from '../../../../../../data/mock/data/testing/testTagRooms';
-import * as repositories from 'repositories';
 
 import locale from '../../testTag.locale.js';
 import { getUserPermissions } from '../../helpers/auth';
@@ -419,11 +418,6 @@ describe('Inspection component', () => {
         });
 
         it('can save inspection', () => {
-            const patternExact = 'UQL100000';
-            mockApi
-                .onGet(repositories.routes.TEST_TAG_ASSETS_API(patternExact).apiUrl)
-                .reply(200, { data: [assetData[0]] });
-
             const mockLoadAssets = jest.fn(() => assetData);
             const mockLoadAssetTypes = jest.fn(() => assetTypeData);
             const mockLoadInspectionConfig = jest.fn(() => configData);
