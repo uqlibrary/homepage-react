@@ -180,7 +180,10 @@ const InspectionDevices = ({
     const { row } = useDataTableRow(inspectionDevices, transformRow);
 
     useEffect(() => {
-        actions.loadInspectionDevices();
+        actions.loadInspectionDevices().catch(error => {
+            console.error(error);
+            openConfirmationAlert(locale.config.alerts.failed('error'), 'error');
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
