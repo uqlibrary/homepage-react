@@ -90,7 +90,7 @@ const FilterDialog = ({
     }, [assetsMineList, assetsMineListLoading]);
 
     useEffect(() => {
-        // locationId, locationType, assetTypeId
+        /* istanbul ignore else */
         if (isOpen && !isBusy) {
             actions.loadAssetsMine({
                 ...((lastSelectedLocation === 'floor' && location.floor !== -1) ||
@@ -114,7 +114,8 @@ const FilterDialog = ({
         onAction?.(selectedAssets);
     };
     const handleAssetTypeChange = row => {
-        setAssetTypeId(row?.asset_type_id === -1 ? '' : row?.asset_type_id ?? '');
+        console.log(row);
+        setAssetTypeId(row?.asset_type_id === -1 ? '' : row?.asset_type_id ?? /* istanbul ignore next */ '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
         const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
@@ -122,7 +123,7 @@ const FilterDialog = ({
     };
 
     const handleSearchNotesChange = e => {
-        const value = e?.target?.value?.trim() ?? '';
+        const value = e?.target?.value?.trim() ?? /* istanbul ignore next */ '';
         setSearchNotes(value);
     };
 

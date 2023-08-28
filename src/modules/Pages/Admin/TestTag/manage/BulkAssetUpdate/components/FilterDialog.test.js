@@ -13,15 +13,15 @@ import { getUserPermissions } from '../../../helpers/auth';
 const defaultLocationState = {
     siteList,
     siteListLoading: false,
-    siteListLoaded: false,
+    siteListLoaded: true,
     buildingList: siteList[0].buildings,
-    buildingListLoading: false,
+    buildingListLoading: true,
     floorList: floorList[0],
     floorListLoading: false,
-    floorListLoaded: false,
+    floorListLoaded: true,
     roomList: roomList[0],
     roomListLoading: false,
-    roomListLoaded: false,
+    roomListLoaded: true,
 };
 
 import FilterDialog from './FilterDialog';
@@ -88,7 +88,7 @@ describe('FilterDialog', () => {
         const loadSitesFn = jest.fn();
         const { getByText, getByTestId, getAllByRole } = setup({
             isOpen: true,
-            actions: { loadAssetsMine: loadAssetsMineFn, loadSites: loadSitesFn },
+            actions: { loadAssetsMine: loadAssetsMineFn, loadSites: loadSitesFn, clearRooms: jest.fn() },
         });
 
         expect(getByText('Select assets by feature')).toBeInTheDocument();
@@ -124,6 +124,113 @@ describe('FilterDialog', () => {
         expect(loadSitesFn).toHaveBeenCalled();
     });
 
+    it('tests actions.loadAssetsMine when filters are selected', async () => {
+        const loadAssetsMineFn = jest.fn();
+        const { getByText, getByTestId, getByRole } = setup({
+            isOpen: true,
+            actions: { loadAssetsMine: loadAssetsMineFn, loadSites: jest.fn(), clearRooms: jest.fn() },
+            state: {
+                testTagLocationReducer: {
+                    ...defaultLocationState,
+                },
+            },
+        });
+
+        expect(getByText('Select assets by feature')).toBeInTheDocument();
+
+        userEvent.click(getByTestId('location_picker-filter-dialog-site-input'));
+        await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
+
+        userEvent.click(getByTestId('location_picker-filter-dialog-building-input'));
+        await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
+
+        userEvent.click(getByTestId('location_picker-filter-dialog-floor-input'));
+        await userEvent.selectOptions(getByRole('listbox'), '2');
+
+        await waitFor(() =>
+            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ locationType: 'floor', locationId: 1, textSearch: '' }),
+        );
+
+        userEvent.click(getByTestId('location_picker-filter-dialog-room-input'));
+        await userEvent.selectOptions(getByRole('listbox'), 'W212');
+
+        await waitFor(() =>
+            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ locationType: 'room', locationId: 1, textSearch: '' }),
+        );
+
+        await userEvent.type(getByTestId('filter_dialog-test-search-notes-input'), 'Test notes');
+
+        await waitFor(() =>
+            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                locationType: 'room',
+                locationId: 1,
+                textSearch: 'Test notes',
+            }),
+        );
+
+        userEvent.click(getByTestId('asset_type_selector-filter-dialog-input'));
+        await userEvent.selectOptions(getByRole('listbox'), 'PowerBoard');
+
+        await waitFor(() =>
+            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                assetTypeId: 3,
+                locationType: 'room',
+                locationId: 1,
+                textSearch: 'Test notes',
+            }),
+        );
+
+        // clear some fields (coverage)
+        await userEvent.click(getByTestId('asset_type_selector-filter-dialog-input'));
+        const selectList = getByTestId('asset_type_selector-filter-dialog');
+        const typesButton = within(selectList).getByTitle('Clear');
+        await userEvent.click(typesButton);
+        await userEvent.selectOptions(getByRole('listbox'), 'All Asset Types');
+        await userEvent.clear(getByTestId('filter_dialog-test-search-notes-input'));
+
+        await waitFor(() =>
+            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                locationType: 'room',
+                locationId: 1,
+                textSearch: '',
+            }),
+        );
+    });
+
+    it('renders component and allows selection of rows', async () => {
+        const loadAssetsMineFn = jest.fn();
+        const loadSitesFn = jest.fn();
+        const onActionFn = jest.fn();
+        const { getByText, getByTestId, getAllByRole } = setup({
+            isOpen: true,
+            onAction: onActionFn,
+            actions: { loadAssetsMine: loadAssetsMineFn, loadSites: loadSitesFn, clearRooms: jest.fn() },
+        });
+
+        expect(getByText('Select assets by feature')).toBeInTheDocument();
+        const row1 = within(getAllByRole('row')[1]);
+        userEvent.click(row1.getByLabelText('Select Row checkbox'));
+        const row2 = within(getAllByRole('row')[2]);
+        userEvent.click(row2.getByLabelText('Select Row checkbox'));
+
+        userEvent.click(getByTestId('filter_dialog-test-action-button'));
+
+        expect(onActionFn).toHaveBeenCalledWith(
+            expect.arrayContaining([
+                expect.objectContaining({ asset_barcode: 'UQL000001' }),
+                expect.objectContaining({ asset_barcode: 'UQL000002' }),
+            ]),
+        );
+        expect(onActionFn).not.toHaveBeenCalledWith(
+            expect.arrayContaining([
+                expect.objectContaining({ asset_barcode: 'UQL001991' }),
+                expect.objectContaining({ asset_barcode: 'UQL001992' }),
+                expect.objectContaining({ asset_barcode: 'UQL001993' }),
+            ]),
+        );
+        preview.debug();
+    });
+
     describe('coverage', () => {
         it('renders nothing if isOpen is false', async () => {
             const { queryByText } = setup({});
@@ -146,9 +253,10 @@ describe('FilterDialog', () => {
                     loadAssetsMine: jest.fn(),
                     loadSites: jest.fn(),
                     clearAssetsMineError: clearAssetsMineErrorFn,
+                    clearRooms: jest.fn(),
                 },
             });
-            preview.debug();
+
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Test assetsMineListError error');
             userEvent.click(getByTitle('Close'));
             await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
@@ -161,7 +269,7 @@ describe('FilterDialog', () => {
             const { getByText, getByTestId } = setup({
                 isOpen: true,
                 onCancel: onCancelFn,
-                actions: { loadAssetsMine: jest.fn(), loadSites: jest.fn() },
+                actions: { loadAssetsMine: jest.fn(), loadSites: jest.fn(), clearRooms: jest.fn() },
             });
 
             expect(getByText('Select assets by feature')).toBeInTheDocument();
