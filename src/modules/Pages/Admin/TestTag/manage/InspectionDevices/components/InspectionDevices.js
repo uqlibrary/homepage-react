@@ -99,7 +99,6 @@ const InspectionDevices = ({
             setDialogueBusy(true);
             const request = structuredClone(data);
             const wrappedRequest = transformAddRequest(request, user);
-            console.log('add', wrappedRequest);
 
             actions
                 .addInspectionDevice(wrappedRequest)
