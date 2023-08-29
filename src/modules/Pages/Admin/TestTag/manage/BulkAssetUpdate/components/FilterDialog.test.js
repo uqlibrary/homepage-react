@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, userEvent, within, preview } from 'test-utils';
+import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetsList from '../../../../../../../data/mock/data/testing/testTagAssetsMine';
@@ -228,7 +228,6 @@ describe('FilterDialog', () => {
                 expect.objectContaining({ asset_barcode: 'UQL001993' }),
             ]),
         );
-        preview.debug();
     });
 
     describe('coverage', () => {
