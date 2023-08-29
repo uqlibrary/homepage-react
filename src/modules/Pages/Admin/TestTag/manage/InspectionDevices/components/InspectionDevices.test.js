@@ -53,17 +53,6 @@ function setup(testProps = {}, renderer = renderWithRouter) {
         </WithReduxStore>,
     );
 }
-
-const selectOptionFromListByIndex = (index, actions) => {
-    expect(actions.getByRole('listbox')).not.toEqual(null);
-    act(() => {
-        const options = actions.getAllByRole('option');
-
-        fireEvent.mouseDown(options[index]);
-        options[index].click();
-    });
-};
-
 describe('InspectionDevices', () => {
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
@@ -193,9 +182,9 @@ describe('InspectionDevices', () => {
         expect(actions.updateInspectionDevice).rejects.toEqual('Testing Update 1');
     });
 
-    it('Delete or Reassign Asset Type functions correctly', async () => {
+    it('Delete Inspection Device functions correctly', async () => {
         // Deletion of device with existing tests
-        const { getByText, getByTestId, getByRole, getAllByRole } = setup({
+        const { getByText, getByTestId } = setup({
             actions: actions,
         });
         expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
@@ -216,31 +205,17 @@ describe('InspectionDevices', () => {
         });
 
         expect(actions.deleteInspectionDevice).toHaveBeenCalledWith(1);
-        // // Simulate an error
-        // actions.deleteInspectionDevice = jest.fn(() => Promise.reject('Error Delete'));
-        // await act(async () => {
-        //     await fireEvent.click(getByTestId('action_cell-1-delete-button'));
-        // });
-        // expect(getByTestId('confirm-test')).toHaveAttribute('disabled');
-        // // delay inherit in the system before attr removal
-        // await new Promise(resolve => setTimeout(resolve, 3100));
-        // await waitFor(() => {
-        //     expect(getByTestId('confirm-test')).not.toHaveAttribute('disabled');
-        // });
-        // await act(async () => {
-        //     await fireEvent.click(getByTestId('action_cell-1-delete-button'));
-        // });
-        // expect(actions.deleteInspectionDevice).rejects.toEqual('Error Delete');
     });
-    it('Delete or Reassign Asset Type Error handles correctly', async () => {
+    it('Delete Inspection Device Error handles correctly', async () => {
         // Deletion of device with existing tests
-        const { getByText, getByTestId, getByRole, getAllByRole } = setup({
+        const { getByText, getByTestId } = setup({
             actions: actions,
         });
         expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
         await waitFor(() => {
             expect(getByText('AV 025')).toBeVisible();
         });
+        preview.debug();
         // Simulate an error
         actions.deleteInspectionDevice = jest.fn(() => Promise.reject('Error Delete'));
         await act(async () => {
@@ -252,9 +227,12 @@ describe('InspectionDevices', () => {
         await waitFor(() => {
             expect(getByTestId('confirm-test')).not.toHaveAttribute('disabled');
         });
+
         await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-delete-button'));
+            await fireEvent.click(getByTestId('confirm-test'));
         });
-        expect(actions.deleteInspectionDevice).rejects.toEqual('Error Delete');
+        await waitFor(() => {
+            expect(actions.deleteInspectionDevice).rejects.toEqual('Error Delete');
+        });
     });
 });

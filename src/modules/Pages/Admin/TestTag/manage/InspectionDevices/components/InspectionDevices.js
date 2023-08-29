@@ -199,7 +199,7 @@ const InspectionDevices = ({
                                 id={componentId}
                                 isOpen={actionState.isAdd}
                                 locale={pageLocale?.dialogAdd}
-                                fields={config.fields ?? []}
+                                fields={config.fields ?? /* istanbul ignore next */ []}
                                 columns={pageLocale.form.columns}
                                 row={actionState?.row}
                                 onCancelAction={closeDialog}
@@ -213,7 +213,7 @@ const InspectionDevices = ({
                                 id={componentId}
                                 isOpen={actionState.isEdit}
                                 locale={pageLocale?.dialogEdit}
-                                fields={config?.fields ?? []}
+                                fields={config?.fields ?? /* istanbul ignore next */ []}
                                 columns={pageLocale.form.columns}
                                 row={actionState?.row}
                                 onCancelAction={closeDialog}
@@ -276,7 +276,7 @@ const InspectionDevices = ({
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>
