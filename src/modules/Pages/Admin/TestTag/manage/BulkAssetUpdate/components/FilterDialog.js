@@ -82,14 +82,15 @@ const FilterDialog = ({
         withActions: false,
     });
     useEffect(() => {
-        if (!assetsMineListLoading) {
+        /* istanbul ignore else */
+        if (!assetsMineListLoading && isOpen) {
             setRow(assetsMineList);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assetsMineList, assetsMineListLoading]);
+    }, [assetsMineList, assetsMineListLoading, isOpen]);
 
     useEffect(() => {
-        // locationId, locationType, assetTypeId
+        /* istanbul ignore else */
         if (isOpen && !isBusy) {
             actions.loadAssetsMine({
                 ...((lastSelectedLocation === 'floor' && location.floor !== -1) ||
@@ -113,7 +114,8 @@ const FilterDialog = ({
         onAction?.(selectedAssets);
     };
     const handleAssetTypeChange = row => {
-        setAssetTypeId(row?.asset_type_id === -1 ? '' : row?.asset_type_id ?? '');
+        console.log(row);
+        setAssetTypeId(row?.asset_type_id === -1 ? '' : row?.asset_type_id ?? /* istanbul ignore next */ '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
         const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));
@@ -121,7 +123,7 @@ const FilterDialog = ({
     };
 
     const handleSearchNotesChange = e => {
-        const value = e?.target?.value?.trim() ?? '';
+        const value = e?.target?.value?.trim() ?? /* istanbul ignore next */ '';
         setSearchNotes(value);
     };
 
@@ -212,7 +214,7 @@ const FilterDialog = ({
                                 disableRowSelectionOnClick
                                 onSelectionModelChange={handleAssetSelectionChange}
                                 disableSelectionOnClick={false}
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>

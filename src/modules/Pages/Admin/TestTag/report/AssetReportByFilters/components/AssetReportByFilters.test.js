@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, userEvent, within, preview } from 'test-utils';
+import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import AssetReportByFilters from './AssetReportByFilters';
@@ -169,7 +169,6 @@ describe('AssetReportByFilters', () => {
         userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20220101'); // input formats as date is typed
         userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20230101'); // input formats as date is typed
 
-        preview.debug();
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
                 assetStatus: null,
