@@ -41,23 +41,23 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         cy.data('user_inspections-user-name-option-2').click();
         cy.get('body').click();
         // Check the value of the dropdown.
-        cy.data('user_inspections-user-name-select').should('contain', 'A Test User');
+        cy.data('user_inspections-user-name-select').should('contain', 'Third Testing user');
         // Select a second user.
         cy.wait(1000);
         cy.data('user_inspections-user-name').click();
         cy.data('user_inspections-user-name-option-1').click();
         cy.get('body').click();
         cy.data('user_inspections-user-name-select')
-            .should('contain', 'SecondTesting user')
-            .should('contain', 'A Test User');
+            .should('contain', 'Second Testing user')
+            .should('contain', 'Third Testing user');
         cy.wait(1000);
         // Select third user
         cy.data('user_inspections-user-name-select').click();
         cy.data('user_inspections-user-name-option-0').click();
         cy.get('body').click();
         cy.data('user_inspections-user-name-select')
-            .should('contain', 'JTest user')
-            .should('contain', 'SecondTesting user')
+            .should('contain', 'JTest User')
+            .should('contain', 'Second Testing user')
             .should('contain', '(and 1 more)');
     });
     it('Date selectors work as intended', () => {

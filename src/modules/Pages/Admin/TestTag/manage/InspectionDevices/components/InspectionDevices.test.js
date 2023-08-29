@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionDevices from './InspectionDevices';
-import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore, preview, userEvent } from 'test-utils';
+import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore, userEvent } from 'test-utils';
 import Immutable from 'immutable';
 import { PERMISSIONS } from '../../../config/auth';
 
@@ -128,7 +128,7 @@ describe('InspectionDevices', () => {
         userEvent.type(getByTestId('device_calibrated_date_last-input'), '2020-01-01');
 
         await act(async () => {
-            await fireEvent.click(getByTestId('update_dialog-action-button'));
+            await userEvent.click(getByTestId('update_dialog-action-button'));
         });
         expect(actions.addInspectionDevice).rejects.toEqual('Testing 2');
     });
@@ -215,7 +215,6 @@ describe('InspectionDevices', () => {
         await waitFor(() => {
             expect(getByText('AV 025')).toBeVisible();
         });
-        preview.debug();
         // Simulate an error
         actions.deleteInspectionDevice = jest.fn(() => Promise.reject('Error Delete'));
         await act(async () => {
