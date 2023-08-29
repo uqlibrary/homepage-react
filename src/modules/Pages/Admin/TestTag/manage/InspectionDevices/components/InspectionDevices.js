@@ -124,7 +124,6 @@ const InspectionDevices = ({
         const id = data.device_id;
         const request = structuredClone(data);
         const wrappedRequest = transformUpdateRequest(request);
-        console.log('edit', wrappedRequest);
 
         actions
             .updateInspectionDevice(id, wrappedRequest)
@@ -146,9 +145,6 @@ const InspectionDevices = ({
     const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
         const id = data.row.device_id;
-
-        console.log('delete', id);
-
         actions
             .deleteInspectionDevice(id)
             .then(() => {
