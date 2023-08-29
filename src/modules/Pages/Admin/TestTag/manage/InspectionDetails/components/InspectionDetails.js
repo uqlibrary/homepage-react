@@ -34,7 +34,6 @@ const useStyles = makeStyles(theme => ({
 const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListError }) => {
     const pageLocale = locale.pages.manage.inspectiondetails;
     const classes = useStyles();
-
     useEffect(() => {
         actions.clearAssets();
         // eslint-disable-next-line react-hooks/exhaustive-deps
