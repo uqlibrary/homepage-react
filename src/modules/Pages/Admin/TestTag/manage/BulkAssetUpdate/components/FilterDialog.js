@@ -83,11 +83,11 @@ const FilterDialog = ({
     });
     useEffect(() => {
         /* istanbul ignore else */
-        if (!assetsMineListLoading) {
+        if (!assetsMineListLoading && isOpen) {
             setRow(assetsMineList);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assetsMineList, assetsMineListLoading]);
+    }, [assetsMineList, assetsMineListLoading, isOpen]);
 
     useEffect(() => {
         /* istanbul ignore else */

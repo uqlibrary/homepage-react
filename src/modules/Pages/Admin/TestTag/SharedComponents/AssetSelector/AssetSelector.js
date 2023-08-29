@@ -48,6 +48,7 @@ const AssetSelector = ({
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
     const [currentValue, setCurrentValue] = useState(selectedAsset ?? null);
+
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
