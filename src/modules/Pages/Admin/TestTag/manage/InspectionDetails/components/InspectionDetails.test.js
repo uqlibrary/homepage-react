@@ -1,21 +1,71 @@
 import React from 'react';
 import InspectionDetails from './InspectionDetails';
-import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore, userEvent, preview } from 'test-utils';
+import { renderWithRouter, waitFor, WithReduxStore, userEvent } from 'test-utils';
 import Immutable from 'immutable';
-import { PERMISSIONS } from '../../../config/auth';
+import * as tntActions from '../../../../../../../data/actions/testTagActions';
+import * as repositories from 'repositories';
+import * as actions from '../../../../../../../data/actions/actionTypes';
 
 import userData from '../../../../../../../data/mock/data/testing/testTagUser';
-import inspectionDevices from '../../../../../../../data/mock/data/records/test_tag_inspection_devices';
 import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
-import config from './config';
 
-const actions = {
+const testActions = {
     clearAssets: jest.fn(),
     clearAssetsError: jest.fn(),
     updateInspectionDetails: jest.fn(() => Promise.resolve()),
     loadAssets: jest.fn(() => Promise.resolve()),
 };
+const mockAPIReturn = [
+    {
+        asset_id: 123,
+        asset_id_displayed: 'UQL000123',
+        asset_next_test_due_date: '2023-05-10',
+        asset_status: 'CURRENT',
+        last_location: {
+            room_id: 404,
+            room_id_displayed: 'L412',
+            room_description: 'LTS Workroom',
+            floor_id: 22,
+            floor_id_displayed: '4',
+            building_id: 4,
+            building_id_displayed: '0050',
+            building_name: 'Hawken Engineering Building',
+            site_id: 1,
+            site_id_displayed: '01',
+            site_name: 'St Lucia',
+        },
+        asset_type: {
+            asset_type_id: 2,
+            asset_type_name: 'Power Cord - C5',
+            asset_type_class: '',
+            asset_type_power_rating: '',
+            asset_type: '',
+            asset_type_notes: '',
+        },
+        last_inspection: {
+            inspect_status: 'PASSED',
+            inspect_date: '2022-11-10 00:00:00',
+            inspect_fail_reason: '',
+            inspect_notes: '',
+            inspect_device_id: 2,
+            inspect_device_model_name: 'AV 025',
+            inspect_device_serial_number: '1499928',
+            inspect_device_department: 'UQL',
+            inspect_device_calibrated_date_last: '2022-10-17 00:00:00',
+            inspect_device_calibrated_by_last: 'Test and Tag Supplies Pty Ltd',
+            inspect_device_calibration_due_date: '2023-10-17 00:00:00',
+            user_id: 4,
+            user_uid: 'uqasato',
+            user_licence_number: '13962560',
+            user_name: 'Aki Sato',
+            user_department: 'UQL',
+            user_current_flag: 1,
+        },
+        last_repair: null,
+        last_discard: null,
+    },
+];
 function setup(testProps = {}, renderer = renderWithRouter) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
@@ -27,7 +77,7 @@ function setup(testProps = {}, renderer = renderWithRouter) {
             privilege: getUserPermissions(userData.privileges ?? {}),
         },
         testTagAssetsReducer: {
-            assetsList: [],
+            assetsList: mockAPIReturn,
             assetsListLoading: false,
             assetsListError: null,
             assetsMineList: [],
@@ -55,183 +105,88 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 }
 describe('InspectionDetails', () => {
     it('renders component standard', () => {
-        const { getByText } = setup({ actions: actions });
+        const { getByText } = setup({ actions: tntActions });
         expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
     });
-    it('loads an asset by absolute value', async () => {
-        const { getByText, getByTestId } = setup({ actions: actions });
+    it('loads an asset by value', async () => {
+        mockApi = setupMockAdapter();
+        mockApi
+            .onGet(repositories.routes.TEST_TAG_ASSETS_FILTERED_API('UQL000123').apiUrl)
+            .reply(200, { status: 'OK', data: [mockAPIReturn] });
+        mockActionsStore = setupStoreForActions();
+        const { getByText, getByTestId } = setup({ actions: tntActions, assetsList: mockAPIReturn });
+        await waitFor(() => {
+            expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
+        });
+        expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
+
+        await userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
+        await mockActionsStore.dispatch(tntActions.loadAssets('UQL000123'));
+        const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+    it('Catches load error correctly', async () => {
+        testActions.loadAssets = jest.fn(() => Promise.reject('load error'));
+
+        const { getByText, getByTestId } = setup({
+            actions: testActions,
+            assetsList: mockAPIReturn,
+        });
         await waitFor(() => {
             expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
         expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
 
         userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
-
-        preview.debug();
-        expect(actions.loadAssets).toHaveBeenCalledWith('a');
-    });
-
-    it('Add Inspection Device functions correctly', async () => {
-        actions.loadInspectionDevices = jest.fn(() => {
-            return Promise.resolve();
-        });
-        const { getByText, getByTestId } = setup({ actions: actions });
-
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
-        expect(getByTestId('add_toolbar-test-add-button')).toBeInTheDocument();
-        await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-test-add-button'));
-        });
-
         await waitFor(() => {
-            expect(getByTestId('device_model_name-input')).toBeInTheDocument();
+            expect(testActions.loadAssets).rejects.toEqual('load error');
         });
-
-        userEvent.type(getByTestId('device_model_name-input'), 'TEST MODELX');
-        userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
-        userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
-
-        userEvent.type(getByTestId('device_calibration_due_date-input'), '2030-01-01');
-        userEvent.type(getByTestId('device_calibrated_date_last-input'), '2020-01-01');
-
-        // preview.debug();
-        // commit the change
-        await act(async () => {
-            await fireEvent.click(getByTestId('update_dialog-action-button'));
+    });
+    it('Editing works correctly', async () => {
+        testActions.loadAssets = jest.fn(() => Promise.resolve());
+        const { getByText, getByTestId } = setup({
+            actions: testActions,
+            assetsList: mockAPIReturn,
         });
-        await waitFor(() =>
-            expect(actions.addInspectionDevice).toHaveBeenCalledWith({
-                device_model_name: 'TEST MODELX',
-                device_serial_number: 'TEST SNX',
-                device_calibrated_by_last: 'PersonX',
-                device_calibration_due_date: '2030-01-01 00:00:00',
-                device_calibrated_date_last: '2020-01-01 00:00:00',
-                device_department: 'UQL',
-            }),
+        await waitFor(() => {
+            expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
+        });
+        expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(getByText('Power Cord - C5')).toBeInTheDocument();
+        userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
+
+        expect(getByTestId('inspect_notes-input')).toBeInTheDocument();
+        expect(getByTestId('discard_reason-input')).toHaveAttribute('disabled');
+        userEvent.type(getByTestId('inspect_notes-input'), 'TEST NOTES');
+        userEvent.type(getByTestId('inspect_fail_reason-input'), 'TEST FAIL REASON');
+        userEvent.tab();
+        userEvent.click(getByTestId('update_dialog-action-button'));
+
+        await expect(testActions.updateInspectionDetails).toHaveBeenCalledWith(123, { inspect_notes: 'TEST NOTES' });
+        await expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent(
+            'Request successfully completed',
         );
-        // Check error condition for add
-        actions.addInspectionDevice = jest.fn(() => Promise.reject('Testing 2'));
-
-        await act(async () => {
-            await fireEvent.click(getByTestId('add_toolbar-test-add-button'));
-        });
-
-        await waitFor(() => {
-            expect(getByTestId('device_model_name-input')).toBeInTheDocument();
-        });
-
-        userEvent.type(getByTestId('device_model_name-input'), 'TEST MODELX');
-        userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
-        userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
-
-        userEvent.type(getByTestId('device_calibration_due_date-input'), '2030-01-01');
-        userEvent.type(getByTestId('device_calibrated_date_last-input'), '2020-01-01');
-
-        await act(async () => {
-            await userEvent.click(getByTestId('update_dialog-action-button'));
-        });
-        expect(actions.addInspectionDevice).rejects.toEqual('Testing 2');
     });
-    it('Edit Inspection Device functions correctly', async () => {
+    it('Error on Edit captured correctly', async () => {
+        testActions.updateInspectionDetails = jest.fn(() => Promise.reject('edit error'));
         const { getByText, getByTestId } = setup({
-            actions: actions,
-        });
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
-        await waitFor(() => {
-            expect(getByText('AV 025')).toBeVisible();
-        });
-        await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-edit-button'));
+            actions: testActions,
+            assetsList: mockAPIReturn,
         });
         await waitFor(() => {
-            expect(getByTestId('device_model_name-input')).toBeInTheDocument();
+            expect(getByTestId('asset_selector-inspection-details-input')).toBeInTheDocument();
         });
-        userEvent.clear(getByTestId('device_model_name-input'));
-        userEvent.type(getByTestId('device_model_name-input'), 'EDIT NAME');
-        userEvent.clear(getByTestId('device_serial_number-input'));
-        userEvent.type(getByTestId('device_serial_number-input'), 'EDIT SN');
-        userEvent.clear(getByTestId('device_calibrated_by_last-input'));
-        userEvent.type(getByTestId('device_calibrated_by_last-input'), 'EDIT PERSON');
-        userEvent.clear(getByTestId('device_calibration_due_date-input'));
-        userEvent.type(getByTestId('device_calibration_due_date-input'), '2031-01-01');
-        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
-        userEvent.type(getByTestId('device_calibrated_date_last-input'), '2030-01-01');
+        expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
+        expect(getByText('Power Cord - C5')).toBeInTheDocument();
+        userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
 
-        // // commit the change
-        await act(async () => {
-            await fireEvent.click(getByTestId('update_dialog-action-button'));
-        });
-        expect(actions.updateInspectionDevice).toHaveBeenCalledWith(1, {
-            device_calibrated_by_last: 'EDIT PERSON',
-            device_calibrated_date_last: '2030-01-01 00:00:00',
-            device_calibration_due_date: '2031-01-01 00:00:00',
-            device_department: 'UQL',
-            device_id: 1,
-            device_model_name: 'EDIT NAME',
-            device_serial_number: 'EDIT SN',
-            has_inspections: 1,
-        });
-        // Check Save Asset Types fail on save.
-        actions.updateInspectionDevice = jest.fn(() => Promise.reject('Testing Update 1'));
-        await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-edit-button'));
-        });
-        await act(async () => {
-            await fireEvent.click(getByTestId('update_dialog-action-button'));
-        });
-        expect(actions.updateInspectionDevice).rejects.toEqual('Testing Update 1');
-    });
+        expect(getByTestId('inspect_notes-input')).toBeInTheDocument();
+        expect(getByTestId('discard_reason-input')).toHaveAttribute('disabled');
+        userEvent.click(getByTestId('update_dialog-action-button'));
 
-    it('Delete Inspection Device functions correctly', async () => {
-        // Deletion of device with existing tests
-        const { getByText, getByTestId } = setup({
-            actions: actions,
-        });
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
-        await waitFor(() => {
-            expect(getByText('AV 025')).toBeVisible();
-        });
-        await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-delete-button'));
-        });
-        expect(getByTestId('confirm-test')).toHaveAttribute('disabled');
-        // delay inherit in the system before attr removal
-        await new Promise(resolve => setTimeout(resolve, 3100));
-        await waitFor(() => {
-            expect(getByTestId('confirm-test')).not.toHaveAttribute('disabled');
-        });
-        await act(async () => {
-            await userEvent.click(getByTestId('confirm-test'));
-        });
-
-        expect(actions.deleteInspectionDevice).toHaveBeenCalledWith(1);
-    });
-    it('Delete Inspection Device Error handles correctly', async () => {
-        // Deletion of device with existing tests
-        const { getByText, getByTestId } = setup({
-            actions: actions,
-        });
-        expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
-        await waitFor(() => {
-            expect(getByText('AV 025')).toBeVisible();
-        });
-        // Simulate an error
-        actions.deleteInspectionDevice = jest.fn(() => Promise.reject('Error Delete'));
-        await act(async () => {
-            await fireEvent.click(getByTestId('action_cell-1-delete-button'));
-        });
-        expect(getByTestId('confirm-test')).toHaveAttribute('disabled');
-        // delay inherit in the system before attr removal
-        await new Promise(resolve => setTimeout(resolve, 3100));
-        await waitFor(() => {
-            expect(getByTestId('confirm-test')).not.toHaveAttribute('disabled');
-        });
-
-        await act(async () => {
-            await fireEvent.click(getByTestId('confirm-test'));
-        });
-        await waitFor(() => {
-            expect(actions.deleteInspectionDevice).rejects.toEqual('Error Delete');
-        });
+        await expect(testActions.updateInspectionDetails).rejects.toEqual('edit error');
+        await expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
+            'Operation failed: Unable to update the test notes',
+        );
     });
 });

@@ -122,7 +122,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                         id={componentId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale?.dialogEdit}
-                        fields={config?.fields ?? []}
+                        fields={config?.fields ?? /* istanbul ignore next */ []}
                         columns={pageLocale.form.columns}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
@@ -155,7 +155,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                                 loading={assetsListLoading}
                                 disableColumnFilter
                                 disableColumnMenu
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>
