@@ -472,7 +472,7 @@ export default [
               "room_id": 477,
               "room_description": "Library Facilities",
               "room_id_displayed": "102",
-          "asset_count": 1,
+          "asset_count": 0,
             },
             {
               "room_id": 478,

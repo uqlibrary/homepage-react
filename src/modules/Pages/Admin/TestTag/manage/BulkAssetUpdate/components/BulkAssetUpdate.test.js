@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
+import { renderWithRouter, WithReduxStore, waitFor, userEvent, within, waitForElementToBeRemoved } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetsList from '../../../../../../../data/mock/data/testing/testTagAssets';
@@ -34,7 +34,6 @@ import pageLocale from '../../../testTag.locale';
 import pageConfig from './config';
 
 import userData from '../../../../../../../data/mock/data/testing/testTagUser';
-import { waitForElementToBeRemoved } from '@testing-library/react';
 
 function setup(testProps = {}, renderer = renderWithRouter) {
     const {

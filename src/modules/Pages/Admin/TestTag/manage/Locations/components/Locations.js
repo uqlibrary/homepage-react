@@ -138,7 +138,7 @@ const ManageLocations = ({ actions }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [location, selectedLocation, locationDisplayedAs],
     );
-    const shouldDisableDelete = row => (row?.asset_count ?? 1) > 0;
+    const shouldDisableDelete = row => (row?.asset_count ?? /* istanbul ignore next */ 1) > 0;
 
     const { columns } = useDataTableColumns({
         config,
@@ -245,7 +245,7 @@ const ManageLocations = ({ actions }) => {
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
                         locationType={selectedLocation}
-                        fields={config?.[selectedLocation].fields ?? []}
+                        fields={config?.[selectedLocation].fields ?? /* istanbul ignore next */ []}
                         columns={pageLocale.form.columns[selectedLocation]}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
@@ -260,7 +260,7 @@ const ManageLocations = ({ actions }) => {
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
                         locationType={selectedLocation}
-                        fields={config?.[selectedLocation].fields ?? []}
+                        fields={config?.[selectedLocation].fields ?? /* istanbul ignore next */ []}
                         columns={pageLocale.form.columns[selectedLocation]}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
@@ -280,7 +280,7 @@ const ManageLocations = ({ actions }) => {
                             !dialogueBusy
                                 ? actionState.props?.locale ?? {}
                                 : {
-                                      ...(actionState.props?.locale ?? {}),
+                                      ...(actionState.props?.locale ?? /* istanbul ignore next */ {}),
                                       confirmButtonLabel: (
                                           <CircularProgress
                                               color="inherit"
@@ -325,7 +325,7 @@ const ManageLocations = ({ actions }) => {
                                 }}
                                 loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
                                 key={selectedLocation}
-                                {...(config[selectedLocation].sort ?? {})}
+                                {...(config[selectedLocation].sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>

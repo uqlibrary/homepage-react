@@ -417,6 +417,7 @@
         ],
         "report-dir": "coverage/cypress",
         "temp-dir": "coverage/temp",
+            "all": true,
         "include": [
             "src/modules/**/*.{js,jsx}",
             "src/modules/Index/*.{js,jsx}",
