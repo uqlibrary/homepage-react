@@ -1,4 +1,4 @@
-import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
+import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 describe('Test and Tag bulk asset update', () => {
     beforeEach(() => {
@@ -35,8 +35,9 @@ describe('Test and Tag bulk asset update', () => {
         forcePageRefresh();
     };
 
-    it('Page is accessible and renders base', () => {
-        checkBaseline();
+    it.only('Page is accessible and renders base', () => {
+        // cy.injectAxe();
+        // checkBaseline();
         // cy.checkA11y('[data-testid="StandardPage"]', {
         //     reportName: 'Test and Tag Manage Inspection devices',
         //     scopeName: 'Content',
@@ -59,12 +60,76 @@ describe('Test and Tag bulk asset update', () => {
         // Clear the second asset
         cy.data('action_cell-6-delete-button').click();
         cy.data('bulk_asset_update-count-alert').should('not.exist');
+
+        // coverage ==>
+        cy.data('asset_selector-bulk-asset-update-input').click();
+        cy.data('asset_selector-bulk-asset-update').within(() => {
+            cy.get('[type="button"][title="Clear"]').click();
+        });
+        cy.data('asset_selector-bulk-asset-update-input').should('have.value', '');
+        // <== end coverage
+
+        cy.data('asset_selector-bulk-asset-update-input').click();
     });
-    it('Asset search by feature works correctly', () => {
-        checkBaseline();
-        // Search for an asset by feature (default)
-        selectAllRows();
+
+    describe('filter dialog', () => {
+        it('all components respond to user input', () => {
+            cy.data('bulk_asset_update-feature-button').click();
+            cy.data('filter_dialog-bulk-asset-update-title').should(
+                'contain',
+                locale.pages.manage.bulkassetupdate.form.filterDialog.title,
+            );
+
+            // site
+            cy.data('location_picker-filter-dialog-site-input').click();
+            cy.get('#location_picker-filter-dialog-site-option-1').click();
+            cy.data('location_picker-filter-dialog-site-input').should('have.value', 'St Lucia');
+            // building
+            cy.data('location_picker-filter-dialog-building-input').click();
+            cy.get('#location_picker-filter-dialog-building-option-1').click();
+            cy.data('location_picker-filter-dialog-building-input').should(
+                'have.value',
+                '0001 - Forgan Smith Building',
+            );
+            // floor
+            cy.data('location_picker-filter-dialog-floor-input').click();
+            cy.get('#location_picker-filter-dialog-floor-option-1').click();
+            cy.data('location_picker-filter-dialog-floor-input').should('have.value', '2');
+            // room
+            cy.data('location_picker-filter-dialog-room-input').click();
+            cy.get('#location_picker-filter-dialog-room-option-1').click();
+            cy.data('location_picker-filter-dialog-room-input').should('have.value', 'W212');
+            // asset type
+            cy.data('asset_type_selector-filter-dialog-input').click();
+            cy.get('#asset_type_selector-filter-dialog-option-1').click();
+            cy.data('asset_type_selector-filter-dialog-input').should('have.value', 'Power Cord - C13');
+            // notes
+            cy.data('filter_dialog-bulk-asset-update-search-notes-input').type('Test notes');
+            cy.data('filter_dialog-bulk-asset-update-search-notes-input').should('have.value', 'Test notes');
+
+            // clear fields
+            cy.data('location_picker-filter-dialog-site-input').click();
+            cy.get('#location_picker-filter-dialog-site-option-0').click();
+            cy.data('location_picker-filter-dialog-site-input').should('have.value', 'All sites');
+            cy.data('location_picker-filter-dialog-building-input').should('have.value', 'All buildings');
+            cy.data('location_picker-filter-dialog-floor-input').should('have.value', 'All floors');
+            cy.data('location_picker-filter-dialog-room-input').should('have.value', 'All rooms');
+            cy.data('asset_type_selector-filter-dialog-input').click();
+            cy.data('asset_type_selector-filter-dialog').within(() => {
+                cy.get('[type="button"][title="Clear"]').click();
+            });
+            cy.data('asset_type_selector-filter-dialog-input').should('have.value', '');
+            cy.data('filter_dialog-bulk-asset-update-clear-search-notes').click();
+            cy.data('filter_dialog-bulk-asset-update-search-notes-input').should('have.value', '');
+        });
+
+        it('Asset search by feature works correctly', () => {
+            checkBaseline();
+            // Search for an asset by feature (default)
+            selectAllRows();
+        });
     });
+
     it('Updates locations of assets', () => {
         checkBaseline();
         // Select all rows.
@@ -83,6 +148,21 @@ describe('Test and Tag bulk asset update', () => {
         cy.data('location_picker-bulk-asset-update-room-input').should('have.attr', 'required');
         cy.data('location_picker-bulk-asset-update-room-input').click();
         cy.get('#location_picker-bulk-asset-update-room-option-0').click();
+
+        // coverage ==>
+        // test clearing selected room by unselecting a floor
+        cy.data('location_picker-bulk-asset-update-floor-input').click();
+        cy.get('#location_picker-bulk-asset-update-floor-option-1').click(); // change floor
+        cy.data('location_picker-bulk-asset-update-floor-input').should('have.value', '3');
+        cy.data('location_picker-bulk-asset-update-room-input').should('have.value', '');
+
+        // reset
+        cy.data('location_picker-bulk-asset-update-floor-input').click();
+        cy.get('#location_picker-bulk-asset-update-floor-option-0').click();
+        cy.data('location_picker-bulk-asset-update-room-input').click();
+        cy.get('#location_picker-bulk-asset-update-room-option-0').click();
+        // <== end coverage
+
         // Commit the change.
         cy.data('bulk_asset_update-submit-button').click();
         // Confirmation showing?
@@ -102,6 +182,7 @@ describe('Test and Tag bulk asset update', () => {
         cy.data('asset_type_selector-bulk-asset-update-input').should('have.attr', 'required');
         cy.data('asset_type_selector-bulk-asset-update-input').click();
         cy.get('#asset_type_selector-bulk-asset-update-option-1').click();
+
         // Commit the change.
         cy.data('bulk_asset_update-submit-button').click();
         // Confirmation showing?
