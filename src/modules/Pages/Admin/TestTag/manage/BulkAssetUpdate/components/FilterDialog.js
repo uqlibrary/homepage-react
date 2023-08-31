@@ -114,8 +114,7 @@ const FilterDialog = ({
         onAction?.(selectedAssets);
     };
     const handleAssetTypeChange = row => {
-        console.log(row);
-        setAssetTypeId(row?.asset_type_id === -1 ? '' : row?.asset_type_id ?? /* istanbul ignore next */ '');
+        setAssetTypeId(row?.asset_type_id ?? '');
     };
     const handleAssetSelectionChange = selectedRowIds => {
         const assets = row.filter(aRow => selectedRowIds.includes(aRow.asset_barcode));

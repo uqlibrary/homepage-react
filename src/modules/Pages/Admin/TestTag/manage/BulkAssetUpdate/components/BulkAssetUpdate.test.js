@@ -327,13 +327,9 @@ describe('BulkAssetUpdate', () => {
         // confirmation panel
         await findByTestId('dialogbox-bulk-asset-update');
 
+        expect(getByText('Bulk Update Selected Assets')).toBeInTheDocument();
         expect(
-            within(getByTestId('dialogbox-bulk-asset-update')).getByText('Bulk Update Selected Assets'),
-        ).toBeInTheDocument();
-        expect(
-            within(getByTestId('dialogbox-bulk-asset-update')).getByText(
-                'Are you sure you wish to proceed with this bulk update of selected assets?',
-            ),
+            getByText('Are you sure you wish to proceed with this bulk update of selected assets?'),
         ).toBeInTheDocument();
         userEvent.click(getByTestId('confirm-bulk-asset-update'));
         expect(getByTestId('confirm-bulk-asset-update')).toHaveAttribute('disabled');
