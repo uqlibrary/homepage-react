@@ -220,6 +220,7 @@ export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test-a
 
 export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test-and-tag/asset/search/current/${pattern}` });
 export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
+    console.log('Filtered API?');
     const urlParams = {
         ...(filter?.status?.discarded === false ? { without_discards: 1 } : {}),
         // TODO: add more filters as required

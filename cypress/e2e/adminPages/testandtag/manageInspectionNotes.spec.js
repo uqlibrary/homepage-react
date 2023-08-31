@@ -1,6 +1,6 @@
 import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
-describe('Test and Tag Manage Asset Types', () => {
+describe('Test and Tag Manage Inspection Notes', () => {
     beforeEach(() => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/manage/inspectiondetails?user=uqtesttag');
@@ -79,5 +79,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.data('update_dialog-action-button').should('not.have.attr', 'disabled');
         cy.data('update_dialog-action-button').click();
         cy.data('confirmation_alert-success').should('be.visible');
+        cy.get('#confirmation_alert-success-alert button').click();
+        cy.data('confirmation_alert-success').should('not.exist');
     });
 });

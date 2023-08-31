@@ -4,7 +4,7 @@ const dateFormat = locale.config.format.dateFormatNoTime;
 
 export const transformRow = row => {
     return row.map(line => {
-        if (!!row.user_name) return row;
+        if (!!line.user_name) return line;
         return {
             asset_id: line.asset_id,
             asset_id_displayed: line.asset_id_displayed,

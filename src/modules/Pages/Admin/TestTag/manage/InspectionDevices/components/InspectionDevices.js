@@ -99,7 +99,6 @@ const InspectionDevices = ({
             setDialogueBusy(true);
             const request = structuredClone(data);
             const wrappedRequest = transformAddRequest(request, user);
-            console.log('add', wrappedRequest);
 
             actions
                 .addInspectionDevice(wrappedRequest)
@@ -125,7 +124,6 @@ const InspectionDevices = ({
         const id = data.device_id;
         const request = structuredClone(data);
         const wrappedRequest = transformUpdateRequest(request);
-        console.log('edit', wrappedRequest);
 
         actions
             .updateInspectionDevice(id, wrappedRequest)
@@ -147,9 +145,6 @@ const InspectionDevices = ({
     const onRowDelete = React.useCallback(data => {
         setDialogueBusy(true);
         const id = data.row.device_id;
-
-        console.log('delete', id);
-
         actions
             .deleteInspectionDevice(id)
             .then(() => {
@@ -180,7 +175,10 @@ const InspectionDevices = ({
     const { row } = useDataTableRow(inspectionDevices, transformRow);
 
     useEffect(() => {
-        actions.loadInspectionDevices();
+        actions.loadInspectionDevices().catch(error => {
+            console.error(error);
+            openConfirmationAlert(locale.config.alerts.failed('error'), 'error');
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -201,7 +199,7 @@ const InspectionDevices = ({
                                 id={componentId}
                                 isOpen={actionState.isAdd}
                                 locale={pageLocale?.dialogAdd}
-                                fields={config.fields ?? []}
+                                fields={config.fields ?? /* istanbul ignore next */ []}
                                 columns={pageLocale.form.columns}
                                 row={actionState?.row}
                                 onCancelAction={closeDialog}
@@ -215,7 +213,7 @@ const InspectionDevices = ({
                                 id={componentId}
                                 isOpen={actionState.isEdit}
                                 locale={pageLocale?.dialogEdit}
-                                fields={config?.fields ?? []}
+                                fields={config?.fields ?? /* istanbul ignore next */ []}
                                 columns={pageLocale.form.columns}
                                 row={actionState?.row}
                                 onCancelAction={closeDialog}
@@ -278,7 +276,7 @@ const InspectionDevices = ({
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>

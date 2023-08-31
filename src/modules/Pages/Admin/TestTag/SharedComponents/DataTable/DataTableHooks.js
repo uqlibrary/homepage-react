@@ -50,8 +50,10 @@ export const useDataTableColumns = ({
                                   {...(!!handleDeleteClick ? { handleDeleteClick: handleDeleteClick } : {})}
                                   {...(!!editIcon ? { editIcon } : {})}
                                   {...(!!deleteIcon ? { deleteIcon } : {})}
-                                  {...(!!actionDataFieldKeys ? { dataFieldKeys: actionDataFieldKeys } : {})}
-                                  {...(!!actionTooltips ? { tooltips } : {})}
+                                  {...(!!actionDataFieldKeys
+                                      ? { dataFieldKeys: actionDataFieldKeys }
+                                      : /* istanbul ignore next */ {})}
+                                  {...(!!actionTooltips ? { tooltips } : /* istanbul ignore next */ {})}
                                   disableEdit={disableEdit}
                                   disableDelete={disableDelete}
                               />

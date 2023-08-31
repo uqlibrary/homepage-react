@@ -40,7 +40,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 
 This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
 
-- make sure to create a .env file based on example.env
+- make sure you have created a .env file based on example.env
 - `nvm use 16.13.2 && npm i -g npm@8 jest webpack-dev-server` - initial setup
 - `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this clears & reinstalls npm packages
 - `npm run start:mock` to use mock data from src/mock
@@ -106,7 +106,7 @@ or
 
 ### Auth
 
-The cookie that holds the UQLID token ('SESSION_COOKIE_NAME') is set in _reusable_ repo, because that is where the login button is.
+The cookie that holds the UQLID token ('SESSION_COOKIE_NAME') is set by the return of the account api.
 
 #### Optimisation
 

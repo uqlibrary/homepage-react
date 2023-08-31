@@ -94,7 +94,7 @@ export const UpdateDialogue = ({
     React.useEffect(() => {
         setIsValid(
             editableFields.every(field => {
-                return !dataFields[field]?.validate?.(data[field], data) ?? true;
+                return !dataFields[field]?.validate?.(data[field], data) ?? /* istanbul ignore next */ true;
             }),
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps

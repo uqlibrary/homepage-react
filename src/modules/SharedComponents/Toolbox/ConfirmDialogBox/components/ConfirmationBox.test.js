@@ -86,4 +86,19 @@ describe('ConfirmationBox component', () => {
         expect(onAlternateActionFn).toBeCalled();
         expect(onCloseFn).toBeCalled();
     });
+
+    it('should set busy if busy prop is passed', () => {
+        const onAlternateActionFn = jest.fn();
+        const onCloseFn = jest.fn();
+        const { getByTestId } = setup({
+            isOpen: true,
+            onAlternateAction: onAlternateActionFn,
+            onClose: onCloseFn,
+            showAlternateActionButton: true,
+            isBusy: true,
+            disableButtonsWhenBusy: true,
+        });
+        expect(getByTestId('confirm-alternate-confirmation-box')).toHaveAttribute('disabled');
+        expect(getByTestId('cancel-confirmation-box')).toHaveAttribute('disabled');
+    });
 });
