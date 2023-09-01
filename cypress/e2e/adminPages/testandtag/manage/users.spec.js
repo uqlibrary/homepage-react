@@ -1,4 +1,4 @@
-import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
+import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 describe('Test and Tag Manage Users', () => {
     beforeEach(() => {
@@ -21,11 +21,14 @@ describe('Test and Tag Manage Users', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqjsmit'));
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Manage Users Form',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('base page edit controls function correctly', () => {
         cy.injectAxe();
@@ -38,6 +41,14 @@ describe('Test and Tag Manage Users', () => {
         cy.get('#action_cell-1-edit-button[data-value="uqjsmit"]').should('not.have.attr', 'disabled');
         // Click the first edit button.
         cy.get('#action_cell-1-edit-button[data-value="uqjsmit"]').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         // Field for licence should be disabled
         cy.data('user_licence_number-input').should('have.attr', 'disabled');
         // Enabling "Inspect" should keep licence (pre-existing) disabled.
@@ -79,6 +90,14 @@ describe('Test and Tag Manage Users', () => {
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqjsmit'));
         // Add.
         cy.data('add_toolbar-user-management-add-button').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         // Check default helper texts are in required state
         cy.get('#user_uid-input-helper-text').should('have.class', 'Mui-error');
         cy.get('#user_name-input-helper-text').should('have.class', 'Mui-error');
@@ -120,6 +139,14 @@ describe('Test and Tag Manage Users', () => {
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqjsmit'));
         // Delete
         cy.data('action_cell-1-delete-button').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         // Accept the deletion
         cy.data('confirm-user-management').click();
         cy.data('confirmation_alert-success-alert').should('be.visible');

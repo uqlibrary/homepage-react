@@ -28,11 +28,14 @@ describe('Test and Tag Report - Inspections due', () => {
         cy.data('location_picker-inspections-due-building-input').should('have.attr', 'disabled');
         cy.data('location_picker-inspections-due-floor-input').should('have.attr', 'disabled');
         cy.data('location_picker-inspections-due-room-input').should('have.attr', 'disabled');
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag inspectionsDue Report',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('page UI elements function as expected', () => {
         cy.injectAxe();

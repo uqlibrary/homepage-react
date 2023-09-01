@@ -1,4 +1,4 @@
-import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
+import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 describe('Test and Tag manage inspection devices', () => {
     beforeEach(() => {
@@ -23,22 +23,36 @@ describe('Test and Tag manage inspection devices', () => {
     };
 
     it('page is accessible and renders base', () => {
+        cy.injectAxe();
         checkBaseline();
         cy.waitUntil(() =>
             getFieldValue('device_calibration_due_date', 2, 2)
                 .find('svg')
                 .should('exist'),
         );
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Manage Inspection devices',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('Add and Edit Inspection Device functions correctly', () => {
+        cy.injectAxe();
         checkBaseline();
         // Adding an Inspection Device
         cy.data('add_toolbar-inspection-devices-add-button').click();
+
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         cy.data('device_model_name-input').type('Test Device');
         cy.data('device_serial_number-input').type('Test Serial No');
         cy.data('device_calibrated_by_last-input').type('Calibration Person');
@@ -46,6 +60,15 @@ describe('Test and Tag manage inspection devices', () => {
         cy.get('.MuiAlert-message').should('contain', 'Request successfully completed');
         // // Editing an asset type
         cy.data('action_cell-2-edit-button').click();
+
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         cy.data('device_model_name-input').type('Edited');
         cy.data('device_serial_number-input').type('Edited');
         cy.data('device_calibrated_by_last-input').type('Edited');

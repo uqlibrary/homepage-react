@@ -1,4 +1,4 @@
-import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
+import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 describe('Test and Tag Manage Locations', () => {
     beforeEach(() => {
@@ -22,13 +22,17 @@ describe('Test and Tag Manage Locations', () => {
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('site_id_displayed', 0, 0).should('contain', '01'));
         cy.waitUntil(() => getFieldValue('site_name', 0, 1).should('contain', 'St Lucia'));
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Manage Assets Form',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('Add location functions correctly', () => {
+        cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.manage.locations.header.pageSubtitle('Library'));
@@ -39,6 +43,14 @@ describe('Test and Tag Manage Locations', () => {
 
         // Adding a site
         cy.data('add_toolbar-locations-add-button').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         cy.data('site_id_displayed-input').should('have.attr', 'required');
         cy.data('site_name-input').should('have.attr', 'required');
         cy.data('site_id_displayed-input').type('cypresstest');
@@ -105,6 +117,7 @@ describe('Test and Tag Manage Locations', () => {
             .should('be.visible');
     });
     it('Edit location functions correctly', () => {
+        cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.manage.locations.header.pageSubtitle('Library'));
@@ -115,6 +128,14 @@ describe('Test and Tag Manage Locations', () => {
 
         // Editing a site
         cy.data('action_cell-1-edit-button').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         // clear a required field - update button should disable
         cy.data('site_id_displayed-input').clear();
         cy.data('update_dialog-action-button').should('have.attr', 'disabled');
@@ -176,6 +197,7 @@ describe('Test and Tag Manage Locations', () => {
     });
 
     it('Delete location functions correctly', () => {
+        cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.manage.locations.header.pageSubtitle('Library'));
@@ -188,6 +210,14 @@ describe('Test and Tag Manage Locations', () => {
         cy.data('action_cell-2-delete-button').should('not.have.attr', 'disabled');
         // delete non populated site
         cy.data('action_cell-3-delete-button').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         cy.data('message-title').should('contain', locale.pages.manage.locations.dialogDeleteConfirm.confirmationTitle);
         cy.data('confirm-locations').click();
         cy.data('confirmation_alert-success-alert').should('be.visible');
