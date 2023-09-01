@@ -57,11 +57,19 @@ describe('Test and Tag bulk asset update', () => {
             .clear()
             .type('6');
         cy.waitUntil(() => getFieldValue('asset_id_displayed', 1, 0).should('contain', 'UQL000006'));
+        // Search for an exact asset
+        cy.data('asset_selector-bulk-asset-update-input')
+            .clear()
+            .type('UQL310000');
+        cy.waitUntil(() => getFieldValue('asset_id_displayed', 2, 0).should('contain', 'UQL310000'));
+
         cy.data('bulk_asset_update-count-alert').should('exist');
         // Clear the first asset
         cy.data('action_cell-5-delete-button').click();
         // Clear the second asset
         cy.data('action_cell-6-delete-button').click();
+        // Clear the third asset
+        cy.data('action_cell-310000-delete-button').click();
         cy.data('bulk_asset_update-count-alert').should('not.exist');
 
         // coverage ==>

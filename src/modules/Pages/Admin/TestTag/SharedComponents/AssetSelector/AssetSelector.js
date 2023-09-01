@@ -112,13 +112,7 @@ const AssetSelector = ({
                 open={!headless && isOpen}
                 value={currentValue ?? previousValueRef.current ?? ''}
                 onChange={(event, newValue) => {
-                    if (typeof newValue === 'string') {
-                        onChange?.(
-                            assetsList?.find(asset => asset.asset_id_displayed === newValue) ?? {
-                                asset_id_displayed: newValue,
-                            },
-                        );
-                    } else if (newValue && newValue.inputValue) {
+                    if (newValue && newValue.inputValue) {
                         // Create a new value from the user input
                         onChange?.({
                             asset_id_displayed: newValue.inputValue,
