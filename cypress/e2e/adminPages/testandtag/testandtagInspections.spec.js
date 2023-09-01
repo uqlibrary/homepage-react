@@ -66,11 +66,14 @@ describe('Test and Tag Admin Inspection page', () => {
             cy.get('h2').contains('Testing assets for Library');
             cy.waitUntil(() => cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia'));
             cy.wait(1000);
-            cy.checkA11y('[data-testid="StandardPage"]', {
-                reportName: 'Test and Tag Inspection Form',
-                scopeName: 'Content',
-                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-            });
+            cy.checkA11y(
+                { include: ['[data-testid="StandardPage"]'] },
+                {
+                    reportName: 'Test and Tag Inspection Form',
+                    scopeName: 'Content',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                },
+            );
         });
         describe('Event panel functionality', () => {
             const today = moment();
@@ -175,14 +178,6 @@ describe('Test and Tag Admin Inspection page', () => {
         });
 
         describe('Asset panel functionality', () => {
-            it('should allow entry of new asset IDs (temporary)', () => {
-                cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
-                // this is for code coverage. Will be removed post MVP
-                cy.data('asset_selector-asset-panel-input').click();
-                cy.data('asset_selector-asset-panel-input').type('AN ASSET ID{enter}');
-                cy.data('asset_selector-asset-panel-input').should('have.value', 'AN ASSET ID');
-                cy.data('asset_type_selector-asset-panel-input').should('not.be.disabled');
-            });
             it('should allow auto complete of asset ID as mask', () => {
                 cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia');
                 // Enter partial asset ID for mask search

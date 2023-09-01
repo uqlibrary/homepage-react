@@ -44,6 +44,7 @@ describe('Test and Tag manage inspection devices', () => {
         checkBaseline();
         // Adding an Inspection Device
         cy.data('add_toolbar-inspection-devices-add-button').click();
+        cy.wait(1000);
 
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },

@@ -23,6 +23,7 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqtest1'));
+        cy.wait(1000);
 
         // Note this a11y check ignores the date label elements. Without these exclusions the label contrast
         // a11y error would appear despite the colour of the label being the same as the Name field, which

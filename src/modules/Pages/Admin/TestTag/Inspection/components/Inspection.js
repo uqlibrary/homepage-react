@@ -150,6 +150,10 @@ const useStyles = makeStyles(theme => ({
     addNewLabel: {
         width: '100%',
     },
+    buttonWhite: {
+        color: 'white',
+        border: '1px solid white',
+    },
 }));
 
 const Inspection = ({
@@ -354,7 +358,10 @@ const Inspection = ({
                             fullWidth={isMobileView}
                             id={`${componentId}-reset-button`}
                             data-testid={`${componentId}-reset-button`}
-                            color={inView ? 'default' : 'secondary'}
+                            color={inView ? 'default' : ''}
+                            className={clsx({
+                                [classes.buttonWhite]: !inView,
+                            })}
                         >
                             {inspectionLocale.form.buttons.reset}
                         </Button>

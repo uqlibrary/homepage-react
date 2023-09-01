@@ -7,6 +7,7 @@ describe('Test and Tag Dashboard', () => {
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.dashboard.header.pageSubtitle('Library'));
+        cy.wait(1000);
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Test and Tag Dashboard',
             scopeName: 'Content',
