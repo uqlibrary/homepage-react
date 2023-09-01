@@ -28,7 +28,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Assets Form',
+                reportName: 'Test and Tag Manage Asset Types',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
@@ -64,7 +64,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Assets Form',
+                reportName: 'Test and Tag Manage Asset Types',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
@@ -81,7 +81,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Assets Form',
+                reportName: 'Test and Tag Manage Asset Types',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
@@ -96,7 +96,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Assets Form',
+                reportName: 'Test and Tag Manage Asset Types',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
@@ -132,7 +132,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Assets Form',
+                reportName: 'Test and Tag Manage Asset Types',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },

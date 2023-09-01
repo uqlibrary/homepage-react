@@ -33,7 +33,7 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
                 exclude: ['[role=grid]', '#user_inspections-tagged-start-label', '#user_inspections-tagged-end-label'],
             },
             {
-                reportName: 'Test and Tag Manage Inspection devices',
+                reportName: 'Test and Tag Report inspections by licenced users',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
