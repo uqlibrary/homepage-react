@@ -41,7 +41,7 @@ describe('Test and Tag bulk asset update', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Inspection devices',
+                reportName: 'Test and Tag Bulk Asset Update',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
@@ -122,7 +122,7 @@ describe('Test and Tag bulk asset update', () => {
             cy.checkA11y(
                 { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
                 {
-                    reportName: 'Test and Tag Manage Inspection devices',
+                    reportName: 'Test and Tag Bulk Asset Update',
                     scopeName: 'Content',
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 },
@@ -160,7 +160,7 @@ describe('Test and Tag bulk asset update', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Inspection devices',
+                reportName: 'Test and Tag Bulk Asset Update',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },

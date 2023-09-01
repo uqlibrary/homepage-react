@@ -24,7 +24,7 @@ describe('Test and Tag Manage Users', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Inspection devices',
+                reportName: 'Test and Tag Manage Users',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
@@ -44,7 +44,7 @@ describe('Test and Tag Manage Users', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Inspection devices',
+                reportName: 'Test and Tag Manage Users',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
@@ -93,7 +93,7 @@ describe('Test and Tag Manage Users', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Inspection devices',
+                reportName: 'Test and Tag Manage Users',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
@@ -142,7 +142,7 @@ describe('Test and Tag Manage Users', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Inspection devices',
+                reportName: 'Test and Tag Manage Users',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },

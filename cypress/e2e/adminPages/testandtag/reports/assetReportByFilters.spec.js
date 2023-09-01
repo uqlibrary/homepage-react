@@ -26,7 +26,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
-                reportName: 'Test and Tag Manage Inspection devices',
+                reportName: 'Test and Tag Inspection by filters',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
