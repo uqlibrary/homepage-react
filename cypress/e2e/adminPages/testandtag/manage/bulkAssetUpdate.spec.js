@@ -35,7 +35,7 @@ describe('Test and Tag bulk asset update', () => {
         forcePageRefresh();
     };
 
-    it.only('Page is accessible and renders base', () => {
+    it('Page is accessible and renders base', () => {
         // cy.injectAxe();
         // checkBaseline();
         // cy.checkA11y('[data-testid="StandardPage"]', {

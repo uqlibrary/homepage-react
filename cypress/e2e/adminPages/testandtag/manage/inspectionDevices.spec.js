@@ -1,4 +1,4 @@
-import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
+import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 describe('Test and Tag manage inspection devices', () => {
     beforeEach(() => {
