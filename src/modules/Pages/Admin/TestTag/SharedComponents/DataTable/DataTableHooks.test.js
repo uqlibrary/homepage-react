@@ -76,8 +76,24 @@ describe('DataTableHooks', () => {
             expect(columns[2]).toEqual(
                 expect.objectContaining({ field: 'asset_location', headerName: 'Location', renderInTable: true }),
             );
-            expect(columns[3]).toEqual(expect.objectContaining({ field: 'asset_status', headerName: 'Status' }));
-            expect(columns[4]).toEqual(expect.objectContaining({ field: '', renderCell: expect.anything() }));
+            expect(columns[3]).toEqual(
+                expect.objectContaining({ editable: false, field: 'asset_status', headerName: 'Status' }),
+            );
+            expect(columns[4]).toEqual(
+                expect.objectContaining({
+                    align: 'center',
+                    disableColumnMenu: true,
+                    disableReorder: true,
+                    field: 'actions',
+                    filterable: false,
+                    headerAlign: 'center',
+                    headerClassName: 'makeStyles-a11yHidden-1',
+                    renderCell: expect.anything(),
+                    renderInUpdate: false,
+                    sortable: false,
+                    width: 100,
+                }),
+            );
         });
 
         it('renders columns without actions', () => {
@@ -153,7 +169,21 @@ describe('DataTableHooks', () => {
             const { columns } = result.current;
 
             expect(columns.length).toBe(Object.keys(locale).length);
-            expect(columns[4]).toEqual(expect.objectContaining({ field: '', renderCell: expect.anything() }));
+            expect(columns[4]).toEqual(
+                expect.objectContaining({
+                    align: 'center',
+                    disableColumnMenu: true,
+                    disableReorder: true,
+                    field: 'actions',
+                    filterable: false,
+                    headerAlign: 'center',
+                    headerClassName: 'makeStyles-a11yHidden-3',
+                    renderCell: expect.anything(),
+                    renderInUpdate: false,
+                    sortable: false,
+                    width: 100,
+                }),
+            );
             // fire the returned renderCell function
             const { getByTestId } = rtlRender(
                 <>{columns[4].renderCell({ id: 3, row: {}, api: { getRow: jest.fn(id => ({ id })) } })}</>,
