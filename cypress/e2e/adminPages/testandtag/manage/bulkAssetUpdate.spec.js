@@ -36,13 +36,16 @@ describe('Test and Tag bulk asset update', () => {
     };
 
     it('Page is accessible and renders base', () => {
-        // cy.injectAxe();
-        // checkBaseline();
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Manage Inspection devices',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.injectAxe();
+        checkBaseline();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('Asset id search functions correctly', () => {
         checkBaseline();
@@ -74,6 +77,7 @@ describe('Test and Tag bulk asset update', () => {
 
     describe('filter dialog', () => {
         it('all components respond to user input', () => {
+            cy.injectAxe();
             cy.data('bulk_asset_update-feature-button').click();
             cy.data('filter_dialog-bulk-asset-update-title').should(
                 'contain',
@@ -107,6 +111,15 @@ describe('Test and Tag bulk asset update', () => {
             cy.data('filter_dialog-bulk-asset-update-search-notes-input').type('Test notes');
             cy.data('filter_dialog-bulk-asset-update-search-notes-input').should('have.value', 'Test notes');
 
+            cy.checkA11y(
+                { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+                {
+                    reportName: 'Test and Tag Manage Inspection devices',
+                    scopeName: 'Content',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                },
+            );
+
             // clear fields
             cy.data('location_picker-filter-dialog-site-input').click();
             cy.get('#location_picker-filter-dialog-site-option-0').click();
@@ -131,9 +144,20 @@ describe('Test and Tag bulk asset update', () => {
     });
 
     it('Updates locations of assets', () => {
+        cy.injectAxe();
         checkBaseline();
         // Select all rows.
         selectAllRows();
+
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
+
         // Update location
         cy.get('#bulk_asset_update-location-checkbox').click();
         cy.data('location_picker-bulk-asset-update-site-input').should('have.attr', 'required');

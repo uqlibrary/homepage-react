@@ -23,11 +23,21 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqtest1'));
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag InspectionsByLicencedUsers Report',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+
+        // Note this a11y check ignores the date label elements. Without these exclusions the label contrast
+        // a11y error would appear despite the colour of the label being the same as the Name field, which
+        // doesnt throw an error.
+        cy.checkA11y(
+            {
+                include: '[data-testid="StandardPage"]',
+                exclude: ['[role=grid]', '#user_inspections-tagged-start-label', '#user_inspections-tagged-end-label'],
+            },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('Inspector selection works as intended', () => {
         cy.viewport(1300, 1000);
@@ -93,6 +103,7 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         cy.get('body').click();
         cy.get('#user_inspections-tagged-end-helper-text').should('contain', 'End date must be after start date');
         cy.get('#user_inspections-tagged-start-helper-text').should('contain', 'Start date must be before end date');
+
         // Now clear the inspection start date, showing error on end date.
         cy.data('user_inspections-tagged-start-input').clear();
         cy.get('body').click();

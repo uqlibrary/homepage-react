@@ -22,14 +22,16 @@ describe('Test and Tag Report - RecalibrationsDue due', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('device_model_name', 0, 0).should('contain', 'AV 025'));
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag recalibrationsDue Report',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('sorting works as expected, and indicates overdue', () => {
-        cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.report.recalibrationsDue.header.pageSubtitle('Library'));

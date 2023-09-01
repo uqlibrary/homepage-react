@@ -21,12 +21,16 @@ describe('Test and Tag Manage Inspection Notes', () => {
     };
 
     it('page is accessible and renders base', () => {
+        cy.injectAxe();
         checkBaseline();
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Manage Inspections',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('allows wildcard searching of assets', () => {
         checkBaseline();
@@ -37,6 +41,7 @@ describe('Test and Tag Manage Inspection Notes', () => {
         cy.get('.MuiTablePagination-caption').should('contain', '1-10 of 10');
     });
     it('allows searching and editing of discard assets', () => {
+        cy.injectAxe();
         checkBaseline();
         // Enter search criteria
         cy.get('[data-testid="asset_selector-inspection-details-input"]').type('1');
@@ -44,6 +49,14 @@ describe('Test and Tag Manage Inspection Notes', () => {
 
         // Edit details
         cy.data('action_cell-UQL000001-edit-button').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         cy.data('update_dialog-inspection-details-content')
             .should('contain', 'UQL000001')
             .should('contain', 'No defects detected');

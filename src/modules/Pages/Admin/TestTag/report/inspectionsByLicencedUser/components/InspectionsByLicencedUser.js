@@ -244,6 +244,7 @@ const InspectionsByLicencedUser = ({
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-start-input`,
                                     'data-testid': `${componentIdLower}-tagged-start-input`,
+                                    'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
                                 format={locale.config.format.dateFormatNoTime}
                                 fullWidth
@@ -274,6 +275,7 @@ const InspectionsByLicencedUser = ({
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-end-input`,
                                     'data-testid': `${componentIdLower}-tagged-end-input`,
+                                    'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
                                 format={locale.config.format.dateFormatNoTime}
                                 fullWidth

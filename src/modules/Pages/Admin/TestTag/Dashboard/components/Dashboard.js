@@ -110,7 +110,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                     primaryHeader
                                     headerProps={{
                                         avatar: (
-                                            <Avatar aria-label="inspections" style={{ backgroundColor: 'white' }}>
+                                            <Avatar aria-hidden="true" style={{ backgroundColor: 'white' }}>
                                                 <InspectionIcon style={{ color: theme.palette.primary.light }} />
                                             </Avatar>
                                         ),
@@ -149,7 +149,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                 primaryHeader
                                 headerProps={{
                                     avatar: (
-                                        <Avatar aria-label="assets" style={{ backgroundColor: 'white' }}>
+                                        <Avatar aria-hidden="true" style={{ backgroundColor: 'white' }}>
                                             <AssetIcon style={{ color: theme.palette.primary.light }} />
                                         </Avatar>
                                     ),
@@ -247,7 +247,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                 primaryHeader
                                 headerProps={{
                                     avatar: (
-                                        <Avatar aria-label="inspection devices" style={{ backgroundColor: 'white' }}>
+                                        <Avatar aria-hidden="true" style={{ backgroundColor: 'white' }}>
                                             <InspectionDeviceIcon style={{ color: theme.palette.primary.light }} />
                                         </Avatar>
                                     ),

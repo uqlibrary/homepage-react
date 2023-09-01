@@ -7,15 +7,14 @@ describe('Test and Tag Dashboard', () => {
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.dashboard.header.pageSubtitle('Library'));
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Manage Assets Form',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y('[data-testid="StandardPage"]', {
+            reportName: 'Test and Tag Manage Assets Form',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
     });
     it('page triggers errors if unable to load onLoad', () => {
         cy.visit('http://localhost:2020/admin/testntag?user=uqpf');
-        cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.dashboard.header.pageSubtitle('Properties and Facilities'));
@@ -24,10 +23,5 @@ describe('Test and Tag Dashboard', () => {
         cy.data('confirmation_alert-error-alert')
             .find('button')
             .click();
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Manage Assets Form',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
     });
 });

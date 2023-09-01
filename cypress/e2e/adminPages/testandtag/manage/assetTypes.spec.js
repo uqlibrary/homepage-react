@@ -25,11 +25,14 @@ describe('Test and Tag Manage Asset Types', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', '[E2E_testing] Name'));
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag Manage Assets Form',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Assets Form',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('Page Pagination functions correctly', () => {
         cy.viewport(1300, 1000);
@@ -49,6 +52,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.get('.MuiTablePagination-caption').should('contain', '1-25 of 60');
     });
     it('Add and Edit Asset type functions correctly', () => {
+        cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
@@ -57,6 +61,14 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', '[E2E_testing] Name'));
         // Adding an asset type
         cy.data('add_toolbar-asset-types-add-button').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Assets Form',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         cy.data('asset_type_name-input').type('Test Asset');
         cy.data('asset_type_class-input').type('Test Class');
         cy.data('asset_type_power_rating-input').type('240V');
@@ -66,6 +78,14 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.get('.MuiAlert-message').should('contain', 'Request successfully completed');
         // Editing an asset type
         cy.data('action_cell-1-edit-button').click();
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Assets Form',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         cy.data('asset_type_name-input').type('Test Asset');
         cy.data('asset_type_class-input').type('Test Class');
         cy.data('asset_type_power_rating-input').type('240V');
@@ -73,6 +93,14 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.data('asset_type_notes-input').type('Notes for asset type');
         cy.data('update_dialog-action-button').click();
         cy.get('.MuiAlert-message').should('contain', 'Request successfully completed');
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Assets Form',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
         // Cancel button - Add.
         cy.data('add_toolbar-asset-types-add-button').click();
         cy.data('update_dialog-cancel-button').click();
@@ -83,6 +111,7 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.get('.MuiAlert-message').should('not.exist');
     });
     it('Delete and Reassign work correctly', () => {
+        cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
@@ -98,6 +127,15 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.data('action_dialogue-asset-types-alert').should(
             'contain',
             locale.pages.manage.assetTypes.actionDialogue.deleteReassignWarningPrompt(76),
+        );
+
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Assets Form',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
         );
         // Fire cancel
         cy.data('action_dialogue-asset-types-cancel-button').click();

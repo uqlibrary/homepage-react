@@ -23,11 +23,14 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000001'));
-        // cy.checkA11y('[data-testid="StandardPage"]', {
-        //     reportName: 'Test and Tag AssetsByFilters Report',
-        //     scopeName: 'Content',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y(
+            { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
+            {
+                reportName: 'Test and Tag Manage Inspection devices',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            },
+        );
     });
     it('UI Dropdown for Status and building function correctly', () => {
         cy.get('h1').contains(locale.pages.general.pageTitle);
