@@ -417,7 +417,7 @@
         ],
         "report-dir": "coverage/cypress",
         "temp-dir": "coverage/temp",
-            "all": true,
+        "all": true,
         "include": [
             "src/modules/**/*.{js,jsx}",
             "src/modules/Index/*.{js,jsx}",
@@ -446,8 +446,7 @@
             "!src/modules/Pages/NotFound/**",
             "!src/modules/Pages/PaymentReceipt/**",
             "!src/modules/SharedComponents/**"
-        ],
-        "all": true
+        ]
     },
     "vendorCopy": [
         {

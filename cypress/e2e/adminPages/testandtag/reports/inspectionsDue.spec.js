@@ -28,6 +28,7 @@ describe('Test and Tag Report - Inspections due', () => {
         cy.data('location_picker-inspections-due-building-input').should('have.attr', 'disabled');
         cy.data('location_picker-inspections-due-floor-input').should('have.attr', 'disabled');
         cy.data('location_picker-inspections-due-room-input').should('have.attr', 'disabled');
+        cy.wait(1000);
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {

@@ -38,6 +38,7 @@ describe('Test and Tag bulk asset update', () => {
     it('Page is accessible and renders base', () => {
         cy.injectAxe();
         checkBaseline();
+        cy.wait(1000);
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {

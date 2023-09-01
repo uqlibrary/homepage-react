@@ -22,6 +22,7 @@ describe('Test and Tag Manage Locations', () => {
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('site_id_displayed', 0, 0).should('contain', '01'));
         cy.waitUntil(() => getFieldValue('site_name', 0, 1).should('contain', 'St Lucia'));
+        cy.wait(1000);
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {

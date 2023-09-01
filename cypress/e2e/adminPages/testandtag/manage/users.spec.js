@@ -21,6 +21,7 @@ describe('Test and Tag Manage Users', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqjsmit'));
+        cy.wait(1000);
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {

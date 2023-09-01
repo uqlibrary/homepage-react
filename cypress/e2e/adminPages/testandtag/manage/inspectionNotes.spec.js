@@ -23,6 +23,7 @@ describe('Test and Tag Manage Inspection Notes', () => {
     it('page is accessible and renders base', () => {
         cy.injectAxe();
         checkBaseline();
+        cy.wait(1000);
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {

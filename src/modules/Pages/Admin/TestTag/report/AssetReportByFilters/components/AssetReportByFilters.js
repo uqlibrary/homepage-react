@@ -225,6 +225,7 @@ const AssetReportByFilters = ({
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-start-input`,
                                     'data-testid': `${componentIdLower}-tagged-start-input`,
+                                    'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
                                 format={locale.config.format.dateFormatNoTime}
                                 fullWidth
@@ -254,6 +255,7 @@ const AssetReportByFilters = ({
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-end-input`,
                                     'data-testid': `${componentIdLower}-tagged-end-input`,
+                                    'aria-labelledby': `${componentIdLower}-tagged-end-label`,
                                 }}
                                 format={locale.config.format.dateFormatNoTime}
                                 fullWidth

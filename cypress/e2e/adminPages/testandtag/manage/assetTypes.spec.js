@@ -25,6 +25,7 @@ describe('Test and Tag Manage Asset Types', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', '[E2E_testing] Name'));
+        cy.wait(1000);
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {

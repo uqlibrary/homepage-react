@@ -23,6 +23,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         forcePageRefresh();
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000001'));
+        cy.wait(1000);
         cy.checkA11y(
             { include: '[data-testid="StandardPage"]', exclude: ['[role=grid]'] },
             {
