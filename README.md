@@ -239,6 +239,8 @@ Then:
 - or to open the Cypress UI use `npm run cypress:open`
 - or to watch the tests `npm run cypress:watch`.
 
+Note: Ensure your .env is configured to use API_URL `https://api.library.uq.edu.au/staging/` when attempting to run cypress tests for full coverage, or whilst using cypress:run or cypress:open, otherwise your cypress tests may fail to run.
+
 Before pushing to a branch make sure to run `npm run test:all`. This runs the unit and cypress tests.
 
 Codeship runs `npm run test:e2e:dashboard` as it spins up a webpack-dev-server and serves the frontend with mock data to run tests for now until we have API integration with docker, but only in `master` branch.

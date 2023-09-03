@@ -1,4 +1,5 @@
-export default [
+export default {
+    data:[
 	{
 		device_id: 1,
 		device_model_name: 'TESTER 620-1',
@@ -23,4 +24,5 @@ export default [
         device_calibrated_by_last_name: 'John Smith',
         device_calibration_due_date: '2022-10-01 00:00:00',
 	},
-];
+],
+};

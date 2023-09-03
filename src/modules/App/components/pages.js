@@ -17,7 +17,20 @@ export const SpotlightsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Ad
 export const SpotlightsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Edit/SpotlightsEditContainer')));
 export const SpotlightsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/View/SpotlightsViewContainer')));
 export const SpotlightsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Clone/SpotlightsCloneContainer')));
-export const TestTag = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/containers/TestTag')));
+
+export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
+export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));
+export const TestTagManageAssetTypes = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/AssetTypes/containers/AssetTypes')));
+export const TestTagManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/Locations/containers/Locations')));
+export const TestTagManageInspectionDevices = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/InspectionDevices/containers/InspectionDevices')));
+export const TestTagManageInspectionDetails = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/InspectionDetails/containers/InspectionDetails')));
+export const TestTagReportRecalibrationsDue = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/recalibrationsDue/containers/RecalibrationsDue')));
+export const TestTagReportInspectionsDue = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/inspectionsDue/containers/InspectionsDue')));
+export const TestTagReportInspectionsByLicencedUser = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/inspectionsByLicencedUser/containers/InspectionsByLicencedUser')));
+export const TestTagAssetReportByFilters = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/report/AssetReportByFilters/containers/AssetReportByFilters')));
+export const TestTagManageBulkAssetUpdate = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/BulkAssetUpdate/containers/BulkAssetUpdate')));
+export const TestTagManageUsers = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/Users/containers/Users')));
+
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));

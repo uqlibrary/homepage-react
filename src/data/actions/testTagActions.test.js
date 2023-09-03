@@ -1,8 +1,8 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
 import {
-    loadConfig,
-    clearConfig,
+    loadInspectionConfig,
+    clearInspectionConfig,
     loadFloors,
     clearFloors,
     loadRooms,
@@ -11,6 +11,8 @@ import {
     clearAssets,
     saveInspection,
     clearSaveInspection,
+    saveAssetTypeAndReload,
+    clearSaveAssetType,
 } from './testTagActions';
 
 jest.mock('@sentry/browser');
@@ -32,26 +34,32 @@ describe('Test & Tag actions', () => {
     // ,,,TEST_TAG_ASSETS_API,TEST_TAG_ASSET_ACTION
     describe('Test & Tag List Config Actions', () => {
         it('handles T&T Config list', async () => {
-            mockApi.onGet(repositories.routes.TEST_TAG_CONFIG_API().apiUrl).reply(200, []);
+            mockApi.onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECT_API().apiUrl).reply(200, []);
 
-            const expectedActions = [actions.TESTTAG_CONFIG_LOADING, actions.TESTTAG_CONFIG_LOADED];
+            const expectedActions = [
+                actions.TESTTAG_INSPECTION_CONFIG_LOADING,
+                actions.TESTTAG_INSPECTION_CONFIG_LOADED,
+            ];
 
-            await mockActionsStore.dispatch(loadConfig());
+            await mockActionsStore.dispatch(loadInspectionConfig());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
         it('dispatches expected actions when  T&T config call fails', async () => {
-            mockApi.onGet(repositories.routes.TEST_TAG_CONFIG_API()).reply(500);
+            mockApi.onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECT_API()).reply(500);
 
-            const expectedActions = [actions.TESTTAG_CONFIG_LOADING, actions.TESTTAG_CONFIG_FAILED];
+            const expectedActions = [
+                actions.TESTTAG_INSPECTION_CONFIG_LOADING,
+                actions.TESTTAG_INSPECTION_CONFIG_FAILED,
+            ];
 
-            await mockActionsStore.dispatch(loadConfig());
+            await mockActionsStore.dispatch(loadInspectionConfig());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
         it('should dispatch clear T&T config action', async () => {
-            const expectedActions = [actions.TESTTAG_CONFIG_CLEAR];
+            const expectedActions = [actions.TESTTAG_INSPECTION_CONFIG_CLEAR];
 
-            await mockActionsStore.dispatch(clearConfig());
+            await mockActionsStore.dispatch(clearInspectionConfig());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });
@@ -152,6 +160,47 @@ describe('Test & Tag actions', () => {
             const expectedActions = [actions.TESTTAG_SAVE_INSPECTION_CLEAR];
 
             await mockActionsStore.dispatch(clearSaveInspection());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+    });
+    describe('Test & Tag Asset Type Actions', () => {
+        it('handles T&T add Asset Type', async () => {
+            mockApi.onPost(repositories.routes.TEST_TAG_ASSETTYPE_ADD().apiUrl).reply(200, { status: 'OK', data: [] });
+            mockApi
+                .onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECT_API().apiUrl)
+                .reply(200, { status: 'OK', data: [] });
+
+            const expectedActions = [actions.TESTTAG_SAVE_ASSET_TYPE_SAVING, actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS];
+
+            await mockActionsStore.dispatch(saveAssetTypeAndReload());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+        it('dispatches expected actions when T&T add Asset Type fails', async () => {
+            mockApi
+                .onPost(repositories.routes.TEST_TAG_ASSETTYPE_ADD().apiUrl)
+                .reply(200, { status: 'ERROR', data: [] });
+
+            const expectedActions = [actions.TESTTAG_SAVE_ASSET_TYPE_SAVING, actions.TESTTAG_SAVE_ASSET_TYPE_FAILED];
+
+            await mockActionsStore.dispatch(saveAssetTypeAndReload());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+        it('dispatches expected actions when T&T reload Asset Type list fails', async () => {
+            mockApi.onPost(repositories.routes.TEST_TAG_ASSETTYPE_ADD().apiUrl).reply(200, { status: 'OK' });
+            mockApi
+                .onGet(repositories.routes.TEST_TAG_ONLOAD_INSPECT_API().apiUrl)
+                .reply(200, { status: 'ERROR', data: [] });
+
+            const expectedActions = [actions.TESTTAG_SAVE_ASSET_TYPE_SAVING, actions.TESTTAG_SAVE_ASSET_TYPE_SUCCESS];
+
+            await mockActionsStore.dispatch(saveAssetTypeAndReload());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('should dispatch clear T&T add Asset Type action', async () => {
+            const expectedActions = [actions.TESTTAG_SAVE_ASSET_TYPE_CLEAR];
+
+            await mockActionsStore.dispatch(clearSaveAssetType());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

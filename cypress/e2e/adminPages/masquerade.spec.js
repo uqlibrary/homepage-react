@@ -31,17 +31,29 @@ context('Masquerade', () => {
         cy.get('body').contains('The requested page is available to authorised users only.');
     });
 
+    // we cant really test the masquerade works, checking we hit auth is really as far as we can go, but its something
     it('readonly users can masquerade', () => {
+        cy.intercept('GET', /auth.library.uq.edu.au/, {
+            statusCode: 200,
+            body: 'user has navigated to auth for readonly',
+        });
+
         cy.visit('/admin/masquerade/?user=uqmasquerade');
         cy.viewport(1300, 1000);
         cy.get('#userName').type('s1111111');
         cy.get('button')
             .contains('Masquerade')
             .click();
-        cy.url().should('include', 'https://auth.library.uq.edu.au/masquerade?user=s1111111');
+        cy.get('body').contains('user has navigated to auth for readonly');
     });
 
+    // we cant really test the masquerade works, checking we hit auth is really as far as we can go, but its something
     it('admin users can masquerade', () => {
+        cy.intercept('GET', /auth.library.uq.edu.au/, {
+            statusCode: 200,
+            body: 'user has navigated to auth for admin',
+        });
+
         cy.visit('/admin/masquerade/?user=uqstaff');
         cy.viewport(1300, 1000);
         cy.get('body').contains('When masquerading');
@@ -49,6 +61,6 @@ context('Masquerade', () => {
         cy.get('button')
             .contains('Masquerade')
             .click();
-        cy.url().should('include', 'https://auth.library.uq.edu.au/masquerade?user=s1111111');
+        cy.get('body').contains('user has navigated to auth for admin');
     });
 });

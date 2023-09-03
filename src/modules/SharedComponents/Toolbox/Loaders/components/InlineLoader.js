@@ -33,7 +33,7 @@ export class InlineLoader extends React.Component {
                     container
                     direction={'row'}
                     spacing={1}
-                    justify="center"
+                    justifyContent="center"
                     alignItems="center"
                     alignContent={'center'}
                 >

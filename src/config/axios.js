@@ -162,7 +162,7 @@ api.interceptors.response.use(
                         : ((error.response || {}).data || {}).message ||
                           locale.global.errorMessages[error.response.status];
                 if (!alertDisplayAllowed(error)) {
-                    // we dont display an error banner for these (the associated panel displays an error)
+                    // we don't display an error banner for these (the associated panel displays an error)
                 } else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {
                     global.mockActionsStore.dispatch(showAppAlert(error.response));
                 } else {
@@ -189,7 +189,15 @@ api.interceptors.response.use(
             }
         }
 
-        reportToSentry(error);
+        const isNonReportable =
+            document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
+            error?.response?.status === 403 || // their login has expired - no action required
+            error?.response?.status === 500 || // api should handle these
+            error?.response?.status === 502; // connection timed out - it happens, FE can't do anything about it
+
+        if (!isNonReportable) {
+            reportToSentry(error);
+        }
 
         if (!!errorMessage) {
             return Promise.reject({ ...errorMessage });

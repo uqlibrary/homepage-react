@@ -3,7 +3,7 @@ import locale from './PaymentRecept.locale';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
-import { pathConfig } from 'config/routes';
+import { pathConfig } from '../../../config/pathConfig';
 import queryString from 'query-string';
 export const PaymentReceipt = () => {
     const querystring = queryString.parse(location.search);

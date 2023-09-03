@@ -48,7 +48,7 @@ export const StandardPage = ({ title, children }) => {
 
     return (
         <div className="layout-card">
-            <Grid justify={'flex-start'} container spacing={0} data-testid="StandardPage" id="StandardPage">
+            <Grid justifyContent={'flex-start'} container spacing={0} data-testid="StandardPage" id="StandardPage">
                 {title && (
                     <Grid item xs className={classes.title}>
                         <Typography
