@@ -40,7 +40,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 
 This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
 
-- make sure to create a .env file based on example.env
+- make sure you have created a .env file based on example.env
 - `nvm use 16.13.2 && npm i -g npm@8 jest webpack-dev-server` - initial setup
 - `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this clears & reinstalls npm packages
 - `npm run start:mock` to use mock data from src/mock
@@ -106,7 +106,7 @@ or
 
 ### Auth
 
-The cookie that holds the UQLID token ('SESSION_COOKIE_NAME') is set in _reusable_ repo, because that is where the login button is.
+The cookie that holds the UQLID token ('SESSION_COOKIE_NAME') is set by the return of the account api.
 
 #### Optimisation
 
@@ -385,11 +385,11 @@ Deployment pipelines are setup for branches: "master", "staging, "production" an
 - Some other branches are deployed on <https://homepage-development.library.uq.edu.au/branchName/>. (Only certain branches are deployed now we are using AWS - [How to create a new CodePipeline](https://docs.google.com/document/d/1uyHOE5eOdPuVkjElNv8xNQJN-A5VU3iV7KOne72UoK8/edit))
 - Note: avoid certain words in your branch name, eg exams - Cloudfront overrides these routes and you won't be able to view the deployment.
   See [Cloudfront list of reserved routes](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-east-1&skipRegion=true#/distributions/E34LPPV7N4XONM/behaviors)
-- Homepage branch reusable-staging is used to test changes to repo reusable-webcomponents that affect Homepage by calling the *staging* branch of reusable. All other branches of homepage display the *production* branch of reusable. Do not merge the Homepage branch `staging_reusable` into any other branch as it has the wrong version of reusable  (the git hooks forbid it, if installed). Instructions:
+- Homepage branch staging is used to test changes to repo reusable-webcomponents that affect Homepage by calling the *staging* branch of reusable. All other branches of homepage display the *production* branch of reusable. Instructions:
 
     * merge your reusable-webcomponents feature branch into reusable-webcomponents staging branch & push and allow to build
-    * if you have homepage changes merge them into homepage feature branch reusable-staging & push and allow to build
-    * load <https://homepage-development.library.uq.edu.au/reusable-staging/#/> (View Source to confirm it is loading the staging reusable file: <https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js">)
+    * if you have homepage changes merge them into homepage feature branch staging & push and allow to build
+    * load <https://homepage-staging.library.uq.edu.au/> (View Source to confirm it is loading the staging reusable file: <https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js">)
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
 to URL/Cloudfront restrictions
