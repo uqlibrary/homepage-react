@@ -10,14 +10,7 @@ import locale from 'locale/global';
 import * as Sentry from '@sentry/browser';
 
 import param from 'can-param';
-import {
-    COMP_AVAIL_API,
-    CURRENT_ACCOUNT_API,
-    LIB_HOURS_API,
-    LOANS_API,
-    PRINTING_API,
-    TRAINING_API,
-} from '../repositories/routes';
+import { COMP_AVAIL_API, LIB_HOURS_API, LOANS_API, PRINTING_API, TRAINING_API } from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -83,15 +76,26 @@ api.interceptors.request.use(request => {
     return request;
 });
 
-const reportToSentry = error => {
-    // the non-logged in user always generates a 403 on the Account call. We dont need to report that to Sentry
-    const isCallToAccountAPI =
-        error?.response?.request?.responseUrl?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`) ||
-        error?.response?.request?.responseURL?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`);
-    if (error?.response?.status === 403 && isCallToAccountAPI) {
+function getUrlRoot(responseUrl) {
+    return responseUrl.startsWith('https://api.library.uq.edu.au/v1/')
+        ? 'https://api.library.uq.edu.au/v1/'
+        : 'https://api.library.uq.edu.au/staging/';
+}
+
+function routeRequiresLogin(error) {
+    const responseURL = error?.response?.request?.responseUrl || error?.response?.request?.responseURL || null;
+    if (!responseURL) {
         return false;
     }
 
+    const urlRoot = getUrlRoot(responseURL);
+    return (
+        responseURL.startsWith(`${urlRoot}/account`) ||
+        responseURL.startsWith(`${urlRoot}learning_resources/reading_list/summary`)
+    );
+}
+
+const reportToSentry = error => {
     let detailedError = '';
     if (error.response) {
         detailedError = `Data: ${JSON.stringify(error.response.data)}; Status: ${
@@ -109,32 +113,33 @@ const reportToSentry = error => {
 };
 
 function alertDisplayAllowed(error) {
-    // these APIs don't put a banner on the page because they are reported or ignored within the panel
-    const apisThatManageTheirOwn500 = [
-        TRAINING_API().apiUrl,
-        COMP_AVAIL_API().apiUrl,
-        LIB_HOURS_API().apiUrl,
-        PRINTING_API().apiUrl,
-        LOANS_API().apiUrl,
-    ];
-    if (
-        !!error.response?.request?.responseUrl &&
-        apisThatManageTheirOwn500.includes(error.response.request.responseUrl)
-    ) {
+    const responseURL = error?.response?.request?.responseURL || error?.response?.request?.responseUrl || null;
+    if (!responseURL) {
         return false;
     }
-    return true;
+
+    const urlRoot = getUrlRoot(responseURL);
+
+    // these APIs don't put a banner on the page because they are reported or ignored within their own panel
+    const handlesErrorUrls =
+        responseURL.startsWith(`${urlRoot}/${TRAINING_API().apiUrl}`) ||
+        responseURL.startsWith(`${urlRoot}/${COMP_AVAIL_API().apiUrl}`) ||
+        responseURL.startsWith(`${urlRoot}/${LIB_HOURS_API().apiUrl}`) ||
+        responseURL.startsWith(`${urlRoot}/${PRINTING_API().apiUrl}`) ||
+        responseURL.startsWith(`${urlRoot}/${LOANS_API().apiUrl}`);
+
+    return !handlesErrorUrls;
 }
 
-function backendhasSanitisedErrorMessages(response) {
-    return response.request?.responseUrl?.startsWith('test-and-tag');
-}
-
-function routeRequiresLogin(error) {
-    if (error?.response?.request?.responseUrl === 'account') {
-        return true;
+function backendHasSanitisedErrorMessages(response) {
+    const responseURL = response?.request?.responseUrl || response?.request?.responseURL || null;
+    if (!responseURL) {
+        return false;
     }
-    return error?.response?.request?.responseUrl?.startsWith('learning_resources/reading_list/summary');
+    const urlRoot = getUrlRoot(responseURL);
+
+    // certain systems have fully sanitised their error messages - these can go through for display on the frontend
+    return !!responseURL && responseURL.startsWith(`${urlRoot}/test-and-tag`);
 }
 
 api.interceptors.response.use(
@@ -146,6 +151,7 @@ api.interceptors.response.use(
     },
     error => {
         let errorMessage = null;
+        console.log('routeRequiresLogin check, error.response=', error.response);
         if (!!error && !!error.config) {
             if ([401, 403].includes(error?.response?.status) && routeRequiresLogin(error)) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
@@ -165,10 +171,10 @@ api.interceptors.response.use(
                 errorMessage =
                     error.response.data?.length > 0
                         ? { message: error.response.data?.join(' ') }
-                        : (backendhasSanitisedErrorMessages(error.response) && error.response.data?.message) ||
+                        : (backendHasSanitisedErrorMessages(error.response) && error.response.data?.message) ||
                           locale.global.errorMessages[error.response.status];
                 if (!alertDisplayAllowed(error)) {
-                    // we dont display an error banner for these (the associated panel displays an error)
+                    // we don't display an error banner for these (the associated panel displays an error)
                 } else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {
                     global.mockActionsStore.dispatch(showAppAlert(error.response));
                 } else {
@@ -178,7 +184,7 @@ api.interceptors.response.use(
                 errorMessage =
                     error.response.data?.length > 0
                         ? { message: error.response.data?.join(' ') }
-                        : (backendhasSanitisedErrorMessages(error.response) && error.response.data?.message) ||
+                        : (backendHasSanitisedErrorMessages(error.response) && error.response.data?.message) ||
                           locale.global.errorMessages[error.response.status];
                 if ([410, 422].includes(error.response.status)) {
                     errorMessage = {
@@ -189,7 +195,17 @@ api.interceptors.response.use(
             }
         }
 
-        reportToSentry(error);
+        const isNonReportable =
+            document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
+            (error?.response?.status === 403 && routeRequiresLogin(error)) || // login expired - no notice required
+            error?.response?.status === 0 || // maybe catch those "the network request was interrupted" we see so much?
+            error?.response?.status === '0' || // don't know what format it comes in
+            error?.response?.status === 500 || // api should handle these
+            error?.response?.status === 502; // connection timed out - it happens, FE can't do anything about it
+
+        if (!isNonReportable) {
+            reportToSentry(error);
+        }
 
         if (!!errorMessage) {
             return Promise.reject({ ...errorMessage });
