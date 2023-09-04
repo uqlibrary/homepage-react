@@ -112,9 +112,6 @@ export const App = ({ account, actions }) => {
                         <askus-button />
                     </span>
                     <span slot="site-utilities">
-                        <div id="mylibrarystub" />
-                    </span>
-                    <span slot="site-utilities">
                         <auth-button />
                     </span>
                 </uq-site-header>
