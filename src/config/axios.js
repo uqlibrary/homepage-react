@@ -78,21 +78,23 @@ api.interceptors.request.use(request => {
 
 function getUrlRoot(responseUrl) {
     return responseUrl.startsWith('https://api.library.uq.edu.au/v1/')
-        ? 'https://api.library.uq.edu.au/v1/'
-        : 'https://api.library.uq.edu.au/staging/';
+        ? 'https://api.library.uq.edu.au/v1'
+        : 'https://api.library.uq.edu.au/staging';
 }
 
 function routeRequiresLogin(error) {
     const responseURL = error?.response?.request?.responseUrl || error?.response?.request?.responseURL || null;
+    console.log('check routeRequiresLogin responseURL=', responseURL);
     if (!responseURL) {
         return false;
     }
 
     const urlRoot = getUrlRoot(responseURL);
-    return (
-        responseURL.startsWith(`${urlRoot}/account`) ||
-        responseURL.startsWith(`${urlRoot}learning_resources/reading_list/summary`)
-    );
+    const accountUrl = `${urlRoot}/account`;
+    const LRurlPrefix = `${urlRoot}/learning_resources/reading_list/summary`;
+    const b = responseURL.startsWith(accountUrl) || responseURL.startsWith(LRurlPrefix);
+    console.log('check routeRequiresLogin accountUrl=', accountUrl, '; LRurlPrefix=', LRurlPrefix);
+    return b;
 }
 
 const reportToSentry = error => {
@@ -154,6 +156,7 @@ api.interceptors.response.use(
         console.log('routeRequiresLogin check, error.response=', error.response);
         if (!!error && !!error.config) {
             if ([401, 403].includes(error?.response?.status) && routeRequiresLogin(error)) {
+                console.log('its a 401/403');
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
@@ -195,13 +198,25 @@ api.interceptors.response.use(
             }
         }
 
+        const localhostcheck = document.location.hostname === 'localhost';
+        console.log('localhostcheck=', localhostcheck);
+        const a403check = error?.response?.status === 403 && routeRequiresLogin(error);
+        console.log('a403check=', a403check);
+        const zeronumerichceck = error?.response?.status === 0;
+        console.log('zeronumerichceck=', zeronumerichceck);
+        const zerocharcheck = error?.response?.status === '0';
+        console.log('zerocharcheck=', zerocharcheck);
+        const a500check = error?.response?.status === 500;
+        console.log('a500check=', a500check);
+        const a502check = error?.response?.status === 502;
+        console.log('a502check=', a502check);
         const isNonReportable =
-            document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
-            (error?.response?.status === 403 && routeRequiresLogin(error)) || // login expired - no notice required
-            error?.response?.status === 0 || // maybe catch those "the network request was interrupted" we see so much?
-            error?.response?.status === '0' || // don't know what format it comes in
-            error?.response?.status === 500 || // api should handle these
-            error?.response?.status === 502; // connection timed out - it happens, FE can't do anything about it
+            localhostcheck || // testing on AWS sometimes fires these
+            a403check || // login expired - no notice required
+            zeronumerichceck || // maybe catch those "the network request was interrupted" we see so much?
+            zerocharcheck || // don't know what format it comes in
+            a500check || // api should handle these
+            a502check; // connection timed out - it happens, FE can't do anything about it
 
         if (!isNonReportable) {
             reportToSentry(error);
