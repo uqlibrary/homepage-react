@@ -93,7 +93,7 @@ function routeRequiresLogin(error) {
     const accountUrl = `${urlRoot}/account`;
     const LRurlPrefix = `${urlRoot}/learning_resources/reading_list/summary`;
     const b = responseURL.startsWith(accountUrl) || responseURL.startsWith(LRurlPrefix);
-    console.log('check routeRequiresLogin accountUrl=', accountUrl, '; LRurlPrefix=', LRurlPrefix);
+    console.log('check routeRequiresLogin result=', b, '; accountUrl=', accountUrl, '; LRurlPrefix=', LRurlPrefix);
     return b;
 }
 
