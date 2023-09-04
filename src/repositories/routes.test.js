@@ -182,4 +182,13 @@ describe('Backend routes method', () => {
         reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
         expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine');
     });
+    describe('coverage', () => {
+        it('should return valid path for routes', () => {
+            expect(routes.TEST_TAG_SAVE_ASSETTYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
+            expect(routes.TEST_TAG_DELETE_ASSET_TYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
+            expect(routes.TEST_TAG_UPDATE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
+            expect(routes.TEST_TAG_ADD_USER_API()).toEqual({ apiUrl: 'test-and-tag/user' });
+            expect(routes.TEST_TAG_DELETE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
+        });
+    });
 });
