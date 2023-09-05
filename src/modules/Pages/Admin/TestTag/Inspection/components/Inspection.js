@@ -235,8 +235,6 @@ const Inspection = ({
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues, location);
 
-        console.log('assignCurrentAsset', { asset, location, formValues, newFormValues });
-
         resetFormValues(newFormValues);
         setSelectedAsset(asset);
     };
@@ -276,7 +274,6 @@ const Inspection = ({
                 { lastInspection: selectedAsset?.last_inspection, dateFormat: inspectionLocale.config.dateFormat } ??
                     /* istanbul ignore next */ {},
             );
-            console.log(formValues, transformedData);
             actions.saveInspection(transformedData);
         }
     };

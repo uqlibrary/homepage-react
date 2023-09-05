@@ -64,7 +64,6 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
-        console.log('edit clicked', row);
         actionDispatch({
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
@@ -75,7 +74,6 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
     const onRowEdit = React.useCallback(
         data => {
             setDialogueBusy(true);
-            console.log(data);
             const id = data.asset_id;
             const wrappedRequest = transformUpdateRequest(data);
             actions

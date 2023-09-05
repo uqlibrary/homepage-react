@@ -164,7 +164,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setConfirmDialogueBusy(true);
         const clonedData = structuredClone(formValues);
         const request = transformRequest(clonedData);
-        console.log('handleConfirmDialogAction', { clonedData, request });
         actions
             .bulkAssetUpdate(request)
             .then(() => {
@@ -185,7 +184,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setLocation(location);
         // and we only want to update when a room has been selected, as
         // that's all we're allowing the user to bulk change
-        console.log(location.room, formValues.location);
         if (location.room !== -1) {
             handleChange('location')(location);
         } else if (formValues.location !== undefined) {
