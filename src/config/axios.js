@@ -153,7 +153,8 @@ api.interceptors.response.use(
     },
     error => {
         let errorMessage = null;
-        console.log('routeRequiresLogin check, error.response=', error.response);
+        console.log('got an error - , error.response=', error.response);
+        console.log('error?.response?.status [1] =', error?.response?.status);
         if (!!error && !!error.config) {
             if ([401, 403].includes(error?.response?.status) && routeRequiresLogin(error)) {
                 console.log('its a 401/403');
@@ -198,9 +199,10 @@ api.interceptors.response.use(
             }
         }
 
+        console.log('error?.response?.status [2] =', error?.response?.status);
         const localhostcheck = document.location.hostname === 'localhost';
         console.log('localhostcheck=', localhostcheck);
-        const a403check = error?.response?.status === 403 && routeRequiresLogin(error);
+        const a403check = [401, 403].includes(error?.response?.status) && routeRequiresLogin(error);
         console.log('a403check=', a403check);
         const zeronumerichceck = error?.response?.status === 0;
         console.log('zeronumerichceck=', zeronumerichceck);
