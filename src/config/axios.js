@@ -217,6 +217,7 @@ api.interceptors.response.use(
             zerocharcheck || // don't know what format it comes in
             a500check || // api should handle these
             a502check; // connection timed out - it happens, FE can't do anything about it
+        console.log('isNonReportable=', isNonReportable);
 
         if (!isNonReportable) {
             reportToSentry(error);
