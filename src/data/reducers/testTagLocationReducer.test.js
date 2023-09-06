@@ -18,9 +18,11 @@ describe('testTagLocationReducer', () => {
             expect(test).toEqual({
                 ...emptyState,
                 floorList: null,
+                floorListLoaded: false,
                 floorListLoading: true,
-                floorListError: false,
+                floorListError: null,
                 roomList: null,
+                roomListLoaded: false,
                 roomListLoading: false,
                 roomListError: null,
             });
@@ -36,9 +38,11 @@ describe('testTagLocationReducer', () => {
 
                 floorList: mockTestTagList,
                 floorListLoading: false,
-                floorListError: false,
+                floorListLoaded: true,
+                floorListError: null,
                 roomList: null,
                 roomListLoading: false,
+                roomListLoaded: false,
                 roomListError: null,
             });
         });
@@ -52,9 +56,11 @@ describe('testTagLocationReducer', () => {
                 ...emptyState,
                 floorList: null,
                 floorListLoading: false,
+                floorListLoaded: false,
                 floorListError: 'failed!',
                 roomList: null,
                 roomListLoading: false,
+                roomListLoaded: false,
                 roomListError: null,
             });
         });
@@ -74,10 +80,12 @@ describe('testTagLocationReducer', () => {
                 ...emptyState,
                 floorList: null,
                 floorListLoading: false,
+                floorListLoaded: false,
                 floorListError: null,
                 roomList: null,
                 roomListLoading: true,
-                roomListError: false,
+                roomListLoaded: false,
+                roomListError: null,
             });
         });
 
@@ -91,10 +99,12 @@ describe('testTagLocationReducer', () => {
 
                 floorList: null,
                 floorListLoading: false,
+                floorListLoaded: false,
                 floorListError: null,
                 roomList: mockTestTagList,
                 roomListLoading: false,
-                roomListError: false,
+                roomListLoaded: true,
+                roomListError: null,
             });
         });
 
@@ -107,9 +117,11 @@ describe('testTagLocationReducer', () => {
                 ...emptyState,
                 floorList: null,
                 floorListLoading: false,
+                floorListLoaded: false,
                 floorListError: null,
                 roomList: null,
                 roomListLoading: false,
+                roomListLoaded: false,
                 roomListError: 'failed!',
             });
         });
