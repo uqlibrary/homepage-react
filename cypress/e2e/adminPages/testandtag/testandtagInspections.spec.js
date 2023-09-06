@@ -87,7 +87,6 @@ describe('Test and Tag Admin Inspection page', () => {
             it('should allow entry of new date', () => {
                 const invalidDate = today.add(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
                 const validDate = today.subtract(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
-                console.log(invalidDate, validDate);
                 cy.data('event_panel-event-date-button').click();
                 cy.get('[role="dialog"]').should('exist');
                 cy.get('button')

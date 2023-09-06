@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
 import { orange, red } from '@mui/material/colors';
 
 const palette = {
@@ -51,83 +51,85 @@ const palette = {
     },
 };
 
-export const mui1theme = createTheme({
-    palette: palette,
-    status: {
-        danger: red[500],
-        warning: orange[500],
-    },
-    typography: {
-        fontWeightLight: 200,
-        fontWeightRegular: 300,
-        fontWeightMedium: 400,
-        useNextVariants: true,
-        suppressDeprecationWarnings: true,
-        caption: {
-            color: '#000',
+export const mui1theme = createTheme(
+    adaptV4Theme({
+        palette: palette,
+        status: {
+            danger: red[500],
+            warning: orange[500],
         },
-    },
-    overrides: {
-        MuiFormLabel: {
-            styleOverrides: {
-                root: {
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    width: '100%',
-                    textOverflow: 'ellipsis',
-                },
+        typography: {
+            fontWeightLight: 200,
+            fontWeightRegular: 300,
+            fontWeightMedium: 400,
+            useNextVariants: true,
+            suppressDeprecationWarnings: true,
+            caption: {
+                color: '#000',
             },
         },
-        MuiMenuItem: {
-            styleOverrides: {
-                root: {
-                    '&.Mui-selected': {
-                        backgroundColor: '#4085C6 !important',
-                        color: '#FFFFFF',
+        overrides: {
+            MuiFormLabel: {
+                styleOverrides: {
+                    root: {
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        width: '100%',
+                        textOverflow: 'ellipsis',
+                    },
+                },
+            },
+            MuiMenuItem: {
+                styleOverrides: {
+                    root: {
+                        '&.Mui-selected': {
+                            backgroundColor: '#4085C6 !important',
+                            color: '#FFFFFF',
+                        },
+                    },
+                },
+            },
+            MUIDataTable: {
+                styleOverrides: {
+                    paper: {
+                        boxShadow: 'none',
+                        padding: 0,
+                        margin: 0,
+                    },
+                },
+            },
+            MuiButton: {
+                styleOverrides: {
+                    containedSecondary: {
+                        '&:hover': {
+                            backgroundColor: '#aca7a3',
+                            borderColor: '#aca7a3',
+                            color: '#000',
+                        },
                     },
                 },
             },
         },
-        MUIDataTable: {
-            styleOverrides: {
-                paper: {
-                    boxShadow: 'none',
-                    padding: 0,
-                    margin: 0,
-                },
-            },
+        graphs: {
+            color1: '#d72865',
+            color2: '#1e7d94',
+            color3: '#49075E',
+            color4: '#468fcc',
+            color5: '#f28620',
+            color6: '#333333',
+            color7: '#595959',
         },
-        MuiButton: {
-            styleOverrides: {
-                containedSecondary: {
-                    '&:hover': {
-                        backgroundColor: '#aca7a3',
-                        borderColor: '#aca7a3',
-                        color: '#000',
-                    },
-                },
-            },
-        },
-    },
-    graphs: {
-        color1: '#d72865',
-        color2: '#1e7d94',
-        color3: '#49075E',
-        color4: '#468fcc',
-        color5: '#f28620',
-        color6: '#333333',
-        color7: '#595959',
-    },
-    // Converts a color hex code to RGBA when referenced from a component
-    hexToRGBA: (hex, alpha) => {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
+        // Converts a color hex code to RGBA when referenced from a component
+        hexToRGBA: (hex, alpha) => {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
 
-        if (alpha) {
-            return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
-        } else {
-            return 'rgb(' + r + ', ' + g + ', ' + b + ')';
-        }
-    },
-});
+            if (alpha) {
+                return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+            } else {
+                return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+            }
+        },
+    }),
+);
