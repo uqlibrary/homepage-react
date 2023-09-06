@@ -1,7 +1,7 @@
 import React from 'react';
 import TestTagHeader from './TestTagHeader';
 import { rtlRender, renderWithRouter } from 'test-utils';
-import InspectionIcon from '@material-ui/icons/Search';
+import InspectionIcon from '@mui/icons-material/Search';
 /*
 
     departmentText: PropTypes.string,

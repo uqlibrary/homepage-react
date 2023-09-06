@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import { useTitle } from 'hooks';
 
-import { Grid, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import Typography from '@material-ui/core/Typography';
+import { Grid, TextField } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';

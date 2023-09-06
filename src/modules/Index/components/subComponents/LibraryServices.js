@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import { getUserServices } from 'helpers/access';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
 const LibraryServices = ({ account }) => {
     return (

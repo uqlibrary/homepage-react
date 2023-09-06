@@ -3,12 +3,12 @@
 import React from 'react';
 
 import moment from 'moment';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 import { isEmptyStr } from '../../../helpers/helpers';
 import locale from '../../../testTag.locale';
-import { WarningOutlined } from '@material-ui/icons';
-import { Tooltip } from '@material-ui/core';
+import { WarningOutlined } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 const dateFormat = locale.config.format.dateFormatNoTime;
 
 // Note: sortable values are set wholesale in the container components of

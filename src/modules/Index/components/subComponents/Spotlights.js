@@ -11,12 +11,12 @@ import {
     Dot,
     Image,
 } from 'pure-react-carousel';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import Fade from '@material-ui/core/Fade';
-import { makeStyles } from '@material-ui/styles';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+// import Fade from '@mui/material/Fade';
+import { makeStyles } from '@mui/styles';
 
 import ContentLoader from 'react-content-loader';
 const MyLoader = props => (
@@ -138,91 +138,91 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
             role="region"
             aria-label="UQ Spotlights carousel"
         >
-            <Fade in={totalSlides > 0} timeout={1000}>
-                <CarouselProvider
-                    visibleSlides={1}
-                    totalSlides={totalSlides}
-                    step={1}
-                    naturalSlideWidth={1967}
-                    naturalSlideHeight={721}
-                    isPlaying={!account}
-                    interval={10000}
-                    style={{ height: '100%' }}
-                    id="spotlights-carousel"
-                    data-testid="spotlights-carousel"
-                >
-                    {totalSlides > 1 && (
-                        <div className={`${classes.backButtonWrapper}`}>
-                            <ButtonBack
-                                aria-label="Previous slide"
-                                id="spotlights-previous-button"
-                                data-testid="spotlights-previous-button"
-                                data-analyticsid="spotlights-previous-button"
-                            >
-                                <ChevronLeftIcon />
-                            </ButtonBack>
-                        </div>
-                    )}
-                    {totalSlides > 1 && (
-                        <div className={`${classes.nextButtonWrapper}`}>
-                            <ButtonNext
-                                aria-label="Next slide"
-                                id="spotlights-next-button"
-                                data-testid="spotlights-next-button"
-                                data-analyticsid="spotlights-next-button"
-                            >
-                                <ChevronRightIcon />
-                            </ButtonNext>
-                        </div>
-                    )}
-                    {totalSlides > 1 && (
-                        <div className={`${classes.playButtonWrapper}`}>
-                            <ButtonPlay
-                                childrenPlaying={<PauseIcon />}
-                                childrenPaused={<PlayArrowIcon />}
-                                aria-label="UQ Spotlights Play/Pause slides"
-                                id="spotlights-play-pause-button"
-                                data-testid="spotlights-play-pause-button"
-                                data-analyticsid="spotlights-play-pause-button"
-                            />
-                        </div>
-                    )}
-                    {totalSlides > 1 && (
-                        <div className={`${classes.chipStyles}`}>
-                            <DotGroup showAsSelectedForCurrentSlideOnly renderDots={renderDots} />
-                        </div>
-                    )}
-                    <div
-                        style={{
-                            zIndex: 2,
-                        }}
-                    >
-                        <Slider trayTag="div" aria-label="UQ Spotlights" aria-live="off">
-                            {slides.map((item, index) => (
-                                <Slide
-                                    tag="div"
-                                    index={index}
-                                    key={index}
-                                    id={`spotlights-slide-${index}`}
-                                    data-testid={`spotlights-slide-${index}`}
-                                    data-analyticsid={`spotlights-link-${index}`}
-                                    onClick={() => (window.location = item.link)}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    <Image
-                                        src={item.src}
-                                        alt={item.alt}
-                                        style={{ width: '100%' }}
-                                        id={`spotlights-image-${index}`}
-                                        data-testid={`spotlights-image-${index}`}
-                                        data-analyticsid={`spotlights-image-${index}`}
-                                    />
-                                </Slide>
-                            ))}
-                        </Slider>
+            {/* <Fade in={totalSlides > 0} timeout={1000}> */}
+            <CarouselProvider
+                visibleSlides={1}
+                totalSlides={totalSlides}
+                step={1}
+                naturalSlideWidth={1967}
+                naturalSlideHeight={721}
+                isPlaying={!account}
+                interval={10000}
+                style={{ height: '100%' }}
+                id="spotlights-carousel"
+                data-testid="spotlights-carousel"
+            >
+                {totalSlides > 1 && (
+                    <div className={`${classes.backButtonWrapper}`}>
+                        <ButtonBack
+                            aria-label="Previous slide"
+                            id="spotlights-previous-button"
+                            data-testid="spotlights-previous-button"
+                            data-analyticsid="spotlights-previous-button"
+                        >
+                            <ChevronLeftIcon />
+                        </ButtonBack>
                     </div>
-                </CarouselProvider>
-            </Fade>
+                )}
+                {totalSlides > 1 && (
+                    <div className={`${classes.nextButtonWrapper}`}>
+                        <ButtonNext
+                            aria-label="Next slide"
+                            id="spotlights-next-button"
+                            data-testid="spotlights-next-button"
+                            data-analyticsid="spotlights-next-button"
+                        >
+                            <ChevronRightIcon />
+                        </ButtonNext>
+                    </div>
+                )}
+                {totalSlides > 1 && (
+                    <div className={`${classes.playButtonWrapper}`}>
+                        <ButtonPlay
+                            childrenPlaying={<PauseIcon />}
+                            childrenPaused={<PlayArrowIcon />}
+                            aria-label="UQ Spotlights Play/Pause slides"
+                            id="spotlights-play-pause-button"
+                            data-testid="spotlights-play-pause-button"
+                            data-analyticsid="spotlights-play-pause-button"
+                        />
+                    </div>
+                )}
+                {totalSlides > 1 && (
+                    <div className={`${classes.chipStyles}`}>
+                        <DotGroup showAsSelectedForCurrentSlideOnly renderDots={renderDots} />
+                    </div>
+                )}
+                <div
+                    style={{
+                        zIndex: 2,
+                    }}
+                >
+                    <Slider trayTag="div" aria-label="UQ Spotlights" aria-live="off">
+                        {slides.map((item, index) => (
+                            <Slide
+                                tag="div"
+                                index={index}
+                                key={index}
+                                id={`spotlights-slide-${index}`}
+                                data-testid={`spotlights-slide-${index}`}
+                                data-analyticsid={`spotlights-link-${index}`}
+                                onClick={() => (window.location = item.link)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <Image
+                                    src={item.src}
+                                    alt={item.alt}
+                                    style={{ width: '100%' }}
+                                    id={`spotlights-image-${index}`}
+                                    data-testid={`spotlights-image-${index}`}
+                                    data-analyticsid={`spotlights-image-${index}`}
+                                />
+                            </Slide>
+                        ))}
+                    </Slider>
+                </div>
+            </CarouselProvider>
+            {/* </Fade> */}
         </div>
     );
 };

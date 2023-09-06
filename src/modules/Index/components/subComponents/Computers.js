@@ -1,21 +1,21 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { useCookies } from 'react-cookie';
 import matchSorter from 'match-sorter';
-import RoomIcon from '@material-ui/icons/Room';
-import Fade from '@material-ui/core/Fade';
-import Badge from '@material-ui/core/Badge';
-import CheckIcon from '@material-ui/icons/Check';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
-import Dialog from '@material-ui/core/Dialog';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import RoomIcon from '@mui/icons-material/Room';
+import Fade from '@mui/material/Fade';
+import Badge from '@mui/material/Badge';
+import CheckIcon from '@mui/icons-material/Check';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import Dialog from '@mui/material/Dialog';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import { computersLocale } from './Computers.locale';
 import ContentLoader from 'react-content-loader';
 
@@ -124,7 +124,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         overflowY: 'auto',
         overflowX: 'hidden',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             overflowX: 'hidden',
             overflowY: 'hidden',
         },
@@ -138,7 +138,7 @@ const useStyles = makeStyles(theme => ({
         height: 'auto',
     },
     componentHeight: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             height: '100%',
         },
         [theme.breakpoints.up('md')]: {
@@ -304,6 +304,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                 onClick={() => closeMap()}
                                 aria-label="Click to close map"
                                 style={{ color: 'white', marginTop: -16 }}
+                                size="large"
                             >
                                 <CloseIcon fontSize="small" />
                             </IconButton>
@@ -343,7 +344,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
             primaryHeader
             standardCardId="standard-card-computers"
             title={
-                <Grid container spacing={0} justify="center" alignItems="center">
+                <Grid container spacing={0} justifyContent="center" alignItems="center">
                     <Grid item xs={11} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {computersLocale.title}
                     </Grid>
@@ -398,7 +399,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                 data-testid={`computer-row-${index}`}
                                                 spacing={1}
                                                 className={classes.row}
-                                                justify="center"
+                                                justifyContent="center"
                                                 alignItems="center"
                                             >
                                                 <Grid item xs style={{ paddingLeft: 16 }}>
@@ -446,7 +447,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                 container
                                                                 spacing={1}
                                                                 className={classes.row}
-                                                                justify="center"
+                                                                justifyContent="center"
                                                                 alignItems="center"
                                                             >
                                                                 <Grid item xs style={{ paddingLeft: 32 }}>

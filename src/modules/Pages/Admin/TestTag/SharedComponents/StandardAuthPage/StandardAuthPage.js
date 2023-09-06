@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import { AUTH_URL_LOGIN } from 'config';
 
 import localeGeneral from '../../testTag.locale';

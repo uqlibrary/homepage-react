@@ -1,25 +1,25 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import Button from '@material-ui/core/Button';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import LinkIcon from '@material-ui/icons/Link';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import Badge from '@material-ui/core/Badge';
-import PrintIcon from '@material-ui/icons/Print';
+import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import Button from '@mui/material/Button';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import LinkIcon from '@mui/icons-material/Link';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import Badge from '@mui/material/Badge';
+import PrintIcon from '@mui/icons-material/Print';
 import { Location } from 'modules/SharedComponents/Location';
 import { ppLocale } from './PersonalisedPanel.locale';
 import { isEspaceAuthor, canSeeLoans, canSeePrintBalance } from 'helpers/access';
-import Collapse from '@material-ui/core/Collapse';
-import Fade from '@material-ui/core/Fade';
+import Collapse from '@mui/material/Collapse';
+import Fade from '@mui/material/Fade';
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -27,13 +27,13 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             borderLeft: 'none',
             paddingLeft: 0,
         },
     },
     locationWrapper: {
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('lg')]: {
             marginLeft: -6,
         },
     },
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
         overflowY: 'auto',
         overflowX: 'hidden',
         paddingTop: 12,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             overflowX: 'hidden',
             overflowY: 'hidden',
             paddingLeft: 0,

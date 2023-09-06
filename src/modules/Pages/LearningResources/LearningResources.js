@@ -15,11 +15,11 @@ import { TabPanel } from './shared/TabPanel';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-import AppBar from '@material-ui/core/AppBar';
-import Grid from '@material-ui/core/Grid';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import { makeStyles } from '@material-ui/styles';
+import AppBar from '@mui/material/AppBar';
+import Grid from '@mui/material/Grid';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { makeStyles } from '@mui/styles';
 
 // lecturers are now maintaining their own courses (it used to be the Library learning Resource team)
 // the Talis screen is just a text field, in which they are supposed to put the course ID

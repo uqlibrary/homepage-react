@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'throttle-debounce';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 const rootId = 'debounced_text_field';
 const DEBOUNCE_INTERVAL = 250;

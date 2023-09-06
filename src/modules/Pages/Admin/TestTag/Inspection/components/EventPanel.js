@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import Collapse from '@material-ui/core/Collapse';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import clsx from 'clsx';
 
 import locale from '../../testTag.locale';
@@ -75,7 +75,7 @@ const EventPanel = ({
                     onClick={() => setEventExpanded(!eventExpanded)}
                     id={`${componentIdLower}-expand-button`}
                     data-testid={`${componentIdLower}-expand-button`}
-                >
+                    size="large">
                     <ExpandMoreIcon />
                 </IconButton>
             }

@@ -3,12 +3,12 @@ import { PropTypes } from 'prop-types';
 
 import { isRepeatingString, unescapeString } from 'helpers/general';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/styles';
-import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import { makeStyles } from '@mui/styles';
+import TextField from '@mui/material/TextField';
 import { throttle } from 'throttle-debounce';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';

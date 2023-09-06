@@ -1,20 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp';
-import RemoveCircleSharpIcon from '@material-ui/icons/RemoveCircle';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import { makeStyles } from '@material-ui/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
+import RemoveCircleSharpIcon from '@mui/icons-material/RemoveCircle';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import { makeStyles } from '@mui/styles';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
@@ -37,7 +37,7 @@ const useStyles = makeStyles(
     theme => ({
         checkboxes: {
             // on mobile layouts reverse the order of the checkboxes so the 'add link' appears with the link text fields
-            [theme.breakpoints.down('sm')]: {
+            [theme.breakpoints.down('md')]: {
                 display: 'flex',
                 flexDirection: 'column-reverse',
             },
@@ -600,7 +600,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             title={locale.form.tooltips.addAnotherDateSet}
                                             style={{ minWidth: 60 }}
                                             aria-label="Add a date set"
-                                        >
+                                            size="large">
                                             <AddCircleSharpIcon />
                                         </IconButton>
                                     ) : (
@@ -614,7 +614,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             onClick={() => removeDateRow(index)}
                                             title={locale.form.tooltips.removeDateSet}
                                             aria-label="Remove this date set"
-                                        >
+                                            size="large">
                                             <RemoveCircleSharpIcon />
                                         </IconButton>
                                     )}

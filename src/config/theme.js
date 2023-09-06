@@ -1,58 +1,58 @@
-import orange from '@material-ui/core/colors/orange';
-import red from '@material-ui/core/colors/red';
-import createTheme from '@material-ui/core/styles/createTheme';
-import createPalette from '@material-ui/core/styles/createPalette';
+import { createTheme } from '@mui/material/styles';
+import { orange, red } from '@mui/material/colors';
 
-export const mui1theme = createTheme({
-    palette: createPalette({
-        primary: {
-            light: '#51247A', // uqpurple
-            main: '#2377CB', // uqblue
-            dark: '#195794',
-            gradient: {
-                horizontal: {
-                    background: 'linear-gradient(to right, rgb(81,36,122) 55%,rgb(150,42,139) 100%)',
-                    filter:
-                        'progid:DXImageTransform.Microsoft.gradient( startColorstr="#51247a", ' +
-                        'endColorstr="#962a8b",GradientType=1 )',
-                },
-                diagonal: {
-                    background: 'linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)',
-                    filter:
-                        'progid:DXImageTransform.Microsoft.gradient( startColorstr="#51247a", ' +
-                        'endColorstr="#962a8b",GradientType=1 )',
-                },
+const palette = {
+    primary: {
+        light: '#51247A', // uqpurple
+        main: '#2377CB', // uqblue
+        dark: '#195794',
+        gradient: {
+            horizontal: {
+                background: 'linear-gradient(to right, rgb(81,36,122) 55%,rgb(150,42,139) 100%)',
+                filter:
+                    'progid:DXImageTransform.Microsoft.gradient( startColorstr="#51247a", ' +
+                    'endColorstr="#962a8b",GradientType=1 )',
+            },
+            diagonal: {
+                background: 'linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)',
+                filter:
+                    'progid:DXImageTransform.Microsoft.gradient( startColorstr="#51247a", ' +
+                    'endColorstr="#962a8b",GradientType=1 )',
             },
         },
-        secondary: {
-            light: '#595959',
-            main: '#f7f6f5', // design system light grey
-            dark: '#333333',
-        },
-        accent: {
-            light: '#962A8B',
-            main: '#3881cb',
-            dark: '#3b1a59',
-        },
-        white: {
-            main: '#FFFFFF',
-        },
-        warning: {
-            light: '#fbb800',
-            main: '#bf5000',
-            dark: '#542400',
-        },
-        success: {
-            light: '#00a700',
-            main: '#007200',
-            dark: '#005000',
-        },
-        error: {
-            light: '#ff0000',
-            main: '#951126',
-            dark: '#790000',
-        },
-    }),
+    },
+    secondary: {
+        light: '#595959',
+        main: '#f7f6f5', // design system light grey
+        dark: '#333333',
+    },
+    accent: {
+        light: '#962A8B',
+        main: '#3881cb',
+        dark: '#3b1a59',
+    },
+    white: {
+        main: '#FFFFFF',
+    },
+    warning: {
+        light: '#fbb800',
+        main: '#bf5000',
+        dark: '#542400',
+    },
+    success: {
+        light: '#00a700',
+        main: '#007200',
+        dark: '#005000',
+    },
+    error: {
+        light: '#ff0000',
+        main: '#951126',
+        dark: '#790000',
+    },
+};
+
+export const mui1theme = createTheme({
+    palette: palette,
     status: {
         danger: red[500],
         warning: orange[500],
@@ -69,34 +69,42 @@ export const mui1theme = createTheme({
     },
     overrides: {
         MuiFormLabel: {
-            root: {
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                width: '100%',
-                textOverflow: 'ellipsis',
+            styleOverrides: {
+                root: {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    width: '100%',
+                    textOverflow: 'ellipsis',
+                },
             },
         },
         MuiMenuItem: {
-            root: {
-                '&$selected': {
-                    backgroundColor: '#4085C6 !important',
-                    color: '#FFFFFF',
+            styleOverrides: {
+                root: {
+                    '&.Mui-selected': {
+                        backgroundColor: '#4085C6 !important',
+                        color: '#FFFFFF',
+                    },
                 },
             },
         },
         MUIDataTable: {
-            paper: {
-                boxShadow: 'none',
-                padding: 0,
-                margin: 0,
+            styleOverrides: {
+                paper: {
+                    boxShadow: 'none',
+                    padding: 0,
+                    margin: 0,
+                },
             },
         },
         MuiButton: {
-            containedSecondary: {
-                '&:hover': {
-                    backgroundColor: '#aca7a3',
-                    borderColor: '#aca7a3',
-                    color: '#000',
+            styleOverrides: {
+                containedSecondary: {
+                    '&:hover': {
+                        backgroundColor: '#aca7a3',
+                        borderColor: '#aca7a3',
+                        color: '#000',
+                    },
                 },
             },
         },

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';

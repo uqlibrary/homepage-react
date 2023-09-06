@@ -3,18 +3,18 @@ import { PropTypes } from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import moment from 'moment-timezone';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Fade from '@material-ui/core/Fade';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import CloseIcon from '@material-ui/icons/Close';
-import EventIcon from '@material-ui/icons/Event';
-import EventAvailableIcon from '@material-ui/icons/EventAvailable';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Fade from '@mui/material/Fade';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import CloseIcon from '@mui/icons-material/Close';
+import EventIcon from '@mui/icons-material/Event';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import { trainingLocale } from './Training.locale';
 
@@ -92,7 +92,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         overflowY: 'auto',
         overflowX: 'hidden',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             overflowX: 'hidden',
             overflowY: 'hidden',
         },
@@ -106,7 +106,7 @@ const useStyles = makeStyles(theme => ({
         height: 'auto',
     },
     componentHeight: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             height: '100%',
         },
         [theme.breakpoints.up('md')]: {
@@ -309,7 +309,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 aria-label={trainingLocale.closeEvent}
                                                 id="training-event-detail-close-button"
                                                 data-testid="training-event-detail-close-button"
-                                            >
+                                                size="large">
                                                 <CloseIcon fontSize="small" className={classes.detailIcon} />
                                             </IconButton>
                                         </Grid>

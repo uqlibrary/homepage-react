@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 
-import DocumentIcon from '@material-ui/icons/Description';
-import CourtHouseIcon from '@material-ui/icons/AccountBalance';
+import DocumentIcon from '@mui/icons-material/Description';
+import CourtHouseIcon from '@mui/icons-material/AccountBalance';
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
 export default {

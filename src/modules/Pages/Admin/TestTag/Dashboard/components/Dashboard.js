@@ -1,21 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
-import Skeleton from '@material-ui/lab/Skeleton';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import Skeleton from '@mui/material/Skeleton';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import clsx from 'clsx';
 
-import Box from '@material-ui/core/Box';
-import Avatar from '@material-ui/core/Avatar';
-import InspectionIcon from '@material-ui/icons/Search';
-import InspectionDeviceIcon from '@material-ui/icons/Build';
-import AssetIcon from '@material-ui/icons/Power';
+import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
+import InspectionIcon from '@mui/icons-material/Search';
+import InspectionDeviceIcon from '@mui/icons-material/Build';
+import AssetIcon from '@mui/icons-material/Power';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import ConfirmationAlert from '../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     centreAlignParent: {
         display: 'flex',
         flexDirection: 'column',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             minHeight: '12rem',
             height: '100%',
         },

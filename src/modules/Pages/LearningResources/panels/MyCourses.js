@@ -6,12 +6,12 @@ import { a11yProps, reverseA11yProps } from '../shared/learningResourcesHelpers'
 import { getCampusByCode } from 'helpers/general';
 import { SubjectBody } from '../shared/SubjectBody';
 import { TabPanel } from '../shared/TabPanel';
-import AppBar from '@material-ui/core/AppBar';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import { makeStyles } from '@material-ui/styles';
+import AppBar from '@mui/material/AppBar';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(
     theme => ({

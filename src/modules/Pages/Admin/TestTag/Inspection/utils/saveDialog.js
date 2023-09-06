@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-import { Grid } from '@material-ui/core';
+import { Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { Grid } from '@mui/material';
 import clsx from 'clsx';
 
 import { statusEnum } from '../utils/helpers';

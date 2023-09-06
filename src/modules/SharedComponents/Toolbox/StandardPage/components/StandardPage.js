@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 export const useStyles = makeStyles(
     theme => ({
@@ -22,14 +22,14 @@ export const useStyles = makeStyles(
             marginLeft: 'auto',
             marginRight: 'auto',
             padding: 0,
-            [theme.breakpoints.down('sm')]: {
+            [theme.breakpoints.down('md')]: {
                 margin: '0 auto 12px auto',
             },
         },
         title: {
             marginLeft: -58,
             marginBottom: 24,
-            [theme.breakpoints.down('sm')]: {
+            [theme.breakpoints.down('md')]: {
                 marginLeft: -20,
                 marginBottom: 8,
             },

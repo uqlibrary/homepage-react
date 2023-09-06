@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 import locale from '../../../testTag.locale';
 import { isEmptyStr } from '../../../helpers/helpers';

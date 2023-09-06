@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Popper from '@material-ui/core/Popper';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
+import Popper from '@mui/material/Popper';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
 

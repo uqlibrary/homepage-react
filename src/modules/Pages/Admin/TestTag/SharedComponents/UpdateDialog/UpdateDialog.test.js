@@ -2,9 +2,9 @@ import React from 'react';
 import UpdateDialog from './UpdateDialog';
 import { rtlRender, act, fireEvent, waitFor } from 'test-utils';
 
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const defaultLocale = {
     cancelButtonLabel: 'test cancel',

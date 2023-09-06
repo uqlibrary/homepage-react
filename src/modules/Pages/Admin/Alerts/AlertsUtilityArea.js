@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import SimpleBackdrop from '@material-ui/core/Backdrop';
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
-import { makeStyles } from '@material-ui/styles';
-import Drawer from '@material-ui/core/Drawer';
+import SimpleBackdrop from '@mui/material/Backdrop';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
+import { makeStyles } from '@mui/styles';
+import Drawer from '@mui/material/Drawer';
 
 /**
  * a block that shows:
@@ -34,7 +34,7 @@ const useStyles = makeStyles(
             backgroundColor: theme.palette.background.paper,
             padding: theme.spacing(2, 4, 3),
             width: 500,
-            [theme.breakpoints.down('sm')]: {
+            [theme.breakpoints.down('md')]: {
                 width: 200,
             },
         },

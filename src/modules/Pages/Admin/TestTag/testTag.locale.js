@@ -1,18 +1,18 @@
 /* istanbul ignore file */
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Alert from '@material-ui/lab/Alert';
+import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
 import { pathConfig } from '../../../../config/pathConfig';
 
-import InspectionIcon from '@material-ui/icons/Search';
-import UsersIcon from '@material-ui/icons/People';
-import AssetTypeIcon from '@material-ui/icons/DevicesOther';
-import LocationIcon from '@material-ui/icons/LocationCity';
-import InspectionDeviceIcon from '@material-ui/icons/Build';
-import BulkUpdateIcon from '@material-ui/icons/DynamicFeed';
-import AssetsInspectedByDateIcon from '@material-ui/icons/EventNote';
-import InspectionByUserIcon from '@material-ui/icons/VerifiedUser';
-import AssetIcon from '@material-ui/icons/Power';
+import InspectionIcon from '@mui/icons-material/Search';
+import UsersIcon from '@mui/icons-material/People';
+import AssetTypeIcon from '@mui/icons-material/DevicesOther';
+import LocationIcon from '@mui/icons-material/LocationCity';
+import InspectionDeviceIcon from '@mui/icons-material/Build';
+import BulkUpdateIcon from '@mui/icons-material/DynamicFeed';
+import AssetsInspectedByDateIcon from '@mui/icons-material/EventNote';
+import InspectionByUserIcon from '@mui/icons-material/VerifiedUser';
+import AssetIcon from '@mui/icons-material/Power';
 
 import { PERMISSIONS } from './config/auth';
 

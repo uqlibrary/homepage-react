@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import { makeStyles } from '@mui/styles';
 import { PromoPanelHelpDrawer } from './PromoPanelHelpDrawer';
 
 const useStyles = makeStyles(() => ({
