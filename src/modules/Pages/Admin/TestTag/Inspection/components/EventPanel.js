@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { KeyboardDatePicker } from '@material-ui/pickers';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -75,7 +76,8 @@ const EventPanel = ({
                     onClick={() => setEventExpanded(!eventExpanded)}
                     id={`${componentIdLower}-expand-button`}
                     data-testid={`${componentIdLower}-expand-button`}
-                    size="large">
+                    size="large"
+                >
                     <ExpandMoreIcon />
                 </IconButton>
             }
@@ -84,7 +86,7 @@ const EventPanel = ({
             <Collapse in={eventExpanded} timeout="auto">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={3}>
-                        <KeyboardDatePicker
+                        <DatePicker
                             {...pageLocale.form.event.date}
                             id={`${componentIdLower}-event-date`}
                             data-testid={`${componentIdLower}-event-date`}

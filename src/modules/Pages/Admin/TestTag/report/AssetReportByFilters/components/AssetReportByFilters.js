@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 
 import Grid from '@mui/material/Grid';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -219,7 +219,7 @@ const AssetReportByFilters = ({
                         </Grid>
                         <Grid item xs={12} md={6} lg={3}>
                             {/* Start Date */}
-                            <KeyboardDatePicker
+                            <DatePicker
                                 id={`${componentIdLower}-tagged-start`}
                                 data-testid={`${componentIdLower}-tagged-start`}
                                 inputProps={{
@@ -249,7 +249,7 @@ const AssetReportByFilters = ({
                             />
                         </Grid>
                         <Grid item xs={12} md={6} lg={3}>
-                            <KeyboardDatePicker
+                            <DatePicker
                                 id={`${componentIdLower}-tagged-end`}
                                 data-testid={`${componentIdLower}-tagged-end`}
                                 inputProps={{

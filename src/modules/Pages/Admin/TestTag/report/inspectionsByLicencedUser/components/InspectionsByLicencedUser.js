@@ -10,6 +10,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -240,7 +241,7 @@ const InspectionsByLicencedUser = ({
                         </Grid>
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
-                            <KeyboardDatePicker
+                            <DatePicker
                                 id={`${componentIdLower}-tagged-start`}
                                 data-testid={`${componentIdLower}-tagged-start`}
                                 inputProps={{
@@ -271,7 +272,7 @@ const InspectionsByLicencedUser = ({
                         </Grid>
                         <Grid item xs={12} md={4}>
                             {/* End Date */}
-                            <KeyboardDatePicker
+                            <DatePicker
                                 id={`${componentIdLower}-tagged-end`}
                                 data-testid={`${componentIdLower}-tagged-end`}
                                 inputProps={{
