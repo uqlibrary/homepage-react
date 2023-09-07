@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const { resolve, join } = require('path');
+const path = require('path');
 const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -30,24 +31,30 @@ module.exports = {
         publicPath: `http://${url}:${port}/${publicPath}`,
     },
     devServer: {
-        clientLogLevel: 'info',
+        client: {
+            logging: 'info',
+        },
         compress: true,
-        contentBase: __dirname,
+        // contentBase: __dirname,
+        devMiddleware: {
+            publicPath: `/${publicPath}`,
+            stats: 'errors-only',
+        },
         headers: { 'X-Custom-Header': 'yes' },
         historyApiFallback: true,
         host: url,
         hot: true,
         https: false,
-        inline: true,
-        lazy: false,
-        noInfo: true,
+        // inline: true,
+        // lazy: false,
+        // noInfo: true,
         open: false,
         port: port,
-        publicPath: `/${publicPath}`,
-        quiet: false,
-        stats: 'errors-only',
-        watchContentBase: false,
-        disableHostCheck: true,
+        // publicPath: `/${publicPath}`,
+        // quiet: false,
+        // stats: 'errors-only',
+        // watchContentBase: false,
+        // disableHostCheck: true,
         proxy: {
             '/api/staging': {
                 target: 'https://api.library.uq.edu.au',
@@ -57,6 +64,10 @@ module.exports = {
                     '^/api': '',
                 },
             },
+        },
+        static: {
+            directory: path.join(__dirname, 'public'),
+            watch: false,
         },
     },
     module: {
@@ -123,7 +134,7 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.NamedModulesPlugin(),
+        // new webpack.NamedModulesPlugin(),
         new webpack.LoaderOptionsPlugin({
             options: {
                 sassLoader: {
