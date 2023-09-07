@@ -155,8 +155,9 @@ api.interceptors.response.use(
         let errorMessage = null;
         console.log('got an error - , error.response=', error.response);
         console.log('error?.response?.status [1] =', error?.response?.status);
+        const errorStatus = error?.response?.status;
         if (!!error && !!error.config) {
-            if ([401, 403].includes(error?.response?.status) && routeRequiresLogin(error)) {
+            if ([401, 403].includes(errorStatus) && routeRequiresLogin(error)) {
                 console.log('its a 401/403');
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
@@ -171,7 +172,7 @@ api.interceptors.response.use(
                 }
             }
 
-            if (error?.response?.status === 500) {
+            if (errorStatus === 500) {
                 errorMessage =
                     error.response.data?.length > 0
                         ? { message: error.response.data?.join(' ') }
@@ -184,7 +185,7 @@ api.interceptors.response.use(
                 } else {
                     store.dispatch(showAppAlert(error.response.data));
                 }
-            } else if (!!error?.response?.status) {
+            } else if (!!errorStatus) {
                 errorMessage =
                     error.response.data?.length > 0
                         ? { message: error.response.data?.join(' ') }
@@ -200,28 +201,22 @@ api.interceptors.response.use(
         }
 
         console.log('error?.response?.status [2] =', error?.response?.status);
-        const localhostcheck = document.location.hostname === 'localhost';
-        console.log('localhostcheck=', localhostcheck);
-        const a403check = [401, 403].includes(error?.response?.status) && routeRequiresLogin(error);
+        console.log('errorStatus =', errorStatus);
+        const a403check = [401, 403].includes(errorStatus);
         console.log('a403check=', a403check);
-        const zeronumerichceck = error?.response?.status === 0;
-        console.log('zeronumerichceck=', zeronumerichceck);
-        const zerocharcheck = error?.response?.status === '0';
-        console.log('zerocharcheck=', zerocharcheck);
-        const a500check = error?.response?.status === 500;
-        console.log('a500check=', a500check);
-        const a502check = error?.response?.status === 502;
-        console.log('a502check=', a502check);
+        const a403checkwithroute = [401, 403].includes(errorStatus) && routeRequiresLogin(error);
+        console.log('a403checkwithroute=', a403checkwithroute);
         const isNonReportable =
-            localhostcheck || // testing on AWS sometimes fires these
+            document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
             a403check || // login expired - no notice required
-            zeronumerichceck || // maybe catch those "the network request was interrupted" we see so much?
-            zerocharcheck || // don't know what format it comes in
-            a500check || // api should handle these
-            a502check; // connection timed out - it happens, FE can't do anything about it
+            errorStatus === 0 || // maybe catch those "the network request was interrupted" we see so much?
+            errorStatus === '0' || // don't know what format it comes in
+            errorStatus === 500 || // api should handle these
+            errorStatus === 502; // connection timed out - it happens, FE can't do anything about it
         console.log('isNonReportable=', isNonReportable);
 
         if (!isNonReportable) {
+            console.log('sending to sentry');
             reportToSentry(error);
         }
 
