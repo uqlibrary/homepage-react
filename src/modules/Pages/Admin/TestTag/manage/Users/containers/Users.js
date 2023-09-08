@@ -3,6 +3,7 @@ import Users from '../components/Users';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
+import { withUser } from '../../../helpers/withUser';
 
 export const mapStateToProps = state => {
     return {
@@ -18,5 +19,6 @@ const mapDispatchToProps = dispatch => {
 
 let UsersContainer = connect(mapStateToProps, mapDispatchToProps)(Users);
 UsersContainer = withRouter(UsersContainer);
+UsersContainer = withUser(UsersContainer);
 
 export default UsersContainer;
