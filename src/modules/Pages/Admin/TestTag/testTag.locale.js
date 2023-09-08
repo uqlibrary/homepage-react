@@ -249,7 +249,7 @@ export default {
                     assetSelector: {
                         label: 'Asset ID',
                         helperText: 'Scan or enter a barcode',
-                        placeholder: 'Enter at least 3 characters',
+                        placeholder: 'Enter 3-5 characters',
                     },
                     assetType: {
                         props: {
@@ -925,6 +925,7 @@ export default {
                     confirmationTitle: 'Edit User',
                 },
                 snackbar: {
+                    loadFail: 'unable to load user list',
                     addSuccess: 'User added successfully',
                     addFail: 'Unable to add the User',
                     updateSuccess: 'User updated successfully',

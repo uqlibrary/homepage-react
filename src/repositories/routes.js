@@ -227,7 +227,6 @@ export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `test-and-tag/asset/search/current/${pattern}${hasParams ? `?${qs.toString()}` : ''}`;
-    console.log(apiUrl);
     return {
         apiUrl,
     };
@@ -241,7 +240,6 @@ export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `/test-and-tag/asset/search/mine${hasParams ? `?${qs.toString()}` : ''}`;
-    console.log(apiUrl);
     return {
         apiUrl,
     };

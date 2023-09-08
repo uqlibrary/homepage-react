@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import ActionCell from './ActionCell';
 
-export const useDataTableRow = (data = [], transform) => {
+const useStyles = makeStyles(() => ({
+    a11yHidden: {
+        visibility: 'hidden',
+    },
+}));
+
+export const useDataTableRow = (data, transform) => {
     const [row, _setRow] = useState(!!transform ? transform(data) : data);
     const setRow = data => _setRow(!!transform ? transform(data) : data);
     useEffect(() => {
@@ -27,11 +34,13 @@ export const useDataTableColumns = ({
     actionTooltips,
     getTooltips,
 }) => {
+    const classes = useStyles();
     const columns = useMemo(
         () => {
             const actionsCell = withActions
                 ? {
-                      field: '',
+                      field: 'actions',
+                      headerClassName: classes.a11yHidden,
                       renderCell: params => {
                           const disableEdit = shouldDisableEdit?.(params.row, filterKey) ?? false;
                           const disableDelete = shouldDisableDelete?.(params.row, filterKey) ?? false;
@@ -50,8 +59,10 @@ export const useDataTableColumns = ({
                                   {...(!!handleDeleteClick ? { handleDeleteClick: handleDeleteClick } : {})}
                                   {...(!!editIcon ? { editIcon } : {})}
                                   {...(!!deleteIcon ? { deleteIcon } : {})}
-                                  {...(!!actionDataFieldKeys ? { dataFieldKeys: actionDataFieldKeys } : {})}
-                                  {...(!!actionTooltips ? { tooltips } : {})}
+                                  {...(!!actionDataFieldKeys
+                                      ? { dataFieldKeys: actionDataFieldKeys }
+                                      : /* istanbul ignore next */ {})}
+                                  {...(!!actionTooltips ? { tooltips } : /* istanbul ignore next */ {})}
                                   disableEdit={disableEdit}
                                   disableDelete={disableDelete}
                               />

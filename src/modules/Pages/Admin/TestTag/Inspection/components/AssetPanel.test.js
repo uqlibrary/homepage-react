@@ -1,9 +1,10 @@
 import React from 'react';
 import AssetPanel from './AssetPanel';
-import { render /* , act, fireEvent*/, WithReduxStore /* , waitFor*/ } from 'test-utils';
+import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
+import assetTypeData from '../../../../../../data/mock/data/testing/testTagAssetTypes';
 import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
 import locale from '../../testTag.locale.js';
 
@@ -14,7 +15,7 @@ const currentRetestList = [
     { value: '60', label: '5 years' },
 ];
 
-const DEFAULT_NEXT_TEST_DATE_VALUE = 12;
+const DEFAULT_NEXT_TEST_DATE_VALUE = '12';
 
 const formValues = {
     action_date: '2016-12-05 14:22',
@@ -40,11 +41,17 @@ function setup(testProps = {}, renderer = render) {
     const _state = {
         testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
         testTagAssetsReducer: { assetsList: assetData, assetsListLoading: false },
+        testTagAssetTypesReducer: {
+            assetTypesList: assetTypeData,
+            assetTypesListLoading: false,
+            assetTypesListError: null,
+        },
         ...state,
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <AssetPanel
+                id="test"
                 actions={actions}
                 currentRetestList={currentRetestList}
                 defaultNextTestDateValue={DEFAULT_NEXT_TEST_DATE_VALUE}
@@ -57,6 +64,16 @@ function setup(testProps = {}, renderer = render) {
         </WithReduxStore>,
     );
 }
+
+const selectOptionFromListByIndex = (index, actions) => {
+    expect(actions.getByRole('listbox')).not.toEqual(null);
+    act(() => {
+        const options = actions.getAllByRole('option');
+
+        fireEvent.mouseDown(options[index]);
+        options[index].click();
+    });
+};
 
 describe('AssetPanel', () => {
     it('renders component', () => {
@@ -149,6 +166,191 @@ describe('AssetPanel', () => {
             rerender,
         );
         expect(getByTestId('asset_selector-asset-panel-progress')).toBeInTheDocument();
+    });
+
+    it('shows dialog to add new asset type', async () => {
+        const resetForm = jest.fn();
+        const assignCurrentAsset = jest.fn();
+        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
+
+        const openConfirmationAlertFn = jest.fn();
+        const addNewAssetTypeFn = jest.fn(() => {
+            return Promise.resolve({ data: { asset_type_id: 99999 } });
+        });
+        const loadAssetTypesFn = jest.fn(() => {
+            return Promise.resolve({ data: [{ asset_type_id: 99999 }] });
+        });
+
+        const { getByText, getByTestId, getByRole, getAllByRole, queryByTestId } = setup({
+            actions: { saveAssetTypeAndReload: addNewAssetTypeFn, loadAssetTypes: loadAssetTypesFn },
+            formValues,
+            location,
+            resetForm,
+            assignCurrentAsset,
+            handleChange,
+            saveInspectionSaving: false,
+            isValid: false,
+            openConfirmationAlert: openConfirmationAlertFn,
+        });
+
+        expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
+        expect(getByTestId('asset_type_selector-asset-panel')).toBeInTheDocument();
+
+        act(() => {
+            fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
+        });
+        selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('value', 'Power Cord - C13');
+
+        act(() => {
+            fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
+        });
+        const newOption = getByRole('option', { name: 'ADD NEW ASSET TYPE' });
+        act(() => {
+            newOption.click();
+        });
+        await waitFor(() => expect(getByTestId('update_dialog-asset-panel')).toBeInTheDocument());
+        act(() => {
+            fireEvent.click(getByTestId('asset_type_name-input'));
+            fireEvent.change(getByTestId('asset_type_name-input'), { target: { value: 'Test new asset type' } });
+        });
+        expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+        act(() => {
+            fireEvent.click(getByTestId('update_dialog-action-button'));
+        });
+        await waitFor(() => expect(queryByTestId('update_dialog-asset-panel')).not.toBeInTheDocument());
+        expect(addNewAssetTypeFn).toHaveBeenCalledWith(
+            expect.objectContaining({ asset_type_name: 'Test new asset type' }),
+        );
+        expect(openConfirmationAlertFn).toHaveBeenCalledWith('Request successfully completed', 'success');
+        expect(handleChange).toHaveBeenCalledWith('asset_type_id');
+    });
+
+    it('(coverage) handles saving and reloading fail  ', async () => {
+        const resetForm = jest.fn();
+        const assignCurrentAsset = jest.fn();
+        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
+
+        const openConfirmationAlertFn = jest.fn();
+        const addNewAssetTypeFn = jest.fn(() => {
+            return Promise.reject('error');
+        });
+        const loadAssetTypesFn = jest.fn(() => {
+            return Promise.resolve({ data: [{ asset_type_id: 99999 }] });
+        });
+        const { getByText, getByTestId, getByRole, getAllByRole, queryByTestId } = setup({
+            actions: { saveAssetTypeAndReload: addNewAssetTypeFn, loadAssetTypes: loadAssetTypesFn },
+            formValues,
+            location,
+            resetForm,
+            assignCurrentAsset,
+            handleChange,
+            saveInspectionSaving: false,
+            isValid: false,
+            openConfirmationAlert: openConfirmationAlertFn,
+        });
+
+        expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
+        expect(getByTestId('asset_type_selector-asset-panel')).toBeInTheDocument();
+
+        act(() => {
+            fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
+        });
+        selectOptionFromListByIndex(1, { getByRole, getAllByRole });
+        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('value', 'Power Cord - C5');
+
+        expect(handleChange).toHaveBeenCalledWith('asset_type_id');
+
+        act(() => {
+            fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
+        });
+        const newOption = getByRole('option', { name: 'ADD NEW ASSET TYPE' });
+        act(() => {
+            newOption.click();
+        });
+        await waitFor(() => expect(getByTestId('update_dialog-asset-panel')).toBeInTheDocument());
+        act(() => {
+            fireEvent.click(getByTestId('asset_type_name-input'));
+            fireEvent.change(getByTestId('asset_type_name-input'), { target: { value: 'Test new asset type' } });
+        });
+        expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+        act(() => {
+            fireEvent.click(getByTestId('update_dialog-action-button'));
+        });
+        // if promise is rejected, dialog will still be in the page
+        await waitFor(() => expect(queryByTestId('update_dialog-asset-panel')).toBeInTheDocument());
+        expect(addNewAssetTypeFn).toHaveBeenCalledWith(
+            expect.objectContaining({ asset_type_name: 'Test new asset type' }),
+        );
+        expect(openConfirmationAlertFn).toHaveBeenCalledWith(expect.stringContaining('Operation failed'), 'error');
+    });
+
+    it('(coverage) handles loading asset types failure', async () => {
+        const resetForm = jest.fn();
+        const assignCurrentAsset = jest.fn();
+        const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
+        // eslint-disable-next-line no-unused-vars
+        const handleChange = jest.fn(prop => jest.fn(event => {}));
+
+        const openConfirmationAlertFn = jest.fn();
+        const addNewAssetTypeFn = jest.fn(() => {
+            return Promise.resolve({ data: { asset_type_id: 99999 } });
+        });
+        const loadAssetTypesFn = jest.fn(() => {
+            return Promise.reject('error');
+        });
+        const { getByText, getByTestId, getByRole, getAllByRole, queryByTestId } = setup({
+            actions: { saveAssetTypeAndReload: addNewAssetTypeFn, loadAssetTypes: loadAssetTypesFn },
+            formValues,
+            location,
+            resetForm,
+            assignCurrentAsset,
+            handleChange,
+            saveInspectionSaving: false,
+            isValid: false,
+            openConfirmationAlert: openConfirmationAlertFn,
+        });
+
+        expect(getByText(locale.pages.inspect.form.asset.title)).toBeInTheDocument();
+        expect(getByTestId('asset_type_selector-asset-panel')).toBeInTheDocument();
+
+        act(() => {
+            fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
+        });
+        selectOptionFromListByIndex(1, { getByRole, getAllByRole });
+        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('value', 'Power Cord - C5');
+
+        expect(handleChange).toHaveBeenCalledWith('asset_type_id');
+
+        act(() => {
+            fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
+        });
+        const newOption = getByRole('option', { name: 'ADD NEW ASSET TYPE' });
+        act(() => {
+            newOption.click();
+        });
+        await waitFor(() => expect(getByTestId('update_dialog-asset-panel')).toBeInTheDocument());
+        act(() => {
+            fireEvent.click(getByTestId('asset_type_name-input'));
+            fireEvent.change(getByTestId('asset_type_name-input'), { target: { value: 'Test new asset type' } });
+        });
+        expect(getByTestId('update_dialog-action-button')).not.toHaveAttribute('disabled');
+        act(() => {
+            fireEvent.click(getByTestId('update_dialog-action-button'));
+        });
+        await waitFor(() => expect(queryByTestId('update_dialog-asset-panel')).not.toBeInTheDocument());
+        expect(addNewAssetTypeFn).toHaveBeenCalledWith(
+            expect.objectContaining({ asset_type_name: 'Test new asset type' }),
+        );
+        expect(openConfirmationAlertFn).toHaveBeenNthCalledWith(1, 'Request successfully completed', 'success');
+        expect(openConfirmationAlertFn).toHaveBeenLastCalledWith(
+            expect.stringContaining('Encountered an error'),
+            'error',
+        );
     });
 
     // MOVE FOLLOWING TESTS TO ASSETSELECTOR TEST

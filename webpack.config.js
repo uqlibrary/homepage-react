@@ -12,8 +12,6 @@ const url = process.env.URL || 'localhost';
 const useMock = !!process.env.USE_MOCK || false;
 const publicPath = '';
 
-const reusableJsLocation =
-    process?.env?.REUSABLE_JS_FILE || 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js';
 module.exports = {
     mode: 'development',
     context: resolve(__dirname),
@@ -112,7 +110,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             favicon: join(__dirname, 'public', 'favicon.ico'),
             filename: 'index.html',
-            reusablejs: reusableJsLocation,
+            reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
+            // reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js',
             inject: true,
             template: join(__dirname, 'public', 'index.html'),
         }),

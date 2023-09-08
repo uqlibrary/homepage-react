@@ -23,6 +23,7 @@ export const actionReducer = (_, action) => {
 };
 export const getAssociatedCollectionKeyBySelectedLocation = (collection, current, direction = 'next') => {
     // get collection key names i.e. ['site','building','floor','room']
+    // NOTE: collection keys MUST ALWAYS be in this order.
     const keys = Object.keys(collection);
 
     // get current selected collection index

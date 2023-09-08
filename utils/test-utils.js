@@ -9,6 +9,8 @@ import { Provider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import preview from 'jest-preview';
+import userEvent from '@testing-library/user-event';
 
 import { getStore } from '../src/config/store';
 import Immutable from 'immutable';
@@ -103,4 +105,6 @@ module.exports = {
     WithRedux,
     WithReduxStore,
     RenderWithRouter,
+    preview,
+    userEvent,
 };

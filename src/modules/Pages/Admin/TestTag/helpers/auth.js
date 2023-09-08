@@ -22,5 +22,5 @@ export const hasAccess = (userPrivilege = PERMISSIONS.none, requiredPermissions 
         : requiredPermissions.some(current => {
               return (userPrivilege & current) > 0;
           });
-    return shouldAllow ?? false;
+    return shouldAllow ?? /* istanbul ignore next */ false;
 };

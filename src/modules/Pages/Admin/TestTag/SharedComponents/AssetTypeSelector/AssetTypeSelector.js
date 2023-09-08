@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
 import Popper from '@material-ui/core/Popper';
 
 const rootId = 'asset_type_selector';
@@ -16,7 +15,6 @@ const filterOptions = createFilterOptions();
 
 const AssetTypeSelector = ({
     id,
-    title,
     locale,
     actions,
     value,
@@ -45,6 +43,7 @@ const AssetTypeSelector = ({
                     ? [{ asset_type_id: -1, asset_type_name: locale.labelAll }, ...assetTypesList]
                     : assetTypesList,
             );
+
             if (!!hasAllOption) setValue(-1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,17 +64,12 @@ const AssetTypeSelector = ({
 
     return (
         <FormControl className={classNames.formControl} fullWidth>
-            {!!title && (
-                <Typography variant="h6" component={'h3'}>
-                    {title}
-                </Typography>
-            )}
             <Autocomplete
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
                 className={classNames.autocomplete}
                 fullWidth
-                options={_assetTypeList ?? []}
+                options={_assetTypeList ?? /* istanbul ignore next */ []}
                 value={_assetTypeList?.find(assetType => assetType.asset_type_id === _value) ?? null}
                 onChange={handleChange}
                 getOptionLabel={option => option.asset_type_name ?? /* istanbul ignore next */ null}
@@ -86,7 +80,9 @@ const AssetTypeSelector = ({
                         {...params}
                         {...locale.props}
                         required={required}
-                        error={(!disabled && required && !validateAssetTypeId?.(value)) ?? false}
+                        error={
+                            (!disabled && required && !validateAssetTypeId?.(value)) ?? /* istanbul ignore next */ false
+                        }
                         variant="standard"
                         InputLabelProps={{ shrink: true, htmlFor: `${componentId}-input` }}
                         InputProps={{
@@ -144,7 +140,6 @@ AssetTypeSelector.propTypes = {
     onChange: PropTypes.func,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
     validateAssetTypeId: PropTypes.func,
-    title: PropTypes.string,
 };
 
 export default React.memo(AssetTypeSelector);

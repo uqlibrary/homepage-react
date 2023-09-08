@@ -28,13 +28,13 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
 
 export const useSelectLocation = ({
     initial = locationType.site,
-    location,
+    location = {},
     setLocation,
     actions,
     setRow,
-    store,
+    store = {},
     condition,
-}) => {
+} = {}) => {
     const [selectedLocation, setSelectedLocation] = useState(initial);
     const [lastSelectedLocation, setLastSelectedLocation] = useState(initial);
 
@@ -97,10 +97,10 @@ export const useSelectLocation = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
-        location.site,
-        location.building,
-        location.floor,
-        location.room,
+        location?.site,
+        location?.building,
+        location?.floor,
+        location?.room,
         siteListLoaded,
         floorListLoaded,
         roomListLoaded,

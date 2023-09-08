@@ -71,7 +71,6 @@ const AssetPanel = ({
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformAddAssetTypeRequest(request);
-        console.log('add', wrappedRequest);
 
         actions
             .saveAssetTypeAndReload(wrappedRequest)
@@ -112,7 +111,7 @@ const AssetPanel = ({
                 id={componentId}
                 isOpen={actionState.isAdd}
                 locale={locale.pages.manage.assetTypes.dialogAdd}
-                fields={configAssetPanel.fields ?? []}
+                fields={configAssetPanel.fields}
                 columns={locale.pages.manage.assetTypes.form.columns}
                 row={actionState?.row}
                 onCancelAction={closeDialog}

@@ -95,4 +95,100 @@ describe('Backend routes method', () => {
     //         'https://api.library.uq.edu.au/staging/search_suggestions?type=exam_paper&prefix=test',
     //     );
     // });
+
+    it('Should return valid path for Test Tag Asset Types (mine)', () => {
+        const testParams = {
+            locationId: 1,
+            locationType: 'site',
+            assetTypeId: 1,
+            textSearch: 'test',
+        };
+        let AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
+        expect(AssetsMine.apiUrl).toEqual(
+            '/test-and-tag/asset/search/mine?location_id=1&location_type=site&asset_type_id=1&inspect_comment=test',
+        );
+        delete testParams.textSearch;
+        AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
+        expect(AssetsMine.apiUrl).toEqual(
+            '/test-and-tag/asset/search/mine?location_id=1&location_type=site&asset_type_id=1',
+        );
+        delete testParams.locationType;
+        AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
+        expect(AssetsMine.apiUrl).toEqual('/test-and-tag/asset/search/mine?asset_type_id=1');
+        delete testParams.assetTypeId;
+        AssetsMine = routes.TEST_TAG_ASSETS_MINE_API(testParams);
+        expect(AssetsMine.apiUrl).toEqual('/test-and-tag/asset/search/mine');
+    });
+    it('Should return valid path for Test Tag Assets Filtered', () => {
+        const testFilter = {
+            status: { discarded: true },
+        };
+        let AssetsFiltered = routes.TEST_TAG_ASSETS_FILTERED_API('test');
+        expect(AssetsFiltered.apiUrl).toEqual('test-and-tag/asset/search/current/test');
+        AssetsFiltered = routes.TEST_TAG_ASSETS_FILTERED_API('test', testFilter);
+        expect(AssetsFiltered.apiUrl).toEqual('test-and-tag/asset/search/current/test');
+        testFilter.status.discarded = false;
+        AssetsFiltered = routes.TEST_TAG_ASSETS_FILTERED_API('test', testFilter);
+        expect(AssetsFiltered.apiUrl).toEqual('test-and-tag/asset/search/current/test?without_discards=1');
+    });
+    it('Should return valid path for TnT Inspections Due', () => {
+        const testFilter = {
+            locationId: 1,
+            locationType: 'site',
+            period: 3,
+            periodType: 'MONTH',
+        };
+        let inspectionsDue = routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API(testFilter);
+        expect(inspectionsDue.apiUrl).toEqual(
+            'test-and-tag/report/pending-inspections?site_id=1&period_length=3&period_type=MONTH',
+        );
+        delete testFilter.period;
+        delete testFilter.periodType;
+        inspectionsDue = routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API(testFilter);
+        expect(inspectionsDue.apiUrl).toEqual('test-and-tag/report/pending-inspections?site_id=1');
+        delete testFilter.locationId;
+        inspectionsDue = routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API(testFilter);
+        expect(inspectionsDue.apiUrl).toEqual('test-and-tag/report/pending-inspections');
+    });
+    it('Should return valid path for TnT Asset report by filters', () => {
+        const testFilter = {
+            assetStatus: 'discarded',
+            locationType: 'site',
+            locationId: 1,
+            inspectionDateFrom: '1999-01-01',
+            inspectionDateTo: '2000-01-01',
+        };
+        let reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual(
+            'test-and-tag/asset/search/mine?asset_status=discarded&location_type=site&location_id=1&inspection_date_from=1999-01-01&inspection_date_to=2000-01-01',
+        );
+        delete testFilter.inspectionDateTo;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual(
+            'test-and-tag/asset/search/mine?asset_status=discarded&location_type=site&location_id=1&inspection_date_from=1999-01-01',
+        );
+        delete testFilter.inspectionDateFrom;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual(
+            'test-and-tag/asset/search/mine?asset_status=discarded&location_type=site&location_id=1',
+        );
+        delete testFilter.assetStatus;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine?location_type=site&location_id=1');
+        delete testFilter.locationId;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine?location_type=site');
+        delete testFilter.locationType;
+        reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
+        expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine');
+    });
+    describe('coverage', () => {
+        it('should return valid path for routes', () => {
+            expect(routes.TEST_TAG_SAVE_ASSETTYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
+            expect(routes.TEST_TAG_DELETE_ASSET_TYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
+            expect(routes.TEST_TAG_UPDATE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
+            expect(routes.TEST_TAG_ADD_USER_API()).toEqual({ apiUrl: 'test-and-tag/user' });
+            expect(routes.TEST_TAG_DELETE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
+        });
+    });
 });

@@ -44,10 +44,9 @@ export default {
         },
         can_inspect_cb: {
             component: props => {
-                const errorStyle = props.error ? { color: 'red' } : { color: 'primary' };
                 return (
                     <FormControlLabel
-                        control={<Checkbox {...errorStyle} color="primary" checked={props.value} {...props} />}
+                        control={<Checkbox color="primary" checked={props.value} {...props} />}
                         label={'Inspect'}
                     />
                 );

@@ -150,6 +150,10 @@ const useStyles = makeStyles(theme => ({
     addNewLabel: {
         width: '100%',
     },
+    buttonWhite: {
+        color: 'white',
+        border: '1px solid white',
+    },
 }));
 
 const Inspection = ({
@@ -231,8 +235,6 @@ const Inspection = ({
     const assignCurrentAsset = asset => {
         const newFormValues = assignAssetDefaults(asset, formValues, location);
 
-        console.log('assignCurrentAsset', { asset, location, formValues, newFormValues });
-
         resetFormValues(newFormValues);
         setSelectedAsset(asset);
     };
@@ -272,7 +274,6 @@ const Inspection = ({
                 { lastInspection: selectedAsset?.last_inspection, dateFormat: inspectionLocale.config.dateFormat } ??
                     /* istanbul ignore next */ {},
             );
-            console.log(formValues, transformedData);
             actions.saveInspection(transformedData);
         }
     };
@@ -289,7 +290,6 @@ const Inspection = ({
             locale={inspectionLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
-            {console.log(formValues)}
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
@@ -355,7 +355,10 @@ const Inspection = ({
                             fullWidth={isMobileView}
                             id={`${componentId}-reset-button`}
                             data-testid={`${componentId}-reset-button`}
-                            color={inView ? 'default' : 'secondary'}
+                            color={inView ? 'default' : ''}
+                            className={clsx({
+                                [classes.buttonWhite]: !inView,
+                            })}
                         >
                             {inspectionLocale.form.buttons.reset}
                         </Button>

@@ -139,7 +139,7 @@ const InspectionsDue = ({
                                         ? classes.inspectionOverdue
                                         : ''
                                 }
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>

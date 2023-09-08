@@ -48,6 +48,7 @@ const AssetSelector = ({
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
 
     const [currentValue, setCurrentValue] = useState(selectedAsset ?? null);
+
     const [formAssetList, setFormAssetList] = useState(assetsList);
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -61,6 +62,7 @@ const AssetSelector = ({
         debounce(500, (pattern, user) => {
             const assetPartial = masked ? maskNumber(pattern, user?.user_department) : pattern;
             setCurrentValue(assetPartial);
+            /* istanbul ignore else */
             if (!!assetPartial && assetPartial.length >= minAssetIdLength) {
                 onSearch?.(assetPartial);
                 dispatch(
@@ -100,28 +102,17 @@ const AssetSelector = ({
         }
     }, [autoFocus]);
 
-    React.useEffect(() => {
-        clearInput();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
-        <FormControl className={classNames.formControl} fullWidth>
+        <FormControl className={classNames?.formControl} fullWidth>
             <Autocomplete
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
-                className={classNames.autocomplete}
+                className={classNames?.autocomplete}
                 fullWidth
                 open={!headless && isOpen}
                 value={currentValue ?? previousValueRef.current ?? ''}
                 onChange={(event, newValue) => {
-                    if (typeof newValue === 'string') {
-                        onChange?.(
-                            assetsList?.find(asset => asset.asset_id_displayed === newValue) ?? {
-                                asset_id_displayed: newValue,
-                            },
-                        );
-                    } else if (newValue && newValue.inputValue) {
+                    if (newValue && newValue.inputValue) {
                         // Create a new value from the user input
                         onChange?.({
                             asset_id_displayed: newValue.inputValue,
@@ -170,7 +161,7 @@ const AssetSelector = ({
                         {...params}
                         {...locale.assetSelector}
                         required={required}
-                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? false}
+                        error={!validateAssetId?.(selectedAsset ?? currentValue) ?? /* istanbul ignore next */ false}
                         variant="standard"
                         onFocus={() => {
                             setIsOpen(true);

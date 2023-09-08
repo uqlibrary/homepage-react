@@ -34,7 +34,6 @@ const useStyles = makeStyles(theme => ({
 const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListError }) => {
     const pageLocale = locale.pages.manage.inspectiondetails;
     const classes = useStyles();
-
     useEffect(() => {
         actions.clearAssets();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,7 +64,6 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
 
     const handleEditClick = ({ id, api }) => {
         const row = api.getRow(id);
-        console.log('edit clicked', row);
         actionDispatch({
             type: 'edit',
             title: pageLocale.dialogEdit?.confirmationTitle,
@@ -76,7 +74,6 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
     const onRowEdit = React.useCallback(
         data => {
             setDialogueBusy(true);
-            console.log(data);
             const id = data.asset_id;
             const wrappedRequest = transformUpdateRequest(data);
             actions
@@ -123,7 +120,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                         id={componentId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale?.dialogEdit}
-                        fields={config?.fields ?? []}
+                        fields={config?.fields ?? /* istanbul ignore next */ []}
                         columns={pageLocale.form.columns}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
@@ -156,7 +153,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                                 loading={assetsListLoading}
                                 disableColumnFilter
                                 disableColumnMenu
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>

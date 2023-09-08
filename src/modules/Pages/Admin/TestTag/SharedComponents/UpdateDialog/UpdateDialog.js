@@ -63,7 +63,7 @@ export const UpdateDialogue = ({
     row,
     props,
     isBusy = false,
-} = {}) => {
+}) => {
     const componentId = `${rootId}-${id}`;
     const classes = useStyles();
     const [dataColumns, setDataColumns] = React.useState({});
@@ -75,6 +75,7 @@ export const UpdateDialogue = ({
     const isMobileView = useMediaQuery(theme.breakpoints.only('xs')) || false;
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (isOpen) {
             setDataColumns(columns);
             setDataFields(fields);
@@ -93,7 +94,7 @@ export const UpdateDialogue = ({
     React.useEffect(() => {
         setIsValid(
             editableFields.every(field => {
-                return !dataFields[field]?.validate?.(data[field], data) ?? true;
+                return !dataFields[field]?.validate?.(data[field], data) ?? /* istanbul ignore next */ true;
             }),
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps

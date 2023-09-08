@@ -79,7 +79,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const { row } = useDataTableRow(assetTypesList);
 
     React.useEffect(() => {
-        actions.loadAssetTypes();
+        actions.loadAssetTypes().catch(error => {
+            console.error(error);
+            openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -234,7 +237,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         id={componentId}
                         isOpen={actionState.isAdd}
                         locale={pageLocale.dialogAdd}
-                        fields={config?.fields ?? []}
+                        fields={config?.fields ?? /* istanbul ignore next */ []}
                         columns={pageLocale.form.columns}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
@@ -248,7 +251,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         id={componentId}
                         isOpen={actionState.isEdit}
                         locale={pageLocale.dialogEdit}
-                        fields={config?.fields ?? []}
+                        fields={config?.fields ?? /* istanbul ignore next */ []}
                         columns={pageLocale.form.columns}
                         row={actionState?.row}
                         onCancelAction={closeDialog}
@@ -278,6 +281,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}
                                 components={{ Toolbar: AddToolbar }}
+                                disableVirtualization
                                 componentsProps={{
                                     toolbar: {
                                         id: componentId,
@@ -285,7 +289,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                         onClick: handleAddClick,
                                     },
                                 }}
-                                {...(config.sort ?? {})}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>

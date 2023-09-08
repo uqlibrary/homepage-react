@@ -49,6 +49,10 @@ import testTag_assets from './data/records/test_tag_assets';
 // Test and Tag Asset Types
 import test_tag_asset_types from './data/records/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/test_tag_pending_inspections';
+import test_tag_pending_inspections_site from './data/records/test_tag_pending_inspections_site';
+import test_tag_pending_inspections_building from './data/records/test_tag_pending_inspections_building';
+import test_tag_pending_inspections_floor from './data/records/test_tag_pending_inspections_floor';
+import test_tag_pending_inspections_room from './data/records/test_tag_pending_inspections_room';
 import test_tag_inspections_by_licenced_user from './data/records/test_tag_inspections_by_licenced_user';
 import test_tag_licenced_inspectors from './data/records/test_tag_licenced_inspectors';
 import test_tag_tagged_building_list from './data/records/test_tag_tagged_building_list';
@@ -738,8 +742,8 @@ mock.onGet('exams/course/FREN1010/summary')
     // user
     .onGet(routes.TEST_TAG_USER_API().apiUrl)
     .reply(config => {
-        const user = () => {
-            switch (config?.headers['X-Uql-Token']) {
+        const userVal = () => {
+            switch (user) {
                 case 'uqpf':
                     return testTag_user_UQPF;
                 case 'uqttadmin':
@@ -754,13 +758,13 @@ mock.onGet('exams/course/FREN1010/summary')
                         return testTag_user;
             }
         }
-        return [200, user()];
+        return [200, userVal()];
     })
 
     // dashboard CONFIG
     .onGet(routes.TEST_TAG_ONLOAD_DASHBOARD_API().apiUrl)
     .reply(config => {
-        if (config?.headers['X-Uql-Token'] === 'uqpf') {
+        if (user === 'uqpf') {
             return[400, {status: 'Test Error'}]
         }
         return [200, testTag_dashboardOnLoad];
@@ -955,6 +959,44 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, test_tag_pending_inspections_floor])
     .onGet(routes.TEST_TAG_REPORT_INSPECTIONS_DUE_API({period: '3', periodType: 'month', locationId: '1', locationType: 'room'}).apiUrl)
     .reply(() => [200, test_tag_pending_inspections_room])
+    // .onGet(
+    //     new RegExp(
+    //         panelRegExp(routes.TEST_TAG_REPORT_INSPECTIONS_BY_LICENCED_USER_API('.*').apiUrl),
+    //     ),
+    // )
+    // .reply(config => {
+    //     const url = new URL(`${config.baseURL}${config.url}`);
+    //     const params = url.searchParams;
+    //     const userRange = params.has('user_range')
+    //         ? params
+    //               .get('user_range')
+    //               .split(',')
+    //               .map(item => parseInt(item, 10))
+    //         : null;
+    //     const dateStart = params.has('start_date') ? params.get('start_date') : null;
+    //     const dateEnd = params.has('start_date') ? params.get('end_date') : null;
+    //     const data =
+    //         !!userRange || !!dateStart || !!dateEnd
+    //             ? test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+    //                   user =>
+    //                       (!!userRange ? userRange.includes(user.user_id) : user.user_id !== '') &&
+    //                       (!!dateStart ? user.start_date >= dateStart : user.start_date !== '') &&
+    //                       (!!dateEnd ? user.start_date <= dateEnd : user.end_date !== ''),
+    //               )
+    //             : test_tag_inspections_by_licenced_user.data.user_inspections;
+
+    //     const total = data.reduce((prev, curr) => prev + curr.total_for_user, 0);
+
+    //     return [
+    //         200,
+    //         {
+    //             data: {
+    //                 user_inspections: data,
+    //                 total_inspections: total,
+    //             },
+    //         },
+    //     ];
+    // })
     .onGet(
         new RegExp(
             panelRegExp(

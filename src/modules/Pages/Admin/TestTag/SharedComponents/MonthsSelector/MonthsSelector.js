@@ -39,9 +39,15 @@ const MonthsSelector = ({
     };
 
     return (
-        <FormControl className={classNames.formControl} fullWidth>
+        <FormControl className={classNames?.formControl} fullWidth disabled={disabled}>
             {!!label && (
-                <InputLabel shrink required={required} htmlFor={`${componentId}-input`}>
+                <InputLabel
+                    shrink
+                    required={required}
+                    htmlFor={`${componentId}-input`}
+                    id={`${componentId}-label`}
+                    data-testid={`${componentId}-label`}
+                >
                     {label}
                 </InputLabel>
             )}
@@ -61,11 +67,10 @@ const MonthsSelector = ({
                     'data-testid': `${componentId}-select`,
                 }}
                 fullWidth={responsive && isMobileView}
-                className={classNames.select}
-                value={currentValue}
+                className={classNames?.select}
+                value={currentValue ?? ''}
                 onChange={onValueChange}
                 required={required}
-                disabled={disabled}
                 {...props}
             >
                 {options?.map((period, index) => (

@@ -7,6 +7,19 @@ describe('saveInspectionTransformer functions work as expected', () => {
         transformer = saveInspectionTransformer('PASSED', 'FAILED');
     });
 
+    it('action_date sets object and value', () => {
+        expect(
+            transformer.action_date({ data: { isManualDate: false }, params: { dateFormat: 'DD/MM/YYYY' } }),
+        ).toEqual({ action_date: '30/06/2017' });
+
+        expect(
+            transformer.action_date({
+                data: { isManualDate: true, action_date: '01-01-2000 10:00' },
+                params: { dateFormat: 'DD/MM/YYYY HH:MM' }, // date format still needed to get time
+            }),
+        ).toEqual({ action_date: '01-01-2000 00:06' }); // current time replaces supplied time for manual dates
+    });
+
     it('inspection_status sets object and value', () => {
         expect(
             transformer.inspection_status({

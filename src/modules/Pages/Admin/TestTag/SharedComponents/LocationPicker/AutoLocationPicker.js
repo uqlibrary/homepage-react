@@ -22,7 +22,9 @@ const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }
 
     const fullSiteList = React.useMemo(
         () =>
-            !!hasAllOption ? [{ site_id: -1, site_name: locale.site.labelAll }, ...(siteList ?? [])] : siteList ?? [],
+            !!hasAllOption
+                ? [{ site_id: -1, site_name: locale.site.labelAll }, ...(siteList ?? [])]
+                : siteList ?? /* istanbul ignore next */ [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [hasAllOption, siteList],
     );

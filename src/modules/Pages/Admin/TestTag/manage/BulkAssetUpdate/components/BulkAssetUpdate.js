@@ -93,7 +93,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
 
     const handleSearchAssetIdChange = useCallback(
         newValue => {
-            if (typeof newValue === 'string' && isEmptyStr(newValue)) return;
             if (isEmptyObject(newValue)) return;
             list.addStart(newValue);
         },
@@ -165,7 +164,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setConfirmDialogueBusy(true);
         const clonedData = structuredClone(formValues);
         const request = transformRequest(clonedData);
-        console.log('handleConfirmDialogAction', { clonedData, request });
         actions
             .bulkAssetUpdate(request)
             .then(() => {
@@ -203,23 +201,18 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         handleChange(e.target.name)(checked);
     };
 
-    // const handlePageSizeChange = total => {
-    //     if (total > 0) {
-    //         openConfirmationAlert(stepOneLocale.tableSizeChanged(total), 'success');
-    //     }
-    // };
-
     const validFormValues = React.useMemo(() => {
         const validLocation =
             !formValues.hasLocation ||
-            (!isEmptyObject(formValues.location) && isValidRoomId(formValues.location?.room ?? 0));
+            (!isEmptyObject(formValues.location) &&
+                isValidRoomId(formValues.location?.room ?? /* istanbul ignore next */ 0));
 
         const validDiscardStatus = !formValues.hasDiscardStatus || !isEmptyStr(formValues.discard_reason);
-        // formValues.hasAssetType ||  || !formValues.hasDiscardStatus &
 
         const validAssetType =
             !formValues.hasAssetType ||
-            (!isEmptyObject(formValues.asset_type) && isValidAssetTypeId(formValues.asset_type?.asset_type_id ?? 0));
+            (!isEmptyObject(formValues.asset_type) &&
+                isValidAssetTypeId(formValues.asset_type?.asset_type_id ?? /* istanbul ignore next */ 0));
 
         const isValid =
             (formValues.hasLocation ||
@@ -266,8 +259,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                       <CircularProgress
                                           color="inherit"
                                           size={25}
-                                          id="confirmationSpinner"
-                                          data-testid="confirmationSpinner"
+                                          id={`${componentIdLower}-confirmation-progress`}
+                                          data-testid={`${componentIdLower}-confirmation-progress`}
                                       />
                                   ),
                               }
@@ -343,7 +336,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                         },
                                     }}
                                     autoPageSize
-                                    {...(config.form.sort ?? {})}
+                                    {...(config.form.sort ?? /* istanbul ignore next */ {})}
                                 />
                             </Grid>
                         </Grid>
