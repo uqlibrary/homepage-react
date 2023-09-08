@@ -198,26 +198,26 @@ api.interceptors.response.use(
                     };
                 }
             }
-        }
 
-        console.log('error?.response?.status [2] =', error?.response?.status);
-        console.log('errorStatus =', errorStatus);
-        const a403check = [401, 403].includes(errorStatus);
-        console.log('a403check=', a403check);
-        const a403checkwithroute = [401, 403].includes(errorStatus) && routeRequiresLogin(error);
-        console.log('a403checkwithroute=', a403checkwithroute);
-        const isNonReportable =
-            document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
-            a403check || // login expired - no notice required
-            errorStatus === 0 || // maybe catch those "the network request was interrupted" we see so much?
-            errorStatus === '0' || // don't know what format it comes in
-            errorStatus === 500 || // api should handle these
-            errorStatus === 502; // connection timed out - it happens, FE can't do anything about it
-        console.log('isNonReportable=', isNonReportable);
+            console.log('error?.response?.status [2] =', error?.response?.status);
+            console.log('errorStatus =', errorStatus);
+            const a403check = [401, 403].includes(errorStatus);
+            console.log('a403check=', a403check);
+            const a403checkwithroute = [401, 403].includes(errorStatus) && routeRequiresLogin(error);
+            console.log('a403checkwithroute=', a403checkwithroute);
+            const isNonReportable =
+                document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
+                a403check || // login expired - no notice required
+                errorStatus === 0 || // maybe catch those "the network request was interrupted" we see so much?
+                errorStatus === '0' || // don't know what format it comes in
+                errorStatus === 500 || // api should handle these
+                errorStatus === 502; // connection timed out - it happens, FE can't do anything about it
+            console.log('isNonReportable=', isNonReportable);
 
-        if (!isNonReportable) {
-            console.log('sending to sentry');
-            reportToSentry(error);
+            if (!isNonReportable) {
+                console.log('sending to sentry');
+                reportToSentry(error);
+            }
         }
 
         if (!!errorMessage) {
