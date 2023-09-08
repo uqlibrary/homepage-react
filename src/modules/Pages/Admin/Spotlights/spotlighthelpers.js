@@ -5,7 +5,6 @@ const moment = require('moment-timezone');
 export const FILTER_STORAGE_NAME = 'spotlights-admin-filter-term'; // match to SpotlightsListAsTable
 
 export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
-    console.log('This is what format date recieves', dateString);
     const newMoment = new moment(dateString);
     return newMoment.format(dateFormat);
 }
