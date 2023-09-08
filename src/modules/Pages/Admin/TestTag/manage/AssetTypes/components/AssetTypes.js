@@ -80,7 +80,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
 
     React.useEffect(() => {
         actions.loadAssetTypes().catch(error => {
-            console.error(error);
+            // console.error(error);
             openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,12 +106,12 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         openConfirmationAlert(locale.config.alerts.success(), 'success');
                     })
                     .catch(error => {
-                        console.error(error);
+                        // console.error(error);
                         openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
                     });
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbars.addFailed), 'error', false);
             })
             .finally(() => {
@@ -134,12 +134,12 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         openConfirmationAlert(locale.config.alerts.success(), 'success');
                     })
                     .catch(error => {
-                        console.error(error);
+                        // console.error(error);
                         openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
                     });
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbars.updateFail), 'error');
             })
             .finally(() => {
@@ -170,12 +170,12 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         openConfirmationAlert(locale.config.alerts.success(), 'success');
                     })
                     .catch(error => {
-                        console.error(error);
+                        // console.error(error);
                         openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
                     });
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbars.reallocateFailed), 'error');
             })
             .finally(() => {
@@ -197,12 +197,12 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         openConfirmationAlert(locale.config.alerts.success(), 'success');
                     })
                     .catch(error => {
-                        console.error(error);
+                        // console.error(error);
                         openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
                     });
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbars.deleteFailed), 'error');
             })
             .finally(() => {

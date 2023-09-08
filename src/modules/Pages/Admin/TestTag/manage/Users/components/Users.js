@@ -57,7 +57,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                     actions.loadUserList();
                 })
                 .catch(error => {
-                    console.error(error);
+                    // console.error(error);
                     openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.addFail), 'error');
                 })
                 .finally(() => {
@@ -81,7 +81,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 closeDialog();
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.updateFail), 'error');
             })
             .finally(() => {
@@ -120,7 +120,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                 actions.loadUserList();
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.deleteFail), 'error');
             })
             .finally(() => {
@@ -151,7 +151,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
 
     React.useEffect(() => {
         actions.loadUserList().catch(error => {
-            console.error(error);
+            // console.error(error);
             openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps

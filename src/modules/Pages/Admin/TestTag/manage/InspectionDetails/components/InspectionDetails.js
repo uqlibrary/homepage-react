@@ -84,7 +84,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                     actions.loadAssets(searchPattern); // call last search
                 })
                 .catch(error => {
-                    console.error(error);
+                    // console.error(error);
                     openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
                 })
                 .finally(() => {

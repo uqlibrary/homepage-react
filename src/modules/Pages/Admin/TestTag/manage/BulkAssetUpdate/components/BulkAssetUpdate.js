@@ -171,7 +171,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                 resetForm();
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.failed(stepTwoLocale.snackbars.failed), 'error');
                 setConfirmDialogueBusy(false);
             });

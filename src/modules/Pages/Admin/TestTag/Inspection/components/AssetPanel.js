@@ -83,12 +83,12 @@ const AssetPanel = ({
                         handleChange('asset_type_id')(response.data.asset_type_id);
                     })
                     .catch(error => {
-                        console.error(error);
+                        // console.error(error);
                         openConfirmationAlert(locale.config.alerts.error(pageLocale.assetType.loadError), 'error');
                     });
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.failed(pageLocale.assetType.saveError), 'error');
             })
             .finally(() => {

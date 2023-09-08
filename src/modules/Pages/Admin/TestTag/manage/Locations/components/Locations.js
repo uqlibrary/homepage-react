@@ -169,7 +169,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
-                    console.error(error);
+                    // console.error(error);
                     openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.addFail), 'error');
                 })
                 .finally(() => {
@@ -194,7 +194,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
-                    console.error(error);
+                    // console.error(error);
                     openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
                 })
                 .finally(() => {
@@ -219,7 +219,7 @@ const ManageLocations = ({ actions }) => {
                     actionHandler[selectedLocation](actions, location);
                 })
                 .catch(error => {
-                    console.error(error);
+                    // console.error(error);
                     openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.deleteFail), 'error');
                 })
                 .finally(() => {

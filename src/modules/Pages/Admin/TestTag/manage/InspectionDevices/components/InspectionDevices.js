@@ -108,7 +108,7 @@ const InspectionDevices = ({
                     actions.loadInspectionDevices();
                 })
                 .catch(error => {
-                    console.error(error);
+                    // console.error(error);
                     openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.addFail), 'error');
                 })
                 .finally(() => {
@@ -133,7 +133,7 @@ const InspectionDevices = ({
                 actions.loadInspectionDevices();
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.updateFail), 'error');
             })
             .finally(() => {
@@ -153,7 +153,7 @@ const InspectionDevices = ({
                 actions.loadInspectionDevices();
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
                 openConfirmationAlert(locale.config.alerts.failed(pageLocale.snackbar.deleteFail), 'error');
             })
             .finally(() => {
@@ -176,7 +176,7 @@ const InspectionDevices = ({
 
     useEffect(() => {
         actions.loadInspectionDevices().catch(error => {
-            console.error(error);
+            // console.error(error);
             openConfirmationAlert(locale.config.alerts.failed('error'), 'error');
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
