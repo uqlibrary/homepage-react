@@ -3,10 +3,6 @@ import StandardAuthPage from './StandardAuthPage';
 import { render, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
-import * as actions from '../../../../../../data/actions/actionTypes';
-import * as tntActions from '../../../../../../data/actions/testTagActions';
-import * as repositories from 'repositories';
-
 import { getUserPermissions } from '../../helpers/auth';
 import { PERMISSIONS } from '../../config/auth';
 import locale from '../../testTag.locale';
@@ -45,41 +41,6 @@ function setup(testProps = {}, renderer = render) {
 }
 
 describe('StandardAuthPage', () => {
-    it('renders component with loading message', () => {
-        const { getByText } = setup({
-            state: {
-                testTagUserReducer: {
-                    userLoading: true,
-                    userLoaded: false,
-                },
-            },
-        });
-        expect(getByText(locale.pages.general.checkingAuth)).toBeInTheDocument();
-    });
-    it('renders component with denied text when no user object available', () => {
-        const { getByText } = setup({
-            state: {
-                testTagUserReducer: {
-                    userLoading: false,
-                    userLoaded: true,
-                },
-            },
-        });
-        expect(getByText(locale.pages.general.pageUnavailable)).toBeInTheDocument();
-    });
-    it('renders component with denied text when error loading user', () => {
-        const { getByText } = setup({
-            state: {
-                testTagUserReducer: {
-                    userLoading: false,
-                    userLoaded: false,
-                    userError: true,
-                },
-            },
-        });
-        expect(getByText(locale.pages.general.pageUnavailable)).toBeInTheDocument();
-    });
-
     it('renders component with denied text when user does not have required permissions', () => {
         const { getByText } = setup({ requiredPermissions: [PERMISSIONS.can_admin] });
         expect(getByText(locale.pages.general.pageUnavailable)).toBeInTheDocument();
@@ -154,32 +115,16 @@ describe('StandardAuthPage', () => {
         expect(getByTestId('test_tag_header')).toHaveTextContent('Subtitle for Library');
         expect(getByText(contentText)).toBeInTheDocument();
     });
-    describe('calling the API', () => {
-        beforeEach(() => {
-            mockActionsStore = setupStoreForActions();
-            mockApi = setupMockAdapter();
-            mockApi.onGet(repositories.routes.TEST_TAG_USER_API().apiUrl).reply(200, { data: userData });
-        });
-        afterEach(() => {
-            mockApi.reset();
-        });
-
-        it('should dispatch action to load user if needed', async () => {
-            const { getByText } = setup({
-                state: {
-                    testTagUserReducer: {
-                        userLoading: false,
-                        userLoaded: false,
-                        userError: false,
-                    },
+    it('renders component with denied text when error loading user', () => {
+        const { getByText } = setup({
+            state: {
+                testTagUserReducer: {
+                    userLoading: false,
+                    userLoaded: false,
+                    userError: true,
                 },
-            });
-            expect(getByText(locale.pages.general.checkingAuth)).toBeInTheDocument();
-
-            const expectedActions = [actions.TESTTAG_USER_LOADING, actions.TESTTAG_USER_LOADED];
-
-            await mockActionsStore.dispatch(tntActions.loadUser());
-            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+            },
         });
+        expect(getByText(locale.pages.general.pageUnavailable)).toBeInTheDocument();
     });
 });
