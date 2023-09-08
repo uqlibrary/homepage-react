@@ -115,4 +115,16 @@ describe('StandardAuthPage', () => {
         expect(getByTestId('test_tag_header')).toHaveTextContent('Subtitle for Library');
         expect(getByText(contentText)).toBeInTheDocument();
     });
+    it('renders component with denied text when error loading user', () => {
+        const { getByText } = setup({
+            state: {
+                testTagUserReducer: {
+                    userLoading: false,
+                    userLoaded: false,
+                    userError: true,
+                },
+            },
+        });
+        expect(getByText(locale.pages.general.pageUnavailable)).toBeInTheDocument();
+    });
 });

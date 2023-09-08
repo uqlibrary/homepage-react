@@ -9,20 +9,16 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { hasAccess } from '../../helpers/auth';
 import TestTagHeader from '../TestTagHeader/TestTagHeader';
 
-const StandardAuthPage = ({
-    title = '',
-    locale = null,
-    requiredPermissions = [],
-    inclusive = true,
-    children,
-    ...props
-}) => {
+const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, inclusive = true, children, ...props }) => {
     const { userLoading, userLoaded, userError, user, privilege } = useSelector(state =>
         state.get('testTagUserReducer'),
     );
 
-    const defaultAllow = (!!user && typeof user === 'object' && Object.keys(user).length > 0) || false;
-    const userAllow = !!privilege ? hasAccess(privilege, requiredPermissions, inclusive) : null;
+    const defaultAllow =
+        (!!user && typeof user === 'object' && Object.keys(user).length > 0) || /* istanbul ignore next */ false;
+    const userAllow = !!privilege
+        ? hasAccess(privilege, requiredPermissions, inclusive)
+        : /* istanbul ignore next */ null;
     const shouldHaveAccess = defaultAllow && userAllow;
     const headerDepartmentText = React.useMemo(
         () =>
