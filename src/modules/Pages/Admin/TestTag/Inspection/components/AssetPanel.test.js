@@ -76,6 +76,14 @@ const selectOptionFromListByIndex = (index, actions) => {
 };
 
 describe('AssetPanel', () => {
+    beforeEach(() => {
+        jest.spyOn(console, 'error');
+        console.error.mockImplementation(() => null);
+    });
+
+    afterEach(() => {
+        console.error.mockRestore();
+    });
     it('renders component', () => {
         const resetForm = jest.fn();
         const assignCurrentAsset = jest.fn();

@@ -6,6 +6,7 @@ import * as actions from 'data/actions';
 import locale from '../../../testTag.locale';
 import config from '../components/config';
 import { PERMISSIONS } from '../../../config/auth';
+import { withUser } from '../../../helpers/withUser';
 
 export const mapStateToProps = state => {
     const componentId = 'inspection-devices';
@@ -29,5 +30,6 @@ const mapDispatchToProps = dispatch => {
 
 let InspectionDevicesContainer = connect(mapStateToProps, mapDispatchToProps)(InspectionDevices);
 InspectionDevicesContainer = withRouter(InspectionDevicesContainer);
+InspectionDevicesContainer = withUser(InspectionDevicesContainer);
 
 export default InspectionDevicesContainer;
