@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
-import { AUTH_URL_LOGIN } from 'config';
+// import { AUTH_URL_LOGIN } from 'config';
 
 import localeGeneral from '../../testTag.locale';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

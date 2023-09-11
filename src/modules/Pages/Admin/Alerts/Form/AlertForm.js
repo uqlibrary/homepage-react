@@ -600,7 +600,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             title={locale.form.tooltips.addAnotherDateSet}
                                             style={{ minWidth: 60 }}
                                             aria-label="Add a date set"
-                                            size="large">
+                                            size="large"
+                                        >
                                             <AddCircleSharpIcon />
                                         </IconButton>
                                     ) : (
@@ -614,7 +615,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             onClick={() => removeDateRow(index)}
                                             title={locale.form.tooltips.removeDateSet}
                                             aria-label="Remove this date set"
-                                            size="large">
+                                            size="large"
+                                        >
                                             <RemoveCircleSharpIcon />
                                         </IconButton>
                                     )}
@@ -781,7 +783,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     <Grid item xs={9} align="right">
                         <Button
                             data-testid="admin-alerts-form-button-preview"
-                            color={!!showPreview ? 'default' : 'secondary'}
+                            color={!!showPreview ? 'primary' : 'secondary'}
                             children="Preview"
                             onClick={displayPreview}
                             style={{ marginRight: '0.5rem' }}
