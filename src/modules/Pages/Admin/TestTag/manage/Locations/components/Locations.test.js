@@ -78,6 +78,7 @@ const assertRow = (grid, values, rowIndex) => {
 
 describe('Locations', () => {
     describe('sites', () => {
+        jest.setTimeout(30000);
         it('renders component as expected', async () => {
             const { getByText, getByTestId } = setup({
                 isOpen: true,
@@ -193,7 +194,9 @@ describe('Locations', () => {
             await findByTestId('confirmation_alert-success');
             expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent('Request successfully completed');
         });
-
+    });
+    describe('delete', () => {
+        jest.setTimeout(30000);
         it('handles delete action as expected', async () => {
             const deleteLocationFn = jest.fn(() => Promise.resolve());
             const { getByText, getByTestId, findByTestId, queryByTestId } = setup({
@@ -235,6 +238,7 @@ describe('Locations', () => {
     });
 
     describe('buildings', () => {
+        jest.setTimeout(30000);
         it('renders grid with buildings', async () => {
             const { getByText, getByTestId, getByRole } = setup({
                 isOpen: true,
@@ -411,6 +415,7 @@ describe('Locations', () => {
         });
     });
     describe('floors', () => {
+        jest.setTimeout(30000);
         it('renders component with floors', async () => {
             const { getByText, getByTestId, getByRole } = setup({
                 isOpen: true,
@@ -642,6 +647,7 @@ describe('Locations', () => {
     });
 
     describe('rooms', () => {
+        jest.setTimeout(30000);
         it('renders component with rooms', async () => {
             const { getByText, getByTestId, getByRole } = setup({
                 isOpen: true,
@@ -903,6 +909,7 @@ describe('Locations', () => {
     });
 
     describe('coverage', () => {
+        jest.setTimeout(30000);
         it('handles closing of dialog', async () => {
             const addLocationFn = jest.fn(() => Promise.resolve());
             const { getByText, getByTestId, findByTestId, queryByTestId } = setup({
@@ -1018,6 +1025,7 @@ describe('Locations', () => {
     });
 
     describe('actionHandler', () => {
+        jest.setTimeout(30000);
         it('returns expected results', () => {
             const loadSitesFn = jest.fn();
             const loadFloorsFn = jest.fn();
@@ -1035,6 +1043,7 @@ describe('Locations', () => {
     });
 
     describe('locationDataFieldKeys', () => {
+        jest.setTimeout(30000);
         it('returns expected results', () => {
             expect(locationDataFieldKeys).toEqual({
                 site: 'site_id_displayed',

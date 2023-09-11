@@ -36,7 +36,7 @@ import {
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
-    const triggerLogoutStatus = [401, 403];
+    const triggerLogoutStatus = [401];
     if (!!error?.status && triggerLogoutStatus.includes(error.status)) {
         // They are no longer allowed. Log them out
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
@@ -303,7 +303,7 @@ export function clearRoomsError() {
 /** * ASSETS  ***/
 export function loadAssets(pattern) {
     return dispatch => {
-        console.log('dispatching');
+        // console.log('dispatching');
         dispatch({ type: actions.TESTTAG_ASSETS_LOADING });
         return get(TEST_TAG_ASSETS_API(pattern))
             .then(response => {

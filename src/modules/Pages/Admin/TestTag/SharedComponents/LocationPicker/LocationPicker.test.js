@@ -41,7 +41,6 @@ function setup(testProps = {}, renderer = render) {
         ...defaultState,
         ...state,
     };
-    console.log(props);
     return renderer(<LocationPicker locale={defaultLocale} location={defaultLocation} {..._state} {...props} />);
 }
 

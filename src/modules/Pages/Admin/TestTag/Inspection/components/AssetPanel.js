@@ -71,7 +71,6 @@ const AssetPanel = ({
         setDialogueBusy(true);
         const request = structuredClone(data);
         const wrappedRequest = transformAddAssetTypeRequest(request);
-        console.log('add', wrappedRequest);
 
         actions
             .saveAssetTypeAndReload(wrappedRequest)
@@ -99,7 +98,6 @@ const AssetPanel = ({
     }, []);
 
     const handleAssetTypeChange = assetType => {
-        console.log('assetType.asset_type_id', assetType.asset_type_id);
         if (assetType.asset_type_id === ADD_NEW_ID) {
             handleAddClick();
         } else handleChange('asset_type_id')(assetType.asset_type_id);
