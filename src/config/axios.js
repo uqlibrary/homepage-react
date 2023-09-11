@@ -207,6 +207,9 @@ api.interceptors.response.use(
             console.log('a403checkwithroute=', a403checkwithroute);
             const isNonReportable =
                 document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
+                !error?.response || // when a 403 comes through, axios fires twice, the second time without a response.
+                // This would then fire a sentry error with no information (because... there was no response).
+                // This is not useful, so don't send it.
                 a403check || // login expired - no notice required
                 errorStatus === 0 || // maybe catch those "the network request was interrupted" we see so much?
                 errorStatus === '0' || // don't know what format it comes in
