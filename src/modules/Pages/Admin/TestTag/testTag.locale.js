@@ -1,8 +1,10 @@
 /* istanbul ignore file */
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Alert from '@material-ui/lab/Alert';
 import { pathConfig } from '../../../../config/pathConfig';
+
+import Alert from '@material-ui/lab/Alert';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 
 import InspectionIcon from '@material-ui/icons/Search';
 import UsersIcon from '@material-ui/icons/People';
@@ -59,6 +61,17 @@ export default {
             pageTitle: 'UQ Asset Test and Tag',
             checkingAuth: 'Retrieving user details...',
             pageUnavailable: 'Page unavailable',
+            accountRequired: {
+                title: 'Test and Tag account not found',
+                children: (
+                    <Box data-testid="account-not-found">
+                        <Typography>
+                            The requested page is only available to users with an active Test and Tag account.
+                        </Typography>
+                        <Typography>Please contact a Test and Tag representative for assistance.</Typography>
+                    </Box>
+                ),
+            },
             locationPicker: {
                 allLabel: 'All',
                 site: {

@@ -5,6 +5,7 @@ describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/inspect?user=uqtesttag');
+        cy.waitUntil(() => cy.focused().should('have.attr', 'value', 'St Lucia'));
     });
 
     const selectListbox = pattern => {
@@ -61,7 +62,6 @@ describe('Test and Tag Admin Inspection page', () => {
     const runAllTests = () => {
         it('page is accessible', () => {
             cy.injectAxe();
-            cy.viewport(1300, 1000);
             cy.get('h1').contains('UQ Asset Test and Tag');
             cy.get('h2').contains('Testing assets for Library');
             cy.waitUntil(() => cy.data('location_picker-event-panel-site-input').should('have.value', 'St Lucia'));
@@ -87,7 +87,7 @@ describe('Test and Tag Admin Inspection page', () => {
             it('should allow entry of new date', () => {
                 const invalidDate = today.add(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
                 const validDate = today.subtract(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
-                console.log(invalidDate, validDate);
+                // console.log(invalidDate, validDate);
                 cy.data('event_panel-event-date-button').click();
                 cy.get('[role="dialog"]').should('exist');
                 cy.get('button')

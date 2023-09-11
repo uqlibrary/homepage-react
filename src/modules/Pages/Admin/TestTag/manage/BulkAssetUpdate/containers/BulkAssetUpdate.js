@@ -3,6 +3,7 @@ import BulkAssetUpdate from '../components/BulkAssetUpdate';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
+import { withUser } from '../../../helpers/withUser';
 
 const DEFAULT_FORM_VALUES = {
     asset_list: [],
@@ -29,5 +30,6 @@ const mapDispatchToProps = dispatch => {
 
 let BulkAssetUpdateContainer = connect(mapStateToProps, mapDispatchToProps)(BulkAssetUpdate);
 BulkAssetUpdateContainer = withRouter(BulkAssetUpdateContainer);
+BulkAssetUpdateContainer = withUser(BulkAssetUpdateContainer);
 
 export default BulkAssetUpdateContainer;

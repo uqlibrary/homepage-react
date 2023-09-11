@@ -3,6 +3,7 @@ import AssetReportByFilters from '../components/AssetReportByFilters';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
+import { withUser } from '../../../helpers/withUser';
 
 export const mapStateToProps = state => {
     return {
@@ -18,5 +19,6 @@ const mapDispatchToProps = dispatch => {
 
 let AssetReportByFiltersContainer = connect(mapStateToProps, mapDispatchToProps)(AssetReportByFilters);
 AssetReportByFiltersContainer = withRouter(AssetReportByFiltersContainer);
+AssetReportByFiltersContainer = withUser(AssetReportByFiltersContainer);
 
 export default AssetReportByFiltersContainer;

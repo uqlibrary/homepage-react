@@ -27,8 +27,8 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     const pageLocale = locale.pages.manage.users;
 
     const { user } = useSelector(state => state.get?.('testTagUserReducer'));
-    const userDepartment = user?.user_department ?? null;
-    const userUID = user?.user_uid ?? null;
+    const userDepartment = user?.user_department ?? /* istanbul ignore next */ null;
+    const userUID = user?.user_uid ?? /* istanbul ignore next */ null;
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });

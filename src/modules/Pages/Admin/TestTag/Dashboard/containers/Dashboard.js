@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import locale from '../../testTag.locale';
+import { withUser } from '../../helpers/withUser';
 
 export const mapStateToProps = state => {
     return {
@@ -20,5 +21,5 @@ const mapDispatchToProps = dispatch => {
 
 let DashboardContainer = connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 DashboardContainer = withRouter(DashboardContainer);
-
+DashboardContainer = withUser(DashboardContainer);
 export default DashboardContainer;
