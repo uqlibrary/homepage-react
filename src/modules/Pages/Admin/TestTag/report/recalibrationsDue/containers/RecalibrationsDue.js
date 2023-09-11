@@ -6,6 +6,7 @@ import * as actions from 'data/actions';
 import locale from '../../../testTag.locale';
 import config from '../../../manage/InspectionDevices/components/config';
 import { PERMISSIONS } from '../../../config/auth';
+import { withUser } from '../../../helpers/withUser';
 
 export const mapStateToProps = state => {
     const componentId = 'recalibrations-due';
@@ -30,5 +31,6 @@ const mapDispatchToProps = dispatch => {
 
 let RecalibrationsDue = connect(mapStateToProps, mapDispatchToProps)(InspectionDevices);
 RecalibrationsDue = withRouter(RecalibrationsDue);
+RecalibrationsDue = withUser(RecalibrationsDue);
 
 export default RecalibrationsDue;

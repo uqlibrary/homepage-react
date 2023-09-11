@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionDetails from './InspectionDetails';
-import { renderWithRouter, waitFor, WithReduxStore, userEvent } from 'test-utils';
+import { renderWithRouter, waitFor, WithReduxStore, userEvent, act } from 'test-utils';
 import Immutable from 'immutable';
 import * as tntActions from '../../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
@@ -153,10 +153,12 @@ describe('InspectionDetails', () => {
         });
         expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
         expect(getByText('Power Cord - C5')).toBeInTheDocument();
-        userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
-
+        act(() => {
+            userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
+        });
         expect(getByTestId('inspect_notes-input')).toBeInTheDocument();
         expect(getByTestId('discard_reason-input')).toHaveAttribute('disabled');
+
         userEvent.type(getByTestId('inspect_notes-input'), 'TEST NOTES');
         userEvent.type(getByTestId('inspect_fail_reason-input'), 'TEST FAIL REASON');
         userEvent.tab();

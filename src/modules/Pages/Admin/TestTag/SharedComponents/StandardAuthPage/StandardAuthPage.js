@@ -5,40 +5,21 @@ import Typography from '@mui/material/Typography';
 import { AUTH_URL_LOGIN } from 'config';
 
 import localeGeneral from '../../testTag.locale';
-import { loadUser } from 'data/actions';
-import notfoundLocale from 'modules/Pages/NotFound/components/notfound.locale';
-import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { hasAccess } from '../../helpers/auth';
 import TestTagHeader from '../TestTagHeader/TestTagHeader';
 
-const StandardAuthPage = ({
-    title = '',
-    locale = null,
-    requiredPermissions = [],
-    inclusive = true,
-    children,
-    ...props
-}) => {
-    const dispatch = useDispatch();
+const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, inclusive = true, children, ...props }) => {
     const { userLoading, userLoaded, userError, user, privilege } = useSelector(state =>
         state.get('testTagUserReducer'),
     );
-    /* istanbul ignore next */
-    const { account, accountLoading } = useSelector(state => state.get('accountReducer'));
-    /* istanbul ignore next */
-    const isLoggedOut = accountLoading === false && !account;
 
-    React.useEffect(() => {
-        if (!userLoading && !userLoaded && !userError) {
-            dispatch(loadUser());
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userLoading, userLoaded, userError]);
-
-    const defaultAllow = (!!user && typeof user === 'object' && Object.keys(user).length > 0) || false;
-    const userAllow = !!privilege ? hasAccess(privilege, requiredPermissions, inclusive) : null;
+    const defaultAllow =
+        (!!user && typeof user === 'object' && Object.keys(user).length > 0) || /* istanbul ignore next */ false;
+    const userAllow = !!privilege
+        ? hasAccess(privilege, requiredPermissions, inclusive)
+        : /* istanbul ignore next */ null;
     const shouldHaveAccess = defaultAllow && userAllow;
     const headerDepartmentText = React.useMemo(
         () =>
@@ -49,22 +30,9 @@ const StandardAuthPage = ({
                 : /* istanbul ignore next */ '',
         [user, locale],
     );
-    /* istanbul ignore if */
-    if (isLoggedOut) {
-        // This only fires redirects if it's NOT one of the following three environments.
-        /* istanbul ignore next */
-        if (
-            process.env.NODE_ENV !== 'test' &&
-            process.env.NODE_ENV !== 'cc' &&
-            process.env.NODE_ENV !== 'development'
-        ) {
-            window.location.assign(`${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`);
-        }
-        return <StandardPage standardPageId="authentication-required" {...notfoundLocale.authenticationRequired} />;
-    }
+
     return (
         <StandardPage title={title} {...props}>
-            {userLoading && <ContentLoader message={localeGeneral.pages.general.checkingAuth} />}
             {!userLoading && (userLoaded || userError) && !shouldHaveAccess && (
                 <Typography variant={'h6'}>{localeGeneral.pages.general.pageUnavailable}</Typography>
             )}

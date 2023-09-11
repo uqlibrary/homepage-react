@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import React from 'react';
+
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import { pathConfig } from '../../../../config/pathConfig';
@@ -13,6 +14,8 @@ import BulkUpdateIcon from '@mui/icons-material/DynamicFeed';
 import AssetsInspectedByDateIcon from '@mui/icons-material/EventNote';
 import InspectionByUserIcon from '@mui/icons-material/VerifiedUser';
 import AssetIcon from '@mui/icons-material/Power';
+// import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 
 import { PERMISSIONS } from './config/auth';
 
@@ -59,6 +62,17 @@ export default {
             pageTitle: 'UQ Asset Test and Tag',
             checkingAuth: 'Retrieving user details...',
             pageUnavailable: 'Page unavailable',
+            accountRequired: {
+                title: 'Test and Tag account not found',
+                children: (
+                    <Box data-testid="account-not-found">
+                        <Typography>
+                            The requested page is only available to users with an active Test and Tag account.
+                        </Typography>
+                        <Typography>Please contact a Test and Tag representative for assistance.</Typography>
+                    </Box>
+                ),
+            },
             locationPicker: {
                 allLabel: 'All',
                 site: {

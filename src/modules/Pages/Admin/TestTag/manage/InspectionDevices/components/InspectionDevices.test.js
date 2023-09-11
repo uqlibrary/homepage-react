@@ -54,6 +54,14 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     );
 }
 describe('InspectionDevices', () => {
+    beforeEach(() => {
+        jest.spyOn(console, 'error');
+        console.error.mockImplementation(() => null);
+    });
+
+    afterEach(() => {
+        console.error.mockRestore();
+    });
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
         expect(getByText(locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'))).toBeInTheDocument();
