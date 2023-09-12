@@ -102,7 +102,7 @@ const BookExamBooth = ({
                         <div className="displayDecider">
                             <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
                             <br />
-                            <FormControl component="fieldset" required>
+                            <FormControl variant="standard" component="fieldset" required>
                                 <RadioGroup
                                     name="displayDecider"
                                     id="displayDecider"
@@ -131,7 +131,7 @@ const BookExamBooth = ({
                     <Grid item xs={12}>
                         <StandardCard title={locale.locationDecider.heading}>
                             <div>
-                                <FormControl component="fieldset" required>
+                                <FormControl variant="standard" component="fieldset" required>
                                     <RadioGroup
                                         name="locationDecider"
                                         id="locationDecider"
@@ -190,7 +190,7 @@ const BookExamBooth = ({
                                 <Grid item xs={12}>
                                     <label htmlFor="examType">{locale.examType.label}</label>
                                     <br />
-                                    <FormControl component="fieldset">
+                                    <FormControl variant="standard" component="fieldset">
                                         <RadioGroup
                                             id="examType"
                                             name="examType"
@@ -218,14 +218,14 @@ const BookExamBooth = ({
                                     <label htmlFor="sessionLength">{locale.sessionLength.label}</label>
                                     <br />
                                     <Select
+                                        variant="standard"
                                         className="sessionLength"
                                         data-testid="session-length-select"
                                         defaultValue={sessionLengthList[0].value}
                                         id="sessionLength"
                                         name="sessionLength"
                                         onChange={_handleSessionLengthChange}
-                                        options={sessionLengthList}
-                                    >
+                                        options={sessionLengthList}>
                                         {sessionLengthList.map((item, index) => {
                                             return (
                                                 <MenuItem
@@ -257,13 +257,13 @@ const BookExamBooth = ({
                                     <label htmlFor="startTimeHours">{locale.startTimeHours.label}</label>
                                     <br />
                                     <Select
+                                        variant="standard"
                                         aria-label={locale.startTimeHours.aria}
                                         data-testid="start-time-hours"
                                         defaultValue={defaultHour}
                                         id="startTimeHours"
                                         name="startTimeHours"
-                                        onChange={_handleStartTimeHoursChange}
-                                    >
+                                        onChange={_handleStartTimeHoursChange}>
                                         {startTimeHoursList.map((item, index) => {
                                             return (
                                                 <MenuItem
@@ -278,14 +278,14 @@ const BookExamBooth = ({
                                     </Select>
                                     :{' '}
                                     <Select
+                                        variant="standard"
                                         aria-label={locale.startTimeMinutes.aria}
                                         data-testid="start-time-minutes"
                                         defaultValue={defaultMinute}
                                         id="startTimeMinutes"
                                         name="startTimeMinutes"
                                         onChange={_handleStartTimeMinutesChange}
-                                        options={minutesList}
-                                    >
+                                        options={minutesList}>
                                         {minutesList.map((item, index) => {
                                             return (
                                                 <MenuItem

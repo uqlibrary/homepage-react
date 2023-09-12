@@ -68,7 +68,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                 data-testid={`${componentId}-content`}
             >
                 <Typography component={'p'}>{pageLocale.deleteReassignTargetPrompt(row?.asset_type_name)}</Typography>
-                <FormControl fullWidth>
+                <FormControl variant="standard" fullWidth>
                     <InputLabel
                         shrink
                         required
@@ -78,6 +78,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         {pageLocale.newAssetTypePrompt}
                     </InputLabel>
                     <Select
+                        variant="standard"
                         id={`${componentId}-reassign`}
                         data-testid={`${componentId}-reassign`}
                         MenuProps={{
@@ -96,8 +97,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         className={classes.formSelect}
                         value={selectedAssetType}
                         onChange={e => onAssetTypeChange(e.target.value)}
-                        required
-                    >
+                        required>
                         {data.map((item, index) => (
                             <MenuItem
                                 value={item.asset_type_id}

@@ -185,9 +185,10 @@ const InspectionsByLicencedUser = ({
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={4}>
                             {/* Date Pickers go here */}
-                            <FormControl fullWidth className={classes.formControl}>
+                            <FormControl variant="standard" fullWidth className={classes.formControl}>
                                 <InputLabel>Inspector Name</InputLabel>
                                 <Select
+                                    variant="standard"
                                     id={`${componentIdLower}-user-name`}
                                     data-testid={`${componentIdLower}-user-name`}
                                     MenuProps={{
@@ -223,8 +224,7 @@ const InspectionsByLicencedUser = ({
                                                         .join(', ')}
                                             </div>
                                         );
-                                    }}
-                                >
+                                    }}>
                                     {licencedUsers?.map((user, index) => (
                                         <MenuItem
                                             key={user.user_id}

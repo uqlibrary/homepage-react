@@ -20,7 +20,7 @@ export default {
             },
         },
         asset_type_name: {
-            component: props => <TextField {...props} required />,
+            component: props => <TextField variant="standard" {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: {
                 minWidth: 180,
@@ -30,28 +30,28 @@ export default {
             },
         },
         asset_type_class: {
-            component: props => <TextField {...props} />,
+            component: props => <TextField variant="standard" {...props} />,
             fieldParams: {
                 minWidth: 100,
                 canEdit: true,
             },
         },
         asset_type_power_rating: {
-            component: props => <TextField {...props} />,
+            component: props => <TextField variant="standard" {...props} />,
             fieldParams: {
                 minWidth: 150,
                 canEdit: true,
             },
         },
         asset_type: {
-            component: props => <TextField {...props} />,
+            component: props => <TextField variant="standard" {...props} />,
             fieldParams: {
                 minWidth: 150,
                 canEdit: true,
             },
         },
         asset_type_notes: {
-            component: props => <TextField multiline minRows={3} {...props} />,
+            component: props => <TextField variant="standard" multiline minRows={3} {...props} />,
             fieldParams: {
                 minWidth: 200,
                 canEdit: true,

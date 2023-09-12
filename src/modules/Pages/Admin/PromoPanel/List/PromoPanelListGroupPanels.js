@@ -342,9 +342,14 @@ export const PromoPanelListGroupPanels = ({
                     </Grid>
                     <Grid item xs={4}>
                         {/* filter start */}
-                        <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
+                        <FormControl
+                            variant="standard"
+                            className={classes.dropdown}
+                            fullWidth
+                            title={locale.form.tooltips.groupField}>
                             <InputLabel id="group-selector">Filter by group</InputLabel>
                             <Select
+                                variant="standard"
                                 labelId="group-selector"
                                 placeholder="Filter by group"
                                 id="group-filter"
@@ -364,8 +369,7 @@ export const PromoPanelListGroupPanels = ({
                                     setTimeout(() => {
                                         document.activeElement.blur();
                                     }, 0);
-                                }}
-                            >
+                                }}>
                                 <MenuItem key="clear-All" value="000" align={'right'} data-testid="filter-clear-all">
                                     <Chip
                                         label="Clear selection"

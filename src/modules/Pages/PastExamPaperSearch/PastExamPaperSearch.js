@@ -185,6 +185,7 @@ export const PastExamPaperSearch = ({
                         noOptionsText={noOptionsText}
                         renderInput={params => (
                             <TextField
+                                variant="standard"
                                 {...params}
                                 label={locale.placeholder}
                                 inputProps={{
@@ -192,8 +193,7 @@ export const PastExamPaperSearch = ({
                                     'data-testid': 'past-exam-paper-search-autocomplete-input',
                                     'aria-label': locale.placeholder,
                                     autoFocus: true,
-                                }}
-                            />
+                                }} />
                         )}
                         renderOption={option => <FormattedSuggestion option={option} />}
                         getOptionLabel={item =>

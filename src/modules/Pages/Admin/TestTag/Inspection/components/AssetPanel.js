@@ -134,7 +134,7 @@ const AssetPanel = ({
                     />
                 </Grid>
                 <Grid xs={12} item sm={6}>
-                    <FormControl className={classes.formControl} fullWidth>
+                    <FormControl variant="standard" className={classes.formControl} fullWidth>
                         <AssetTypeSelector
                             id={componentId}
                             locale={pageLocale.assetType}

@@ -801,6 +801,7 @@ export const SpotlightsListAsTable = ({
                                     {!!canTextFilter && (
                                         <div style={{ position: 'relative' }}>
                                             <TextField
+                                                variant="standard"
                                                 data-testid="spotlights-list-clear-text-field"
                                                 inputProps={{
                                                     maxLength: 25,
@@ -808,8 +809,7 @@ export const SpotlightsListAsTable = ({
                                                 }}
                                                 onChange={filterRowsByText}
                                                 label={locale.listPage.textSearch.displayLabel}
-                                                value={savedTextTerm || textSearch}
-                                            />
+                                                value={savedTextTerm || textSearch} />
                                             <CloseIcon
                                                 id="spotlights-list-clear-text-filter-clear-button"
                                                 data-testid="spotlights-list-clear-text-filter-clear-button"

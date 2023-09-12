@@ -152,7 +152,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                     <StandardCard title="View alert" squash>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormControl fullWidth title={locale.form.tooltips.title}>
+                                <FormControl variant="standard" fullWidth title={locale.form.tooltips.title}>
                                     <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                                     <Input
                                         id="alertTitle"
@@ -166,7 +166,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                         </Grid>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormControl fullWidth title={locale.form.tooltips.message}>
+                                <FormControl variant="standard" fullWidth title={locale.form.tooltips.message}>
                                     <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
                                         {locale.form.labels.message}
                                     </InputLabel>
@@ -239,12 +239,12 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.priority.title}>
                                     {locale.form.labels.priority.title}
                                     <Select
+                                        variant="standard"
                                         data-testid="admin-alerts-view-select-priority-type"
                                         // defaultValue={values.priority_type}
                                         value={values.priorityType}
                                         disabled
-                                        classes={{ root: classes.selectPriorityType }}
-                                    >
+                                        classes={{ root: classes.selectPriorityType }}>
                                         <MenuItem value={'info'}>{locale.form.labels.priority.level.info}</MenuItem>
                                         <MenuItem value={'urgent'}>{locale.form.labels.priority.level.urgent}</MenuItem>
                                         <MenuItem value={'extreme'}>
@@ -264,7 +264,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                             }}
                         >
                             <Grid item md={6} xs={12}>
-                                <FormControl fullWidth>
+                                <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                                     <Input
                                         id="linkTitle"
@@ -277,7 +277,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 </FormControl>
                             </Grid>
                             <Grid item md={6} xs={12}>
-                                <FormControl fullWidth>
+                                <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                                     <Input
                                         type="url"

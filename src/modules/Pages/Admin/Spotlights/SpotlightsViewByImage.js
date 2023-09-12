@@ -109,6 +109,7 @@ export const SpotlightsViewByImage = ({
                     <span style={{ minHeight: 48, verticalAlign: 'bottom' }}>{locale.viewByImage.title}</span>
                     <div style={{ display: 'inline', marginLeft: 16 }}>
                         <TextField
+                            variant="standard"
                             data-testid="spotlights-viewbyimage-filter-text-field"
                             inputProps={{
                                 maxLength: 25,
@@ -116,8 +117,7 @@ export const SpotlightsViewByImage = ({
                             }}
                             onChange={filterRowsByText}
                             label={locale.listPage.textSearch.displayLabel}
-                            value={textSearch}
-                        />
+                            value={textSearch} />
                         <CloseIcon
                             id="spotlights-list-viewbyimage-text-filter-clear-button"
                             data-testid="spotlights-viewbyimage-filter-text-clear-button"

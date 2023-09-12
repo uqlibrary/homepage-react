@@ -60,14 +60,14 @@ export default class Masquerade extends PureComponent {
                             <Grid container spacing={3} alignItems={'flex-end'} style={{ marginTop: 12 }}>
                                 <Grid item xs>
                                     <TextField
+                                        variant="standard"
                                         data-testid="masquerade-userName"
                                         fullWidth
                                         id="userName"
                                         label={txt.labels.hint}
                                         onChange={this._usernameChanged}
                                         onKeyPress={this._masqueradeAs}
-                                        value={this.state.userName}
-                                    />
+                                        value={this.state.userName} />
                                 </Grid>
                                 <Grid item xs={12} sm={'auto'}>
                                     <Button

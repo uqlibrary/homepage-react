@@ -106,275 +106,273 @@ const LocationPicker = ({
     const floorDisabled = disabled || (!hide.includes('building') && (location.building === -1 || floorListLoading));
     const roomDisabled = disabled || (!hide.includes('floor') && (location.floor === -1 || roomListLoading));
 
-    return (
-        <>
-            {!hide.includes('site') && (
-                <GridWrapper withGrid={withGrid} divisor={divisor}>
-                    <FormControl className={classes.formControl} fullWidth>
-                        <Autocomplete
-                            id={`${componentId}-site`}
-                            data-testid={`${componentId}-site`}
-                            aria-controls={`${componentId}-site-popup`}
-                            fullWidth
-                            options={siteList}
-                            value={
-                                !hasAllOption && location.site === -1
-                                    ? ''
-                                    : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
-                            }
-                            onChange={(_, newValue) => {
-                                setLocation({
-                                    site: newValue.site_id,
-                                    building: -1,
-                                    floor: -1,
-                                    room: -1,
-                                });
-                                actions?.clearFloors?.();
-                            }}
-                            getOptionLabel={option => `${option?.site_name ?? /* istanbul ignore next */ ''}`}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    label={locale.site.label}
-                                    variant="standard"
-                                    InputLabelProps={{
-                                        ...inputLabelProps,
-                                        htmlFor: `${componentId}-site-input`,
-                                    }}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {!!siteListLoading ? (
-                                                    <CircularProgress
-                                                        color="inherit"
-                                                        size={20}
-                                                        id={`${componentId}-site-progress`}
-                                                        data-testid={`${componentId}-site-progress`}
-                                                    />
-                                                ) : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        id: `${componentId}-site-input`,
-                                        'data-testid': `${componentId}-site-input`,
-                                    }}
-                                    inputRef={
-                                        !siteDisabled && autoFocus && focusTarget === 'site' ? focusElementRef : null
-                                    }
-                                    {...(inputProps?.site ?? {})}
-                                />
-                            )}
-                            PopperComponent={customPopper}
-                            disabled={siteDisabled}
-                            disableClearable
-                            loading={siteListLoading}
-                        />
-                    </FormControl>
-                </GridWrapper>
-            )}
-            {!hide.includes('building') && (
-                <GridWrapper withGrid={withGrid} divisor={divisor}>
-                    <FormControl className={classes.formControl} fullWidth>
-                        <Autocomplete
-                            id={`${componentId}-building`}
-                            data-testid={`${componentId}-building`}
-                            aria-controls={`${componentId}-building-popup`}
-                            fullWidth
-                            options={buildingList}
-                            value={
-                                buildingList?.length === 0 || (!hasAllOption && location.building === -1)
-                                    ? ''
-                                    : buildingList?.find(building => building.building_id === location.building)
-                            }
-                            onChange={(_, newValue) => {
-                                setLocation({
-                                    building: newValue.building_id,
-                                    floor: -1,
-                                    room: -1,
-                                });
-
-                                actions?.clearFloors?.();
-                                /* istanbul ignore else */ if (newValue.building_id !== -1) {
-                                    actions?.loadFloors?.(newValue.building_id);
+    return <>
+        {!hide.includes('site') && (
+            <GridWrapper withGrid={withGrid} divisor={divisor}>
+                <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <Autocomplete
+                        id={`${componentId}-site`}
+                        data-testid={`${componentId}-site`}
+                        aria-controls={`${componentId}-site-popup`}
+                        fullWidth
+                        options={siteList}
+                        value={
+                            !hasAllOption && location.site === -1
+                                ? ''
+                                : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
+                        }
+                        onChange={(_, newValue) => {
+                            setLocation({
+                                site: newValue.site_id,
+                                building: -1,
+                                floor: -1,
+                                room: -1,
+                            });
+                            actions?.clearFloors?.();
+                        }}
+                        getOptionLabel={option => `${option?.site_name ?? /* istanbul ignore next */ ''}`}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label={locale.site.label}
+                                variant="standard"
+                                InputLabelProps={{
+                                    ...inputLabelProps,
+                                    htmlFor: `${componentId}-site-input`,
+                                }}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {!!siteListLoading ? (
+                                                <CircularProgress
+                                                    color="inherit"
+                                                    size={20}
+                                                    id={`${componentId}-site-progress`}
+                                                    data-testid={`${componentId}-site-progress`}
+                                                />
+                                            ) : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    ),
+                                }}
+                                inputProps={{
+                                    ...params.inputProps,
+                                    id: `${componentId}-site-input`,
+                                    'data-testid': `${componentId}-site-input`,
+                                }}
+                                inputRef={
+                                    !siteDisabled && autoFocus && focusTarget === 'site' ? focusElementRef : null
                                 }
-                            }}
-                            getOptionLabel={option => getBuildingLabel(option)}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    label={locale.building.label}
-                                    variant="standard"
-                                    InputLabelProps={{
-                                        ...inputLabelProps,
-                                        htmlFor: `${componentId}-building-input`,
-                                    }}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {!!buildingListLoading ? (
-                                                    <CircularProgress
-                                                        color="inherit"
-                                                        size={20}
-                                                        id={`${componentId}-building-progress`}
-                                                        data-testid={`${componentId}-building-progress`}
-                                                    />
-                                                ) : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        id: `${componentId}-building-input`,
-                                        'data-testid': `${componentId}-building-input`,
-                                    }}
-                                    inputRef={
-                                        !buildingDisabled && autoFocus && focusTarget === 'building'
-                                            ? focusElementRef
-                                            : null
-                                    }
-                                    {...(inputProps?.building ?? {})}
-                                />
-                            )}
-                            PopperComponent={customPopper}
-                            disabled={buildingDisabled}
-                            disableClearable
-                            loading={siteListLoading}
-                        />
-                    </FormControl>
-                </GridWrapper>
-            )}
+                                {...(inputProps?.site ?? {})}
+                            />
+                        )}
+                        PopperComponent={customPopper}
+                        disabled={siteDisabled}
+                        disableClearable
+                        loading={siteListLoading}
+                    />
+                </FormControl>
+            </GridWrapper>
+        )}
+        {!hide.includes('building') && (
+            <GridWrapper withGrid={withGrid} divisor={divisor}>
+                <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <Autocomplete
+                        id={`${componentId}-building`}
+                        data-testid={`${componentId}-building`}
+                        aria-controls={`${componentId}-building-popup`}
+                        fullWidth
+                        options={buildingList}
+                        value={
+                            buildingList?.length === 0 || (!hasAllOption && location.building === -1)
+                                ? ''
+                                : buildingList?.find(building => building.building_id === location.building)
+                        }
+                        onChange={(_, newValue) => {
+                            setLocation({
+                                building: newValue.building_id,
+                                floor: -1,
+                                room: -1,
+                            });
 
-            {!hide.includes('floor') && (
-                <GridWrapper withGrid={withGrid} divisor={divisor}>
-                    <FormControl className={classes.formControl} fullWidth>
-                        <Autocomplete
-                            id={`${componentId}-floor`}
-                            data-testid={`${componentId}-floor`}
-                            aria-controls={`${componentId}-floor-popup`}
-                            fullWidth
-                            options={floorList}
-                            value={
-                                !hasAllOption && location.floor === -1
-                                    ? ''
-                                    : floorList?.find(floor => floor.floor_id === location.floor)
+                            actions?.clearFloors?.();
+                            /* istanbul ignore else */ if (newValue.building_id !== -1) {
+                                actions?.loadFloors?.(newValue.building_id);
                             }
-                            onChange={(_, newValue) => {
-                                setLocation({ floor: newValue.floor_id, room: -1 });
-
-                                actions?.clearRooms?.();
-                                /* istanbul ignore else */ if (newValue.floor_id !== -1) {
-                                    actions?.loadRooms?.(newValue.floor_id);
+                        }}
+                        getOptionLabel={option => getBuildingLabel(option)}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label={locale.building.label}
+                                variant="standard"
+                                InputLabelProps={{
+                                    ...inputLabelProps,
+                                    htmlFor: `${componentId}-building-input`,
+                                }}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {!!buildingListLoading ? (
+                                                <CircularProgress
+                                                    color="inherit"
+                                                    size={20}
+                                                    id={`${componentId}-building-progress`}
+                                                    data-testid={`${componentId}-building-progress`}
+                                                />
+                                            ) : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    ),
+                                }}
+                                inputProps={{
+                                    ...params.inputProps,
+                                    id: `${componentId}-building-input`,
+                                    'data-testid': `${componentId}-building-input`,
+                                }}
+                                inputRef={
+                                    !buildingDisabled && autoFocus && focusTarget === 'building'
+                                        ? focusElementRef
+                                        : null
                                 }
-                            }}
-                            getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    label={locale.floor.label}
-                                    variant="standard"
-                                    InputLabelProps={{ ...inputLabelProps, htmlFor: `${componentId}-floor-input` }}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {floorListLoading ? (
-                                                    <CircularProgress
-                                                        color="inherit"
-                                                        size={20}
-                                                        id={`${componentId}-floor-progress`}
-                                                        data-testid={`${componentId}-floor-progress`}
-                                                    />
-                                                ) : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        id: `${componentId}-floor-input`,
-                                        'data-testid': `${componentId}-floor-input`,
-                                    }}
-                                    inputRef={
-                                        !floorDisabled && autoFocus && focusTarget === 'floor' ? focusElementRef : null
-                                    }
-                                    {...(inputProps?.floor ?? {})}
-                                />
-                            )}
-                            PopperComponent={customPopper}
-                            disabled={floorDisabled}
-                            disableClearable
-                            loading={!!floorListLoading}
-                        />
-                    </FormControl>
-                </GridWrapper>
-            )}
-            {!hide.includes('room') && (
-                <GridWrapper withGrid={withGrid} divisor={divisor}>
-                    <FormControl className={classes.formControl} fullWidth>
-                        <Autocomplete
-                            id={`${componentId}-room`}
-                            data-testid={`${componentId}-room`}
-                            aria-controls={`${componentId}-room-popup`}
-                            fullWidth
-                            options={roomList}
-                            value={
-                                !hasAllOption && location.room === -1
-                                    ? ''
-                                    : roomList?.find(room => room.room_id === location.room)
+                                {...(inputProps?.building ?? {})}
+                            />
+                        )}
+                        PopperComponent={customPopper}
+                        disabled={buildingDisabled}
+                        disableClearable
+                        loading={siteListLoading}
+                    />
+                </FormControl>
+            </GridWrapper>
+        )}
+
+        {!hide.includes('floor') && (
+            <GridWrapper withGrid={withGrid} divisor={divisor}>
+                <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <Autocomplete
+                        id={`${componentId}-floor`}
+                        data-testid={`${componentId}-floor`}
+                        aria-controls={`${componentId}-floor-popup`}
+                        fullWidth
+                        options={floorList}
+                        value={
+                            !hasAllOption && location.floor === -1
+                                ? ''
+                                : floorList?.find(floor => floor.floor_id === location.floor)
+                        }
+                        onChange={(_, newValue) => {
+                            setLocation({ floor: newValue.floor_id, room: -1 });
+
+                            actions?.clearRooms?.();
+                            /* istanbul ignore else */ if (newValue.floor_id !== -1) {
+                                actions?.loadRooms?.(newValue.floor_id);
                             }
-                            onChange={(_, newValue) => {
-                                setLocation({ room: newValue.room_id }, true);
-                            }}
-                            getOptionLabel={option => option.room_id_displayed ?? option}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    label={locale.room.label}
-                                    variant="standard"
-                                    InputLabelProps={{ ...inputLabelProps, htmlFor: `${componentId}-room-input` }}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {roomListLoading ? (
-                                                    <CircularProgress
-                                                        color="inherit"
-                                                        size={20}
-                                                        id={`${componentId}-room-progress`}
-                                                        data-testid={`${componentId}-room-progress`}
-                                                    />
-                                                ) : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        id: `${componentId}-room-input`,
-                                        'data-testid': `${componentId}-room-input`,
-                                    }}
-                                    inputRef={
-                                        !roomDisabled && autoFocus && focusTarget === 'room' ? focusElementRef : null
-                                    }
-                                    {...(inputProps?.room ?? {})}
-                                />
-                            )}
-                            PopperComponent={customPopper}
-                            disabled={roomDisabled}
-                            disableClearable
-                            loading={!!roomListLoading}
-                        />
-                    </FormControl>
-                </GridWrapper>
-            )}
-        </>
-    );
+                        }}
+                        getOptionLabel={option => option.floor_id_displayed ?? /* istanbul ignore next */ option}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label={locale.floor.label}
+                                variant="standard"
+                                InputLabelProps={{ ...inputLabelProps, htmlFor: `${componentId}-floor-input` }}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {floorListLoading ? (
+                                                <CircularProgress
+                                                    color="inherit"
+                                                    size={20}
+                                                    id={`${componentId}-floor-progress`}
+                                                    data-testid={`${componentId}-floor-progress`}
+                                                />
+                                            ) : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    ),
+                                }}
+                                inputProps={{
+                                    ...params.inputProps,
+                                    id: `${componentId}-floor-input`,
+                                    'data-testid': `${componentId}-floor-input`,
+                                }}
+                                inputRef={
+                                    !floorDisabled && autoFocus && focusTarget === 'floor' ? focusElementRef : null
+                                }
+                                {...(inputProps?.floor ?? {})}
+                            />
+                        )}
+                        PopperComponent={customPopper}
+                        disabled={floorDisabled}
+                        disableClearable
+                        loading={!!floorListLoading}
+                    />
+                </FormControl>
+            </GridWrapper>
+        )}
+        {!hide.includes('room') && (
+            <GridWrapper withGrid={withGrid} divisor={divisor}>
+                <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <Autocomplete
+                        id={`${componentId}-room`}
+                        data-testid={`${componentId}-room`}
+                        aria-controls={`${componentId}-room-popup`}
+                        fullWidth
+                        options={roomList}
+                        value={
+                            !hasAllOption && location.room === -1
+                                ? ''
+                                : roomList?.find(room => room.room_id === location.room)
+                        }
+                        onChange={(_, newValue) => {
+                            setLocation({ room: newValue.room_id }, true);
+                        }}
+                        getOptionLabel={option => option.room_id_displayed ?? option}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label={locale.room.label}
+                                variant="standard"
+                                InputLabelProps={{ ...inputLabelProps, htmlFor: `${componentId}-room-input` }}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {roomListLoading ? (
+                                                <CircularProgress
+                                                    color="inherit"
+                                                    size={20}
+                                                    id={`${componentId}-room-progress`}
+                                                    data-testid={`${componentId}-room-progress`}
+                                                />
+                                            ) : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    ),
+                                }}
+                                inputProps={{
+                                    ...params.inputProps,
+                                    id: `${componentId}-room-input`,
+                                    'data-testid': `${componentId}-room-input`,
+                                }}
+                                inputRef={
+                                    !roomDisabled && autoFocus && focusTarget === 'room' ? focusElementRef : null
+                                }
+                                {...(inputProps?.room ?? {})}
+                            />
+                        )}
+                        PopperComponent={customPopper}
+                        disabled={roomDisabled}
+                        disableClearable
+                        loading={!!roomListLoading}
+                    />
+                </FormControl>
+            </GridWrapper>
+        )}
+    </>;
 };
 
 LocationPicker.propTypes = {

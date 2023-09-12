@@ -27,6 +27,7 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
 
     return (
         <TextField
+            variant="standard"
             onChange={debounceChange}
             value={internalValue}
             id={`${componentId}-input`}
@@ -37,8 +38,7 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
                 ...rest.inputProps,
                 'data-testid': `${componentId}-input`,
                 'data-fieldtype': rootId,
-            }}
-        />
+            }} />
     );
 };
 

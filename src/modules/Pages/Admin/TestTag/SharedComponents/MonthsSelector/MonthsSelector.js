@@ -39,7 +39,11 @@ const MonthsSelector = ({
     };
 
     return (
-        <FormControl className={classNames?.formControl} fullWidth disabled={disabled}>
+        <FormControl
+            variant="standard"
+            className={classNames?.formControl}
+            fullWidth
+            disabled={disabled}>
             {!!label && (
                 <InputLabel
                     shrink
@@ -52,6 +56,7 @@ const MonthsSelector = ({
                 </InputLabel>
             )}
             <Select
+                variant="standard"
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
                 MenuProps={{
@@ -71,8 +76,7 @@ const MonthsSelector = ({
                 value={currentValue ?? ''}
                 onChange={onValueChange}
                 required={required}
-                {...props}
-            >
+                {...props}>
                 {options?.map((period, index) => (
                     <MenuItem
                         value={period.value}

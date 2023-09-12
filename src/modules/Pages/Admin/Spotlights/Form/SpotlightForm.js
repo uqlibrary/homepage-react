@@ -468,10 +468,10 @@ export const SpotlightForm = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl
+                            variant="standard"
                             className={classes.typingArea}
                             fullWidth
-                            title={locale.form.tooltips.adminNotesField}
-                        >
+                            title={locale.form.tooltips.adminNotesField}>
                             <InputLabel htmlFor="spotlightAdminNote">{locale.form.labels.adminNotesField}</InputLabel>
                             <Input
                                 id="spotlightAdminNote"
@@ -487,10 +487,10 @@ export const SpotlightForm = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl
+                            variant="standard"
                             className={classes.typingArea}
                             fullWidth
-                            title={locale.form.tooltips.linkDescAriaField}
-                        >
+                            title={locale.form.tooltips.linkDescAriaField}>
                             <InputLabel htmlFor="spotlightTitle">{locale.form.labels.linkDescAriaField}</InputLabel>
                             <Input
                                 id="spotlightTitle"
@@ -509,7 +509,11 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl className={classes.typingArea} fullWidth title={locale.form.tooltips.imgAltField}>
+                        <FormControl
+                            variant="standard"
+                            className={classes.typingArea}
+                            fullWidth
+                            title={locale.form.tooltips.imgAltField}>
                             <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.imgAltField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
@@ -527,7 +531,11 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.linkField} className={classes.typingArea}>
+                        <FormControl
+                            variant="standard"
+                            fullWidth
+                            title={locale.form.tooltips.linkField}
+                            className={classes.typingArea}>
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.linkField}</InputLabel>
                             <Input
                                 type="url"
@@ -581,14 +589,14 @@ export const SpotlightForm = ({
                             minDateMessage="Should not be before Date published"
                             renderInput={props => (
                                 <TextField
+                                    variant="standard"
                                     {...props}
                                     helperText={
                                         values.end && values.end < values.start
                                             ? 'Date must not be before the minimum date.'
                                             : ''
                                     }
-                                    error={values.end && values.end < values.start}
-                                />
+                                    error={values.end && values.end < values.start} />
                             )}
                         />
                     </Grid>

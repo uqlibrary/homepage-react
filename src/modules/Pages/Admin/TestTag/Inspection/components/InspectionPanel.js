@@ -119,11 +119,16 @@ const InspectionPanel = ({
             <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={4}>
-                        <FormControl className={classes.formControl} fullWidth error={invalidTestingDevice}>
+                        <FormControl
+                            variant="standard"
+                            className={classes.formControl}
+                            fullWidth
+                            error={invalidTestingDevice}>
                             <InputLabel required htmlFor={`${componentIdLower}-inspection-device-input`}>
                                 {pageLocale.form.inspection.deviceLabel}
                             </InputLabel>
                             <Select
+                                variant="standard"
                                 id={`${componentIdLower}-inspection-device`}
                                 data-testid={`${componentIdLower}-inspection-device`}
                                 MenuProps={{
@@ -146,8 +151,7 @@ const InspectionPanel = ({
                                 }}
                                 required
                                 error={invalidTestingDevice}
-                                disabled={disabled}
-                            >
+                                disabled={disabled}>
                                 {!!inspectionConfigLoading && (
                                     <MenuItem value={-1} disabled key={'devicetypes-loading'}>
                                         {pageLocale.form.loading}
@@ -255,7 +259,7 @@ const InspectionPanel = ({
                     )}
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
                         <Grid item xs={12} sm={12}>
-                            <FormControl className={classes.formControl} fullWidth>
+                            <FormControl variant="standard" className={classes.formControl} fullWidth>
                                 <TextField
                                     {...pageLocale.form.inspection.failReason}
                                     multiline
@@ -278,7 +282,7 @@ const InspectionPanel = ({
                     )}
 
                     <Grid item xs={12} sm={12}>
-                        <FormControl className={classes.formControl} fullWidth>
+                        <FormControl variant="standard" className={classes.formControl} fullWidth>
                             <TextField
                                 {...pageLocale.form.inspection.inspectionNotes}
                                 multiline

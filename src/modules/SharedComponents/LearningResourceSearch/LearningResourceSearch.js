@@ -141,6 +141,7 @@ export const LearningResourceSearch = ({
                         renderInput={params => {
                             return (
                                 <TextField
+                                    variant="standard"
                                     {...params}
                                     placeholder={locale.search.placeholder}
                                     error={!!CRsuggestionsError}
@@ -157,8 +158,7 @@ export const LearningResourceSearch = ({
                                         'data-analyticsid': `${elementId}-autocomplete-input-wrapper`,
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
-                                    label={locale.search.placeholder}
-                                />
+                                    label={locale.search.placeholder} />
                             );
                         }}
                         disableClearable

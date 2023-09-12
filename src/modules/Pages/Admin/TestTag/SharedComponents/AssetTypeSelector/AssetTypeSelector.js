@@ -63,7 +63,7 @@ const AssetTypeSelector = ({
     );
 
     return (
-        <FormControl className={classNames.formControl} fullWidth>
+        <FormControl variant="standard" className={classNames.formControl} fullWidth>
             <Autocomplete
                 id={`${componentId}`}
                 data-testid={`${componentId}`}

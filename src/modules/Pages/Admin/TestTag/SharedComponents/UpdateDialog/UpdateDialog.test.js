@@ -51,12 +51,12 @@ describe('UpdateDialog Renders component', () => {
     it('renders simple Add form and returns values', async () => {
         const fields = {
             asset_id: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField variant="standard" {...props} />,
                 fieldParams: { canAdd: false },
             },
-            asset_id_displayed: { component: props => <TextField {...props} />, fieldParams: {} },
-            asset_type_name: { component: props => <TextField {...props} />, fieldParams: {} },
-            asset_location: { component: props => <TextField {...props} />, fieldParams: {} },
+            asset_id_displayed: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
+            asset_type_name: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
+            asset_location: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
             asset_status: {
                 component: props => <FormControlLabel control={<Checkbox checked={false} {...props} />} />,
                 fieldParams: { type: 'checkbox' }, // required for checkbox controls
@@ -116,8 +116,8 @@ describe('UpdateDialog Renders component', () => {
 
     it('doesnt render Add fields', async () => {
         const fields = {
-            asset_id_displayed: { component: props => <TextField {...props} />, fieldParams: { renderInAdd: false } },
-            asset_type_name: { component: props => <TextField {...props} />, fieldParams: {} },
+            asset_id_displayed: { component: props => <TextField variant="standard" {...props} />, fieldParams: { renderInAdd: false } },
+            asset_type_name: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
         };
         const columns = {
             asset_id_displayed: { label: 'Asset ID' },
@@ -143,13 +143,13 @@ describe('UpdateDialog Renders component', () => {
     it('renders simple Edit form and returns values', async () => {
         const fields = {
             asset_id: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField variant="standard" {...props} />,
                 fieldParams: { canEdit: false },
             },
-            asset_id_displayed: { component: props => <TextField {...props} />, fieldParams: {} },
-            asset_type_name: { component: props => <TextField {...props} />, fieldParams: {} },
-            asset_location: { component: props => <TextField {...props} />, fieldParams: {} },
-            asset_status: { component: props => <TextField {...props} />, fieldParams: {} },
+            asset_id_displayed: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
+            asset_type_name: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
+            asset_location: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
+            asset_status: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
         };
         const columns = {
             asset_id: { label: 'ID' },
@@ -208,10 +208,10 @@ describe('UpdateDialog Renders component', () => {
     it('doesnt render Edit fields', () => {
         const fields = {
             asset_id_displayed: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField variant="standard" {...props} />,
                 fieldParams: { renderInUpdate: false },
             },
-            asset_type_name: { component: props => <TextField {...props} />, fieldParams: {} },
+            asset_type_name: { component: props => <TextField variant="standard" {...props} />, fieldParams: {} },
         };
         const columns = {
             asset_id_displayed: { label: 'Asset ID' },
@@ -321,7 +321,7 @@ describe('UpdateDialog Renders component', () => {
         const valueFormatterFn = jest.fn(prop => prop.split('/').join('-'));
         const fields = {
             asset_id_displayed: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField variant="standard" {...props} />,
                 fieldParams: {},
                 valueFormatter: valueFormatterFn,
             },
@@ -350,7 +350,7 @@ describe('UpdateDialog Renders component', () => {
         });
         const fields = {
             asset_id_displayed: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField variant="standard" {...props} />,
                 fieldParams: {},
                 validate: validateFn,
             },
@@ -384,7 +384,7 @@ describe('UpdateDialog Renders component', () => {
     it('shows spinner in action button when busy', () => {
         const fields = {
             asset_id_displayed: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField variant="standard" {...props} />,
                 fieldParams: {},
             },
         };
@@ -409,7 +409,7 @@ describe('UpdateDialog Renders component', () => {
     it('coverage', () => {
         const fields = {
             asset_id_displayed: {
-                component: props => <TextField {...props} />,
+                component: props => <TextField variant="standard" {...props} />,
                 fieldParams: {},
             },
         };

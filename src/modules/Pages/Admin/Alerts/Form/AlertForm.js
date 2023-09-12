@@ -515,7 +515,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.title}>
+                        <FormControl variant="standard" fullWidth title={locale.form.tooltips.title}>
                             <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                             <Input
                                 id="alertTitle"
@@ -530,7 +530,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.message}>
+                        <FormControl variant="standard" fullWidth title={locale.form.tooltips.message}>
                             <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
                                 {locale.form.labels.message}
                             </InputLabel>
@@ -559,6 +559,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             >
                                 <Grid item md={5} xs={12}>
                                     <TextField
+                                        variant="standard"
                                         id={`startDate-${index}`}
                                         data-testid={`admin-alerts-form-start-date-${index}`}
                                         error={isInvalidStartDate(dateset.startDate)}
@@ -571,11 +572,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         inputProps={{
                                             min: defaults.minimumDate,
                                             required: true,
-                                        }}
-                                    />
+                                        }} />
                                 </Grid>
                                 <Grid item md={5} xs={12}>
                                     <TextField
+                                        variant="standard"
                                         id={`endDate-${index}`}
                                         data-testid={`admin-alerts-form-end-date-${index}`}
                                         InputLabelProps={{ shrink: true }}
@@ -588,8 +589,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         inputProps={{
                                             min: values.dateList[index].startDate,
                                             required: true,
-                                        }}
-                                    />
+                                        }} />
                                 </Grid>
                                 <Grid item md={2} xs={12} data-testid={`admin-alerts-form-add-remove-buttons-${index}`}>
                                     {['add', 'clone'].includes(defaults.type) &&
@@ -661,6 +661,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         >
                             {locale.form.labels.priority.title}
                             <Select
+                                variant="standard"
                                 data-testid="admin-alerts-form-select-prioritytype"
                                 defaultValue={values.priorityType}
                                 value={values.priorityType}
@@ -668,8 +669,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 classes={{ root: classes.selectPriorityType }}
                                 inputProps={{
                                     'data-testid': 'admin-alerts-form-prioritytype-input',
-                                }}
-                            >
+                                }}>
                                 <MenuItem data-testid="admin-alerts-form-option-info" value={'info'}>
                                     {locale.form.labels.priority.level.info}
                                 </MenuItem>
@@ -692,7 +692,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     }}
                 >
                     <Grid item md={6} xs={12}>
-                        <FormControl fullWidth>
+                        <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                             <Input
                                 id="linkTitle"
@@ -707,7 +707,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         </FormControl>
                     </Grid>
                     <Grid item md={6} xs={12}>
-                        <FormControl fullWidth>
+                        <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                             <Input
                                 type="url"

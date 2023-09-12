@@ -111,16 +111,16 @@ export const PromoPanelAddNewDefault = ({
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item xs={12}>
-                            <FormControl className={classes.dropdown} fullWidth title={'Panel'}>
+                            <FormControl variant="standard" className={classes.dropdown} fullWidth title={'Panel'}>
                                 <InputLabel id="group-selector">Panel</InputLabel>
                                 <Select
+                                    variant="standard"
                                     labelId="group-selector"
                                     id="new-default-panel-for-group"
                                     label="Panel"
                                     value={selectedPanel}
                                     onChange={handlePanelChange}
-                                    MenuProps={MenuProps}
-                                >
+                                    MenuProps={MenuProps}>
                                     {AvailablePanels.map(item => (
                                         <MenuItem key={item.panel_id} value={item.panel_id}>
                                             <ListItemText primary={item.panel_title} />

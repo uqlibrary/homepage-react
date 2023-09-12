@@ -37,18 +37,19 @@ export default {
             },
         },
         device_model_name: {
-            component: props => <TextField {...props} required />,
+            component: props => <TextField variant="standard" {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
         },
         device_serial_number: {
-            component: props => <TextField {...props} required />,
+            component: props => <TextField variant="standard" {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, minWidth: 150 },
         },
         device_calibration_due_date: {
             component: props => (
                 <TextField
+                    variant="standard"
                     format={dateFormat}
                     type="date"
                     {...props}
@@ -58,8 +59,7 @@ export default {
                             .add(1, 'd')
                             .format(dateFormat),
                     }}
-                    required
-                />
+                    required />
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
@@ -90,19 +90,19 @@ export default {
         device_calibrated_date_last: {
             component: props => (
                 <TextField
+                    variant="standard"
                     format={dateFormat}
                     type="date"
                     {...props}
                     inputProps={{ ...props.inputProps, max: moment().format(dateFormat) }}
-                    required
-                />
+                    required />
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
             fieldParams: { canEdit: true, minWidth: 180 },
         },
         device_calibrated_by_last: {
-            component: props => <TextField {...props} required />,
+            component: props => <TextField variant="standard" {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, minWidth: 180, flex: 1 },
         },
