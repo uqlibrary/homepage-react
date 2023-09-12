@@ -471,7 +471,8 @@ export const SpotlightForm = ({
                             variant="standard"
                             className={classes.typingArea}
                             fullWidth
-                            title={locale.form.tooltips.adminNotesField}>
+                            title={locale.form.tooltips.adminNotesField}
+                        >
                             <InputLabel htmlFor="spotlightAdminNote">{locale.form.labels.adminNotesField}</InputLabel>
                             <Input
                                 id="spotlightAdminNote"
@@ -490,7 +491,8 @@ export const SpotlightForm = ({
                             variant="standard"
                             className={classes.typingArea}
                             fullWidth
-                            title={locale.form.tooltips.linkDescAriaField}>
+                            title={locale.form.tooltips.linkDescAriaField}
+                        >
                             <InputLabel htmlFor="spotlightTitle">{locale.form.labels.linkDescAriaField}</InputLabel>
                             <Input
                                 id="spotlightTitle"
@@ -513,7 +515,8 @@ export const SpotlightForm = ({
                             variant="standard"
                             className={classes.typingArea}
                             fullWidth
-                            title={locale.form.tooltips.imgAltField}>
+                            title={locale.form.tooltips.imgAltField}
+                        >
                             <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.imgAltField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
@@ -535,7 +538,8 @@ export const SpotlightForm = ({
                             variant="standard"
                             fullWidth
                             title={locale.form.tooltips.linkField}
-                            className={classes.typingArea}>
+                            className={classes.typingArea}
+                        >
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.linkField}</InputLabel>
                             <Input
                                 type="url"
@@ -596,7 +600,8 @@ export const SpotlightForm = ({
                                             ? 'Date must not be before the minimum date.'
                                             : ''
                                     }
-                                    error={values.end && values.end < values.start} />
+                                    error={values.end && values.end < values.start}
+                                />
                             )}
                         />
                     </Grid>

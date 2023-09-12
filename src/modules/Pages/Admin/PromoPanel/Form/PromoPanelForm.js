@@ -373,161 +373,165 @@ export const PromoPanelForm = ({
         clearForm();
         window.location.reload(false);
     };
-    return <>
-        <StandardCard title={locale.editPage.Title(isEdit, isClone)}>
-            <form className={classes.spotlightForm}>
-                {/* Confirmation Boxes here */}
-                <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
-                    {locale.form.labels.adminNotesLabel}
-                </Typography>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <FormControl
-                            variant="standard"
-                            className={classes.typingArea}
-                            fullWidth
-                            title={locale.form.tooltips.adminNotesField}>
-                            <InputLabel htmlFor="promoPanelAdminNote">
-                                {locale.form.labels.adminNotesField}
-                            </InputLabel>
-                            <Input
-                                id="promoPanelAdminNote"
-                                data-testid="admin-promopanel-form-admin-note"
-                                multiline
-                                onChange={handleChange('admin_notes')}
-                                rows={2}
-                                value={values.admin_notes}
-                            />
-                        </FormControl>
-                    </Grid>
+    return (
+        <>
+            <StandardCard title={locale.editPage.Title(isEdit, isClone)}>
+                <form className={classes.spotlightForm}>
+                    {/* Confirmation Boxes here */}
+                    <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
+                        {locale.form.labels.adminNotesLabel}
+                    </Typography>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <FormControl
+                                variant="standard"
+                                className={classes.typingArea}
+                                fullWidth
+                                title={locale.form.tooltips.adminNotesField}
+                            >
+                                <InputLabel htmlFor="promoPanelAdminNote">
+                                    {locale.form.labels.adminNotesField}
+                                </InputLabel>
+                                <Input
+                                    id="promoPanelAdminNote"
+                                    data-testid="admin-promopanel-form-admin-note"
+                                    multiline
+                                    onChange={handleChange('admin_notes')}
+                                    rows={2}
+                                    value={values.admin_notes}
+                                />
+                            </FormControl>
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
-                            {locale.form.labels.titleLabel}
-                        </Typography>
-                        <FormControl
-                            variant="standard"
-                            className={classes.typingArea}
-                            fullWidth
-                            title={locale.form.tooltips.titleField}>
-                            <InputLabel htmlFor="promoPanelTitle">{locale.form.labels.titleField}</InputLabel>
-                            <Input
-                                id="promoPanelTitle"
-                                data-testid="admin-promopanel-form-title"
-                                multiline
-                                error={!values.title}
-                                onChange={handleChange('title')}
-                                rows={1}
-                                value={values.title}
+                        <Grid item xs={12}>
+                            <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
+                                {locale.form.labels.titleLabel}
+                            </Typography>
+                            <FormControl
+                                variant="standard"
+                                className={classes.typingArea}
+                                fullWidth
+                                title={locale.form.tooltips.titleField}
+                            >
+                                <InputLabel htmlFor="promoPanelTitle">{locale.form.labels.titleField}</InputLabel>
+                                <Input
+                                    id="promoPanelTitle"
+                                    data-testid="admin-promopanel-form-title"
+                                    multiline
+                                    error={!values.title}
+                                    onChange={handleChange('title')}
+                                    rows={1}
+                                    value={values.title}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
+                                {locale.form.labels.contentLabel}
+                            </Typography>
+                            <CKEditor
+                                id="promoPanelContent"
+                                style={{ width: '100%' }}
+                                editor={ClassicEditor}
+                                config={{ ...locale.editor.config }}
+                                data={values.content}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    handleContentChange(data);
+                                }}
+                                onBlur={(event, editor) => {
+                                    const data = editor.getData();
+                                    handleContentChange(data);
+                                }}
                             />
-                        </FormControl>
+                            {!!!values.content && (
+                                <span className={classes.contentRequired}>* This content is required</span>
+                            )}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
-                            {locale.form.labels.contentLabel}
-                        </Typography>
-                        <CKEditor
-                            id="promoPanelContent"
-                            style={{ width: '100%' }}
-                            editor={ClassicEditor}
-                            config={{ ...locale.editor.config }}
-                            data={values.content}
-                            onChange={(event, editor) => {
-                                const data = editor.getData();
-                                handleContentChange(data);
-                            }}
-                            onBlur={(event, editor) => {
-                                const data = editor.getData();
-                                handleContentChange(data);
-                            }}
-                        />
-                        {!!!values.content && (
-                            <span className={classes.contentRequired}>* This content is required</span>
-                        )}
-                    </Grid>
-                </Grid>
-            </form>
-        </StandardCard>
-        {/* Schedules */}
+                </form>
+            </StandardCard>
+            {/* Schedules */}
 
-        <StandardCard style={{ marginTop: 20 }} title={locale.form.labels.defaultPanelLabel}>
-            <PromoPanelFormSchedules
-                values={values}
-                isEdit={isEdit}
-                currentPanel={currentPanel}
-                scheduledList={scheduledList}
-                knownGroups={knownGroups}
-                defaults={defaults}
+            <StandardCard style={{ marginTop: 20 }} title={locale.form.labels.defaultPanelLabel}>
+                <PromoPanelFormSchedules
+                    values={values}
+                    isEdit={isEdit}
+                    currentPanel={currentPanel}
+                    scheduledList={scheduledList}
+                    knownGroups={knownGroups}
+                    defaults={defaults}
+                    displayList={displayList}
+                    removePanelGroupSchedule={removePanelGroupSchedule}
+                    editPanelGroupSchedule={editPanelGroupSchedule}
+                    selectorGroupNames={selectorGroupNames}
+                    handleAddSchedule={handleAddSchedule}
+                    handleChange={handleChange}
+                    handleGroupChange={handleGroupChange}
+                />
+
+                <PromoPanelContentButtons
+                    values={values}
+                    isEdit={isEdit}
+                    previewPromoPanel={previewPromoPanel}
+                    navigateToListPage={navigateToListPage}
+                    confirmSavePromo={confirmSavePromo}
+                    savePromoPanel={savePromoPanel}
+                    promoPanelSaving={promoPanelSaving || (panelUpdated && queueLength > 0)}
+                />
+            </StandardCard>
+
+            <PromoPanelPreview
+                isPreviewOpen={values.isPreviewOpen}
+                previewName={values.name}
+                handlePreviewClose={handlePreviewClose}
+                previewTitle={values.title}
+                previewContent={values.content}
+                previewGroup={selectorGroupNames}
+                previewScheduled={values.scheduled === 1 ? true : false}
+                previewStart={values.start}
+                previewEnd={values.end}
+            />
+            <PromoPanelGroupDateSelector
+                isEditingDate={isEditingDate}
+                group={scheduleGroupIndex}
+                defaultStartDate={editDate.start}
+                defaultEndDate={editDate.end}
+                scheduleChangeIndex={scheduleChangeIndex}
+                scheduleGroupIndex={scheduleGroupIndex}
+                handleCloseGroupDate={handleCloseGroupDate}
+                handleSaveGroupDate={handleSaveGroupDate}
+                fullPromoPanelUserTypeList={fullPromoPanelUserTypeList}
                 displayList={displayList}
-                removePanelGroupSchedule={removePanelGroupSchedule}
-                editPanelGroupSchedule={editPanelGroupSchedule}
-                selectorGroupNames={selectorGroupNames}
-                handleAddSchedule={handleAddSchedule}
-                handleChange={handleChange}
-                handleGroupChange={handleGroupChange}
+                setConfirmationMessage={setConfirmationMessage}
+                setIsConfirmOpen={setIsConfirmOpen}
+                setConfirmationMode={setConfirmationMode}
+                panelScheduleId={panelScheduleId}
+            />
+            <PromoPanelFormConfirmation
+                confirmationMode={confirmationMode}
+                isConfirmOpen={isConfirmOpen}
+                confirmationMessage={confirmationMessage}
+                confirmSave={savePromoPanel}
+                confirmAddSchedule={handleAddSchedule}
+                cancelAction={cancelConfirmation}
             />
 
-            <PromoPanelContentButtons
-                values={values}
-                isEdit={isEdit}
-                previewPromoPanel={previewPromoPanel}
-                navigateToListPage={navigateToListPage}
-                confirmSavePromo={confirmSavePromo}
-                savePromoPanel={savePromoPanel}
-                promoPanelSaving={promoPanelSaving || (panelUpdated && queueLength > 0)}
+            <PromoPanelSaveConfirmation
+                isConfirmOpen={panelUpdated && queueLength === 0}
+                title={isEdit ? 'Panel has been updated' : 'Panel has been created'}
+                content={
+                    values.scheduledList.length > 0 || values.defaultList.length > 0
+                        ? 'Panel is saved, and schedules / defaults assigned'
+                        : 'This panel is yet to be scheduled or assigned.'
+                }
+                primaryAction={addNewPanel}
+                primaryText={isEdit ? 'Continue Editing' : 'Add another panel'}
+                secondaryAction={navigateToListPage}
+                secondaryText={'Return to list'}
             />
-        </StandardCard>
-
-        <PromoPanelPreview
-            isPreviewOpen={values.isPreviewOpen}
-            previewName={values.name}
-            handlePreviewClose={handlePreviewClose}
-            previewTitle={values.title}
-            previewContent={values.content}
-            previewGroup={selectorGroupNames}
-            previewScheduled={values.scheduled === 1 ? true : false}
-            previewStart={values.start}
-            previewEnd={values.end}
-        />
-        <PromoPanelGroupDateSelector
-            isEditingDate={isEditingDate}
-            group={scheduleGroupIndex}
-            defaultStartDate={editDate.start}
-            defaultEndDate={editDate.end}
-            scheduleChangeIndex={scheduleChangeIndex}
-            scheduleGroupIndex={scheduleGroupIndex}
-            handleCloseGroupDate={handleCloseGroupDate}
-            handleSaveGroupDate={handleSaveGroupDate}
-            fullPromoPanelUserTypeList={fullPromoPanelUserTypeList}
-            displayList={displayList}
-            setConfirmationMessage={setConfirmationMessage}
-            setIsConfirmOpen={setIsConfirmOpen}
-            setConfirmationMode={setConfirmationMode}
-            panelScheduleId={panelScheduleId}
-        />
-        <PromoPanelFormConfirmation
-            confirmationMode={confirmationMode}
-            isConfirmOpen={isConfirmOpen}
-            confirmationMessage={confirmationMessage}
-            confirmSave={savePromoPanel}
-            confirmAddSchedule={handleAddSchedule}
-            cancelAction={cancelConfirmation}
-        />
-
-        <PromoPanelSaveConfirmation
-            isConfirmOpen={panelUpdated && queueLength === 0}
-            title={isEdit ? 'Panel has been updated' : 'Panel has been created'}
-            content={
-                values.scheduledList.length > 0 || values.defaultList.length > 0
-                    ? 'Panel is saved, and schedules / defaults assigned'
-                    : 'This panel is yet to be scheduled or assigned.'
-            }
-            primaryAction={addNewPanel}
-            primaryText={isEdit ? 'Continue Editing' : 'Add another panel'}
-            secondaryAction={navigateToListPage}
-            secondaryText={'Return to list'}
-        />
-    </>;
+        </>
+    );
 };
 
 PromoPanelForm.propTypes = {

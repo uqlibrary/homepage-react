@@ -108,7 +108,7 @@
         "nyc": "^15.1.0",
         "postcss-loader": "^2.1.4",
         "prettier": "^1.18.2",
-        "prettier-eslint": "^9.0.1",
+        "prettier-eslint": "^15.0.1",
         "prettier-eslint-cli": "^5.0.0",
         "progress-bar-webpack-plugin": "^2.1.0",
         "query-string": "^6.5.0",

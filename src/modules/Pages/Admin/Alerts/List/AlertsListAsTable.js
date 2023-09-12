@@ -350,7 +350,8 @@ export const AlertsListAsTable = ({
                             aria-label="Delete alert(s)"
                             data-testid={`alert-list-${tableType}-delete-button`}
                             title="Delete alert(s)"
-                            size="large">
+                            size="large"
+                        >
                             <DeleteIcon
                                 className={`${
                                     !!deleteActive
@@ -365,7 +366,8 @@ export const AlertsListAsTable = ({
                             data-testid={`alert-list-${tableType}-deselect-button`}
                             className={classes.iconHighlighted}
                             title="Deselect all"
-                            size="large">
+                            size="large"
+                        >
                             <CloseIcon />
                         </IconButton>
                     </span>
