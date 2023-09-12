@@ -94,10 +94,13 @@ const FilterDialog = ({
         if (isOpen && !isBusy) {
             actions.loadAssetsMine({
                 ...((lastSelectedLocation === 'floor' && location.floor !== -1) ||
-                (lastSelectedLocation === 'room' && location.room !== -1)
+                (lastSelectedLocation === 'room' && location.room !== -1) ||
+                (lastSelectedLocation === 'building' && location.building !== -1) ||
+                (lastSelectedLocation === 'site' && location.site !== -1)
                     ? {
                           locationType: lastSelectedLocation,
-                          locationId: lastSelectedLocation === 'room' ? location.room : location.floor,
+                          // locationId: lastSelectedLocation === 'room' ? location.room : location.floor,
+                          locationId: location[lastSelectedLocation],
                       }
                     : {}),
                 ...(!!assetTypeId ? { assetTypeId } : {}),
@@ -105,7 +108,7 @@ const FilterDialog = ({
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lastSelectedLocation, location.floor, location.room, assetTypeId, searchNotes, isOpen, isBusy]);
+    }, [lastSelectedLocation, location, assetTypeId, searchNotes, isOpen, isBusy]);
 
     const handleCancelAction = () => {
         onCancel?.();
