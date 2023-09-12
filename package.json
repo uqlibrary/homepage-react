@@ -163,7 +163,7 @@
         "match-sorter": "^4.2.1",
         "mini-create-react-context": "^0.4.1",
         "moment": "^2.22.1",
-        "moment-timezone": "^0.5.33",
+        "moment-timezone": "^0.5.43",
         "moment-timezone-data-webpack-plugin": "^1.5.0",
         "prop-types": "^15.7.2",
         "pure-react-carousel": "^1.28.1",

@@ -8,7 +8,8 @@ import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import TextField from '@mui/material/TextField';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -327,7 +328,8 @@ export const SpotlightForm = ({
     const handleChange = prop => event => {
         let propValue;
         if (['start', 'end'].includes(prop)) {
-            propValue = event.format('YYYY/MM/DD hh:mm a');
+            console.log('EVENT', event);
+            propValue = event; // event.format('YYYY/MM/DD hh:mm a');
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
             // fake switch because istanbul doesnt block on an else if in this version :(
@@ -541,9 +543,10 @@ export const SpotlightForm = ({
                         </FormControl>
                     </Grid>
                 </Grid>
+                {console.log(values.start)}
                 <Grid container spacing={2} style={{ marginTop: 12 }}>
                     <Grid item md={5} xs={12}>
-                        <KeyboardDateTimePicker
+                        <DateTimePicker
                             id="admin-spotlights-form-start-date"
                             data-testid="admin-spotlights-form-start-date"
                             value={values.start}
@@ -563,12 +566,12 @@ export const SpotlightForm = ({
                         )}
                     </Grid>
                     <Grid item md={5} xs={12}>
-                        <KeyboardDateTimePicker
+                        <DateTimePicker
                             id="admin-spotlights-form-end-date"
                             data-testid="admin-spotlights-form-end-date"
+                            value={values.end}
                             label={locale.form.labels.unpublishDate}
                             onChange={handleChange('end')}
-                            value={values.end}
                             minDate={values.start}
                             format="DD/MM/YYYY HH:mm a"
                             autoOk
@@ -576,6 +579,17 @@ export const SpotlightForm = ({
                                 'aria-label': locale.form.tooltips.unpublishDate,
                             }}
                             minDateMessage="Should not be before Date published"
+                            renderInput={props => (
+                                <TextField
+                                    {...props}
+                                    helperText={
+                                        values.end && values.end < values.start
+                                            ? 'Date must not be before the minimum date.'
+                                            : ''
+                                    }
+                                    error={values.end && values.end < values.start}
+                                />
+                            )}
                         />
                     </Grid>
                 </Grid>
