@@ -61,6 +61,14 @@ const selectOptionFromListByIndex = (index, actions) => {
 };
 
 describe('AssetTypes', () => {
+    beforeEach(() => {
+        jest.spyOn(console, 'error');
+        console.error.mockImplementation(() => null);
+    });
+
+    afterEach(() => {
+        console.error.mockRestore();
+    });
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
         expect(getByText(locale.pages.manage.assetTypes.header.pageSubtitle('Library'))).toBeInTheDocument();

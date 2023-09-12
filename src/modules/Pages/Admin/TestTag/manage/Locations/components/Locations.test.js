@@ -77,6 +77,14 @@ const assertRow = (grid, values, rowIndex) => {
 };
 
 describe('Locations', () => {
+    beforeEach(() => {
+        jest.spyOn(console, 'error');
+        console.error.mockImplementation(() => null);
+    });
+
+    afterEach(() => {
+        console.error.mockRestore();
+    });
     describe('sites', () => {
         jest.setTimeout(30000);
         it('renders component as expected', async () => {

@@ -10,14 +10,7 @@ import locale from 'locale/global';
 import * as Sentry from '@sentry/browser';
 
 import param from 'can-param';
-import {
-    COMP_AVAIL_API,
-    CURRENT_ACCOUNT_API,
-    LIB_HOURS_API,
-    LOANS_API,
-    PRINTING_API,
-    TRAINING_API,
-} from '../repositories/routes';
+import { COMP_AVAIL_API, LIB_HOURS_API, LOANS_API, PRINTING_API, TRAINING_API } from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -83,15 +76,25 @@ api.interceptors.request.use(request => {
     return request;
 });
 
-const reportToSentry = error => {
-    // the non-logged in user always generates a 403 on the Account call. We dont need to report that to Sentry
-    const isCallToAccountAPI =
-        error?.response?.request?.responseUrl?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`) ||
-        error?.response?.request?.responseURL?.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`);
-    if (error?.response?.status === 403 && isCallToAccountAPI) {
+function getUrlRoot(responseUrl) {
+    return responseUrl.startsWith('https://api.library.uq.edu.au/v1/')
+        ? 'https://api.library.uq.edu.au/v1'
+        : 'https://api.library.uq.edu.au/staging';
+}
+
+function routeRequiresLogin(error) {
+    const responseURL = error?.response?.request?.responseUrl || error?.response?.request?.responseURL || null;
+    if (!responseURL) {
         return false;
     }
 
+    const urlRoot = getUrlRoot(responseURL);
+    const accountUrl = `${urlRoot}/account`;
+    const LRurlPrefix = `${urlRoot}/learning_resources/reading_list/summary`;
+    return responseURL.startsWith(accountUrl) || responseURL.startsWith(LRurlPrefix);
+}
+
+const reportToSentry = error => {
     let detailedError = '';
     if (error.response) {
         detailedError = `Data: ${JSON.stringify(error.response.data)}; Status: ${
@@ -109,21 +112,33 @@ const reportToSentry = error => {
 };
 
 function alertDisplayAllowed(error) {
-    // these APIs don't put a banner on the page because they are reported or ignored within the panel
-    const apisThatManageTheirOwn500 = [
-        TRAINING_API().apiUrl,
-        COMP_AVAIL_API().apiUrl,
-        LIB_HOURS_API().apiUrl,
-        PRINTING_API().apiUrl,
-        LOANS_API().apiUrl,
-    ];
-    if (
-        !!error.response?.request?.responseUrl &&
-        apisThatManageTheirOwn500.includes(error.response.request.responseUrl)
-    ) {
+    const responseURL = error?.response?.request?.responseURL || error?.response?.request?.responseUrl || null;
+    if (!responseURL) {
         return false;
     }
-    return true;
+
+    const urlRoot = getUrlRoot(responseURL);
+
+    // these APIs don't put a banner on the page because they are reported or ignored within their own panel
+    const handlesErrorUrls =
+        responseURL.startsWith(`${urlRoot}/${TRAINING_API().apiUrl}`) ||
+        responseURL.startsWith(`${urlRoot}/${COMP_AVAIL_API().apiUrl}`) ||
+        responseURL.startsWith(`${urlRoot}/${LIB_HOURS_API().apiUrl}`) ||
+        responseURL.startsWith(`${urlRoot}/${PRINTING_API().apiUrl}`) ||
+        responseURL.startsWith(`${urlRoot}/${LOANS_API().apiUrl}`);
+
+    return !handlesErrorUrls;
+}
+
+function backendHasSanitisedErrorMessages(response) {
+    const responseURL = response?.request?.responseUrl || response?.request?.responseURL || null;
+    if (!responseURL) {
+        return false;
+    }
+    const urlRoot = getUrlRoot(responseURL);
+
+    // certain systems have fully sanitised their error messages - these can go through for display on the frontend
+    return !!responseURL && responseURL.startsWith(`${urlRoot}/test-and-tag`);
 }
 
 api.interceptors.response.use(
@@ -135,13 +150,10 @@ api.interceptors.response.use(
     },
     error => {
         let errorMessage = null;
-        if (!!error && !!error.config) {
-            if (
-                !!error.response &&
-                !!error.response.status &&
-                error.response.status === 403 &&
-                error?.response?.request?.responseUrl === 'account'
-            ) {
+        if (!!error?.config && !!error?.response) {
+            // (oddly, when a 403 comes through, axios fires twice, the second time without a response)
+            const errorStatus = error.response.status;
+            if ([401, 403].includes(errorStatus) && routeRequiresLogin(error)) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
@@ -155,11 +167,11 @@ api.interceptors.response.use(
                 }
             }
 
-            if (!!error.message && !!error.response && !!error.response.status && error.response.status === 500) {
+            if (errorStatus === 500) {
                 errorMessage =
-                    !!error.response?.data && error.response?.data.length > 0
-                        ? { message: error.response.data.join(' ') }
-                        : ((error.response || {}).data || {}).message ||
+                    error.response.data?.length > 0
+                        ? { message: error.response.data?.join(' ') }
+                        : (backendHasSanitisedErrorMessages(error.response) && error.response.data?.message) ||
                           locale.global.errorMessages[error.response.status];
                 if (!alertDisplayAllowed(error)) {
                     // we don't display an error banner for these (the associated panel displays an error)
@@ -168,35 +180,31 @@ api.interceptors.response.use(
                 } else {
                     store.dispatch(showAppAlert(error.response.data));
                 }
-            } else if (!!error.response && !!error.response.status) {
-                errorMessage = locale.global.errorMessages[error.response.status];
+            } else if (!!errorStatus) {
+                errorMessage =
+                    error.response.data?.length > 0
+                        ? { message: error.response.data?.join(' ') }
+                        : (backendHasSanitisedErrorMessages(error.response) && error.response.data?.message) ||
+                          locale.global.errorMessages[error.response.status];
                 if ([410, 422].includes(error.response.status)) {
                     errorMessage = {
                         ...errorMessage,
                         ...error.response.data,
                     };
                 }
-                if (error.response.status === 403) {
-                    if (!!error?.response?.request?.responseUrl && error.response.request.responseUrl !== 'account') {
-                        // if the api was account, we default to the global.js errorMessages entry
-                        // as it is the most common case for a 403
-                        errorMessage = {
-                            ...error.response,
-                            message: 'Your submission failed. Please try again or notify support',
-                        };
-                    }
-                }
             }
-        }
 
-        const isNonReportable =
-            document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
-            error?.response?.status === 403 || // their login has expired - no action required
-            error?.response?.status === 500 || // api should handle these
-            error?.response?.status === 502; // connection timed out - it happens, FE can't do anything about it
+            const isNonReportable =
+                document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
+                [401, 403].includes(errorStatus) || // login expired - no notice required
+                errorStatus === 0 || // maybe catch those "the network request was interrupted" we see so much?
+                errorStatus === '0' || // don't know what format it comes in
+                errorStatus === 500 || // api should handle these
+                errorStatus === 502; // connection timed out - it happens, FE can't do anything about it
 
-        if (!isNonReportable) {
-            reportToSentry(error);
+            if (!isNonReportable) {
+                reportToSentry(error);
+            }
         }
 
         if (!!errorMessage) {

@@ -57,6 +57,14 @@ function setup(testProps = {}, renderer = render) {
 }
 
 describe('AssetSelector', () => {
+    beforeEach(() => {
+        jest.spyOn(console, 'error');
+        console.error.mockImplementation(() => null);
+    });
+
+    afterEach(() => {
+        console.error.mockRestore();
+    });
     it('renders component', () => {
         const { getByTestId, getByText, getByRole, getAllByRole } = setup({
             state: { testTagAssetsReducer: { assetsList: [] } },

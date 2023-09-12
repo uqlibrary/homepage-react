@@ -107,6 +107,14 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     );
 }
 describe('Manage Users', () => {
+    beforeEach(() => {
+        jest.spyOn(console, 'error');
+        console.error.mockImplementation(() => null);
+    });
+
+    afterEach(() => {
+        console.error.mockRestore();
+    });
     it('renders component standard', () => {
         const { getByText } = setup({ actions: actions });
         expect(getByText(locale.pages.manage.users.header.pageSubtitle('Library'))).toBeInTheDocument();
