@@ -84,7 +84,6 @@ function getUrlRoot(responseUrl) {
 
 function routeRequiresLogin(error) {
     const responseURL = error?.response?.request?.responseUrl || error?.response?.request?.responseURL || null;
-    console.log('check routeRequiresLogin responseURL=', responseURL);
     if (!responseURL) {
         return false;
     }
@@ -92,9 +91,7 @@ function routeRequiresLogin(error) {
     const urlRoot = getUrlRoot(responseURL);
     const accountUrl = `${urlRoot}/account`;
     const LRurlPrefix = `${urlRoot}/learning_resources/reading_list/summary`;
-    const b = responseURL.startsWith(accountUrl) || responseURL.startsWith(LRurlPrefix);
-    console.log('check routeRequiresLogin result=', b, '; accountUrl=', accountUrl, '; LRurlPrefix=', LRurlPrefix);
-    return b;
+    return responseURL.startsWith(accountUrl) || responseURL.startsWith(LRurlPrefix);
 }
 
 const reportToSentry = error => {
@@ -153,13 +150,10 @@ api.interceptors.response.use(
     },
     error => {
         let errorMessage = null;
-        console.log('got an error - , error.response=', error.response);
-        console.log('error?.response?.status [1] =', error?.response?.status);
         if (!!error?.config && !!error?.response) {
             // (oddly, when a 403 comes through, axios fires twice, the second time without a response)
             const errorStatus = error.response.status;
             if ([401, 403].includes(errorStatus) && routeRequiresLogin(error)) {
-                console.log('its a 401/403');
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
@@ -200,23 +194,15 @@ api.interceptors.response.use(
                 }
             }
 
-            console.log('error?.response?.status [2] =', error?.response?.status);
-            console.log('errorStatus =', errorStatus);
-            const a403check = [401, 403].includes(errorStatus);
-            console.log('a403check=', a403check);
-            const a403checkwithroute = [401, 403].includes(errorStatus) && routeRequiresLogin(error);
-            console.log('a403checkwithroute=', a403checkwithroute);
             const isNonReportable =
                 document.location.hostname === 'localhost' || // testing on AWS sometimes fires these
-                a403check || // login expired - no notice required
+                [401, 403].includes(errorStatus) || // login expired - no notice required
                 errorStatus === 0 || // maybe catch those "the network request was interrupted" we see so much?
                 errorStatus === '0' || // don't know what format it comes in
                 errorStatus === 500 || // api should handle these
                 errorStatus === 502; // connection timed out - it happens, FE can't do anything about it
-            console.log('isNonReportable=', isNonReportable);
 
             if (!isNonReportable) {
-                console.log('sending to sentry');
                 reportToSentry(error);
             }
         }
