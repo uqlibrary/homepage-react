@@ -23,6 +23,8 @@ import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';
 import PromoPanelContentButtons from './PromoPanelContentButtons';
 import PromoPanelFormSchedules from './PromoPanelFormSchedules';
 
+const moment = require('moment');
+
 const useStyles = makeStyles(() => ({
     contentRequired: {
         color: '#990000',
@@ -307,7 +309,7 @@ export const PromoPanelForm = ({
         if (['is_default_panel'].includes(prop)) {
             propValue = event.target.checked ? 1 : 0;
         } else if (['start', 'end'].includes(prop)) {
-            propValue = !!event && event.format('YYYY/MM/DD hh:mm a');
+            propValue = !!event && event;
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
         }
@@ -342,7 +344,7 @@ export const PromoPanelForm = ({
         setScheduleChangeIndex(idx);
         setScheduleGroupIndex(displayList[idx].groupNames);
         setPanelScheduleId(displayList[idx].id);
-        setEditDate({ start: displayList[idx].startDate, end: displayList[idx].endDate });
+        setEditDate({ start: moment(displayList[idx].startDate), end: moment(displayList[idx].endDate) });
         setIsEditingDate(true);
     };
 

@@ -9,7 +9,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
+// import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import Typography from '@mui/material/Typography';
 
 import { default as locale } from 'locale/promopanel.locale';
@@ -147,14 +148,17 @@ export const PromoPanelFormSchedules = ({
                 {!!!values.is_default_panel && (
                     <>
                         <Grid item xs={4} align={'right'}>
-                            <KeyboardDateTimePicker
+                            <DateTimePicker
+                                sx={{
+                                    width: '90%',
+                                }}
                                 id="admin-promopanel-form-start-date"
                                 data-testid="admin-promopanel-form-start-date"
                                 value={values.start}
                                 label={locale.form.labels.startDate}
                                 onChange={handleChange('start')}
                                 minDate={defaults.minimumDate}
-                                format="ddd D MMM YYYY h:mma"
+                                format="ddd D MMM YYYY h:mm a"
                                 showTodayButton
                                 InputProps={{
                                     style: {
@@ -177,7 +181,10 @@ export const PromoPanelFormSchedules = ({
                             )}
                         </Grid>
                         <Grid item xs={4} align={'right'}>
-                            <KeyboardDateTimePicker
+                            <DateTimePicker
+                                sx={{
+                                    width: '90%',
+                                }}
                                 id="admin-promopanel-form-end-date"
                                 data-testid="admin-promopanel-form-end-date"
                                 label={locale.form.labels.endDate}
@@ -192,7 +199,7 @@ export const PromoPanelFormSchedules = ({
                                     },
                                     readOnly: true,
                                 }}
-                                format="ddd D MMM YYYY h:mma"
+                                format="ddd D MMM YYYY h:mm a"
                                 autoOk
                                 InputLabelProps={{ style: { textAlign: 'left' } }}
                                 KeyboardButtonProps={{

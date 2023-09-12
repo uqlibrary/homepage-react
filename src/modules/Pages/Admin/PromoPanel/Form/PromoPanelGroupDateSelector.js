@@ -6,7 +6,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
-import { DateTimePicker } from '@material-ui/pickers';
+// import { DateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import { default as locale } from 'locale/promopanel.locale';
 
 const moment = require('moment');
@@ -55,14 +56,14 @@ export const handleChange = (event, startDate, endDate, setSaveEnabled, setStart
         } else {
             setSaveEnabled(true);
         }
-        setStartDate(value.format('YYYY-MM-DD HH:mm'));
+        setStartDate(value);
     } else {
         if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
             setSaveEnabled(false);
         } else {
             setSaveEnabled(true);
         }
-        setEndDate(value.format('YYYY-MM-DD HH:mm'));
+        setEndDate(value);
     }
 };
 
@@ -169,94 +170,11 @@ export const PromoPanelGroupDateSelector = ({
         setEndDate(defaultEndDate);
     }, [defaultStartDate, defaultEndDate]);
 
-    // const handleChange = event => value => {
-    //     if (event === 'start') {
-    //         if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
-    //             setSaveEnabled(false);
-    //         } else {
-    //             setSaveEnabled(true);
-    //         }
-    //         setStartDate(value.format('YYYY-MM-DD HH:mm'));
-    //     } else {
-    //         if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
-    //             setSaveEnabled(false);
-    //         } else {
-    //             setSaveEnabled(true);
-    //         }
-    //         setEndDate(value.format('YYYY-MM-DD HH:mm'));
-    //     }
-    // };
-
     const handleGroupDateClose = () => {
         setStartDate(defaultStartDate);
         setStartDate(defaultEndDate);
         handleCloseGroupDate();
     };
-
-    // const handleGroupDateSave = () => {
-    //     let isValid = true;
-    //     // Check against existing schedules already saved
-    //     fullPromoPanelUserTypeList.map(schedules => {
-    //         /* istanbul ignore else */
-    //         if (schedules.usergroup_group === scheduleGroupIndex) {
-    //             schedules.scheduled_panels &&
-    //                 schedules.scheduled_panels.map(schedule => {
-    //                     /* istanbul ignore else */
-    //                     if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
-    //                         /* istanbul ignore else */
-    //                         if (
-    //                             (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-    //                                 moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
-    //                             (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
-    //                                 /* istanbul ignore next */
-    //                                 moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
-    //                         ) {
-    //                             isValid = false;
-    //                             setConfirmationMessage(
-    //                                 locale.form.scheduleConflict.alert(
-    //                                     scheduleGroupIndex,
-    //                                     schedule.panel_title,
-    //                                     schedule.panel_schedule_start_time,
-    //                                     schedule.panel_schedule_end_time,
-    //                                 ),
-    //                             );
-    //                         }
-    //                     }
-    //                 });
-    //         }
-    //     });
-    //     !!displayList &&
-    //         displayList.length > 0 &&
-    //         displayList.map((alloc, index) => {
-    //             /* istanbul ignore else  */
-    //             if (
-    //                 ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
-    //                     moment(startDate).isBefore(moment(alloc.endDate))) ||
-    //                     (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
-    //                         moment(alloc.startDate).isBefore(moment(endDate)))) &&
-    //                 isValid &&
-    //                 index !== scheduleChangeIndex &&
-    //                 scheduleGroupIndex === alloc.groupNames
-    //             ) {
-    //                 isValid = false;
-    //                 setConfirmationMessage(
-    //                     locale.form.scheduleConflict.alert(
-    //                         scheduleGroupIndex,
-    //                         `Schedule existing in this panel for ${scheduleGroupIndex}`,
-    //                         alloc.startDate,
-    //                         alloc.endDate,
-    //                     ),
-    //                 );
-    //             }
-    //         });
-
-    //     if (isValid) {
-    //         handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
-    //     } else {
-    //         setConfirmationMode('schedule');
-    //         setIsConfirmOpen(true);
-    //     }
-    // };
 
     return (
         <React.Fragment>
@@ -287,7 +205,7 @@ export const PromoPanelGroupDateSelector = ({
                                     setStartDate,
                                     setEndDate,
                                 )}
-                                format="ddd D MMM YYYY h:mma"
+                                format="ddd D MMM YYYY h:mm a"
                                 InputProps={{
                                     style: {
                                         width: '100%',
@@ -327,7 +245,7 @@ export const PromoPanelGroupDateSelector = ({
                                     setStartDate,
                                     setEndDate,
                                 )}
-                                format="ddd D MMM YYYY h:mma"
+                                format="ddd D MMM YYYY h:mm a"
                                 InputProps={{
                                     style: {
                                         width: '100%',
