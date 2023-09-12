@@ -77,7 +77,7 @@ describe('Promo Panel List', () => {
             testId('confirm-panel-delete-confirm').click();
         });
         it('handles an api error', () => {
-            cy.visit('http://localhost:2020/admin/promopanel?user=s2222222');
+            cy.visit('http://localhost:2020/admin/promopanel?user=uqmasquerade');
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Promo panel management');

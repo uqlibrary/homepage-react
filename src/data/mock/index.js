@@ -1131,7 +1131,7 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl)
     .reply(() => {
-        if (user === 's2222222') {
+        if (user === 'uqmasquerade') {
             return [500, ['an api error occurred']];
         } else {
             return [200, activePanels];
