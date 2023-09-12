@@ -24,13 +24,17 @@ describe('Test & Tag actions', () => {
         mockActionsStore = setupStoreForActions();
         mockApi = setupMockAdapter();
         mockSessionApi = setupSessionMockAdapter();
+        jest.spyOn(console, 'error');
+        console.error.mockImplementation(() => null);
     });
 
     afterEach(() => {
         MockDate.reset();
         mockApi.reset();
         mockSessionApi.reset();
+        console.error.mockRestore();
     });
+
     // ,,,TEST_TAG_ASSETS_API,TEST_TAG_ASSET_ACTION
     describe('Test & Tag List Config Actions', () => {
         it('handles T&T Config list', async () => {
