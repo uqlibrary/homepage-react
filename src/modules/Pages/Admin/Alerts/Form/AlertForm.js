@@ -572,7 +572,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         inputProps={{
                                             min: defaults.minimumDate,
                                             required: true,
-                                        }} />
+                                        }}
+                                    />
                                 </Grid>
                                 <Grid item md={5} xs={12}>
                                     <TextField
@@ -589,7 +590,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         inputProps={{
                                             min: values.dateList[index].startDate,
                                             required: true,
-                                        }} />
+                                        }}
+                                    />
                                 </Grid>
                                 <Grid item md={2} xs={12} data-testid={`admin-alerts-form-add-remove-buttons-${index}`}>
                                     {['add', 'clone'].includes(defaults.type) &&
@@ -669,7 +671,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 classes={{ root: classes.selectPriorityType }}
                                 inputProps={{
                                     'data-testid': 'admin-alerts-form-prioritytype-input',
-                                }}>
+                                }}
+                            >
                                 <MenuItem data-testid="admin-alerts-form-option-info" value={'info'}>
                                     {locale.form.labels.priority.level.info}
                                 </MenuItem>

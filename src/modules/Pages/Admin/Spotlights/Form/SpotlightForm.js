@@ -135,8 +135,8 @@ export const SpotlightForm = ({
 
     const [values, setValues] = useState({
         ...defaults,
-        start: defaults.startDateDefault,
-        end: defaults.endDateDefault,
+        start: moment(defaults.startDateDefault),
+        end: moment(defaults.endDateDefault),
         hasImage: defaults.type !== 'add',
     });
 
