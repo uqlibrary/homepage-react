@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 // import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -239,8 +240,9 @@ export const PromoPanelAddSchedule = ({
                                 value={startDate}
                                 label="Start date"
                                 onChange={handleDateChange('start')}
-                                InputProps={{
-                                    id: 'picker-start-date-text',
+                                inputProps={{
+                                    id: 'admin-promopanel-group-start-date',
+                                    'data-testid': 'admin-promopanel-group-start-date',
                                     style: {
                                         width: '100%',
                                         marginRight: 25,
@@ -248,14 +250,8 @@ export const PromoPanelAddSchedule = ({
                                     readOnly: true,
                                 }}
                                 // // minDate={startDate}
-                                format="ddd D MMM YYYY h:mm a"
-                                // showTodayButton
-                                // todayLabel={'Today'}
-                                // autoOk
-                                // KeyboardButtonProps={{
-                                //     'aria-label': 'Start Date',
-                                //     id: 'picker-start-date',
-                                // }}
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                renderInput={params => <TextField variant="standard" {...params} />}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div className={classes.errorStyle} data-testid="start-date-error">
@@ -273,23 +269,18 @@ export const PromoPanelAddSchedule = ({
                                 value={endDate}
                                 label="End date"
                                 onChange={handleDateChange('end')}
-                                format="ddd D MMM YYYY h:mm a"
-                                // InputProps={{
-                                //     id: 'picker-end-date-text',
-                                //     style: {
-                                //         width: '100%',
-                                //         marginRight: 25,
-                                //     },
-                                //     readOnly: true,
-                                // }}
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                inputProps={{
+                                    id: 'admin-promopanel-group-end-date',
+                                    'data-testid': 'admin-promopanel-group-end-date',
+                                    style: {
+                                        width: '100%',
+                                        marginRight: 25,
+                                    },
+                                    readOnly: true,
+                                }}
                                 minDate={startDate}
-                                // showTodayButton
-                                // todayLabel={'Today'}
-                                // autoOk
-                                // KeyboardButtonProps={{
-                                //     'aria-label': 'End Date',
-                                //     id: 'picker-end-date',
-                                // }}
+                                renderInput={params => <TextField variant="standard" {...params} />}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div className={classes.errorStyle} data-testid="end-date-error">

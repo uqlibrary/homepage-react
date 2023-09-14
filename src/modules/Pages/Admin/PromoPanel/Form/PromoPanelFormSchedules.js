@@ -11,6 +11,7 @@ import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
 // import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import { DateTimePicker } from '@mui/x-date-pickers';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { default as locale } from 'locale/promopanel.locale';
@@ -156,21 +157,21 @@ export const PromoPanelFormSchedules = ({
                         <Grid item xs={4} align={'right'}>
                             <DateTimePicker
                                 sx={{
-                                    width: '90%',
+                                    width: '100%',
                                 }}
-                                id="admin-promopanel-form-start-date"
-                                data-testid="admin-promopanel-form-start-date"
-                                value={values.start}
                                 label={locale.form.labels.startDate}
+                                value={moment.utc(values.start)}
                                 onChange={handleChange('start')}
-                                minDate={defaults.minimumDate}
-                                format="ddd D MMM YYYY h:mm a"
-                                showTodayButton
-                                InputProps={{
-                                    style: {
-                                        width: '100%',
-                                        marginRight: 25,
-                                    },
+                                minDate={moment.utc(defaults.minimumDate)}
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                inputProps={{
+                                    id: 'admin-promopanel-form-start-date',
+                                    'data-testid': 'admin-promopanel-form-start-date',
+                                    label: locale.form.labels.startDate,
+                                    // style: {
+                                    //     width: '100%',
+                                    //     marginRight: 25,
+                                    // },
                                     readOnly: true,
                                 }}
                                 todayLabel={locale.form.labels.datePopupNowButton}
@@ -179,6 +180,7 @@ export const PromoPanelFormSchedules = ({
                                 KeyboardButtonProps={{
                                     'aria-label': locale.form.labels.startDate,
                                 }}
+                                renderInput={params => <TextField variant="standard" {...params} />}
                             />
                             {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div data-testid="admin-promopanel-startdate-past" className={classes.errorStyle}>
@@ -188,30 +190,43 @@ export const PromoPanelFormSchedules = ({
                         </Grid>
                         <Grid item xs={4} align={'right'}>
                             <DateTimePicker
-                                sx={{
-                                    width: '90%',
-                                }}
-                                id="admin-promopanel-form-end-date"
-                                data-testid="admin-promopanel-form-end-date"
                                 label={locale.form.labels.endDate}
                                 // variant="inline"
                                 onChange={handleChange('end')}
-                                value={values.end}
-                                minDate={values.start}
-                                InputProps={{
+                                value={moment.utc(values.end)}
+                                minDateTime={moment.utc(values.start)}
+                                inputProps={{
+                                    id: 'admin-promopanel-form-end-date',
+                                    'data-testid': 'admin-promopanel-form-end-date',
+                                    label: locale.form.labels.endDate,
+
                                     style: {
                                         width: '100%',
                                         marginRight: 25,
                                     },
                                     readOnly: true,
                                 }}
-                                format="ddd D MMM YYYY h:mm a"
+                                inputFormat="ddd D MMM YYYY h:mm a"
                                 autoOk
                                 InputLabelProps={{ style: { textAlign: 'left' } }}
                                 KeyboardButtonProps={{
                                     'aria-label': locale.form.labels.endDate,
                                 }}
-                                minDateMessage="Should not be before Date published"
+                                renderInput={params => {
+                                    const value = params.inputProps.value ?? null;
+                                    return (
+                                        <TextField
+                                            variant="standard"
+                                            helperText={
+                                                !value || moment.utc(value).isBefore(moment.utc(values.start))
+                                                    ? 'Should not be before Date published.'
+                                                    : ''
+                                            }
+                                            error={!value || moment.utc(value).isBefore(moment.utc(values.start))}
+                                            {...params}
+                                        />
+                                    );
+                                }}
                             />
                         </Grid>
                     </>

@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 // import { DateTimePicker } from '@material-ui/pickers';
+import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { default as locale } from 'locale/promopanel.locale';
 
@@ -193,8 +194,6 @@ export const PromoPanelGroupDateSelector = ({
                     <Grid container spacing={1}>
                         <Grid item xs>
                             <DateTimePicker
-                                id="admin-promopanel-group-start-date"
-                                data-testid="admin-promopanel-group-start-date"
                                 value={startDate}
                                 label="Start date"
                                 onChange={handleChange(
@@ -205,8 +204,10 @@ export const PromoPanelGroupDateSelector = ({
                                     setStartDate,
                                     setEndDate,
                                 )}
-                                format="ddd D MMM YYYY h:mm a"
-                                InputProps={{
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                inputProps={{
+                                    id: 'admin-promopanel-group-start-date',
+                                    'data-testid': 'admin-promopanel-group-start-date',
                                     style: {
                                         width: '100%',
                                         marginRight: 25,
@@ -220,6 +221,7 @@ export const PromoPanelGroupDateSelector = ({
                                     'data-testid': 'end-date-calendar',
                                     id: 'start-date-calendar',
                                 }}
+                                renderInput={params => <TextField variant="standard" {...params} />}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div
@@ -233,8 +235,6 @@ export const PromoPanelGroupDateSelector = ({
                         </Grid>
                         <Grid item xs align="left">
                             <DateTimePicker
-                                id="admin-promopanel-group-end-date"
-                                data-testid="admin-promopanel-group-end-date"
                                 value={endDate}
                                 label="End date"
                                 onChange={handleChange(
@@ -245,8 +245,10 @@ export const PromoPanelGroupDateSelector = ({
                                     setStartDate,
                                     setEndDate,
                                 )}
-                                format="ddd D MMM YYYY h:mm a"
-                                InputProps={{
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                inputProps={{
+                                    id: 'admin-promopanel-group-end-date',
+                                    'data-testid': 'admin-promopanel-group-end-date',
                                     style: {
                                         width: '100%',
                                         marginRight: 25,
@@ -260,6 +262,7 @@ export const PromoPanelGroupDateSelector = ({
                                     'data-testid': 'end-date-calendar',
                                     id: 'end-date-calendar',
                                 }}
+                                renderInput={params => <TextField variant="standard" {...params} />}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div
