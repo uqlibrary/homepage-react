@@ -59,7 +59,8 @@ export default {
                             .add(1, 'd')
                             .format(dateFormat),
                     }}
-                    required />
+                    required
+                />
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,
@@ -95,7 +96,8 @@ export default {
                     type="date"
                     {...props}
                     inputProps={{ ...props.inputProps, max: moment().format(dateFormat) }}
-                    required />
+                    required
+                />
             ),
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             valueFormatter: date => date?.split(' ')?.[0] ?? date,

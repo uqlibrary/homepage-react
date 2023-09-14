@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
-import { DateTimePicker } from '@mui/x-date-pickers';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import TextField from '@mui/material/TextField';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -559,19 +559,21 @@ export const SpotlightForm = ({
                 <Grid container spacing={2} style={{ marginTop: 12 }}>
                     <Grid item md={5} xs={12}>
                         <DateTimePicker
-                            id="admin-spotlights-form-start-date"
-                            data-testid="admin-spotlights-form-start-date"
-                            value={values.start}
                             label={locale.form.labels.publishDate}
+                            value={values.start}
                             onChange={handleChange('start')}
                             minDate={defaults.minimumDate}
-                            format="DD/MM/YYYY HH:mm a"
-                            showTodayButton
-                            todayLabel={locale.form.labels.datePopupNowButton}
-                            autoOk
-                            KeyboardButtonProps={{
-                                'aria-label': locale.form.tooltips.publishDate,
+                            inputFormat="DD/MM/YYYY HH:mm a"
+                            inputProps={{
+                                id: 'admin-spotlights-form-start-date',
+                                'data-testid': 'admin-spotlights-form-start-date',
+                                label: locale.form.labels.publishDate,
+                                'aria-label': locale.form.labels.publishDate,
                             }}
+                            // KeyboardButtonProps={{
+                            //     'aria-label': locale.form.tooltips.publishDate,
+                            // }}
+                            renderInput={params => <TextField variant="standard" {...params} />}
                         />
                         {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
                             <div className={classes.errorStyle}>This date is in the past.</div>
@@ -579,17 +581,21 @@ export const SpotlightForm = ({
                     </Grid>
                     <Grid item md={5} xs={12}>
                         <DateTimePicker
-                            id="admin-spotlights-form-end-date"
                             data-testid="admin-spotlights-form-end-date"
                             value={values.end}
                             label={locale.form.labels.unpublishDate}
                             onChange={handleChange('end')}
                             minDate={values.start}
-                            format="DD/MM/YYYY HH:mm a"
-                            autoOk
-                            KeyboardButtonProps={{
-                                'aria-label': locale.form.tooltips.unpublishDate,
+                            inputFormat="DD/MM/YYYY HH:mm a"
+                            inputProps={{
+                                id: 'admin-spotlights-form-end-date',
+                                'data-testid': 'admin-spotlights-form-end-date',
+                                label: locale.form.labels.unpublishDate,
+                                'aria-label': locale.form.labels.unpublishDate,
                             }}
+                            // KeyboardButtonProps={{
+                            //     'aria-label': locale.form.tooltips.unpublishDate,
+                            // }}
                             minDateMessage="Should not be before Date published"
                             renderInput={props => (
                                 <TextField
