@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
-import { DatePicker } from '@material-ui/pickers';
+// import { DatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import TextField from '@mui/material/TextField';
 import MapIcon from '@mui/icons-material/Map';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -22,15 +24,14 @@ const BookExamBooth = ({
 }) => {
     useTitle(locale.title);
 
-    const dateFormat = 'YYYY-MM-DD';
+    const dateFormat = 'DD/MM/YYYY';
     const defaultHour = 8;
     const defaultMinute = 15;
     const defaultExamLength = 30; // minutes
     const setupAllowance = 30; // the number of minutes they can arrive and setup before their exam time starts
 
-    const yesterday = moment()
-        .subtract(1, 'days')
-        .format(dateFormat);
+    const yesterday = moment().subtract(1, 'days');
+    // .format(dateFormat);
 
     // store the exam location
     const [chosenLocationCode, setLocation] = React.useState('unset');
@@ -225,7 +226,8 @@ const BookExamBooth = ({
                                         id="sessionLength"
                                         name="sessionLength"
                                         onChange={_handleSessionLengthChange}
-                                        options={sessionLengthList}>
+                                        options={sessionLengthList}
+                                    >
                                         {sessionLengthList.map((item, index) => {
                                             return (
                                                 <MenuItem
@@ -239,18 +241,20 @@ const BookExamBooth = ({
                                         })}
                                     </Select>
                                 </Grid>
+                                {console.log('startdate', startDate)}
                                 <Grid item xs={12}>
                                     <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />
                                     <DatePicker
                                         data-testid="start-date"
-                                        format={dateFormat}
+                                        inputFormat={dateFormat}
                                         id="startDate"
                                         minDate={yesterday}
                                         name="startDate"
                                         onChange={_handleStartDateChange}
                                         type="date"
-                                        value={startDate}
+                                        value={moment(startDate, 'DD/MM/YYYY')}
+                                        renderInput={params => <TextField variant="standard" {...params} />}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -263,7 +267,8 @@ const BookExamBooth = ({
                                         defaultValue={defaultHour}
                                         id="startTimeHours"
                                         name="startTimeHours"
-                                        onChange={_handleStartTimeHoursChange}>
+                                        onChange={_handleStartTimeHoursChange}
+                                    >
                                         {startTimeHoursList.map((item, index) => {
                                             return (
                                                 <MenuItem
@@ -285,7 +290,8 @@ const BookExamBooth = ({
                                         id="startTimeMinutes"
                                         name="startTimeMinutes"
                                         onChange={_handleStartTimeMinutesChange}
-                                        options={minutesList}>
+                                        options={minutesList}
+                                    >
                                         {minutesList.map((item, index) => {
                                             return (
                                                 <MenuItem
