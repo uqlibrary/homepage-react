@@ -11,6 +11,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import TextField from '@mui/material/TextField';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -224,7 +225,8 @@ const InspectionsByLicencedUser = ({
                                                         .join(', ')}
                                             </div>
                                         );
-                                    }}>
+                                    }}
+                                >
                                     {licencedUsers?.map((user, index) => (
                                         <MenuItem
                                             key={user.user_id}
@@ -249,7 +251,7 @@ const InspectionsByLicencedUser = ({
                                     'data-testid': `${componentIdLower}-tagged-start-input`,
                                     'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
-                                format={locale.config.format.dateFormatNoTime}
+                                inputFormat={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
@@ -268,6 +270,9 @@ const InspectionsByLicencedUser = ({
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                                 autoOk
+                                renderInput={params => (
+                                    <TextField error={startDateError.error} variant="standard" {...params} />
+                                )}
                             />
                         </Grid>
                         <Grid item xs={12} md={4}>
@@ -280,7 +285,7 @@ const InspectionsByLicencedUser = ({
                                     'data-testid': `${componentIdLower}-tagged-end-input`,
                                     'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
-                                format={locale.config.format.dateFormatNoTime}
+                                inputFormat={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
@@ -298,6 +303,9 @@ const InspectionsByLicencedUser = ({
                                     'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                                 autoOk
+                                renderInput={params => (
+                                    <TextField error={endDateError.error} variant="standard" {...params} />
+                                )}
                             />
                         </Grid>
                     </Grid>

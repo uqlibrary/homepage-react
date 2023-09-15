@@ -277,6 +277,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                             <DataTable
                                 id={componentId}
                                 rows={row}
+                                density="standard"
                                 columns={columns}
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}

@@ -4,6 +4,7 @@ import makeStyles from '@mui/styles/makeStyles';
 
 import Grid from '@mui/material/Grid';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import TextField from '@mui/material/TextField';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -246,6 +247,9 @@ const AssetReportByFilters = ({
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                                 autoOk
+                                renderInput={params => (
+                                    <TextField error={!!startDateError.error} variant="standard" {...params} />
+                                )}
                             />
                         </Grid>
                         <Grid item xs={12} md={6} lg={3}>
@@ -275,6 +279,9 @@ const AssetReportByFilters = ({
                                     'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                                 autoOk
+                                renderInput={params => (
+                                    <TextField error={!!endDateError.error} variant="standard" {...params} />
+                                )}
                             />
                         </Grid>
                     </Grid>
