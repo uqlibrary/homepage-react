@@ -9,7 +9,6 @@ import { connectRouter } from 'connected-react-router/immutable';
 import { AppContainer } from 'react-hot-loader';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // pick utils
-import MomentUtils from '@date-io/moment';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 // Internal

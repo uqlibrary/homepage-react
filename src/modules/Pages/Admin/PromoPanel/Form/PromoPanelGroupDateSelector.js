@@ -6,7 +6,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
-// import { DateTimePicker } from '@material-ui/pickers';
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { default as locale } from 'locale/promopanel.locale';
