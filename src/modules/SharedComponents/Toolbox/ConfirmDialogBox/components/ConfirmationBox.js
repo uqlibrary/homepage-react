@@ -88,7 +88,7 @@ export const ConfirmationBox = ({
                                 {...(!!actionButtonVariant ? { variant: actionButtonVariant } : {})}
                                 children={locale.confirmButtonLabel}
                                 autoFocus
-                                color={actionButtonColor || 'primary'}
+                                color={'primary'}
                                 fullWidth
                                 onClick={_onAction}
                                 id="confirm-action"
@@ -116,7 +116,7 @@ export const ConfirmationBox = ({
                         <Grid item xs={12} sm={'auto'}>
                             <Button
                                 variant={'contained'}
-                                color={cancelButtonColor || 'primary'}
+                                color={'primary'}
                                 children={locale.cancelButtonLabel}
                                 fullWidth
                                 onClick={_onCancelAction}

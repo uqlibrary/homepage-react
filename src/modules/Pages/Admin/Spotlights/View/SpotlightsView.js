@@ -105,7 +105,8 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
                                 <FormControl
                                     variant="standard"
                                     fullWidth
-                                    title={locale.form.tooltips.linkDescAriaField}>
+                                    title={locale.form.tooltips.linkDescAriaField}
+                                >
                                     <InputLabel htmlFor="spotlightTitle">
                                         {locale.form.labels.linkDescAriaField}
                                     </InputLabel>

@@ -181,7 +181,8 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     aria-label={formLocale.aria.collapseButtonLabel}
                     onClick={() => !forceOpen && setTestPanelExpanded(!testPanelExpanded)}
                     disabled={disabled}
-                    size="large">
+                    size="large"
+                >
                     <ExpandMoreIcon />
                 </IconButton>
             }

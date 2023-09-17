@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import TextField from '@mui/material/TextField';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -99,7 +100,7 @@ const EventPanel = ({
                                 'data-testid': `${componentIdLower}-event-date-dialog`,
                             }}
                             InputLabelProps={{ shrink: true, htmlFor: `${componentIdLower}-event-date-input` }}
-                            format={pageLocale.config.dateFormatDisplay}
+                            inputFormat={pageLocale.config.dateFormatDisplay}
                             rifmFormatter={val => val.replace(/[^a-zA-Z0-9\s]+/gi, '')}
                             refuse={/[^a-zA-Z0-9\s]+/gi}
                             minDate={startDate}
@@ -115,6 +116,7 @@ const EventPanel = ({
                                 id: `${componentIdLower}-event-date-button`,
                                 'data-testid': `${componentIdLower}-event-date-button`,
                             }}
+                            renderInput={params => <TextField variant="standard" {...params} />}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>

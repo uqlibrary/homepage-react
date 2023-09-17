@@ -67,7 +67,8 @@ export default class Masquerade extends PureComponent {
                                         label={txt.labels.hint}
                                         onChange={this._usernameChanged}
                                         onKeyPress={this._masqueradeAs}
-                                        value={this.state.userName} />
+                                        value={this.state.userName}
+                                    />
                                 </Grid>
                                 <Grid item xs={12} sm={'auto'}>
                                     <Button

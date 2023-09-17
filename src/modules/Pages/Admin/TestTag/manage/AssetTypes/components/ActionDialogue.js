@@ -97,7 +97,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         className={classes.formSelect}
                         value={selectedAssetType}
                         onChange={e => onAssetTypeChange(e.target.value)}
-                        required>
+                        required
+                    >
                         {data.map((item, index) => (
                             <MenuItem
                                 value={item.asset_type_id}
@@ -125,7 +126,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                             onClick={onCancel}
                             id={`${componentId}-cancel-button`}
                             data-testid={`${componentId}-cancel-button`}
-                            disabled={!!isBusy}>
+                            disabled={!!isBusy}
+                        >
                             {pageLocale.cancelButtonLabel}
                         </Button>
                     </Grid>
@@ -135,7 +137,8 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                             onClick={() => onProceed(row.asset_type_id, selectedAssetType)}
                             id={`${componentId}-action-button`}
                             data-testid={`${componentId}-action-button`}
-                            disabled={!!isBusy || !!!selectedAssetType || row?.asset_type_id === selectedAssetType}>
+                            disabled={!!isBusy || !!!selectedAssetType || row?.asset_type_id === selectedAssetType}
+                        >
                             {isBusy ? (
                                 <CircularProgress
                                     color="inherit"

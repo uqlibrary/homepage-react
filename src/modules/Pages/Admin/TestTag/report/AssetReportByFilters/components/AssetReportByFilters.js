@@ -218,6 +218,7 @@ const AssetReportByFilters = ({
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                             />
                         </Grid>
+                        {console.log('SD', startDateError)}
                         <Grid item xs={12} md={6} lg={3}>
                             {/* Start Date */}
                             <DatePicker
@@ -231,7 +232,6 @@ const AssetReportByFilters = ({
                                 format={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
-                                classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
@@ -241,14 +241,17 @@ const AssetReportByFilters = ({
                                     (!!!startDate || (!!startDate && startDate.isValid())) &&
                                     handleStartDateChange(startDate)
                                 }
-                                error={!!startDateError.error}
-                                helperText={!!startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                                 autoOk
                                 renderInput={params => (
-                                    <TextField error={!!startDateError.error} variant="standard" {...params} />
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        error={!!startDateError.error}
+                                        helperText={!!startDateError.error && startDateError.message}
+                                    />
                                 )}
                             />
                         </Grid>
@@ -274,13 +277,17 @@ const AssetReportByFilters = ({
                                     (!!!endDate || (!!endDate && endDate.isValid())) && handleEndDateChange(endDate)
                                 }
                                 error={!!endDateError.error}
-                                helperText={!!endDateError.error && endDateError.message}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                                 autoOk
                                 renderInput={params => (
-                                    <TextField error={!!endDateError.error} variant="standard" {...params} />
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        error={!!endDateError.error}
+                                        helperText={!!endDateError.error && endDateError.message}
+                                    />
                                 )}
                             />
                         </Grid>

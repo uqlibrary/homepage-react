@@ -356,7 +356,7 @@ const Inspection = ({
                             fullWidth={isMobileView}
                             id={`${componentId}-reset-button`}
                             data-testid={`${componentId}-reset-button`}
-                            color={inView ? 'default' : ''}
+                            color={inView ? 'primary' : 'secondary'}
                             className={clsx({
                                 [classes.buttonWhite]: !inView,
                             })}

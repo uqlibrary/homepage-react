@@ -309,7 +309,8 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 aria-label={trainingLocale.closeEvent}
                                                 id="training-event-detail-close-button"
                                                 data-testid="training-event-detail-close-button"
-                                                size="large">
+                                                size="large"
+                                            >
                                                 <CloseIcon fontSize="small" className={classes.detailIcon} />
                                             </IconButton>
                                         </Grid>

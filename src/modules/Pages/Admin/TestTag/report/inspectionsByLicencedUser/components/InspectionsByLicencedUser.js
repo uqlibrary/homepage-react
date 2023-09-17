@@ -263,14 +263,17 @@ const InspectionsByLicencedUser = ({
                                     (!!!startDate || (!!startDate && startDate.isValid())) &&
                                     handleStartDateChange(startDate)
                                 }
-                                error={startDateError.error}
-                                helperText={startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                                 autoOk
                                 renderInput={params => (
-                                    <TextField error={startDateError.error} variant="standard" {...params} />
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        error={startDateError.error}
+                                        helperText={startDateError.error && startDateError.message}
+                                    />
                                 )}
                             />
                         </Grid>
@@ -296,14 +299,17 @@ const InspectionsByLicencedUser = ({
                                 onChange={endDate =>
                                     (!!!endDate || (!!endDate && endDate.isValid())) && handleEndDateChange(endDate)
                                 }
-                                helperText={endDateError.error && endDateError.message}
-                                error={endDateError.error}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                                 autoOk
                                 renderInput={params => (
-                                    <TextField error={endDateError.error} variant="standard" {...params} />
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        helperText={endDateError.error && endDateError.message}
+                                        error={endDateError.error}
+                                    />
                                 )}
                             />
                         </Grid>

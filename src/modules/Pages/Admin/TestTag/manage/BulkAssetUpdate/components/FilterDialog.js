@@ -126,132 +126,135 @@ const FilterDialog = ({
         setSearchNotes(value);
     };
 
-    return <>
-        <Dialog
-            classes={{ paper: classes.dialogPaper }}
-            style={{ padding: 6 }}
-            open={isOpen}
-            id={`${componentId}`}
-            data-testid={`${componentId}`}
-            fullWidth
-            aria-describedby="messageTitle"
-        >
-            <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
-                {locale?.title}
-            </DialogTitle>
-            <DialogContent>
-                <Grid container spacing={3}>
-                    <AutoLocationPicker
-                        id={rootId}
-                        actions={actions}
-                        location={location}
-                        setLocation={setLocation}
-                        locale={locationLocale}
-                        hasAllOption
-                    />
-                </Grid>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <AssetTypeSelector
+    return (
+        <>
+            <Dialog
+                classes={{ paper: classes.dialogPaper }}
+                style={{ padding: 6 }}
+                open={isOpen}
+                id={`${componentId}`}
+                data-testid={`${componentId}`}
+                fullWidth
+                aria-describedby="messageTitle"
+            >
+                <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
+                    {locale?.title}
+                </DialogTitle>
+                <DialogContent>
+                    <Grid container spacing={3}>
+                        <AutoLocationPicker
                             id={rootId}
-                            locale={assetTypeLocale}
                             actions={actions}
-                            onChange={handleAssetTypeChange}
-                            validateAssetTypeId={isValidAssetTypeId}
+                            location={location}
+                            setLocation={setLocation}
+                            locale={locationLocale}
                             hasAllOption
-                            value={-1}
-                            required={false}
-                            autoSelect={false}
-                            autoHighlight={false}
-                            selectOnFocus
-                            disableClearable={false}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <DebouncedTextField
-                            id={`${componentId}-search-notes`}
-                            inputProps={{
-                                maxLength: 50,
-                            }}
-                            fullWidth
-                            onChange={handleSearchNotesChange}
-                            value={searchNotes}
-                            interval={500}
-                            InputProps={{
-                                ...(!!searchNotes
-                                    ? {
-                                          endAdornment: (
-                                              <InputAdornment position="end">
-                                                  <IconButton
-                                                      id={`${componentId}-clear-search-notes`}
-                                                      data-testid={`${componentId}-clear-search-notes`}
-                                                      aria-label={locale.form.ariaClearNotes}
-                                                      size="small"
-                                                      onClick={handleSearchNotesChange}
-                                                  >
-                                                      <Clear />
-                                                  </IconButton>
-                                              </InputAdornment>
-                                          ),
-                                      }
-                                    : {}),
-                            }}
-                            {...locale.form.testNoteSearch}
-                        />
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <AssetTypeSelector
+                                id={rootId}
+                                locale={assetTypeLocale}
+                                actions={actions}
+                                onChange={handleAssetTypeChange}
+                                validateAssetTypeId={isValidAssetTypeId}
+                                hasAllOption
+                                value={-1}
+                                required={false}
+                                autoSelect={false}
+                                autoHighlight={false}
+                                selectOnFocus
+                                disableClearable={false}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <DebouncedTextField
+                                id={`${componentId}-search-notes`}
+                                inputProps={{
+                                    maxLength: 50,
+                                }}
+                                fullWidth
+                                onChange={handleSearchNotesChange}
+                                value={searchNotes}
+                                interval={500}
+                                InputProps={{
+                                    ...(!!searchNotes
+                                        ? {
+                                              endAdornment: (
+                                                  <InputAdornment position="end">
+                                                      <IconButton
+                                                          id={`${componentId}-clear-search-notes`}
+                                                          data-testid={`${componentId}-clear-search-notes`}
+                                                          aria-label={locale.form.ariaClearNotes}
+                                                          size="small"
+                                                          onClick={handleSearchNotesChange}
+                                                      >
+                                                          <Clear />
+                                                      </IconButton>
+                                                  </InputAdornment>
+                                              ),
+                                          }
+                                        : {}),
+                                }}
+                                {...locale.form.testNoteSearch}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container spacing={3}>
-                    <Grid item padding={3} style={{ flex: 1 }}>
-                        <DataTable
-                            id={rootId}
-                            rows={row}
-                            columns={columns}
-                            rowId={'asset_id_displayed'}
-                            loading={!!assetsMineListLoading}
-                            checkboxSelection
-                            disableRowSelectionOnClick
-                            onSelectionModelChange={handleAssetSelectionChange}
-                            disableSelectionOnClick={false}
-                            {...(config.sort ?? /* istanbul ignore next */ {})}
-                        />
+                    <Grid container spacing={3}>
+                        <Grid item padding={3} style={{ flex: 1 }}>
+                            <DataTable
+                                id={rootId}
+                                rows={row}
+                                columns={columns}
+                                rowId={'asset_id_displayed'}
+                                loading={!!assetsMineListLoading}
+                                checkboxSelection
+                                disableRowSelectionOnClick
+                                onSelectionModelChange={handleAssetSelectionChange}
+                                disableSelectionOnClick={false}
+                                {...(config.sort ?? /* istanbul ignore next */ {})}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container spacing={4} className={classes.actionButtons}>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-start">
-                        <Button
-                            variant="outlined"
-                            onClick={handleCancelAction}
-                            id={`${componentId}-cancel-button`}
-                            data-testid={`${componentId}-cancel-button`}
-                            fullWidth={isMobileView}>
-                            {locale.button.cancel}
-                        </Button>
+                    <Grid container spacing={4} className={classes.actionButtons}>
+                        <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                            <Button
+                                variant="outlined"
+                                onClick={handleCancelAction}
+                                id={`${componentId}-cancel-button`}
+                                data-testid={`${componentId}-cancel-button`}
+                                fullWidth={isMobileView}
+                            >
+                                {locale.button.cancel}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} container justifyContent="flex-end">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleAddAction}
+                                id={`${componentId}-action-button`}
+                                data-testid={`${componentId}-action-button`}
+                                disabled={row.length === 0}
+                                fullWidth={isMobileView}
+                            >
+                                {locale.button.submit}
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6} container justifyContent="flex-end">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleAddAction}
-                            id={`${componentId}-action-button`}
-                            data-testid={`${componentId}-action-button`}
-                            disabled={row.length === 0}
-                            fullWidth={isMobileView}
-                        >
-                            {locale.button.submit}
-                        </Button>
-                    </Grid>
-                </Grid>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
 
-        <ConfirmationAlert
-            isOpen={confirmationAlert.visible}
-            message={confirmationAlert.message}
-            type={confirmationAlert.type}
-            autoHideDuration={confirmationAlert.autoHideDuration}
-            closeAlert={closeConfirmationAlert}
-        />
-    </>;
+            <ConfirmationAlert
+                isOpen={confirmationAlert.visible}
+                message={confirmationAlert.message}
+                type={confirmationAlert.type}
+                autoHideDuration={confirmationAlert.autoHideDuration}
+                closeAlert={closeConfirmationAlert}
+            />
+        </>
+    );
 };
 
 FilterDialog.propTypes = {

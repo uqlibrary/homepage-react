@@ -117,7 +117,8 @@ export const SpotlightsViewByImage = ({
                             }}
                             onChange={filterRowsByText}
                             label={locale.listPage.textSearch.displayLabel}
-                            value={textSearch} />
+                            value={textSearch}
+                        />
                         <CloseIcon
                             id="spotlights-list-viewbyimage-text-filter-clear-button"
                             data-testid="spotlights-viewbyimage-filter-text-clear-button"
