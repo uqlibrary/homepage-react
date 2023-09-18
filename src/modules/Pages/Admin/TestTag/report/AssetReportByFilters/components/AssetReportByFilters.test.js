@@ -166,8 +166,8 @@ describe('AssetReportByFilters', () => {
         });
         expect(getByText('Asset tests report for Library')).toBeInTheDocument();
 
-        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '01012022'); // input formats as date is typed
-        userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '01012023'); // input formats as date is typed
+        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20220101'); // input formats as date is typed
+        userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20230101'); // input formats as date is typed
 
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
@@ -192,8 +192,8 @@ describe('AssetReportByFilters', () => {
         });
         expect(getByText('Asset tests report for Library')).toBeInTheDocument();
 
-        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '01012021');
-        userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '01012020');
+        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
+        userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20200101');
 
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
@@ -228,7 +228,7 @@ describe('AssetReportByFilters', () => {
             }),
         );
 
-        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '01012021');
+        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
 
         expect(getByTestId('assets_inspected-tagged-start-helpertext')).toHaveTextContent(
             'Start date must be before End Date',

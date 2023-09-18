@@ -226,7 +226,7 @@ const AssetReportByFilters = ({
                                     'data-testid': `${componentIdLower}-tagged-start-input`,
                                     'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
-                                format={locale.config.format.dateFormatNoTime}
+                                inputFormat={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                 disableToolbar
@@ -267,7 +267,7 @@ const AssetReportByFilters = ({
                                     'data-testid': `${componentIdLower}-tagged-end-input`,
                                     'aria-labelledby': `${componentIdLower}-tagged-end-label`,
                                 }}
-                                format={locale.config.format.dateFormatNoTime}
+                                inputFormat={locale.config.format.dateFormatNoTime}
                                 fullWidth
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                 classes={{ root: classes.datePickerRoot }}
