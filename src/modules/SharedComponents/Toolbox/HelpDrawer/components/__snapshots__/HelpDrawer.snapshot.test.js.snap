@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`HelpDrawer snapshots tests renders menu 1`] = `
-<WithStyles(ForwardRef(Drawer))
+<ForwardRef(Drawer)
   anchor="right"
   classes={
     Object {
@@ -11,51 +11,51 @@ exports[`HelpDrawer snapshots tests renders menu 1`] = `
   onClose={[MockFunction]}
   open={true}
 >
-  <WithStyles(ForwardRef(Grid))
+  <ForwardRef(Grid)
     container={true}
     id="help-drawer"
     spacing={5}
   >
-    <WithStyles(ForwardRef(Grid))
+    <ForwardRef(Grid)
       item={true}
       xs={12}
     >
-      <WithStyles(ForwardRef(Typography))
+      <ForwardRef(Typography)
         component="span"
         id="help-drawer-title"
         key="title"
         variant="h6"
       >
         HelpDrawer Title
-      </WithStyles(ForwardRef(Typography))>
-      <WithStyles(ForwardRef(Typography))
+      </ForwardRef(Typography)>
+      <ForwardRef(Typography)
         component="span"
         id="help-drawer-text-HelpDrawerTitle"
         key="text"
         variant="body2"
       >
         Integer mattis rutrum velit nec posuere. Quisque rhoncus quam elit.
-      </WithStyles(ForwardRef(Typography))>
-    </WithStyles(ForwardRef(Grid))>
-    <WithStyles(ForwardRef(Grid))
+      </ForwardRef(Typography)>
+    </ForwardRef(Grid)>
+    <ForwardRef(Grid)
       id="help-drawer-button"
       item={true}
       xs={12}
     >
-      <WithStyles(ForwardRef(Button))
+      <ForwardRef(Button)
         color="primary"
         onClick={[MockFunction]}
         variant="contained"
       >
         Close
-      </WithStyles(ForwardRef(Button))>
-    </WithStyles(ForwardRef(Grid))>
-  </WithStyles(ForwardRef(Grid))>
-</WithStyles(ForwardRef(Drawer))>
+      </ForwardRef(Button)>
+    </ForwardRef(Grid)>
+  </ForwardRef(Grid)>
+</ForwardRef(Drawer)>
 `;
 
 exports[`HelpDrawer snapshots tests renders text as react children 1`] = `
-<WithStyles(ForwardRef(Drawer))
+<ForwardRef(Drawer)
   anchor="right"
   classes={
     Object {
@@ -65,24 +65,24 @@ exports[`HelpDrawer snapshots tests renders text as react children 1`] = `
   onClose={[MockFunction]}
   open={true}
 >
-  <WithStyles(ForwardRef(Grid))
+  <ForwardRef(Grid)
     container={true}
     id="help-drawer"
     spacing={5}
   >
-    <WithStyles(ForwardRef(Grid))
+    <ForwardRef(Grid)
       item={true}
       xs={12}
     >
-      <WithStyles(ForwardRef(Typography))
+      <ForwardRef(Typography)
         component="span"
         id="help-drawer-title"
         key="title"
         variant="h6"
       >
         HelpDrawer title
-      </WithStyles(ForwardRef(Typography))>
-      <WithStyles(ForwardRef(Typography))
+      </ForwardRef(Typography)>
+      <ForwardRef(Typography)
         component="span"
         id="help-drawer-text-HelpDrawertitle"
         key="text"
@@ -93,27 +93,27 @@ exports[`HelpDrawer snapshots tests renders text as react children 1`] = `
         >
           Test text
         </span>
-      </WithStyles(ForwardRef(Typography))>
-    </WithStyles(ForwardRef(Grid))>
-    <WithStyles(ForwardRef(Grid))
+      </ForwardRef(Typography)>
+    </ForwardRef(Grid)>
+    <ForwardRef(Grid)
       id="help-drawer-button"
       item={true}
       xs={12}
     >
-      <WithStyles(ForwardRef(Button))
+      <ForwardRef(Button)
         color="primary"
         onClick={[MockFunction]}
         variant="contained"
       >
         Test OK
-      </WithStyles(ForwardRef(Button))>
-    </WithStyles(ForwardRef(Grid))>
-  </WithStyles(ForwardRef(Grid))>
-</WithStyles(ForwardRef(Drawer))>
+      </ForwardRef(Button)>
+    </ForwardRef(Grid)>
+  </ForwardRef(Grid)>
+</ForwardRef(Drawer)>
 `;
 
 exports[`HelpDrawer snapshots tests renders text as react element 1`] = `
-<WithStyles(ForwardRef(Drawer))
+<ForwardRef(Drawer)
   anchor="right"
   classes={
     Object {
@@ -123,47 +123,47 @@ exports[`HelpDrawer snapshots tests renders text as react element 1`] = `
   onClose={[MockFunction]}
   open={true}
 >
-  <WithStyles(ForwardRef(Grid))
+  <ForwardRef(Grid)
     container={true}
     id="help-drawer"
     spacing={5}
   >
-    <WithStyles(ForwardRef(Grid))
+    <ForwardRef(Grid)
       item={true}
       xs={12}
     >
-      <WithStyles(ForwardRef(Typography))
+      <ForwardRef(Typography)
         component="span"
         id="help-drawer-title"
         key="title"
         variant="h6"
       >
         HelpDrawer title
-      </WithStyles(ForwardRef(Typography))>
-      <WithStyles(ForwardRef(Typography))
+      </ForwardRef(Typography)>
+      <ForwardRef(Typography)
         component="span"
         id="help-drawer-text-HelpDrawertitle"
         key="text"
         variant="body2"
       >
         Test text
-      </WithStyles(ForwardRef(Typography))>
-    </WithStyles(ForwardRef(Grid))>
-    <WithStyles(ForwardRef(Grid))
+      </ForwardRef(Typography)>
+    </ForwardRef(Grid)>
+    <ForwardRef(Grid)
       id="help-drawer-button"
       item={true}
       xs={12}
     >
-      <WithStyles(ForwardRef(Button))
+      <ForwardRef(Button)
         color="primary"
         onClick={[MockFunction]}
         variant="contained"
       >
         Test OK
-      </WithStyles(ForwardRef(Button))>
-    </WithStyles(ForwardRef(Grid))>
-  </WithStyles(ForwardRef(Grid))>
-</WithStyles(ForwardRef(Drawer))>
+      </ForwardRef(Button)>
+    </ForwardRef(Grid)>
+  </ForwardRef(Grid)>
+</ForwardRef(Drawer)>
 `;
 
 exports[`HelpDrawer snapshots tests should render with styles 1`] = `

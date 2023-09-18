@@ -8,7 +8,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
     }
   }
 >
-  <WithStyles(ForwardRef(Grid))
+  <ForwardRef(Grid)
     alignContent="center"
     alignItems="center"
     container={true}
@@ -19,12 +19,12 @@ exports[`Component InlineLoader should render as expected 1`] = `
     <Hidden
       smUp={true}
     >
-      <WithStyles(ForwardRef(Grid))
+      <ForwardRef(Grid)
         item={true}
         xs={true}
       />
     </Hidden>
-    <WithStyles(ForwardRef(Grid))
+    <ForwardRef(Grid)
       item={true}
       style={
         Object {
@@ -33,13 +33,13 @@ exports[`Component InlineLoader should render as expected 1`] = `
       }
       xs="auto"
     >
-      <WithStyles(ForwardRef(CircularProgress))
+      <ForwardRef(CircularProgress)
         aria-labelledby="loading-icon"
         size={18}
         thickness={2}
       />
-    </WithStyles(ForwardRef(Grid))>
-    <WithStyles(ForwardRef(Grid))
+    </ForwardRef(Grid)>
+    <ForwardRef(Grid)
       item={true}
       style={
         Object {
@@ -48,23 +48,23 @@ exports[`Component InlineLoader should render as expected 1`] = `
       }
       xs="auto"
     >
-      <WithStyles(ForwardRef(Typography))
+      <ForwardRef(Typography)
         component="span"
         id="loading-icon"
         variant="h5"
       >
         InlineLoader Test
-      </WithStyles(ForwardRef(Typography))>
-    </WithStyles(ForwardRef(Grid))>
+      </ForwardRef(Typography)>
+    </ForwardRef(Grid)>
     <Hidden
       smUp={true}
     >
-      <WithStyles(ForwardRef(Grid))
+      <ForwardRef(Grid)
         item={true}
         xs={true}
       />
     </Hidden>
-  </WithStyles(ForwardRef(Grid))>
+  </ForwardRef(Grid)>
 </div>
 `;
 

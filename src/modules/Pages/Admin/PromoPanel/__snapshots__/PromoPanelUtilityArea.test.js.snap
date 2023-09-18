@@ -9,19 +9,15 @@ Object {
         class="makeStyles-actionButtonPlacer-1"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-da9nxa-MuiButtonBase-root-MuiButton-root"
           data-testid="admin-promopanel-help-button"
           id="admin-promopanel-help-button"
           tabindex="0"
           type="button"
         >
+          Help
           <span
-            class="MuiButton-label"
-          >
-            Help
-          </span>
-          <span
-            class="MuiTouchRipple-root"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
       </div>
@@ -29,19 +25,15 @@ Object {
         class="makeStyles-actionButtonPlacer-1"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-4lnysq-MuiButtonBase-root-MuiButton-root"
           data-testid="admin-promopanel-add-display-button"
           id="admin-promopanel-add-display-button"
           tabindex="0"
           type="button"
         >
+          Add panel
           <span
-            class="MuiButton-label"
-          >
-            Add panel
-          </span>
-          <span
-            class="MuiTouchRipple-root"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
       </div>
@@ -52,19 +44,15 @@ Object {
       class="makeStyles-actionButtonPlacer-1"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-da9nxa-MuiButtonBase-root-MuiButton-root"
         data-testid="admin-promopanel-help-button"
         id="admin-promopanel-help-button"
         tabindex="0"
         type="button"
       >
+        Help
         <span
-          class="MuiButton-label"
-        >
-          Help
-        </span>
-        <span
-          class="MuiTouchRipple-root"
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
         />
       </button>
     </div>
@@ -72,19 +60,15 @@ Object {
       class="makeStyles-actionButtonPlacer-1"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-4lnysq-MuiButtonBase-root-MuiButton-root"
         data-testid="admin-promopanel-add-display-button"
         id="admin-promopanel-add-display-button"
         tabindex="0"
         type="button"
       >
+        Add panel
         <span
-          class="MuiButton-label"
-        >
-          Add panel
-        </span>
-        <span
-          class="MuiTouchRipple-root"
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
         />
       </button>
     </div>

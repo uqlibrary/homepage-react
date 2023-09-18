@@ -269,7 +269,7 @@ describe('AssetPanel', () => {
             fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
         });
         selectOptionFromListByIndex(1, { getByRole, getAllByRole });
-        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('value', 'Power Cord - C5');
+        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('value', 'Power Cord - C13');
 
         expect(handleChange).toHaveBeenCalledWith('asset_type_id');
 
@@ -330,7 +330,7 @@ describe('AssetPanel', () => {
             fireEvent.mouseDown(getByTestId('asset_type_selector-asset-panel-input'));
         });
         selectOptionFromListByIndex(1, { getByRole, getAllByRole });
-        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('value', 'Power Cord - C5');
+        expect(getByTestId('asset_type_selector-asset-panel-input')).toHaveAttribute('value', 'Power Cord - C13');
 
         expect(handleChange).toHaveBeenCalledWith('asset_type_id');
 
