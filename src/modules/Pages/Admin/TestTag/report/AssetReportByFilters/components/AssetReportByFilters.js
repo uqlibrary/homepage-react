@@ -218,12 +218,9 @@ const AssetReportByFilters = ({
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                             />
                         </Grid>
-                        {console.log('SD', startDateError)}
                         <Grid item xs={12} md={6} lg={3}>
                             {/* Start Date */}
                             <DatePicker
-                                id={`${componentIdLower}-tagged-start`}
-                                data-testid={`${componentIdLower}-tagged-start`}
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-start-input`,
                                     'data-testid': `${componentIdLower}-tagged-start-input`,
@@ -237,28 +234,34 @@ const AssetReportByFilters = ({
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                 value={selectedStartDate.date}
-                                onChange={startDate =>
-                                    (!!!startDate || (!!startDate && startDate.isValid())) &&
-                                    handleStartDateChange(startDate)
-                                }
+                                onChange={startDate => {
+                                    return (
+                                        (!!!startDate || (!!startDate && startDate.isValid())) &&
+                                        handleStartDateChange(startDate)
+                                    );
+                                }}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                                 autoOk
                                 renderInput={params => (
                                     <TextField
-                                        variant="standard"
                                         {...params}
+                                        label={pageLocale.form.keyboardDatePicker.startDateLabel}
+                                        variant="standard"
                                         error={!!startDateError.error}
+                                        id={`${componentIdLower}-tagged-start`}
+                                        data-testid={`${componentIdLower}-tagged-start`}
                                         helperText={!!startDateError.error && startDateError.message}
+                                        FormHelperTextProps={{
+                                            'data-testid': `${componentIdLower}-tagged-start-helpertext`,
+                                        }}
                                     />
                                 )}
                             />
                         </Grid>
                         <Grid item xs={12} md={6} lg={3}>
                             <DatePicker
-                                id={`${componentIdLower}-tagged-end`}
-                                data-testid={`${componentIdLower}-tagged-end`}
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-end-input`,
                                     'data-testid': `${componentIdLower}-tagged-end-input`,
@@ -283,10 +286,15 @@ const AssetReportByFilters = ({
                                 autoOk
                                 renderInput={params => (
                                     <TextField
-                                        variant="standard"
                                         {...params}
+                                        id={`${componentIdLower}-tagged-end`}
+                                        data-testid={`${componentIdLower}-tagged-end`}
+                                        variant="standard"
                                         error={!!endDateError.error}
                                         helperText={!!endDateError.error && endDateError.message}
+                                        FormHelperTextProps={{
+                                            'data-testid': `${componentIdLower}-tagged-end-helpertext`,
+                                        }}
                                     />
                                 )}
                             />
