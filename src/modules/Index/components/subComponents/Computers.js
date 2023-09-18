@@ -100,6 +100,9 @@ const useStyles = makeStyles(theme => ({
         minWidth: 0,
         marginTop: -2,
         marginBottom: -2,
+        textAlign: 'left',
+        fontWeight: 300,
+        textTransform: 'none',
     },
     linkButtonLabel: {
         textTransform: 'none',
@@ -407,7 +410,11 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                         onClick={() => handleCollapse(index)}
                                                         aria-expanded={!!collapse[index]}
                                                         classes={{
-                                                            root: classes.linkButton,
+                                                            root: `${classes.linkButton} ${
+                                                                item.campus && cookies.location === item.campus
+                                                                    ? classes.selectedCampus
+                                                                    : ''
+                                                            }`,
                                                             label: `${classes.linkButtonLabel} ${
                                                                 item.campus && cookies.location === item.campus
                                                                     ? classes.selectedCampus
