@@ -317,6 +317,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         )}
                         <Grid container spacing={3}>
                             <Grid item padding={3} style={{ flex: 1 }}>
+                                {console.log('data', list.data)}
                                 <DataTable
                                     id={componentId}
                                     rows={list.data}
@@ -335,7 +336,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             className: classes.actionButtons,
                                         },
                                     }}
-                                    autoPageSize
                                     {...(config.form.sort ?? /* istanbul ignore next */ {})}
                                 />
                             </Grid>

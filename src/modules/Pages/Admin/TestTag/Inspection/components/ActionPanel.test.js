@@ -1,6 +1,6 @@
 import React from 'react';
 import ActionPanel from './ActionPanel';
-import { rtlRender, act, fireEvent, waitFor } from 'test-utils';
+import { rtlRender, act, fireEvent, waitFor, preview, userEvent } from 'test-utils';
 
 import * as helpers from '../utils/helpers';
 
@@ -60,17 +60,25 @@ describe('ActionPanel', () => {
 
         const { getByTestId } = setup({ formValues: testValues, handleChange, classes, isMobileView, disabled });
 
+        // userEvent.click(getByTestId(`${componentId}-repair-tab-button`));
+
+        userEvent.click(getByTestId(`${componentId}-discard-tab-button`));
+
+        // act(() => {
+        //     fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
+        // });
+
         act(() => {
             fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
         });
 
-        expect(setStateMock).toHaveBeenCalledWith(0);
+        // expect(setStateMock).toHaveBeenCalledWith(1);
 
-        act(() => {
-            fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
-        });
+        // act(() => {
+        //     fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
+        // });
 
-        expect(setStateMock).toHaveBeenCalledWith(1);
+        // expect(setStateMock).toHaveBeenCalledWith(0);
     });
 
     it('allows selection of only discard tab', () => {

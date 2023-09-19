@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
@@ -46,10 +46,10 @@ const AssetSelector = ({
     const inputRef = React.useRef();
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
-
     const [currentValue, setCurrentValue] = useState(selectedAsset ?? null);
 
     const [formAssetList, setFormAssetList] = useState(assetsList);
+
     const [isOpen, setIsOpen] = React.useState(false);
 
     const clearInput = () => {
@@ -153,7 +153,11 @@ const AssetSelector = ({
                     // Regular option
                     return `${option.asset_id_displayed ?? /* istanbul ignore next */ ''}`;
                 }}
-                renderOption={option => option.asset_id_displayed}
+                renderOption={(props, option) => (
+                    <Box component="li" {...props} key={option.org_id}>
+                        {option.asset_id_displayed}
+                    </Box>
+                )}
                 PopperComponent={customPopper}
                 freeSolo
                 renderInput={params => (

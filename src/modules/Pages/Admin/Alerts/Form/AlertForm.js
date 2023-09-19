@@ -374,8 +374,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
             return;
         }
-
-        const newValue = !!event.target.value ? event.target.value : event.target.checked;
+        const newValue = event.target.hasOwnProperty('checked') ? event.target.checked : event.target.value;
         setValues({ ...values, [prop]: newValue });
 
         const newValues = expandValues({ ...values, [prop]: newValue });
@@ -635,7 +634,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     <Grid item sm={4} xs={12}>
                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.link.checkbox}>
                             <Checkbox
-                                checked={values.linkRequired}
+                                checked={!!values.linkRequired}
                                 data-testid="admin-alerts-form-checkbox-linkrequired"
                                 onChange={handleChange('linkRequired')}
                                 className={classes.checkbox}
@@ -647,7 +646,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.permanent}>
                             <Checkbox
                                 data-testid="admin-alerts-form-checkbox-permanent"
-                                checked={values.permanentAlert}
+                                checked={!!values.permanentAlert}
                                 onChange={handleChange('permanentAlert')}
                                 name="permanentAlert"
                                 title={locale.form.permanentTooltip}

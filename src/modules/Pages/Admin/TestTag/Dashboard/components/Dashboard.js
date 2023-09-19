@@ -94,7 +94,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
             inclusive={false}
         >
             <div className={classes.root}>
-                <Grid container spacing={3} padding={3}>
+                <Grid container spacing={3} sx={{ paddingBottom: 1.5 }}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
                         <Grid item xs={12} sm className={classes.flexParent}>
                             {dashboardConfigLoading && !dashboardConfigError ? (

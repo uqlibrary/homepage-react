@@ -240,7 +240,6 @@ const BookExamBooth = ({
                                         })}
                                     </Select>
                                 </Grid>
-                                {console.log('startdate', startDate)}
                                 <Grid item xs={12}>
                                     <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />

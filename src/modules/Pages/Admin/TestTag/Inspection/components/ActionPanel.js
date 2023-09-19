@@ -89,7 +89,10 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 value={selectedTabValue}
                 indicatorColor="primary"
                 textColor="primary"
-                onChange={(e, value) => setSelectedTabValue(value)}
+                onChange={(e, value) => {
+                    console.log('test', value);
+                    return setSelectedTabValue(value);
+                }}
                 variant={isMobileView ? 'fullWidth' : 'standard'}
                 id={`${componentId}-tabs`}
                 data-testid={`${componentId}-tabs`}

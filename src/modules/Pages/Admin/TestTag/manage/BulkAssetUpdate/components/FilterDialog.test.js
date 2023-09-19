@@ -118,7 +118,7 @@ describe('FilterDialog', () => {
         expect(row.getByText('1-W212 Forgan Smith Building, St Lucia')).toBeInTheDocument();
         expect(row.getByText('AWAITINGTEST')).toBeInTheDocument();
 
-        expect(getByText('1-5 of 5')).toBeInTheDocument();
+        expect(getByText('1–5 of 5')).toBeInTheDocument();
 
         expect(loadAssetsMineFn).toHaveBeenCalled();
         expect(loadSitesFn).toHaveBeenCalled();
@@ -209,9 +209,9 @@ describe('FilterDialog', () => {
 
         expect(getByText('Select assets by feature')).toBeInTheDocument();
         const row1 = within(getAllByRole('row')[1]);
-        userEvent.click(row1.getByLabelText('Select Row checkbox'));
+        userEvent.click(row1.getByLabelText('Select row'));
         const row2 = within(getAllByRole('row')[2]);
-        userEvent.click(row2.getByLabelText('Select Row checkbox'));
+        userEvent.click(row2.getByLabelText('Select row'));
 
         userEvent.click(getByTestId('filter_dialog-test-action-button'));
 

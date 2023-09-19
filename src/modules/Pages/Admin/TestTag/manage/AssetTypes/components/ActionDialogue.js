@@ -123,6 +123,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                     <Grid item xs={12} sm={6} container justifyContent="flex-start">
                         <Button
                             variant="outlined"
+                            color="secondary"
                             onClick={onCancel}
                             id={`${componentId}-cancel-button`}
                             data-testid={`${componentId}-cancel-button`}
