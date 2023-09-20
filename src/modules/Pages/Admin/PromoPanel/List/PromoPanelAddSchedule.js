@@ -250,7 +250,14 @@ export const PromoPanelAddSchedule = ({
                                 }}
                                 // // minDate={startDate}
                                 inputFormat="ddd D MMM YYYY h:mm a"
-                                renderInput={params => <TextField variant="standard" {...params} />}
+                                renderInput={params => (
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        id="admin-promopanel-group-start-date-container"
+                                        data-testid="admin-promopanel-group-start-date-container"
+                                    />
+                                )}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div className={classes.errorStyle} data-testid="start-date-error">
@@ -279,7 +286,14 @@ export const PromoPanelAddSchedule = ({
                                     readOnly: true,
                                 }}
                                 minDate={startDate}
-                                renderInput={params => <TextField variant="standard" {...params} />}
+                                renderInput={params => (
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        id="admin-promopanel-group-end-date-container"
+                                        data-testid="admin-promopanel-group-end-date-container"
+                                    />
+                                )}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div className={classes.errorStyle} data-testid="end-date-error">
