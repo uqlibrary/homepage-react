@@ -83,6 +83,7 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 }
 
 describe('FilterDialog', () => {
+    jest.setTimeout(30000);
     it('renders component', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();

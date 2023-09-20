@@ -88,8 +88,6 @@ const EventPanel = ({
                     <Grid item xs={12} sm={6} md={3}>
                         <DatePicker
                             {...pageLocale.form.event.date}
-                            id={`${componentIdLower}-event-date`}
-                            data-testid={`${componentIdLower}-event-date`}
                             inputProps={{
                                 ...pageLocale.form.event.date.inputProps,
                                 id: `${componentIdLower}-event-date-input`,
@@ -116,7 +114,14 @@ const EventPanel = ({
                                 id: `${componentIdLower}-event-date-button`,
                                 'data-testid': `${componentIdLower}-event-date-button`,
                             }}
-                            renderInput={params => <TextField variant="standard" {...params} />}
+                            renderInput={params => (
+                                <TextField
+                                    variant="standard"
+                                    id={`${componentIdLower}-event-date`}
+                                    data-testid={`${componentIdLower}-event-date`}
+                                    {...params}
+                                />
+                            )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StandardPage } from './StandardPage';
-import { rtlRender, preview } from '../../../../../../utils/test-utils';
+import { rtlRender } from '../../../../../../utils/test-utils';
 jest.mock('react-router', () => ({
     useHistory: jest.fn(() => ({ go: jest.fn() })),
 }));
