@@ -105,7 +105,7 @@ describe('InspectionsDue', () => {
         expect(row.getByText('4-L412')).toBeInTheDocument();
 
         // check pagination counter shows expected number of rows
-        expect(getByText('1-10 of 10')).toBeInTheDocument();
+        expect(getByText('1–10 of 10')).toBeInTheDocument();
     });
 
     it('fires action when filter site and date range change', async () => {
