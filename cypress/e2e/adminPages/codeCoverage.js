@@ -36,7 +36,7 @@ context('Learning Resources', () => {
         const learningResourceSearchSuggestionsWithACCT = learningResourceSearchSuggestions.filter(item =>
             item.name.startsWith('ACCT11'),
         );
-        cy.get('ul#homepage-learningresource-autocomplete-popup')
+        cy.get('ul#homepage-learningresource-autocomplete-listbox')
             .children()
             .should('have.length', learningResourceSearchSuggestionsWithACCT.length + 1); // add one for title
     });

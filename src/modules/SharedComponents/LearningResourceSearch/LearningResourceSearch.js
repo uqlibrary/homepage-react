@@ -126,7 +126,7 @@ export const LearningResourceSearch = ({
                     <Autocomplete
                         data-testid={`${elementId}-autocomplete`}
                         analyticsid-testid={`${elementId}-autocomplete`}
-                        aria-controls={`${elementId}-autocomplete-popup`}
+                        aria-controls={`${elementId}-autocomplete-listbox`}
                         blurOnSelect="mouse"
                         id={`${elementId}-autocomplete`}
                         options={getOptions()}
@@ -158,7 +158,8 @@ export const LearningResourceSearch = ({
                                         'data-analyticsid': `${elementId}-autocomplete-input-wrapper`,
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
-                                    label={locale.search.placeholder} />
+                                    label={locale.search.placeholder}
+                                />
                             );
                         }}
                         disableClearable
