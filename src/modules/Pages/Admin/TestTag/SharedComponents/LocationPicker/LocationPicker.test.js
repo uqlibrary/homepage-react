@@ -1,6 +1,6 @@
 import React from 'react';
 import LocationPicker, { GridWrapper, getBuildingLabel } from './LocationPicker';
-import { render, act, fireEvent } from 'test-utils';
+import { render, rtlRender, act, fireEvent } from 'test-utils';
 import siteList from '../../../../../../data/mock/data/testing/testTagSites';
 import floorList from '../../../../../../data/mock/data/testing/testTagFloors';
 import roomList from '../../../../../../data/mock/data/testing/testTagRooms';
@@ -34,7 +34,7 @@ const defaultLocale = {
 
 const defaultLocation = { site: -1, building: -1, floor: -1, room: -1 };
 
-function setup(testProps = {}, renderer = render) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, ...props } = testProps;
 
     const _state = {
