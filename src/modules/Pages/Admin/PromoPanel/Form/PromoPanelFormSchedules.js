@@ -179,7 +179,14 @@ export const PromoPanelFormSchedules = ({
                                 KeyboardButtonProps={{
                                     'aria-label': locale.form.labels.startDate,
                                 }}
-                                renderInput={params => <TextField variant="standard" {...params} />}
+                                renderInput={params => (
+                                    <TextField
+                                        {...params}
+                                        variant="standard"
+                                        id="admin-promopanel-form-start-date-container"
+                                        data-testid="admin-promopanel-form-start-date-container"
+                                    />
+                                )}
                             />
                             {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div data-testid="admin-promopanel-startdate-past" className={classes.errorStyle}>
@@ -215,6 +222,7 @@ export const PromoPanelFormSchedules = ({
                                     const value = params.inputProps.value ?? null;
                                     return (
                                         <TextField
+                                            {...params}
                                             variant="standard"
                                             helperText={
                                                 !value || moment.utc(value).isBefore(moment.utc(values.start))
@@ -222,7 +230,8 @@ export const PromoPanelFormSchedules = ({
                                                     : ''
                                             }
                                             error={!value || moment.utc(value).isBefore(moment.utc(values.start))}
-                                            {...params}
+                                            id="admin-promopanel-form-end-date-container"
+                                            data-testid="admin-promopanel-form-end-date-container"
                                         />
                                     );
                                 }}

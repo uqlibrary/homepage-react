@@ -96,67 +96,45 @@ describe('Promopanel Admin Form Pages', () => {
             // cy.get('#new-scheduled-panel-for-group').click();
             cy.get('body').type('{esc}');
             // Create first date range
-            cy.get(
-                '[data-testid="admin-promopanel-form-start-date"] > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root',
-            ).click();
+            cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiPickersYearSelection-container')
+            cy.get('.MuiYearPicker-root')
                 .contains('2050')
                 .click({ force: true });
-            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
-            cy.get(
-                '[data-testid="admin-promopanel-form-end-date"] > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root',
-            ).click();
-            cy.get('.MuiToolbar-root')
-                .contains('2050')
+            cy.get('body').type('{esc}');
 
-                .click();
-            cy.get('.MuiPickersYearSelection-container')
+            cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
+            cy.contains(new Date().getFullYear()).click();
+            cy.get('.MuiYearPicker-root')
                 .contains('2052')
                 .click({ force: true });
-            cy.get('.MuiDialogActions-root > :nth-child(2)').click();
+            cy.get('body').type('{esc}');
+
             cy.get('[data-testid="admin-promopanel-form-button-addSchedule"]').click();
+
             // Add new record, overlapping start date.
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="hdr"]').click();
             cy.get('body').type('{esc}');
             // Create second date range
-            cy.get(
-                '[data-testid="admin-promopanel-form-start-date"] > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root',
-            ).click();
-            cy.get('.MuiToolbar-root')
-                .contains('2050')
+            cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
+            cy.get('.MuiPickersCalendarHeader-labelContainer > .MuiButtonBase-root').click();
 
-                .click({ force: true });
-            cy.get('.MuiPickersYearSelection-container')
+            cy.get('.MuiYearPicker-root')
                 .contains('2049')
                 .click({ force: true });
-            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
-            cy.get(
-                '[data-testid="admin-promopanel-form-end-date"] > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root',
-            ).click();
-            cy.get('.MuiToolbar-root')
-                .contains('2052')
+            cy.get('body').type('{esc}');
 
-                .click();
-            cy.get('.MuiPickersYearSelection-container')
-                .contains('2049')
-                .click({ force: true });
-            cy.get('.MuiDialogActions-root > :nth-child(2)').click();
-            cy.get('[data-testid="admin-promopanel-form-button-addSchedule"]').click();
-            testId('admin-promopanel-form-button-editSchedule-1').click();
-            cy.get('#admin-promopanel-group-end-date').click();
-            cy.get('.MuiToolbar-root')
-                .contains('2049')
-                .click({ force: true });
-            cy.get('.MuiPickersYearSelection-container')
+            cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
+            cy.get('.MuiPickersCalendarHeader-labelContainer > .MuiButtonBase-root').click();
+            cy.get('.MuiYearPicker-root')
                 .contains('2051')
-                .click();
-            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
-            cy.get('[data-testid="admin-promopanel-group-button-save"]').click();
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            cy.get('[data-testid="admin-promopanel-form-button-addSchedule"]').click();
             cy.get('[data-testid="panel-save-or-schedule-title"]').should('contain', 'Schedule Conflict');
             cy.get('[data-testid="admin-promopanel-group-button-cancel"]').click({ multiple: true, force: true });
-            // cy.get('[data-testid="panel-save-or-schedule-title"]').should('not.be.visible');
+            cy.get('[data-testid="panel-save-or-schedule-title"]').should('not.exist');
         });
         it('can enter new data into form fields for a scheduled panel, detecting conflicts', () => {
             saveButtonIsDisabled(true);
@@ -171,6 +149,7 @@ describe('Promopanel Admin Form Pages', () => {
                 .type('This is the content of the panel');
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
+            cy.wait(200);
             testId('admin-promopanel-form-button-preview').click();
             testId('promopanel-preview-title').should('be.visible');
             testId('admin-promopanel-preview-button-cancel').click();
@@ -187,6 +166,7 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('[data-value="student"]').click();
             cy.get('[data-value="hdr"]').click();
             cy.get('body').type('{esc}');
+            cy.wait(200);
             testId('admin-promopanel-form-button-addSchedule').click();
             testId('admin-promopanel-form-button-save').click();
             testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');

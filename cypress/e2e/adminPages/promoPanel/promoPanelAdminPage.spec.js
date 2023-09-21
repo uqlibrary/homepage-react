@@ -85,11 +85,13 @@ describe('Promopanel Admin Form Pages', () => {
                 .contains('panel');
             cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
             testId('schedule-panel-hdr').click();
-            cy.get('[aria-label="Start Date"]').click();
-            cy.get('.MuiPickersModal-withAdditionalAction > button:first-of-type').click();
-            cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
-            cy.get('[aria-label="Start Date"]').click();
-            cy.get('.MuiPickersModal-withAdditionalAction > button:nth-of-type(3)').click();
+            cy.get('[data-testid="admin-promopanel-group-start-date-container"] button').click();
+            cy.get('.MuiDayPicker-weekContainer:first-of-type > button:first-of-type').click();
+            cy.get('body').type('{esc}');
+            cy.get('[data-testid="admin-promopanel-group-end-date-container"] button').click();
+            cy.get('.MuiDayPicker-weekContainer:last-of-type > button:first-of-type').click();
+            cy.get('body').type('{esc}');
+
             cy.get('#group-selector').click({ force: true });
             cy.get('#new-scheduled-panel-for-group').click();
             cy.get('[data-value="7"]').click();
@@ -134,21 +136,21 @@ describe('Promopanel Admin Form Pages', () => {
                 .contains('panel');
             cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
             testId('schedule-panel-hdr').click();
-            cy.get('#picker-start-date').click();
-            // cy.get('.MuiToolbar-root > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root').click();
+            cy.get('[data-testid="admin-promopanel-group-start-date-container"] button').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiPickersYearSelection-container')
+            cy.get('.MuiYearPicker-root')
                 .contains('1999')
                 .click({ force: true });
-            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
+            cy.get('body').type('{esc}');
             testId('start-date-error').should('contain', 'This date is in the past');
-            cy.get('#picker-end-date').click();
-            // cy.get('.MuiToolbar-root > .MuiInputBase-root > .MuiInputAdornment-root > .MuiButtonBase-root').click();
+
+            cy.get('[data-testid="admin-promopanel-group-end-date-container"] button').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiPickersYearSelection-container')
+            cy.get('.MuiYearPicker-root')
                 .contains('1999')
                 .click({ force: true });
-            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
+            cy.get('body').type('{esc}');
+
             testId('end-date-error').should('contain', 'This date is in the past');
         });
         it('can unschedule a panel', () => {

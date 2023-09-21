@@ -217,10 +217,17 @@ export const PromoPanelGroupDateSelector = ({
                                 autoOk
                                 KeyboardButtonProps={{
                                     'aria-label': 'Start Date',
-                                    'data-testid': 'end-date-calendar',
+                                    'data-testid': 'start-date-calendar',
                                     id: 'start-date-calendar',
                                 }}
-                                renderInput={params => <TextField variant="standard" {...params} />}
+                                renderInput={params => (
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        id="admin-promopanel-form-start-date-edit-container"
+                                        data-testid="admin-promopanel-form-start-date-edit-container"
+                                    />
+                                )}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div
@@ -257,11 +264,18 @@ export const PromoPanelGroupDateSelector = ({
                                 todayLabel={'Today'}
                                 autoOk
                                 KeyboardButtonProps={{
-                                    'aria-label': 'Start Date',
+                                    'aria-label': 'End Date',
                                     'data-testid': 'end-date-calendar',
                                     id: 'end-date-calendar',
                                 }}
-                                renderInput={params => <TextField variant="standard" {...params} />}
+                                renderInput={params => (
+                                    <TextField
+                                        {...params}
+                                        variant="standard"
+                                        id="admin-promopanel-form-end-date-edit-container"
+                                        data-testid="admin-promopanel-form-end-date-edit-container"
+                                    />
+                                )}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div
