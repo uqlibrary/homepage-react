@@ -274,7 +274,7 @@ describe('Spotlights Admin List Page', () => {
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
         cy.get('[data-testid="admin-spotlights-list-past-list"]').should('be.visible');
 
-        cy.get('[data-testid="admin-spotlights-list-past-list"] tbody tr:first-child').should(
+        cy.get('[data-testid="admin-spotlights-list-past-list"] tbody tr:first-child td').should(
             'contain',
             'Can be viewed or deleted past #1',
         );

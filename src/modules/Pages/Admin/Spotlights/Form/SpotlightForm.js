@@ -565,15 +565,26 @@ export const SpotlightForm = ({
                             minDate={defaults.minimumDate}
                             inputFormat="DD/MM/YYYY HH:mm a"
                             inputProps={{
-                                id: 'admin-spotlights-form-start-date',
-                                'data-testid': 'admin-spotlights-form-start-date',
                                 label: locale.form.labels.publishDate,
                                 'aria-label': locale.form.labels.publishDate,
+                            }}
+                            componentsProps={{
+                                actionBar: {
+                                    actions: ['today'],
+                                    'data-testid': 'spotlight-start-today',
+                                },
                             }}
                             // KeyboardButtonProps={{
                             //     'aria-label': locale.form.tooltips.publishDate,
                             // }}
-                            renderInput={params => <TextField variant="standard" {...params} />}
+                            renderInput={params => (
+                                <TextField
+                                    variant="standard"
+                                    {...params}
+                                    id="admin-spotlights-form-start-date"
+                                    data-testid="admin-spotlights-form-start-date"
+                                />
+                            )}
                         />
                         {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
                             <div className={classes.errorStyle}>This date is in the past.</div>
@@ -596,6 +607,12 @@ export const SpotlightForm = ({
                             // KeyboardButtonProps={{
                             //     'aria-label': locale.form.tooltips.unpublishDate,
                             // }}
+                            componentsProps={{
+                                actionBar: {
+                                    actions: ['today'],
+                                    'data-testid': 'spotlight-end-today',
+                                },
+                            }}
                             minDateMessage="Should not be before Date published"
                             renderInput={props => (
                                 <TextField
@@ -603,10 +620,12 @@ export const SpotlightForm = ({
                                     {...props}
                                     helperText={
                                         values.end && values.end < values.start
-                                            ? 'Date must not be before the minimum date.'
+                                            ? 'Should not be before Date published.'
                                             : ''
                                     }
                                     error={values.end && values.end < values.start}
+                                    id="admin-spotlights-form-end-date"
+                                    data-testid="admin-spotlights-form-end-date"
                                 />
                             )}
                         />

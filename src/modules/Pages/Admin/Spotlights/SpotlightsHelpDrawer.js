@@ -39,6 +39,9 @@ export const SpotlightsHelpDrawer = ({ open, helpContent, closeHelpLightbox }) =
 
     return (
         <Drawer
+            sx={{
+                zIndex: 9999,
+            }}
             anchor="right"
             className={classes.drawer}
             open={open}
