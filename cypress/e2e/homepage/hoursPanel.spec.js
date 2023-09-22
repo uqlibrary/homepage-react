@@ -9,6 +9,7 @@ context('Hours Accessibility', () => {
 
         cy.log('Hours list');
         cy.waitUntil(() => cy.get('div[data-testid="library-hours-panel"]').should('exist'));
+        cy.wait(1000);
         cy.checkA11y('div[data-testid="library-hours-panel"]', {
             reportName: 'Hours',
             scopeName: 'As loaded',

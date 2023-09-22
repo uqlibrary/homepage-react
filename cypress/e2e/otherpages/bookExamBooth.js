@@ -135,28 +135,26 @@ context('Book Exam Booth page', () => {
             .should($input => {
                 const defaultDate = $input.val();
                 const yesterday = moment().subtract(1, 'day');
-                expect(defaultDate).to.equal(yesterday.format('YYYY-MM-DD'));
+                expect(defaultDate).to.equal(yesterday.format('DD/MM/YYYY'));
             });
 
-        cy.get('[data-testid="start-date"]').click();
+        cy.get('[data-testid="start-date"] button').click();
 
-        cy.get('.MuiPickersCalendarHeader-switchHeader button:nth-of-type(2)')
+        cy.data('ArrowRightIcon')
             .as('next-month-button')
             .click();
         if (moment().date() === 1) {
             // The field defaults to the previous day, which can be in the previous month.
             cy.get('@next-month-button').click();
         }
-        cy.get('[role="dialog"] .MuiPickersBasePicker-pickerView button')
+        cy.get('.MuiPickersDay-root')
             .contains('10')
             .click();
-        cy.get('[role="dialog"] button')
-            .contains('OK')
-            .click();
+        cy.get('body').type('{esc}');
         cy.get('@date-input')
             .invoke('val')
             .then(text => {
-                expect(text).to.equal(bookingDate.format('YYYY-MM-DD'));
+                expect(text).to.equal(bookingDate.format('DD/MM/YYYY'));
             });
 
         // Choose a custom time

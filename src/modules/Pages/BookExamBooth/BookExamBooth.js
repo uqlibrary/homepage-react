@@ -29,8 +29,9 @@ const BookExamBooth = ({
     const defaultExamLength = 30; // minutes
     const setupAllowance = 30; // the number of minutes they can arrive and setup before their exam time starts
 
-    const yesterday = moment().subtract(1, 'days');
-    // .format(dateFormat);
+    const yesterday = moment()
+        .subtract(1, 'days')
+        .format(dateFormat);
 
     // store the exam location
     const [chosenLocationCode, setLocation] = React.useState('unset');
@@ -82,10 +83,31 @@ const BookExamBooth = ({
     const encodeTime = momentObj => encodeURIComponent(momentObj.format('HH:mm'));
     const _getAddress = () => {
         const bookingUrl = getBookingUrl(isBYOD, chosenLocationCode, locale.locationDecider.locations);
-        const startTimeStr = encodeTime(getStartTime(startDate, startTimeHours, startTimeMinutes, setupAllowance));
-        const endTimeStr = encodeTime(getEndTime(startDate, startTimeHours, startTimeMinutes, sessionLength));
+        const startTimeStr = encodeTime(
+            getStartTime(
+                moment(startDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                startTimeHours,
+                startTimeMinutes,
+                setupAllowance,
+            ),
+        );
+        const endTimeStr = encodeTime(
+            getEndTime(
+                moment(startDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                startTimeHours,
+                startTimeMinutes,
+                sessionLength,
+            ),
+        );
 
-        const address = bookingUrl + '&firstDay=' + startDate + '&fromTime=' + startTimeStr + '&toTime=' + endTimeStr;
+        const address =
+            bookingUrl +
+            '&firstDay=' +
+            moment(startDate, 'DD/MM/YYYY').format('YYYY-MM-DD') +
+            '&fromTime=' +
+            startTimeStr +
+            '&toTime=' +
+            endTimeStr;
 
         // alert('we would visit ' + address);
         window.location.assign(address);
@@ -244,7 +266,6 @@ const BookExamBooth = ({
                                     <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />
                                     <DatePicker
-                                        data-testid="start-date"
                                         inputFormat={dateFormat}
                                         id="startDate"
                                         minDate={yesterday}
@@ -252,7 +273,9 @@ const BookExamBooth = ({
                                         onChange={_handleStartDateChange}
                                         type="date"
                                         value={moment(startDate, 'DD/MM/YYYY')}
-                                        renderInput={params => <TextField variant="standard" {...params} />}
+                                        renderInput={params => (
+                                            <TextField data-testid="start-date" variant="standard" {...params} />
+                                        )}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
