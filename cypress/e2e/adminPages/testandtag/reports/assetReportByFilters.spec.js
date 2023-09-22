@@ -8,7 +8,8 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
     const zeroPad = (num, places) => String(num).padStart(places, '0');
 
     const getFieldValue = (dataField, rowIndex, colIndex) =>
-        cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 
     const forcePageRefresh = () => {
         cy.data('test_tag_header-navigation-dashboard').click();
@@ -75,7 +76,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000001'));
         // Select a Tagged from Date.
         cy.get('[data-testid="assets_inspected-tagged-start"] button').click();
-        cy.get('.MuiPickersCalendar-week')
+        cy.get('.MuiPickersDay-root')
             .contains('11')
             .click();
         cy.get('body').type('{esc}');
@@ -84,7 +85,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000001'));
         // Select a Tagged to Date.
         cy.get('[data-testid="assets_inspected-tagged-end"] button').click();
-        cy.get('.MuiPickersCalendar-week')
+        cy.get('.MuiPickersDay-root')
             .contains('12')
             .click();
         cy.get('body').type('{esc}');
@@ -92,7 +93,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.data('assets_inspected-tagged-end-input').should('have.value', `${currentYear}-${currentMonth}-12`);
         // Select invalid end date.
         cy.get('[data-testid="assets_inspected-tagged-end"] button').click();
-        cy.get('.MuiPickersCalendar-week')
+        cy.get('.MuiPickersDay-root')
             .contains('10')
             .click();
         cy.get('body').type('{esc}');
@@ -102,7 +103,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
             .should('have.class', 'Mui-error');
         // select a valid date.
         cy.get('[data-testid="assets_inspected-tagged-end"] button').click();
-        cy.get('.MuiPickersCalendar-week')
+        cy.get('.MuiPickersDay-root')
             .contains('12')
             .click();
         cy.get('body').type('{esc}');

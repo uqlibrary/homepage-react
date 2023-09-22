@@ -243,8 +243,6 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
                             <DatePicker
-                                id={`${componentIdLower}-tagged-start`}
-                                data-testid={`${componentIdLower}-tagged-start`}
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-start-input`,
                                     'data-testid': `${componentIdLower}-tagged-start-input`,
@@ -273,6 +271,8 @@ const InspectionsByLicencedUser = ({
                                         {...params}
                                         error={startDateError.error}
                                         helperText={startDateError.error && startDateError.message}
+                                        id={`${componentIdLower}-tagged-start`}
+                                        data-testid={`${componentIdLower}-tagged-start`}
                                     />
                                 )}
                             />
@@ -280,8 +280,6 @@ const InspectionsByLicencedUser = ({
                         <Grid item xs={12} md={4}>
                             {/* End Date */}
                             <DatePicker
-                                id={`${componentIdLower}-tagged-end`}
-                                data-testid={`${componentIdLower}-tagged-end`}
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-end-input`,
                                     'data-testid': `${componentIdLower}-tagged-end-input`,
@@ -309,6 +307,8 @@ const InspectionsByLicencedUser = ({
                                         {...params}
                                         helperText={endDateError.error && endDateError.message}
                                         error={endDateError.error}
+                                        id={`${componentIdLower}-tagged-end`}
+                                        data-testid={`${componentIdLower}-tagged-end`}
                                     />
                                 )}
                             />

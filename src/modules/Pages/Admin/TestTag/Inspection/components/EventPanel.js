@@ -50,6 +50,7 @@ const EventPanel = ({
     };
 
     const updateEventDate = newDate => {
+        console.log('Test change', newDate);
         const manualDate = moment(newDate).isBefore(moment(), 'day');
         handleChange('action_date')(newDate);
         handleChange('isManualDate')(manualDate);
@@ -109,19 +110,21 @@ const EventPanel = ({
                             onChange={updateEventDate}
                             required
                             fullWidth={isMobileView}
-                            KeyboardButtonProps={{
-                                'aria-label': 'Event date',
-                                id: `${componentIdLower}-event-date-button`,
-                                'data-testid': `${componentIdLower}-event-date-button`,
-                            }}
+                            // KeyboardButtonProps={{
+                            //     'aria-label': 'Event date',
+                            //     id: `${componentIdLower}-event-date-button`,
+                            //     'data-testid': `${componentIdLower}-event-date-button`,
+                            // }}
                             renderInput={params => (
                                 <TextField
                                     variant="standard"
                                     id={`${componentIdLower}-event-date`}
                                     data-testid={`${componentIdLower}-event-date`}
                                     {...params}
+                                    helperText={params.error ? pageLocale.form.event.date.maxDateMessage : null}
                                 />
                             )}
+                            InputAdornmentProps={{ 'data-testid': `${componentIdLower}-event-date-button` }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>

@@ -114,7 +114,6 @@ const LocationPicker = ({
                         <Autocomplete
                             id={`${componentId}-site`}
                             data-testid={`${componentId}-site`}
-                            aria-controls={`${componentId}-site-popup`}
                             fullWidth
                             options={siteList}
                             value={
@@ -182,7 +181,6 @@ const LocationPicker = ({
                         <Autocomplete
                             id={`${componentId}-building`}
                             data-testid={`${componentId}-building`}
-                            aria-controls={`${componentId}-building-popup`}
                             fullWidth
                             options={buildingList}
                             value={
@@ -256,7 +254,6 @@ const LocationPicker = ({
                         <Autocomplete
                             id={`${componentId}-floor`}
                             data-testid={`${componentId}-floor`}
-                            aria-controls={`${componentId}-floor-popup`}
                             fullWidth
                             options={floorList}
                             value={
@@ -320,7 +317,6 @@ const LocationPicker = ({
                         <Autocomplete
                             id={`${componentId}-room`}
                             data-testid={`${componentId}-room`}
-                            aria-controls={`${componentId}-room-popup`}
                             fullWidth
                             options={roomList}
                             value={

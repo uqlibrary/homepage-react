@@ -26,7 +26,8 @@ export default {
                         props.error
                             ? locale.pages.manage.users.helperText.user_uid
                             : locale.pages.general.helperText.maxChars(20)
-                    } />
+                    }
+                />
             ),
             validate: value => isEmptyStr(value) || isInvalidUUID(value),
             fieldParams: { canEdit: true, canAdd: true, minWidth: 120 },
@@ -37,7 +38,8 @@ export default {
                     variant="standard"
                     {...props}
                     required
-                    helperText={props.error ? locale.pages.manage.users.helperText.user_name : null} />
+                    helperText={props.error ? locale.pages.manage.users.helperText.user_name : null}
+                />
             ),
             validate: value => isEmptyStr(value),
             fieldParams: { canEdit: true, minWidth: 200, flex: 1 },
@@ -71,7 +73,8 @@ export default {
                             props.error
                                 ? locale.pages.manage.users.helperText.user_licence_number
                                 : locale.pages.general.helperText.maxChars(45)
-                        } />
+                        }
+                    />
                 );
             },
 

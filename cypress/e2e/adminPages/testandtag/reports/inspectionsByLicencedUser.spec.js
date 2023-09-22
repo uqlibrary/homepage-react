@@ -8,7 +8,8 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
     const zeroPad = (num, places) => String(num).padStart(places, '0');
 
     const getFieldValue = (dataField, rowIndex, colIndex) =>
-        cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 
     const forcePageRefresh = () => {
         cy.data('test_tag_header-navigation-dashboard').click();
@@ -82,7 +83,7 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         cy.waitUntil(() => getFieldValue('user_uid', 0, 0).should('contain', 'uqtest1'));
         // Add a start date
         cy.get('[data-testid="user_inspections-tagged-start"] button').click();
-        cy.get('.MuiPickersCalendar-week')
+        cy.get('.MuiPickersDay-root')
             .contains('11')
             .click();
         cy.get('body').click();
@@ -91,14 +92,14 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         // Add an end date
         cy.data('user_inspections-tagged-start-input').should('have.value', `${currentYear}-${currentMonth}-11`);
         cy.get('[data-testid="user_inspections-tagged-end"] button').click();
-        cy.get('.MuiPickersCalendar-week')
+        cy.get('.MuiPickersDay-root')
             .contains('12')
             .click();
         cy.get('body').click();
         cy.data('user_inspections-tagged-end-input').should('have.value', `${currentYear}-${currentMonth}-12`);
         // Set up an incorrect date for the end.
         cy.get('[data-testid="user_inspections-tagged-end"] button').click();
-        cy.get('.MuiPickersCalendar-week')
+        cy.get('.MuiPickersDay-root')
             .contains('10')
             .click();
         cy.get('body').click();
