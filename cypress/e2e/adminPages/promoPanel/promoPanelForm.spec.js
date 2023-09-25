@@ -172,5 +172,80 @@ describe('Promopanel Admin Form Pages', () => {
             testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');
             testId('admin-promopanel-group-button-cancel').click();
         });
+
+        const createGroupConflict = pass => {
+            cy.get('#group-multiple-checkbox').click();
+            cy.get('[data-value="student"]').click();
+            cy.get('body').type('{esc}');
+            testId('admin-promopanel-form-button-addSchedule').click();
+            testId('panel-save-or-schedule-title').should('contain', 'Schedule Conflict');
+            testId('admin-promopanel-group-button-cancel').click();
+            cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
+            cy.get('.MuiPickersCalendarHeader-label').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2098')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            cy.wait(200);
+            cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
+            cy.get('.MuiPickersCalendarHeader-label').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2099')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            testId('admin-promopanel-form-button-addSchedule').click();
+            cy.wait(200);
+            // now edit that last one to make a conflict.
+            if (pass <= 1) {
+                cy.data('admin-promopanel-form-button-editSchedule-0').click();
+                cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] button').click();
+                cy.get('.MuiPickersCalendarHeader-label').click();
+
+                cy.get('.MuiYearPicker-root')
+                    .contains('2070')
+                    .click({ force: true });
+                cy.get('body').type('{esc}');
+                cy.data('admin-promopanel-group-button-save').click();
+                // conflict
+                cy.get('[data-testid="admin-promopanel-group-button-cancel"]:last-of-type').click();
+                // Fix the conflict.
+                cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] button').click();
+                cy.get('.MuiPickersCalendarHeader-label').click();
+                cy.get('.MuiYearPicker-root')
+                    .contains('2098')
+                    .click({ force: true });
+                cy.get('body').type('{esc}');
+                cy.data('admin-promopanel-group-button-save').click();
+            } else {
+                cy.get('[data-testid="admin-promopanel-group-button-cancel"]:last-of-type').click();
+            }
+        };
+
+        it('handles new and existing group date conflicts', () => {
+            saveButtonIsDisabled(true);
+            addScheduleIsDisabled(true);
+            previewIsDisabled(true);
+            testId('admin-promopanel-form-admin-note').type('Test Admin Note');
+            testId('admin-promopanel-form-title').type('Test Admin Title');
+            cy.get('.ck-content')
+                .clear()
+                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+                // depending on the platform. Best to just leave as plain text for testing.
+                .type('This is the content of the panel');
+            saveButtonIsDisabled(false);
+            previewIsDisabled(false);
+            cy.wait(200);
+            testId('admin-promopanel-form-button-preview').click();
+            testId('promopanel-preview-title').should('be.visible');
+            testId('admin-promopanel-preview-button-cancel').click();
+            testId('promopanel-preview-title').should('not.be.visible');
+            testId('standard-card-schedule-or-set-a-default-panel-content').should('be.visible');
+            // testId('admin-promopanel-form-default-panel').click();
+            createGroupConflict(1);
+            createGroupConflict(2);
+            testId('admin-promopanel-form-button-save').click();
+            testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');
+            testId('admin-promopanel-group-button-cancel').click();
+        });
     });
 });

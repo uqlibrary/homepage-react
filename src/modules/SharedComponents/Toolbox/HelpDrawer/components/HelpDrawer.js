@@ -6,6 +6,7 @@ import withStyles from '@mui/styles/withStyles';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+/* istanbul ignore next */
 const styles = theme => ({
     paper: {
         width: 320,

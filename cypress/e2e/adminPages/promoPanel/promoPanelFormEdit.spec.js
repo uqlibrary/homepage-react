@@ -158,6 +158,26 @@ describe('Promopanel Admin Form Pages', () => {
             testId('admin-promopanel-form-button-save').click();
             testId('admin-promopanel-group-button-save').click();
         });
+        it('can edit an existing schedule, setting dates in the past.', () => {
+            cy.get('[data-testid="admin-promopanel-form-button-editSchedule-0"]').click();
+            cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] button').click();
+            cy.get('.MuiPopper-root:last-of-type .MuiPickersCalendarHeader-labelContainer').click();
+
+            cy.get('.MuiYearPicker-root')
+                .contains('2000')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+
+            cy.get('[data-testid="admin-promopanel-form-end-date-edit-container"] button').click();
+            cy.get('.MuiPopper-root:last-of-type .MuiPickersCalendarHeader-labelContainer').click();
+
+            cy.get('.MuiYearPicker-root')
+                .contains('2001')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            cy.data('start-date-warning').contains('This date is in the past.');
+            cy.data('end-date-warning').contains('This date is in the past.');
+        });
         it('can detect dates in the past', () => {
             cy.get('[data-testid="admin-promopanel-form-button-editSchedule-0"]').click();
 

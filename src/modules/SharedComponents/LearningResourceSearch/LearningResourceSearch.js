@@ -65,6 +65,7 @@ export const LearningResourceSearch = ({
 
     const throttledReadingListLoadSuggestions = useRef(
         throttle(1000, newValue => {
+            console.log('This', newValue);
             actions.loadCourseReadingListsSuggestions(newValue);
         }),
     );
@@ -124,6 +125,9 @@ export const LearningResourceSearch = ({
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
+                        filterOptions={options => {
+                            return options;
+                        }}
                         data-testid={`${elementId}-autocomplete`}
                         analyticsid-testid={`${elementId}-autocomplete`}
                         aria-controls={`${elementId}-autocomplete-listbox`}
@@ -159,6 +163,13 @@ export const LearningResourceSearch = ({
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
                                     label={locale.search.placeholder}
+                                    // onKeyDown={e => {
+                                    //     console.log(e.code);
+                                    //     if (e.code === 'Space') {
+                                    //         e.stopPropagation();
+                                    //         e.preventDefault();
+                                    //     }
+                                    // }}
                                 />
                             );
                         }}

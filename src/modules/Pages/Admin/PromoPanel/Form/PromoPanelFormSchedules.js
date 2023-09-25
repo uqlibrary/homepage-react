@@ -219,7 +219,7 @@ export const PromoPanelFormSchedules = ({
                                     'aria-label': locale.form.labels.endDate,
                                 }}
                                 renderInput={params => {
-                                    const value = params.inputProps.value ?? null;
+                                    const value = params.inputProps.value ?? /* istanbul ignore next */ null;
                                     return (
                                         <TextField
                                             {...params}

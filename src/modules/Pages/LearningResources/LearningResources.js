@@ -78,6 +78,14 @@ const useStyles = makeStyles(theme => ({
     appbar: {
         backgroundColor: theme.palette.primary.light,
     },
+    TabSelected: {
+        color: 'white !important',
+        opacity: 1,
+    },
+    TabUnselected: {
+        color: 'white !important',
+        opacity: 0.5,
+    },
 }));
 
 export const getQueryParams = qs => {
@@ -343,8 +351,22 @@ export const LearningResources = ({
                                 className={classes.appbar}
                             >
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
-                                    <Tab value="mycoursestab" label={locale.myCourses.title} {...a11yProps('0')} />
-                                    <Tab value="searchtab" label={locale.search.title} {...a11yProps('1')} />
+                                    <Tab
+                                        className={
+                                            topmenu === 'mycoursestab' ? classes.TabSelected : classes.TabUnselected
+                                        }
+                                        value="mycoursestab"
+                                        label={locale.myCourses.title}
+                                        {...a11yProps('0')}
+                                    />
+                                    <Tab
+                                        value="searchtab"
+                                        className={
+                                            topmenu === 'searchtab' ? classes.TabSelected : classes.TabUnselected
+                                        }
+                                        label={locale.search.title}
+                                        {...a11yProps('1')}
+                                    />
                                 </Tabs>
                             </AppBar>
 

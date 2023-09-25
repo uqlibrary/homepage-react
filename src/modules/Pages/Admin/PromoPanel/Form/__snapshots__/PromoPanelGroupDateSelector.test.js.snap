@@ -56,12 +56,13 @@ Object {
               >
                 <div
                   class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+                  data-testid="admin-promopanel-form-start-date-edit-container"
                 >
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1875xhu-MuiFormLabel-root-MuiInputLabel-root"
                     data-shrink="true"
-                    for="mui-1"
-                    id="mui-1-label"
+                    for="admin-promopanel-form-start-date-edit-container"
+                    id="admin-promopanel-form-start-date-edit-container-label"
                   >
                     Start date
                   </label>
@@ -118,12 +119,13 @@ Object {
               >
                 <div
                   class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+                  data-testid="admin-promopanel-form-end-date-edit-container"
                 >
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1875xhu-MuiFormLabel-root-MuiInputLabel-root"
                     data-shrink="true"
-                    for="mui-2"
-                    id="mui-2-label"
+                    for="admin-promopanel-form-end-date-edit-container"
+                    id="admin-promopanel-form-end-date-edit-container-label"
                   >
                     End date
                   </label>

@@ -120,7 +120,8 @@ export const PromoPanelAddNewDefault = ({
                                     label="Panel"
                                     value={selectedPanel}
                                     onChange={handlePanelChange}
-                                    MenuProps={MenuProps}>
+                                    MenuProps={MenuProps}
+                                >
                                     {AvailablePanels.map(item => (
                                         <MenuItem key={item.panel_id} value={item.panel_id}>
                                             <ListItemText primary={item.panel_title} />
