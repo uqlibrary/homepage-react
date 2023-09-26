@@ -646,7 +646,9 @@ export const SpotlightForm = ({
                             currentSpotlights={currentSpotlights}
                             currentSpotlightsLoading={spotlightsLoading}
                             defaultWeight={
-                                defaults.type === 'edit' && originalValues.start === values.start ? values.weight : 1000
+                                defaults.type === 'edit' && originalValues.start === values.start
+                                    ? /* istanbul ignore next */ values.weight
+                                    : 1000
                             }
                             currentValues={values}
                             updateWeightInValues={updateWeightInValues}

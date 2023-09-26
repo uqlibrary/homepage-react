@@ -175,50 +175,27 @@ describe('Promopanel Admin Form Pages', () => {
 
         const createGroupConflict = pass => {
             cy.get('#group-multiple-checkbox').click();
-            cy.get('[data-value="student"]').click();
+            cy.get('[data-value="other"]').click();
+            // cy.get('[data-value="Other"]').click();
             cy.get('body').type('{esc}');
-            testId('admin-promopanel-form-button-addSchedule').click();
-            testId('panel-save-or-schedule-title').should('contain', 'Schedule Conflict');
-            testId('admin-promopanel-group-button-cancel').click();
+            cy.wait(100);
+            // Start Date
             cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
             cy.get('.MuiPickersCalendarHeader-label').click();
             cy.get('.MuiYearPicker-root')
-                .contains('2098')
+                .contains(pass === 1 ? '2060' : '2071')
                 .click({ force: true });
             cy.get('body').type('{esc}');
-            cy.wait(200);
+
+            // End Date
             cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
             cy.get('.MuiPickersCalendarHeader-label').click();
             cy.get('.MuiYearPicker-root')
-                .contains('2099')
+                .contains(pass === 1 ? '2070' : '2081')
                 .click({ force: true });
             cy.get('body').type('{esc}');
-            testId('admin-promopanel-form-button-addSchedule').click();
-            cy.wait(200);
-            // now edit that last one to make a conflict.
-            if (pass <= 1) {
-                cy.data('admin-promopanel-form-button-editSchedule-0').click();
-                cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] button').click();
-                cy.get('.MuiPickersCalendarHeader-label').click();
 
-                cy.get('.MuiYearPicker-root')
-                    .contains('2070')
-                    .click({ force: true });
-                cy.get('body').type('{esc}');
-                cy.data('admin-promopanel-group-button-save').click();
-                // conflict
-                cy.get('[data-testid="admin-promopanel-group-button-cancel"]:last-of-type').click();
-                // Fix the conflict.
-                cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] button').click();
-                cy.get('.MuiPickersCalendarHeader-label').click();
-                cy.get('.MuiYearPicker-root')
-                    .contains('2098')
-                    .click({ force: true });
-                cy.get('body').type('{esc}');
-                cy.data('admin-promopanel-group-button-save').click();
-            } else {
-                cy.get('[data-testid="admin-promopanel-group-button-cancel"]:last-of-type').click();
-            }
+            testId('admin-promopanel-form-button-addSchedule').click();
         };
 
         it('handles new and existing group date conflicts', () => {
@@ -240,12 +217,39 @@ describe('Promopanel Admin Form Pages', () => {
             testId('admin-promopanel-preview-button-cancel').click();
             testId('promopanel-preview-title').should('not.be.visible');
             testId('standard-card-schedule-or-set-a-default-panel-content').should('be.visible');
-            // testId('admin-promopanel-form-default-panel').click();
             createGroupConflict(1);
             createGroupConflict(2);
-            testId('admin-promopanel-form-button-save').click();
-            testId('panel-save-or-schedule-title').should('contain', 'Panel has been created');
-            testId('admin-promopanel-group-button-cancel').click();
+            // Now cause the list conflict, start date inside schedule
+            cy.data('admin-promopanel-form-button-editSchedule-1').click();
+            cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] .MuiButtonBase-root').click();
+            cy.get('.MuiPickersCalendarHeader-labelContainer').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2062')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            cy.get('[data-testid="admin-promopanel-group-button-save"]').click();
+            cy.get('[data-testid="panel-save-or-schedule-title"]')
+                .should('contain', 'Schedule Conflict')
+                .should('be.visible');
+            cy.get('[data-testid="admin-promopanel-group-button-cancel"]:last-of-type').click();
+            // Fix the start
+            cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] .MuiButtonBase-root').click();
+            cy.get('.MuiPickersCalendarHeader-labelContainer').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2059')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            // Error the end date
+            cy.get('[data-testid="admin-promopanel-form-end-date-edit-container"] .MuiButtonBase-root').click();
+            cy.get('.MuiPickersCalendarHeader-labelContainer').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2069')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            cy.get('[data-testid="admin-promopanel-group-button-save"]').click();
+            cy.get('[data-testid="panel-save-or-schedule-title"]')
+                .should('contain', 'Schedule Conflict')
+                .should('be.visible');
         });
     });
 });

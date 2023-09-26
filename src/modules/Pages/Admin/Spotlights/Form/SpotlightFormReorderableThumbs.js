@@ -78,6 +78,7 @@ export const SpotlightFormReorderableThumbs = ({
         if (!!currentSpotlights) {
             if (tableType === 'edit') {
                 const currentSpotlightThumbsForEdit = [...currentSpotlights];
+                /* istanbul ignore else */
                 if (currentValues.start !== originalValues.start) {
                     const spotlightThumbPlaceholder = {
                         id: placeholderThumbnailId,

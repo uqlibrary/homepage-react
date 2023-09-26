@@ -137,7 +137,7 @@ export const currentPanels = [
                     {
                         "panel_schedule_id": 4,
                         "panel_schedule_start_time": "2090-12-15 00:00:00",
-                        "panel_schedule_end_time": "2091-01-05 23:59:59"
+                        "panel_schedule_end_time": "2095-01-05 23:59:59"
                     }
                 ]
             },
@@ -361,7 +361,7 @@ export const userListPanels = [
                 "panel_admin_notes": "",
                 "panel_schedule_id": 4,
                 "panel_schedule_start_time": "2090-12-15 00:00:00",
-                "panel_schedule_end_time": "2091-01-05 23:59:59"
+                "panel_schedule_end_time": "2095-01-05 23:59:59"
             }
         ]
     },

@@ -98,7 +98,6 @@ export const handleGroupDateSave = (
                             (capturedStartDate.isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
                                 capturedStartDate.isBefore(moment(schedule.panel_schedule_end_time))) ||
                             (moment(schedule.panel_schedule_start_time).isSameOrAfter(capturedStartDate) &&
-                                /* istanbul ignore next */
                                 moment(schedule.panel_schedule_start_time).isBefore(capturedEndDate))
                         ) {
                             isValid = false;
@@ -122,21 +121,12 @@ export const handleGroupDateSave = (
             if (
                 ((capturedStartDate.isSameOrAfter(moment(alloc.startDate, dateFormat)) &&
                     capturedStartDate.isBefore(moment(alloc.endDate, dateFormat))) ||
-                    /* istanbul ignore next */
                     (moment(alloc.startDate, dateFormat).isSameOrAfter(capturedStartDate) &&
                         moment(alloc.startDate, dateFormat).isBefore(capturedEndDate))) &&
                 isValid &&
                 index !== scheduleChangeIndex &&
-                // Since MUI upgrade, this appears to no longer be relevant.
-                // appears to be covered primarily in first if statement.
-                // removed from coverage whilst this is being analysed.
-                // istanbul ignore next */
                 scheduleGroupIndex === alloc.groupNames
             ) {
-                // Since MUI upgrade, this path appears to no longer be taken.
-                // removing from coverage whilst this is being analysed.
-                /* istanbul ignore next */
-
                 isValid = false;
                 setConfirmationMessage(
                     locale.form.scheduleConflict.alert(

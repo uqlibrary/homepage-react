@@ -38,9 +38,10 @@ describe('Promopanel Admin Form Pages', () => {
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
             testId('admin-promopanel-form-button-preview').click();
+            cy.wait(100);
             testId('promopanel-preview-title').should('be.visible');
             testId('admin-promopanel-preview-button-cancel').click();
-            testId('promopanel-preview-title').should('not.be.visible');
+            testId('promopanel-preview-title').should('not.exist');
             testId('standard-card-schedule-or-set-a-default-panel-content').should('be.visible');
             cy.get('#group-multiple-checkbox').click();
             cy.get('[data-value="alumni"]').click();
@@ -157,6 +158,49 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('[data-testid="admin-promopanel-group-button-save"]').click();
             testId('admin-promopanel-form-button-save').click();
             testId('admin-promopanel-group-button-save').click();
+        });
+        it('can detect exiting schedule conflicts', () => {
+            // test
+            cy.visit('http://localhost:2020/admin/promopanel/edit/8?user=uqstaff');
+            cy.get('#group-multiple-checkbox').click();
+            cy.get('[data-value="hdr"]').click();
+            cy.get('body').type('{esc}');
+            // Set date start as conflict
+            cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
+            cy.get('.MuiPickersCalendarHeader-label').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2091')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
+            cy.get('.MuiPickersCalendarHeader-label').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2099')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            testId('admin-promopanel-form-button-addSchedule').click();
+            cy.data('panel-save-or-schedule-title')
+                .should('be.visible')
+                .contains('Schedule Conflict');
+            cy.data('admin-promopanel-group-button-cancel').click();
+            // Set end date as conflict
+            cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
+            cy.get('.MuiPickersCalendarHeader-label').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2080')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
+            cy.get('.MuiPickersCalendarHeader-label').click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2092')
+                .click({ force: true });
+            cy.get('body').type('{esc}');
+            testId('admin-promopanel-form-button-addSchedule').click();
+            cy.data('panel-save-or-schedule-title')
+                .should('be.visible')
+                .contains('Schedule Conflict');
+            cy.data('admin-promopanel-group-button-cancel').click();
         });
         it('can edit an existing schedule, setting dates in the past.', () => {
             cy.get('[data-testid="admin-promopanel-form-button-editSchedule-0"]').click();
