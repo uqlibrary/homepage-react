@@ -142,8 +142,18 @@ describe('FilterDialog', () => {
         userEvent.click(getByTestId('location_picker-filter-dialog-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
 
+        await waitFor(() => expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ textSearch: '' }));
+
         userEvent.click(getByTestId('location_picker-filter-dialog-building-input'));
         await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
+
+        await waitFor(() =>
+            expect(loadAssetsMineFn).toHaveBeenLastCalledWith({
+                locationId: 1,
+                locationType: 'building',
+                textSearch: '',
+            }),
+        );
 
         userEvent.click(getByTestId('location_picker-filter-dialog-floor-input'));
         await userEvent.selectOptions(getByRole('listbox'), '2');

@@ -190,7 +190,7 @@ export const accounts = {
         "name": "UQ STAFF",
         'mail': 'uq.masquerader@example.uq.edu.au',
         "barcode": "111111111111111",
-        "groups": ["DC=uq","DC=edu","DC=au"],
+        "groups": ["DC=uq","DC=edu","DC=au","CN=lib_libapi_SpotlightAdmins"],
         "classes": [],
         "expiryDate": "31-12-19",
         "hasSession": true,

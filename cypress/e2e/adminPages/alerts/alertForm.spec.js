@@ -344,7 +344,7 @@ describe('Alerts Admin Form Pages', () => {
     });
     context('Alert Admin Edit page Special', () => {
         it('if a non existing record is requested the edit form pops an error', () => {
-            // this alert doesnt exist in mock, so an error pops up on edit
+            // this alert doesn't exist in mock, so an error pops up on edit
             cy.visit('http://localhost:2020/admin/alerts/edit/232d6880-996a-11eb-8a79-e7fddae87baf?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('button[data-testid="confirm-alert-error"]').should('exist');

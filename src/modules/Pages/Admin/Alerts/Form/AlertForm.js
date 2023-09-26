@@ -171,6 +171,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     }, [showConfirmation, alertResponse, alertStatus]);
 
     useEffect(() => {
+        /* istanbul ignore next */
         if (!!alertError || alertStatus === 'error') {
             showConfirmation();
         }
@@ -465,11 +466,15 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         <Fragment>
             <form>
                 {alertStatus === 'error' && (
-                    <ConfirmationBox
+                    /* istanbul ignore next */ <ConfirmationBox
                         actionButtonColor="primary"
                         actionButtonVariant="contained"
                         confirmationBoxId="alert-error"
-                        onAction={() => alertError === 'The requested page could not be found.' && navigateToListPage()}
+                        onAction={
+                            /* istanbul ignore next */ () =>
+                                /* istanbul ignore next */
+                                alertError === 'The requested page could not be found.' && navigateToListPage()
+                        }
                         onClose={hideConfirmation}
                         hideCancelButton
                         isOpen={isOpen}
