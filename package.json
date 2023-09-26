@@ -140,7 +140,7 @@
         "@mui/material": "^5.11.4",
         "@mui/styles": "^5.11.2",
         "@mui/x-data-grid": "^5.17.26",
-        "@mui/x-date-pickers": "^5.0.15",
+        "@mui/x-date-pickers": "^5.0.20",
         "@sentry/browser": "^7.15.0",
         "@sentry/tracing": "^7.15.0",
         "@webcomponents/webcomponentsjs": "^2.5.0",

@@ -49,24 +49,24 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const handleChange = (event, startDate, endDate, setSaveEnabled, setStartDate, setEndDate) => value => {
-    console.log('Datelist The value is ', event, startDate);
-    if (event === 'start') {
-        if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
-            setSaveEnabled(false);
-        } else {
-            setSaveEnabled(true);
-        }
-        setStartDate(value);
-    } else {
-        if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
-            setSaveEnabled(false);
-        } else {
-            setSaveEnabled(true);
-        }
-        setEndDate(value);
-    }
-};
+// export const handleChange = (event, startDate, endDate, setSaveEnabled, setStartDate, setEndDate) => value => {
+//     console.log('Datelist The value is ', value, event, startDate);
+//     if (event === 'start') {
+//         if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
+//             setSaveEnabled(false);
+//         } else {
+//             setSaveEnabled(true);
+//         }
+//         setStartDate(value);
+//     } else {
+//         if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
+//             setSaveEnabled(false);
+//         } else {
+//             setSaveEnabled(true);
+//         }
+//         setEndDate(value);
+//     }
+// };
 
 export const handleGroupDateSave = (
     displayList,
@@ -81,6 +81,8 @@ export const handleGroupDateSave = (
     setConfirmationMode,
     setIsConfirmOpen,
 ) => {
+    const capturedStartDate = moment(moment(startDate).format('YYYY-MM-DD HH:mm:ss'));
+    const capturedEndDate = moment(moment(endDate).format('YYYY-MM-DD HH:mm:ss'));
     const dateFormat = 'YYYY-MM-DD HH:mm:ss';
     let isValid = true;
     // Check against existing schedules already saved
@@ -93,11 +95,11 @@ export const handleGroupDateSave = (
                     if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
                         /* istanbul ignore else */
                         if (
-                            (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-                                moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
-                            (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
+                            (capturedStartDate.isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
+                                capturedStartDate.isBefore(moment(schedule.panel_schedule_end_time))) ||
+                            (moment(schedule.panel_schedule_start_time).isSameOrAfter(capturedStartDate) &&
                                 /* istanbul ignore next */
-                                moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
+                                moment(schedule.panel_schedule_start_time).isBefore(capturedEndDate))
                         ) {
                             isValid = false;
                             setConfirmationMessage(
@@ -113,18 +115,16 @@ export const handleGroupDateSave = (
                 });
         }
     });
-    console.log('Datelist', displayList);
     !!displayList &&
         displayList.length > 0 &&
         displayList.map((alloc, index) => {
-            console.log('Datelist alloc', startDate, alloc.startDate);
             /* istanbul ignore else  */
             if (
-                ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
-                    moment(startDate).isBefore(moment(alloc.endDate))) ||
+                ((capturedStartDate.isSameOrAfter(moment(alloc.startDate, dateFormat)) &&
+                    capturedStartDate.isBefore(moment(alloc.endDate, dateFormat))) ||
                     /* istanbul ignore next */
-                    (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
-                        moment(alloc.startDate).isBefore(moment(endDate)))) &&
+                    (moment(alloc.startDate, dateFormat).isSameOrAfter(capturedStartDate) &&
+                        moment(alloc.startDate, dateFormat).isBefore(capturedEndDate))) &&
                 isValid &&
                 index !== scheduleChangeIndex &&
                 // Since MUI upgrade, this appears to no longer be relevant.
@@ -136,25 +136,23 @@ export const handleGroupDateSave = (
                 // Since MUI upgrade, this path appears to no longer be taken.
                 // removing from coverage whilst this is being analysed.
                 /* istanbul ignore next */
-                () => {
-                    isValid = false;
-                    setConfirmationMessage(
-                        locale.form.scheduleConflict.alert(
-                            scheduleGroupIndex,
-                            `Schedule existing in this panel for ${scheduleGroupIndex}`,
-                            alloc.startDate,
-                            alloc.endDate,
-                        ),
-                    );
-                };
+
+                isValid = false;
+                setConfirmationMessage(
+                    locale.form.scheduleConflict.alert(
+                        scheduleGroupIndex,
+                        `Schedule existing in this panel for ${scheduleGroupIndex}`,
+                        alloc.startDate,
+                        alloc.endDate,
+                    ),
+                );
             }
         });
 
     if (isValid) {
-        console.log('Datelist Start and End', startDate, endDate);
         handleSaveGroupDate(scheduleChangeIndex, {
-            start: startDate,
-            end: endDate,
+            start: capturedStartDate.format('YYYY-MM-DD HH:mm:ss'),
+            end: capturedEndDate.format('YYYY-MM-DD HH:mm:ss'),
         });
     } else {
         setConfirmationMode('schedule');
@@ -194,6 +192,14 @@ export const PromoPanelGroupDateSelector = ({
         handleCloseGroupDate();
     };
 
+    React.useEffect(() => {
+        if (moment(startDate).isAfter(moment(endDate))) {
+            setSaveEnabled(false);
+        } else {
+            setSaveEnabled(true);
+        }
+    }, [startDate, endDate]);
+
     return (
         <React.Fragment>
             <Dialog
@@ -213,9 +219,15 @@ export const PromoPanelGroupDateSelector = ({
                             <DateTimePicker
                                 value={startDate}
                                 label="Start date"
-                                onChange={newValue =>
-                                    handleChange('start', newValue, endDate, setSaveEnabled, setStartDate, setEndDate)
-                                }
+                                // onChange={handleChange(
+                                //     'start',
+                                //     startDate,
+                                //     endDate,
+                                //     setSaveEnabled,
+                                //     setStartDate,
+                                //     setEndDate,
+                                // )}
+                                onChange={newValue => setStartDate(newValue)}
                                 inputFormat="ddd D MMM YYYY h:mm a"
                                 inputProps={{
                                     id: 'admin-promopanel-group-start-date',
@@ -256,14 +268,15 @@ export const PromoPanelGroupDateSelector = ({
                             <DateTimePicker
                                 value={endDate}
                                 label="End date"
-                                onChange={handleChange(
-                                    'end',
-                                    startDate,
-                                    endDate,
-                                    setSaveEnabled,
-                                    setStartDate,
-                                    setEndDate,
-                                )}
+                                // onChange={handleChange(
+                                //     'end',
+                                //     startDate,
+                                //     endDate,
+                                //     setSaveEnabled,
+                                //     setStartDate,
+                                //     setEndDate,
+                                // )}
+                                onChange={newValue => setEndDate(newValue)}
                                 inputFormat="ddd D MMM YYYY h:mm a"
                                 inputProps={{
                                     id: 'admin-promopanel-group-end-date',
