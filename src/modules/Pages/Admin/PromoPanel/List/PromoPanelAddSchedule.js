@@ -204,7 +204,7 @@ export const PromoPanelAddSchedule = ({
                     data-testid="panel-edit-date-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
                     children={
-                        <p style={{ lineHeight: 1, margin: 0 }}>{`Add a new scheduled panel for ${groupName}`}</p>
+                        <h2 style={{ lineHeight: 1, margin: 0 }}>{`Add a new scheduled panel for ${groupName}`}</h2>
                     }
                 />
                 <DialogContent>

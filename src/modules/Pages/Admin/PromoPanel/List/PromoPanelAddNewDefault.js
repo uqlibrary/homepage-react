@@ -106,7 +106,9 @@ export const PromoPanelAddNewDefault = ({
                     id="lightboxTitle"
                     data-testid="panel-edit-date-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
-                    children={<p style={{ lineHeight: 1, margin: 0 }}>{`Set a new default panel for ${groupName}`}</p>}
+                    children={
+                        <h2 style={{ lineHeight: 1, margin: 0 }}>{`Set a new default panel for ${groupName}`}</h2>
+                    }
                 />
                 <DialogContent>
                     <Grid container spacing={1}>

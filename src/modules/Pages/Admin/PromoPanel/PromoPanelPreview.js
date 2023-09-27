@@ -63,7 +63,7 @@ export const PromoPanelPreview = props => {
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
                     children={
                         <>
-                            <p style={{ lineHeight: 1, margin: 0 }}>{'Preview'}</p>
+                            <h2 style={{ lineHeight: 1, margin: 0 }}>{'Preview'}</h2>
                             <p style={{ fontSize: 14, fontWeight: 100, lineHeight: 1, margin: 0 }}>
                                 {props.previewName}
                             </p>
