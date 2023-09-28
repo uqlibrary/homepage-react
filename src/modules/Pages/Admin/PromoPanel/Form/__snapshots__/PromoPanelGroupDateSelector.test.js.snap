@@ -39,11 +39,11 @@ Object {
             id="lightboxTitle"
             style="position: relative; border-bottom: 1px solid #d7d1cc; font-size: 12px;"
           >
-            <p
+            <h2
               style="line-height: 1; margin: 0px;"
             >
               Edit Schedule Dates
-            </p>
+            </h2>
           </h2>
           <div
             class="MuiDialogContent-root css-ypiqx9-MuiDialogContent-root"

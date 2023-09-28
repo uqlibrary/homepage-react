@@ -39,11 +39,11 @@ Object {
             id="promopanel-preview-title"
             style="position: relative; border-bottom: 1px solid #d7d1cc; font-size: 12px;"
           >
-            <p
+            <h2
               style="line-height: 1; margin: 0px;"
             >
               Preview
-            </p>
+            </h2>
             <p
               style="font-size: 14px; font-weight: 100; line-height: 1; margin: 0px;"
             >
