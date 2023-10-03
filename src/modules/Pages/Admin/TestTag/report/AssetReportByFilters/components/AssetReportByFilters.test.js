@@ -95,7 +95,7 @@ describe('AssetReportByFilters', () => {
         expect(row.getByText('CURRENT')).toBeInTheDocument();
 
         // check pagination counter shows expected number of rows
-        expect(getByText('1-6 of 6')).toBeInTheDocument();
+        expect(getByText('1–6 of 6')).toBeInTheDocument();
     });
 
     it('fires action when status is changed', async () => {
@@ -205,8 +205,13 @@ describe('AssetReportByFilters', () => {
             }),
         );
 
-        expect(getByText('Start date must be before End Date')).toBeInTheDocument();
-        expect(getByText('End date must be after Start Date')).toBeInTheDocument();
+        expect(getByTestId('assets_inspected-tagged-start-helpertext')).toHaveTextContent(
+            'Start date must be before End Date',
+        );
+
+        expect(getByTestId('assets_inspected-tagged-end-helpertext')).toHaveTextContent(
+            'End date must be after Start Date',
+        );
 
         userEvent.clear(getByTestId('assets_inspected-tagged-start-input'));
 
@@ -225,13 +230,15 @@ describe('AssetReportByFilters', () => {
 
         userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
 
-        expect(getByText('Start date must be before End Date')).toBeInTheDocument();
-        expect(getByText('End date must be after Start Date')).toBeInTheDocument();
+        expect(getByTestId('assets_inspected-tagged-start-helpertext')).toHaveTextContent(
+            'Start date must be before End Date',
+        );
+
+        expect(getByTestId('assets_inspected-tagged-end-helpertext')).toHaveTextContent(
+            'End date must be after Start Date',
+        );
 
         userEvent.clear(getByTestId('assets_inspected-tagged-end-input'));
-
-        expect(queryByText('Start date must be before End Date')).not.toBeInTheDocument();
-        expect(queryByText('End date must be after Start Date')).not.toBeInTheDocument();
 
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({

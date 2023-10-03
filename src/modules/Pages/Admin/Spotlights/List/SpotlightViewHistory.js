@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 
 import SpotlightSizeWarningByUrl from 'modules/Pages/Admin/Spotlights/Form/SpotlightSizeWarningByUrl';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';

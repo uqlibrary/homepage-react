@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const moment = require('moment');
@@ -53,12 +54,15 @@ const useStyles = makeStyles(theme => ({
     },
     dialogPaper: {
         // make the block take up more of the page
-        width: 550,
+        width: 600,
     },
     link: {
         marginBottom: 10,
         marginRight: 10,
         cursor: 'pointer',
+    },
+    dropdown: {
+        width: '100%',
     },
 }));
 export const PromoPanelAddSchedule = ({
@@ -147,9 +151,7 @@ export const PromoPanelAddSchedule = ({
     }, [isAddingSchedule]);
 
     const handleDateChange = event => value => {
-        event === 'start'
-            ? setStartDate(value.format('YYYY-MM-DD HH:mm'))
-            : setEndDate(value.format('YYYY-MM-DD HH:mm'));
+        event === 'start' ? setStartDate(value) : setEndDate(value);
         // Check if there's a conflict here.
         setShowError(false);
         setErrorMessage('');
@@ -202,15 +204,16 @@ export const PromoPanelAddSchedule = ({
                     data-testid="panel-edit-date-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
                     children={
-                        <p style={{ lineHeight: 1, margin: 0 }}>{`Add a new scheduled panel for ${groupName}`}</p>
+                        <h2 style={{ lineHeight: 1, margin: 0 }}>{`Add a new scheduled panel for ${groupName}`}</h2>
                     }
                 />
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item xs={12}>
-                            <FormControl className={classes.dropdown} fullWidth title={'Panel'}>
+                            <FormControl variant="standard" className={classes.dropdown} fullWidth title={'Panel'}>
                                 <InputLabel id="group-selector">Panel</InputLabel>
                                 <Select
+                                    variant="standard"
                                     labelId="group-selector"
                                     id="new-scheduled-panel-for-group"
                                     label="Panel"
@@ -226,30 +229,35 @@ export const PromoPanelAddSchedule = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs>
-                            <KeyboardDateTimePicker
+                        <Grid item sm={6}>
+                            <DateTimePicker
+                                sx={{
+                                    width: '100%',
+                                }}
                                 id="admin-promopanel-group-start-date"
                                 data-testid="admin-promopanel-group-start-date"
                                 value={startDate}
                                 label="Start date"
                                 onChange={handleDateChange('start')}
-                                InputProps={{
-                                    id: 'picker-start-date-text',
+                                inputProps={{
+                                    id: 'admin-promopanel-group-start-date',
+                                    'data-testid': 'admin-promopanel-group-start-date',
                                     style: {
                                         width: '100%',
                                         marginRight: 25,
                                     },
                                     readOnly: true,
                                 }}
-                                // minDate={startDate}
-                                format="ddd D MMM YYYY h:mma"
-                                showTodayButton
-                                todayLabel={'Today'}
-                                autoOk
-                                KeyboardButtonProps={{
-                                    'aria-label': 'Start Date',
-                                    id: 'picker-start-date',
-                                }}
+                                // // minDate={startDate}
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                renderInput={params => (
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        id="admin-promopanel-group-start-date-container"
+                                        data-testid="admin-promopanel-group-start-date-container"
+                                    />
+                                )}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div className={classes.errorStyle} data-testid="start-date-error">
@@ -257,16 +265,20 @@ export const PromoPanelAddSchedule = ({
                                 </div>
                             )}
                         </Grid>
-                        <Grid item xs>
-                            <KeyboardDateTimePicker
+                        <Grid item sm={6}>
+                            <DateTimePicker
+                                sx={{
+                                    width: '100%',
+                                }}
                                 id="admin-promopanel-group-end-date"
                                 data-testid="admin-promopanel-group-end-date"
                                 value={endDate}
                                 label="End date"
                                 onChange={handleDateChange('end')}
-                                format="ddd D MMM YYYY h:mma"
-                                InputProps={{
-                                    id: 'picker-end-date-text',
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                inputProps={{
+                                    id: 'admin-promopanel-group-end-date',
+                                    'data-testid': 'admin-promopanel-group-end-date',
                                     style: {
                                         width: '100%',
                                         marginRight: 25,
@@ -274,13 +286,14 @@ export const PromoPanelAddSchedule = ({
                                     readOnly: true,
                                 }}
                                 minDate={startDate}
-                                showTodayButton
-                                todayLabel={'Today'}
-                                autoOk
-                                KeyboardButtonProps={{
-                                    'aria-label': 'End Date',
-                                    id: 'picker-end-date',
-                                }}
+                                renderInput={params => (
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        id="admin-promopanel-group-end-date-container"
+                                        data-testid="admin-promopanel-group-end-date-container"
+                                    />
+                                )}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div className={classes.errorStyle} data-testid="end-date-error">

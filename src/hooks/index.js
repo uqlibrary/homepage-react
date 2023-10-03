@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useCallback, useEffect } from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export const useConfirmationState = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +59,7 @@ export function useScript(params) {
 
 export const useIsMobileView = () => {
     const theme = useTheme();
-    return useMediaQuery(theme.breakpoints.down('sm')) || false;
+    return useMediaQuery(theme.breakpoints.down('md')) || false;
 };
 
 export const withIsMobileView = () => Component => props => {

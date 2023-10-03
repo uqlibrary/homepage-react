@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import CircularProgress from '@mui/material/CircularProgress';
 import clsx from 'clsx';
 import { InView } from 'react-intersection-observer';
 
@@ -54,7 +55,7 @@ const useStyles = makeStyles(theme => ({
         flex: 1,
     },
     toolbar: {
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
             alignContent: 'space-between',
             padding: theme.spacing(2),
@@ -131,7 +132,7 @@ const useStyles = makeStyles(theme => ({
     },
     dialogSuccessLineItems: {
         padding: '8px',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             textAlign: 'center',
         },
         '& >p': {
@@ -176,7 +177,7 @@ const Inspection = ({
 }) => {
     const classes = useStyles();
     const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
     const inspectionLocale = locale.pages.inspect;
 
     const [selectedAsset, setSelectedAsset] = useState({});
@@ -355,7 +356,7 @@ const Inspection = ({
                             fullWidth={isMobileView}
                             id={`${componentId}-reset-button`}
                             data-testid={`${componentId}-reset-button`}
-                            color={inView ? 'default' : ''}
+                            color={inView ? 'primary' : 'secondary'}
                             className={clsx({
                                 [classes.buttonWhite]: !inView,
                             })}

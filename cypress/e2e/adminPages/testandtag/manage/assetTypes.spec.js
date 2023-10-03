@@ -6,7 +6,8 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.visit('http://localhost:2020/admin/testntag/manage/assettypes?user=uqtesttag');
     });
     const getFieldValue = (dataField, rowIndex, colIndex) =>
-        cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 
     const forcePageRefresh = () => {
         cy.data('test_tag_header-navigation-dashboard').click();
@@ -44,13 +45,13 @@ describe('Test and Tag Manage Asset Types', () => {
         cy.waitUntil(() => getFieldValue('asset_type_name', 0, 0).should('contain', '[E2E_testing] Name'));
         // Change Rows to 25
         changeRowsPerPage(25);
-        cy.get('.MuiTablePagination-caption').should('contain', '1-25 of 60');
+        cy.get('.MuiTablePagination-displayedRows').should('contain', '1–25 of 60');
         // next page
-        cy.get('.MuiTablePagination-actions button[title="Next page"]').click();
-        cy.get('.MuiTablePagination-caption').should('contain', '26-50 of 60');
+        cy.get('.MuiTablePagination-actions button[aria-label="Go to next page"]').click();
+        cy.get('.MuiTablePagination-displayedRows').should('contain', '26–50 of 60');
         // previous page
-        cy.get('.MuiTablePagination-actions button[title="Previous page"]').click();
-        cy.get('.MuiTablePagination-caption').should('contain', '1-25 of 60');
+        cy.get('.MuiTablePagination-actions button[aria-label="Go to previous page"]').click();
+        cy.get('.MuiTablePagination-displayedRows').should('contain', '1–25 of 60');
     });
     it('Add and Edit Asset type functions correctly', () => {
         cy.injectAxe();

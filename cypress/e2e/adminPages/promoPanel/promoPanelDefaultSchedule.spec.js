@@ -30,22 +30,27 @@ describe('Promo Panel List Default or Schedule', () => {
             testId('schedule-panel-hdr').click();
             cy.get('#new-scheduled-panel-for-group').click();
             cy.get('[data-value="2"').click();
-            // testId('admin-promopanel-group-button-save').click();
-            cy.get('#picker-start-date').click();
+            // Enter start date.
+            cy.get('[data-testid="admin-promopanel-group-start-date-container"] button').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiPickersYearSelection-container')
-                .contains('2090')
+            cy.get('.MuiYearPicker-root')
+                .contains('2091')
                 .click({ force: true });
-            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
-            cy.get('#picker-end-date').click();
+            cy.get('body').type('{esc}');
+            testId('admin-promopanel-group-end-date')
+                .invoke('attr', 'aria-invalid')
+                .should('eq', 'true');
+            // Enter end date.
+            cy.get('[data-testid="admin-promopanel-group-end-date-container"] button').click();
             cy.wait(100);
-            cy.get('.MuiToolbar-root')
-                .contains('2090')
-                .click();
-            cy.get('.MuiPickersYearSelection-container')
-                .contains('2092')
+            cy.contains(new Date().getFullYear()).click();
+            cy.get('.MuiYearPicker-root')
+                .contains('2091')
                 .click({ force: true });
-            cy.get('.MuiDialogActions-root > :nth-child(3)').click();
+            cy.get('body').type('{esc}');
+            testId('admin-promopanel-group-end-date')
+                .invoke('attr', 'aria-invalid')
+                .should('not.eq', 'true');
         });
         it('Can detect a schedule conflict for group', () => {
             cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');
@@ -58,6 +63,7 @@ describe('Promo Panel List Default or Schedule', () => {
             // testId('admin-promopanel-group-button-save').click();
             testId('schedule-error-conflict').should('exist');
             testId('admin-promopanel-group-button-cancel').click();
+            testId('schedule-error-conflict').should('not.exist');
         });
     });
 });

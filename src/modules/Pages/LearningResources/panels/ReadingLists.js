@@ -5,11 +5,11 @@ import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 import locale from '../shared/learningResources.locale';
 import { _pluralise, trimNotes } from '../shared/learningResourcesHelpers';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/styles';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from '@mui/styles';
 import { getCampusByCode, unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(

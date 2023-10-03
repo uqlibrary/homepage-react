@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import AlertsAdd from './AlertsAdd';
 import { render } from 'test-utils';
 import { mui1theme } from 'config';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 function setup(testProps, renderer = render) {
     const props = {
@@ -15,9 +15,11 @@ function setup(testProps, renderer = render) {
         ...testProps,
     };
     return renderer(
-        <ThemeProvider theme={mui1theme}>
-            <AlertsAdd {...props} />
-        </ThemeProvider>,
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={mui1theme}>
+                <AlertsAdd {...props} />
+            </ThemeProvider>
+        </StyledEngineProvider>,
     );
 }
 

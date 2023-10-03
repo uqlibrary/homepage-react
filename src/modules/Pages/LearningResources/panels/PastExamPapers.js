@@ -6,11 +6,11 @@ import { _courseLink, _pluralise } from '../shared/learningResourcesHelpers';
 import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(
     () => ({

@@ -5,18 +5,18 @@ import { useParams } from 'react-router';
 // import { throttle } from 'throttle-debounce';
 import { useTitle } from 'hooks';
 
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import useTheme from '@material-ui/styles/useTheme';
+import { Grid } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import useTheme from '@mui/styles/useTheme';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -100,7 +100,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     }
 
     const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     return (
         <StandardPage>

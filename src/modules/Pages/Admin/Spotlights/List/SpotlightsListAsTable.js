@@ -3,27 +3,27 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import TextField from '@material-ui/core/TextField';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
+import TextField from '@mui/material/TextField';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableFooter from '@mui/material/TableFooter';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
 
-import CloseIcon from '@material-ui/icons/Close';
-import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import SortIcon from '@material-ui/icons/Sort';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import SortIcon from '@mui/icons-material/Sort';
 
 import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -727,7 +727,7 @@ export const SpotlightsListAsTable = ({
                                                 </span>
                                             </h3>
                                         </Grid>
-                                        <Grid item xs={12} md={7} container justify="flex-end">
+                                        <Grid item xs={12} md={7} container justifyContent="flex-end">
                                             {!!deleteActive && (
                                                 <span
                                                     className="deleteManager"
@@ -741,7 +741,7 @@ export const SpotlightsListAsTable = ({
                                                         }
                                                         data-testid={`spotlight-list-${tableType}-delete-button`}
                                                         title={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
-                                                    >
+                                                        size="large">
                                                         <DeleteIcon
                                                             className={`${
                                                                 !!deleteActive
@@ -758,7 +758,7 @@ export const SpotlightsListAsTable = ({
                                                         data-testid={`spotlight-list-${tableType}-deselect-button`}
                                                         className={classes.iconHighlighted}
                                                         title={locale.listPage.tooltips.clearSelectedSpotlightsButton}
-                                                    >
+                                                        size="large">
                                                         <CloseIcon />
                                                     </IconButton>
                                                 </span>
@@ -801,6 +801,7 @@ export const SpotlightsListAsTable = ({
                                     {!!canTextFilter && (
                                         <div style={{ position: 'relative' }}>
                                             <TextField
+                                                variant="standard"
                                                 data-testid="spotlights-list-clear-text-field"
                                                 inputProps={{
                                                     maxLength: 25,
@@ -808,8 +809,7 @@ export const SpotlightsListAsTable = ({
                                                 }}
                                                 onChange={filterRowsByText}
                                                 label={locale.listPage.textSearch.displayLabel}
-                                                value={savedTextTerm || textSearch}
-                                            />
+                                                value={savedTextTerm || textSearch} />
                                             <CloseIcon
                                                 id="spotlights-list-clear-text-filter-clear-button"
                                                 data-testid="spotlights-list-clear-text-filter-clear-button"
@@ -1063,8 +1063,8 @@ export const SpotlightsListAsTable = ({
                                             },
                                             native: true,
                                         }}
-                                        onChangePage={handleChangePage}
-                                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
                                         ActionsComponent={TablePaginationActions}
                                     />
                                 </TableRow>

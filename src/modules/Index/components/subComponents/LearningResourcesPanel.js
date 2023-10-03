@@ -11,9 +11,9 @@ import { default as locale } from 'modules/Pages/LearningResources/shared/learni
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
 
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
 
 const useStyles = makeStyles(() => ({
     myCourses: {

@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Skeleton from '@material-ui/lab/Skeleton';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { Link } from 'react-router-dom';
-import Icon from '@material-ui/core/Icon';
-import HomeIcon from '@material-ui/icons/Home';
+import Icon from '@mui/material/Icon';
+import HomeIcon from '@mui/icons-material/Home';
 import clsx from 'clsx';
 
 const componentId = 'test_tag_header';

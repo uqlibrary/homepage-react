@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Popper from '@material-ui/core/Popper';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
+import Popper from '@mui/material/Popper';
 import { debounce } from 'throttle-debounce';
 import * as actions from 'data/actions';
 
@@ -46,10 +46,10 @@ const AssetSelector = ({
     const inputRef = React.useRef();
     const dispatch = useDispatch();
     const { assetsList, assetsListLoading } = useSelector(state => state.get?.('testTagAssetsReducer'));
-
     const [currentValue, setCurrentValue] = useState(selectedAsset ?? null);
 
     const [formAssetList, setFormAssetList] = useState(assetsList);
+
     const [isOpen, setIsOpen] = React.useState(false);
 
     const clearInput = () => {
@@ -103,7 +103,7 @@ const AssetSelector = ({
     }, [autoFocus]);
 
     return (
-        <FormControl className={classNames?.formControl} fullWidth>
+        <FormControl variant="standard" className={classNames?.formControl} fullWidth>
             <Autocomplete
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
@@ -153,7 +153,11 @@ const AssetSelector = ({
                     // Regular option
                     return `${option.asset_id_displayed ?? /* istanbul ignore next */ ''}`;
                 }}
-                renderOption={option => option.asset_id_displayed}
+                renderOption={(props, option) => (
+                    <Box component="li" {...props} key={option.org_id}>
+                        {option.asset_id_displayed}
+                    </Box>
+                )}
                 PopperComponent={customPopper}
                 freeSolo
                 renderInput={params => (

@@ -17,7 +17,7 @@ Homepage is based on Material Design, and while we are using Material UI for Rea
 
 ## Grid
 
-We are now using [MUIv1 Grid](https://material-ui.com/layout/grid/) component for our responsive layout.
+We are now using [MUIv5 Grid](https://material-ui.com/layout/grid/) component for our responsive layout.
 
 ### General tips
 

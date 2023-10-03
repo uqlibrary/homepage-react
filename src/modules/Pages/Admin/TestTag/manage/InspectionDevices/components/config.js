@@ -3,12 +3,12 @@
 import React from 'react';
 
 import moment from 'moment';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 import { isEmptyStr } from '../../../helpers/helpers';
 import locale from '../../../testTag.locale';
-import { WarningOutlined } from '@material-ui/icons';
-import { Tooltip } from '@material-ui/core';
+import { WarningOutlined } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 const dateFormat = locale.config.format.dateFormatNoTime;
 
 // Note: sortable values are set wholesale in the container components of
@@ -37,18 +37,19 @@ export default {
             },
         },
         device_model_name: {
-            component: props => <TextField {...props} required />,
+            component: props => <TextField variant="standard" {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
         },
         device_serial_number: {
-            component: props => <TextField {...props} required />,
+            component: props => <TextField variant="standard" {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, minWidth: 150 },
         },
         device_calibration_due_date: {
             component: props => (
                 <TextField
+                    variant="standard"
                     format={dateFormat}
                     type="date"
                     {...props}
@@ -90,6 +91,7 @@ export default {
         device_calibrated_date_last: {
             component: props => (
                 <TextField
+                    variant="standard"
                     format={dateFormat}
                     type="date"
                     {...props}
@@ -102,7 +104,7 @@ export default {
             fieldParams: { canEdit: true, minWidth: 180 },
         },
         device_calibrated_by_last: {
-            component: props => <TextField {...props} required />,
+            component: props => <TextField variant="standard" {...props} required />,
             validate: value => isEmptyStr(value), // should return true if a validation error exists
             fieldParams: { canEdit: true, minWidth: 180, flex: 1 },
         },

@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import parse from 'html-react-parser';
 import { promoPanel as locale } from './promoPanel.locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import PromoPanelLoader from 'modules/Pages/Admin/PromoPanel/PromoPanelLoader';
 const PromoPanel = ({
     useAPI,

@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { useCookies } from 'react-cookie';
 import matchSorter from 'match-sorter';
-import RoomIcon from '@material-ui/icons/Room';
-import Fade from '@material-ui/core/Fade';
-import Badge from '@material-ui/core/Badge';
-import CheckIcon from '@material-ui/icons/Check';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import RoomIcon from '@mui/icons-material/Room';
+import Fade from '@mui/material/Fade';
+import Badge from '@mui/material/Badge';
+import CheckIcon from '@mui/icons-material/Check';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { hoursLocale } from './Hours.locale';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import ContentLoader from 'react-content-loader';
 
 const useStyles = makeStyles(theme => ({
@@ -90,7 +90,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         overflowY: 'auto',
         overflowX: 'hidden',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             overflowX: 'hidden',
             overflowY: 'hidden',
         },
@@ -99,7 +99,7 @@ const useStyles = makeStyles(theme => ({
         height: 'auto',
     },
     componentHeight: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             height: '100%',
         },
         [theme.breakpoints.up('md')]: {
@@ -111,7 +111,7 @@ const useStyles = makeStyles(theme => ({
     },
 
     componentHeightPublic: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             height: '100%',
         },
         [theme.breakpoints.up('md')]: {
@@ -254,7 +254,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
         <StandardCard
             primaryHeader
             title={
-                <Grid container spacing={0} justify="center" alignItems="center">
+                <Grid container spacing={0} justifyContent="center" alignItems="center">
                     <Grid item xs={'auto'}>
                         {hoursLocale.title}
                     </Grid>

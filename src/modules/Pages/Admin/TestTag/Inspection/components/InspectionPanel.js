@@ -2,22 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Collapse from '@material-ui/core/Collapse';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
-import Box from '@material-ui/core/Box';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import Collapse from '@mui/material/Collapse';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+import Box from '@mui/material/Box';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import TextField from '@mui/material/TextField';
+import makeStyles from '@mui/styles/makeStyles';
 
 import ActionPanel from './ActionPanel';
 import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
@@ -119,11 +119,16 @@ const InspectionPanel = ({
             <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={4}>
-                        <FormControl className={classes.formControl} fullWidth error={invalidTestingDevice}>
+                        <FormControl
+                            variant="standard"
+                            className={classes.formControl}
+                            fullWidth
+                            error={invalidTestingDevice}>
                             <InputLabel required htmlFor={`${componentIdLower}-inspection-device-input`}>
                                 {pageLocale.form.inspection.deviceLabel}
                             </InputLabel>
                             <Select
+                                variant="standard"
                                 id={`${componentIdLower}-inspection-device`}
                                 data-testid={`${componentIdLower}-inspection-device`}
                                 MenuProps={{
@@ -146,8 +151,7 @@ const InspectionPanel = ({
                                 }}
                                 required
                                 error={invalidTestingDevice}
-                                disabled={disabled}
-                            >
+                                disabled={disabled}>
                                 {!!inspectionConfigLoading && (
                                     <MenuItem value={-1} disabled key={'devicetypes-loading'}>
                                         {pageLocale.form.loading}
@@ -255,7 +259,7 @@ const InspectionPanel = ({
                     )}
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
                         <Grid item xs={12} sm={12}>
-                            <FormControl className={classes.formControl} fullWidth>
+                            <FormControl variant="standard" className={classes.formControl} fullWidth>
                                 <TextField
                                     {...pageLocale.form.inspection.failReason}
                                     multiline
@@ -278,7 +282,7 @@ const InspectionPanel = ({
                     )}
 
                     <Grid item xs={12} sm={12}>
-                        <FormControl className={classes.formControl} fullWidth>
+                        <FormControl variant="standard" className={classes.formControl} fullWidth>
                             <TextField
                                 {...pageLocale.form.inspection.inspectionNotes}
                                 multiline

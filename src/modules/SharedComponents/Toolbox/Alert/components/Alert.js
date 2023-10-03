@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Close from '@material-ui/icons/Close';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
+import Close from '@mui/icons-material/Close';
 
-import ErrorOutline from '@material-ui/icons/ErrorOutline';
-import Error from '@material-ui/icons/Error';
-import Warning from '@material-ui/icons/Warning';
-import Info from '@material-ui/icons/Info';
-import InfoOutlined from '@material-ui/icons/InfoOutlined';
-import Help from '@material-ui/icons/Help';
-import HelpOutline from '@material-ui/icons/HelpOutline';
-import Done from '@material-ui/icons/Done';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
-import { makeStyles } from '@material-ui/styles';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import Error from '@mui/icons-material/Error';
+import Warning from '@mui/icons-material/Warning';
+import Info from '@mui/icons-material/Info';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import Help from '@mui/icons-material/Help';
+import HelpOutline from '@mui/icons-material/HelpOutline';
+import Done from '@mui/icons-material/Done';
+import Grid from '@mui/material/Grid';
+import Hidden from '@mui/material/Hidden';
+import { makeStyles } from '@mui/styles';
 
 const classNames = require('classnames');
 
@@ -57,7 +57,7 @@ const useStyles = makeStyles(
         actionButton: {
             marginRight: -4,
             '& .action': {
-                [theme.breakpoints.down('xs')]: {
+                [theme.breakpoints.down('sm')]: {
                     marginRight: 12,
                 },
             },
@@ -428,6 +428,7 @@ export const Alert = ({
                                                 aria-label={dismissTitle}
                                                 id={`${alertId}-dismiss-button-mobile`}
                                                 data-testid={`${alertId}-dismiss-button-mobile`}
+                                                size="large"
                                             >
                                                 <Close />
                                             </IconButton>
@@ -442,6 +443,7 @@ export const Alert = ({
                                                 aria-label={dismissTitle}
                                                 id={`${alertId}-hide-button-mobile`}
                                                 data-testid={`${alertId}-hide-button-mobile`}
+                                                size="large"
                                             >
                                                 <Close />
                                             </IconButton>
@@ -464,13 +466,14 @@ export const Alert = ({
                             </Grid>
                         )}
                         {allowDismiss && dismissAction && (
-                            <Hidden xsDown>
+                            <Hidden smDown>
                                 <Grid item className={classes.dismissButton}>
                                     <IconButton
                                         onClick={dismissAction}
                                         aria-label={dismissTitle}
                                         id={`${alertId}-dismiss-button`}
                                         data-testid={`${alertId}-dismiss-button`}
+                                        size="large"
                                     >
                                         <Close />
                                     </IconButton>
@@ -478,13 +481,14 @@ export const Alert = ({
                             </Hidden>
                         )}
                         {!!canHide && (
-                            <Hidden xsDown>
+                            <Hidden smDown>
                                 <Grid item className={classes.dismissButton}>
                                     <IconButton
                                         onClick={hideThisAlert}
                                         aria-label={dismissTitle}
                                         id={`${alertId}-hide-button`}
                                         data-testid={`${alertId}-hide-button`}
+                                        size="large"
                                     >
                                         <Close />
                                     </IconButton>

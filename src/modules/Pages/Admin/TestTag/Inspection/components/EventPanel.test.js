@@ -1,6 +1,6 @@
 import React from 'react';
 import EventPanel from './EventPanel';
-import { render, act, fireEvent, WithReduxStore } from 'test-utils';
+import { render, act, fireEvent, WithReduxStore, preview } from 'test-utils';
 import Immutable from 'immutable';
 
 import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
@@ -63,6 +63,7 @@ describe('EventPanel', () => {
 
         expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(setLocation).toHaveBeenCalledWith({ site: 1 });
+        preview.debug();
         expect(getByTestId('event_panel-event-date')).toBeInTheDocument();
         expect(getByTestId('location_picker-event-panel-site')).toBeInTheDocument();
         expect(getByTestId('location_picker-event-panel-building')).toBeInTheDocument();

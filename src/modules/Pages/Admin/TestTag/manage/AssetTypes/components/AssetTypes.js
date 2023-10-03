@@ -1,9 +1,9 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
@@ -277,6 +277,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                             <DataTable
                                 id={componentId}
                                 rows={row}
+                                density="standard"
                                 columns={columns}
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}

@@ -5,9 +5,9 @@ import { useDropzone } from 'react-dropzone';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { addConstantsToDisplayValues } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { SpotlightSizeWarning } from './SpotlightSizeWarning';
@@ -195,7 +195,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                                 style={deleteButton}
                                 onClick={removeUpload}
                                 title={locale.form.tooltips.deleteIcon}
-                            >
+                                size="large">
                                 <DeleteIcon />
                             </IconButton>
                         </Grid>

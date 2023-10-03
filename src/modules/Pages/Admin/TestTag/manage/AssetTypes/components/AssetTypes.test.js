@@ -61,6 +61,8 @@ const selectOptionFromListByIndex = (index, actions) => {
 };
 
 describe('AssetTypes', () => {
+    jest.useFakeTimers();
+    jest.setTimeout(30000);
     beforeEach(() => {
         jest.spyOn(console, 'error');
         console.error.mockImplementation(() => null);

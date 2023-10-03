@@ -6,7 +6,8 @@ describe('Test and Tag Manage Inspection Notes', () => {
         cy.visit('http://localhost:2020/admin/testntag/manage/inspectiondetails?user=uqtesttag');
     });
     const getFieldValue = (dataField, rowIndex, colIndex) =>
-        cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 
     const forcePageRefresh = () => {
         cy.data('test_tag_header-navigation-dashboard').click();
@@ -39,7 +40,7 @@ describe('Test and Tag Manage Inspection Notes', () => {
         cy.get('[data-testid="asset_selector-inspection-details-input"]').type('UQL00001');
         cy.waitUntil(() => getFieldValue('asset_id_displayed', 0, 0).should('contain', 'UQL000010'));
         cy.waitUntil(() => getFieldValue('asset_id_displayed', 9, 0).should('contain', 'UQL000019'));
-        cy.get('.MuiTablePagination-caption').should('contain', '1-10 of 10');
+        cy.get('.MuiTablePagination-displayedRows').should('contain', '1–10 of 10');
     });
     it('allows searching and editing of discard assets', () => {
         cy.injectAxe();

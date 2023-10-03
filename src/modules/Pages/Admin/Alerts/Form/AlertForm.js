@@ -1,20 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp';
-import RemoveCircleSharpIcon from '@material-ui/icons/RemoveCircle';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import { makeStyles } from '@material-ui/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
+import RemoveCircleSharpIcon from '@mui/icons-material/RemoveCircle';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import { makeStyles } from '@mui/styles';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
@@ -37,7 +37,7 @@ const useStyles = makeStyles(
     theme => ({
         checkboxes: {
             // on mobile layouts reverse the order of the checkboxes so the 'add link' appears with the link text fields
-            [theme.breakpoints.down('sm')]: {
+            [theme.breakpoints.down('md')]: {
                 display: 'flex',
                 flexDirection: 'column-reverse',
             },
@@ -375,8 +375,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
             return;
         }
-
-        const newValue = !!event.target.value ? event.target.value : event.target.checked;
+        const newValue = event.target.hasOwnProperty('checked') ? event.target.checked : event.target.value;
         setValues({ ...values, [prop]: newValue });
 
         const newValues = expandValues({ ...values, [prop]: newValue });
@@ -520,7 +519,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.title}>
+                        <FormControl variant="standard" fullWidth title={locale.form.tooltips.title}>
                             <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                             <Input
                                 id="alertTitle"
@@ -535,7 +534,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.message}>
+                        <FormControl variant="standard" fullWidth title={locale.form.tooltips.message}>
                             <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
                                 {locale.form.labels.message}
                             </InputLabel>
@@ -564,6 +563,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             >
                                 <Grid item md={5} xs={12}>
                                     <TextField
+                                        variant="standard"
                                         id={`startDate-${index}`}
                                         data-testid={`admin-alerts-form-start-date-${index}`}
                                         error={isInvalidStartDate(dateset.startDate)}
@@ -581,6 +581,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 </Grid>
                                 <Grid item md={5} xs={12}>
                                     <TextField
+                                        variant="standard"
                                         id={`endDate-${index}`}
                                         data-testid={`admin-alerts-form-end-date-${index}`}
                                         InputLabelProps={{ shrink: true }}
@@ -605,6 +606,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             title={locale.form.tooltips.addAnotherDateSet}
                                             style={{ minWidth: 60 }}
                                             aria-label="Add a date set"
+                                            size="large"
                                         >
                                             <AddCircleSharpIcon />
                                         </IconButton>
@@ -619,6 +621,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             onClick={() => removeDateRow(index)}
                                             title={locale.form.tooltips.removeDateSet}
                                             aria-label="Remove this date set"
+                                            size="large"
                                         >
                                             <RemoveCircleSharpIcon />
                                         </IconButton>
@@ -636,7 +639,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     <Grid item sm={4} xs={12}>
                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.link.checkbox}>
                             <Checkbox
-                                checked={values.linkRequired}
+                                checked={!!values.linkRequired}
                                 data-testid="admin-alerts-form-checkbox-linkrequired"
                                 onChange={handleChange('linkRequired')}
                                 className={classes.checkbox}
@@ -648,7 +651,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.permanent}>
                             <Checkbox
                                 data-testid="admin-alerts-form-checkbox-permanent"
-                                checked={values.permanentAlert}
+                                checked={!!values.permanentAlert}
                                 onChange={handleChange('permanentAlert')}
                                 name="permanentAlert"
                                 title={locale.form.permanentTooltip}
@@ -664,6 +667,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         >
                             {locale.form.labels.priority.title}
                             <Select
+                                variant="standard"
                                 data-testid="admin-alerts-form-select-prioritytype"
                                 defaultValue={values.priorityType}
                                 value={values.priorityType}
@@ -695,7 +699,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     }}
                 >
                     <Grid item md={6} xs={12}>
-                        <FormControl fullWidth>
+                        <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                             <Input
                                 id="linkTitle"
@@ -710,7 +714,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         </FormControl>
                     </Grid>
                     <Grid item md={6} xs={12}>
-                        <FormControl fullWidth>
+                        <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                             <Input
                                 type="url"
@@ -786,7 +790,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     <Grid item xs={9} align="right">
                         <Button
                             data-testid="admin-alerts-form-button-preview"
-                            color={!!showPreview ? 'default' : 'secondary'}
+                            color={!!showPreview ? 'primary' : 'secondary'}
                             children="Preview"
                             onClick={displayPreview}
                             style={{ marginRight: '0.5rem' }}

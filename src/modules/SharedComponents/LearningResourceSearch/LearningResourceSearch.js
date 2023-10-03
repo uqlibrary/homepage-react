@@ -3,12 +3,12 @@ import { PropTypes } from 'prop-types';
 
 import { isRepeatingString, unescapeString } from 'helpers/general';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/styles';
-import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import { makeStyles } from '@mui/styles';
+import TextField from '@mui/material/TextField';
 import { throttle } from 'throttle-debounce';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
@@ -65,6 +65,7 @@ export const LearningResourceSearch = ({
 
     const throttledReadingListLoadSuggestions = useRef(
         throttle(1000, newValue => {
+            console.log('This', newValue);
             actions.loadCourseReadingListsSuggestions(newValue);
         }),
     );
@@ -124,9 +125,12 @@ export const LearningResourceSearch = ({
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
+                        filterOptions={options => {
+                            return options;
+                        }}
                         data-testid={`${elementId}-autocomplete`}
                         analyticsid-testid={`${elementId}-autocomplete`}
-                        aria-controls={`${elementId}-autocomplete-popup`}
+                        aria-controls={`${elementId}-autocomplete-listbox`}
                         blurOnSelect="mouse"
                         id={`${elementId}-autocomplete`}
                         options={getOptions()}
@@ -141,6 +145,7 @@ export const LearningResourceSearch = ({
                         renderInput={params => {
                             return (
                                 <TextField
+                                    variant="standard"
                                     {...params}
                                     placeholder={locale.search.placeholder}
                                     error={!!CRsuggestionsError}
@@ -158,6 +163,13 @@ export const LearningResourceSearch = ({
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
                                     label={locale.search.placeholder}
+                                    // onKeyDown={e => {
+                                    //     console.log(e.code);
+                                    //     if (e.code === 'Space') {
+                                    //         e.stopPropagation();
+                                    //         e.preventDefault();
+                                    //     }
+                                    // }}
                                 />
                             );
                         }}

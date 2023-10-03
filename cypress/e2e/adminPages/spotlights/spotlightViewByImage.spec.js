@@ -91,7 +91,7 @@ describe('Spotlights Admin: the view-by-image lightbox works', () => {
         hasAWorkingHelpButton('admin-spotlights-viewbyimage-help-button');
     });
     it('the view-by-image close button works', () => {
-        clickButton('[data-testid="spotlights-viewbyimage-lightbox-close-button"]', 'Close');
+        clickButton('[data-testid="spotlights-viewbyimage-lightbox-close-button"]');
         cy.location('href').should('eq', `${Cypress.config('baseUrl')}/admin/spotlights?user=uqstaff`);
         cy.get('[data-testid="spotlights-viewbyimage-lightbox-title"]').should('not.exist');
     });

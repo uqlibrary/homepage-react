@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import RoomIcon from '@material-ui/icons/Room';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import { makeStyles } from '@material-ui/styles';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import RoomIcon from '@mui/icons-material/Room';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import { makeStyles } from '@mui/styles';
 import { useCookies } from 'react-cookie';
 import { locale } from './locale';
 

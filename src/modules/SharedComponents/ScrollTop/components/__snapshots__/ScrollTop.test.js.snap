@@ -20,9 +20,9 @@ exports[`Component ScrollTop should not render component 2`] = `
 
 exports[`Component ScrollTop should render component 1`] = `
 <Hidden
-  smDown={true}
+  mdDown={true}
 >
-  <WithStyles(ForwardRef(Fab))
+  <ForwardRef(Fab)
     aria-label="Scroll to top of page"
     color="secondary"
     id="scrolltopbtn"
@@ -30,7 +30,7 @@ exports[`Component ScrollTop should render component 1`] = `
     title="Scroll to top of page"
   >
     <Memo(ForwardRef(ArrowUpwardIcon)) />
-  </WithStyles(ForwardRef(Fab))>
+  </ForwardRef(Fab)>
 </Hidden>
 `;
 

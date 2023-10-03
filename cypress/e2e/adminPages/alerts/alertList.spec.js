@@ -57,7 +57,7 @@ describe('Alert Admin List page', () => {
             .children()
             .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
         cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').should('exist');
-        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 78');
+        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1–5 of 78');
     });
     it('is accessible', () => {
         cy.injectAxe();
@@ -138,7 +138,7 @@ describe('Alert Admin List page', () => {
             'have.value',
             '10',
         );
-        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-10 of 78');
+        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1–10 of 78');
     });
     it('has working Split button actions for current/scheduled alerts', () => {
         cy.get('[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
@@ -242,14 +242,14 @@ describe('Alert Admin List page', () => {
         cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
             .children()
             .should('have.length', 78 + numRowsHiddenAsNoDatainfo);
-        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-78 of 78');
+        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1–78 of 78');
     });
     it('the footer paginator navigates between pages', () => {
-        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 78');
+        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1–5 of 78');
         cy.get('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(3)')
             .should('exist')
             .click();
-        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('6-10 of 78');
+        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('6–10 of 78');
         cy.get('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child').should(
             'contain',
             '[5.00pm] Unexpected performance issues, UQ Library Search',
@@ -257,7 +257,7 @@ describe('Alert Admin List page', () => {
         cy.get('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(2)')
             .should('exist')
             .click();
-        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 78');
+        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1–5 of 78');
         cy.get('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child').should(
             'contain',
             'Face masks in the Library',
@@ -265,7 +265,7 @@ describe('Alert Admin List page', () => {
         cy.get('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(4)')
             .should('exist')
             .click();
-        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('76-78 of 78');
+        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('76–78 of 78');
         cy.get('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child').should(
             'contain',
             'Unexpected issue, print credit top-ups',
@@ -273,7 +273,7 @@ describe('Alert Admin List page', () => {
         cy.get('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(1)')
             .should('exist')
             .click();
-        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 78');
+        cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1–5 of 78');
         cy.get('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child').should(
             'contain',
             'Face masks in the Library',

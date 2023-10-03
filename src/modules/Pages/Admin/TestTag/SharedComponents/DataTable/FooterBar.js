@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { GridFooterContainer } from '@mui/x-data-grid';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
 const rootId = 'footer_bar';
 
 const FooterBar = ({
     id,
-    actionLabel = '',
-    altLabel = '',
+    actionLabel,
+    altLabel,
     onAltClick,
     onActionClick,
     cancelButtonProps,
@@ -55,5 +55,8 @@ const FooterBar = ({
         </GridFooterContainer>
     );
 };
-
+FooterBar.defaultProps = {
+    actionLabel: '',
+    altLabel: '',
+};
 export default React.memo(FooterBar);

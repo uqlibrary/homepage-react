@@ -6,8 +6,8 @@ import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import * as pages from 'modules/App/components/pages';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
 import { getHomepageLink } from 'helpers/access';
 
 browserUpdate({
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     layoutCard: {
         width: '100%',
         padding: 0,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             margin: '0 auto 24px auto',
         },
     },

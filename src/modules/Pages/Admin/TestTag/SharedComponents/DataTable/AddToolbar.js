@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
 
 import { GridToolbarContainer } from '@mui/x-data-grid';
 
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 
 const rootId = 'add_toolbar';
 

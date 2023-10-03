@@ -2,8 +2,8 @@ import React from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { rtlRender } from 'test-utils';
 import { useDataTableRow, useDataTableColumns } from './DataTableHooks';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 
 describe('DataTableHooks', () => {
     describe('useDataTableRow', () => {

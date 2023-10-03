@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@material-ui/core';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Alert from '@material-ui/lab/Alert';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Typography from '@material-ui/core/Typography';
+import { Grid } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Alert from '@mui/material/Alert';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Typography from '@mui/material/Typography';
 
 import locale from '../../testTag.locale';
 import TabPanel from './TabPanel';
@@ -89,7 +89,10 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 value={selectedTabValue}
                 indicatorColor="primary"
                 textColor="primary"
-                onChange={(e, value) => setSelectedTabValue(value)}
+                onChange={(e, value) => {
+                    // console.log('test', value);
+                    return setSelectedTabValue(value);
+                }}
                 variant={isMobileView ? 'fullWidth' : 'standard'}
                 id={`${componentId}-tabs`}
                 data-testid={`${componentId}-tabs`}
@@ -119,9 +122,10 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <FormControl className={classes.formControl} fullWidth={isMobileView}>
+                        <FormControl variant="standard" className={classes.formControl} fullWidth={isMobileView}>
                             <InputLabel shrink>{pageLocale.form.action.discard.label}</InputLabel>
                             <Select
+                                variant="standard"
                                 id={`${componentId}-is-discard`}
                                 data-testid={`${componentId}-is-discard`}
                                 MenuProps={{
@@ -157,7 +161,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl className={classes.formControl} fullWidth required>
+                        <FormControl variant="standard" className={classes.formControl} fullWidth required>
                             <TextField
                                 {...pageLocale.form.action.discard.discardReason}
                                 required
@@ -190,9 +194,10 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
             <TabPanel id={componentId} value={selectedTabValue} index={1}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <FormControl className={classes.formControl} fullWidth={isMobileView}>
+                        <FormControl variant="standard" className={classes.formControl} fullWidth={isMobileView}>
                             <InputLabel shrink>{pageLocale.form.action.repair.label}</InputLabel>
                             <Select
+                                variant="standard"
                                 id={`${componentId}-is-repair`}
                                 data-testid={`${componentId}-is-repair`}
                                 MenuProps={{
@@ -228,7 +233,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl className={classes.formControl} fullWidth required>
+                        <FormControl variant="standard" className={classes.formControl} fullWidth required>
                             <TextField
                                 {...pageLocale.form.action.repair.repairerDetails}
                                 required

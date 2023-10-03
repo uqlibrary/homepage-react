@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import { makeStyles } from '@mui/styles';
 import { SpotlightsHelpDrawer } from './SpotlightsHelpDrawer';
 import { SpotlightsViewByImage } from './SpotlightsViewByImage';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';

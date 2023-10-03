@@ -1,10 +1,11 @@
 import React from 'react';
 import { HelpDrawer } from './HelpDrawer';
 import HelpDrawerWithStyles from './HelpDrawer';
+import { rtlRender } from '../../../../../../utils/test-utils';
 
 function setup(testProps = {}) {
     const props = {
-        classes: {},
+        classes: { paper: {} },
         theme: { palette: { white: { main: '#FFFFFF' } } },
         open: true,
         title: 'Test title',
@@ -13,18 +14,24 @@ function setup(testProps = {}) {
         buttonLabel: 'Test OK',
         ...testProps,
     };
-    return getElement(HelpDrawer, props);
+    return rtlRender(<HelpDrawer {...props} />);
 }
 
-describe('HelpDrawer snapshots tests', () => {
+describe('HelpDrawer tests', () => {
     it('renders menu', () => {
         const hdText = 'Integer mattis rutrum velit nec posuere. Quisque rhoncus quam elit.';
-        const wrapper = setup({ title: 'HelpDrawer Title', text: hdText, open: true, buttonLabel: 'Close' });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        const { getByText } = setup({
+            title: 'HelpDrawer Title',
+            text: hdText,
+            open: true,
+            buttonLabel: 'Close',
+        });
+        expect(getByText(hdText)).toBeInTheDocument();
+        expect(getByText('HelpDrawer Title')).toBeInTheDocument();
     });
 
     it('renders text as react children', () => {
-        const wrapper = setup({
+        const { getByText } = setup({
             title: 'HelpDrawer title',
             text: (
                 <p>
@@ -32,24 +39,24 @@ describe('HelpDrawer snapshots tests', () => {
                 </p>
             ),
         });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect(getByText('Test text')).toBeInTheDocument();
     });
 
     it('renders text as react element', () => {
-        const wrapper = setup({
+        const { container } = setup({
             title: 'HelpDrawer title',
             text: <span>Test text</span>,
         });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it('should render with styles', () => {
-        const wrapper = getElement(HelpDrawerWithStyles, {
+        const { container } = setup(HelpDrawerWithStyles, {
             open: true,
             title: 'Test title',
             text: 'Test text',
             hide: jest.fn(),
         });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 });

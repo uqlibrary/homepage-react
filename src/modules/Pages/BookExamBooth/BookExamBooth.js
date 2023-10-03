@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@material-ui/core';
-import { DatePicker } from '@material-ui/pickers';
-import MapIcon from '@material-ui/icons/Map';
+import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import TextField from '@mui/material/TextField';
+import MapIcon from '@mui/icons-material/Map';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -22,7 +23,7 @@ const BookExamBooth = ({
 }) => {
     useTitle(locale.title);
 
-    const dateFormat = 'YYYY-MM-DD';
+    const dateFormat = 'DD/MM/YYYY';
     const defaultHour = 8;
     const defaultMinute = 15;
     const defaultExamLength = 30; // minutes
@@ -82,10 +83,31 @@ const BookExamBooth = ({
     const encodeTime = momentObj => encodeURIComponent(momentObj.format('HH:mm'));
     const _getAddress = () => {
         const bookingUrl = getBookingUrl(isBYOD, chosenLocationCode, locale.locationDecider.locations);
-        const startTimeStr = encodeTime(getStartTime(startDate, startTimeHours, startTimeMinutes, setupAllowance));
-        const endTimeStr = encodeTime(getEndTime(startDate, startTimeHours, startTimeMinutes, sessionLength));
+        const startTimeStr = encodeTime(
+            getStartTime(
+                moment(startDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                startTimeHours,
+                startTimeMinutes,
+                setupAllowance,
+            ),
+        );
+        const endTimeStr = encodeTime(
+            getEndTime(
+                moment(startDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                startTimeHours,
+                startTimeMinutes,
+                sessionLength,
+            ),
+        );
 
-        const address = bookingUrl + '&firstDay=' + startDate + '&fromTime=' + startTimeStr + '&toTime=' + endTimeStr;
+        const address =
+            bookingUrl +
+            '&firstDay=' +
+            moment(startDate, 'DD/MM/YYYY').format('YYYY-MM-DD') +
+            '&fromTime=' +
+            startTimeStr +
+            '&toTime=' +
+            endTimeStr;
 
         // alert('we would visit ' + address);
         window.location.assign(address);
@@ -102,7 +124,7 @@ const BookExamBooth = ({
                         <div className="displayDecider">
                             <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
                             <br />
-                            <FormControl component="fieldset" required>
+                            <FormControl variant="standard" component="fieldset" required>
                                 <RadioGroup
                                     name="displayDecider"
                                     id="displayDecider"
@@ -131,7 +153,7 @@ const BookExamBooth = ({
                     <Grid item xs={12}>
                         <StandardCard title={locale.locationDecider.heading}>
                             <div>
-                                <FormControl component="fieldset" required>
+                                <FormControl variant="standard" component="fieldset" required>
                                     <RadioGroup
                                         name="locationDecider"
                                         id="locationDecider"
@@ -190,7 +212,7 @@ const BookExamBooth = ({
                                 <Grid item xs={12}>
                                     <label htmlFor="examType">{locale.examType.label}</label>
                                     <br />
-                                    <FormControl component="fieldset">
+                                    <FormControl variant="standard" component="fieldset">
                                         <RadioGroup
                                             id="examType"
                                             name="examType"
@@ -218,6 +240,7 @@ const BookExamBooth = ({
                                     <label htmlFor="sessionLength">{locale.sessionLength.label}</label>
                                     <br />
                                     <Select
+                                        variant="standard"
                                         className="sessionLength"
                                         data-testid="session-length-select"
                                         defaultValue={sessionLengthList[0].value}
@@ -243,20 +266,23 @@ const BookExamBooth = ({
                                     <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />
                                     <DatePicker
-                                        data-testid="start-date"
-                                        format={dateFormat}
+                                        inputFormat={dateFormat}
                                         id="startDate"
                                         minDate={yesterday}
                                         name="startDate"
                                         onChange={_handleStartDateChange}
                                         type="date"
-                                        value={startDate}
+                                        value={moment(startDate, 'DD/MM/YYYY')}
+                                        renderInput={params => (
+                                            <TextField data-testid="start-date" variant="standard" {...params} />
+                                        )}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <label htmlFor="startTimeHours">{locale.startTimeHours.label}</label>
                                     <br />
                                     <Select
+                                        variant="standard"
                                         aria-label={locale.startTimeHours.aria}
                                         data-testid="start-time-hours"
                                         defaultValue={defaultHour}
@@ -278,6 +304,7 @@ const BookExamBooth = ({
                                     </Select>
                                     :{' '}
                                     <Select
+                                        variant="standard"
                                         aria-label={locale.startTimeMinutes.aria}
                                         data-testid="start-time-minutes"
                                         defaultValue={defaultMinute}

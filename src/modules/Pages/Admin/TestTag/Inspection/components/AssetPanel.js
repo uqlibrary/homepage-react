@@ -2,8 +2,8 @@ import React, { useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
+import Grid from '@mui/material/Grid';
+import FormControl from '@mui/material/FormControl';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import InspectionPanel from './InspectionPanel';
@@ -134,7 +134,7 @@ const AssetPanel = ({
                     />
                 </Grid>
                 <Grid xs={12} item sm={6}>
-                    <FormControl className={classes.formControl} fullWidth>
+                    <FormControl variant="standard" className={classes.formControl} fullWidth>
                         <AssetTypeSelector
                             id={componentId}
                             locale={pageLocale.assetType}

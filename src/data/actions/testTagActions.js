@@ -303,7 +303,6 @@ export function clearRoomsError() {
 /** * ASSETS  ***/
 export function loadAssets(pattern) {
     return dispatch => {
-        // console.log('dispatching');
         dispatch({ type: actions.TESTTAG_ASSETS_LOADING });
         return get(TEST_TAG_ASSETS_API(pattern))
             .then(response => {

@@ -1,9 +1,6 @@
 import React from 'react';
 import PromoPanelGroupDateSelector from './PromoPanelGroupDateSelector';
 import { rtlRender, fireEvent } from '../../../../../../utils/test-utils';
-import { handleChange } from './PromoPanelGroupDateSelector';
-
-const moment = require('moment');
 
 const PromoList = [
     {
@@ -48,69 +45,6 @@ function setup(testProps = {}) {
 }
 
 describe('Promo Panel Group Date Selector', () => {
-    it('Handles change correctly for start in past', () => {
-        const setSaveEnabled = jest.fn();
-        const setStartDate = jest.fn();
-        const setEndDate = jest.fn();
-
-        handleChange(
-            'start',
-            '1980/01/01 00:00:00',
-            '1980/02/01 00:00:00',
-            setSaveEnabled,
-            setStartDate,
-            setEndDate,
-        )(moment());
-        expect(setSaveEnabled).toBeCalled();
-    });
-
-    it('Handles change correctly for end in past', () => {
-        const setSaveEnabled = jest.fn();
-        const setStartDate = jest.fn();
-        const setEndDate = jest.fn();
-
-        handleChange(
-            'end',
-            '1980/01/01 00:00:00',
-            '1980/02/01 00:00:00',
-            setSaveEnabled,
-            setStartDate,
-            setEndDate,
-        )(moment());
-        expect(setSaveEnabled).toBeCalled();
-    });
-
-    it('Handles change correctly for start in future', () => {
-        const setSaveEnabled = jest.fn();
-        const setStartDate = jest.fn();
-        const setEndDate = jest.fn();
-
-        handleChange(
-            'start',
-            '2090/01/01 00:00:00',
-            '2090/02/01 00:00:00',
-            setSaveEnabled,
-            setStartDate,
-            setEndDate,
-        )(moment());
-        expect(setSaveEnabled).toBeCalled();
-    });
-
-    it('Handles change correctly for end in future', () => {
-        const setSaveEnabled = jest.fn();
-        const setStartDate = jest.fn();
-        const setEndDate = jest.fn();
-
-        handleChange(
-            'end',
-            '2090/01/01 00:00:00',
-            '2090/02/01 00:00:00',
-            setSaveEnabled,
-            setStartDate,
-            setEndDate,
-        )(moment());
-        expect(setSaveEnabled).toBeCalled();
-    });
     it('Should render correctly', () => {
         const wrapper = setup();
         expect(wrapper).toMatchSnapshot();

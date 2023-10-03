@@ -36,7 +36,6 @@ const selectOptionFromListByIndex = (index, actions) => {
     expect(actions.getByRole('listbox')).not.toEqual(null);
     act(() => {
         const options = actions.getAllByRole('option');
-
         fireEvent.mouseDown(options[index]);
         options[index].click();
     });
@@ -65,7 +64,7 @@ describe('AssetSelector', () => {
     afterEach(() => {
         console.error.mockRestore();
     });
-    it('renders component', () => {
+    it('renders component', async () => {
         const { getByTestId, getByText, getByRole, getAllByRole } = setup({
             state: { testTagAssetsReducer: { assetsList: [] } },
             id: 'test',
@@ -78,6 +77,7 @@ describe('AssetSelector', () => {
             fireEvent.click(getByTestId('asset_selector-test-input'));
         });
         selectOptionFromListByIndex(0, { getByRole, getAllByRole });
+
         expect(getByTestId('asset_selector-test-input')).toHaveAttribute('value', 'NEW ASSET');
     });
     it('renders component without ADD NEW option', () => {

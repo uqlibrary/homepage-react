@@ -1,5 +1,5 @@
 import React from 'react';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export const SpacedArrowForwardIcon = () => {
     return <ArrowForwardIcon style={{ paddingRight: '1rem' }} />;

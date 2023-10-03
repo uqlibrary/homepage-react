@@ -3,9 +3,9 @@ import { ConnectedRouter } from 'connected-react-router/immutable';
 import { Route, Switch } from 'react-router';
 import PropTypes from 'prop-types';
 import { mui1theme } from 'config';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import JssProvider from 'react-jss/lib/JssProvider';
-import { createGenerateClassName } from '@material-ui/core/styles';
+import createGenerateClassName from '@mui/styles/createGenerateClassName';
 const generateClassName = createGenerateClassName({
     dangerouslyUseGlobalCSS: false,
     productionPrefix: 'uq-lib-',
@@ -17,11 +17,13 @@ const Root = ({ history }) => {
     return (
         <ConnectedRouter history={history}>
             <JssProvider generateClassName={generateClassName}>
-                <ThemeProvider theme={mui1theme}>
-                    <Switch>
-                        <Route component={App} />
-                    </Switch>
-                </ThemeProvider>
+                <StyledEngineProvider injectFirst>
+                    <ThemeProvider theme={mui1theme}>
+                        <Switch>
+                            <Route component={App} />
+                        </Switch>
+                    </ThemeProvider>
+                </StyledEngineProvider>
             </JssProvider>
         </ConnectedRouter>
     );

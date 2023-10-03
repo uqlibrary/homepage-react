@@ -15,7 +15,7 @@ describe('Computer availability', () => {
                 'have.text',
                 'Architecture & Music Library',
             );
-            cy.wait(500);
+            cy.wait(1000);
             // checking all rows was creating spurious colour contrast errors; just one seemed to work
             cy.checkA11y('div[data-testid="computer-row-0"]', {
                 reportName: 'Computers',
