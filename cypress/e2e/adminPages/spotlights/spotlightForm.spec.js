@@ -16,7 +16,7 @@ import { clickButton, waitUntilSpotlightListPageHasLoaded } from '../../../suppo
 
 function setDateToNow() {
     cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
-    cy.get('[data-testid="spotlight-start-today"] button').click();
+    cy.get('[data-testid="spotlight-start-today"] button:first-of-type').click();
     cy.get('[data-testid="admin-spotlights-form-start-date"]')
         .parent()
         .should('not.contain', 'This date is in the past.');
