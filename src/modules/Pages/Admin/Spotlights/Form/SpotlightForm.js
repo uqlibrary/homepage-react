@@ -570,7 +570,7 @@ export const SpotlightForm = ({
                             }}
                             componentsProps={{
                                 actionBar: {
-                                    actions: ['today'],
+                                    actions: ['today', 'accept'],
                                     'data-testid': 'spotlight-start-today',
                                 },
                             }}
@@ -609,7 +609,7 @@ export const SpotlightForm = ({
                             // }}
                             componentsProps={{
                                 actionBar: {
-                                    actions: ['today'],
+                                    actions: ['today', 'accept'],
                                     'data-testid': 'spotlight-end-today',
                                 },
                             }}
