@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import makeStyles from '@mui/styles/makeStyles';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -205,7 +205,7 @@ const FilterDialog = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid item padding={3} style={{ flex: 1 }}>
+                        <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={rootId}
                                 rows={row}

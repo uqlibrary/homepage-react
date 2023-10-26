@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from 'react-redux';
 
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -309,7 +309,7 @@ const ManageLocations = ({ actions }) => {
                         />
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
-                        <Grid item padding={3} style={{ flex: 1 }}>
+                        <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

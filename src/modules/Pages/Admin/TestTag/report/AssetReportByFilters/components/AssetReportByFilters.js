@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 
-import Grid from '@mui/material/Grid';
+// import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
 
@@ -227,7 +228,6 @@ const AssetReportByFilters = ({
                                     'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
                                 inputFormat={locale.config.format.dateFormatNoTime}
-                                fullWidth
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                 disableToolbar
                                 variant="inline"
@@ -246,6 +246,7 @@ const AssetReportByFilters = ({
                                 autoOk
                                 renderInput={params => (
                                     <TextField
+                                        fullWidth
                                         {...params}
                                         label={pageLocale.form.keyboardDatePicker.startDateLabel}
                                         variant="standard"
@@ -268,7 +269,6 @@ const AssetReportByFilters = ({
                                     'aria-labelledby': `${componentIdLower}-tagged-end-label`,
                                 }}
                                 inputFormat={locale.config.format.dateFormatNoTime}
-                                fullWidth
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
@@ -286,6 +286,7 @@ const AssetReportByFilters = ({
                                 autoOk
                                 renderInput={params => (
                                     <TextField
+                                        fullWidth
                                         {...params}
                                         id={`${componentIdLower}-tagged-end`}
                                         data-testid={`${componentIdLower}-tagged-end`}
@@ -302,7 +303,7 @@ const AssetReportByFilters = ({
                     </Grid>
 
                     <Grid container spacing={3} className={classes.tableMarginTop}>
-                        <Grid item padding={3} style={{ flex: 1 }}>
+                        <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

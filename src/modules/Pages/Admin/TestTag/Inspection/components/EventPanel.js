@@ -109,14 +109,9 @@ const EventPanel = ({
                             value={actionDate}
                             onChange={updateEventDate}
                             required
-                            fullWidth={isMobileView}
-                            // KeyboardButtonProps={{
-                            //     'aria-label': 'Event date',
-                            //     id: `${componentIdLower}-event-date-button`,
-                            //     'data-testid': `${componentIdLower}-event-date-button`,
-                            // }}
                             renderInput={params => (
                                 <TextField
+                                    fullWidth={isMobileView}
                                     variant="standard"
                                     id={`${componentIdLower}-event-date`}
                                     data-testid={`${componentIdLower}-event-date`}
