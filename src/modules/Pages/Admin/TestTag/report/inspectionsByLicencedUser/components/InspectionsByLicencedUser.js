@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 
 import makeStyles from '@mui/styles/makeStyles';
 
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -249,7 +249,6 @@ const InspectionsByLicencedUser = ({
                                     'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
                                 inputFormat={locale.config.format.dateFormatNoTime}
-                                fullWidth
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
@@ -267,6 +266,7 @@ const InspectionsByLicencedUser = ({
                                 autoOk
                                 renderInput={params => (
                                     <TextField
+                                        fullWidth
                                         variant="standard"
                                         {...params}
                                         error={startDateError.error}
@@ -286,7 +286,6 @@ const InspectionsByLicencedUser = ({
                                     'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
                                 inputFormat={locale.config.format.dateFormatNoTime}
-                                fullWidth
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
@@ -303,6 +302,7 @@ const InspectionsByLicencedUser = ({
                                 autoOk
                                 renderInput={params => (
                                     <TextField
+                                        fullWidth
                                         variant="standard"
                                         {...params}
                                         helperText={endDateError.error && endDateError.message}
@@ -315,7 +315,7 @@ const InspectionsByLicencedUser = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
-                        <Grid item padding={3} style={{ flex: 1 }}>
+                        <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

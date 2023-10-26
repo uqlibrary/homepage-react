@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
             border: '1px solid rgba(224, 224, 224, 1)',
             borderRadius: 0,
         },
-        '& .MuiDataGrid-window': {
+        '& .MuiDataGrid-virtualScroller': {
             backgroundImage:
                 'linear-gradient(left, #fff, rgba(255, 255, 255, 0)),linear-gradient(to left, #fff, rgba(255, 255, 255, 0)),linear-gradient(to right, #d7d1cc, rgba(195, 195, 197, 0)),linear-gradient(to left, #d7d1cc, rgba(195, 195, 197, 0))',
             backgroundPosition: '0 0,100% 0,0 0,100% 0',

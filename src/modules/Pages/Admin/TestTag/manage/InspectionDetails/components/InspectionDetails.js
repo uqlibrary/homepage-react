@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import makeStyles from '@mui/styles/makeStyles';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -129,7 +129,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                         isBusy={dialogueBusy}
                     />
                     <Grid container spacing={3}>
-                        <Grid item padding={3} xs={12} md={4} style={{ flex: 1 }}>
+                        <Grid item xs={12} md={4} style={{ flex: 1 }}>
                             <AssetSelector
                                 id={componentId}
                                 locale={pageLocale.form}
@@ -144,7 +144,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
-                        <Grid item padding={3} style={{ flex: 1 }}>
+                        <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 rows={row}
                                 columns={columns}

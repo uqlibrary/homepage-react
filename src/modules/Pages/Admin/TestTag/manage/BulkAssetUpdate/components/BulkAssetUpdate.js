@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from 'react-redux';
 
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -316,7 +316,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         )}
                         <Grid container spacing={3}>
-                            <Grid item padding={3} style={{ flex: 1 }}>
+                            <Grid item style={{ flex: 1 }}>
                                 <DataTable
                                     id={componentId}
                                     rows={list.data}
@@ -435,7 +435,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
 
                         <Grid container spacing={3}>
                             <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                                <Grid item xs={12} sm={6} padding={3}>
+                                <Grid item xs={12} sm={6}>
                                     <Grid container spacing={3}>
                                         <Grid item xs={12}>
                                             <FormControlLabel
@@ -470,7 +470,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     </Grid>
                                 </Grid>
                             </AuthWrapper>
-                            <Grid item xs={12} sm={6} padding={3}>
+                            <Grid item xs={12} sm={6}>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>
                                         <FormControlLabel
