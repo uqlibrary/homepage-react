@@ -364,10 +364,10 @@ describe('LocationPicker Renders component', () => {
 
         rerender(<GridWrapper divisor={4}>content</GridWrapper>);
         expect(document.querySelectorAll('div').length).toBe(2);
-        expect(document.querySelectorAll('div')[1]).toHaveClass('MuiGrid-grid-md-3');
+        expect(document.querySelectorAll('div')[1]).toHaveClass('MuiGrid2-grid-md-3');
 
         rerender(<GridWrapper divisor={3}>content</GridWrapper>);
-        expect(document.querySelectorAll('div')[1]).toHaveClass('MuiGrid-grid-md-4');
+        expect(document.querySelectorAll('div')[1]).toHaveClass('MuiGrid2-grid-md-4');
     });
 
     it('gets expected values from getBuildingLabel', () => {
