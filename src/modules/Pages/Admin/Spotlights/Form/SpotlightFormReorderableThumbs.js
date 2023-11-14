@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import { makeStyles } from '@mui/styles';
 
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import {
@@ -78,6 +78,7 @@ export const SpotlightFormReorderableThumbs = ({
         if (!!currentSpotlights) {
             if (tableType === 'edit') {
                 const currentSpotlightThumbsForEdit = [...currentSpotlights];
+                /* istanbul ignore else */
                 if (currentValues.start !== originalValues.start) {
                     const spotlightThumbPlaceholder = {
                         id: placeholderThumbnailId,

@@ -1,17 +1,17 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -106,14 +106,17 @@ export const PromoPanelAddNewDefault = ({
                     id="lightboxTitle"
                     data-testid="panel-edit-date-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
-                    children={<p style={{ lineHeight: 1, margin: 0 }}>{`Set a new default panel for ${groupName}`}</p>}
+                    children={
+                        <h2 style={{ lineHeight: 1, margin: 0 }}>{`Set a new default panel for ${groupName}`}</h2>
+                    }
                 />
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item xs={12}>
-                            <FormControl className={classes.dropdown} fullWidth title={'Panel'}>
+                            <FormControl variant="standard" className={classes.dropdown} fullWidth title={'Panel'}>
                                 <InputLabel id="group-selector">Panel</InputLabel>
                                 <Select
+                                    variant="standard"
                                     labelId="group-selector"
                                     id="new-default-panel-for-group"
                                     label="Panel"

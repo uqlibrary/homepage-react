@@ -2,8 +2,8 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
+import Grid from '@mui/material/Grid';
+import Hidden from '@mui/material/Hidden';
 
 import { useDispatch } from 'react-redux';
 import {
@@ -171,7 +171,7 @@ export const Index = ({
                     )}
                     {/* Personalisation panel, desktop */}
                     {accountLoading === false && !!account && (
-                        <Hidden smDown>
+                        <Hidden mdDown>
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
                                     account={account}

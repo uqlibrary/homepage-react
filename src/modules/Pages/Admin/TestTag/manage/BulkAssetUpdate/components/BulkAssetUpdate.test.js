@@ -142,9 +142,9 @@ describe('BulkAssetUpdate', () => {
         await findByTestId('filter_dialog-bulk-asset-update');
 
         const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-        userEvent.click(within(frow1).getByLabelText('Select Row checkbox'));
+        userEvent.click(within(frow1).getByLabelText('Select row'));
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-        userEvent.click(within(frow2).getByLabelText('Select Row checkbox'));
+        userEvent.click(within(frow2).getByLabelText('Select row'));
 
         act(() => {
             userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
@@ -206,9 +206,9 @@ describe('BulkAssetUpdate', () => {
         await findByTestId('filter_dialog-bulk-asset-update');
 
         const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-        userEvent.click(within(frow1).getByLabelText('Select Row checkbox'));
+        userEvent.click(within(frow1).getByLabelText('Select row'));
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-        userEvent.click(within(frow2).getByLabelText('Select Row checkbox'));
+        userEvent.click(within(frow2).getByLabelText('Select row'));
 
         act(() => {
             userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
@@ -275,9 +275,9 @@ describe('BulkAssetUpdate', () => {
         await findByTestId('filter_dialog-bulk-asset-update');
 
         const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-        userEvent.click(within(frow1).getByLabelText('Select Row checkbox'));
+        userEvent.click(within(frow1).getByLabelText('Select row'));
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-        userEvent.click(within(frow2).getByLabelText('Select Row checkbox'));
+        userEvent.click(within(frow2).getByLabelText('Select row'));
 
         act(() => {
             userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
@@ -371,9 +371,9 @@ describe('BulkAssetUpdate', () => {
         await findByTestId('filter_dialog-bulk-asset-update');
 
         const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-        userEvent.click(within(frow1).getByLabelText('Select Row checkbox'));
+        userEvent.click(within(frow1).getByLabelText('Select row'));
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-        userEvent.click(within(frow2).getByLabelText('Select Row checkbox'));
+        userEvent.click(within(frow2).getByLabelText('Select row'));
 
         act(() => {
             userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
@@ -498,9 +498,9 @@ describe('BulkAssetUpdate', () => {
 
             await findByTestId('filter_dialog-bulk-asset-update');
             const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-            userEvent.click(within(frow1).getByLabelText('Select Row checkbox'));
+            userEvent.click(within(frow1).getByLabelText('Select row'));
             const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-            userEvent.click(within(frow2).getByLabelText('Select Row checkbox'));
+            userEvent.click(within(frow2).getByLabelText('Select row'));
 
             act(() => {
                 userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));

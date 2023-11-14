@@ -6,7 +6,8 @@ describe('Test and Tag bulk asset update', () => {
         cy.visit('http://localhost:2020/admin/testntag/manage/bulkassetupdate?user=uqtesttag');
     });
     const getFieldValue = (dataField, rowIndex, colIndex) =>
-        cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 
     const forcePageRefresh = () => {
         cy.data('test_tag_header-navigation-dashboard').click();
@@ -20,7 +21,7 @@ describe('Test and Tag bulk asset update', () => {
             locale.pages.manage.bulkassetupdate.form.filterDialog.title,
         );
         cy.waitUntil(() => getFieldValue('asset_barcode', 0, 1).should('contain', 'UQL000001'));
-        cy.get('input[aria-label="Select All Rows checkbox"]').click();
+        cy.get('input[aria-label="Select all rows"]').click();
         cy.data('filter_dialog-bulk-asset-update-action-button').click();
         cy.waitUntil(() => getFieldValue('asset_id_displayed', 0, 0).should('contain', 'UQL000001'));
         cy.waitUntil(() => getFieldValue('asset_id_displayed', 4, 0).should('contain', 'UQL001993'));

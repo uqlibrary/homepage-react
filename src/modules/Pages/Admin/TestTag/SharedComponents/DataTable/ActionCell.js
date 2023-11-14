@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { createTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/DeleteOutlined';
-import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import Tooltip from '@mui/material/Tooltip';
 
 import { getDataFieldParams } from './utils';
 

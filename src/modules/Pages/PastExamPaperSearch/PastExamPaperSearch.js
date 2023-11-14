@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 
 import { useTitle } from 'hooks';
 
-import { Grid, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import Typography from '@material-ui/core/Typography';
+import { Grid, TextField } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -114,22 +115,6 @@ export const PastExamPaperSearch = ({
         [actions, searchTerm],
     );
 
-    // eslint-disable-next-line react/prop-types
-    const FormattedSuggestion = ({ option: { name: name, course_title: courseTitle } }) => (
-        <Grid container className="autocompleteClass">
-            <Grid item xs={12}>
-                <Typography variant="body1" color="textPrimary">
-                    {name}
-                </Typography>
-            </Grid>
-            <Grid item xs={12}>
-                <Typography variant="body2" color="textSecondary">
-                    {courseTitle}
-                </Typography>
-            </Grid>
-        </Grid>
-    );
-
     const addKeywordAsOption = (options, params) => {
         const filtered = filter(options, params);
 
@@ -140,7 +125,7 @@ export const PastExamPaperSearch = ({
                 course_title: `View all exam papers for ${truncatedSearchTerm}`,
             });
         }
-
+        console.log('Filtered is', filtered);
         return filtered;
     };
 
@@ -172,6 +157,7 @@ export const PastExamPaperSearch = ({
                     </Grid>
                 </Grid>
                 <form>
+                    {console.log('suggestions', examSuggestionList)}
                     <Autocomplete
                         autoHighlight
                         clearOnEscape
@@ -185,6 +171,7 @@ export const PastExamPaperSearch = ({
                         noOptionsText={noOptionsText}
                         renderInput={params => (
                             <TextField
+                                variant="standard"
                                 {...params}
                                 label={locale.placeholder}
                                 inputProps={{
@@ -195,7 +182,22 @@ export const PastExamPaperSearch = ({
                                 }}
                             />
                         )}
-                        renderOption={option => <FormattedSuggestion option={option} />}
+                        renderOption={(props, option) => (
+                            <Box component="li" {...props} key={option.name}>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Typography variant="body1" color="textPrimary">
+                                            {option.name}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {option.course_title}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        )}
                         getOptionLabel={item =>
                             (!!item && !!item.name && String(`${item.name} (${item.course_title})`)) ||
                             /* istanbul ignore next */ ''

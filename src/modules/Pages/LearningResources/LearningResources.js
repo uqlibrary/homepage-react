@@ -15,11 +15,11 @@ import { TabPanel } from './shared/TabPanel';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-import AppBar from '@material-ui/core/AppBar';
-import Grid from '@material-ui/core/Grid';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import { makeStyles } from '@material-ui/styles';
+import AppBar from '@mui/material/AppBar';
+import Grid from '@mui/material/Grid';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { makeStyles } from '@mui/styles';
 
 // lecturers are now maintaining their own courses (it used to be the Library learning Resource team)
 // the Talis screen is just a text field, in which they are supposed to put the course ID
@@ -77,6 +77,14 @@ export const isValidInput = params => {
 const useStyles = makeStyles(theme => ({
     appbar: {
         backgroundColor: theme.palette.primary.light,
+    },
+    TabSelected: {
+        color: 'white !important',
+        opacity: 1,
+    },
+    TabUnselected: {
+        color: 'white !important',
+        opacity: 0.5,
     },
 }));
 
@@ -343,8 +351,22 @@ export const LearningResources = ({
                                 className={classes.appbar}
                             >
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
-                                    <Tab value="mycoursestab" label={locale.myCourses.title} {...a11yProps('0')} />
-                                    <Tab value="searchtab" label={locale.search.title} {...a11yProps('1')} />
+                                    <Tab
+                                        className={
+                                            topmenu === 'mycoursestab' ? classes.TabSelected : classes.TabUnselected
+                                        }
+                                        value="mycoursestab"
+                                        label={locale.myCourses.title}
+                                        {...a11yProps('0')}
+                                    />
+                                    <Tab
+                                        value="searchtab"
+                                        className={
+                                            topmenu === 'searchtab' ? classes.TabSelected : classes.TabUnselected
+                                        }
+                                        label={locale.search.title}
+                                        {...a11yProps('1')}
+                                    />
                                 </Tabs>
                             </AppBar>
 

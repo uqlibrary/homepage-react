@@ -349,7 +349,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.viewport(1300, 1000);
             cy.get('button[data-testid="confirm-alert-error"]').should('exist');
             // the ok button on the error returns to the list page
-            clickButton('button[data-testid="confirm-alert-error"]', 'OK');
+            clickButton('button[data-testid="confirm-alert-error"]');
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
             cy.get('button[data-testid="confirm-alert-error"]').should('not.exist');
         });

@@ -235,7 +235,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
     cy.get('div[data-testid=full-learningresource-autocomplete] input').type(typeChar);
     cy.get('[data-testid="noCoursesFound"]').should('not.exist');
 
-    cy.get('ul#full-learningresource-autocomplete-popup')
+    cy.get('ul#full-learningresource-autocomplete-listbox')
         .children()
         .should('have.length', numberOfMatchingSubject + 1); // plus one for title
 
@@ -246,7 +246,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
         typeChar.substring(0, typeChar.length - 1),
     );
     // the backspace means we dont have enough char and the dropdown is emptied
-    cy.get('ul#full-learningresource-autocomplete-popup').should('not.exist');
+    cy.get('ul#full-learningresource-autocomplete-listbox').should('not.exist');
 
     cy.get('div[data-testid=full-learningresource-autocomplete] input').type('{backspace}');
     cy.get('div[data-testid=full-learningresource-autocomplete] input').should(
@@ -257,7 +257,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
     // re-enter the characters
     cy.get('div[data-testid=full-learningresource-autocomplete] input').type(typeChar.slice(-2));
     // the drop down returns
-    cy.get('ul#full-learningresource-autocomplete-popup')
+    cy.get('ul#full-learningresource-autocomplete-listbox')
         .children()
         .should('have.length', numberOfMatchingSubject + 1);
 
@@ -350,6 +350,7 @@ context('Learning Resources Accessibility', () => {
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="learning-resources"]').contains('My courses');
         cy.log('Learning Resources');
+        cy.wait(1000);
         cy.checkA11y('div[data-testid="learning-resources"]', {
             reportName: 'Learning Resources',
             scopeName: 'Content',
@@ -363,6 +364,7 @@ context('Learning Resources Accessibility', () => {
         cy.viewport(414, 736);
         cy.get('div[data-testid="learning-resources"]').contains('My courses');
         cy.log('Learning Resources');
+        cy.wait(1000);
         cy.checkA11y('div[data-testid="learning-resources"]', {
             reportName: 'Learning Resources',
             scopeName: 'Content',
@@ -578,7 +580,7 @@ context('The Learning Resources Page', () => {
             .clear()
             .type('FREN 1');
         // and the drop-down will not appear
-        cy.get('ul#full-learningresource-autocomplete-popup')
+        cy.get('ul#full-learningresource-autocomplete-listbox')
             .children()
             .should('have.length', 3 + 1);
     });

@@ -2,15 +2,15 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import { makeStyles } from '@mui/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -152,7 +152,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                     <StandardCard title="View alert" squash>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormControl fullWidth title={locale.form.tooltips.title}>
+                                <FormControl variant="standard" fullWidth title={locale.form.tooltips.title}>
                                     <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                                     <Input
                                         id="alertTitle"
@@ -166,7 +166,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                         </Grid>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormControl fullWidth title={locale.form.tooltips.message}>
+                                <FormControl variant="standard" fullWidth title={locale.form.tooltips.message}>
                                     <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
                                         {locale.form.labels.message}
                                     </InputLabel>
@@ -239,12 +239,12 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.priority.title}>
                                     {locale.form.labels.priority.title}
                                     <Select
+                                        variant="standard"
                                         data-testid="admin-alerts-view-select-priority-type"
                                         // defaultValue={values.priority_type}
                                         value={values.priorityType}
                                         disabled
-                                        classes={{ root: classes.selectPriorityType }}
-                                    >
+                                        classes={{ root: classes.selectPriorityType }}>
                                         <MenuItem value={'info'}>{locale.form.labels.priority.level.info}</MenuItem>
                                         <MenuItem value={'urgent'}>{locale.form.labels.priority.level.urgent}</MenuItem>
                                         <MenuItem value={'extreme'}>
@@ -264,7 +264,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                             }}
                         >
                             <Grid item md={6} xs={12}>
-                                <FormControl fullWidth>
+                                <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                                     <Input
                                         id="linkTitle"
@@ -277,7 +277,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 </FormControl>
                             </Grid>
                             <Grid item md={6} xs={12}>
-                                <FormControl fullWidth>
+                                <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                                     <Input
                                         type="url"

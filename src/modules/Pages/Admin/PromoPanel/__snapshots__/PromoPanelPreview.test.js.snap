@@ -4,83 +4,78 @@ exports[`Component PromoPanel Preview should render correctly 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body
-    style="padding-right: 0px; overflow: hidden;"
+    style="padding-right: 1024px; overflow: hidden;"
   >
     <div
       aria-hidden="true"
     />
     <div
-      class="MuiDialog-root"
+      class="MuiDialog-root MuiModal-root css-zw3mfo-MuiModal-root-MuiDialog-root"
       role="presentation"
-      style="position: fixed; z-index: 1300; right: 0px; bottom: 0px; top: 0px; left: 0px;"
     >
       <div
         aria-hidden="true"
-        class="MuiBackdrop-root"
+        class="MuiBackdrop-root MuiModal-backdrop css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop"
         style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
       />
       <div
-        data-test="sentinelStart"
+        data-testid="sentinelStart"
         tabindex="0"
       />
       <div
-        class="MuiDialog-container MuiDialog-scrollPaper"
-        role="none presentation"
+        class="MuiDialog-container MuiDialog-scrollPaper css-hz1bth-MuiDialog-container"
+        role="presentation"
         style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
         tabindex="-1"
       >
         <div
           aria-labelledby="promopanel-preview-title"
-          class="MuiPaper-root makeStyles-dialogPaper-2 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm MuiPaper-elevation24 MuiPaper-rounded"
+          class="MuiPaper-root makeStyles-dialogPaper-2 MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm css-1t1j96h-MuiPaper-root-MuiDialog-paper"
           role="dialog"
         >
-          <div
-            class="MuiDialogTitle-root"
+          <h2
+            class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root css-1qg91f3-MuiTypography-root-MuiDialogTitle-root"
             data-testid="promopanel-preview-title"
             id="promopanel-preview-title"
             style="position: relative; border-bottom: 1px solid #d7d1cc; font-size: 12px;"
           >
             <h2
-              class="MuiTypography-root MuiTypography-h6"
+              style="line-height: 1; margin: 0px;"
             >
-              <p
-                style="line-height: 1; margin: 0px;"
-              >
-                Preview
-              </p>
-              <p
-                style="font-size: 14px; font-weight: 100; line-height: 1; margin: 0px;"
-              >
-                test preview
-              </p>
+              Preview
             </h2>
-          </div>
+            <p
+              style="font-size: 14px; font-weight: 100; line-height: 1; margin: 0px;"
+            >
+              test preview
+            </p>
+          </h2>
           <div
-            class="MuiDialogContent-root"
+            class="MuiDialogContent-root css-ypiqx9-MuiDialogContent-root"
           >
             <div
-              class="MuiPaper-root MuiCard-root Cards-card-4 StandardCard  MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-4 StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
               data-analyticsid="promo-panel"
               data-testid="promo-panel"
               id="promo-panel"
               style="height: 100%;"
             >
               <div
-                class="MuiCardHeader-root Cards-cardHeaderPrimary-6"
+                class="MuiCardHeader-root Cards-cardHeaderPrimary-6 css-185gdzj-MuiCardHeader-root"
                 style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
               >
                 <div
-                  class="MuiCardHeader-content"
+                  class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
                 >
                   <h2
-                    class="MuiTypography-root MuiCardHeader-title MuiTypography-h5 MuiTypography-colorInherit MuiTypography-displayBlock"
+                    class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
                     data-testid="promo-panel-header"
                   >
                     <div
-                      class="MuiGrid-root MuiGrid-container"
+                      class="MuiGrid-root MuiGrid-container css-11lq3yg-MuiGrid-root"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-10"
+                        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-10 css-17p3wh3-MuiGrid-root"
                         style="overflow: hidden; text-overflow: ellipsis;"
                       >
                         Title Preview
@@ -89,18 +84,18 @@ Object {
                   </h2>
                 </div>
                 <div
-                  class="MuiCardHeader-action"
+                  class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
                 />
               </div>
               <div
-                class="MuiCardContent-root"
+                class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
                 data-testid="promo-panel-content"
               >
                 <div
-                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1"
+                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-a5rdam-MuiGrid-root"
                 >
                   <div
-                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1vd824g-MuiGrid-root"
                   >
                     Content Preview
                   </div>
@@ -109,23 +104,19 @@ Object {
             </div>
             <div
               align="right"
-              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-13i4rnv-MuiGrid-root"
             >
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1mhlsgc-MuiButtonBase-root-MuiButton-root"
                 data-testid="admin-promopanel-preview-button-cancel"
                 id="admin-promopanel-preview-button-cancel"
                 style="margin-top: 10px;"
                 tabindex="0"
                 type="button"
               >
+                Close
                 <span
-                  class="MuiButton-label"
-                >
-                  Close
-                </span>
-                <span
-                  class="MuiTouchRipple-root"
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                 />
               </button>
             </div>
@@ -133,7 +124,7 @@ Object {
         </div>
       </div>
       <div
-        data-test="sentinelEnd"
+        data-testid="sentinelEnd"
         tabindex="0"
       />
     </div>

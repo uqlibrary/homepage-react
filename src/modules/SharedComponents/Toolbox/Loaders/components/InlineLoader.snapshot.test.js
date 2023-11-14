@@ -1,5 +1,7 @@
+import React from 'react';
 import { InlineLoader } from './InlineLoader';
 import InlineLoaderWithStyles from './InlineLoader';
+import { rtlRender } from '../../../../../../utils/test-utils';
 
 function setup(testProps = {}) {
     const props = {
@@ -8,7 +10,7 @@ function setup(testProps = {}) {
         // theme: { palette: { accent: { main: 'blue' } } },
         ...testProps,
     };
-    return getElement(InlineLoader, props);
+    return rtlRender(<InlineLoader {...props} />);
 }
 
 describe('Component InlineLoader', () => {
@@ -22,14 +24,15 @@ describe('Component InlineLoader', () => {
                 },
             },
         };
-        const wrapper = setup({ ...props });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        const { container } = setup({ ...props });
+        expect(container).toMatchSnapshot();
     });
 
     it('should render with styles', () => {
-        const wrapper = getElement(InlineLoaderWithStyles, {
+        const props = {
             message: 'InlineLoader Styled Test',
-        });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        };
+        const { container } = rtlRender(<InlineLoaderWithStyles {...props} />);
+        expect(container).toMatchSnapshot();
     });
 });

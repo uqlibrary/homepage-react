@@ -1,6 +1,6 @@
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 export const FILTER_STORAGE_NAME = 'spotlights-admin-filter-term'; // match to SpotlightsListAsTable
 
@@ -11,23 +11,27 @@ export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
 }
 
 export function getStartOfDayFormatted() {
-    return moment()
-        .startOf('day')
+    const BrisbaneZone = moment().tz('Australia/Brisbane');
+    BrisbaneZone.utcOffset(600);
+    return BrisbaneZone.startOf('day')
+        .add(1, 'minutes')
         .add(1, 'minutes')
         .format('YYYY-MM-DDTHH:mm');
 }
 
 export function getTimeEndOfDayFormatted() {
-    return moment()
-        .endOf('day')
-        .format('YYYY-MM-DDTHH:mm');
+    const BrisbaneZone = moment().tz('Australia/Brisbane');
+    BrisbaneZone.utcOffset(600);
+    return BrisbaneZone.endOf('day').format('YYYY-MM-DDTHH:mm');
 }
 
 // return the sunday after next monday
 // (next monday is the default start date, this is the default end date)
 export function getTimeSundayNextFormatted(baseDate = null) {
     const today = baseDate || moment();
+    // const todayUTC = today.utc();
     const monday = 1;
+
     return today
         .isoWeekday(monday)
         .add(13, 'days')
@@ -46,6 +50,7 @@ export function getTimeMondayComing(baseDate = null) {
 
 export function getTimeMondayMidnightNext(baseDate = null) {
     const today = baseDate || moment();
+    // const todayUTC = today.utc();
     const monday = 1;
     return today
         .isoWeekday(monday)

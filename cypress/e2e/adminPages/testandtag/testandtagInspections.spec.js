@@ -87,13 +87,11 @@ describe('Test and Tag Admin Inspection page', () => {
             it('should allow entry of new date', () => {
                 const invalidDate = today.add(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
                 const validDate = today.subtract(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
-                // console.log(invalidDate, validDate);
-                cy.data('event_panel-event-date-button').click();
-                cy.get('[role="dialog"]').should('exist');
-                cy.get('button')
-                    .contains('Cancel')
-                    .parent()
+                cy.data('event_panel-event-date-button')
+                    .children('button')
                     .click();
+                cy.get('[role="dialog"]').should('exist');
+                cy.get('body').type('{esc}');
                 cy.get('[role="dialog"]').should('not.exist');
 
                 cy.data('event_panel-event-date-input').clear();
@@ -499,11 +497,11 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.data('inspection-save-button').should('not.be.disabled');
                 cy.data('inspection-save-button').click();
                 cy.wait(2000);
-                cy.get('[role=presentation]').within(() => {
-                    cy.contains('Asset saved');
-                    cy.contains('UQL000298');
-                    cy.data('confirm-inspection-save-success').click();
-                });
+                cy.get('[data-testid="message-title"] > .MuiTypography-root');
+                cy.data('message-title').contains('Asset saved');
+                cy.get('.makeStyles-dialogBarcode-32 > [data-testid="saved-asset-id"]');
+                cy.data('saved-asset-id').contains('UQL000298');
+                cy.data('confirm-inspection-save-success').click();
 
                 cy.data('asset_selector-asset-panel-input').should('have.value', '');
             });

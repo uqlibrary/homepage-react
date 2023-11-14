@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'throttle-debounce';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 const rootId = 'debounced_text_field';
 const DEBOUNCE_INTERVAL = 250;
@@ -27,6 +27,7 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
 
     return (
         <TextField
+            variant="standard"
             onChange={debounceChange}
             value={internalValue}
             id={`${componentId}-input`}
@@ -37,8 +38,7 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
                 ...rest.inputProps,
                 'data-testid': `${componentId}-input`,
                 'data-fieldtype': rootId,
-            }}
-        />
+            }} />
     );
 };
 

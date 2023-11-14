@@ -13,7 +13,7 @@ import {
     SPOTLIGHTS_API_CURRENT,
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
-import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, STORAGE_ACCOUNT_KEYNAME } from 'config/general';
+import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
 import Cookies from 'js-cookie';
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010

@@ -1,18 +1,18 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from 'react-redux';
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Alert from '@material-ui/lab/Alert';
-import { useTheme } from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import Grid from '@mui/material/Unstable_Grid2';
+import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
+import { useTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
@@ -72,7 +72,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     });
 
     const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
+    const isMobileView = useMediaQuery(theme.breakpoints.down('md')) || false;
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
@@ -316,7 +316,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         )}
                         <Grid container spacing={3}>
-                            <Grid item padding={3} style={{ flex: 1 }}>
+                            <Grid item style={{ flex: 1 }}>
                                 <DataTable
                                     id={componentId}
                                     rows={list.data}
@@ -335,7 +335,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             className: classes.actionButtons,
                                         },
                                     }}
-                                    autoPageSize
                                     {...(config.form.sort ?? /* istanbul ignore next */ {})}
                                 />
                             </Grid>
@@ -436,7 +435,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
 
                         <Grid container spacing={3}>
                             <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                                <Grid item xs={12} sm={6} padding={3}>
+                                <Grid item xs={12} sm={6}>
                                     <Grid container spacing={3}>
                                         <Grid item xs={12}>
                                             <FormControlLabel
@@ -471,7 +470,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     </Grid>
                                 </Grid>
                             </AuthWrapper>
-                            <Grid item xs={12} sm={6} padding={3}>
+                            <Grid item xs={12} sm={6}>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>
                                         <FormControlLabel
@@ -554,7 +553,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     onClick={handlePrevStepButton}
                                     id={`${componentIdLower}-back-button`}
                                     data-testid={`${componentIdLower}-back-button`}
-                                    color={'default'}
                                     fullWidth={isMobileView}
                                 >
                                     {stepTwoLocale.button.previous}

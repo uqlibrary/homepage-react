@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import { DateTimePicker } from '@material-ui/pickers';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { default as locale } from 'locale/promopanel.locale';
 
 const moment = require('moment');
@@ -48,23 +49,24 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const handleChange = (event, startDate, endDate, setSaveEnabled, setStartDate, setEndDate) => value => {
-    if (event === 'start') {
-        if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
-            setSaveEnabled(false);
-        } else {
-            setSaveEnabled(true);
-        }
-        setStartDate(value.format('YYYY-MM-DD HH:mm'));
-    } else {
-        if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
-            setSaveEnabled(false);
-        } else {
-            setSaveEnabled(true);
-        }
-        setEndDate(value.format('YYYY-MM-DD HH:mm'));
-    }
-};
+// export const handleChange = (event, startDate, endDate, setSaveEnabled, setStartDate, setEndDate) => value => {
+//     console.log('Datelist The value is ', value, event, startDate);
+//     if (event === 'start') {
+//         if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
+//             setSaveEnabled(false);
+//         } else {
+//             setSaveEnabled(true);
+//         }
+//         setStartDate(value);
+//     } else {
+//         if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
+//             setSaveEnabled(false);
+//         } else {
+//             setSaveEnabled(true);
+//         }
+//         setEndDate(value);
+//     }
+// };
 
 export const handleGroupDateSave = (
     displayList,
@@ -79,6 +81,9 @@ export const handleGroupDateSave = (
     setConfirmationMode,
     setIsConfirmOpen,
 ) => {
+    const capturedStartDate = moment(moment(startDate).format('YYYY-MM-DD HH:mm:ss'));
+    const capturedEndDate = moment(moment(endDate).format('YYYY-MM-DD HH:mm:ss'));
+    const dateFormat = 'YYYY-MM-DD HH:mm:ss';
     let isValid = true;
     // Check against existing schedules already saved
     fullPromoPanelUserTypeList.map(schedules => {
@@ -90,11 +95,10 @@ export const handleGroupDateSave = (
                     if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
                         /* istanbul ignore else */
                         if (
-                            (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-                                moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
-                            (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
-                                /* istanbul ignore next */
-                                moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
+                            (capturedStartDate.isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
+                                capturedStartDate.isBefore(moment(schedule.panel_schedule_end_time))) ||
+                            (moment(schedule.panel_schedule_start_time).isSameOrAfter(capturedStartDate) &&
+                                moment(schedule.panel_schedule_start_time).isBefore(capturedEndDate))
                         ) {
                             isValid = false;
                             setConfirmationMessage(
@@ -115,10 +119,10 @@ export const handleGroupDateSave = (
         displayList.map((alloc, index) => {
             /* istanbul ignore else  */
             if (
-                ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
-                    moment(startDate).isBefore(moment(alloc.endDate))) ||
-                    (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
-                        moment(alloc.startDate).isBefore(moment(endDate)))) &&
+                ((capturedStartDate.isSameOrAfter(moment(alloc.startDate, dateFormat)) &&
+                    capturedStartDate.isBefore(moment(alloc.endDate, dateFormat))) ||
+                    (moment(alloc.startDate, dateFormat).isSameOrAfter(capturedStartDate) &&
+                        moment(alloc.startDate, dateFormat).isBefore(capturedEndDate))) &&
                 isValid &&
                 index !== scheduleChangeIndex &&
                 scheduleGroupIndex === alloc.groupNames
@@ -136,7 +140,10 @@ export const handleGroupDateSave = (
         });
 
     if (isValid) {
-        handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
+        handleSaveGroupDate(scheduleChangeIndex, {
+            start: capturedStartDate.format('YYYY-MM-DD HH:mm:ss'),
+            end: capturedEndDate.format('YYYY-MM-DD HH:mm:ss'),
+        });
     } else {
         setConfirmationMode('schedule');
         setIsConfirmOpen(true);
@@ -169,94 +176,19 @@ export const PromoPanelGroupDateSelector = ({
         setEndDate(defaultEndDate);
     }, [defaultStartDate, defaultEndDate]);
 
-    // const handleChange = event => value => {
-    //     if (event === 'start') {
-    //         if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
-    //             setSaveEnabled(false);
-    //         } else {
-    //             setSaveEnabled(true);
-    //         }
-    //         setStartDate(value.format('YYYY-MM-DD HH:mm'));
-    //     } else {
-    //         if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
-    //             setSaveEnabled(false);
-    //         } else {
-    //             setSaveEnabled(true);
-    //         }
-    //         setEndDate(value.format('YYYY-MM-DD HH:mm'));
-    //     }
-    // };
-
     const handleGroupDateClose = () => {
         setStartDate(defaultStartDate);
         setStartDate(defaultEndDate);
         handleCloseGroupDate();
     };
 
-    // const handleGroupDateSave = () => {
-    //     let isValid = true;
-    //     // Check against existing schedules already saved
-    //     fullPromoPanelUserTypeList.map(schedules => {
-    //         /* istanbul ignore else */
-    //         if (schedules.usergroup_group === scheduleGroupIndex) {
-    //             schedules.scheduled_panels &&
-    //                 schedules.scheduled_panels.map(schedule => {
-    //                     /* istanbul ignore else */
-    //                     if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
-    //                         /* istanbul ignore else */
-    //                         if (
-    //                             (moment(startDate).isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-    //                                 moment(startDate).isBefore(moment(schedule.panel_schedule_end_time))) ||
-    //                             (moment(schedule.panel_schedule_start_time).isSameOrAfter(moment(startDate)) &&
-    //                                 /* istanbul ignore next */
-    //                                 moment(schedule.panel_schedule_start_time).isBefore(moment(endDate)))
-    //                         ) {
-    //                             isValid = false;
-    //                             setConfirmationMessage(
-    //                                 locale.form.scheduleConflict.alert(
-    //                                     scheduleGroupIndex,
-    //                                     schedule.panel_title,
-    //                                     schedule.panel_schedule_start_time,
-    //                                     schedule.panel_schedule_end_time,
-    //                                 ),
-    //                             );
-    //                         }
-    //                     }
-    //                 });
-    //         }
-    //     });
-    //     !!displayList &&
-    //         displayList.length > 0 &&
-    //         displayList.map((alloc, index) => {
-    //             /* istanbul ignore else  */
-    //             if (
-    //                 ((moment(startDate).isSameOrAfter(moment(alloc.startDate)) &&
-    //                     moment(startDate).isBefore(moment(alloc.endDate))) ||
-    //                     (moment(alloc.startDate).isSameOrAfter(moment(startDate)) &&
-    //                         moment(alloc.startDate).isBefore(moment(endDate)))) &&
-    //                 isValid &&
-    //                 index !== scheduleChangeIndex &&
-    //                 scheduleGroupIndex === alloc.groupNames
-    //             ) {
-    //                 isValid = false;
-    //                 setConfirmationMessage(
-    //                     locale.form.scheduleConflict.alert(
-    //                         scheduleGroupIndex,
-    //                         `Schedule existing in this panel for ${scheduleGroupIndex}`,
-    //                         alloc.startDate,
-    //                         alloc.endDate,
-    //                     ),
-    //                 );
-    //             }
-    //         });
-
-    //     if (isValid) {
-    //         handleSaveGroupDate(scheduleChangeIndex, { start: startDate, end: endDate });
-    //     } else {
-    //         setConfirmationMode('schedule');
-    //         setIsConfirmOpen(true);
-    //     }
-    // };
+    React.useEffect(() => {
+        if (moment(startDate).isAfter(moment(endDate))) {
+            setSaveEnabled(false);
+        } else {
+            setSaveEnabled(true);
+        }
+    }, [startDate, endDate]);
 
     return (
         <React.Fragment>
@@ -269,26 +201,27 @@ export const PromoPanelGroupDateSelector = ({
                     id="lightboxTitle"
                     data-testid="panel-edit-date-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
-                    children={<p style={{ lineHeight: 1, margin: 0 }}>{'Edit Schedule Dates'}</p>}
+                    children={<h2 style={{ lineHeight: 1, margin: 0 }}>{'Edit Schedule Dates'}</h2>}
                 />
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item xs>
                             <DateTimePicker
-                                id="admin-promopanel-group-start-date"
-                                data-testid="admin-promopanel-group-start-date"
                                 value={startDate}
                                 label="Start date"
-                                onChange={handleChange(
-                                    'start',
-                                    startDate,
-                                    endDate,
-                                    setSaveEnabled,
-                                    setStartDate,
-                                    setEndDate,
-                                )}
-                                format="ddd D MMM YYYY h:mma"
-                                InputProps={{
+                                // onChange={handleChange(
+                                //     'start',
+                                //     startDate,
+                                //     endDate,
+                                //     setSaveEnabled,
+                                //     setStartDate,
+                                //     setEndDate,
+                                // )}
+                                onChange={newValue => setStartDate(newValue)}
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                inputProps={{
+                                    id: 'admin-promopanel-group-start-date',
+                                    'data-testid': 'admin-promopanel-group-start-date',
                                     style: {
                                         width: '100%',
                                         marginRight: 25,
@@ -299,9 +232,17 @@ export const PromoPanelGroupDateSelector = ({
                                 autoOk
                                 KeyboardButtonProps={{
                                     'aria-label': 'Start Date',
-                                    'data-testid': 'end-date-calendar',
+                                    'data-testid': 'start-date-calendar',
                                     id: 'start-date-calendar',
                                 }}
+                                renderInput={params => (
+                                    <TextField
+                                        variant="standard"
+                                        {...params}
+                                        id="admin-promopanel-form-start-date-edit-container"
+                                        data-testid="admin-promopanel-form-start-date-edit-container"
+                                    />
+                                )}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div
@@ -315,20 +256,21 @@ export const PromoPanelGroupDateSelector = ({
                         </Grid>
                         <Grid item xs align="left">
                             <DateTimePicker
-                                id="admin-promopanel-group-end-date"
-                                data-testid="admin-promopanel-group-end-date"
                                 value={endDate}
                                 label="End date"
-                                onChange={handleChange(
-                                    'end',
-                                    startDate,
-                                    endDate,
-                                    setSaveEnabled,
-                                    setStartDate,
-                                    setEndDate,
-                                )}
-                                format="ddd D MMM YYYY h:mma"
-                                InputProps={{
+                                // onChange={handleChange(
+                                //     'end',
+                                //     startDate,
+                                //     endDate,
+                                //     setSaveEnabled,
+                                //     setStartDate,
+                                //     setEndDate,
+                                // )}
+                                onChange={newValue => setEndDate(newValue)}
+                                inputFormat="ddd D MMM YYYY h:mm a"
+                                inputProps={{
+                                    id: 'admin-promopanel-group-end-date',
+                                    'data-testid': 'admin-promopanel-group-end-date',
                                     style: {
                                         width: '100%',
                                         marginRight: 25,
@@ -338,10 +280,18 @@ export const PromoPanelGroupDateSelector = ({
                                 todayLabel={'Today'}
                                 autoOk
                                 KeyboardButtonProps={{
-                                    'aria-label': 'Start Date',
+                                    'aria-label': 'End Date',
                                     'data-testid': 'end-date-calendar',
                                     id: 'end-date-calendar',
                                 }}
+                                renderInput={params => (
+                                    <TextField
+                                        {...params}
+                                        variant="standard"
+                                        id="admin-promopanel-form-end-date-edit-container"
+                                        data-testid="admin-promopanel-form-end-date-edit-container"
+                                    />
+                                )}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div

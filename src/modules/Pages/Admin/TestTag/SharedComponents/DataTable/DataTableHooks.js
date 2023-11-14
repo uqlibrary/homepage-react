@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import ActionCell from './ActionCell';
 
 const useStyles = makeStyles(() => ({

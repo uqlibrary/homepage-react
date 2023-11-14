@@ -6,7 +6,8 @@ describe('Test and Tag Manage Users', () => {
         cy.visit('http://localhost:2020/admin/testntag/manage/users?user=uqtesttag');
     });
     const getFieldValue = (dataField, rowIndex, colIndex) =>
-        cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 
     const forcePageRefresh = () => {
         cy.data('test_tag_header-navigation-dashboard').click();

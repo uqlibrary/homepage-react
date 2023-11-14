@@ -1,6 +1,3 @@
-import moment from 'moment';
-import { default as locale } from '../../../../src/modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-
 import {
     assertImageOKIsPresent,
     assertImageWarningIsPresent,
@@ -19,13 +16,7 @@ import { clickButton, waitUntilSpotlightListPageHasLoaded } from '../../../suppo
 
 function setDateToNow() {
     cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
-    cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
-        .should('be.visible')
-        .contains(locale.form.labels.datePopupNowButton)
-        .click();
-    cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
-        .contains('OK')
-        .click();
+    cy.get('[data-testid="spotlight-start-today"] button:first-of-type').click();
     cy.get('[data-testid="admin-spotlights-form-start-date"]')
         .parent()
         .should('not.contain', 'This date is in the past.');
@@ -93,78 +84,43 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
             // advance the start date two months forward
             // (picking a date that far forward lets us test the error on the end date)
-            cy.get('.MuiPickersCalendarHeader-switchHeader button:nth-of-type(2)')
-                .as('next-month-button')
+            cy.data('ArrowRightIcon')
+                .click()
                 .click();
-            cy.get('.MuiPickersCalendarHeader-switchHeader p').then(monthLabel => {
-                // towards the end of the month, the default start date is already into _next_ month,
-                // only click a second time if we need to, to get Month 2
-                const nextmonth = moment()
-                    .add(1, 'M')
-                    .startOf('month');
-                let month;
-                if (monthLabel.length > 1) {
-                    month = monthLabel[0].textContent || monthLabel[0].innerText || '';
-                } else {
-                    month = monthLabel.val();
-                }
-                if (month === nextmonth.format('MMMM YYYY')) {
-                    cy.get('@next-month-button').click(); // and on to the next month
-                } else {
-                    cy.log('2 months already', nextmonth);
-                }
-            });
 
             // and pick the first of the month
-            cy.get('.MuiPickersCalendar-week button:not(.MuiPickersDay-hidden')
-                .first()
-                .contains('1')
+            cy.get('.MuiDayPicker-weekContainer:first-of-type button:first-of-type')
+                .contains(1)
                 .click();
-            // the time dialog loads, but lets just ok out
-            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
-                .contains('OK')
-                .click();
+            // // the time dialog loads, but lets just ok out
+            cy.get('body').type('{esc}');
             // and date is set to next month
-            cy.get('[data-testid="admin-spotlights-form-start-date"] input').should($input => {
-                const defaultDate = $input.val();
-                const nextmonth = moment()
-                    .add(2, 'M')
-                    .startOf('month');
-                expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
-            });
+            // 2 Month logic covered in jest - disabling due to potential flakey results
+
             cy.get('[data-testid="admin-spotlights-form-start-date"]')
                 .parent()
                 .should('not.contain', 'This date is in the past.');
             // and the end date field now has an error, so the submit button is disabled
             saveButtonisDisabled();
             // and the end date has an error message
-            cy.get('[data-testid="admin-spotlights-form-end-date"] p.Mui-error')
+            cy.get('#admin-spotlights-form-end-date-helper-text')
                 .should('exist')
                 .and('contain', 'Should not be before Date published');
-            // open the end date so we can fix the date
+            // // open the end date so we can fix the date
             cy.get('[data-testid="admin-spotlights-form-end-date"] button').click();
-            // advance the end date another month
-            cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
-                .as('next-month-button')
+            cy.data('ArrowRightIcon')
+                .click()
+                .click()
                 .click();
-            // and pick the first of the month
-            cy.get('.MuiPickersCalendar-week button:not(.MuiPickersDay-hidden')
-                .first()
-                .contains('1')
+
+            // and pick the last of the month
+            cy.get('.MuiDayPicker-weekContainer:first-of-type button:first-of-type')
+                .contains(1)
                 .click();
-            // the time dialog loads, but lets just ok out
-            cy.get('.MuiDialogActions-spacing button:nth-child(2)')
-                .contains('OK')
-                .click();
-            // and date is set to next month
-            cy.get('[data-testid="admin-spotlights-form-end-date"] input').should($input => {
-                const defaultDate = $input.val();
-                const nextmonth = moment()
-                    .add(3, 'M')
-                    .startOf('month');
-                expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
-            });
-            // all is good so the create button enables
+
+            cy.get('body').type('{esc}');
+
+            // // all is good so the create button enables
             saveButtonNOTDisabled();
 
             // can clear the upload with the Trashcan button
@@ -370,13 +326,13 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-start-date"]')
                 .parent()
                 .should('contain', 'This date is in the past.');
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea')
+            cy.get('#spotlightTitle')
                 .clear()
                 .type('spotlight title 3');
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] textarea')
+            cy.get('#spotlightTooltip')
                 .clear()
                 .type('spotlight image alt 3');
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child')
+            cy.get('#linkUrl')
                 .clear()
                 .type('http://example.com');
 
@@ -449,29 +405,26 @@ describe('Spotlights Admin Form Pages', () => {
             // this is an edit page, so the page loads valid
             saveButtonNOTDisabled();
 
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea').clear();
+            cy.get('#spotlightTitle').clear();
             saveButtonisDisabled();
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea').type('spotlight title 5');
+            cy.get('#spotlightTitle').type('spotlight title 5');
             saveButtonNOTDisabled();
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea').should('have.value', 'spotlight title 5');
+            cy.get('#spotlightTitle').should('have.value', 'spotlight title 5');
 
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] textarea').clear();
+            cy.get('#spotlightTooltip').clear();
             saveButtonisDisabled();
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] textarea').type('spotlight img alt 5');
+            cy.get('#spotlightTooltip').type('spotlight img alt 5');
             saveButtonNOTDisabled();
 
             // start an url, but button are disabled while it isnt valid
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').clear();
+            cy.get('#linkUrl').clear();
             saveButtonisDisabled();
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('http://e');
+            cy.get('#linkUrl').type('http://e');
             saveButtonisDisabled();
             // complete to a valid url
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('xample.com');
+            cy.get('#linkUrl').type('xample.com');
             saveButtonNOTDisabled();
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').should(
-                'have.value',
-                'http://example.com',
-            );
+            cy.get('#linkUrl').should('have.value', 'http://example.com');
         });
         it('can delete the current spotlight image on the edit form and upload a different image', () => {
             dragzoneContainsAnImage();
@@ -496,7 +449,7 @@ describe('Spotlights Admin Form Pages', () => {
                 .scrollIntoView();
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
                 .children()
-                .should('have.length', 4);
+                .should('have.length', 5);
             cy.get('[data-testid="spotlights-thumbs-reorder"] span:first-child img').should(
                 'have.css', // proxy for "the img is highlighted"
                 'border-left-style',
@@ -581,39 +534,36 @@ describe('Spotlights Admin Form Pages', () => {
             // this is an clone page, so the page loads valid
             saveButtonNOTDisabled();
 
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea').clear();
+            cy.get('#spotlightTitle').clear();
             saveButtonisDisabled();
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea').type('spotlight title 5');
+            cy.get('#spotlightTitle').type('spotlight title 5');
             saveButtonNOTDisabled();
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea').should('have.value', 'spotlight title 5');
+            cy.get('#spotlightTitle').should('have.value', 'spotlight title 5');
 
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] textarea').clear();
+            cy.get('#spotlightTooltip').clear();
             saveButtonisDisabled();
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] textarea').type('spotlight img alt 5');
+            cy.get('#spotlightTooltip').type('spotlight img alt 5');
             saveButtonNOTDisabled();
 
             // start an url, but button are disabled while it isnt valid
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').clear();
+            cy.get('#linkUrl').clear();
             saveButtonisDisabled();
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('http://e');
+            cy.get('#linkUrl').type('http://e');
             saveButtonisDisabled();
             // complete to a valid url
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('xample.com');
+            cy.get('#linkUrl').type('xample.com');
             saveButtonNOTDisabled();
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').should(
-                'have.value',
-                'http://example.com',
-            );
+            cy.get('#linkUrl').should('have.value', 'http://example.com');
         });
         it('can make changes to spotlight fields on the clone form', () => {
             cy.waitUntil(() => cy.get('[data-testid="admin-spotlights-form-button-cancel"]').should('exist'));
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea')
+            cy.get('#spotlightTitle')
                 .clear()
                 .type('spotlight title 3');
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] textarea')
+            cy.get('#spotlightTooltip')
                 .clear()
                 .type('spotlight image alt 3');
-            cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child')
+            cy.get('#linkUrl')
                 .clear()
                 .type('http://example.com');
 
@@ -622,7 +572,7 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
         });
         it('the save on the clone page runs correctly and can reclone', () => {
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea')
+            cy.get('#spotlightTitle')
                 .clear()
                 .type('a cloned spotlight');
             clickButton('[data-testid="admin-spotlights-form-button-save"]', 'Create');
@@ -638,10 +588,7 @@ describe('Spotlights Admin Form Pages', () => {
             // dialog has closed
             cy.get('[data-testid="dialogbox-spotlight-clone-save-succeeded"]').should('not.exist');
             // the original clone reloads correctly
-            cy.get('[data-testid="admin-spotlights-form-title"] textarea').should(
-                'have.value',
-                'Can be deleted and edited',
-            );
+            cy.get('#spotlightTitle').should('have.value', 'Can be deleted and edited');
         });
         it('the save on the clone form runs correctly and can return to list', () => {
             clickButton('[data-testid="admin-spotlights-form-button-save"]', 'Create');

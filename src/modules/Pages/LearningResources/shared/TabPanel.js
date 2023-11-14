@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 export const TabPanel = props => {
     const { children, value, tabId, index, label, ...other } = props;

@@ -79,7 +79,7 @@ context('The Homepage Learning Resource Panel', () => {
         const learningResourceSearchSuggestionsWithACCT = learningResourceSearchSuggestions.filter(item =>
             item.name.startsWith('ACCT11'),
         );
-        cy.get('ul#homepage-learningresource-autocomplete-popup')
+        cy.get('ul#homepage-learningresource-autocomplete-listbox')
             .children()
             .should('have.length', learningResourceSearchSuggestionsWithACCT.length + 1); // add one for title
         // user clicks on #1, ACCT1101
@@ -129,7 +129,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get('div[data-testid=learning-resources-panel] form input')
             .clear()
             .type('ACCT1101');
-        cy.get('ul#homepage-learningresource-autocomplete-popup')
+        cy.get('ul#homepage-learningresource-autocomplete-listbox')
             .children()
             .should('have.length', 1 + 1); // add one for title
     });

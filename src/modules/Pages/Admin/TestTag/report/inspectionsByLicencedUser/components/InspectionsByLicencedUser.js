@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
 
-import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import makeStyles from '@mui/styles/makeStyles';
+
+import Grid from '@mui/material/Unstable_Grid2';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import TextField from '@mui/material/TextField';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -182,9 +185,10 @@ const InspectionsByLicencedUser = ({
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={4}>
                             {/* Date Pickers go here */}
-                            <FormControl fullWidth className={classes.formControl}>
+                            <FormControl variant="standard" fullWidth className={classes.formControl}>
                                 <InputLabel>Inspector Name</InputLabel>
                                 <Select
+                                    variant="standard"
                                     id={`${componentIdLower}-user-name`}
                                     data-testid={`${componentIdLower}-user-name`}
                                     MenuProps={{
@@ -238,16 +242,13 @@ const InspectionsByLicencedUser = ({
                         </Grid>
                         <Grid item xs={12} md={4}>
                             {/* Start Date */}
-                            <KeyboardDatePicker
-                                id={`${componentIdLower}-tagged-start`}
-                                data-testid={`${componentIdLower}-tagged-start`}
+                            <DatePicker
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-start-input`,
                                     'data-testid': `${componentIdLower}-tagged-start-input`,
                                     'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
-                                format={locale.config.format.dateFormatNoTime}
-                                fullWidth
+                                inputFormat={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
@@ -259,26 +260,32 @@ const InspectionsByLicencedUser = ({
                                     (!!!startDate || (!!startDate && startDate.isValid())) &&
                                     handleStartDateChange(startDate)
                                 }
-                                error={startDateError.error}
-                                helperText={startDateError.error && startDateError.message}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                                 autoOk
+                                renderInput={params => (
+                                    <TextField
+                                        fullWidth
+                                        variant="standard"
+                                        {...params}
+                                        error={startDateError.error}
+                                        helperText={startDateError.error && startDateError.message}
+                                        id={`${componentIdLower}-tagged-start`}
+                                        data-testid={`${componentIdLower}-tagged-start`}
+                                    />
+                                )}
                             />
                         </Grid>
                         <Grid item xs={12} md={4}>
                             {/* End Date */}
-                            <KeyboardDatePicker
-                                id={`${componentIdLower}-tagged-end`}
-                                data-testid={`${componentIdLower}-tagged-end`}
+                            <DatePicker
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-end-input`,
                                     'data-testid': `${componentIdLower}-tagged-end-input`,
                                     'aria-labelledby': `${componentIdLower}-tagged-start-label`,
                                 }}
-                                format={locale.config.format.dateFormatNoTime}
-                                fullWidth
+                                inputFormat={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: classes.datePickerRoot }}
                                 disableToolbar
@@ -289,17 +296,26 @@ const InspectionsByLicencedUser = ({
                                 onChange={endDate =>
                                     (!!!endDate || (!!endDate && endDate.isValid())) && handleEndDateChange(endDate)
                                 }
-                                helperText={endDateError.error && endDateError.message}
-                                error={endDateError.error}
                                 KeyboardButtonProps={{
                                     'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                                 autoOk
+                                renderInput={params => (
+                                    <TextField
+                                        fullWidth
+                                        variant="standard"
+                                        {...params}
+                                        helperText={endDateError.error && endDateError.message}
+                                        error={endDateError.error}
+                                        id={`${componentIdLower}-tagged-end`}
+                                        data-testid={`${componentIdLower}-tagged-end`}
+                                    />
+                                )}
                             />
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} className={classes.tableMarginTop}>
-                        <Grid item padding={3} style={{ flex: 1 }}>
+                        <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

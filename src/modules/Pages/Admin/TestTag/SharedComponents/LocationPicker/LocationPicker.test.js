@@ -1,6 +1,6 @@
 import React from 'react';
 import LocationPicker, { GridWrapper, getBuildingLabel } from './LocationPicker';
-import { render, act, fireEvent } from 'test-utils';
+import { render, rtlRender, act, fireEvent } from 'test-utils';
 import siteList from '../../../../../../data/mock/data/testing/testTagSites';
 import floorList from '../../../../../../data/mock/data/testing/testTagFloors';
 import roomList from '../../../../../../data/mock/data/testing/testTagRooms';
@@ -34,7 +34,7 @@ const defaultLocale = {
 
 const defaultLocation = { site: -1, building: -1, floor: -1, room: -1 };
 
-function setup(testProps = {}, renderer = render) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, ...props } = testProps;
 
     const _state = {
@@ -364,10 +364,10 @@ describe('LocationPicker Renders component', () => {
 
         rerender(<GridWrapper divisor={4}>content</GridWrapper>);
         expect(document.querySelectorAll('div').length).toBe(2);
-        expect(document.querySelectorAll('div')[1]).toHaveClass('MuiGrid-grid-md-3');
+        expect(document.querySelectorAll('div')[1]).toHaveClass('MuiGrid2-grid-md-3');
 
         rerender(<GridWrapper divisor={3}>content</GridWrapper>);
-        expect(document.querySelectorAll('div')[1]).toHaveClass('MuiGrid-grid-md-4');
+        expect(document.querySelectorAll('div')[1]).toHaveClass('MuiGrid2-grid-md-4');
     });
 
     it('gets expected values from getBuildingLabel', () => {

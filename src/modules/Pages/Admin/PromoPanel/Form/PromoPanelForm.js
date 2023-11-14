@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { PromoPanelSaveConfirmation } from './PromoPanelSaveConfirmation';
 import PromoPanelPreview from '../PromoPanelPreview';
@@ -22,6 +22,8 @@ import PromoPanelFormConfirmation from './PromoPanelFormConfirmation';
 import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';
 import PromoPanelContentButtons from './PromoPanelContentButtons';
 import PromoPanelFormSchedules from './PromoPanelFormSchedules';
+
+const moment = require('moment');
 
 const useStyles = makeStyles(() => ({
     contentRequired: {
@@ -307,7 +309,7 @@ export const PromoPanelForm = ({
         if (['is_default_panel'].includes(prop)) {
             propValue = event.target.checked ? 1 : 0;
         } else if (['start', 'end'].includes(prop)) {
-            propValue = !!event && event.format('YYYY/MM/DD hh:mm a');
+            propValue = !!event && event;
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
         }
@@ -342,7 +344,7 @@ export const PromoPanelForm = ({
         setScheduleChangeIndex(idx);
         setScheduleGroupIndex(displayList[idx].groupNames);
         setPanelScheduleId(displayList[idx].id);
-        setEditDate({ start: displayList[idx].startDate, end: displayList[idx].endDate });
+        setEditDate({ start: moment(displayList[idx].startDate), end: moment(displayList[idx].endDate) });
         setIsEditingDate(true);
     };
 
@@ -382,6 +384,7 @@ export const PromoPanelForm = ({
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <FormControl
+                                variant="standard"
                                 className={classes.typingArea}
                                 fullWidth
                                 title={locale.form.tooltips.adminNotesField}
@@ -405,6 +408,7 @@ export const PromoPanelForm = ({
                                 {locale.form.labels.titleLabel}
                             </Typography>
                             <FormControl
+                                variant="standard"
                                 className={classes.typingArea}
                                 fullWidth
                                 title={locale.form.tooltips.titleField}

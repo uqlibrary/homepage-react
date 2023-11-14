@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { KeyboardDatePicker } from '@material-ui/pickers';
-import Collapse from '@material-ui/core/Collapse';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import TextField from '@mui/material/TextField';
+import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import clsx from 'clsx';
 
 import locale from '../../testTag.locale';
@@ -49,6 +50,7 @@ const EventPanel = ({
     };
 
     const updateEventDate = newDate => {
+        console.log('Test change', newDate);
         const manualDate = moment(newDate).isBefore(moment(), 'day');
         handleChange('action_date')(newDate);
         handleChange('isManualDate')(manualDate);
@@ -75,6 +77,7 @@ const EventPanel = ({
                     onClick={() => setEventExpanded(!eventExpanded)}
                     id={`${componentIdLower}-expand-button`}
                     data-testid={`${componentIdLower}-expand-button`}
+                    size="large"
                 >
                     <ExpandMoreIcon />
                 </IconButton>
@@ -84,10 +87,8 @@ const EventPanel = ({
             <Collapse in={eventExpanded} timeout="auto">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={3}>
-                        <KeyboardDatePicker
+                        <DatePicker
                             {...pageLocale.form.event.date}
-                            id={`${componentIdLower}-event-date`}
-                            data-testid={`${componentIdLower}-event-date`}
                             inputProps={{
                                 ...pageLocale.form.event.date.inputProps,
                                 id: `${componentIdLower}-event-date-input`,
@@ -98,7 +99,7 @@ const EventPanel = ({
                                 'data-testid': `${componentIdLower}-event-date-dialog`,
                             }}
                             InputLabelProps={{ shrink: true, htmlFor: `${componentIdLower}-event-date-input` }}
-                            format={pageLocale.config.dateFormatDisplay}
+                            inputFormat={pageLocale.config.dateFormatDisplay}
                             rifmFormatter={val => val.replace(/[^a-zA-Z0-9\s]+/gi, '')}
                             refuse={/[^a-zA-Z0-9\s]+/gi}
                             minDate={startDate}
@@ -108,12 +109,17 @@ const EventPanel = ({
                             value={actionDate}
                             onChange={updateEventDate}
                             required
-                            fullWidth={isMobileView}
-                            KeyboardButtonProps={{
-                                'aria-label': 'Event date',
-                                id: `${componentIdLower}-event-date-button`,
-                                'data-testid': `${componentIdLower}-event-date-button`,
-                            }}
+                            renderInput={params => (
+                                <TextField
+                                    fullWidth={isMobileView}
+                                    variant="standard"
+                                    id={`${componentIdLower}-event-date`}
+                                    data-testid={`${componentIdLower}-event-date`}
+                                    {...params}
+                                    helperText={params.error ? pageLocale.form.event.date.maxDateMessage : null}
+                                />
+                            )}
+                            InputAdornmentProps={{ 'data-testid': `${componentIdLower}-event-date-button` }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>

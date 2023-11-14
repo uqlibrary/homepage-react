@@ -2,7 +2,7 @@ import React from 'react';
 import locale from './PaymentRecept.locale';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { pathConfig } from '../../../config/pathConfig';
 import queryString from 'query-string';
 export const PaymentReceipt = () => {

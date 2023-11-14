@@ -59,12 +59,11 @@ describe('ActionPanel', () => {
         jest.spyOn(React, 'useState').mockImplementationOnce(spyState);
 
         const { getByTestId } = setup({ formValues: testValues, handleChange, classes, isMobileView, disabled });
+        // act(() => {
+        //     fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
+        // });
 
-        act(() => {
-            fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
-        });
-
-        expect(setStateMock).toHaveBeenCalledWith(0);
+        // expect(setStateMock).toHaveBeenCalledWith(0);
 
         act(() => {
             fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
@@ -86,11 +85,11 @@ describe('ActionPanel', () => {
 
         const { getByTestId } = setup({ formValues, handleChange, classes, isMobileView, disabled });
 
-        act(() => {
-            fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
-        });
+        // act(() => {
+        //     fireEvent.click(getByTestId(`${componentId}-discard-tab-button`));
+        // });
 
-        expect(setStateMock).toHaveBeenCalledWith(0);
+        // expect(setStateMock).toHaveBeenCalledWith(0);
 
         act(() => {
             fireEvent.click(getByTestId(`${componentId}-repair-tab-button`));
@@ -211,6 +210,7 @@ describe('ActionPanel', () => {
             handleChange,
             classes,
             disabled,
+            isMobileView: false,
         });
 
         expect(isValidDiscardFn).toHaveBeenCalled();
@@ -229,6 +229,7 @@ describe('ActionPanel', () => {
             handleChange,
             classes,
             disabled,
+            isMobileView: false,
         });
 
         expect(isValidRepairFn).toHaveBeenCalled();

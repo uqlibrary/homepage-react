@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 import locale from '../../../testTag.locale';
 import { isEmptyStr } from '../../../helpers/helpers';
@@ -26,7 +26,7 @@ export default {
         },
         inspect_notes: {
             component: props => {
-                return <TextField {...props} multiline minRows={3} />;
+                return <TextField variant="standard" {...props} multiline minRows={3} />;
             },
             fieldParams: { canEdit: true, renderInTable: false },
         },
@@ -34,12 +34,12 @@ export default {
             component: (props, row) => {
                 return (
                     <TextField
+                        variant="standard"
                         {...props}
                         multiline
                         minRows={3}
                         disabled={row?.last_inspect_status !== locale.config.inspectStatus.failed ?? false}
-                        required={row?.last_inspect_status === locale.config.inspectStatus.failed ?? false}
-                    />
+                        required={row?.last_inspect_status === locale.config.inspectStatus.failed ?? false} />
                 );
             },
 
@@ -52,12 +52,12 @@ export default {
         discard_reason: {
             component: (props, row) => (
                 <TextField
+                    variant="standard"
                     {...props}
                     multiline
                     minRows={3}
                     disabled={row?.asset_status !== locale.config.assetStatus.discarded}
-                    required={row?.asset_status === locale.config.assetStatus.discarded}
-                />
+                    required={row?.asset_status === locale.config.assetStatus.discarded} />
             ),
             validate: (value, row) => {
                 // should return true if a validation error exists
@@ -68,12 +68,12 @@ export default {
         repairer_name: {
             component: (props, row) => (
                 <TextField
+                    variant="standard"
                     {...props}
                     multiline
                     minRows={3}
                     disabled={row?.asset_status !== locale.config.assetStatus.outforrepair}
-                    required={row?.asset_status === locale.config.assetStatus.outforrepair}
-                />
+                    required={row?.asset_status === locale.config.assetStatus.outforrepair} />
             ),
             validate: (value, row) => {
                 // should return true if a validation error exists

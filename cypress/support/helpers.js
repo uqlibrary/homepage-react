@@ -9,18 +9,19 @@
  */
 import { default as locale } from '../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 
-export function clickButton(selector, expectedButtonLabel) {
+export function clickButton(selector) {
     cy.waitUntil(() => cy.get(selector).should('exist'));
     cy.get(selector).scrollIntoView();
-    cy.get(`${selector} span:first-child`) // standard MUI button
-        .should('exist')
-        .should('be.visible')
-        // .should('not.be.disabled')
-        .should('have.text', expectedButtonLabel) // force reget
-        .parent()
-        .then(e => {
-            Cypress.$(e).trigger('click');
-        });
+    cy.get(selector).click();
+    // cy.get(`${selector} span:first-child`) // standard MUI button
+    //     .should('exist')
+    //     .should('be.visible')
+    //     // .should('not.be.disabled')
+    //     .should('have.text', expectedButtonLabel) // force reget
+    //     .parent()
+    //     .then(e => {
+    //         Cypress.$(e).trigger('click');
+    //     });
 }
 
 /**

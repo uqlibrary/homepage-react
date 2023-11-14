@@ -779,7 +779,6 @@ mock.onGet('exams/course/FREN1010/summary')
     // T&T SITES
     .onGet(routes.TEST_TAG_SITE_API().apiUrl)
     .reply(config => {
-        console.log('onget sites', testTag_siteList.data);
         return [200, testTag_siteList];
     })
 

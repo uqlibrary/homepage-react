@@ -7,7 +7,8 @@ describe('Test and Tag Report - Inspections due', () => {
     });
 
     const getFieldValue = (dataField, rowIndex, colIndex) =>
-        cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
+        cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 
     const forcePageRefresh = () => {
         cy.data('test_tag_header-navigation-dashboard').click();
@@ -52,25 +53,25 @@ describe('Test and Tag Report - Inspections due', () => {
         cy.data('location_picker-inspections-due-site-input').click();
         cy.get('#location_picker-inspections-due-site-option-1').click();
         // Check if number of results are correct
-        cy.get('.MuiTablePagination-caption').should('contain', '1-8 of 8');
+        cy.get('.MuiTablePagination-displayedRows').should('contain', '1–8 of 8');
         cy.data('location_picker-inspections-due-building-input').should('not.have.attr', 'disabled');
         // Change Building
         cy.data('location_picker-inspections-due-building-input').click();
         cy.get('#location_picker-inspections-due-building-option-1').click();
         // Check if number of results are correct
-        cy.get('.MuiTablePagination-caption').should('contain', '1-6 of 6');
+        cy.get('.MuiTablePagination-displayedRows').should('contain', '1–6 of 6');
         cy.data('location_picker-inspections-due-floor-input').should('not.have.attr', 'disabled');
         // Change Floor.
         cy.data('location_picker-inspections-due-floor-input').click();
         cy.get('#location_picker-inspections-due-floor-option-1').click();
         // Check if number of results are correct
-        cy.get('.MuiTablePagination-caption').should('contain', '1-4 of 4');
+        cy.get('.MuiTablePagination-displayedRows').should('contain', '1–4 of 4');
         cy.data('location_picker-inspections-due-room-input').should('not.have.attr', 'disabled');
         // Change Root.
         cy.data('location_picker-inspections-due-room-input').click();
         cy.get('#location_picker-inspections-due-room-option-1').click();
         // Check if number of results are correct
-        cy.get('.MuiTablePagination-caption').should('contain', '1-2 of 2');
+        cy.get('.MuiTablePagination-displayedRows').should('contain', '1–2 of 2');
         // does it change relevant pending/overdue colors?
         getFieldValue('asset_next_test_due_date', 1, 2)
             .invoke('attr', 'class')

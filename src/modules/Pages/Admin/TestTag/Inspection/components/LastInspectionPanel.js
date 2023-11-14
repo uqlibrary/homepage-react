@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import { useTheme } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@mui/styles/makeStyles';
+import { useTheme } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Typography from '@material-ui/core/Typography';
-import Collapse from '@material-ui/core/Collapse';
-import Chip from '@material-ui/core/Chip';
-import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
-import IconButton from '@material-ui/core/IconButton';
+import Typography from '@mui/material/Typography';
+import Collapse from '@mui/material/Collapse';
+import Chip from '@mui/material/Chip';
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
 import clsx from 'clsx';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { isEmptyStr } from '../../helpers/helpers';
 import locale from '../../testTag.locale';
@@ -32,7 +32,7 @@ const useTestPanelStyles = makeStyles(theme => ({
     },
     cardActive: props => ({
         borderColor: !props.pass ? theme.palette.error.main : theme.palette.success.main,
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             borderTopWidth: 10,
         },
         [theme.breakpoints.up('sm')]: {
@@ -55,7 +55,7 @@ const useTestPanelStyles = makeStyles(theme => ({
             width: 'auto',
             paddingRight: theme.spacing(1),
         },
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             paddingBottom: theme.spacing(1),
         },
     },
@@ -181,6 +181,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     aria-label={formLocale.aria.collapseButtonLabel}
                     onClick={() => !forceOpen && setTestPanelExpanded(!testPanelExpanded)}
                     disabled={disabled}
+                    size="large"
                 >
                     <ExpandMoreIcon />
                 </IconButton>

@@ -5,12 +5,12 @@ import { default as locale } from '../shared/learningResources.locale';
 import { SubjectBody } from '../shared/SubjectBody';
 import { TabPanel } from '../shared/TabPanel';
 import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
-import AppBar from '@material-ui/core/AppBar';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
+import AppBar from '@mui/material/AppBar';
+import Grid from '@mui/material/Grid';
+import { makeStyles } from '@mui/styles';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
 
 const useStyles = makeStyles(
     theme => ({

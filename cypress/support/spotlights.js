@@ -11,7 +11,7 @@ export function getFooterLabel(
     lowestRecordNumberDisplayedOnPage = 1,
 ) {
     // eg '1-5 of 34'
-    return `${lowestRecordNumberDisplayedOnPage}-${highestRecordNumberDisplayedOnPage} of ${totalCountRecordsAvailable}`;
+    return `${lowestRecordNumberDisplayedOnPage}–${highestRecordNumberDisplayedOnPage} of ${totalCountRecordsAvailable}`;
 }
 
 export function dragzoneIsReadyForDrag() {
@@ -67,9 +67,8 @@ export function assertImageWarningIsPresent(dataTestid, isUpload = true) {
 export function assertImageOKIsPresent(dataTestid) {
     cy.get(`[data-testid="${dataTestid}"]`)
         .should('exist')
-        .should('contain', 'Dimensions: 813px by 298px (aspect ratio: 2.73).')
-        .find('svg path[d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"]')
-        .should('exist');
+        .should('contain', 'Dimensions: 813px by 298px (aspect ratio: 2.73).');
+    cy.data('DeleteIcon').should('exist');
 }
 
 export function removeImageFromDragzone() {
@@ -84,7 +83,7 @@ export function hasAWorkingHelpButton(idHelpButton = 'admin-spotlights-help-butt
     cy.get('[data-testid="help-drawer-title"]').should('not.exist');
 
     // click the help button
-    clickButton(`[data-testid="${idHelpButton}"]`, 'Help');
+    clickButton(`[data-testid="${idHelpButton}"]`);
 
     // we can see the help contents
     cy.get('[data-testid="help-drawer-title"]').scrollIntoView();

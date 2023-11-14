@@ -1,8 +1,8 @@
 import React from 'react';
 
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
 
@@ -17,6 +17,7 @@ export default {
             label: 'User ID',
             component: (props, data) => (
                 <TextField
+                    variant="standard"
                     {...props}
                     disabled={data?.isSelf}
                     required
@@ -34,6 +35,7 @@ export default {
         user_name: {
             component: props => (
                 <TextField
+                    variant="standard"
                     {...props}
                     required
                     helperText={props.error ? locale.pages.manage.users.helperText.user_name : null}
@@ -60,6 +62,7 @@ export default {
             component: (props, data, row) => {
                 return (
                     <TextField
+                        variant="standard"
                         required={data?.can_inspect_cb}
                         disabled={
                             !data?.can_inspect_cb || (data?.can_inspect_cb && !isEmptyStr(row?.user_licence_number))

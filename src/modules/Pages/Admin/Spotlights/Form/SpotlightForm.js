@@ -1,14 +1,15 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import { makeStyles } from '@material-ui/styles';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import { makeStyles } from '@mui/styles';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import TextField from '@mui/material/TextField';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -134,8 +135,8 @@ export const SpotlightForm = ({
 
     const [values, setValues] = useState({
         ...defaults,
-        start: defaults.startDateDefault,
-        end: defaults.endDateDefault,
+        start: moment(defaults.startDateDefault),
+        end: moment(defaults.endDateDefault),
         hasImage: defaults.type !== 'add',
     });
 
@@ -327,7 +328,8 @@ export const SpotlightForm = ({
     const handleChange = prop => event => {
         let propValue;
         if (['start', 'end'].includes(prop)) {
-            propValue = event.format('YYYY/MM/DD hh:mm a');
+            console.log('EVENT', event);
+            propValue = event; // event.format('YYYY/MM/DD hh:mm a');
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
             // fake switch because istanbul doesnt block on an else if in this version :(
@@ -466,6 +468,7 @@ export const SpotlightForm = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl
+                            variant="standard"
                             className={classes.typingArea}
                             fullWidth
                             title={locale.form.tooltips.adminNotesField}
@@ -485,6 +488,7 @@ export const SpotlightForm = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl
+                            variant="standard"
                             className={classes.typingArea}
                             fullWidth
                             title={locale.form.tooltips.linkDescAriaField}
@@ -507,7 +511,12 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl className={classes.typingArea} fullWidth title={locale.form.tooltips.imgAltField}>
+                        <FormControl
+                            variant="standard"
+                            className={classes.typingArea}
+                            fullWidth
+                            title={locale.form.tooltips.imgAltField}
+                        >
                             <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.imgAltField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
@@ -525,7 +534,12 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.linkField} className={classes.typingArea}>
+                        <FormControl
+                            variant="standard"
+                            fullWidth
+                            title={locale.form.tooltips.linkField}
+                            className={classes.typingArea}
+                        >
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.linkField}</InputLabel>
                             <Input
                                 type="url"
@@ -541,41 +555,79 @@ export const SpotlightForm = ({
                         </FormControl>
                     </Grid>
                 </Grid>
+                {console.log(values.start)}
                 <Grid container spacing={2} style={{ marginTop: 12 }}>
                     <Grid item md={5} xs={12}>
-                        <KeyboardDateTimePicker
-                            id="admin-spotlights-form-start-date"
-                            data-testid="admin-spotlights-form-start-date"
-                            value={values.start}
+                        <DateTimePicker
                             label={locale.form.labels.publishDate}
+                            value={values.start}
                             onChange={handleChange('start')}
                             minDate={defaults.minimumDate}
-                            format="DD/MM/YYYY HH:mm a"
-                            showTodayButton
-                            todayLabel={locale.form.labels.datePopupNowButton}
-                            autoOk
-                            KeyboardButtonProps={{
-                                'aria-label': locale.form.tooltips.publishDate,
+                            inputFormat="DD/MM/YYYY HH:mm a"
+                            inputProps={{
+                                label: locale.form.labels.publishDate,
+                                'aria-label': locale.form.labels.publishDate,
                             }}
+                            componentsProps={{
+                                actionBar: {
+                                    actions: ['today', 'accept'],
+                                    'data-testid': 'spotlight-start-today',
+                                },
+                            }}
+                            // KeyboardButtonProps={{
+                            //     'aria-label': locale.form.tooltips.publishDate,
+                            // }}
+                            renderInput={params => (
+                                <TextField
+                                    variant="standard"
+                                    {...params}
+                                    id="admin-spotlights-form-start-date"
+                                    data-testid="admin-spotlights-form-start-date"
+                                />
+                            )}
                         />
                         {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
                             <div className={classes.errorStyle}>This date is in the past.</div>
                         )}
                     </Grid>
                     <Grid item md={5} xs={12}>
-                        <KeyboardDateTimePicker
-                            id="admin-spotlights-form-end-date"
+                        <DateTimePicker
                             data-testid="admin-spotlights-form-end-date"
+                            value={values.end}
                             label={locale.form.labels.unpublishDate}
                             onChange={handleChange('end')}
-                            value={values.end}
                             minDate={values.start}
-                            format="DD/MM/YYYY HH:mm a"
-                            autoOk
-                            KeyboardButtonProps={{
-                                'aria-label': locale.form.tooltips.unpublishDate,
+                            inputFormat="DD/MM/YYYY HH:mm a"
+                            inputProps={{
+                                id: 'admin-spotlights-form-end-date',
+                                'data-testid': 'admin-spotlights-form-end-date',
+                                label: locale.form.labels.unpublishDate,
+                                'aria-label': locale.form.labels.unpublishDate,
+                            }}
+                            // KeyboardButtonProps={{
+                            //     'aria-label': locale.form.tooltips.unpublishDate,
+                            // }}
+                            componentsProps={{
+                                actionBar: {
+                                    actions: ['today', 'accept'],
+                                    'data-testid': 'spotlight-end-today',
+                                },
                             }}
                             minDateMessage="Should not be before Date published"
+                            renderInput={props => (
+                                <TextField
+                                    variant="standard"
+                                    {...props}
+                                    helperText={
+                                        values.end && values.end < values.start
+                                            ? 'Should not be before Date published.'
+                                            : ''
+                                    }
+                                    error={values.end && values.end < values.start}
+                                    id="admin-spotlights-form-end-date"
+                                    data-testid="admin-spotlights-form-end-date"
+                                />
+                            )}
                         />
                     </Grid>
                 </Grid>
@@ -594,7 +646,9 @@ export const SpotlightForm = ({
                             currentSpotlights={currentSpotlights}
                             currentSpotlightsLoading={spotlightsLoading}
                             defaultWeight={
-                                defaults.type === 'edit' && originalValues.start === values.start ? values.weight : 1000
+                                defaults.type === 'edit' && originalValues.start === values.start
+                                    ? /* istanbul ignore next */ values.weight
+                                    : 1000
                             }
                             currentValues={values}
                             updateWeightInValues={updateWeightInValues}

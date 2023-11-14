@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Clear from '@material-ui/icons/Clear';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@mui/material/Unstable_Grid2';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Clear from '@mui/icons-material/Clear';
 
 import DataTable from './../../../SharedComponents/DataTable/DataTable';
 import { useDataTableRow, useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
@@ -205,7 +205,7 @@ const FilterDialog = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid item padding={3} style={{ flex: 1 }}>
+                        <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={rootId}
                                 rows={row}
@@ -227,7 +227,6 @@ const FilterDialog = ({
                                 onClick={handleCancelAction}
                                 id={`${componentId}-cancel-button`}
                                 data-testid={`${componentId}-cancel-button`}
-                                color={'default'}
                                 fullWidth={isMobileView}
                             >
                                 {locale.button.cancel}

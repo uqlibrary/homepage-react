@@ -4,27 +4,26 @@ exports[`Component Help Drawer should render correctly 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body
-    style="padding-right: 0px; overflow: hidden;"
+    style="padding-right: 1024px; overflow: hidden;"
   >
     <div
       aria-hidden="true"
     />
     <div
-      class="MuiDrawer-root MuiDrawer-modal makeStyles-drawer-1"
+      class="MuiDrawer-root MuiDrawer-modal makeStyles-drawer-1 MuiModal-root css-1u2w381-MuiModal-root-MuiDrawer-root"
       role="presentation"
-      style="position: fixed; z-index: 1300; right: 0px; bottom: 0px; top: 0px; left: 0px;"
     >
       <div
         aria-hidden="true"
-        class="MuiBackdrop-root"
+        class="MuiBackdrop-root MuiModal-backdrop css-sox5kk-MuiBackdrop-root"
         style="opacity: 1; webkit-transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
       />
       <div
-        data-test="sentinelStart"
+        data-testid="sentinelStart"
         tabindex="0"
       />
       <div
-        class="MuiPaper-root MuiDrawer-paper MuiDrawer-paperAnchorRight MuiPaper-elevation16"
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation16 MuiDrawer-paper MuiDrawer-paperAnchorRight css-1160xiw-MuiPaper-root-MuiDrawer-paper"
         tabindex="-1"
       >
         <div
@@ -323,26 +322,22 @@ Object {
           </div>
           <div>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-t41e4y-MuiButtonBase-root-MuiButton-root"
               data-testid="promopanel-helpdrawer-close-button"
               id="promopanel-helpdrawer-close-button"
               tabindex="0"
               type="button"
             >
+              Close
               <span
-                class="MuiButton-label"
-              >
-                Close
-              </span>
-              <span
-                class="MuiTouchRipple-root"
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
           </div>
         </div>
       </div>
       <div
-        data-test="sentinelEnd"
+        data-testid="sentinelEnd"
         tabindex="0"
       />
     </div>

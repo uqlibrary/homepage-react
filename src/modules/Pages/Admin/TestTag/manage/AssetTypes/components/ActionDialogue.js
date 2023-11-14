@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Alert from '@material-ui/lab/Alert';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@mui/material/Grid';
+import FormControl from '@mui/material/FormControl';
+import Typography from '@mui/material/Typography';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import locale from '../../../testTag.locale';
 
@@ -68,7 +68,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                 data-testid={`${componentId}-content`}
             >
                 <Typography component={'p'}>{pageLocale.deleteReassignTargetPrompt(row?.asset_type_name)}</Typography>
-                <FormControl fullWidth>
+                <FormControl variant="standard" fullWidth>
                     <InputLabel
                         shrink
                         required
@@ -78,6 +78,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                         {pageLocale.newAssetTypePrompt}
                     </InputLabel>
                     <Select
+                        variant="standard"
                         id={`${componentId}-reassign`}
                         data-testid={`${componentId}-reassign`}
                         MenuProps={{
@@ -122,10 +123,10 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                     <Grid item xs={12} sm={6} container justifyContent="flex-start">
                         <Button
                             variant="outlined"
+                            color="secondary"
                             onClick={onCancel}
                             id={`${componentId}-cancel-button`}
                             data-testid={`${componentId}-cancel-button`}
-                            color={'default'}
                             disabled={!!isBusy}
                         >
                             {pageLocale.cancelButtonLabel}
@@ -137,7 +138,6 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                             onClick={() => onProceed(row.asset_type_id, selectedAssetType)}
                             id={`${componentId}-action-button`}
                             data-testid={`${componentId}-action-button`}
-                            color={'default'}
                             disabled={!!isBusy || !!!selectedAssetType || row?.asset_type_id === selectedAssetType}
                         >
                             {isBusy ? (

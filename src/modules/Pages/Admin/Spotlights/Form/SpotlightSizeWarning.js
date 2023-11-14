@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import CheckIcon from '@material-ui/icons/Check';
-import Warning from '@material-ui/icons/Warning';
+import makeStyles from '@mui/styles/makeStyles';
+import CheckIcon from '@mui/icons-material/Check';
+import Warning from '@mui/icons-material/Warning';
 
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
