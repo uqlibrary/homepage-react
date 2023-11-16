@@ -1,5 +1,5 @@
 describe('Past Exam Papers Pages', () => {
-    context('past exam paper search page', () => {
+    context('searching', () => {
         it('the past exam paper search page is accessible', () => {
             cy.visit('/exams');
             cy.injectAxe();
@@ -117,7 +117,7 @@ describe('Past Exam Papers Pages', () => {
                 .contains('Autocomplete suggestions currently unavailable - please try again later');
         });
     });
-    context('past exam paper result page', () => {
+    context('results', () => {
         it('the past exam paper result page is accessible', () => {
             cy.visit('/exams/course/fren');
             cy.injectAxe();
@@ -154,6 +154,22 @@ describe('Past Exam Papers Pages', () => {
             cy.get('[data-testid="exampaper-results-bodycell-1-2"]').contains('FREN2010');
             cy.get('[data-testid="exampaper-results-bodycell-1-2"]').contains('Final');
         });
+        it('the past exam paper result mobile page is correct', () => {
+            cy.visit('/exams/course/fren');
+            cy.viewport(414, 736);
+            cy.get('[data-testid="exampaper-mobilelink-0-0-0"]').should('contain', 'FREN1010 Sem.2 2020 (Sample)');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', 'FREN1010 Sem.1 2020 Paper A');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', 'FREN1010 Sem.1 2020 Paper B');
+            cy.get('[data-testid="exampaper-mobilelink-1-0-0"]').should('contain', 'FREN2010 Sem.1 2021');
+            cy.get('[data-testid="exampaper-mobilelink-1-2-0"]').should('contain', 'FREN2010 Sem.1 2019 Final');
+            cy.get('[data-testid="exampaper-mobilelink-4-1-0"]').should(
+                'contain',
+                'FREN2082 Sem.1 2020 a special french paper',
+            );
+            cy.get('[data-testid="exampaper-mobilelink-4-1-1"]').should('contain', 'FREN2082 Sem.1 2020 Paper 2');
+        });
+    });
+    context('search errors', () => {
         it('a search with no results shows a message', () => {
             cy.visit('/exams/course/empt');
             cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "EMPT"');
@@ -174,20 +190,6 @@ describe('Past Exam Papers Pages', () => {
             cy.get('div[data-testid="past-exam-paper-error"]')
                 .should('exist')
                 .contains('Past exam paper search is currently unavailable - please try again later');
-        });
-        it('the past exam paper result mobile page is correct', () => {
-            cy.visit('/exams/course/fren');
-            cy.viewport(414, 736);
-            cy.get('[data-testid="exampaper-mobilelink-0-0-0"]').should('contain', 'FREN1010 Sem.2 2020 (Sample)');
-            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', 'FREN1010 Sem.1 2020 Paper A');
-            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', 'FREN1010 Sem.1 2020 Paper B');
-            cy.get('[data-testid="exampaper-mobilelink-1-0-0"]').should('contain', 'FREN2010 Sem.1 2021');
-            cy.get('[data-testid="exampaper-mobilelink-1-2-0"]').should('contain', 'FREN2010 Sem.1 2019 Final');
-            cy.get('[data-testid="exampaper-mobilelink-4-1-0"]').should(
-                'contain',
-                'FREN2082 Sem.1 2020 a special french paper',
-            );
-            cy.get('[data-testid="exampaper-mobilelink-4-1-1"]').should('contain', 'FREN2082 Sem.1 2020 Paper 2');
         });
     });
 });
