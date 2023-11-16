@@ -79,10 +79,16 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     const classes = useStyles();
     useTitle(`${listTitle} - Library - The University of Queensland`);
 
+    let displayedCourseHint = '';
     useEffect(() => {
         /* istanbul ignore else */
         if (!!courseHint) {
             actions.loadExamSearch(courseHint);
+        }
+
+        // don't show the input unless it is shown to be valid
+        if (examSearchListError === false && courseHint.length > 0) {
+            displayedCourseHint = `(${courseHint})`;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courseHint]);
