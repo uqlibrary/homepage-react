@@ -158,7 +158,14 @@ describe('Past Exam Papers Pages', () => {
             cy.visit('/exams/course/empt');
             cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "EMPT"');
             cy.get('div[data-testid="past-exam-paper-missing"]').contains(
-                'We have not found any past exams for this course (EMPT) because either',
+                'We have not found any past exams for this course "EMPT" because either',
+            );
+        });
+        it('a search for a true 404 shows a message', () => {
+            cy.visit('/exams/course/mock404');
+            cy.get('div[id="content-container"]').contains('Past Exam Papers by Subject');
+            cy.get('div[data-testid="past-exam-paper-missing"]').contains(
+                'We have not found any past exams for this course because either',
             );
         });
         it('when the api fails I get an appropriate error message', () => {

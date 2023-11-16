@@ -20,10 +20,7 @@ import useTheme from '@mui/styles/useTheme';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { noResultsFoundBlock } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
-
-// import locale from './pastExamPaperList.locale';
-// import { isRepeatingString } from 'helpers/general';
+import { noResultsFoundBlock, MESSAGE_EXAMCODE_404 } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
 
 const useStyles = makeStyles(
     () => ({
@@ -99,8 +96,14 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             : /* istanbul ignore next */ null;
     }
 
+    // don't display the input unless it is shown to be valid
+    const displayedCourseHint = examSearchListError === false && courseHint.length > 0 ? `"${courseHint}"` : '';
+
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
+
+    const is404Error = !!examSearchListError && examSearchListError === MESSAGE_EXAMCODE_404;
+    const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
 
     return (
         <StandardPage>
@@ -117,7 +120,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                         </Grid>
                     </Grid>
                 )}
-                {!!examSearchListError && (
+                {!!isNon404Error && (
                     <Grid container spacing={2} className={classes.searchPanel} data-testid={'past-exam-paper-error'}>
                         <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
                             <span>Past exam paper search is currently unavailable - please try again later</span>
@@ -125,13 +128,14 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     </Grid>
                 )}
                 {!examSearchListLoading &&
-                    !examSearchListError &&
+                    !isNon404Error &&
                     ((!!examSearchList && !!examSearchList.papers && examSearchList.papers.length === 0) ||
                         !examSearchList ||
-                        !examSearchList.papers) && (
+                        !examSearchList.papers ||
+                        !!is404Error) && (
                         <Grid container>
                             <Grid item xs={12} data-testid="past-exam-paper-missing">
-                                {noResultsFoundBlock(courseHint)}
+                                {noResultsFoundBlock(displayedCourseHint)}
                             </Grid>
                         </Grid>
                     )}

@@ -724,6 +724,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, examSearch_DENT80];
     })
+    .onGet('exams/search/mock404')
+    .reply(() => {
+        return [404, []];
+    })
     .onGet('exams/search/empt') // this course code fragment does not return any results - mnemonic: empty
     .reply(() => {
         return [
@@ -735,6 +739,10 @@ mock.onGet('exams/course/FREN1010/summary')
                 papers: [],
             },
         ];
+    })
+    .onGet('exams/search/fail')
+    .reply(() => {
+        return [500, []];
     })
 
     /** TEST AND TAG ROUTES **/
@@ -1067,10 +1075,6 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API('.*').apiUrl)))
     .reply(() => [200, { status: 'OK' }])
-    .onGet('exams/search/fail')
-    .reply(() => {
-        return [500, []];
-    })
     .onGet(routes.TEST_TAG_USER_LIST_API().apiUrl)
     .reply(withDelay([200, test_tag_user_list]))
     .onPut(/test-and-tag\/user\/5/)
