@@ -29,7 +29,7 @@ const deployment = {
         environment: 'staging',
         basePath: '',
         publicPath: '/',
-        reusablejs: 'http://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js',
+        reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js',
     },
     production: {
         url: () => 'https://homepage-production.library.uq.edu.au/',
