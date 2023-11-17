@@ -127,9 +127,11 @@ context('Book Exam Booth page', () => {
         cy.get('[data-testid="session-length-option-90"]').click();
 
         // Choose a custom date
+        const intendedDate = '12';
+
         const bookingDate = moment()
             .add(1, 'month')
-            .date(10);
+            .date(intendedDate);
         cy.get('[data-testid="start-date"] input')
             .as('date-input')
             .should($input => {
@@ -148,7 +150,7 @@ context('Book Exam Booth page', () => {
             cy.get('@next-month-button').click();
         }
         cy.get('.MuiPickersDay-root')
-            .contains('10')
+            .contains(intendedDate)
             .click();
         cy.get('body').type('{esc}');
         cy.get('@date-input')
