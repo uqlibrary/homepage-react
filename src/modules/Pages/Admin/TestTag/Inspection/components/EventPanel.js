@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
