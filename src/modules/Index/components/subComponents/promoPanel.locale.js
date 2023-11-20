@@ -39,7 +39,7 @@ export const promoPanel = {
     apiError: {
         title: 'Message not found',
         content: (
-            <div>
+            <div style={{ lineHeight: 24, margin: 0 }}>
                 <p>We can’t display your library service message right now. Please refresh your browser or try again later.</p>
             </div>
         ),
