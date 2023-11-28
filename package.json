@@ -242,8 +242,8 @@
         "test:debug": "npm-run-all -p test jest-preview"
     },
     "engines": {
-        "npm": "^9.6.5",
-        "node": ">=18.18.2"
+        "npm": "^8",
+        "node": ">=16.13.2"
     },
     "babel": {
         "presets": [
