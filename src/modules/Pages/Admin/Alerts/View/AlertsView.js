@@ -236,7 +236,11 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 </InputLabel>
                             </Grid>
                             <Grid item sm={4} xs={12}>
-                                <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.priority.title}>
+                                <InputLabel
+                                    style={{ color: '#333' }}
+                                    title={locale.form.tooltips.priority.title}
+                                    // id="admin-alerts-view-select-priority-type-id"
+                                >
                                     {locale.form.labels.priority.title}
                                     <Select
                                         variant="standard"
@@ -244,7 +248,11 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                         // defaultValue={values.priority_type}
                                         value={values.priorityType}
                                         disabled
-                                        classes={{ root: classes.selectPriorityType }}>
+                                        classes={{ root: classes.selectPriorityType }}
+                                        inputProps={{
+                                            ['aria-label']: locale.form.tooltips.priority.title,
+                                        }}
+                                    >
                                         <MenuItem value={'info'}>{locale.form.labels.priority.level.info}</MenuItem>
                                         <MenuItem value={'urgent'}>{locale.form.labels.priority.level.urgent}</MenuItem>
                                         <MenuItem value={'extreme'}>

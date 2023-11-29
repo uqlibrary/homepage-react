@@ -12,6 +12,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useTitle } from 'hooks';
 
 import locale from './bookExamBooth.locale';
+import { componentId } from '../Admin/TestTag/Inspection/components/ActionPanel';
 
 const BookExamBooth = ({
     getBookingUrl,
@@ -248,6 +249,9 @@ const BookExamBooth = ({
                                         name="sessionLength"
                                         onChange={_handleSessionLengthChange}
                                         options={sessionLengthList}
+                                        inputProps={{
+                                            ['aria-label']: `${locale.sessionLength.label}`,
+                                        }}
                                     >
                                         {sessionLengthList.map((item, index) => {
                                             return (
@@ -283,12 +287,15 @@ const BookExamBooth = ({
                                     <br />
                                     <Select
                                         variant="standard"
-                                        aria-label={locale.startTimeHours.aria}
+                                        // aria-label={locale.startTimeHours.aria}
                                         data-testid="start-time-hours"
                                         defaultValue={defaultHour}
                                         id="startTimeHours"
                                         name="startTimeHours"
                                         onChange={_handleStartTimeHoursChange}
+                                        inputProps={{
+                                            ['aria-label']: `${locale.startTimeHours.aria}`,
+                                        }}
                                     >
                                         {startTimeHoursList.map((item, index) => {
                                             return (
@@ -305,13 +312,16 @@ const BookExamBooth = ({
                                     :{' '}
                                     <Select
                                         variant="standard"
-                                        aria-label={locale.startTimeMinutes.aria}
+                                        // aria-label={locale.startTimeMinutes.aria}
                                         data-testid="start-time-minutes"
                                         defaultValue={defaultMinute}
                                         id="startTimeMinutes"
                                         name="startTimeMinutes"
                                         onChange={_handleStartTimeMinutesChange}
                                         options={minutesList}
+                                        inputProps={{
+                                            ['aria-label']: `${locale.startTimeMinutes.aria}`,
+                                        }}
                                     >
                                         {minutesList.map((item, index) => {
                                             return (
