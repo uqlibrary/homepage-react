@@ -54,7 +54,7 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <Locations actions={actions} {...props} />
+            <Locations actions={actions} {...props} disableVirtualizationOverride />
         </WithReduxStore>,
     );
 }
@@ -89,6 +89,7 @@ describe('Locations', () => {
         jest.setTimeout(30000);
         it('renders component as expected', async () => {
             const { getByText, getByTestId } = setup({
+                disableVirtualizationOverride: true,
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),
@@ -247,7 +248,7 @@ describe('Locations', () => {
 
     describe('buildings', () => {
         jest.setTimeout(30000);
-        it('renders grid with buildings', async () => {
+        it.only('renders grid with buildings', async () => {
             const { getByText, getByTestId, getByRole } = setup({
                 isOpen: true,
                 actions: {
@@ -272,6 +273,7 @@ describe('Locations', () => {
 
             const grid = getByTestId('data_table-locations');
             assertHeader(grid, ['Building ID', 'Building name', 'No. assets']);
+            // here
             const cells1 = assertRow(grid, ['8102', 'J.K. Murray Library', '4'], 1);
             expect(within(cells1[3]).getByTestId('action_cell-8-edit-button')).not.toHaveAttribute('disabled');
             expect(within(cells1[3]).getByTestId('action_cell-8-delete-button')).toHaveAttribute('disabled');

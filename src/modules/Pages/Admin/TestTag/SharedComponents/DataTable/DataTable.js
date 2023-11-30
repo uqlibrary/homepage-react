@@ -58,9 +58,11 @@ const DataTable = ({
     height,
     defaultSortColumn,
     defaultSortDirection = 'asc',
+    disableVirtualizationOverride = false,
     classes = {},
     ...rest
 }) => {
+    console.log('disableVirtualizationOverride=', disableVirtualizationOverride);
     const componentId = `${rootId}-${id}`;
     delete rest.editMode;
     delete rest.getRowId;
@@ -91,9 +93,10 @@ const DataTable = ({
                     disableSelectionOnClick
                     hideFooterRowCount
                     hideFooterSelectedRowCount
-                    disableVirtualization={
-                        !!process?.env ?? /* istanbul ignore next */ false
-                    } /* required for jest tests */
+                    disableVirtualization={disableVirtualizationOverride}
+                    // disableVirtualization={
+                    //     !!process && !!process.env ? process.env : /* istanbul ignore next */ false
+                    // } /* required for jest tests */
                     getRowId={row => row?.[rowId]}
                     autoHeight
                     rowsPerPageOptions={[10, 25, 50, 100]}
@@ -124,6 +127,7 @@ DataTable.propTypes = {
     rowId: PropTypes.string.isRequired,
     defaultSortColumn: PropTypes.string,
     defaultSortDirection: PropTypes.oneOf(['asc', 'desc']),
+    disableVirtualizationOverride: PropTypes.bool,
     toolbarComponent: PropTypes.object,
     classes: PropTypes.object,
     autoHeight: PropTypes.bool,

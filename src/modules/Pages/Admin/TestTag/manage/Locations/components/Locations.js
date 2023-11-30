@@ -58,7 +58,7 @@ export const locationDataFieldKeys = {
     [locationType.room]: 'room_id_displayed',
 };
 
-const ManageLocations = ({ actions }) => {
+const ManageLocations = ({ actions, disableVirtualizationOverride }) => {
     useEffect(() => {
         actions.clearSites();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -326,6 +326,7 @@ const ManageLocations = ({ actions }) => {
                                 loading={store.siteListLoading || store.floorListLoading || store.roomListLoading}
                                 key={selectedLocation}
                                 {...(config[selectedLocation].sort ?? /* istanbul ignore next */ {})}
+                                disableVirtualizationOverride={disableVirtualizationOverride}
                             />
                         </Grid>
                     </Grid>
@@ -344,6 +345,11 @@ const ManageLocations = ({ actions }) => {
 
 ManageLocations.propTypes = {
     actions: PropTypes.object,
+    disableVirtualizationOverride: PropTypes.bool,
+};
+
+ManageLocations.defaultProps = {
+    disableVirtualizationOverride: false,
 };
 
 export default React.memo(ManageLocations);
