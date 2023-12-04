@@ -77,7 +77,7 @@
         "chalk": "2.4.1",
         "chromedriver": "^116.0.0",
         "cross-env": "^5.2.0",
-        "css-loader": "^2.1.1",
+        "css-loader": "^6.8.1",
         "css-mediaquery": "^0.1.2",
         "cypress": "^12.6.0",
         "cypress-axe": "^1.4.0",
