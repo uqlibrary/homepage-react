@@ -31,19 +31,19 @@ module.exports = {
         publicPath: `http://${url}:${port}/${publicPath}`,
     },
     devServer: {
-        client: {
-            logging: 'info',
-        },
+        // client: {
+        //     logging: 'info',
+        // },
         compress: true,
         // contentBase: __dirname,
-        devMiddleware: {
-            publicPath: `/${publicPath}`,
-            stats: 'errors-only',
-        },
+        // devMiddleware: {
+        //     publicPath: '/public', // `/${publicPath}`,
+        //     // stats: 'errors-only',
+        // },
         headers: { 'X-Custom-Header': 'yes' },
         historyApiFallback: true,
         host: url,
-        hot: true,
+        // hot: true,
         https: false,
         // inline: true,
         // lazy: false,
@@ -65,10 +65,10 @@ module.exports = {
                 },
             },
         },
-        static: {
-            directory: path.join(__dirname, 'public'),
-            watch: false,
-        },
+        // static: {
+        //     directory: path.join(__dirname, 'public'),
+        //     watch: false,
+        // },
     },
     module: {
         rules: [
@@ -168,6 +168,9 @@ module.exports = {
         new Dotenv(),
         new MomentTimezoneDataPlugin({
             matchZones: /^Australia\/Brisbane/,
+        }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
         }),
     ],
     resolve: {
