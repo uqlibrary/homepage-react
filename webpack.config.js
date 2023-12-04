@@ -29,6 +29,7 @@ module.exports = {
         path: resolve(__dirname),
         pathinfo: true,
         publicPath: `http://${url}:${port}/${publicPath}`,
+        // assetModuleFilename: 'images/[hash][ext][query]' // TBD
     },
     devServer: {
         // client: {
@@ -105,15 +106,7 @@ module.exports = {
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            outputPath: 'assets/',
-                            publicPath: 'assets/',
-                        },
-                    },
-                ],
+                type: 'asset/resource',
             },
         ],
     },
