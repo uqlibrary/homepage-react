@@ -181,6 +181,9 @@ module.exports = {
         alias: {
             '@material-ui/styles': resolve(__dirname, 'node_modules', '@material-ui/styles'),
         },
+        fallback: {
+            'process/browser': require.resolve('process/browser'),
+        },
     },
     optimization: {
         splitChunks: {
