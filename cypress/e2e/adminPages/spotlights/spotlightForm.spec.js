@@ -106,7 +106,8 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('#admin-spotlights-form-end-date-helper-text')
                 .should('exist')
                 .and('contain', 'Should not be before Date published');
-            // // open the end date so we can fix the date
+            // open the end date so we can fix the date
+            cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
             cy.get('[data-testid="admin-spotlights-form-end-date"] button').click();
             cy.data('ArrowRightIcon')
                 .click()
