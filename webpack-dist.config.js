@@ -159,10 +159,11 @@ const webpackConfig = {
             'process.env.TITLE_SUFFIX': JSON.stringify(config.titleSuffix),
             'process.env.GIT_SHA': JSON.stringify(process.env.CI_COMMIT_ID),
         }),
-        new webpack.IgnorePlugin({
-            resourceRegExp: /^\.\/locale$/,
-            contextRegExp: /moment$/,
-        }),
+        // // remove momentjs & locale
+        // new webpack.IgnorePlugin({
+        //     resourceRegExp: /^\.\/locale$/,
+        //     contextRegExp: /moment$/,
+        // }),
         new BundleAnalyzerPlugin({
             analyzerMode: config.environment === 'production' ? 'disabled' : 'static',
             openAnalyzer: !process.env.CI_BRANCH,
