@@ -125,6 +125,7 @@ describe('Promopanel Admin Form Pages', () => {
                 .click({ force: true });
             cy.get('body').type('{esc}');
 
+            cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
             cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
             cy.get('.MuiPickersCalendarHeader-labelContainer > .MuiButtonBase-root').click();
             cy.get('.MuiYearPicker-root')
@@ -188,6 +189,7 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('body').type('{esc}');
 
             // End Date
+            cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
             cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
             cy.get('.MuiPickersCalendarHeader-label').click();
             cy.get('.MuiYearPicker-root')
@@ -240,6 +242,7 @@ describe('Promopanel Admin Form Pages', () => {
                 .click({ force: true });
             cy.get('body').type('{esc}');
             // Error the end date
+            cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
             cy.get('[data-testid="admin-promopanel-form-end-date-edit-container"] .MuiButtonBase-root').click();
             cy.get('.MuiPickersCalendarHeader-labelContainer').click();
             cy.get('.MuiYearPicker-root')
