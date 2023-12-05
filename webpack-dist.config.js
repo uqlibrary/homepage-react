@@ -103,6 +103,7 @@ const webpackConfig = {
         path: resolve(__dirname, './dist/', config.basePath),
         filename: `frontend-js/${currentCommitHash}/[name]-[contenthash].min.js`,
         publicPath: config.publicPath,
+        // assetModuleFilename: 'images/[hash][ext][query]', // TBD
     },
     devServer: {
         contentBase: resolve(__dirname, './dist/', config.basePath),
@@ -181,6 +182,9 @@ const webpackConfig = {
                 });
             },
         },
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
     ],
     optimization: {
         splitChunks: {
@@ -221,15 +225,7 @@ const webpackConfig = {
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            outputPath: 'assets/',
-                            publicPath: '/assets/',
-                        },
-                    },
-                ],
+                type: 'asset/resource',
             },
             {
                 test: /\.js$/,
@@ -244,6 +240,9 @@ const webpackConfig = {
         modules: ['src', 'node_modules', 'custom_modules'],
         alias: {
             '@material-ui/styles': resolve(__dirname, 'node_modules', '@material-ui/styles'),
+        },
+        fallback: {
+            'process/browser': require.resolve('process/browser'),
         },
     },
     performance: {
