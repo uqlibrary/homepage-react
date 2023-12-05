@@ -165,12 +165,6 @@ to keep initial load to a minimum following optimisation has been added to the p
   })
   ```
 
-- remove momentjs locale:
-
-  ```javascript
-  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/);
-  ```
-
 ### Gotchas
 
 - Because FE is served from Cloudfront, add a behaviour to Cloudfront to serve any css/js filename patterns. E.g. behaviours have been
