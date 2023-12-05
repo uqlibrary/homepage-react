@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const chalk = require('chalk');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const WebpackStrip = require('strip-loader');
+// const WebpackStrip = require('strip-loader');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotstxtPlugin = require('robotstxt-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -106,7 +106,7 @@ const webpackConfig = {
         // assetModuleFilename: 'images/[hash][ext][query]', // TBD
     },
     devServer: {
-        contentBase: resolve(__dirname, './dist/', config.basePath),
+        static: resolve(__dirname, './dist/', config.basePath),
         compress: true,
         port: port,
         host: '0.0.0.0',
@@ -198,7 +198,7 @@ const webpackConfig = {
         },
         minimizer: [
             new TerserPlugin({
-                sourceMap: true,
+                // sourceMap: true,
                 parallel: true,
             }),
         ],
@@ -230,10 +230,10 @@ const webpackConfig = {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 type: 'asset/resource',
             },
-            {
-                test: /\.js$/,
-                loader: WebpackStrip.loader('console.log'),
-            },
+            // {
+            //     test: /\.js$/,
+            //     loader: WebpackStrip.loader('console.log'),
+            // },
         ],
     },
     resolve: {
