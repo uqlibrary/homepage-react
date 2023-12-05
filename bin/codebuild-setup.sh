@@ -23,3 +23,9 @@ npm ci
 printf "\n\n--- INSTALL JEST ---\n"
 echo "$ npm install --save-dev jest"
 npm install -g jest
+
+# temp debug only
+echo "ls ~/src/webpack-dist.config"
+ls ~/src/webpack-dist.config
+echo "cat ~/src/webpack-dist.config"
+cat ~/src/webpack-dist.config
