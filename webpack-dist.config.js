@@ -7,7 +7,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const chalk = require('chalk');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-// const WebpackStrip = require('strip-loader');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotstxtPlugin = require('robotstxt-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -196,10 +195,15 @@ const webpackConfig = {
             minChunks: 5,
             minSize: 40000,
         },
+        minimize: true,
         minimizer: [
             new TerserPlugin({
-                // sourceMap: true,
                 parallel: true,
+                terserOptions: {
+                    compress: {
+                        drop_console: config.removeConsoleLog,
+                    },
+                },
             }),
         ],
     },
@@ -230,10 +234,6 @@ const webpackConfig = {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 type: 'asset/resource',
             },
-            // {
-            //     test: /\.js$/,
-            //     loader: WebpackStrip.loader('console.log'),
-            // },
         ],
     },
     resolve: {
