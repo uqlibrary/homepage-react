@@ -159,7 +159,7 @@ describe('Promopanel Admin Form Pages', () => {
             testId('admin-promopanel-form-button-save').click();
             testId('admin-promopanel-group-button-save').click();
         });
-        it('can detect exiting schedule conflicts', () => {
+        it('can detect existing schedule conflicts', () => {
             // test
             cy.visit('http://localhost:2020/admin/promopanel/edit/8?user=uqstaff');
             cy.get('#group-multiple-checkbox').click();
@@ -172,6 +172,7 @@ describe('Promopanel Admin Form Pages', () => {
                 .contains('2091')
                 .click({ force: true });
             cy.get('body').type('{esc}');
+            cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
             cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
             cy.get('.MuiPickersCalendarHeader-label').click();
             cy.get('.MuiYearPicker-root')
@@ -190,6 +191,7 @@ describe('Promopanel Admin Form Pages', () => {
                 .contains('2080')
                 .click({ force: true });
             cy.get('body').type('{esc}');
+            cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
             cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
             cy.get('.MuiPickersCalendarHeader-label').click();
             cy.get('.MuiYearPicker-root')

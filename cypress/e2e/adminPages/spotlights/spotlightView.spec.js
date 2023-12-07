@@ -66,7 +66,7 @@ describe('Spotlight Admin View page', () => {
             .and(
                 'have.attr',
                 'src',
-                'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+                'http://localhost:2020/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
             );
     });
 });

@@ -106,7 +106,8 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('#admin-spotlights-form-end-date-helper-text')
                 .should('exist')
                 .and('contain', 'Should not be before Date published');
-            // // open the end date so we can fix the date
+            // open the end date so we can fix the date
+            cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
             cy.get('[data-testid="admin-spotlights-form-end-date"] button').click();
             cy.data('ArrowRightIcon')
                 .click()
@@ -395,7 +396,7 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="spotlights-form-upload-dropzone"] img').should(
                 'have.attr',
                 'src',
-                'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+                'http://localhost:2020/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
             );
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
 
@@ -462,7 +463,7 @@ describe('Spotlights Admin Form Pages', () => {
                 .and(
                     'have.attr',
                     'src',
-                    'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+                    'http://localhost:2020/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
                 );
             removeImageFromDragzone();
             cy.get('[data-testid="spotlights-thumbs-reorder"] > span:first-child img')
@@ -527,7 +528,7 @@ describe('Spotlights Admin Form Pages', () => {
                 .and(
                     'have.attr',
                     'src',
-                    'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+                    'http://localhost:2020/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
                 );
         });
         it('Save button is disabled when the clone form is invalid', () => {

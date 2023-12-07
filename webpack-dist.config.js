@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const chalk = require('chalk');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const WebpackStrip = require('strip-loader');
+// const WebpackStrip = require('strip-loader');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotstxtPlugin = require('robotstxt-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -103,9 +103,10 @@ const webpackConfig = {
         path: resolve(__dirname, './dist/', config.basePath),
         filename: `frontend-js/${currentCommitHash}/[name]-[contenthash].min.js`,
         publicPath: config.publicPath,
+        // assetModuleFilename: 'images/[hash][ext][query]', // TBD
     },
     devServer: {
-        contentBase: resolve(__dirname, './dist/', config.basePath),
+        static: resolve(__dirname, './dist/', config.basePath),
         compress: true,
         port: port,
         host: '0.0.0.0',
@@ -158,7 +159,10 @@ const webpackConfig = {
             'process.env.TITLE_SUFFIX': JSON.stringify(config.titleSuffix),
             'process.env.GIT_SHA': JSON.stringify(process.env.CI_COMMIT_ID),
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^\.\/locale$/,
+            contextRegExp: /moment$/,
+        }),
         new BundleAnalyzerPlugin({
             analyzerMode: config.environment === 'production' ? 'disabled' : 'static',
             openAnalyzer: !process.env.CI_BRANCH,
@@ -181,6 +185,9 @@ const webpackConfig = {
                 });
             },
         },
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
     ],
     optimization: {
         splitChunks: {
@@ -191,7 +198,7 @@ const webpackConfig = {
         },
         minimizer: [
             new TerserPlugin({
-                sourceMap: true,
+                // sourceMap: true,
                 parallel: true,
             }),
         ],
@@ -221,15 +228,7 @@ const webpackConfig = {
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            outputPath: 'assets/',
-                            publicPath: '/assets/',
-                        },
-                    },
-                ],
+                type: 'asset/resource',
             },
             // {
             //     test: /\.js$/,
@@ -244,6 +243,9 @@ const webpackConfig = {
         modules: ['src', 'node_modules', 'custom_modules'],
         alias: {
             '@material-ui/styles': resolve(__dirname, 'node_modules', '@material-ui/styles'),
+        },
+        fallback: {
+            'process/browser': require.resolve('process/browser'),
         },
     },
     performance: {

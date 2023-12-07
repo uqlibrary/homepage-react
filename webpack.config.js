@@ -28,26 +28,33 @@ module.exports = {
         path: resolve(__dirname),
         pathinfo: true,
         publicPath: `http://${url}:${port}/${publicPath}`,
+        // assetModuleFilename: 'images/[hash][ext][query]' // TBD
     },
     devServer: {
-        clientLogLevel: 'info',
+        // client: {
+        //     logging: 'info',
+        // },
         compress: true,
-        contentBase: __dirname,
+        // contentBase: __dirname,
+        // devMiddleware: {
+        //     publicPath: '/public', // `/${publicPath}`,
+        //     // stats: 'errors-only',
+        // },
         headers: { 'X-Custom-Header': 'yes' },
         historyApiFallback: true,
         host: url,
-        hot: true,
+        // hot: true,
         https: false,
-        inline: true,
-        lazy: false,
-        noInfo: true,
+        // inline: true,
+        // lazy: false,
+        // noInfo: true,
         open: false,
         port: port,
-        publicPath: `/${publicPath}`,
-        quiet: false,
-        stats: 'errors-only',
-        watchContentBase: false,
-        disableHostCheck: true,
+        // publicPath: `/${publicPath}`,
+        // quiet: false,
+        // stats: 'errors-only',
+        // watchContentBase: false,
+        // disableHostCheck: true,
         proxy: {
             '/api/staging': {
                 target: 'https://api.library.uq.edu.au',
@@ -58,6 +65,10 @@ module.exports = {
                 },
             },
         },
+        // static: {
+        //     directory: path.join(__dirname, 'public'),
+        //     watch: false,
+        // },
     },
     module: {
         rules: [
@@ -94,15 +105,7 @@ module.exports = {
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            outputPath: 'assets/',
-                            publicPath: 'assets/',
-                        },
-                    },
-                ],
+                type: 'asset/resource',
             },
         ],
     },
@@ -123,7 +126,7 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.NamedModulesPlugin(),
+        // new webpack.NamedModulesPlugin(),
         new webpack.LoaderOptionsPlugin({
             options: {
                 sassLoader: {
@@ -158,6 +161,9 @@ module.exports = {
         new MomentTimezoneDataPlugin({
             matchZones: /^Australia\/Brisbane/,
         }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
     ],
     resolve: {
         descriptionFiles: ['package.json'],
@@ -166,6 +172,9 @@ module.exports = {
         modules: ['src', 'node_modules', 'custom_modules'],
         alias: {
             '@material-ui/styles': resolve(__dirname, 'node_modules', '@material-ui/styles'),
+        },
+        fallback: {
+            'process/browser': require.resolve('process/browser'),
         },
     },
     optimization: {

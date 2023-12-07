@@ -24,7 +24,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 
 2. Create a .env file based on example.env
 
-3. install npm: `nvm use 16.13.2 && npm i -g npm@8 jest webpack-dev-server`
+3. install npm: `nvm use 16.20.2 && npm i -g npm@8 jest webpack-dev-server`
  
 4. Create these git hooks to manage branches to project standard: 
 
@@ -41,7 +41,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
 
 - make sure you have created a .env file based on example.env
-- `nvm use 16.13.2 && npm i -g npm@8 jest webpack-dev-server` - initial setup
+- `nvm use 16.20.2 && npm i -g npm@8 jest webpack-dev-server` - initial setup
 - `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this clears & reinstalls npm packages
 - `npm run start:mock` to use mock data from src/mock
   - runs <http://localhost:2020/>
@@ -163,12 +163,6 @@ to keep initial load to a minimum following optimisation has been added to the p
     'process.env.NODE_ENV': JSON.stringify('production'),       //  always production build on CI
     ...
   })
-  ```
-
-- remove momentjs locale:
-
-  ```javascript
-  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/);
   ```
 
 ### Gotchas
