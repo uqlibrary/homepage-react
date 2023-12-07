@@ -7,8 +7,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const chalk = require('chalk');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-// const WebpackStrip = require('strip-loader');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// npm i -D webpack-bundle-analyzer@3.6.1 to re-enable bundle treemap
 const RobotstxtPlugin = require('robotstxt-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
@@ -163,10 +163,10 @@ const webpackConfig = {
             resourceRegExp: /^\.\/locale$/,
             contextRegExp: /moment$/,
         }),
-        new BundleAnalyzerPlugin({
-            analyzerMode: config.environment === 'production' ? 'disabled' : 'static',
-            openAnalyzer: !process.env.CI_BRANCH,
-        }),
+        // new BundleAnalyzerPlugin({
+        //     analyzerMode: config.environment === 'production' ? 'disabled' : 'static',
+        //     openAnalyzer: !process.env.CI_BRANCH,
+        // }),
         new RobotstxtPlugin(robotsTxtOptions),
         new MomentTimezoneDataPlugin({
             matchZones: /^Australia\/Brisbane/,
@@ -196,10 +196,15 @@ const webpackConfig = {
             minChunks: 5,
             minSize: 40000,
         },
+        minimize: true,
         minimizer: [
             new TerserPlugin({
-                // sourceMap: true,
                 parallel: true,
+                terserOptions: {
+                    compress: {
+                        drop_console: config.removeConsoleLog,
+                    },
+                },
             }),
         ],
     },
@@ -230,10 +235,6 @@ const webpackConfig = {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 type: 'asset/resource',
             },
-            // {
-            //     test: /\.js$/,
-            //     loader: WebpackStrip.loader('console.log'),
-            // },
         ],
     },
     resolve: {

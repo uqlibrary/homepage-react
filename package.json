@@ -121,11 +121,9 @@
         "snapshot-diff": "^0.9.0",
         "start-server-and-test": "^1.9.1",
         "string-to-arraybuffer": "^1.0.0",
-        "strip-loader": "^0.1.2",
         "style-loader": "^3.3.3",
         "terser-webpack-plugin": "^5.3.9",
         "webpack": "^5.89.0",
-        "webpack-bundle-analyzer": "^3.6.1",
         "webpack-cli": "^5.1.4",
         "webpack-dev-server": "^4.15.1"
     },
