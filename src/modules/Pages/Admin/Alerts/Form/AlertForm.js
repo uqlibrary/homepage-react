@@ -675,6 +675,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 classes={{ root: classes.selectPriorityType }}
                                 inputProps={{
                                     'data-testid': 'admin-alerts-form-prioritytype-input',
+                                    'aria-label': locale.form.labels.priority.aria,
                                 }}
                             >
                                 <MenuItem data-testid="admin-alerts-form-option-info" value={'info'}>

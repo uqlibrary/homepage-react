@@ -244,7 +244,11 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                         // defaultValue={values.priority_type}
                                         value={values.priorityType}
                                         disabled
-                                        classes={{ root: classes.selectPriorityType }}>
+                                        classes={{ root: classes.selectPriorityType }}
+                                        inputProps={{
+                                            'aria-label': locale.form.labels.priority.aria,
+                                        }}
+                                    >
                                         <MenuItem value={'info'}>{locale.form.labels.priority.level.info}</MenuItem>
                                         <MenuItem value={'urgent'}>{locale.form.labels.priority.level.urgent}</MenuItem>
                                         <MenuItem value={'extreme'}>

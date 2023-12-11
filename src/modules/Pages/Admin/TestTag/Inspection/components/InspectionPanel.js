@@ -123,7 +123,8 @@ const InspectionPanel = ({
                             variant="standard"
                             className={classes.formControl}
                             fullWidth
-                            error={invalidTestingDevice}>
+                            error={invalidTestingDevice}
+                        >
                             <InputLabel required htmlFor={`${componentIdLower}-inspection-device-input`}>
                                 {pageLocale.form.inspection.deviceLabel}
                             </InputLabel>
@@ -137,6 +138,7 @@ const InspectionPanel = ({
                                 }}
                                 inputProps={{
                                     id: `${componentIdLower}-inspection-device-input`,
+                                    'aria-label': pageLocale.form.inspection.deviceLabel,
                                     ['data-testid']: `${componentIdLower}-inspection-device-input`,
                                 }}
                                 SelectDisplayProps={{
@@ -151,7 +153,8 @@ const InspectionPanel = ({
                                 }}
                                 required
                                 error={invalidTestingDevice}
-                                disabled={disabled}>
+                                disabled={disabled}
+                            >
                                 {!!inspectionConfigLoading && (
                                     <MenuItem value={-1} disabled key={'devicetypes-loading'}>
                                         {pageLocale.form.loading}

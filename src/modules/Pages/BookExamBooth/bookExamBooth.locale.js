@@ -57,6 +57,7 @@ export default {
     },
     sessionLength: {
         label: 'What is the duration of your exam, as shown on your personal exam timetable?',
+        aria: 'Select Exam Duration',
     },
     startDate: {
         label: 'What is the date of your exam, as shown on your personal exam timetable?',
@@ -64,6 +65,7 @@ export default {
     startTimeHours: {
         aria: 'Select the nearest hour',
         label: 'What is your registered exam appointment time? Select the nearest possible time.',
+        name: 'Select registered exam time',
     },
     startTimeMinutes: {
         aria: 'Select the nearest minute value',

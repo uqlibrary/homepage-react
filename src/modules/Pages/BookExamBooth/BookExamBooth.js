@@ -245,9 +245,11 @@ const BookExamBooth = ({
                                         data-testid="session-length-select"
                                         defaultValue={sessionLengthList[0].value}
                                         id="sessionLength"
+                                        inputProps={{
+                                            'aria-label': locale.sessionLength.aria,
+                                        }}
                                         name="sessionLength"
                                         onChange={_handleSessionLengthChange}
-                                        options={sessionLengthList}
                                     >
                                         {sessionLengthList.map((item, index) => {
                                             return (
@@ -283,10 +285,12 @@ const BookExamBooth = ({
                                     <br />
                                     <Select
                                         variant="standard"
-                                        aria-label={locale.startTimeHours.aria}
                                         data-testid="start-time-hours"
                                         defaultValue={defaultHour}
                                         id="startTimeHours"
+                                        inputProps={{
+                                            'aria-label': locale.startTimeHours.aria,
+                                        }}
                                         name="startTimeHours"
                                         onChange={_handleStartTimeHoursChange}
                                     >
@@ -305,13 +309,14 @@ const BookExamBooth = ({
                                     :{' '}
                                     <Select
                                         variant="standard"
-                                        aria-label={locale.startTimeMinutes.aria}
                                         data-testid="start-time-minutes"
                                         defaultValue={defaultMinute}
                                         id="startTimeMinutes"
+                                        inputProps={{
+                                            'aria-label': locale.startTimeMinutes.aria,
+                                        }}
                                         name="startTimeMinutes"
                                         onChange={_handleStartTimeMinutesChange}
-                                        options={minutesList}
                                     >
                                         {minutesList.map((item, index) => {
                                             return (

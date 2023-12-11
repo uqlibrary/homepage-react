@@ -134,6 +134,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                 }}
                                 inputProps={{
                                     id: `${componentId}-is-discard-input`,
+                                    'aria-label': pageLocale.form.action.discard.label,
                                     ['data-testid']: `${componentId}-is-discard-input`,
                                 }}
                                 SelectDisplayProps={{
