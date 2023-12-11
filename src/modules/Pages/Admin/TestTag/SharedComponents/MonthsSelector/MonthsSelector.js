@@ -39,11 +39,7 @@ const MonthsSelector = ({
     };
 
     return (
-        <FormControl
-            variant="standard"
-            className={classNames?.formControl}
-            fullWidth
-            disabled={disabled}>
+        <FormControl variant="standard" className={classNames?.formControl} fullWidth disabled={disabled}>
             {!!label && (
                 <InputLabel
                     shrink
@@ -66,6 +62,7 @@ const MonthsSelector = ({
                 inputProps={{
                     id: `${componentId}-input`,
                     ['data-testid']: `${componentId}-input`,
+                    'aria-label': label,
                 }}
                 SelectDisplayProps={{
                     id: `${componentId}-select`,
@@ -76,7 +73,8 @@ const MonthsSelector = ({
                 value={currentValue ?? ''}
                 onChange={onValueChange}
                 required={required}
-                {...props}>
+                {...props}
+            >
                 {options?.map((period, index) => (
                     <MenuItem
                         value={period.value}
