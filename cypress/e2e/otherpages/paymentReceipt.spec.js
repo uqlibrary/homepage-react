@@ -1,7 +1,5 @@
 context('Payment receipt', () => {
     it('Shows the correct messages for valid querystring', () => {
-        // masquerade may be a special case, but we dont have a better example atm
-        // if we end up with other admin pages, swap this out
         cy.visit('payment-receipt?Success=1&Receipt=1234&AmountPaid=20');
         cy.viewport(1300, 1000);
         cy.get('body').contains('Your transaction of $20.00 has been successful.');
@@ -9,8 +7,6 @@ context('Payment receipt', () => {
     });
 
     it('Shows the failure messages for missing querystrings', () => {
-        // masquerade may be a special case, but we dont have a better example atm
-        // if we end up with other admin pages, swap this out
         cy.visit('payment-receipt');
         cy.viewport(1300, 1000);
         cy.get('body').contains(
@@ -28,5 +24,11 @@ context('Payment receipt', () => {
         cy.get('body').contains(
             'You have reached this page in error. Please go back, and check what brought you here.',
         );
+    });
+
+    it('Shows the correct messages for a failed payment request', () => {
+        cy.visit('payment-receipt?Success=0');
+        cy.viewport(1300, 1000);
+        cy.get('body').contains('The payment request was not successful');
     });
 });

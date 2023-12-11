@@ -252,7 +252,9 @@ export const LearningResources = ({
         if (!!readingList && !!readingList.coursecode && currentReadingLists[readingList.coursecode] === undefined) {
             const newReadingList = {};
             newReadingList[readingList.coursecode] = readingList;
-            updateReadingLists(currentReadings => Object.assign({}, ...currentReadings, ...newReadingList));
+            updateReadingLists(currentReadings => {
+                return { ...currentReadings, ...newReadingList };
+            });
         }
     }, [readingList, currentReadingLists]);
 
@@ -274,7 +276,9 @@ export const LearningResources = ({
             if (subjectNumber !== false && currentGuidesList[subjectNumber] === undefined) {
                 const newGuidesList = {};
                 newGuidesList[subjectNumber] = guideList;
-                updateGuidesList(currentGuides => Object.assign({}, ...currentGuides, ...newGuidesList));
+                updateGuidesList(currentGuides => {
+                    return { ...currentGuides, ...newGuidesList };
+                });
             }
         }
     }, [guideList, currentGuidesList]);
@@ -290,7 +294,9 @@ export const LearningResources = ({
             if (subjectNumber !== false && currentExamsList[subjectNumber] === undefined) {
                 const newExamsList = {};
                 newExamsList[subjectNumber] = examLearningResourceList;
-                updateExamsList(currentExams => Object.assign({}, ...currentExams, ...newExamsList));
+                updateExamsList(currentExams => {
+                    return { ...currentExams, ...newExamsList };
+                });
             }
         }
     }, [examLearningResourceList, currentExamsList]);
