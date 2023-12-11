@@ -79,8 +79,10 @@ const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
 const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 
-const queryString = require('query-string');
-let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
+const queryString = new URLSearchParams(window.location.search);
+let user = !!queryString
+    ? queryString.get('user')
+    : window.location.hash.substring(window.location.hash.indexOf('?')).user;
 user = user || 'vanilla';
 
 // set session cookie in mock mode
