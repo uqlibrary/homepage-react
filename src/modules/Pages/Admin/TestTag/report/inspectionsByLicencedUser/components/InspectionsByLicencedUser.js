@@ -198,6 +198,7 @@ const InspectionsByLicencedUser = ({
                                     inputProps={{
                                         id: `${componentIdLower}-user-name-input`,
                                         ['data-testid']: `${componentIdLower}-user-name-input`,
+                                        'aria-label': 'Select Inspector Name',
                                     }}
                                     SelectDisplayProps={{
                                         id: `${componentIdLower}-user-name-select`,

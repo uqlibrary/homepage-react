@@ -17,6 +17,7 @@ export default {
             },
             permanent: 'Permanent',
             priority: {
+                aria: 'Alert priority',
                 title: 'Priority: ',
                 level: {
                     info: 'Info (blue)',
@@ -24,13 +25,12 @@ export default {
                     extreme: 'Extreme (red)',
                 },
             },
-            systems:
-                (
-                    <Fragment>
-                        <strong>System specific alerts:</strong>{' '}
-                        use these checkboxes to target your alert to selected systems only. Leave the checkboxes blank to show alert on all systems.
-                    </Fragment>
-                ),
+            systems: (
+                <Fragment>
+                    <strong>System specific alerts:</strong> use these checkboxes to target your alert to selected
+                    systems only. Leave the checkboxes blank to show alert on all systems.
+                </Fragment>
+            ),
         },
         tooltips: {
             title: 'Alert lead text. Appears in bold. Field length of 100 characters.',
@@ -187,29 +187,31 @@ export default {
                         <dt>Priority</dt>
                         <dd>
                             <p>
-                               Sets alert priority: Info (blue), Urgent (yellow) or Extreme (red) and 
-                               changes the alert colour and icon to indicate relative alert level.
-                            </p>
-                            <p>Default Info alert is blue and used most often. Use discretion for Urgent and Extreme.</p>
-                            <p>
-                                Use <strong>Urgent</strong> for important or high impact alerts 
-                                (e.g. where services, locations or systems are affected).
+                                Sets alert priority: Info (blue), Urgent (yellow) or Extreme (red) and changes the alert
+                                colour and icon to indicate relative alert level.
                             </p>
                             <p>
-                                Use <strong>Extreme</strong> for very important or very high impact issues only 
-                                (e.g. COVID lockdown, major system outage, major network outage, serious campus issue etc).
+                                Default Info alert is blue and used most often. Use discretion for Urgent and Extreme.
+                            </p>
+                            <p>
+                                Use <strong>Urgent</strong> for important or high impact alerts (e.g. where services,
+                                locations or systems are affected).
+                            </p>
+                            <p>
+                                Use <strong>Extreme</strong> for very important or very high impact issues only (e.g.
+                                COVID lockdown, major system outage, major network outage, serious campus issue etc).
                             </p>
                         </dd>
                         <dt>System specific alerts</dt>
                         <dd>
                             <p>Displays the alert on selected systems only.</p>
                             <p>
-                                Optional field. Use the checkboxes to select one or more systems for your alert. The alert will be
-                                displayed on those systems only.
+                                Optional field. Use the checkboxes to select one or more systems for your alert. The
+                                alert will be displayed on those systems only.
                             </p>
                             <p>
-                                When the checkboxes are blank, the alert will be displayed on all systems (Library Homepage apps, 
-                                Drupal Website, Libguides, Library CRM pages and eSpace).
+                                When the checkboxes are blank, the alert will be displayed on all systems (Library
+                                Homepage apps, Drupal Website, Libguides, Library CRM pages and eSpace).
                             </p>
                         </dd>
                     </dl>
