@@ -30,7 +30,7 @@ phases:
       java: corretto11
       nodejs: 14
     commands:
-      - n 16
+      - n 18
       # - command
   pre_build:
     commands:
