@@ -73,8 +73,11 @@ export const Location = ({ idLabel }) => {
     } else {
         thisLocation = cookies.location;
     }
-    const getTagId = (tag = null) =>
-        `location${!!idLabel ? /* istanbul ignore next */ '-' + idLabel : ''}${!!tag ? '-' + tag : ''}`;
+    const getTagId = (tag = null) => {
+        const locationPrefix = !!idLabel ? /* istanbul ignore next */ '-' + idLabel : '';
+        const locationSuffix = !!tag ? '-' + tag : '';
+        return `location${locationPrefix}${locationSuffix}`;
+    };
     return (
         <div id={getTagId()} data-testid={getTagId()}>
             <Tooltip
