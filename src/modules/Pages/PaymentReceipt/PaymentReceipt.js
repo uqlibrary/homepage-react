@@ -4,17 +4,33 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@mui/material/Grid';
 import { pathConfig } from '../../../config/pathConfig';
-import queryString from 'query-string';
 export const PaymentReceipt = () => {
-    const querystring = queryString.parse(location.search);
-    const amountPaid = parseFloat(querystring.AmountPaid).toFixed(2);
-    const receipt = querystring.Receipt;
-    const success = querystring.Success === '1' ? 'successful' : 'unsuccessful';
-    if (!querystring.AmountPaid || !querystring.Receipt || !querystring.Success) {
+    const urlObj = new URL(window.location.href);
+    const querystring = urlObj.searchParams;
+    const amountPaidInterim = querystring.get('AmountPaid');
+    const amountPaid =
+        querystring.has('AmountPaid') && !Number.isNaN(amountPaidInterim) && amountPaidInterim > 0
+            ? parseFloat(amountPaidInterim).toFixed(2)
+            : false;
+    const receiptValue = querystring.has('Receipt') ? querystring.get('Receipt') : false;
+    const successful = querystring.has('Success') ? querystring.get('Success') : false;
+    const receipt = querystring.get('Receipt');
+    const successStatus =
+        querystring.has('Success') && querystring.get('Success') === '1' ? 'successful' : 'unsuccessful';
+    if (querystring.has('Success') && querystring.get('Success') !== '1') {
         return (
             <StandardPage standardPageId="payment-receipt" title={locale.failed.title}>
                 <section className="layout-card">
                     <b>{locale.failed.message}</b>
+                </section>
+            </StandardPage>
+        );
+    }
+    if (!amountPaid || !receiptValue || !successful) {
+        return (
+            <StandardPage standardPageId="payment-receipt" title={locale.error.title}>
+                <section className="layout-card">
+                    <b>{locale.error.message}</b>
                 </section>
             </StandardPage>
         );
@@ -26,7 +42,7 @@ export const PaymentReceipt = () => {
                     <p>
                         <strong>{locale.thanks}</strong>
                     </p>
-                    <p>{locale.transaction.replace('[AmountPaid]', amountPaid).replace('[Success]', success)}</p>
+                    <p>{locale.transaction.replace('[AmountPaid]', amountPaid).replace('[Success]', successStatus)}</p>
                     <p>{locale.check.replace('[Receipt]', receipt)}</p>
                     <sub>{locale.maintenance}</sub>
                 </StandardCard>
