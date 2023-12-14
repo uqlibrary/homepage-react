@@ -20,5 +20,9 @@ export const locale = {
             location: 'Herston',
             value: 'Herston',
         },
+        {
+            location: 'Dutton Park',
+            value: 'Dutton Park',
+        },
     ],
 };
