@@ -1,5 +1,5 @@
 import { promoPanel } from '../../src/modules/Index/components/subComponents/promoPanel.locale';
-import { panelTitleOther, panelTitles } from '../../src/data/mock/data/promoPanels';
+import { panelTitleOther, panelTitles } from '../../src/data/mock/data/promoPanelsLong';
 
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);

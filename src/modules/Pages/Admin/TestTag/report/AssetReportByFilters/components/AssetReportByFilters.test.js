@@ -4,9 +4,9 @@ import Immutable from 'immutable';
 
 import AssetReportByFilters from './AssetReportByFilters';
 
-import assetData from '../../../../../../../data/mock/data/testing/testTagAssetsReportAssets';
-import userData from '../../../../../../../data/mock/data/testing/testTagUser';
-import buildingList from '../../../../../../../data/mock/data/testing/testTagTaggedBuildingList';
+import assetData from '../../../../../../../data/mock/data/testAndTag/testTagAssetsReportAssets';
+import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
+import buildingList from '../../../../../../../data/mock/data/testAndTag/testTagTaggedBuildingList';
 
 import { getUserPermissions } from '../../../helpers/auth';
 

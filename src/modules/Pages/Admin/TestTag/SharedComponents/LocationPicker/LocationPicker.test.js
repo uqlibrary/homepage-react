@@ -1,9 +1,9 @@
 import React from 'react';
 import LocationPicker, { GridWrapper, getBuildingLabel } from './LocationPicker';
 import { render, rtlRender, act, fireEvent } from 'test-utils';
-import siteList from '../../../../../../data/mock/data/testing/testTagSites';
-import floorList from '../../../../../../data/mock/data/testing/testTagFloors';
-import roomList from '../../../../../../data/mock/data/testing/testTagRooms';
+import siteList from '../../../../../../data/mock/data/testAndTag/testTagSites';
+import floorList from '../../../../../../data/mock/data/testAndTag/testTagFloors';
+import roomList from '../../../../../../data/mock/data/testAndTag/testTagRooms';
 
 const selectOptionFromListByIndex = (index, actions) => {
     expect(actions.getByRole('listbox')).not.toEqual(null);
