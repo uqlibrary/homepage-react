@@ -10,10 +10,10 @@ import {
 } from 'test-utils';
 import Immutable from 'immutable';
 
-import siteList from '../../../../../../../data/mock/data/testing/testTagSites';
-import floorList from '../../../../../../../data/mock/data/testing/testTagFloors';
-import roomList from '../../../../../../../data/mock/data/testing/testTagRooms';
-import userData from '../../../../../../../data/mock/data/testing/testTagUser';
+import siteList from '../../../../../../../data/mock/data/testAndTag/testTagSites';
+import floorList from '../../../../../../../data/mock/data/testAndTag/testTagFloors';
+import roomList from '../../../../../../../data/mock/data/testAndTag/testTagRooms';
+import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
 
 import { getUserPermissions } from '../../../helpers/auth';
 

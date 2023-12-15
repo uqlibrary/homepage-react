@@ -1,4 +1,4 @@
-import { spotlights as spotlightsHomepage } from '../../../src/data/mock/data/spotlights';
+import { spotlights as spotlightsHomepage } from '../../../src/data/mock/data/general';
 
 context('Spotlights on homepage', () => {
     it('Spotlights is accessible', () => {

@@ -1,5 +1,5 @@
 import * as Helpers from './promoPanelHelpers';
-import * as MockData from 'data/mock/data/promoPanels';
+import * as MockData from 'data/mock/data/promoPanelsLong';
 import { default as locale } from 'locale/promopanel.locale';
 
 const actions = {

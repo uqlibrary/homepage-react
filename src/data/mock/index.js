@@ -28,10 +28,10 @@ import {
     libHours,
     loans,
     printBalance,
+    spotlights as spotlightsHomepage,
     training_object,
-} from './data/account';
-import { alertList } from './data/alerts';
-import { spotlights as spotlightsHomepage } from './data/spotlights';
+} from './data/general';
+import { alertList } from './data/alertsLong';
 import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
@@ -70,7 +70,7 @@ import {
     mockAuthenticatedPanel,
     mockPublicPanel,
     promoPanelMocks,
-} from './data/promoPanels';
+} from './data/promoPanelsLong';
 
 const moment = require('moment');
 

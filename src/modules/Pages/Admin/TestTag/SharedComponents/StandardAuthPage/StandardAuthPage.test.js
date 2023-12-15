@@ -6,7 +6,7 @@ import Immutable from 'immutable';
 import { getUserPermissions } from '../../helpers/auth';
 import { PERMISSIONS } from '../../config/auth';
 import locale from '../../testTag.locale';
-import userData from '../../../../../../data/mock/data/testing/testTagUser';
+import userData from '../../../../../../data/mock/data/testAndTag/testTagUser';
 /*
     title: PropTypes.string,
     user: PropTypes.object,

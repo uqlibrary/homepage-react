@@ -187,16 +187,25 @@ export const ariaLabelForLocation = item => {
     const hoursConjunction = !!hours[0] && !!hours[1] ? 'and' : '';
     return `${studySpaceHours} ${hoursConjunction} ${askUsHours}`;
 };
+
+function departmentProvided(item) {
+    return !!item && !!item.departments && Array.isArray(item.departments) && item.departments.length > 0;
+}
+
 export const hasDepartments = item => {
-    const departments = item.departments.map(item => {
-        if (hoursLocale.departmentsMap.includes(item.name)) {
-            return item.name;
-        }
-        return null;
-    });
-    const displayableDepartments = departments.filter(el => {
-        return el !== null;
-    });
+    const departments =
+        !!departmentProvided(item) &&
+        item.departments.map(item => {
+            if (hoursLocale.departmentsMap.includes(item.name)) {
+                return item.name;
+            }
+            return null;
+        });
+    const displayableDepartments =
+        !!departmentProvided(item) &&
+        departments.filter(el => {
+            return el !== null;
+        });
     return displayableDepartments.length > 0;
 };
 
@@ -220,9 +229,15 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
             !!libHours.locations &&
             libHours.locations.length > 0 &&
             libHours.locations.map(item => {
-                const departments = item.departments.map(item => {
-                    return { name: item.name, hours: item.rendered };
-                });
+                let departments = [];
+                if (!!departmentProvided(item)) {
+                    departments = item.departments.map(item => {
+                        return {
+                            name: item.name,
+                            hours: item.rendered,
+                        };
+                    });
+                }
                 if (item.abbr !== 'AskUs') {
                     return {
                         name: item.abbr,
@@ -339,11 +354,11 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 </a>
                                             </Grid>
                                             {hasDepartments(item) ? (
-                                                item.departments.map((item, index) => {
-                                                    if (hoursLocale.departmentsMap.includes(item.name)) {
+                                                item.departments.map((department, index) => {
+                                                    if (hoursLocale.departmentsMap.includes(department.name)) {
                                                         return (
                                                             <Grid item xs key={index} style={{ fontSize: 14 }}>
-                                                                {item.hours}
+                                                                {department.hours}
                                                             </Grid>
                                                         );
                                                     }

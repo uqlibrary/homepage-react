@@ -4,5 +4,3 @@ export {
     examLearningResourceList,
     libraryGuide,
 } from './records';
-
-export { mockRecordToFix } from './testing/records';

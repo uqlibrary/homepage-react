@@ -5,11 +5,11 @@ import Immutable from 'immutable';
 import InspectionsDue from './InspectionsDue';
 import config from './config';
 
-import inspectionData from '../../../../../../../data/mock/data/testing/testTagPendingInspections';
-import userData from '../../../../../../../data/mock/data/testing/testTagUser';
-import siteList from '../../../../../../../data/mock/data/testing/testTagSites';
-import floorList from '../../../../../../../data/mock/data/testing/testTagFloors';
-import roomList from '../../../../../../../data/mock/data/testing/testTagRooms';
+import inspectionData from '../../../../../../../data/mock/data/testAndTag/testTagPendingInspections';
+import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
+import siteList from '../../../../../../../data/mock/data/testAndTag/testTagSites';
+import floorList from '../../../../../../../data/mock/data/testAndTag/testTagFloors';
+import roomList from '../../../../../../../data/mock/data/testAndTag/testTagRooms';
 
 import { getUserPermissions } from '../../../helpers/auth';
 

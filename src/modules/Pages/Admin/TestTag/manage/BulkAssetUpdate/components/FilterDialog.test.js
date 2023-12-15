@@ -2,11 +2,11 @@ import React from 'react';
 import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
-import assetsList from '../../../../../../../data/mock/data/testing/testTagAssetsMine';
-import siteList from '../../../../../../../data/mock/data/testing/testTagSites';
-import floorList from '../../../../../../../data/mock/data/testing/testTagFloors';
-import roomList from '../../../../../../../data/mock/data/testing/testTagRooms';
-import assetTypeData from '../../../../../../../data/mock/data/testing/testTagAssetTypes';
+import assetsList from '../../../../../../../data/mock/data/testAndTag/testTagAssetsMine';
+import siteList from '../../../../../../../data/mock/data/testAndTag/testTagSites';
+import floorList from '../../../../../../../data/mock/data/testAndTag/testTagFloors';
+import roomList from '../../../../../../../data/mock/data/testAndTag/testTagRooms';
+import assetTypeData from '../../../../../../../data/mock/data/testAndTag/testTagAssetTypes';
 
 import { getUserPermissions } from '../../../helpers/auth';
 
@@ -28,7 +28,7 @@ import FilterDialog from './FilterDialog';
 import pageLocale from '../../../testTag.locale';
 import pageConfig from './config';
 
-import userData from '../../../../../../../data/mock/data/testing/testTagUser';
+import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
 
 function setup(testProps = {}, renderer = renderWithRouter) {
     const {
