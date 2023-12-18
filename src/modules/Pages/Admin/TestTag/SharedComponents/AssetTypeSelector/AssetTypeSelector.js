@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -30,12 +31,11 @@ const AssetTypeSelector = ({
     const componentId = `${rootId}-${id}`;
     const [_value, setValue] = React.useState(value ?? '');
     const [_assetTypeList, setAssetTypeList] = useState([]);
-    const { assetTypesList, assetTypesListLoading, assetTypesListError } = useSelector(state =>
+    const { assetTypesList, assetTypesListLoading, assetTypesListLoaded, assetTypesListError } = useSelector(state =>
         state.get('testTagAssetTypesReducer'),
     );
-
     React.useEffect(() => {
-        if (assetTypesList.length === 0 && !!!assetTypesListError) {
+        if (assetTypesList.length === 0 && !!!assetTypesListLoaded && !!!assetTypesListError) {
             actions.loadAssetTypes();
         } else if (!!!assetTypesListError) {
             setAssetTypeList(
@@ -47,7 +47,7 @@ const AssetTypeSelector = ({
             if (!!hasAllOption) setValue(-1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hasAllOption, assetTypesList]);
+    }, [hasAllOption, assetTypesList, assetTypesListLoaded, assetTypesListError]);
 
     const handleChange = (_event, assetType) => {
         !!!value && setValue(assetType.asset_type_id);

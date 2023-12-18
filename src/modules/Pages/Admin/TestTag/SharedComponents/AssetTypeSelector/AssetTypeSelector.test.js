@@ -54,6 +54,7 @@ function setup(testProps = {}, renderer = render) {
         testTagAssetTypesReducer: {
             assetTypesList: assetTypeData,
             assetTypesListLoading: false,
+            assetTypesListLoaded: false,
             assetTypesListError: null,
         },
         ...state,
@@ -81,7 +82,13 @@ describe('AssetTypeSelector', () => {
     it('renders component with spinner when loading data', () => {
         const mockLoadAssetTypes = jest.fn();
         const { getByTestId } = setup({
-            state: { testTagAssetTypesReducer: { assetTypesList: [], assetTypesListLoading: true } },
+            state: {
+                testTagAssetTypesReducer: {
+                    assetTypesList: [],
+                    assetTypesListLoading: true,
+                    assetTypesListLoaded: false,
+                },
+            },
             actions: { loadAssetTypes: mockLoadAssetTypes },
         });
         expect(getByTestId('asset_type_selector-test')).toBeInTheDocument();
@@ -96,6 +103,7 @@ describe('AssetTypeSelector', () => {
                 testTagAssetTypesReducer: {
                     assetTypesList: [],
                     assetTypesListLoading: false,
+                    assetTypesListLoaded: true,
                     assetTypesListError: 'some error',
                 },
             },
@@ -116,6 +124,7 @@ describe('AssetTypeSelector', () => {
                         { asset_type_id: 1, asset_type_name: 'Asset Type One' },
                         { asset_type_id: 2, asset_type_name: 'Asset Type Two' },
                     ],
+                    assetTypesListLoaded: true,
                 },
             },
             actions: { loadAssetTypes: mockLoadAssetTypes },
