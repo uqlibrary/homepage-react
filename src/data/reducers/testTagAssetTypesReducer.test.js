@@ -23,12 +23,13 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesList: [],
                 assetTypesListError: null,
                 assetTypesListLoading: true,
+                assetTypesListLoaded: false,
             });
         });
 
         it('should set asset types values when successfully loaded', () => {
             const test = testTagAssetTypesReducer(emptyState, {
-                type: actions.TESTTAG_FLOOR_LIST_LOADED,
+                type: actions.TESTTAG_ASSET_TYPES_LIST_LOADED,
                 payload: mockAssetTypeList,
             });
             expect(test).toEqual({
@@ -38,6 +39,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesList: mockAssetTypeList,
                 assetTypesListError: null,
                 assetTypesListLoading: false,
+                assetTypesListLoaded: true,
             });
         });
 
@@ -53,6 +55,7 @@ describe('testTagAssetTypeReducer', () => {
                 assetTypesList: mockAssetTypeList,
                 assetTypesListError: 'error',
                 assetTypesListLoading: false,
+                assetTypesListLoaded: false,
             });
         });
     });

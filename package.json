@@ -156,6 +156,7 @@
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.43",
         "moment-timezone-data-webpack-plugin": "^1.5.1",
+        "npm": "^10.2.5",
         "process": "^0.11.10",
         "prop-types": "^15.8.1",
         "pure-react-carousel": "^1.28.1",
