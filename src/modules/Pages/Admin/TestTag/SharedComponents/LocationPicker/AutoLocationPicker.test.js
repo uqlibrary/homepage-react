@@ -2,9 +2,9 @@ import React from 'react';
 import AutoLocationPicker from './AutoLocationPicker';
 import { render, act, fireEvent, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
-import siteList from '../../../../../../data/mock/data/testing/testTagSites';
-import floorList from '../../../../../../data/mock/data/testing/testTagFloors';
-import roomList from '../../../../../../data/mock/data/testing/testTagRooms';
+import siteList from '../../../../../../data/mock/data/testAndTag/testTagSites';
+import floorList from '../../../../../../data/mock/data/testAndTag/testTagFloors';
+import roomList from '../../../../../../data/mock/data/testAndTag/testTagRooms';
 
 const defaultState = {
     siteList,

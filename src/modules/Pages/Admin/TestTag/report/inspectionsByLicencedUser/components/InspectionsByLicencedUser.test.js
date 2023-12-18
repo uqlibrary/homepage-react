@@ -8,9 +8,9 @@ import * as repositories from 'repositories';
 
 import InspectionsByLicencedUser from './InspectionsByLicencedUser';
 
-import inspectionData from '../../../../../../../data/mock/data/testing/testTagInspectionsByLicencedUsers';
-import inspectorsData from '../../../../../../../data/mock/data/testing/testTagLicencedInspectors';
-import userData from '../../../../../../../data/mock/data/testing/testTagUser';
+import inspectionData from '../../../../../../../data/mock/data/testAndTag/testTagInspectionsByLicencedUsers';
+import inspectorsData from '../../../../../../../data/mock/data/testAndTag/testTagLicencedInspectors';
+import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
 
 import { getUserPermissions } from '../../../helpers/auth';
 

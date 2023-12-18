@@ -3,10 +3,10 @@ import ManageAssetTypes from './AssetTypes';
 import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
-// import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
-import userData from '../../../../../../../data/mock/data/testing/testTagUser';
+// import assetData from '../../../../../../data/mock/data/testAndTag/testTagAssets';
+import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
 import assetTypeData from '../../../../../../../data/mock/data/records/test_tag_asset_types';
-// import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
+// import configData from '../../../../../../data/mock/data/testAndTag/testTagOnLoadInspection';
 import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
 
