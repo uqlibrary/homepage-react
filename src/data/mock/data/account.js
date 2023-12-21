@@ -292,7 +292,7 @@ export const accounts = {
         "name": "J RHD Student",
         "mail": "rhd@student.uq.edu.au",
         "barcode": "111111111111111",
-        "groups": ["CN=lib_libapi_SpotlightAdmins"],
+        "groups": null,
         "classes": [],
         "expiryDate": "14-12-19",
         "hasSession": true,
