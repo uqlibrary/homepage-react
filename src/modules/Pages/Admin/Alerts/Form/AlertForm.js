@@ -19,8 +19,6 @@ import Typography from '@mui/material/Typography';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
-const moment = require('moment');
-
 import { default as locale } from '../alertsadmin.locale';
 import {
     formatDate,
@@ -29,9 +27,11 @@ import {
     getTimeNowFormatted,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
-    scrollToTopOfPage,
     systemList,
 } from '../alerthelpers';
+import { scrollToTopOfPage } from 'helpers/general';
+
+const moment = require('moment');
 
 const useStyles = makeStyles(
     theme => ({

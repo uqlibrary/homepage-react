@@ -25,9 +25,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
-import { default as locale } from '../../../../../locale/promopanel.locale';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 
-import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { scrollToTopOfPage } from 'helpers/general';
 import PromoPanelScheduleHeaders from './PromoPanelScheduleHeaders';
 import { filterPanelList } from '../promoPanelHelpers';
 import PromoPanelAddSchedule from './PromoPanelAddSchedule';
@@ -346,7 +346,8 @@ export const PromoPanelListGroupPanels = ({
                             variant="standard"
                             className={classes.dropdown}
                             fullWidth
-                            title={locale.form.tooltips.groupField}>
+                            title={locale.form.tooltips.groupField}
+                        >
                             <InputLabel id="group-selector">Filter by group</InputLabel>
                             <Select
                                 variant="standard"
@@ -365,11 +366,12 @@ export const PromoPanelListGroupPanels = ({
                                     // This will stop the dropdown being selected after click-away
                                     // MUI Dropdowns seem to require TWO clicks away to deselect
                                     // (one to close the popper, one to close the select)
-                                    // Jake didnt want that behavior. This rectifies that.
+                                    // Jake didn't want that behavior. This rectifies that.
                                     setTimeout(() => {
                                         document.activeElement.blur();
                                     }, 0);
-                                }}>
+                                }}
+                            >
                                 <MenuItem key="clear-All" value="000" align={'right'} data-testid="filter-clear-all">
                                     <Chip
                                         label="Clear selection"

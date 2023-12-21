@@ -108,8 +108,3 @@ export const systemList = [
         title: 'eSpace',
     },
 ];
-
-export function scrollToTopOfPage() {
-    const topOfPage = document.getElementById('StandardPage');
-    !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
-}

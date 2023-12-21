@@ -1,6 +1,6 @@
 import * as Helpers from './promoPanelHelpers';
 import * as MockData from 'data/mock/data/promoPanelsLong';
-import { default as locale } from 'locale/promopanel.locale';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 
 const actions = {
     updateScheduleQueuelength: jest.fn(),

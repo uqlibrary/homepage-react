@@ -7,8 +7,8 @@ import * as actions from '../../../../../../data/actions/actionTypes';
 import * as tntActions from '../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
 
-import userData from '../../../../../../data/mock/data/testAndTag/testTagUser';
-import assetData from '../../../../../../data/mock/data/testAndTag/testTagAssets';
+import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
+import assetData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
 import locale from '../../testTag.locale.js';
 
 /*

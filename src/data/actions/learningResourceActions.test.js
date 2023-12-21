@@ -1,5 +1,5 @@
 // import { courseReadingList } from 'mock/data/records';
-import { default as HIST1201ReadingList } from 'data/mock/data/records/courseReadingList_HIST1201';
+import { default as HIST1201ReadingList } from 'data/mock/data/records/learningResources/courseReadingList_HIST1201';
 
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';

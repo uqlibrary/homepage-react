@@ -6,7 +6,7 @@ import * as tntActions from '../../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
 import * as actions from '../../../../../../../data/actions/actionTypes';
 
-import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
+import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
 

@@ -9,14 +9,14 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
-import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { scrollToTopOfPage } from 'helpers/general';
 import { PromoPanelSaveConfirmation } from './PromoPanelSaveConfirmation';
 import PromoPanelPreview from '../PromoPanelPreview';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import { default as locale } from 'locale/promopanel.locale';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 import PromoPanelGroupDateSelector from './PromoPanelGroupDateSelector';
 import PromoPanelFormConfirmation from './PromoPanelFormConfirmation';
 import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';

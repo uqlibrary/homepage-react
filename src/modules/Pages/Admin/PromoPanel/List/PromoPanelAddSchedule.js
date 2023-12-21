@@ -13,7 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
-import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'helpers/dateTime';
 
 const moment = require('moment');
 const ITEM_HEIGHT = 48;
