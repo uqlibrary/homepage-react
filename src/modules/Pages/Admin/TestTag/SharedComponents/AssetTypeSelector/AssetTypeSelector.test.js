@@ -5,7 +5,7 @@ import * as tntActions from '../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
 
 import AssetTypeSelector, { ADD_NEW_ID } from './AssetTypeSelector';
-import assetTypeData from '../../../../../../data/mock/data/testAndTag/testTagAssetTypes';
+import assetTypeData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
 import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 

@@ -5,7 +5,7 @@ import Immutable from 'immutable';
 
 import { getUserPermissions } from '../../helpers/auth';
 import { PERMISSIONS } from '../../config/auth';
-import userData from '../../../../../../data/mock/data/testAndTag/testTagUser';
+import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 /*
   requiredPermissions: PropTypes.array,
     fallback: PropTypes.node,

@@ -4,8 +4,8 @@ import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore, userEvent } 
 import Immutable from 'immutable';
 import { PERMISSIONS } from '../../../config/auth';
 
-import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
-import inspectionDevices from '../../../../../../../data/mock/data/records/test_tag_inspection_devices';
+import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
+import inspectionDevices from '../../../../../../../data/mock/data/records/testAndTag/test_tag_inspection_devices';
 import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
 import config from './config';

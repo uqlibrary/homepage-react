@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import PromoPanelHelpDrawer from '../../PromoPanelHelpDrawer';
-import { default as locale } from 'locale/promopanel.locale';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'helpers/dateTime';
 
 export const PromoPanelAdd = ({
     actions,

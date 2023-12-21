@@ -10,12 +10,12 @@ import {
 } from 'test-utils';
 import Immutable from 'immutable';
 
-import assetsList from '../../../../../../../data/mock/data/testAndTag/testTagAssets';
-import assetsListMine from '../../../../../../../data/mock/data/testAndTag/testTagAssetsMine';
-import siteList from '../../../../../../../data/mock/data/testAndTag/testTagSites';
-import floorList from '../../../../../../../data/mock/data/testAndTag/testTagFloors';
-import roomList from '../../../../../../../data/mock/data/testAndTag/testTagRooms';
-import assetTypeData from '../../../../../../../data/mock/data/testAndTag/testTagAssetTypes';
+import assetsList from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
+import assetsListMine from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetsMine';
+import siteList from '../../../../../../../data/mock/data/testing/testAndTag/testTagSites';
+import floorList from '../../../../../../../data/mock/data/testing/testAndTag/testTagFloors';
+import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
+import assetTypeData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
 
 import * as actions from '../../../../../../../data/actions/actionTypes';
 import * as tntActions from '../../../../../../../data/actions/testTagActions';
@@ -41,7 +41,7 @@ import BulkAssetUpdate from './BulkAssetUpdate';
 import pageLocale from '../../../testTag.locale';
 import pageConfig from './config';
 
-import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
+import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
 function setup(testProps = {}, renderer = renderWithRouter) {
     const {

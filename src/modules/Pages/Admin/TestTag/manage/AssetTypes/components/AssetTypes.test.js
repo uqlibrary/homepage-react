@@ -4,8 +4,8 @@ import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-
 import Immutable from 'immutable';
 
 // import assetData from '../../../../../../data/mock/data/testAndTag/testTagAssets';
-import userData from '../../../../../../../data/mock/data/testAndTag/testTagUser';
-import assetTypeData from '../../../../../../../data/mock/data/records/test_tag_asset_types';
+import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
+import assetTypeData from '../../../../../../../data/mock/data/records/testAndTag/test_tag_asset_types';
 // import configData from '../../../../../../data/mock/data/testAndTag/testTagOnLoadInspection';
 import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';

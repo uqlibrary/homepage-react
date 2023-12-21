@@ -3,8 +3,8 @@ import Dashboard from './Dashboard';
 import { renderWithRouter, WithReduxStore, act, fireEvent, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
-import configData from '../../../../../../data/mock/data/testAndTag/testTagOnLoadDashboard';
-import userData from '../../../../../../data/mock/data/testAndTag/testTagUser';
+import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadDashboard';
+import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
 import { default as localeData } from '../../testTag.locale.js';
 import { getUserPermissions } from '../../helpers/auth';
