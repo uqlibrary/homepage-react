@@ -10,7 +10,8 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
-import { getTimeNowFormatted, extractFieldsFromBody, formatDate } from '../../alerthelpers';
+import { getTimeNowFormatted, extractFieldsFromBody } from '../../alerthelpers';
+import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({

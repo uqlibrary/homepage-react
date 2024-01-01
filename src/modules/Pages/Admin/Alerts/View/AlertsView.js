@@ -21,12 +21,12 @@ import { default as locale } from '../alertsadmin.locale';
 import {
     getTimeNowFormatted,
     extractFieldsFromBody,
-    formatDate,
     getBody,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
     systemList,
 } from '../alerthelpers';
+import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
 
 const useStyles = makeStyles(() => ({
