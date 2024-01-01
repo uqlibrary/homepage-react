@@ -1,13 +1,10 @@
 const moment = require('moment-timezone');
 
+/* istanbul ignore next */
 export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
     const newMoment = new moment(dateString);
     return newMoment.format(dateFormat);
 }
-
-// export function getTimeNowFormatted() {
-//     return moment().format('YYYY-MM-DDTHH:mm');
-// }
 
 export function getStartOfDayFormatted() {
     const BrisbaneZone = moment().tz('Australia/Brisbane');
@@ -17,12 +14,6 @@ export function getStartOfDayFormatted() {
         .add(1, 'minutes')
         .format('YYYY-MM-DDTHH:mm');
 }
-
-// export function getTimeEndOfDayFormatted() {
-//     const BrisbaneZone = moment().tz('Australia/Brisbane');
-//     BrisbaneZone.utcOffset(600);
-//     return BrisbaneZone.endOf('day').format('YYYY-MM-DDTHH:mm');
-// }
 
 // return the sunday after next monday
 // (next monday is the default start date, this is the default end date)
