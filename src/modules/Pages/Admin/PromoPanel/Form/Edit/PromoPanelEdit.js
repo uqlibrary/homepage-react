@@ -7,7 +7,7 @@ import { useParams } from 'react-router';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
-import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'helpers/dateTime';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/dateTimeHelper';
 import { remapScheduleList } from '../../promoPanelHelpers';
 
 export const PromoPanelEdit = ({

@@ -28,7 +28,7 @@ import {
     manuallyMakeWebComponentBePermanent,
     systemList,
 } from '../alerthelpers';
-import { formatDate } from 'helpers/dateTime';
+import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
 
 const moment = require('moment');

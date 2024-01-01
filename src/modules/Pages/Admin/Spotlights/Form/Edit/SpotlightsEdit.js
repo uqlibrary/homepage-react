@@ -8,7 +8,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
-import { formatDate } from 'helpers/dateTime';
+import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 export const SpotlightsEdit = ({

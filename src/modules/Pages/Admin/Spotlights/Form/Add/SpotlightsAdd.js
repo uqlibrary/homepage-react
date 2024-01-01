@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
-import { getStartOfDayFormatted, getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'helpers/dateTime';
+import {
+    getStartOfDayFormatted,
+    getTimeMondayMidnightNext,
+    getTimeSundayNextFormatted,
+} from 'modules/Pages/Admin/dateTimeHelper';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

@@ -1,9 +1,8 @@
 import {
-    // getTimeEndOfDayFormatted,
     getTimeMondayComing,
     getTimeMondayMidnightNext,
     getTimeSundayNextFormatted,
-} from 'helpers/dateTime';
+} from 'modules/Pages/Admin/dateTimeHelper';
 
 const moment = require('moment');
 

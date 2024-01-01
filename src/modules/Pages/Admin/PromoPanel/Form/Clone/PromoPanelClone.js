@@ -6,7 +6,7 @@ import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.loc
 import { useParams } from 'react-router';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
-import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'helpers/dateTime';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/dateTimeHelper';
 
 export const PromoPanelClone = ({
     actions,
