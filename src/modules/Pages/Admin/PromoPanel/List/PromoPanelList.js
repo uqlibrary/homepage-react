@@ -5,8 +5,8 @@ import { PromoPanelListGroupPanels } from './PromoPanelListGroupPanels';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
 import { PromoPanelListActive } from './PromoPanelListActive';
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
-import { default as locale } from 'locale/promopanel.locale';
-import { scrollToTopOfPage } from '../../Alerts/alerthelpers';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
+import { scrollToTopOfPage } from 'helpers/general';
 
 export const PromoPanelList = ({
     actions,

@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import Chip from '@mui/material/Chip';
-// import Select from '@mui/material/Select';
-// import MenuItem from '@mui/material/MenuItem';
-// import Checkbox from '@mui/material/Checkbox';
-// import ListItemText from '@mui/material/ListItemText';
-// import FormControl from '@mui/material/FormControl';
-// import InputLabel from '@mui/material/InputLabel';
-// import Grid from '@mui/material/Grid';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -25,9 +18,8 @@ import { PromoPanelSplitButton } from './PromoPanelSplitButton';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
-import { default as locale } from '../../../../../locale/promopanel.locale';
-import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-// import { filterPanelList } from '../promoPanelHelpers';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
+import { scrollToTopOfPage } from 'helpers/general';
 
 const moment = require('moment');
 

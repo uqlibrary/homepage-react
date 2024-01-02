@@ -97,3 +97,8 @@ export const lazyRetry = (importFn, retries = 3, interval = 500) => {
             );
     });
 };
+
+export function scrollToTopOfPage() {
+    const topOfPage = document.getElementById('StandardPage');
+    !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
+}

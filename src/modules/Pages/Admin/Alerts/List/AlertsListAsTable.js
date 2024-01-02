@@ -25,7 +25,8 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../alertsadmin.locale';
 import AlertSplitButton from './AlertSplitButton';
-import { scrollToTopOfPage, systemList } from '../alerthelpers';
+import { systemList } from '../alerthelpers';
+import { scrollToTopOfPage } from 'helpers/general';
 
 const moment = require('moment');
 

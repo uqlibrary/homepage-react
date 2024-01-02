@@ -3,7 +3,7 @@ import EventPanel from './EventPanel';
 import { render, act, fireEvent, WithReduxStore, preview } from 'test-utils';
 import Immutable from 'immutable';
 
-import configData from '../../../../../../data/mock/data/testAndTag/testTagOnLoadInspection';
+import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';
 import locale from '../../testTag.locale.js';
 
 function setup(testProps = {}) {

@@ -19,7 +19,8 @@ import ConfirmationAlert from '../../SharedComponents/ConfirmationAlert/Confirma
 import EventPanel from './EventPanel';
 import AssetPanel from './AssetPanel';
 
-import { scrollToTopOfPage, statusEnum } from '../utils/helpers';
+import { statusEnum } from '../utils/helpers';
+import { scrollToTopOfPage } from 'helpers/general';
 import { useValidation } from '../utils/hooks';
 import { useLocation, useForm, useConfirmationAlert } from '../../helpers/hooks';
 import locale from '../../testTag.locale';

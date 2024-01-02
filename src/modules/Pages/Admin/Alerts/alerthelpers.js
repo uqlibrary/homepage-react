@@ -1,10 +1,5 @@
 const moment = require('moment');
 
-export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
-    const newMoment = new moment(dateString);
-    return newMoment.format(dateFormat);
-}
-
 export function getTimeNowFormatted() {
     return moment().format('YYYY-MM-DDTHH:mm');
 }
@@ -108,8 +103,3 @@ export const systemList = [
         title: 'eSpace',
     },
 ];
-
-export function scrollToTopOfPage() {
-    const topOfPage = document.getElementById('StandardPage');
-    !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
-}

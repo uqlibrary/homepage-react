@@ -13,7 +13,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { default as locale } from 'locale/promopanel.locale';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 
 const moment = require('moment');
 
