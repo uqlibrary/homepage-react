@@ -236,7 +236,7 @@
         "test:debug": "npm-run-all -p test jest-preview"
     },
     "engines": {
-        "npm": "~10.2.3",
+        "npm": "~10.2.5",
         "node": ">=18.19.0"
     },
     "babel": {
