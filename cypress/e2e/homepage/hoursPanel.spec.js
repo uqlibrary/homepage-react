@@ -1,21 +1,20 @@
-context('Hours Accessibility', () => {
-    it('Hours Accessibility', () => {
+context('Library Opening Hours Homepage Panel', () => {
+    it('is Accessible', () => {
         cy.visit('/');
         cy.injectAxe();
-        cy.wait(2000);
         cy.viewport(1300, 1000);
+
         cy.log('Hours');
+        cy.waitUntil(() => cy.get('div[data-testid="library-hours-panel"]').should('exist'));
+
+        // the expected content is found on the page
         cy.get('[data-testid="hours-item-0"]').contains('Arch Music');
 
-        cy.log('Hours list');
-        cy.waitUntil(() => cy.get('div[data-testid="library-hours-panel"]').should('exist'));
-        cy.wait(1000);
         cy.checkA11y('div[data-testid="library-hours-panel"]', {
             reportName: 'Hours',
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
-        cy.log('Done!');
     });
     it('can navigate to specific library hours page', () => {
         cy.intercept('GET', 'https://web.library.uq.edu.au/locations-hours/architecture-music-library', {
@@ -60,13 +59,15 @@ context('Hours Accessibility', () => {
         cy.get('[data-testid="hours-item-0"] div:first-child').contains('Arch Music');
         cy.get('[data-testid="hours-item-0"] div:nth-child(2)').contains('7:30am - 7:30pm');
         cy.get('[data-testid="hours-item-0"] div:nth-child(3)').should('not.exist');
+
         cy.get('[data-testid="hours-item-3"] div:first-child').contains('Central'); // Central
         cy.get('[data-testid="hours-item-3"] div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-3"] div:nth-child(3)').contains('8am - 6pm');
+
         cy.get('[data-testid="hours-item-10"]')
             .scrollIntoView()
             .find('div:nth-child(2)')
-            .contains('See location'); // Hervey Bay - departments empty
-        cy.get('[data-testid="hours-item-13"] div:nth-child(2)').contains('See location'); // Rockhampton - missing department field completely
+            .contains('See location'); // Hervey Bay - mock response has 'departments' empty
+        cy.get('[data-testid="hours-item-13"] div:nth-child(2)').contains('See location'); // Rockhampton - mock response is missing department field completely
     });
 });
