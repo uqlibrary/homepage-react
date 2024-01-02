@@ -14,7 +14,7 @@ export default {
     },
     fields: {
         user_uid: {
-            label: 'User ID',
+            label: locale.pages.manage.users.form.columns.user_uid.label,
             component: (props, data) => (
                 <TextField
                     variant="standard"
@@ -49,7 +49,7 @@ export default {
                 return (
                     <FormControlLabel
                         control={<Checkbox color="primary" checked={props.value} {...props} />}
-                        label={'Inspect'}
+                        label={locale.pages.manage.users.form.columns.can_inspect_cb.label}
                     />
                 );
             },
@@ -107,7 +107,7 @@ export default {
                                 {...props}
                             />
                         }
-                        label={'Admin'}
+                        label={locale.pages.manage.users.form.columns.can_admin_cb.label}
                     />
                 );
             },
@@ -123,7 +123,7 @@ export default {
             component: props => (
                 <FormControlLabel
                     control={<Checkbox color="primary" checked={props.value} {...props} />}
-                    label={'Alter'}
+                    label={locale.pages.manage.users.form.columns.can_alter_cb.label}
                 />
             ),
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
@@ -135,7 +135,7 @@ export default {
             component: props => (
                 <FormControlLabel
                     control={<Checkbox color="primary" checked={props.value} {...props} />}
-                    label={'Report'}
+                    label={locale.pages.manage.users.form.columns.can_see_reports_cb.label}
                 />
             ),
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },
@@ -147,7 +147,7 @@ export default {
             component: (props, data) => (
                 <FormControlLabel
                     control={<Checkbox color="primary" disabled={data?.isSelf} checked={props.value} {...props} />}
-                    label={'Is Current'}
+                    label={locale.pages.manage.users.form.columns.user_current_flag_cb.label}
                 />
             ),
             fieldParams: { canEdit: true, renderInTable: false, type: 'checkbox' },

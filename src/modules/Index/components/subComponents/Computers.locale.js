@@ -12,7 +12,8 @@ export const computersLocale = {
         'Herston Health Sciences Library': 'Herston',
         'Law Library': 'St Lucia',
         'Whitty Mater': 'Other',
-        'PACE Health Sciences Library': 'Other',
+        'PACE Health Sciences Library': 'Dutton Park', // can be removed after Jan 2024
+        'Dutton Park Health Sciences Library': 'Dutton Park',
     },
     unavailable: "We can't load computer availability right now. Please refresh your browser or try again later.",
 };
