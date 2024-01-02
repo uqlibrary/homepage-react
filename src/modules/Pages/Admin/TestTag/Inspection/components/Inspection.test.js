@@ -8,12 +8,12 @@ import {
     // intersectionMockInstance,
 } from 'react-intersection-observer/test-utils';
 
-import configData from '../../../../../../data/mock/data/testAndTag/testTagOnLoadInspection';
-import userData from '../../../../../../data/mock/data/testAndTag/testTagUser';
-import assetData from '../../../../../../data/mock/data/testAndTag/testTagAssets';
-import assetTypeData from '../../../../../../data/mock/data/testAndTag/testTagAssetTypes';
-import floorData from '../../../../../../data/mock/data/testAndTag/testTagFloors';
-import roomData from '../../../../../../data/mock/data/testAndTag/testTagRooms';
+import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';
+import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
+import assetData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
+import assetTypeData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
+import floorData from '../../../../../../data/mock/data/testing/testAndTag/testTagFloors';
+import roomData from '../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 
 import locale from '../../testTag.locale.js';
 import { getUserPermissions } from '../../helpers/auth';

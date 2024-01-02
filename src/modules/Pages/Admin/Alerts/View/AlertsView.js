@@ -17,6 +17,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
+import { default as locale } from '../alertsadmin.locale';
 import {
     getTimeNowFormatted,
     extractFieldsFromBody,
@@ -24,10 +25,9 @@ import {
     getBody,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
-    scrollToTopOfPage,
     systemList,
 } from '../alerthelpers';
-import { default as locale } from '../alertsadmin.locale';
+import { scrollToTopOfPage } from 'helpers/general';
 
 const useStyles = makeStyles(() => ({
     previewWrapper: {

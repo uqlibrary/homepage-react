@@ -3,9 +3,9 @@ import InspectionPanel from './InspectionPanel';
 import { rtlRender, rerender, act, fireEvent, WithReduxStore, waitFor, within } from 'test-utils';
 import Immutable from 'immutable';
 
-import configData from '../../../../../../data/mock/data/testAndTag/testTagOnLoadInspection';
-import assetData from '../../../../../../data/mock/data/testAndTag/testTagAssets';
-import userData from '../../../../../../data/mock/data/testAndTag/testTagUser';
+import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';
+import assetData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
+import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import locale from '../../testTag.locale.js';
 
 const formValues = {

@@ -6,7 +6,6 @@ import moment from 'moment';
 import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
 
-// import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import AlertsListAsTable from './AlertsListAsTable';

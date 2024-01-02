@@ -11,12 +11,9 @@ import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/Spotlights
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import moment from 'moment';
-import {
-    isPastSpotlight,
-    isScheduledSpotlight,
-    scrollToTopOfPage,
-} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { isPastSpotlight, isScheduledSpotlight } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import SpotlightViewHistory from './SpotlightViewHistory';
+import { scrollToTopOfPage } from 'helpers/general';
 
 const useStyles = makeStyles(
     theme => ({

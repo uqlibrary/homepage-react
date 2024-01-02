@@ -35,8 +35,6 @@ import moment from 'moment';
 import {
     FILTER_STORAGE_NAME,
     filterSpotlights,
-    formatDate,
-    getTimeMondayComing,
     isCurrentSpotlight,
     isPastSpotlight,
     isScheduledSpotlight,
@@ -44,6 +42,7 @@ import {
     navigateToCloneForm,
     navigateToView,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { formatDate, getTimeMondayComing } from 'helpers/dateTime';
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
@@ -741,7 +740,8 @@ export const SpotlightsListAsTable = ({
                                                         }
                                                         data-testid={`spotlight-list-${tableType}-delete-button`}
                                                         title={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
-                                                        size="large">
+                                                        size="large"
+                                                    >
                                                         <DeleteIcon
                                                             className={`${
                                                                 !!deleteActive
@@ -758,7 +758,8 @@ export const SpotlightsListAsTable = ({
                                                         data-testid={`spotlight-list-${tableType}-deselect-button`}
                                                         className={classes.iconHighlighted}
                                                         title={locale.listPage.tooltips.clearSelectedSpotlightsButton}
-                                                        size="large">
+                                                        size="large"
+                                                    >
                                                         <CloseIcon />
                                                     </IconButton>
                                                 </span>
@@ -809,7 +810,8 @@ export const SpotlightsListAsTable = ({
                                                 }}
                                                 onChange={filterRowsByText}
                                                 label={locale.listPage.textSearch.displayLabel}
-                                                value={savedTextTerm || textSearch} />
+                                                value={savedTextTerm || textSearch}
+                                            />
                                             <CloseIcon
                                                 id="spotlights-list-clear-text-filter-clear-button"
                                                 data-testid="spotlights-list-clear-text-filter-clear-button"
