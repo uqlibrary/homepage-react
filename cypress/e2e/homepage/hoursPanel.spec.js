@@ -56,18 +56,27 @@ context('Library Opening Hours Homepage Panel', () => {
     it('shows the expected values in hours', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
+
+        cy.log('Architecture has study space hours but not askus hours');
         cy.get('[data-testid="hours-item-0"] div:first-child').contains('Arch Music');
         cy.get('[data-testid="hours-item-0"] div:nth-child(2)').contains('7:30am - 7:30pm');
         cy.get('[data-testid="hours-item-0"] div:nth-child(3)').should('not.exist');
 
-        cy.get('[data-testid="hours-item-3"] div:first-child').contains('Central'); // Central
+        cy.log('Central has study space AND askus hours');
+        cy.get('[data-testid="hours-item-3"] div:first-child').contains('Central');
         cy.get('[data-testid="hours-item-3"] div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-3"] div:nth-child(3)').contains('8am - 6pm');
 
-        cy.get('[data-testid="hours-item-10"]')
+        cy.log('Hervey Bay has an empty departments field, so we see "See Location');
+        cy.get('[data-testid="hours-item-9"] div:first-child')
             .scrollIntoView()
-            .find('div:nth-child(2)')
-            .contains('See location'); // Hervey Bay - mock response has 'departments' empty
-        cy.get('[data-testid="hours-item-13"] div:nth-child(2)').contains('See location'); // Rockhampton - mock response is missing department field completely
+            .contains('HerveyBay');
+        cy.get('[data-testid="hours-item-9"] div:nth-child(2)').contains('See location');
+
+        cy.log('Rockhampton has a missing department field (should never happen) so we see "See location"');
+        cy.get('[data-testid="hours-item-12"] div:first-child')
+            .scrollIntoView()
+            .contains('Rockhampton');
+        cy.get('[data-testid="hours-item-12"] div:nth-child(2)').contains('See location');
     });
 });
