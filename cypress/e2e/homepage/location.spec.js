@@ -48,6 +48,15 @@ context('Location component', () => {
         cy.get('[data-testid="computer-row-0"]').should('contain', 'Herston');
         cy.get('[data-testid="hours-item-0"]').should('contain', 'Herston');
 
+        cy.log('Should set the cookie to Dutton Park');
+        cy.get('button[data-testid="location-button"]').click();
+        cy.get('li[data-testid="location-option-4"').click();
+        cy.getCookie('location').should('have.property', 'value', 'Dutton%20Park');
+        cy.get('button[data-testid="location-button"]').trigger('mouseover');
+        cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently Dutton Park');
+        cy.get('[data-testid="computer-row-0"]').should('contain', 'Dutton Park');
+        cy.get('[data-testid="hours-item-0"]').should('contain', 'Dutton Park');
+
         cy.log('Should set the cookie to null');
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-0"').click();
