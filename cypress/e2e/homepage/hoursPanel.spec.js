@@ -68,10 +68,10 @@ context('Library Opening Hours Homepage Panel', () => {
         cy.get('[data-testid="hours-item-3"] div:nth-child(3)').contains('8am - 6pm');
 
         cy.log('Hervey Bay has an empty departments field, so we see "See Location');
-        cy.get('[data-testid="hours-item-9"] div:first-child')
+        cy.get('[data-testid="hours-item-10"] div:first-child')
             .scrollIntoView()
             .contains('HerveyBay');
-        cy.get('[data-testid="hours-item-9"] div:nth-child(2)').contains('See location');
+        cy.get('[data-testid="hours-item-10"] div:nth-child(2)').contains('See location');
 
         cy.log('Rockhampton has a missing department field (should never happen) so we see "See location"');
         cy.get('[data-testid="hours-item-12"] div:first-child')
