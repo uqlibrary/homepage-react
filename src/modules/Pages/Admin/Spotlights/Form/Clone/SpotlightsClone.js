@@ -8,7 +8,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
-import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'helpers/dateTime';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/dateTimeHelper';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 export const SpotlightsClone = ({
@@ -50,7 +50,6 @@ export const SpotlightsClone = ({
                 img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
                 weight: spotlight?.weight || 1000,
                 active: spotlight?.active || 0,
-                // minimumDate: getStartOfDayFormatted(),
                 type: 'clone',
                 // eslint-disable-next-line camelcase
                 admin_notes: spotlight?.admin_notes || /* istanbul ignore next */ '',

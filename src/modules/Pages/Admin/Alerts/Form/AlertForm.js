@@ -21,7 +21,6 @@ import { useConfirmationState } from 'hooks';
 
 import { default as locale } from '../alertsadmin.locale';
 import {
-    formatDate,
     getBody,
     getTimeEndOfDayFormatted,
     getTimeNowFormatted,
@@ -29,6 +28,7 @@ import {
     manuallyMakeWebComponentBePermanent,
     systemList,
 } from '../alerthelpers';
+import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
 
 const moment = require('moment');

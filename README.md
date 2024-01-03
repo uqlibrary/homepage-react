@@ -24,7 +24,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 
 2. Create a .env file based on example.env
 
-3. install npm: `nvm use 16.20.2 && npm i -g npm@8 jest webpack-dev-server`
+3. install npm: `nvm use 18.19.0 && npm i -g npm@10 jest webpack-dev-server` (current npm is 10.2.5)
  
 4. Create these git hooks to manage branches to project standard: 
 

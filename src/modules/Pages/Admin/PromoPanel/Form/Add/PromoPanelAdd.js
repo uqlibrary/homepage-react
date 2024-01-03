@@ -5,7 +5,7 @@ import PromoPanelHelpDrawer from '../../PromoPanelHelpDrawer';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'helpers/dateTime';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/dateTimeHelper';
 
 export const PromoPanelAdd = ({
     actions,
