@@ -26,7 +26,6 @@ export const hoursLocale = {
         Herston: 'Herston',
         Law: 'St Lucia',
         'Whitty Mater': 'Other',
-        PACE: 'Dutton Park', // can be removed after Jan 2024
         'Dutton Park': 'Dutton Park',
         Bundaberg: 'Other',
         HerveyBay: 'Other',
