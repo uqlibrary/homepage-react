@@ -17,6 +17,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { computersLocale } from './Computers.locale';
+import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
 import ContentLoader from 'react-content-loader';
 
 const MyLoader = props => (
@@ -208,7 +209,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                 levels: levelsData,
                 buildingCode: parseInt(item.buildingCode, 10),
                 buildingNumber: parseInt(item.buildingNumber, 10),
-                campus: computersLocale.campusMap[item.library],
+                campus: locationLocale.computersCampusMap[item.library],
             };
         });
     const alphaAvailability =
