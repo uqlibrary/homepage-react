@@ -12,6 +12,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { hoursLocale } from './Hours.locale';
+import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
 import Button from '@mui/material/Button';
 import ContentLoader from 'react-content-loader';
 
@@ -243,7 +244,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         name: item.abbr,
                         url: item.url,
                         alt: item.name,
-                        campus: hoursLocale.campusMap[item.abbr],
+                        campus: locationLocale.hoursCampusMap[item.abbr],
                         departments,
                     };
                 }
