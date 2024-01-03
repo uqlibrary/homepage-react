@@ -22,6 +22,8 @@ context('Location component', () => {
         cy.getCookie('location').should('have.property', 'value', 'St%20Lucia');
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
         cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently St Lucia');
+        cy.get('[data-testid="computer-row-0"]').should('contain', 'Architecture');
+        cy.get('[data-testid="hours-item-0"]').should('contain', 'Arch');
 
         cy.log('Should set the cookie to Gatton');
         cy.get('button[data-testid="location-button"]').click();
@@ -29,6 +31,8 @@ context('Location component', () => {
         cy.getCookie('location').should('have.property', 'value', 'Gatton');
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
         cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently Gatton');
+        cy.get('[data-testid="computer-row-0"]').should('contain', 'Gatton');
+        cy.get('[data-testid="hours-item-0"]').should('contain', 'Gatton');
 
         cy.log('Should close when opened if clicking on body');
         cy.get('button[data-testid="location-button"]').click();
@@ -41,11 +45,15 @@ context('Location component', () => {
         cy.getCookie('location').should('have.property', 'value', 'Herston');
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
         cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently Herston');
+        cy.get('[data-testid="computer-row-0"]').should('contain', 'Herston');
+        cy.get('[data-testid="hours-item-0"]').should('contain', 'Herston');
 
         cy.log('Should set the cookie to null');
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-0"').click();
         cy.getCookie('location').should('have.property', 'value', 'null');
         cy.get('body').type('{esc}');
+        cy.get('[data-testid="computer-row-0"]').should('contain', 'Architecture');
+        cy.get('[data-testid="hours-item-0"]').should('contain', 'Arch');
     });
 });

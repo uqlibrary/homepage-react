@@ -127,8 +127,8 @@ export const Location = ({ idLabel }) => {
                         data-analyticsid={getTagId(`option-${index}`)}
                         id={getTagId(`option-${index}`)}
                     >
-                        {(thisLocation === item.location || thisLocation === item.value) && <RoomIcon />}
-                        {item.location}
+                        {(thisLocation === item.displayName || thisLocation === item.value) && <RoomIcon />}
+                        {item.displayName}
                     </MenuItem>
                 ))}
             </Menu>
