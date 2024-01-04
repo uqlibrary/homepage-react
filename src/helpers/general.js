@@ -103,7 +103,7 @@ export function scrollToTopOfPage() {
     !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
 }
 
-function rotateCharacters(str, indexCount = 1) {
+export function rotateCharacters(str, indexCount = 1) {
     return str
         .split('')
         .map(char => {
