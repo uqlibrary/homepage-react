@@ -211,14 +211,15 @@ export const hasDepartments = item => {
 };
 
 const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
+    const LOCATION_COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
     const classes = useStyles();
     const [cookies] = useCookies();
-    const [location, setLocation] = React.useState(cookies.location || undefined);
+    const [location, setLocation] = React.useState(cookies[LOCATION_COOKIE_NAME] || undefined);
     const [showIcon, setShowIcon] = React.useState(false);
     useEffect(() => {
-        if (location !== cookies.location) {
+        if (location !== cookies[LOCATION_COOKIE_NAME]) {
             setShowIcon(true);
-            setLocation(cookies.location);
+            setLocation(cookies[LOCATION_COOKIE_NAME]);
             setTimeout(() => {
                 setShowIcon(false);
             }, 5000);
@@ -261,7 +262,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
         });
     const sortedHours =
         !!account && !!account.id
-            ? matchSorter(alphaHours, cookies.location, {
+            ? matchSorter(alphaHours, cookies[LOCATION_COOKIE_NAME], {
                   keys: ['campus'],
                   threshold: matchSorter.rankings.NO_MATCH,
               })
@@ -350,7 +351,8 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     data-analyticsid={`hours-item-${index}`}
                                                     href={item.url}
                                                     className={
-                                                        (cookies.location === item.campus && classes.selectedCampus) ||
+                                                        (cookies[LOCATION_COOKIE_NAME] === item.campus &&
+                                                            classes.selectedCampus) ||
                                                         ''
                                                     }
                                                 >
