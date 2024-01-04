@@ -270,7 +270,7 @@ const BookExamBooth = ({
                                     <DatePicker
                                         inputFormat={dateFormat}
                                         id="startDate"
-                                        minDate={yesterday}
+                                        minDate={moment(yesterday, 'DD/MM/YYYY')}
                                         name="startDate"
                                         onChange={_handleStartDateChange}
                                         type="date"
