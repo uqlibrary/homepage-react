@@ -520,7 +520,7 @@ const PersonalisedPanel = ({
                             </Grid>
                         )}
                         <Grid item xs={12} lg className={classes.locationWrapper}>
-                            <Location />
+                            <Location account={account} />
                         </Grid>
                     </Grid>
                 </div>

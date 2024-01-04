@@ -171,19 +171,27 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
     const LOCATION_COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
     const classes = useStyles();
     const [cookies] = useCookies();
-    const [location, setLocation] = React.useState(cookies[LOCATION_COOKIE_NAME] || undefined);
+    const [preferredLocation, setPreferredLocation] = React.useState(undefined);
     const [showIcon, setShowIcon] = React.useState(false);
     const [collapse, setCollapse] = React.useState({});
     const [mapSrc, setMapSrc] = React.useState(null);
     useEffect(() => {
-        if (location !== cookies[LOCATION_COOKIE_NAME]) {
+        const locationCookie = cookies.hasOwnProperty(LOCATION_COOKIE_NAME) ? cookies[LOCATION_COOKIE_NAME] : {};
+        if (!!account) {
+            const username = !!account && account.id;
+            setPreferredLocation(
+                locationCookie.hasOwnProperty(username) ? locationCookie[username] : locationLocale.noLocationSet,
+            );
+        }
+    }, [cookies, account]);
+    useEffect(() => {
+        if (preferredLocation !== undefined && preferredLocation !== locationLocale.noLocationSet) {
             setShowIcon(true);
-            setLocation(cookies[LOCATION_COOKIE_NAME]);
             setTimeout(() => {
                 setShowIcon(false);
             }, 5000);
         }
-    }, [location, cookies]);
+    }, [preferredLocation, cookies]);
     const cleanedAvailability =
         computerAvailability &&
         computerAvailability.map(item => {
@@ -226,7 +234,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
     const sortedComputers =
         !!account && !!account.id
             ? alphaAvailability &&
-              matchSorter(alphaAvailability, cookies[LOCATION_COOKIE_NAME], {
+              matchSorter(alphaAvailability, preferredLocation, {
                   keys: ['campus'],
                   threshold: matchSorter.rankings.NO_MATCH,
               })
@@ -415,14 +423,12 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                         aria-expanded={!!collapse[index]}
                                                         classes={{
                                                             root: `${classes.linkButton} ${
-                                                                item.campus &&
-                                                                cookies[LOCATION_COOKIE_NAME] === item.campus
+                                                                item.campus && preferredLocation === item.campus
                                                                     ? classes.selectedCampus
                                                                     : ''
                                                             }`,
                                                             label: `${classes.linkButtonLabel} ${
-                                                                item.campus &&
-                                                                cookies[LOCATION_COOKIE_NAME] === item.campus
+                                                                item.campus && preferredLocation === item.campus
                                                                     ? classes.selectedCampus
                                                                     : ''
                                                             }`,
@@ -484,8 +490,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                         classes={{
                                                                             root: classes.linkButton,
                                                                             label: `${classes.linkButtonLabel} ${
-                                                                                cookies[LOCATION_COOKIE_NAME] ===
-                                                                                item.campus
+                                                                                preferredLocation === item.campus
                                                                                     ? classes.selectedCampus
                                                                                     : ''
                                                                             }`,
