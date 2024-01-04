@@ -6,7 +6,6 @@ module.exports = defineConfig({
     video: false,
     chromeWebSecurity: false,
     defaultCommandTimeout: 10000,
-    videoUploadOnPasses: false,
     projectId: 'd2f4io',
     blockHosts: ['www.googletagmanager.com'],
     numTestsKeptInMemory: 100,
