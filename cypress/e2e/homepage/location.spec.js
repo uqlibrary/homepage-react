@@ -65,4 +65,12 @@ context('Location component', () => {
         cy.get('[data-testid="computer-row-0"]').should('contain', 'Architecture');
         cy.get('[data-testid="hours-item-0"]').should('contain', 'Arch');
     });
+
+    it('the logged out user does not see the cookie value', () => {
+        cy.setCookie('location', 'Gatton');
+        cy.visit('/?user=public');
+        cy.viewport(1300, 1000);
+        cy.get('[data-testid="computer-row-0"]').should('contain', 'Architecture');
+        cy.get('[data-testid="hours-item-0"]').should('contain', 'Arch');
+    });
 });

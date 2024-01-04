@@ -167,7 +167,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError }) => {
+const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError, account }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || undefined);
@@ -223,11 +223,13 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                 return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
             });
     const sortedComputers =
-        alphaAvailability &&
-        matchSorter(alphaAvailability, cookies.location, {
-            keys: ['campus'],
-            threshold: matchSorter.rankings.NO_MATCH,
-        });
+        !!account && !!account.id
+            ? alphaAvailability &&
+              matchSorter(alphaAvailability, cookies.location, {
+                  keys: ['campus'],
+                  threshold: matchSorter.rankings.NO_MATCH,
+              })
+            : alphaAvailability;
     const handleCollapse = index => {
         if (collapse[index]) {
             setCollapse({ [index]: false });
@@ -520,6 +522,7 @@ Computers.propTypes = {
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
     computerAvailabilityError: PropTypes.bool,
+    account: PropTypes.object,
 };
 
 Computers.defaultProps = {};

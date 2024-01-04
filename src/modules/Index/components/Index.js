@@ -201,6 +201,7 @@ export const Index = ({
                             computerAvailability={computerAvailability}
                             computerAvailabilityLoading={computerAvailabilityLoading}
                             computerAvailabilityError={computerAvailabilityError}
+                            account={account}
                         />
                     </Grid>
                     {accountLoading === false && !!account && (
