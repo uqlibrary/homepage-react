@@ -259,10 +259,13 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
             // eslint-disable-next-line no-nested-ternary
             return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
         });
-    const sortedHours = matchSorter(alphaHours, cookies.location, {
-        keys: ['campus'],
-        threshold: matchSorter.rankings.NO_MATCH,
-    });
+    const sortedHours =
+        !!account && !!account.id
+            ? matchSorter(alphaHours, cookies.location, {
+                  keys: ['campus'],
+                  threshold: matchSorter.rankings.NO_MATCH,
+              })
+            : alphaHours;
     const navigateToUrl = url => {
         window.location.href = url;
     };
