@@ -8,6 +8,7 @@ import Menu from '@mui/material/Menu';
 import { makeStyles } from '@mui/styles';
 import { useCookies } from 'react-cookie';
 import { locale } from './locale';
+import { obfusticateUsername } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
     selectedItem: {
@@ -57,24 +58,27 @@ export const Location = ({ idLabel, account }) => {
 
     function cookieContents(account, location) {
         const cookieValue = {};
-        cookieValue[account.id] = location;
+        cookieValue[obfusticateUsername(account)] = location;
         return cookieValue;
     }
 
     function preferredLocation() {
-        const locationCookie = cookies[COOKIE_NAME];
+        /* istanbul ignore next */
         if (!account) {
             return locale.noLocationSet;
         }
 
-        const username = !!account && account.id;
-        if (locationCookie[username]) {
-            return locationCookie[username];
+        const locationCookie = cookies[COOKIE_NAME];
+        const username1 = obfusticateUsername(account);
+        if (locationCookie[username1]) {
+            return locationCookie[username1];
         }
 
         // the username isn't in the cookie? different user!! public computer? clear that cookie!
+        /* istanbul ignore next */
         removeCookie(COOKIE_NAME);
 
+        /* istanbul ignore next */
         return locale.noLocationSet;
     }
 
@@ -131,7 +135,7 @@ export const Location = ({ idLabel, account }) => {
                 >
                     <RoomIcon
                         className={`${classes.icon} ${
-                            !cookies.location || cookies.location === 'null' ? classes.wiggler : ''
+                            !cookies[COOKIE_NAME] || cookies[COOKIE_NAME] === 'null' ? classes.wiggler : ''
                         }`}
                     />{' '}
                     {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}

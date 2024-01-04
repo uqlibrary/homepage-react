@@ -15,6 +15,7 @@ import { hoursLocale } from './Hours.locale';
 import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
 import Button from '@mui/material/Button';
 import ContentLoader from 'react-content-loader';
+import { obfusticateUsername } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -219,7 +220,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
     useEffect(() => {
         const locationCookie = cookies.hasOwnProperty(LOCATION_COOKIE_NAME) ? cookies[LOCATION_COOKIE_NAME] : {};
         if (!!account) {
-            const username = !!account && account.id;
+            const username = obfusticateUsername(account);
             setPreferredLocation(
                 locationCookie.hasOwnProperty(username) ? locationCookie[username] : locationLocale.noLocationSet,
             );

@@ -19,6 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { computersLocale } from './Computers.locale';
 import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
 import ContentLoader from 'react-content-loader';
+import { obfusticateUsername } from 'helpers/general';
 
 const MyLoader = props => (
     <ContentLoader
@@ -178,7 +179,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
     useEffect(() => {
         const locationCookie = cookies.hasOwnProperty(LOCATION_COOKIE_NAME) ? cookies[LOCATION_COOKIE_NAME] : {};
         if (!!account) {
-            const username = !!account && account.id;
+            const username = obfusticateUsername(account);
             setPreferredLocation(
                 locationCookie.hasOwnProperty(username) ? locationCookie[username] : locationLocale.noLocationSet,
             );
