@@ -46,21 +46,24 @@ const useStyles = makeStyles(theme => ({
 
 export const Location = ({ idLabel }) => {
     const classes = useStyles();
-    const [cookies, setCookie] = useCookies();
+    const [cookies, setCookie, removeCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const OLD_COOKIE_NAME = 'location';
+    const COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
 
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
-    const handleLocationClose = location => () => {
+
+    function cookieExpiryDate() {
         const current = new Date();
         const nextYear = new Date();
         nextYear.setFullYear(current.getFullYear() + 1);
-        if (location === 'not set') {
-            setCookie('location', null, { expires: nextYear });
-        } else {
-            setCookie('location', location, { expires: nextYear });
-        }
+        return nextYear;
+    }
+    const handleLocationClose = location => () => {
+        setCookie(COOKIE_NAME, location === 'not set' ? null : location, { expires: cookieExpiryDate() });
         setAnchorEl(null);
     };
     const handleClose = () => {
@@ -68,10 +71,17 @@ export const Location = ({ idLabel }) => {
     };
 
     let thisLocation = null;
-    if (!cookies.location || cookies.location === 'null') {
+    if (cookies[OLD_COOKIE_NAME] && cookies[OLD_COOKIE_NAME] !== 'null') {
+        // old cookie found - they last a year - this reset can be removed in feb 2025
+        thisLocation = cookies[OLD_COOKIE_NAME];
+        const nextYear = cookieExpiryDate();
+        setCookie(COOKIE_NAME, thisLocation, { expires: nextYear });
+        removeCookie(OLD_COOKIE_NAME);
+    }
+    if (!cookies[COOKIE_NAME] || cookies[COOKIE_NAME] === 'null') {
         thisLocation = locale.noLocationSet;
     } else {
-        thisLocation = cookies.location;
+        thisLocation = cookies[COOKIE_NAME];
     }
     const getTagId = (tag = null) => {
         const locationPrefix = !!idLabel ? /* istanbul ignore next */ '-' + idLabel : '';

@@ -168,16 +168,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError, account }) => {
+    const LOCATION_COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
     const classes = useStyles();
     const [cookies] = useCookies();
-    const [location, setLocation] = React.useState(cookies.location || undefined);
+    const [location, setLocation] = React.useState(cookies[LOCATION_COOKIE_NAME] || undefined);
     const [showIcon, setShowIcon] = React.useState(false);
     const [collapse, setCollapse] = React.useState({});
     const [mapSrc, setMapSrc] = React.useState(null);
     useEffect(() => {
-        if (location !== cookies.location) {
+        if (location !== cookies[LOCATION_COOKIE_NAME]) {
             setShowIcon(true);
-            setLocation(cookies.location);
+            setLocation(cookies[LOCATION_COOKIE_NAME]);
             setTimeout(() => {
                 setShowIcon(false);
             }, 5000);
@@ -225,7 +226,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
     const sortedComputers =
         !!account && !!account.id
             ? alphaAvailability &&
-              matchSorter(alphaAvailability, cookies.location, {
+              matchSorter(alphaAvailability, cookies[LOCATION_COOKIE_NAME], {
                   keys: ['campus'],
                   threshold: matchSorter.rankings.NO_MATCH,
               })
@@ -414,12 +415,14 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                         aria-expanded={!!collapse[index]}
                                                         classes={{
                                                             root: `${classes.linkButton} ${
-                                                                item.campus && cookies.location === item.campus
+                                                                item.campus &&
+                                                                cookies[LOCATION_COOKIE_NAME] === item.campus
                                                                     ? classes.selectedCampus
                                                                     : ''
                                                             }`,
                                                             label: `${classes.linkButtonLabel} ${
-                                                                item.campus && cookies.location === item.campus
+                                                                item.campus &&
+                                                                cookies[LOCATION_COOKIE_NAME] === item.campus
                                                                     ? classes.selectedCampus
                                                                     : ''
                                                             }`,
@@ -481,7 +484,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                         classes={{
                                                                             root: classes.linkButton,
                                                                             label: `${classes.linkButtonLabel} ${
-                                                                                cookies.location === item.campus
+                                                                                cookies[LOCATION_COOKIE_NAME] ===
+                                                                                item.campus
                                                                                     ? classes.selectedCampus
                                                                                     : ''
                                                                             }`,
