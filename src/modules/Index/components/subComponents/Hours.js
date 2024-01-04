@@ -214,17 +214,25 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
     const LOCATION_COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
     const classes = useStyles();
     const [cookies] = useCookies();
-    const [location, setLocation] = React.useState(cookies[LOCATION_COOKIE_NAME] || undefined);
+    const [preferredLocation, setPreferredLocation] = React.useState(undefined);
     const [showIcon, setShowIcon] = React.useState(false);
     useEffect(() => {
-        if (location !== cookies[LOCATION_COOKIE_NAME]) {
+        const locationCookie = cookies.hasOwnProperty(LOCATION_COOKIE_NAME) ? cookies[LOCATION_COOKIE_NAME] : {};
+        if (!!account) {
+            const username = !!account && account.id;
+            setPreferredLocation(
+                locationCookie.hasOwnProperty(username) ? locationCookie[username] : locationLocale.noLocationSet,
+            );
+        }
+    }, [cookies, account]);
+    useEffect(() => {
+        if (preferredLocation !== undefined && preferredLocation !== locationLocale.noLocationSet) {
             setShowIcon(true);
-            setLocation(cookies[LOCATION_COOKIE_NAME]);
             setTimeout(() => {
                 setShowIcon(false);
             }, 5000);
         }
-    }, [location, cookies]);
+    }, [preferredLocation, cookies]);
     const cleanedHours =
         (!libHoursError &&
             !!libHours &&
@@ -262,7 +270,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
         });
     const sortedHours =
         !!account && !!account.id
-            ? matchSorter(alphaHours, cookies[LOCATION_COOKIE_NAME], {
+            ? matchSorter(alphaHours, preferredLocation, {
                   keys: ['campus'],
                   threshold: matchSorter.rankings.NO_MATCH,
               })
@@ -351,8 +359,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     data-analyticsid={`hours-item-${index}`}
                                                     href={item.url}
                                                     className={
-                                                        (cookies[LOCATION_COOKIE_NAME] === item.campus &&
-                                                            classes.selectedCampus) ||
+                                                        (preferredLocation === item.campus && classes.selectedCampus) ||
                                                         ''
                                                     }
                                                 >

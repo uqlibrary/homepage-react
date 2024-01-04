@@ -44,17 +44,39 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Location = ({ idLabel }) => {
+export const Location = ({ idLabel, account }) => {
     const classes = useStyles();
     const [cookies, setCookie, removeCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const OLD_COOKIE_NAME = 'location';
     const COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
 
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
+
+    function cookieContents(account, location) {
+        const cookieValue = {};
+        cookieValue[account.id] = location;
+        return cookieValue;
+    }
+
+    function preferredLocation() {
+        const locationCookie = cookies[COOKIE_NAME];
+        if (!account) {
+            return locale.noLocationSet;
+        }
+
+        const username = !!account && account.id;
+        if (locationCookie[username]) {
+            return locationCookie[username];
+        }
+
+        // the username isn't in the cookie? different user!! public computer? clear that cookie!
+        removeCookie(COOKIE_NAME);
+
+        return locale.noLocationSet;
+    }
 
     function cookieExpiryDate() {
         const current = new Date();
@@ -63,26 +85,28 @@ export const Location = ({ idLabel }) => {
         return nextYear;
     }
     const handleLocationClose = location => () => {
-        setCookie(COOKIE_NAME, location === 'not set' ? null : location, { expires: cookieExpiryDate() });
+        setCookie(COOKIE_NAME, location === 'not set' ? null : cookieContents(account, location), {
+            expires: cookieExpiryDate(),
+        });
         setAnchorEl(null);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
 
-    let thisLocation = null;
+    // temporary code to rename old cookie; these cookies are set to last a year
+    // this if... can be removed in feb 2025
+    const OLD_COOKIE_NAME = 'location';
     if (cookies[OLD_COOKIE_NAME] && cookies[OLD_COOKIE_NAME] !== 'null') {
-        // old cookie found - they last a year - this reset can be removed in feb 2025
-        thisLocation = cookies[OLD_COOKIE_NAME];
-        const nextYear = cookieExpiryDate();
-        setCookie(COOKIE_NAME, thisLocation, { expires: nextYear });
+        const location = cookies[OLD_COOKIE_NAME];
         removeCookie(OLD_COOKIE_NAME);
+        const nextYear = cookieExpiryDate();
+        setCookie(COOKIE_NAME, cookieContents(account, location), { expires: nextYear });
     }
-    if (!cookies[COOKIE_NAME] || cookies[COOKIE_NAME] === 'null') {
-        thisLocation = locale.noLocationSet;
-    } else {
-        thisLocation = cookies[COOKIE_NAME];
-    }
+
+    const thisLocation =
+        !cookies[COOKIE_NAME] || cookies[COOKIE_NAME] === 'null' ? locale.noLocationSet : preferredLocation();
+
     const getTagId = (tag = null) => {
         const locationPrefix = !!idLabel ? /* istanbul ignore next */ '-' + idLabel : '';
         const locationSuffix = !!tag ? '-' + tag : '';
@@ -148,6 +172,7 @@ export const Location = ({ idLabel }) => {
 
 Location.propTypes = {
     idLabel: PropTypes.string,
+    account: PropTypes.object,
 };
 
 Location.defaultProps = {
