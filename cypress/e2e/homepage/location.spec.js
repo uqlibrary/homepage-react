@@ -13,6 +13,16 @@ context('Location component', () => {
     });
 
     it('Works as expected', () => {
+        function assertCookieHas(cookie, expectedLocation, username = 'vanilla') {
+            const decodedValue = decodeURIComponent(cookie.value);
+            const parsedValue = JSON.parse(decodedValue);
+            if (expectedLocation === null) {
+                expect(parsedValue).to.equal(null);
+            } else {
+                expect(parsedValue[username]).to.equal(expectedLocation);
+            }
+        }
+
         cy.clearCookies();
         cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
@@ -21,7 +31,8 @@ context('Location component', () => {
         cy.log('Should set the cookie to St Lucia');
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-1"').click();
-        cy.getCookie(LOCATION_COOKIE_NAME).should('have.property', 'value', 'St%20Lucia');
+
+        cy.getCookie(LOCATION_COOKIE_NAME).then(cookie => assertCookieHas(cookie, 'St Lucia'));
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
         cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently St Lucia');
         cy.get('[data-testid="computer-row-0"]').should('contain', 'Architecture');
@@ -30,7 +41,7 @@ context('Location component', () => {
         cy.log('Should set the cookie to Gatton');
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-2"').click();
-        cy.getCookie(LOCATION_COOKIE_NAME).should('have.property', 'value', 'Gatton');
+        cy.getCookie(LOCATION_COOKIE_NAME).then(cookie => assertCookieHas(cookie, 'Gatton'));
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
         cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently Gatton');
         cy.get('[data-testid="computer-row-0"]').should('contain', 'Gatton');
@@ -44,7 +55,7 @@ context('Location component', () => {
         cy.log('Should set the cookie to Herston');
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-3"').click();
-        cy.getCookie(LOCATION_COOKIE_NAME).should('have.property', 'value', 'Herston');
+        cy.getCookie(LOCATION_COOKIE_NAME).then(cookie => assertCookieHas(cookie, 'Herston'));
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
         cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently Herston');
         cy.get('[data-testid="computer-row-0"]').should('contain', 'Herston');
@@ -53,7 +64,8 @@ context('Location component', () => {
         cy.log('Should set the cookie to Dutton Park');
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-4"').click();
-        cy.getCookie(LOCATION_COOKIE_NAME).should('have.property', 'value', 'Dutton%20Park');
+        cy.getCookie(LOCATION_COOKIE_NAME).then(cookie => assertCookieHas(cookie, 'Dutton Park'));
+
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
         cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently Dutton Park');
         cy.get('[data-testid="computer-row-0"]').should('contain', 'Dutton Park');
@@ -62,7 +74,8 @@ context('Location component', () => {
         cy.log('Should set the cookie to null');
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-0"').click();
-        cy.getCookie(LOCATION_COOKIE_NAME).should('have.property', 'value', 'null');
+        cy.getCookie(LOCATION_COOKIE_NAME).then(cookie => assertCookieHas(cookie, null));
+
         cy.get('body').type('{esc}');
         cy.get('[data-testid="computer-row-0"]').should('contain', 'Architecture');
         cy.get('[data-testid="hours-item-0"]').should('contain', 'Arch');
