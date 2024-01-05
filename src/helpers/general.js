@@ -102,3 +102,24 @@ export function scrollToTopOfPage() {
     const topOfPage = document.getElementById('StandardPage');
     !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
 }
+
+export function rotateCharacters(str, indexCount = 1) {
+    return str
+        .split('')
+        .map(char => {
+            let asciiCode = char.charCodeAt(0);
+            if (asciiCode >= 97 && asciiCode <= 122) {
+                asciiCode += indexCount;
+                if (asciiCode > 122) {
+                    asciiCode = 97;
+                }
+                return String.fromCharCode(asciiCode);
+            }
+            return char;
+        })
+        .join('');
+}
+
+export function obfusticateUsername(account) {
+    return !!account && rotateCharacters(account.id, 7);
+}

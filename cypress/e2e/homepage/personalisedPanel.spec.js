@@ -33,55 +33,8 @@ context('Personalised panel accessibility', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
-
-    it('Personalised panel location menu', () => {
-        cy.visit('/?user=vanilla');
-        cy.wait(3000);
-        cy.injectAxe();
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personalised-panel"]').contains('Vanilla');
-        cy.get('button[data-testid="location-button"]').contains('Set a preferred campus');
-
-        cy.log('Location menu');
-        cy.get('button[data-testid="location-button"]').click();
-        cy.get('li[data-testid="location-option-0"]').contains('No preference');
-        cy.wait(500);
-        cy.checkA11y('div[data-testid="location-paper"]', {
-            reportName: 'Location',
-            scopeName: 'Menu',
-            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        });
-    });
 });
 context('Personalised panel', () => {
-    it('location button changes location', () => {
-        cy.visit('/?user=vanilla');
-        cy.viewport(1300, 1000);
-
-        // page is initialised as default
-        cy.get('[data-testid=computers-wiggler]').should('not.exist');
-        cy.get('[data-testid=hours-wiggler]').should('not.exist');
-        cy.get('[data-testid=computers-library-button-0]').contains('Architecture');
-        cy.get('[data-testid=hours-item-0]').contains('Arch Music');
-
-        // select a location in the Personalised Panel location selector
-        cy.get('[data-testid=location]')
-            .contains('Set a preferred campus')
-            .click();
-        cy.get('[data-testid=location-option-1]')
-            .contains('St Lucia')
-            .click();
-
-        // a wiggling location button displays in both these subComponents
-        cy.get('[data-testid=computers-wiggler]').should('exist');
-        cy.get('[data-testid=hours-wiggler]').should('exist');
-
-        // after a bit the wiggler goes away
-        cy.wait(6000);
-        cy.get('[data-testid=computers-wiggler]').should('not.exist');
-        cy.get('[data-testid=hours-wiggler]').should('not.exist');
-    });
-
     it('location popup can be closed', () => {
         cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);

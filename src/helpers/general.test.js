@@ -1,4 +1,4 @@
-import { getCampusByCode, isRepeatingString, leftJoin, stripHtml, unescapeString } from './general';
+import { getCampusByCode, isRepeatingString, leftJoin, rotateCharacters, stripHtml, unescapeString } from './general';
 
 describe('general helpers', () => {
     it('leftJoin', () => {
@@ -51,5 +51,10 @@ describe('general helpers', () => {
         expect(unescapeString(null)).toEqual('');
 
         expect(unescapeString('1&amp;2')).toEqual('1 and 2');
+    });
+
+    it('should rotate strings correctly', () => {
+        expect(rotateCharacters('vanilla', 7)).toEqual('ahupssh');
+        expect(rotateCharacters('uqldegro')).toEqual('vrmefhsp');
     });
 });
