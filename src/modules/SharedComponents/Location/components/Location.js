@@ -99,9 +99,9 @@ export const Location = ({ idLabel, account }) => {
     };
 
     // temporary code to rename old cookie; these cookies are set to last a year
-    // this if... can be removed in feb 2025
+    // this `if` can be removed in feb 2025
     const OLD_COOKIE_NAME = 'location';
-    if (cookies[OLD_COOKIE_NAME] && cookies[OLD_COOKIE_NAME] !== 'null') {
+    if (cookies.hasOwnProperty(OLD_COOKIE_NAME) && cookies[OLD_COOKIE_NAME] !== 'null') {
         const location = cookies[OLD_COOKIE_NAME];
         removeCookie(OLD_COOKIE_NAME);
         const nextYear = cookieExpiryDate();
