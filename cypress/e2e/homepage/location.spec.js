@@ -169,4 +169,39 @@ context('Location component', () => {
             cookies.forEach(c => expect(c.name).not.to.equal(OLD_COOKIE_NAME));
         });
     });
+
+    it('a user logs in and sets a location on a public machine and then another user logs in later, they dont see the old users location', () => {
+        // a user logged in on this computer previously and set a location, and their cookie exists
+        // (we don't remove it because its normal to log in and out on your own computer and maintain the location)
+        cy.setCookie(LOCATION_COOKIE_NAME, cookieContents(USERNAME_UQSTAFF, 'Gatton'));
+
+        // but it's a public computer - now someone else logs in
+        cy.visit('/?user=vanilla');
+        cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="location-button"]').should('exist'));
+
+        // the cookie from the previous user has been removed
+        cy.getAllCookies().then(cookies => {
+            cookies.forEach(c => expect(c.name).not.to.equal(LOCATION_COOKIE_NAME));
+        });
+    });
+
+    it('a user who logs in again sees their old location', () => {
+        // set the cookie against a logged-in user
+        cy.setCookie(LOCATION_COOKIE_NAME, cookieContents(USERNAME_UQSTAFF, 'Gatton'));
+
+        // then load the page in the logged out mode
+        cy.visit('/?user=public');
+        cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="library-hours-panel"]').should('exist'));
+
+        cy.visit('/?user=uqstaff');
+        cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="location-button"]').should('exist'));
+
+        // the cookie has not been wiped, despite being logged out earlier
+        cy.getCookie(LOCATION_COOKIE_NAME).then(cookie => assertCookieHas(cookie, 'Gatton', USERNAME_UQSTAFF));
+        cy.get('[data-testid="computer-row-0"]').should('contain', 'Gatton');
+        cy.get('[data-testid="hours-item-0"]').should('contain', 'Gatton');
+    });
 });
