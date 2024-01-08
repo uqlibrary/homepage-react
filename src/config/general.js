@@ -3,6 +3,8 @@ export const SESSION_COOKIE_NAME = 'UQLID';
 export const SESSION_USER_GROUP_COOKIE_NAME = 'UQLID_USER_GROUP';
 export const TOKEN_NAME = 'X-Uql-Token';
 
+export const LOCATION_COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
+
 // URLS - values are set in webpack build
 export const STAGING_URL = 'https://homepage-staging.library.uq.edu.au/';
 export const API_URL = process.env.API_URL || 'https://api.library.uq.edu.au/staging/';

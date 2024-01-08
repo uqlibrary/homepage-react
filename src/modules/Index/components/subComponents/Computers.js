@@ -20,6 +20,7 @@ import { computersLocale } from './Computers.locale';
 import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
 import ContentLoader from 'react-content-loader';
 import { obfusticateUsername } from 'helpers/general';
+import { LOCATION_COOKIE_NAME } from 'config/general';
 
 const MyLoader = props => (
     <ContentLoader
@@ -169,7 +170,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError, account }) => {
-    const LOCATION_COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
     const classes = useStyles();
     const [cookies] = useCookies();
     const [preferredLocation, setPreferredLocation] = React.useState(undefined);
