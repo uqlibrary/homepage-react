@@ -9,6 +9,7 @@ import { makeStyles } from '@mui/styles';
 import { useCookies } from 'react-cookie';
 import { locale } from './locale';
 import { obfusticateUsername } from 'helpers/general';
+import { LOCATION_COOKIE_NAME } from 'config/general';
 
 const useStyles = makeStyles(theme => ({
     selectedItem: {
@@ -50,8 +51,6 @@ export const Location = ({ idLabel, account }) => {
     const [cookies, setCookie, removeCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const COOKIE_NAME = 'UQL_PREFERRED_LOCATION';
-
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -68,7 +67,7 @@ export const Location = ({ idLabel, account }) => {
             return locale.noLocationSet;
         }
 
-        const locationCookie = cookies[COOKIE_NAME];
+        const locationCookie = cookies[LOCATION_COOKIE_NAME];
         const username1 = obfusticateUsername(account);
         if (locationCookie[username1]) {
             return locationCookie[username1];
@@ -76,7 +75,7 @@ export const Location = ({ idLabel, account }) => {
 
         // the username isn't in the cookie? different user!! public computer? clear that cookie!
         /* istanbul ignore next */
-        removeCookie(COOKIE_NAME);
+        removeCookie(LOCATION_COOKIE_NAME);
 
         /* istanbul ignore next */
         return locale.noLocationSet;
@@ -89,7 +88,7 @@ export const Location = ({ idLabel, account }) => {
         return nextYear;
     }
     const handleLocationClose = location => () => {
-        setCookie(COOKIE_NAME, location === 'not set' ? null : cookieContents(account, location), {
+        setCookie(LOCATION_COOKIE_NAME, location === 'not set' ? null : cookieContents(account, location), {
             expires: cookieExpiryDate(),
         });
         setAnchorEl(null);
@@ -105,11 +104,13 @@ export const Location = ({ idLabel, account }) => {
         const location = cookies[OLD_COOKIE_NAME];
         removeCookie(OLD_COOKIE_NAME);
         const nextYear = cookieExpiryDate();
-        setCookie(COOKIE_NAME, cookieContents(account, location), { expires: nextYear });
+        setCookie(LOCATION_COOKIE_NAME, cookieContents(account, location), { expires: nextYear });
     }
 
     const thisLocation =
-        !cookies[COOKIE_NAME] || cookies[COOKIE_NAME] === 'null' ? locale.noLocationSet : preferredLocation();
+        !cookies[LOCATION_COOKIE_NAME] || cookies[LOCATION_COOKIE_NAME] === 'null'
+            ? locale.noLocationSet
+            : preferredLocation();
 
     const getTagId = (tag = null) => {
         const locationPrefix = !!idLabel ? /* istanbul ignore next */ '-' + idLabel : '';
@@ -135,7 +136,9 @@ export const Location = ({ idLabel, account }) => {
                 >
                     <RoomIcon
                         className={`${classes.icon} ${
-                            !cookies[COOKIE_NAME] || cookies[COOKIE_NAME] === 'null' ? classes.wiggler : ''
+                            !cookies[LOCATION_COOKIE_NAME] || cookies[LOCATION_COOKIE_NAME] === 'null'
+                                ? classes.wiggler
+                                : ''
                         }`}
                     />{' '}
                     {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}
