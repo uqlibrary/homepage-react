@@ -387,6 +387,9 @@ context('Learning Resources Access', () => {
     });
 });
 
+beforeEach(() => {
+    cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
+});
 context('The Learning Resources Page', () => {
     /**
      * Show a user with 3 classes can see all the variations correctly

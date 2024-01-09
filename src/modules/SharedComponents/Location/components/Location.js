@@ -8,6 +8,8 @@ import Menu from '@mui/material/Menu';
 import { makeStyles } from '@mui/styles';
 import { useCookies } from 'react-cookie';
 import { locale } from './locale';
+import { obfusticateUsername } from 'helpers/general';
+import { LOCATION_COOKIE_NAME } from 'config/general';
 
 const useStyles = makeStyles(theme => ({
     selectedItem: {
@@ -44,35 +46,72 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Location = ({ idLabel }) => {
+export const Location = ({ idLabel, account }) => {
     const classes = useStyles();
-    const [cookies, setCookie] = useCookies();
+    const [cookies, setCookie, removeCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
-    const handleLocationClose = location => () => {
+
+    function cookieContents(account, location) {
+        const cookieValue = {};
+        cookieValue[obfusticateUsername(account)] = location;
+        return cookieValue;
+    }
+
+    function preferredLocation() {
+        /* istanbul ignore next */
+        if (!account) {
+            return locale.noLocationSet;
+        }
+
+        const locationCookie = cookies[LOCATION_COOKIE_NAME];
+        const username1 = obfusticateUsername(account);
+        if (locationCookie[username1]) {
+            return locationCookie[username1];
+        }
+
+        // the username isn't in the cookie? different user!! public computer? clear that cookie!
+        /* istanbul ignore next */
+        removeCookie(LOCATION_COOKIE_NAME);
+
+        /* istanbul ignore next */
+        return locale.noLocationSet;
+    }
+
+    function cookieExpiryDate() {
         const current = new Date();
         const nextYear = new Date();
         nextYear.setFullYear(current.getFullYear() + 1);
-        if (location === 'not set') {
-            setCookie('location', null, { expires: nextYear });
-        } else {
-            setCookie('location', location, { expires: nextYear });
-        }
+        return nextYear;
+    }
+    const handleLocationClose = location => () => {
+        setCookie(LOCATION_COOKIE_NAME, location === 'not set' ? null : cookieContents(account, location), {
+            expires: cookieExpiryDate(),
+        });
         setAnchorEl(null);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
 
-    let thisLocation = null;
-    if (!cookies.location || cookies.location === 'null') {
-        thisLocation = locale.noLocationSet;
-    } else {
-        thisLocation = cookies.location;
+    // temporary code to rename old cookie; these cookies are set to last a year
+    // this `if` can be removed in feb 2025
+    const OLD_COOKIE_NAME = 'location';
+    if (cookies.hasOwnProperty(OLD_COOKIE_NAME) && cookies[OLD_COOKIE_NAME] !== 'null') {
+        const location = cookies[OLD_COOKIE_NAME];
+        removeCookie(OLD_COOKIE_NAME);
+        const nextYear = cookieExpiryDate();
+        setCookie(LOCATION_COOKIE_NAME, cookieContents(account, location), { expires: nextYear });
     }
+
+    const thisLocation =
+        !cookies[LOCATION_COOKIE_NAME] || cookies[LOCATION_COOKIE_NAME] === 'null'
+            ? locale.noLocationSet
+            : preferredLocation();
+
     const getTagId = (tag = null) => {
         const locationPrefix = !!idLabel ? /* istanbul ignore next */ '-' + idLabel : '';
         const locationSuffix = !!tag ? '-' + tag : '';
@@ -97,7 +136,9 @@ export const Location = ({ idLabel }) => {
                 >
                     <RoomIcon
                         className={`${classes.icon} ${
-                            !cookies.location || cookies.location === 'null' ? classes.wiggler : ''
+                            !cookies[LOCATION_COOKIE_NAME] || cookies[LOCATION_COOKIE_NAME] === 'null'
+                                ? classes.wiggler
+                                : ''
                         }`}
                     />{' '}
                     {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}
@@ -127,8 +168,8 @@ export const Location = ({ idLabel }) => {
                         data-analyticsid={getTagId(`option-${index}`)}
                         id={getTagId(`option-${index}`)}
                     >
-                        {(thisLocation === item.location || thisLocation === item.value) && <RoomIcon />}
-                        {item.location}
+                        {(thisLocation === item.displayName || thisLocation === item.value) && <RoomIcon />}
+                        {item.displayName}
                     </MenuItem>
                 ))}
             </Menu>
@@ -138,6 +179,7 @@ export const Location = ({ idLabel }) => {
 
 Location.propTypes = {
     idLabel: PropTypes.string,
+    account: PropTypes.object,
 };
 
 Location.defaultProps = {

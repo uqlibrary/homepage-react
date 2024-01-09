@@ -12,8 +12,11 @@ import CheckIcon from '@mui/icons-material/Check';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { hoursLocale } from './Hours.locale';
+import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
 import Button from '@mui/material/Button';
 import ContentLoader from 'react-content-loader';
+import { obfusticateUsername } from 'helpers/general';
+import { LOCATION_COOKIE_NAME } from 'config/general';
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -212,17 +215,25 @@ export const hasDepartments = item => {
 const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
-    const [location, setLocation] = React.useState(cookies.location || undefined);
+    const [preferredLocation, setPreferredLocation] = React.useState(undefined);
     const [showIcon, setShowIcon] = React.useState(false);
     useEffect(() => {
-        if (location !== cookies.location) {
+        const locationCookie = cookies.hasOwnProperty(LOCATION_COOKIE_NAME) ? cookies[LOCATION_COOKIE_NAME] : {};
+        if (!!account) {
+            const username = obfusticateUsername(account);
+            setPreferredLocation(
+                locationCookie.hasOwnProperty(username) ? locationCookie[username] : locationLocale.noLocationSet,
+            );
+        }
+    }, [cookies, account]);
+    useEffect(() => {
+        if (preferredLocation !== undefined && preferredLocation !== locationLocale.noLocationSet) {
             setShowIcon(true);
-            setLocation(cookies.location);
             setTimeout(() => {
                 setShowIcon(false);
             }, 5000);
         }
-    }, [location, cookies]);
+    }, [preferredLocation, cookies]);
     const cleanedHours =
         (!libHoursError &&
             !!libHours &&
@@ -243,7 +254,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         name: item.abbr,
                         url: item.url,
                         alt: item.name,
-                        campus: hoursLocale.campusMap[item.abbr],
+                        campus: locationLocale.hoursCampusMap[item.abbr],
                         departments,
                     };
                 }
@@ -258,10 +269,13 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
             // eslint-disable-next-line no-nested-ternary
             return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
         });
-    const sortedHours = matchSorter(alphaHours, cookies.location, {
-        keys: ['campus'],
-        threshold: matchSorter.rankings.NO_MATCH,
-    });
+    const sortedHours =
+        !!account && !!account.id
+            ? matchSorter(alphaHours, preferredLocation, {
+                  keys: ['campus'],
+                  threshold: matchSorter.rankings.NO_MATCH,
+              })
+            : alphaHours;
     const navigateToUrl = url => {
         window.location.href = url;
     };
@@ -346,7 +360,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     data-analyticsid={`hours-item-${index}`}
                                                     href={item.url}
                                                     className={
-                                                        (cookies.location === item.campus && classes.selectedCampus) ||
+                                                        (preferredLocation === item.campus && classes.selectedCampus) ||
                                                         ''
                                                     }
                                                 >
