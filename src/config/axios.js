@@ -9,23 +9,12 @@ import locale from 'locale/global';
 
 import * as Sentry from '@sentry/browser';
 
-import param from 'can-param';
 import { COMP_AVAIL_API, LIB_HOURS_API, LOANS_API, PRINTING_API, TRAINING_API } from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
     key: request => {
         return `${request.url}${JSON.stringify(request.params)}`;
-    },
-    exclude: {
-        query: false,
-        paths: [
-            'external/records/search',
-            'records/search?rule=',
-            'records/search?title=',
-            'records/search?doi=',
-            'records/search?id=pmid:',
-        ],
     },
 });
 
@@ -62,17 +51,6 @@ api.isCancel = axios.isCancel; // needed for cancelling requests and the instanc
 let isGet = null;
 api.interceptors.request.use(request => {
     isGet = request.method === 'get';
-    if (
-        !!request.url &&
-        (request.url.includes('records/search') || request.url.includes('records/export')) &&
-        !!request.params &&
-        !!request.params.mode &&
-        request.params.mode === 'advanced'
-    ) {
-        request.paramsSerializer = params => {
-            return param(params);
-        };
-    }
     return request;
 });
 
