@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import { default as locale } from '../learningResources.locale';
 import { Guides } from '../panels/Guides';
 import { PastExamPapers } from '../panels/PastExamPapers';
-import { ReadingLists } from '../panels/ReadingLists';
+import { default as ReadingLists } from '../panels/ReadingLists';
 import { SubjectLinks } from '../panels/SubjectLinks';
 
 import Grid from '@mui/material/Grid';
@@ -14,17 +14,6 @@ import { unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     theme => ({
-        learningResourceLineItem: {
-            borderTop: '1px solid #e8e8e8',
-            padding: '15px 0',
-            '& a': {
-                display: 'flex',
-                alignItems: 'center',
-            },
-        },
-        studyLinks: {
-            minHeight: '10rem',
-        },
         panelGap: {
             [theme.breakpoints.up('md')]: {
                 paddingLeft: 16,
@@ -82,7 +71,6 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
             >
                 <Grid item xs={12}>
                     <ReadingLists
-                        subject={subject}
                         readingList={readingList.list[[coursecode]]}
                         readingListLoading={readingList.loading}
                         readingListError={readingList.error}

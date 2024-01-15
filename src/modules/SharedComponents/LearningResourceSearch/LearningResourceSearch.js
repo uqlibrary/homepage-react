@@ -109,6 +109,7 @@ export const LearningResourceSearch = ({
 
     function getOptions() {
         // make special characters display nicely
+        // this is where the subjects in the Autocomplete dropdown is displayed
         return (!!CRsuggestions && CRsuggestions.map(option => unescapeString(option.displayname))) || [];
     }
 
