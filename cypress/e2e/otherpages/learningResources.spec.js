@@ -275,10 +275,7 @@ function FREN1010_loads_properly_for_s111111_user() {
 
     the_title_block_displays_properly(FREN1010ReadingList);
 
-    const readingListHeader = getReadingListHeader(FREN1010ReadingList);
-    cy.get('[data-testid="learning-resource-subject-reading-list"]')
-        .find(`${'h3'}`)
-        .contains(readingListHeader);
+    cy.get('[data-testid="learning-resource-subject-reading-list"] h3').contains('Course reading lists');
     cy.get('div[data-testid="reading-list-FREN1010"').should('not.contain', 'Reading list currently unavailable');
 
     exams_panel_loads_correctly_for_a_subject_with_many_exams(FREN1010Exam);
@@ -336,55 +333,27 @@ beforeEach(() => {
     cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
 });
 context('The Learning Resources Page', () => {
-    /**
-     * Show a user with 3 classes can see all the variations correctly
-     * The mock data has been selected to cover the display options:
-     *
-     *          |  reading lists                    | exams         | guides         |
-     * ---------+-----------------------------------+---------------+----------------+
-     * FREN1010 | has 1 list with exactly 2 entries | has > 2 exams | has 1 guide    |
-     * ---------+-----------------------------------+---------------+----------------+
-     * HIST1201 | has 1 list with > 2 entries       | has 1 exams   | has 0 guides   |
-     * ---------+-----------------------------------+---------------+----------------+
-     * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
-     * ---------+-----------------------------------+---------------+----------------+
-     *
-     * NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
-     *
-     */
+    // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
     it('User with classes sees their classes', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
 
-        FREN1010_loads_properly_for_s111111_user();
+        // FREN1010_loads_properly_for_s111111_user();
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010 - Introductory French 1');
 
         // next tab - the user clicks on the HIST1201 subject tab
         click_on_a_subject_tab(1, HIST1201ReadingList);
-
-        const readingListHeader = getReadingListHeader(HIST1201ReadingList);
-        cy.get(`[data-testid="learning-resource-subject-reading-list"] ${'h3'}`).contains(readingListHeader);
-
-        exams_panel_loads_correctly_for_a_subject_with_one_exam();
-
-        guides_panel_loads_correctly_for_a_subject_with_zero_guides();
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('HIST1201 - The Australian Experience');
 
         // user clicks on third subject tab, PHIL1002, loads as expected
         click_on_a_subject_tab(2, PHIL1002ReadingList);
         cy.get('[data-testid=learning-resource-subject-title]').contains(
             'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
         );
-        cy.get('[data-testid=reading-list-linkout]').contains('Each subject has a Reading list... ');
-        cy.get('[data-testid=reading-list-linkout]').contains(
-            // 'this subject will have a reading list published soon',
-            'view the 27 items on the PHIL1002 Reading list',
-        );
-
-        exams_panel_loads_correctly_for_a_subject_with_no_exams('PHIL1002');
-
-        guides_panel_loads_correctly_for_a_subject_with_many_guides(PHIL1002Guide, 'PHIL1002');
 
         // and back to the second tab (to load a tab where we don't need to reload the data)
         click_on_a_subject_tab(1, HIST1201ReadingList);
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('HIST1201 - The Australian Experience');
 
         // next tab
         the_user_clicks_on_the_Search_tab();
@@ -398,8 +367,9 @@ context('The Learning Resources Page', () => {
         the_user_lands_on_the_Search_tab();
 
         a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
-        const readingListHeader = getReadingListHeader(FREN1010ReadingList);
-        cy.get('[data-testid="reading-list-FREN1010"]').contains(readingListHeader);
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010 - Introductory French 1');
+        cy.get('[data-testid="reading-list-FREN1010-content"] h4').contains('Course reading lists');
+        cy.get('[data-testid="reading-list-link"]').contains('FREN1010 Reading list (contains 2 items)');
         cy.get('[data-testid="past-exams-FREN1010"]').contains('Past exam papers (16 items)');
         cy.get('[data-testid="guides-FREN1010"]').should('contain', 'French Studies');
 
@@ -426,17 +396,11 @@ context('The Learning Resources Page', () => {
 
         the_user_lands_on_the_Search_tab();
 
-        const readingListHeader = getReadingListHeader(ACCT1101ReadingList);
-        cy.get('[data-testid="learning-resource-subject-reading-list"]')
-            .find(`${'h4'}`)
-            .contains(readingListHeader);
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('ACCT1101 - Accounting for Decision Making');
+
+        cy.get('[data-testid="reading-list-ACCT1101-content"] h4').contains('Course reading lists');
+        cy.get('[data-testid="reading-list-link"]').contains('ACCT1101 Reading list (contains 2 items)');
         cy.get('div[data-testid="reading-list-ACCT1101"]').should('not.contain', 'Reading list currently unavailable');
-        cy.get('[data-testid=reading-list-linkout]')
-            .contains('Each subject has a Reading list... ')
-            .contains(
-                // 'this subject will have a reading list published soon',
-                'view the 2 items on the ACCT1101 Reading list',
-            );
 
         exams_panel_loads_correctly_for_a_subject_with_many_exams(ACCT1101Exam, 'searchresults');
 
@@ -446,13 +410,14 @@ context('The Learning Resources Page', () => {
     });
 
     it('A user who searches for a course that happens to have a blank campus gets the course they requested', () => {
-        cy.visit('/learning-resources?user=s1111111&coursecode=FREN1011&campus=&semester=Semester%202%202020');
+        cy.visit('/learning-resources?user=s3333333&coursecode=FREN1011&campus=&semester=Semester%202%202020');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab(FREN1011ReadingList);
 
-        const readingListHeader = getReadingListHeader(FREN1011ReadingList);
-        cy.get('[data-testid="learning-resource-subject-reading-list"] h4').contains(readingListHeader);
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1011 - Introductory French 1 extended');
+        cy.get('[data-testid="reading-list-FREN1011-content"] h4').contains('Course reading lists');
+        cy.get('[data-testid="reading-list-link"]').contains('FREN1011 Reading list (contains 11 items)');
 
         exams_panel_loads_correctly_for_a_subject_with_many_exams(FREN1011Exam, 'searchresults');
 
@@ -542,24 +507,30 @@ context('The Learning Resources Page', () => {
             .should('have.length', 3 + 1);
     });
 
+    /**
+     * Show a user with 3 classes can see all the variations correctly
+     * The mock data has been selected to cover the display options:
+     *
+     *          |  reading lists                    | exams         | guides         |
+     * ---------+-----------------------------------+---------------+----------------+
+     * FREN1010 | has 1 list with exactly 2 entries | has > 2 exams | has 1 guide    |
+     * ---------+-----------------------------------+---------------+----------------+
+     * HIST1201 | has 1 list with > 2 entries       | has 1 exams   | has 0 guides   |
+     * ---------+-----------------------------------+---------------+----------------+
+     * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
+     * ---------+-----------------------------------+---------------+----------------+
+     */
     // a subject with one reading list which contains more than the minimum number displays correctly
     it('the content on the history tab is correct', () => {
         cy.visit(
             '/learning-resources?coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020&user=s1111111',
         );
         cy.waitUntil(() =>
-            cy
-                .get('[data-testid="reading-list-linkout"]')
-                .should('exist')
-                .should('contain', 'Each subject has a Reading list')
-                .should('contain', 'view the 35 items on the HIST1201 Reading list'),
+            cy.get('[data-testid="reading-list-link"]').contains('HIST1201 Reading list (contains 35 items)'),
         );
 
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'HIST1201');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'The Australian Experience');
-        cy.get('[data-testid="reading-list-linkout"]')
-            .should('contain', 'Each subject has a Reading list')
-            .should('contain', 'view the 35 items on the HIST1201 Reading list');
         cy.get('[data-testid="past-exams-HIST1201-content"] > div')
             .children()
             .should('have.length', 1);
@@ -573,11 +544,7 @@ context('The Learning Resources Page', () => {
             '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
         );
         cy.waitUntil(() =>
-            cy
-                .get('[data-testid="reading-list-linkout"]')
-                .should('exist')
-                .should('contain', 'Each subject has a Reading list')
-                .should('contain', 'view the 2 items on the FREN1010 Reading list'),
+            cy.get('[data-testid="reading-list-link"]').contains('FREN1010 Reading list (contains 2 items)'),
         );
 
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'FREN1010');
@@ -601,13 +568,8 @@ context('The Learning Resources Page', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%203%202020',
         );
-        cy.waitUntil(
-            () =>
-                cy
-                    .get('[data-testid="reading-list-linkout"]')
-                    .should('exist')
-                    .should('contain', 'Each subject has a Reading list')
-                    .should('contain', 'view the 27 items on the PHIL1002 Reading list'), // add up the number of items between the two lists
+        cy.waitUntil(() =>
+            cy.get('[data-testid="reading-list-link"]').contains('PHIL1002 Reading list (contains 27 items)'),
         );
 
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'PHIL1002');
