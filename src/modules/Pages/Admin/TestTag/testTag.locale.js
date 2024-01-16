@@ -895,28 +895,28 @@ export default {
                             label: 'Admin',
                         },
                         can_inspect: {
-                            label: 'Inspect',
+                            label: 'Test n Tag',
                         },
                         can_inspect_cb: {
-                            label: 'Admin',
+                            label: 'Test n Tag',
                         },
                         can_alter: {
-                            label: 'Alter',
+                            label: 'Manage',
                         },
                         can_alter_cb: {
-                            label: 'Admin',
+                            label: 'Manage',
                         },
                         can_see_reports: {
                             label: 'Report',
                         },
                         can_see_reports_cb: {
-                            label: 'Admin',
+                            label: 'Report',
                         },
                         user_current_flag: {
-                            label: 'Current',
+                            label: 'Active',
                         },
                         user_current_flag_cb: {
-                            label: 'Current',
+                            label: 'Active',
                         },
                         actions_count: {
                             label: 'No. Tests',

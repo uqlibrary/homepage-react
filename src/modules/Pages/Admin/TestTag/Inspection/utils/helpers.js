@@ -1,20 +1,13 @@
 import { isEmptyStr } from '../../helpers/helpers';
 const moment = require('moment');
 
-/* istanbul ignore next */
-export const scrollToTopOfPage = () => {
-    const topOfPage = document.getElementById('StandardPage');
-    !!topOfPage && topOfPage.scrollIntoView();
-};
-
 export const isValidEventDate = (date, format) => {
     if (isEmptyStr(date)) return false;
     const today = new moment();
     const formattedToday = today.startOf('day');
 
     const formattedEventDate = moment(date, format).startOf('day');
-    const result = !!moment(formattedEventDate).isValid() && moment(formattedEventDate).isSameOrBefore(formattedToday);
-    return result;
+    return !!moment(formattedEventDate).isValid() && moment(formattedEventDate).isSameOrBefore(formattedToday);
 };
 export const isValidNextTestDate = (inspection, passedValue, format) => {
     const date = inspection?.inspection_date_next ?? undefined;
@@ -24,9 +17,7 @@ export const isValidNextTestDate = (inspection, passedValue, format) => {
     const formattedToday = today.startOf('day');
 
     const formattedNextTestDate = new moment(date, format).startOf('day');
-    const result = !!moment(formattedNextTestDate).isValid() && moment(formattedNextTestDate).isAfter(formattedToday);
-
-    return result;
+    return !!moment(formattedNextTestDate).isValid() && moment(formattedNextTestDate).isAfter(formattedToday);
 };
 export const isValidAssetId = assetId => {
     return !isEmptyStr(assetId);

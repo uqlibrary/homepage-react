@@ -1,10 +1,10 @@
 import { promoPanel } from '../../src/modules/Index/components/subComponents/promoPanel.locale';
-import { panelTitleOther, panelTitles } from '../../src/data/mock/data/promoPanels';
+import { panelTitleOther, panelTitles } from '../../src/data/mock/data/promoPanelsLong';
 
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
-    cy.wait(1000);
+    cy.waitUntil(() => cy.get('[data-testid="location-button"]').contains('Set a preferred campus'));
     cy.get('div[data-testid="personalised-panel"]').contains(firstname);
 };
 export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {

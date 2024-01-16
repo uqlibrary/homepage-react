@@ -17,7 +17,10 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { computersLocale } from './Computers.locale';
+import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
 import ContentLoader from 'react-content-loader';
+import { obfusticateUsername } from 'helpers/general';
+import { LOCATION_COOKIE_NAME } from 'config/general';
 
 const MyLoader = props => (
     <ContentLoader
@@ -166,22 +169,30 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError }) => {
+const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError, account }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
-    const [location, setLocation] = React.useState(cookies.location || undefined);
+    const [preferredLocation, setPreferredLocation] = React.useState(undefined);
     const [showIcon, setShowIcon] = React.useState(false);
     const [collapse, setCollapse] = React.useState({});
     const [mapSrc, setMapSrc] = React.useState(null);
     useEffect(() => {
-        if (location !== cookies.location) {
+        const locationCookie = cookies.hasOwnProperty(LOCATION_COOKIE_NAME) ? cookies[LOCATION_COOKIE_NAME] : {};
+        if (!!account) {
+            const username = obfusticateUsername(account);
+            setPreferredLocation(
+                locationCookie.hasOwnProperty(username) ? locationCookie[username] : locationLocale.noLocationSet,
+            );
+        }
+    }, [cookies, account]);
+    useEffect(() => {
+        if (preferredLocation !== undefined && preferredLocation !== locationLocale.noLocationSet) {
             setShowIcon(true);
-            setLocation(cookies.location);
             setTimeout(() => {
                 setShowIcon(false);
             }, 5000);
         }
-    }, [location, cookies]);
+    }, [preferredLocation, cookies]);
     const cleanedAvailability =
         computerAvailability &&
         computerAvailability.map(item => {
@@ -208,7 +219,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                 levels: levelsData,
                 buildingCode: parseInt(item.buildingCode, 10),
                 buildingNumber: parseInt(item.buildingNumber, 10),
-                campus: computersLocale.campusMap[item.library],
+                campus: locationLocale.computersCampusMap[item.library],
             };
         });
     const alphaAvailability =
@@ -222,11 +233,13 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                 return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
             });
     const sortedComputers =
-        alphaAvailability &&
-        matchSorter(alphaAvailability, cookies.location, {
-            keys: ['campus'],
-            threshold: matchSorter.rankings.NO_MATCH,
-        });
+        !!account && !!account.id
+            ? alphaAvailability &&
+              matchSorter(alphaAvailability, preferredLocation, {
+                  keys: ['campus'],
+                  threshold: matchSorter.rankings.NO_MATCH,
+              })
+            : alphaAvailability;
     const handleCollapse = index => {
         if (collapse[index]) {
             setCollapse({ [index]: false });
@@ -411,12 +424,12 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                         aria-expanded={!!collapse[index]}
                                                         classes={{
                                                             root: `${classes.linkButton} ${
-                                                                item.campus && cookies.location === item.campus
+                                                                item.campus && preferredLocation === item.campus
                                                                     ? classes.selectedCampus
                                                                     : ''
                                                             }`,
                                                             label: `${classes.linkButtonLabel} ${
-                                                                item.campus && cookies.location === item.campus
+                                                                item.campus && preferredLocation === item.campus
                                                                     ? classes.selectedCampus
                                                                     : ''
                                                             }`,
@@ -478,7 +491,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                         classes={{
                                                                             root: classes.linkButton,
                                                                             label: `${classes.linkButtonLabel} ${
-                                                                                cookies.location === item.campus
+                                                                                preferredLocation === item.campus
                                                                                     ? classes.selectedCampus
                                                                                     : ''
                                                                             }`,
@@ -519,6 +532,7 @@ Computers.propTypes = {
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
     computerAvailabilityError: PropTypes.bool,
+    account: PropTypes.object,
 };
 
 Computers.defaultProps = {};

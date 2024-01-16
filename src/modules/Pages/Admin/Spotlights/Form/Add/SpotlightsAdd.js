@@ -7,7 +7,7 @@ import {
     getStartOfDayFormatted,
     getTimeMondayMidnightNext,
     getTimeSundayNextFormatted,
-} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+} from 'modules/Pages/Admin/dateTimeHelper';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

@@ -3,9 +3,9 @@ import AssetPanel from './AssetPanel';
 import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
-import assetData from '../../../../../../data/mock/data/testing/testTagAssets';
-import assetTypeData from '../../../../../../data/mock/data/testing/testTagAssetTypes';
-import configData from '../../../../../../data/mock/data/testing/testTagOnLoadInspection';
+import assetData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
+import assetTypeData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
+import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';
 import locale from '../../testTag.locale.js';
 
 const currentRetestList = [

@@ -54,18 +54,6 @@ export function readingListLength(courseReadingList) {
     );
 }
 
-/**
- * @param courseReadingList
- * @return string
- */
-export const getReadingListHeader = courseReadingList => {
-    const readingList = courseReadingList?.reading_lists?.[0];
-    const campusMarker = !!readingList.campus ? ` at ${readingList.campus}` : '';
-    return `${locale.myCourses.readingLists.title} for ${readingList.period}${campusMarker} (${readingListLength(
-        courseReadingList,
-    )} items)`;
-};
-
 export function waitUntilSpotlightListPageHasLoaded() {
     cy.waitUntil(() =>
         cy.get('[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').should('exist'),

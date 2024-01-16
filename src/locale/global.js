@@ -23,12 +23,9 @@ help: {
 
 */
 
-export const EXPROXY_URL_PREFIX = 'http://ezproxy.library.uq.edu.au/login?url=';
-
 export default {
     global: {
         title: `UQ Library ${process.env.TITLE_SUFFIX || ''}`,
-        pageTitle: 'Library',
         appTitle: (
             <a
                 href={`${pathConfig.index}`}
@@ -44,30 +41,7 @@ export default {
             label: 'The University of Queensland',
             link: 'https://www.uq.edu.au',
         },
-        orgTitle: 'The University of Queensland',
         loading: 'Loading',
-        loadingUserAccount: 'Loading account',
-        mainNavButton: {
-            tooltip: 'Main navigation',
-            aria: 'Click to open the main navigation',
-            closeMenuLabel: 'Close menu',
-        },
-        authentication: {
-            signInText: 'Log in',
-            signOutText: 'Log out',
-            ariaIn: 'Click to log in to the Library',
-            ariaOut: 'Click to log out of the Library',
-        },
-        skipNav: {
-            title: 'Skip Navigation',
-            ariaLabel: 'Click to skip, or tab to progress to the navigation',
-        },
-        loginAlert: {
-            title: 'You are not logged in',
-            message: 'Login to UQ Library for full search results and more services.',
-            type: 'info_outline',
-            actionButtonLabel: 'Click to login',
-        },
         errorMessages: {
             401: {
                 message:
@@ -103,106 +77,6 @@ export default {
             genericAlternate:
                 "Error has occurred during request and request can't be processed. Please contact webmaster@library.uq.edu.au or try again later.",
         },
-        notRegisteredAuthorAlert: {
-            title: 'You are not registered in UQ Library as an author',
-            message: 'Please contact the UQ Library administrator to resolve this.',
-            type: 'info_outline',
-        },
-        discardFormChangesConfirmation: {
-            confirmationTitle: 'Discard changes?',
-            confirmationMessage: 'Are you sure you want to navigate away and discard all changes to the form?',
-            cancelButtonLabel: 'No',
-            confirmButtonLabel: 'Yes',
-        },
-        linkWillOpenInNewWindow: 'Link to [destination] will open in a new window.',
-        sources: {
-            espace: {
-                id: 'espace',
-                title: 'eSpace',
-                priority: 0,
-                externalUrl: `${APP_URL}view/[id]`,
-                idKey: 'rek_pid',
-            },
-            wos: {
-                id: 'wos',
-                title: 'Web of science',
-                priority: 1,
-                externalUrl:
-                    EXPROXY_URL_PREFIX +
-                    'http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=resolve1&DestLinkType=FullRecord&DestApp=WOS_CPL&KeyUT=[id]&SrcAuth=uqueensland',
-                idKey: 'fez_record_search_key_isi_loc.rek_isi_loc',
-            },
-            scopus: {
-                id: 'scopus',
-                title: 'Scopus',
-                priority: 2,
-                externalUrl: EXPROXY_URL_PREFIX + 'http://www.scopus.com/record/display.url?eid=[id]&origin=inward',
-                idKey: 'fez_record_search_key_scopus_id.rek_scopus_id',
-            },
-            pubmed: {
-                id: 'pubmed',
-                title: 'PubMed',
-                priority: 3,
-                externalUrl: EXPROXY_URL_PREFIX + 'https://www.ncbi.nlm.nih.gov/pubmed/[id]',
-                idKey: 'fez_record_search_key_pubmed_id.rek_pubmed_id',
-            },
-            crossref: {
-                id: 'crossref',
-                title: 'Crossref',
-                priority: 4,
-                externalUrl: EXPROXY_URL_PREFIX + 'https://doi.org/[id]',
-                idKey: 'fez_record_search_key_doi.rek_doi',
-            },
-        },
-        doiCitationLink: {
-            ariaLabel: 'Open this DOI in an new window',
-            prefix: 'https://doi.org/',
-            externalUrl: 'https://doi.org/[id]',
-        },
-        pubmedCentralLink: {
-            ariaLabel: 'Full text via Pubmed Central (open access)',
-            prefix: 'https://www.ncbi.nlm.nih.gov/pmc/articles/',
-            externalUrl: 'https://www.ncbi.nlm.nih.gov/pmc/articles/[id]',
-        },
-        sherpaRomeoLink: {
-            ariaLabel: "Check publisher's OA archiving policy in a new window",
-            externalUrl: 'http://www.sherpa.ac.uk/romeo/search.php?issn=[id]',
-            externalLinktext: 'SHERPA/RoMEO',
-            title: "Check publisher's OA archiving policy",
-        },
-        ulrichsLink: {
-            ariaLabel: 'Source publisher name/place and alternate ISSNs in a new window',
-            externalLinktext: 'Ulrichs',
-            externalUrl: EXPROXY_URL_PREFIX + 'http://ulrichsweb.serialssolutions.com/title/[id]',
-        },
-        embargoDateFormat: 'YYYY-MM-DD',
-        defaultLinkDescription: 'Link to work',
-        offlineSnackbar: {
-            online: {
-                message: 'Your connection is back online',
-                autoHideDuration: 5000,
-            },
-            offline: {
-                message: 'Your connection is offline',
-                autoHideDuration: null,
-            },
-        },
-        audioPlayer: {
-            controls: {
-                playAudio: 'Click to play audio file [fileName]',
-                pauseAudio: 'Click to pause audio file [fileName]',
-            },
-        },
-        sessionExpiredConfirmation: {
-            confirmationTitle: 'Session Expired',
-            confirmationMessage:
-                'Your session has expired. Follow the login prompt to return to your submission form. ' +
-                'You must upload your files again to successfully deposit your thesis, even if you have ' +
-                'already uploaded your files.',
-            cancelButtonLabel: 'Cancel',
-            confirmButtonLabel: 'Redirect to login',
-        },
-        defaultAuthorDataPlaceholder: 'Missing',
     },
     campuses: {
         STLUC: 'St Lucia',

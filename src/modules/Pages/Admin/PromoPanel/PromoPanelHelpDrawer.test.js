@@ -1,7 +1,7 @@
 import { PromoPanelHelpDrawer } from './PromoPanelHelpDrawer';
 import React from 'react';
 import { rtlRender, fireEvent } from '../../../../../utils/test-utils';
-import { default as locale } from 'locale/promopanel.locale';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 
 function setup(testProps = {}) {
     const props = {
