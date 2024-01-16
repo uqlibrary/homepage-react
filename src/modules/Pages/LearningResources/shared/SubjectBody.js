@@ -29,6 +29,7 @@ const useStyles = makeStyles(
         contentBlock: {
             paddingLeft: 12,
             paddingRight: 12,
+            marginBlock: 6,
         },
     }),
     { withTheme: true },
@@ -69,7 +70,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 className={classes.contentBlock}
                 data-testid="learning-resource-subject-reading-list"
             >
-                <Grid item xs={12}>
+                <Grid item xs={12} md={6} className={classes.panelGap}>
                     <ReadingLists
                         readingList={readingList.list[[coursecode]]}
                         readingListLoading={readingList.loading}
@@ -77,10 +78,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-            </Grid>
-
-            <Grid container className={classes.contentBlock}>
-                <Grid item xs={12} md={4} data-testid="learning-resource-subject-exams">
+                <Grid item xs={12} md={6} data-testid="learning-resource-subject-exams" className={classes.panelGap}>
                     <PastExamPapers
                         examList={examList.list[coursecode]}
                         examListLoading={examList.loading}
@@ -88,7 +86,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-                <Grid item xs={12} md={4} className={classes.panelGap}>
+                <Grid item xs={12} md={6}>
                     <Guides
                         guideList={guideList.list[coursecode]}
                         guideListLoading={guideList.loading}
@@ -96,7 +94,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-                <Grid item xs={12} md={4} className={classes.panelGap}>
+                <Grid item xs={12} md={6}>
                     <SubjectLinks subject={subject} headingLevel={panelHeadingLevel} />
                 </Grid>
             </Grid>

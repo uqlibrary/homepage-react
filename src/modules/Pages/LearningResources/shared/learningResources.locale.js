@@ -39,7 +39,7 @@ export default {
             ),
         },
         readingLists: {
-            title: 'Reading list',
+            title: 'Course reading lists',
             error: {
                 none: 'No reading list for this course',
                 unavailable: {
