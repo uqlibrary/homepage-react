@@ -28,7 +28,9 @@ const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingLi
     const classes = useStyles();
 
     const courseCode = (!!readingList && readingList.coursecode) || null;
-    const talisSubjectUrl = courseCode => `https://uq.rl.talis.com/courses/${courseCode}.html`;
+    const talisSubjectUrl = courseCode => {
+        return `https://uq.rl.talis.com/courses/${courseCode.toLowerCase()}.html`;
+    };
 
     const listOfReadingLists =
         !!readingList && !!readingList.reading_lists && readingList.reading_lists.length > 0
@@ -44,6 +46,9 @@ const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingLi
                   )
                 : 0;
         };
+        if (readingListItemCount === 0) {
+            return `${courseCode} Reading list`;
+        }
         const noun = _pluralise('item', readingListItemCount(readingList));
         return `${courseCode} Reading list (contains ${readingListItemCount(readingList)} ${noun})`;
     };
