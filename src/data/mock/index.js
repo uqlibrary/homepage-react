@@ -626,6 +626,18 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, courseReadingList_FREN1010];
     })
+    .onGet('learning_resources/reading_list/count/PHYS1101E/St Lucia/Semester%25202%25202020')
+    .reply(() => {
+        return [404, 'Unable to retrieve this course list: Title for PHYS1101E not available'];
+    })
+    .onGet('library_guides/PHYS1101E')
+    .reply(() => {
+        return [200, []];
+    })
+    .onGet('exams/course/PHYS1101E/summary')
+    .reply(() => {
+        return [200, []];
+    })
     .onGet('learning_resources/reading_list/count/FREN1011//Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_FREN1011];

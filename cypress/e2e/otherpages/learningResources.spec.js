@@ -586,4 +586,13 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="guide-1"]').should('contain', 'Philosophy');
         cy.get('[data-testid="guide-2"]').should('contain', 'Stuff');
     });
+
+    it('a user who manages to load a subject that has no reading list informed so', () => {
+        cy.visit(
+            '/learning-resources?user=s3333333&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        cy.waitUntil(() =>
+            cy.get('[data-testid="reading-list-PHYS1101E-content"]').contains('Reading list currently unavailable'),
+        );
+    });
 });

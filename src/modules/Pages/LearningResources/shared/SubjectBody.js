@@ -72,6 +72,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
             >
                 <Grid item xs={12} md={6} className={classes.panelGap}>
                     <ReadingLists
+                        courseCode={coursecode}
                         readingList={readingList.list[[coursecode]]}
                         readingListLoading={readingList.loading}
                         readingListError={readingList.error}
