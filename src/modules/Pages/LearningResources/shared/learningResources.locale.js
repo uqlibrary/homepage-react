@@ -40,23 +40,7 @@ export default {
         },
         readingLists: {
             title: 'Course reading lists',
-            error: {
-                none: 'No reading list for this course',
-                unavailable: {
-                    label: 'Reading list currently unavailable - ',
-                    tryManually: 'Try manually',
-                    linkOut: 'https://uq.rl.talis.com/courses/[coursecode].html',
-                },
-                multiple: 'More than one reading list found for [classnumber]. Please select a list:',
-                footer: {
-                    linkLabel: 'Search other reading lists',
-                    linkOut: 'https://uq.rl.talis.com/index.html',
-                },
-            },
-            footer: {
-                linkLabel: '[numberExcessReadingLists] more [readingListNumber]',
-            },
-            visibleItemsCount: 2,
+            courseLink: 'https://uq.rl.talis.com/courses/[coursecode].html',
         },
         examPapers: {
             title: 'Past exam papers',

@@ -24,12 +24,11 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingListError }) => {
+const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoading, readingListError }) => {
     const classes = useStyles();
 
-    const courseCode = (!!readingList && readingList.coursecode) || null;
     const talisSubjectUrl = courseCode => {
-        return `https://uq.rl.talis.com/courses/${courseCode.toLowerCase()}.html`;
+        return locale.myCourses.readingLists.courseLink.replace('[coursecode]', courseCode.toLowerCase());
     };
 
     const listOfReadingLists =
@@ -38,17 +37,13 @@ const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingLi
             : false;
     const linkText = courseCode => {
         // add up the number of items across lists, in that rare case where there is more than one list
-        const readingListItemCount = readingList => {
-            return !readingListError && !!readingList && !!readingList.reading_lists
-                ? Object.values(readingList.reading_lists).reduce(
+        const readingListItemCount = readingList =>
+            !readingListError && !!readingList && !!readingList.reading_lists
+                ? readingList.reading_lists.reduce(
                       (accumulator, currentValue) => accumulator + currentValue.totalCount,
                       0,
                   )
-                : 0;
-        };
-        if (readingListItemCount === 0) {
-            return `${courseCode} Reading list`;
-        }
+                : /* istanbul ignore next */ 0;
         const noun = _pluralise('item', readingListItemCount(readingList));
         return `${courseCode} Reading list (contains ${readingListItemCount(readingList)} ${noun})`;
     };
@@ -66,7 +61,9 @@ const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingLi
                 </Grid>
                 {!!readingListError && (
                     /* istanbul ignore next */
-                    <Typography>{locale.myCourses.readingLists.unavailable}</Typography>
+                    <Typography>
+                        Reading list currently unavailable - <a href={talisSubjectUrl(courseCode)}>Try manually</a>
+                    </Typography>
                 )}
                 {!readingListError && !!readingListLoading && (
                     <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
@@ -82,9 +79,7 @@ const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingLi
                 {!readingListError && !readingListLoading && (!listOfReadingLists || listOfReadingLists.length === 0) && (
                     <React.Fragment>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <Typography data-testid="no-reading-lists">
-                                {locale.myCourses.readingLists.error.none}
-                            </Typography>
+                            <Typography data-testid="no-reading-lists">No reading list for this course</Typography>
                         </Grid>
                     </React.Fragment>
                 )}
@@ -103,6 +98,7 @@ const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingLi
 
 ReadingLists.propTypes = {
     subject: PropTypes.object,
+    courseCode: PropTypes.string,
     headingLevel: PropTypes.string,
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
