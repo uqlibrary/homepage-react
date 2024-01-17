@@ -622,23 +622,23 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, libraryGuides_ACCT1101];
     })
 
-    .onGet('learning_resources/reading_list/summary/FREN1010/St Lucia/Semester%25202%25202020')
+    .onGet('learning_resources/reading_list/count/FREN1010/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_FREN1010];
     })
-    .onGet('learning_resources/reading_list/summary/FREN1011//Semester%25202%25202020')
+    .onGet('learning_resources/reading_list/count/FREN1011//Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_FREN1011];
     })
-    .onGet('learning_resources/reading_list/summary/HIST1201/St Lucia/Semester%25202%25202020')
+    .onGet('learning_resources/reading_list/count/HIST1201/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_HIST1201];
     })
-    .onGet('learning_resources/reading_list/summary/PHIL1002/St Lucia/Semester%25203%25202020')
+    .onGet('learning_resources/reading_list/count/PHIL1002/St Lucia/Semester%25203%25202020')
     .reply(() => {
         return [200, courseReadingList_PHIL1002];
     })
-    .onGet('learning_resources/reading_list/summary/ACCT1101/St Lucia/Semester%25202%25202020')
+    .onGet('learning_resources/reading_list/count/ACCT1101/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_ACCT1101];
     })

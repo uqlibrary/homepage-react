@@ -68,7 +68,7 @@ function routeRequiresLogin(error) {
 
     const urlRoot = getUrlRoot(responseURL);
     const accountUrl = `${urlRoot}/account`;
-    const LRurlPrefix = `${urlRoot}/learning_resources/reading_list/summary`;
+    const LRurlPrefix = `${urlRoot}/learning_resources/reading_list/count`;
     return responseURL.startsWith(accountUrl) || responseURL.startsWith(LRurlPrefix);
 }
 
