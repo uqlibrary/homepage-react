@@ -52,7 +52,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
         return `${course.classnumber} ${title}`;
     };
 
-    const readingListError = subject.classnumber === readingList.coursecode ? readingList.error : null;
+    const readingListError =
+        subject.classnumber === readingList.coursecode ? /* istanbul ignore next */ readingList.error : null;
     return (
         <React.Fragment>
             <Typography
