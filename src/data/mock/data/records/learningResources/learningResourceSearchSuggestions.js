@@ -86,6 +86,6 @@ export default [{
         type: "learning_resource",
         course_title: "Physics",
         campus: "UQ College",
-        period: "Yearlong 2023",
+        period: 'Semester 2 2020',
     }
 ];

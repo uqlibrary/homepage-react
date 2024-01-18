@@ -52,6 +52,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
         return `${course.classnumber} ${title}`;
     };
 
+    console.log('SubjectBody: ', coursecode, '; readingList.error=', readingList.error, readingList.list);
     return (
         <React.Fragment>
             <Typography
