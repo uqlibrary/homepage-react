@@ -520,6 +520,14 @@ context('The Learning Resources Page', () => {
             .should('exist')
             .should('contain', 'No subject guides for this course');
 
+        // swap tabs to FREN1010
+        cy.get('[data-testid=classtab-FREN1010]')
+            .contains('FREN1010')
+            .click();
+        cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
+        // FREN1010LoadsProperly();
+        // cy.wait(5000);
+
         // search for HIST1201
         searchFor('HIST', 'HIST1201');
         HIST1201LoadsProperly();

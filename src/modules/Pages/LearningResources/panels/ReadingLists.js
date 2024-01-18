@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 import locale from '../shared/learningResources.locale';
 import { _pluralise } from '../shared/learningResourcesHelpers';
+import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Typography from '@mui/material/Typography';
+
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(
@@ -24,6 +25,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
+
 const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoading, readingListError }) => {
     const classes = useStyles();
 
@@ -35,8 +37,13 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
         !!readingList && !!readingList.reading_lists && readingList.reading_lists.length > 0
             ? readingList.reading_lists
             : false;
+    console.log('LR -----');
+    console.log('readingListLoading=', readingListLoading);
+    console.log('readingListError=', readingListError);
+    console.log('readingList=', readingList);
+    console.log('** listOfReadingLists=', listOfReadingLists);
     return (
-        <StandardCard noHeader fullHeight standardCardId={`reading-list-${courseCode}`}>
+        <StandardCard fullHeight noHeader standardCardId={`reading-list-${courseCode}`}>
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
                 {locale.myCourses.readingLists.title}
             </Typography>
@@ -48,7 +55,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                 </Grid>
                 {!!readingListError && (
                     /* istanbul ignore next */
-                    <Typography>
+                    <Typography data-testid={`unavailable-${courseCode}`}>
                         Reading list currently unavailable - <a href={talisSubjectUrl(courseCode)}>Try manually</a>
                     </Typography>
                 )}
@@ -66,7 +73,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                 {!readingListError && !readingListLoading && (!listOfReadingLists || listOfReadingLists.length === 0) && (
                     <React.Fragment>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <Typography data-testid="no-reading-lists">No reading list for this course</Typography>
+                            <Typography data-testid="no-reading-lists">No Reading list for this course</Typography>
                         </Grid>
                     </React.Fragment>
                 )}
