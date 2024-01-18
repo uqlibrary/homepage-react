@@ -633,11 +633,12 @@ context('The Learning Resources Page', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%203%202020',
         );
-        cy.waitUntil(() =>
-            cy.get('[data-testid="reading-list-link"]').contains('PHIL1002 Reading list (contains 27 items)'),
-        );
+        cy.waitUntil(() => cy.get('[data-testid="reading-list-link"]').contains('PHIL1002 (has 2 reading lists)'));
 
-        cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'PHIL1002');
+        cy.get('[data-testid="learning-resource-subject-title"]').should(
+            'contain',
+            'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
+        );
 
         cy.get('[data-testid="past-exams-PHIL1002-content"] > div')
             .children()
