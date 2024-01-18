@@ -22,6 +22,10 @@ const useStyles = makeStyles(
                 alignItems: 'center',
             },
         },
+        presentLabel: {
+            paddingBottom: '1rem',
+            lineHeight: 1.3,
+        },
     }),
     { withTheme: true },
 );
@@ -48,11 +52,6 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                 {locale.myCourses.readingLists.title}
             </Typography>
             <Grid container className={'readinglists'}>
-                <Grid item xs={12} className={classes.learningResourceLineItem}>
-                    <span style={{ paddingBottom: '1rem', lineHeight: 1.3 }}>
-                        View required and recommended readings on your course reading list.
-                    </span>
-                </Grid>
                 {!!readingListError && (
                     /* istanbul ignore next */
                     <Typography data-testid={`unavailable-${courseCode}`}>
@@ -73,32 +72,48 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                 {!readingListError && !readingListLoading && (!listOfReadingLists || listOfReadingLists.length === 0) && (
                     <React.Fragment>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <Typography data-testid="no-reading-lists">No Reading list for this course</Typography>
+                            <Typography data-testid="no-reading-lists">No Reading list for this course.</Typography>
+                        </Grid>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                            <a href={talisSubjectUrl(courseCode)}>
+                                <SpacedArrowForwardIcon />
+                                Search for older lists
+                            </a>
                         </Grid>
                     </React.Fragment>
                 )}
                 {/* eslint-disable-next-line max-len */}
                 {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length === 1 && (
-                    <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
-                        <a href={listOfReadingLists[0].url}>
-                            <SpacedArrowForwardIcon />
-                            {`${courseCode} Reading list (contains ${listOfReadingLists[0].totalCount} ${_pluralise(
-                                'item',
-                                listOfReadingLists[0].totalCount,
-                            )})`}
-                        </a>
-                    </Grid>
+                    <React.Fragment>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                            <span className={classes.presentLabel}>{locale.myCourses.readingLists.presentLabel}</span>
+                        </Grid>
+                        <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
+                            <a href={listOfReadingLists[0].url}>
+                                <SpacedArrowForwardIcon />
+                                {`${courseCode} Reading list (contains ${listOfReadingLists[0].totalCount} ${_pluralise(
+                                    'item',
+                                    listOfReadingLists[0].totalCount,
+                                )})`}
+                            </a>
+                        </Grid>
+                    </React.Fragment>
                 )}
                 {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length > 1 && (
-                    <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
-                        <a href={talisSubjectUrl(courseCode)}>
-                            <SpacedArrowForwardIcon />
-                            {`${courseCode} (has ${listOfReadingLists.length} ${_pluralise(
-                                'reading list',
-                                listOfReadingLists.length,
-                            )})`}
-                        </a>
-                    </Grid>
+                    <React.Fragment>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                            <span className={classes.presentLabel}>{locale.myCourses.readingLists.presentLabel}</span>
+                        </Grid>
+                        <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
+                            <a href={talisSubjectUrl(courseCode)}>
+                                <SpacedArrowForwardIcon />
+                                {`${courseCode} (has ${listOfReadingLists.length} ${_pluralise(
+                                    'reading list',
+                                    listOfReadingLists.length,
+                                )})`}
+                            </a>
+                        </Grid>
+                    </React.Fragment>
                 )}
             </Grid>
         </StandardCard>

@@ -36,6 +36,5 @@ export default function examLearningResourceReducer(state = initialState, action
     if (!handler) {
         return state;
     }
-    console.log('EX action: ', action.type, state, action);
     return handler(state, action);
 }
