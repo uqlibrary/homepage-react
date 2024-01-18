@@ -41,10 +41,11 @@ export default {
         readingLists: {
             title: 'Course reading lists',
             courseLink: 'https://uq.rl.talis.com/courses/[coursecode].html',
+            presentLabel: 'View required and recommended readings on your course reading list.',
         },
         examPapers: {
             title: 'Past exam papers',
-            none: 'No Past Exam Papers for this course',
+            none: 'No Past Exam Papers for this course.',
             unavailable: 'Exam papers list currently unavailable',
             footer: {
                 noPastExams: {
@@ -60,7 +61,7 @@ export default {
         },
         guides: {
             title: 'Subject guides',
-            none: 'No subject guides for this course',
+            none: 'No subject guides for this course.',
             unavailable: 'Subject guides list currently unavailable',
             footer: {
                 links: [

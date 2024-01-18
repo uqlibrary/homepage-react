@@ -512,7 +512,7 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="learning-resource-subject-title"]').contains('PHYS1101E');
         cy.get('[data-testid="reading-list-PHYS1101E-content"]')
             .should('exist')
-            .contains('Reading list currently unavailable');
+            .contains('No Reading list for this course');
         cy.get('[data-testid="past-exams-false-content"]')
             .should('exist')
             .contains('No Past Exam Papers for this course');
@@ -520,13 +520,12 @@ context('The Learning Resources Page', () => {
             .should('exist')
             .should('contain', 'No subject guides for this course');
 
-        // swap tabs to FREN1010
+        // swap tabs to FREN1010 - at one point swapping from an error to an ok wiped the ok :(
         cy.get('[data-testid=classtab-FREN1010]')
             .contains('FREN1010')
             .click();
         cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
-        // FREN1010LoadsProperly();
-        // cy.wait(5000);
+        FREN1010LoadsProperly();
 
         // search for HIST1201
         searchFor('HIST', 'HIST1201');
@@ -666,7 +665,7 @@ context('The Learning Resources Page', () => {
             '/learning-resources?user=s3333333&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
         );
         cy.waitUntil(() =>
-            cy.get('[data-testid="reading-list-PHYS1101E-content"]').contains('Reading list currently unavailable'),
+            cy.get('[data-testid="reading-list-PHYS1101E-content"]').contains('No Reading list for this course'),
         );
     });
 });

@@ -49,10 +49,6 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
         !examListError && !examListLoading && examTotalCount > 0 ? `(${examTotalCount} ${itemCountLabel})` : ''
     }`;
 
-    console.log('EX -----');
-    console.log('examListLoading=', examListLoading);
-    console.log('examListError=', examListError);
-    console.log('examList=', examList);
     return (
         <StandardCard fullHeight noHeader standardCardId={`past-exams-${subject}`}>
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
