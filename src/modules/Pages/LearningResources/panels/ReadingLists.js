@@ -35,19 +35,6 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
         !!readingList && !!readingList.reading_lists && readingList.reading_lists.length > 0
             ? readingList.reading_lists
             : false;
-    const linkText = courseCode => {
-        // add up the number of items across lists, in that rare case where there is more than one list
-        const readingListItemCount = readingList =>
-            !readingListError && !!readingList && !!readingList.reading_lists
-                ? readingList.reading_lists.reduce(
-                      (accumulator, currentValue) => accumulator + currentValue.totalCount,
-                      0,
-                  )
-                : /* istanbul ignore next */ 0;
-        const noun = _pluralise('item', readingListItemCount(readingList));
-        return `${courseCode} Reading list (contains ${readingListItemCount(readingList)} ${noun})`;
-    };
-
     return (
         <StandardCard noHeader fullHeight standardCardId={`reading-list-${courseCode}`}>
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
@@ -83,11 +70,26 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                         </Grid>
                     </React.Fragment>
                 )}
-                {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length > 0 && (
+                {/* eslint-disable-next-line max-len */}
+                {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length === 1 && (
+                    <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
+                        <a href={listOfReadingLists[0].url}>
+                            <SpacedArrowForwardIcon />
+                            {`${courseCode} Reading list (contains ${listOfReadingLists[0].totalCount} ${_pluralise(
+                                'item',
+                                listOfReadingLists[0].totalCount,
+                            )})`}
+                        </a>
+                    </Grid>
+                )}
+                {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length > 1 && (
                     <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
                         <a href={talisSubjectUrl(courseCode)}>
                             <SpacedArrowForwardIcon />
-                            {linkText(courseCode)}
+                            {`${courseCode} (has ${listOfReadingLists.length} ${_pluralise(
+                                'reading list',
+                                listOfReadingLists.length,
+                            )})`}
                         </a>
                     </Grid>
                 )}
