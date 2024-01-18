@@ -164,12 +164,11 @@ function course_links_panel_loads_correctly_for_a_subject(courseReadingList) {
 }
 
 function load_a_subject_in_learning_resource_page_search_tab(
-    courseReadingList,
+    courseCode,
     searchSuggestions,
     typeChar = 'FREN',
     numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
 ) {
-    const courseCode = courseReadingList.coursecode || 'mock data is missing';
     const frenchSearchSuggestion = searchSuggestions
         .filter(obj => {
             return obj.name === courseCode;
@@ -229,7 +228,7 @@ function a_user_can_use_the_search_bar_to_load_a_subject(
     tabId = 0,
 ) {
     load_a_subject_in_learning_resource_page_search_tab(
-        courseReadingList,
+        courseReadingList.coursecode,
         searchSuggestions,
         typeChar,
         numberOfMatchingSubject,
@@ -283,6 +282,23 @@ function FREN1010_loads_properly_for_s111111_user() {
     guides_panel_loads_correctly_for_a_subject_with_one_guide(FREN1010Guide, 'FREN1010');
 
     course_links_panel_loads_correctly_for_a_subject(FREN1010ReadingList);
+}
+
+function FREN1010LoadsProperly() {
+    cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010 - Introductory French 1');
+    // cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010');
+    cy.get('[data-testid="reading-list-FREN1010-content"]')
+        .should('exist')
+        .contains('FREN1010 Reading list (contains 2 items)');
+    cy.get('div[data-testid="reading-list-FREN1010"').should('not.contain', 'Reading list currently unavailable');
+
+    cy.get('[data-testid="past-exams-FREN1010-content"]')
+        .should('exist')
+        .contains('Past exam papers (16 items)');
+
+    cy.get('[data-testid="guides-FREN1010-content"]')
+        .should('exist')
+        .contains('French Studies');
 }
 
 context('Learning Resources Accessibility', () => {
@@ -367,11 +383,7 @@ context('The Learning Resources Page', () => {
         the_user_lands_on_the_Search_tab();
 
         a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
-        cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010 - Introductory French 1');
-        cy.get('[data-testid="reading-list-FREN1010-content"] h4').contains('Course reading lists');
-        cy.get('[data-testid="reading-list-link"]').contains('FREN1010 Reading list (contains 2 items)');
-        cy.get('[data-testid="past-exams-FREN1010"]').contains('Past exam papers (16 items)');
-        cy.get('[data-testid="guides-FREN1010"]').should('contain', 'French Studies');
+        FREN1010LoadsProperly();
 
         the_user_clicks_on_the_My_Courses_tab();
         a_user_with_no_classes_sees_notice_of_same_in_courses_list();
@@ -434,53 +446,106 @@ context('The Learning Resources Page', () => {
 
         the_user_sees_the_search_form();
 
-        load_a_subject_in_learning_resource_page_search_tab(FREN1010ReadingList, learningResourceSearchSuggestions);
+        load_a_subject_in_learning_resource_page_search_tab(
+            FREN1010ReadingList.coursecode,
+            learningResourceSearchSuggestions,
+        );
 
         FREN1010_loads_properly_for_s111111_user();
     });
 
     it('A user who searches for multiple subjects can switch between the tabs for each one', () => {
+        function HIST1201LoadsProperly() {
+            cy.get('[data-testid="learning-resource-subject-title"]').contains('HIST1201');
+            cy.get('[data-testid="reading-list-HIST1201-content"]')
+                .should('exist')
+                .contains('HIST1201 Reading list (contains 35 items)');
+            cy.get('[data-testid="past-exams-HIST1201-content"]')
+                .should('exist')
+                .contains('Past exam papers (1 item)');
+            cy.get('[data-testid="guides-false-content"]')
+                .should('exist')
+                .contains('No subject guides');
+        }
+
+        function ACCT1101LoadsProperly() {
+            cy.get('[data-testid="learning-resource-subject-title"]').contains('ACCT1101');
+            cy.get('[data-testid="reading-list-ACCT1101-content"]')
+                .should('exist')
+                .contains('ACCT1101 Reading list (contains 2 items)');
+            cy.get('[data-testid="past-exams-ACCT1101-content"]')
+                .should('exist')
+                .contains('Past exam papers (9 items)');
+            cy.get('[data-testid="guides-ACCT1101-content"]')
+                .should('exist')
+                .contains('Accounting');
+        }
+
+        function searchFor(searchFor = 'FREN', selectCourseCode) {
+            cy.log('searching for ', selectCourseCode);
+            const searchSuggestionForThisCourse = learningResourceSearchSuggestions
+                .filter(obj => {
+                    return obj.name === selectCourseCode;
+                })
+                .pop();
+
+            cy.get('div[data-testid=full-learningresource-autocomplete] input').clear();
+            cy.get('div[data-testid=full-learningresource-autocomplete] input').type(searchFor);
+            // click the first option
+            cy.get('li#full-learningresource-autocomplete-option-0')
+                .contains(
+                    `${searchSuggestionForThisCourse.course_title}, ${searchSuggestionForThisCourse.campus}, ${searchSuggestionForThisCourse.period}`,
+                )
+                .click();
+        }
         cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();
 
-        a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
+        // search for FREN1010
+        searchFor('FREN', 'FREN1010');
+        FREN1010LoadsProperly();
 
-        a_user_can_use_the_search_bar_to_load_a_subject(
-            HIST1201ReadingList,
-            learningResourceSearchSuggestions,
-            'HIST',
-            1,
-            1,
-        );
+        // search for PHYS1101E
+        searchFor('PHYS', 'PHYS1101E');
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('PHYS1101E');
+        cy.get('[data-testid="reading-list-PHYS1101E-content"]')
+            .should('exist')
+            .contains('Reading list currently unavailable');
+        cy.get('[data-testid="past-exams-false-content"]')
+            .should('exist')
+            .contains('No Past Exam Papers for this course');
+        cy.get('[data-testid="no-guides"]')
+            .should('exist')
+            .should('contain', 'No subject guides for this course');
 
-        a_user_can_use_the_search_bar_to_load_a_subject(
-            ACCT1101ReadingList,
-            learningResourceSearchSuggestions,
-            'ACCT',
-            8,
-            2,
-        );
+        // search for HIST1201
+        searchFor('HIST', 'HIST1201');
+        HIST1201LoadsProperly();
 
+        // search for ACCT1101
+        searchFor('ACCT', 'ACCT1101');
+        ACCT1101LoadsProperly();
+
+        // swap tabs to FREN1010
         cy.get('[data-testid=classtab-FREN1010]')
             .contains('FREN1010')
             .click();
         cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
+        FREN1010LoadsProperly();
 
+        // swap tabs to HIST1201
         cy.get('[data-testid=classtab-HIST1201]')
             .contains('HIST1201')
             .click();
-        cy.get('div[data-testid=classpanel-1] h3').contains('HIST1201');
+        HIST1201LoadsProperly();
 
-        // search again and go to the existing tab
-        a_user_can_use_the_search_bar_to_load_a_subject(
-            ACCT1101ReadingList,
-            learningResourceSearchSuggestions,
-            'ACCT',
-            8,
-            2,
-        );
+        // search again for ACC1101
+        searchFor('ACCT', 'ACCT1101');
+        ACCT1101LoadsProperly();
+        // only the 4 tabs in the subject tab bar - it didn't load another tab
+        cy.get('header [role="tablist"] button').should('have.length', 4);
     });
 
     // it('A repeating string is handled correctly', () => {

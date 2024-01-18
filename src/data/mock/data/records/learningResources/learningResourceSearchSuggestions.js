@@ -80,5 +80,12 @@ export default [{
         course_title: 'has mock data - Accounting for Decision Making',
         campus: 'St Lucia',
         period: 'Semester 2 2020',
+    }, {
+        name: "PHYS1101E",
+        url: "https://uq.rl.talis.com/lists/98013B8A-65C7-FDB9-1DA2-03E51ED01C39",
+        type: "learning_resource",
+        course_title: "Physics",
+        campus: "UQ College",
+        period: "Yearlong 2023",
     }
 ];
