@@ -14,7 +14,11 @@ import { default as ACCT1101ReadingList } from '../../../src/data/mock/data/reco
 import { default as ACCT1101Guide } from '../../../src/data/mock/data/records/learningResources/libraryGuides_ACCT1101';
 import { default as ACCT1101Exam } from '../../../src/data/mock/data/records/learningResources/examListACCT1101';
 import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/learningResourceSearchSuggestions';
-import { getReadingListHeader, readingListLength } from '../../support/helpers';
+import { readingListLength } from '../../support/helpers';
+
+const getReadingListHeader = courseReadingList => {
+    return `view the ${readingListLength(courseReadingList)} items on the ${courseReadingList.coursecode} Reading list`;
+};
 
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
     const title = courseReadingList.course_title || 'mock data is missing';
@@ -38,58 +42,6 @@ function the_user_clicks_on_the_Search_tab() {
     cy.get('button#topmenu-1')
         .contains(locale.search.title)
         .click();
-}
-
-function firstReadingListItems(courseReadingList) {
-    return readingListLength(courseReadingList) > 0 ? courseReadingList.reading_lists[0].list[0] : [];
-}
-
-function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_with_the_maximum_num_displayable_items(
-    courseCode,
-    courseReadingList,
-    headerLevel = 'h3',
-) {
-    const readingList = firstReadingListItems(courseReadingList);
-    const firstReadingListTitle = readingList.title || 'mock data is missing';
-    const firstReadingListLink = readingList.itemLink || 'mock data is missing';
-    const readingListHeader = getReadingListHeader(FREN1010ReadingList);
-    cy.get('[data-testid="learning-resource-subject-reading-list"]')
-        .find(`${headerLevel}`)
-        .contains(readingListHeader);
-    cy.get(`div[data-testid="reading-list-${courseCode}"`).should('not.contain', 'Reading list currently unavailable');
-    cy.get('[data-testid="learning-resource-subject-reading-list"]')
-        .find('a')
-        .contains(firstReadingListTitle)
-        .should('have.attr', 'href', firstReadingListLink);
-}
-
-function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_of_more_than_the_max_displayable_items(
-    courseReadingList,
-    headerLevel = 'h3',
-) {
-    const readingList =
-        !!courseReadingList.reading_lists &&
-        courseReadingList.reading_lists.length > 0 &&
-        courseReadingList.reading_lists[0];
-    const readingListLink = readingList.url || 'mock data is missing';
-    const readingListHeader = getReadingListHeader(courseReadingList);
-    cy.get(`[data-testid="learning-resource-subject-reading-list"] ${headerLevel}`).contains(readingListHeader);
-    const numberExcessReadingLists =
-        readingListLength(courseReadingList) - locale.myCourses.readingLists.visibleItemsCount;
-    cy.get('div[data-testid=reading-list-more-link] a')
-        .contains(`${numberExcessReadingLists} more items`)
-        .should('have.attr', 'href', readingListLink);
-}
-
-function reading_list_panel_loads_correctly_for_a_subject_with_multiple_reading_lists(courseReadingList, coursecode) {
-    const courseCode = courseReadingList.coursecode || 'mock data is missing';
-
-    const multipleLabel = locale.myCourses.readingLists.error.multiple.replace('[classnumber]', courseCode);
-    expect(multipleLabel).contains(coursecode);
-    cy.get('p[data-testid=reading-list-multiple-label]').contains(multipleLabel);
-    cy.get('a[data-testid=multiple-reading-list-search-link]')
-        .contains(locale.myCourses.readingLists.error.footer.linkLabel)
-        .should('have.attr', 'href', locale.myCourses.readingLists.error.footer.linkOut);
 }
 
 function exams_panel_loads_correctly_for_a_subject_with_no_exams(coursecode) {
@@ -212,12 +164,11 @@ function course_links_panel_loads_correctly_for_a_subject(courseReadingList) {
 }
 
 function load_a_subject_in_learning_resource_page_search_tab(
-    courseReadingList,
+    courseCode,
     searchSuggestions,
     typeChar = 'FREN',
     numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
 ) {
-    const courseCode = courseReadingList.coursecode || 'mock data is missing';
     const frenchSearchSuggestion = searchSuggestions
         .filter(obj => {
             return obj.name === courseCode;
@@ -277,7 +228,7 @@ function a_user_can_use_the_search_bar_to_load_a_subject(
     tabId = 0,
 ) {
     load_a_subject_in_learning_resource_page_search_tab(
-        courseReadingList,
+        courseReadingList.coursecode,
         searchSuggestions,
         typeChar,
         numberOfMatchingSubject,
@@ -311,14 +262,6 @@ function click_on_a_subject_tab(panelNumber, courseReadingList) {
     cy.get(`div[data-testid=classpanel-${panelNumber}] h2`).contains(title);
 }
 
-function the_user_clicks_on_the_second_subject_tab(courseReadingList) {
-    click_on_a_subject_tab(1, courseReadingList);
-}
-
-function the_user_clicks_on_the_third_subject_tab(courseReadingList) {
-    click_on_a_subject_tab(2, courseReadingList);
-}
-
 function the_title_block_displays_properly(courseReadingList) {
     const listTitle = courseReadingList.course_title || 'mock data is missing1';
     const coursecode = courseReadingList.coursecode || 'mock data is missing2';
@@ -331,16 +274,31 @@ function FREN1010_loads_properly_for_s111111_user() {
 
     the_title_block_displays_properly(FREN1010ReadingList);
 
-    reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_with_the_maximum_num_displayable_items(
-        'FREN1010',
-        FREN1010ReadingList,
-    );
+    cy.get('[data-testid="learning-resource-subject-reading-list"] h3').contains('Course reading lists');
+    cy.get('div[data-testid="reading-list-FREN1010"').should('not.contain', 'Reading list currently unavailable');
 
     exams_panel_loads_correctly_for_a_subject_with_many_exams(FREN1010Exam);
 
     guides_panel_loads_correctly_for_a_subject_with_one_guide(FREN1010Guide, 'FREN1010');
 
     course_links_panel_loads_correctly_for_a_subject(FREN1010ReadingList);
+}
+
+function FREN1010LoadsProperly() {
+    cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010 - Introductory French 1');
+    // cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010');
+    cy.get('[data-testid="reading-list-FREN1010-content"]')
+        .should('exist')
+        .contains('FREN1010 Reading list (contains 2 items)');
+    cy.get('div[data-testid="reading-list-FREN1010"').should('not.contain', 'Reading list currently unavailable');
+
+    cy.get('[data-testid="past-exams-FREN1010-content"]')
+        .should('exist')
+        .contains('Past exam papers (16 items)');
+
+    cy.get('[data-testid="guides-FREN1010-content"]')
+        .should('exist')
+        .contains('French Studies');
 }
 
 context('Learning Resources Accessibility', () => {
@@ -391,50 +349,27 @@ beforeEach(() => {
     cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
 });
 context('The Learning Resources Page', () => {
-    /**
-     * Show a user with 3 classes can see all the variations correctly
-     * The mock data has been selected to cover the display options:
-     *
-     *          |  reading lists                    | exams         | guides         |
-     * ---------+-----------------------------------+---------------+----------------+
-     * FREN1010 | has 1 list with exactly 2 entries | has > 2 exams | has 1 guide    |
-     * ---------+-----------------------------------+---------------+----------------+
-     * HIST1201 | has 1 list with > 2 entries       | has 1 exams   | has 0 guides   |
-     * ---------+-----------------------------------+---------------+----------------+
-     * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
-     * ---------+-----------------------------------+---------------+----------------+
-     *
-     * NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
-     *
-     */
+    // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
     it('User with classes sees their classes', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
 
-        FREN1010_loads_properly_for_s111111_user();
+        // FREN1010_loads_properly_for_s111111_user();
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010 - Introductory French 1');
 
-        // next tab
-        the_user_clicks_on_the_second_subject_tab(HIST1201ReadingList);
+        // next tab - the user clicks on the HIST1201 subject tab
+        click_on_a_subject_tab(1, HIST1201ReadingList);
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('HIST1201 - The Australian Experience');
 
-        reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_of_more_than_the_max_displayable_items(
-            HIST1201ReadingList,
+        // user clicks on third subject tab, PHIL1002, loads as expected
+        click_on_a_subject_tab(2, PHIL1002ReadingList);
+        cy.get('[data-testid=learning-resource-subject-title]').contains(
+            'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
         );
 
-        exams_panel_loads_correctly_for_a_subject_with_one_exam();
-
-        guides_panel_loads_correctly_for_a_subject_with_zero_guides();
-
-        // next tab
-        the_user_clicks_on_the_third_subject_tab(PHIL1002ReadingList);
-
-        reading_list_panel_loads_correctly_for_a_subject_with_multiple_reading_lists(PHIL1002ReadingList, 'PHIL1002');
-
-        exams_panel_loads_correctly_for_a_subject_with_no_exams('PHIL1002');
-
-        guides_panel_loads_correctly_for_a_subject_with_many_guides(PHIL1002Guide, 'PHIL1002');
-
         // and back to the second tab (to load a tab where we don't need to reload the data)
-        the_user_clicks_on_the_second_subject_tab(HIST1201ReadingList);
+        click_on_a_subject_tab(1, HIST1201ReadingList);
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('HIST1201 - The Australian Experience');
 
         // next tab
         the_user_clicks_on_the_Search_tab();
@@ -448,10 +383,7 @@ context('The Learning Resources Page', () => {
         the_user_lands_on_the_Search_tab();
 
         a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
-        const readingListHeader = getReadingListHeader(FREN1010ReadingList);
-        cy.get('[data-testid="reading-list-FREN1010"]').contains(readingListHeader);
-        cy.get('[data-testid="past-exams-FREN1010"]').contains('Past exam papers (16 items)');
-        cy.get('[data-testid="guides-FREN1010"]').should('contain', 'French Studies');
+        FREN1010LoadsProperly();
 
         the_user_clicks_on_the_My_Courses_tab();
         a_user_with_no_classes_sees_notice_of_same_in_courses_list();
@@ -476,11 +408,11 @@ context('The Learning Resources Page', () => {
 
         the_user_lands_on_the_Search_tab();
 
-        reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_with_the_maximum_num_displayable_items(
-            'ACCT1101',
-            ACCT1101ReadingList,
-            'h4',
-        );
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('ACCT1101 - Accounting for Decision Making');
+
+        cy.get('[data-testid="reading-list-ACCT1101-content"] h4').contains('Course reading lists');
+        cy.get('[data-testid="reading-list-link"]').contains('ACCT1101 Reading list (contains 2 items)');
+        cy.get('div[data-testid="reading-list-ACCT1101"]').should('not.contain', 'Reading list currently unavailable');
 
         exams_panel_loads_correctly_for_a_subject_with_many_exams(ACCT1101Exam, 'searchresults');
 
@@ -490,15 +422,14 @@ context('The Learning Resources Page', () => {
     });
 
     it('A user who searches for a course that happens to have a blank campus gets the course they requested', () => {
-        cy.visit('/learning-resources?user=s1111111&coursecode=FREN1011&campus=&semester=Semester%202%202020');
+        cy.visit('/learning-resources?user=s3333333&coursecode=FREN1011&campus=&semester=Semester%202%202020');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab(FREN1011ReadingList);
 
-        reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list_of_more_than_the_max_displayable_items(
-            FREN1011ReadingList,
-            'h4',
-        );
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1011 - Introductory French 1 extended');
+        cy.get('[data-testid="reading-list-FREN1011-content"] h4').contains('Course reading lists');
+        cy.get('[data-testid="reading-list-link"]').contains('FREN1011 Reading list (contains 11 items)');
 
         exams_panel_loads_correctly_for_a_subject_with_many_exams(FREN1011Exam, 'searchresults');
 
@@ -515,53 +446,113 @@ context('The Learning Resources Page', () => {
 
         the_user_sees_the_search_form();
 
-        load_a_subject_in_learning_resource_page_search_tab(FREN1010ReadingList, learningResourceSearchSuggestions);
+        load_a_subject_in_learning_resource_page_search_tab(
+            FREN1010ReadingList.coursecode,
+            learningResourceSearchSuggestions,
+        );
 
         FREN1010_loads_properly_for_s111111_user();
     });
 
     it('A user who searches for multiple subjects can switch between the tabs for each one', () => {
+        function HIST1201LoadsProperly() {
+            cy.get('[data-testid="learning-resource-subject-title"]').contains('HIST1201');
+            cy.get('[data-testid="reading-list-HIST1201-content"]')
+                .should('exist')
+                .contains('HIST1201 Reading list (contains 35 items)');
+            cy.get('[data-testid="past-exams-HIST1201-content"]')
+                .should('exist')
+                .contains('Past exam papers (1 item)');
+            cy.get('[data-testid="guides-false-content"]')
+                .should('exist')
+                .contains('No subject guides');
+        }
+
+        function ACCT1101LoadsProperly() {
+            cy.get('[data-testid="learning-resource-subject-title"]').contains('ACCT1101');
+            cy.get('[data-testid="reading-list-ACCT1101-content"]')
+                .should('exist')
+                .contains('ACCT1101 Reading list (contains 2 items)');
+            cy.get('[data-testid="past-exams-ACCT1101-content"]')
+                .should('exist')
+                .contains('Past exam papers (9 items)');
+            cy.get('[data-testid="guides-ACCT1101-content"]')
+                .should('exist')
+                .contains('Accounting');
+        }
+
+        function searchFor(searchFor = 'FREN', selectCourseCode) {
+            cy.log('searching for ', selectCourseCode);
+            const searchSuggestionForThisCourse = learningResourceSearchSuggestions
+                .filter(obj => {
+                    return obj.name === selectCourseCode;
+                })
+                .pop();
+
+            cy.get('div[data-testid=full-learningresource-autocomplete] input').clear();
+            cy.get('div[data-testid=full-learningresource-autocomplete] input').type(searchFor);
+            // click the first option
+            cy.get('li#full-learningresource-autocomplete-option-0')
+                .contains(
+                    `${searchSuggestionForThisCourse.course_title}, ${searchSuggestionForThisCourse.campus}, ${searchSuggestionForThisCourse.period}`,
+                )
+                .click();
+        }
         cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();
 
-        a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
+        // search for FREN1010
+        searchFor('FREN', 'FREN1010');
+        FREN1010LoadsProperly();
 
-        a_user_can_use_the_search_bar_to_load_a_subject(
-            HIST1201ReadingList,
-            learningResourceSearchSuggestions,
-            'HIST',
-            1,
-            1,
-        );
+        // search for PHYS1101E
+        searchFor('PHYS', 'PHYS1101E');
+        cy.get('[data-testid="learning-resource-subject-title"]').contains('PHYS1101E');
+        cy.get('[data-testid="reading-list-PHYS1101E-content"]')
+            .should('exist')
+            .contains('No Reading list for this course');
+        cy.get('[data-testid="past-exams-false-content"]')
+            .should('exist')
+            .contains('No Past Exam Papers for this course');
+        cy.get('[data-testid="no-guides"]')
+            .should('exist')
+            .should('contain', 'No subject guides for this course');
 
-        a_user_can_use_the_search_bar_to_load_a_subject(
-            ACCT1101ReadingList,
-            learningResourceSearchSuggestions,
-            'ACCT',
-            8,
-            2,
-        );
-
+        // swap tabs to FREN1010 - at one point swapping from an error to an ok wiped the ok :(
         cy.get('[data-testid=classtab-FREN1010]')
             .contains('FREN1010')
             .click();
         cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
+        FREN1010LoadsProperly();
 
+        // search for HIST1201
+        searchFor('HIST', 'HIST1201');
+        HIST1201LoadsProperly();
+
+        // search for ACCT1101
+        searchFor('ACCT', 'ACCT1101');
+        ACCT1101LoadsProperly();
+
+        // swap tabs to FREN1010
+        cy.get('[data-testid=classtab-FREN1010]')
+            .contains('FREN1010')
+            .click();
+        cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
+        FREN1010LoadsProperly();
+
+        // swap tabs to HIST1201
         cy.get('[data-testid=classtab-HIST1201]')
             .contains('HIST1201')
             .click();
-        cy.get('div[data-testid=classpanel-1] h3').contains('HIST1201');
+        HIST1201LoadsProperly();
 
-        // search again and go to the existing tab
-        a_user_can_use_the_search_bar_to_load_a_subject(
-            ACCT1101ReadingList,
-            learningResourceSearchSuggestions,
-            'ACCT',
-            8,
-            2,
-        );
+        // search again for ACC1101
+        searchFor('ACCT', 'ACCT1101');
+        ACCT1101LoadsProperly();
+        // only the 4 tabs in the subject tab bar - it didn't load another tab
+        cy.get('header [role="tablist"] button').should('have.length', 4);
     });
 
     // it('A repeating string is handled correctly', () => {
@@ -588,27 +579,30 @@ context('The Learning Resources Page', () => {
             .should('have.length', 3 + 1);
     });
 
+    /**
+     * Show a user with 3 classes can see all the variations correctly
+     * The mock data has been selected to cover the display options:
+     *
+     *          |  reading lists                    | exams         | guides         |
+     * ---------+-----------------------------------+---------------+----------------+
+     * FREN1010 | has 1 list with exactly 2 entries | has > 2 exams | has 1 guide    |
+     * ---------+-----------------------------------+---------------+----------------+
+     * HIST1201 | has 1 list with > 2 entries       | has 1 exams   | has 0 guides   |
+     * ---------+-----------------------------------+---------------+----------------+
+     * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
+     * ---------+-----------------------------------+---------------+----------------+
+     */
     // a subject with one reading list which contains more than the minimum number displays correctly
     it('the content on the history tab is correct', () => {
         cy.visit(
             '/learning-resources?coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020&user=s1111111',
         );
         cy.waitUntil(() =>
-            cy
-                .get('[data-testid="reading-list-HIST1201-content"]')
-                .should('exist')
-                .should('contain', 'Reading list for Semester 2 2020 at St Lucia (35 items)'),
+            cy.get('[data-testid="reading-list-link"]').contains('HIST1201 Reading list (contains 35 items)'),
         );
 
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'HIST1201');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'The Australian Experience');
-        cy.get('[data-testid="reading-list-HIST1201-content"]').should(
-            'contain',
-            'Reading list for Semester 2 2020 at St Lucia (35 items)',
-        );
-        cy.get('[data-testid="reading-list-0"]').should('contain', 'True stories: history, politics, aboriginality');
-        cy.get('[data-testid="reading-list-1"]').should('contain', 'Warrior: a legendary');
-        cy.get('[data-testid="reading-list-more-link"]').should('contain', '33 more items');
         cy.get('[data-testid="past-exams-HIST1201-content"] > div')
             .children()
             .should('have.length', 1);
@@ -622,22 +616,11 @@ context('The Learning Resources Page', () => {
             '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
         );
         cy.waitUntil(() =>
-            cy
-                .get('[data-testid="reading-list-FREN1010-content"] h3')
-                .should('exist')
-                .should('contain', 'Reading list for Semester 2 2020 at St Lucia (2 items)'),
+            cy.get('[data-testid="reading-list-link"]').contains('FREN1010 Reading list (contains 2 items)'),
         );
 
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'FREN1010');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'Introductory French 1');
-
-        cy.get('[data-testid="reading-list-FREN1010-content"]').should(
-            'contain',
-            'Reading list for Semester 2 2020 at St Lucia (2 items)',
-        );
-        cy.get('[data-testid="reading-list-0"]').should('contain', 'Chahi, Fatiha');
-        cy.get('[data-testid="reading-list-1"]').should('contain', 'Collins Robert French dictionary');
-        cy.get('[data-testid="reading-list-more-link"]').should('not.exist');
 
         cy.get('[data-testid="past-exams-FREN1010-content"] > div')
             .children()
@@ -657,35 +640,12 @@ context('The Learning Resources Page', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%203%202020',
         );
-        cy.waitUntil(() =>
-            cy
-                .get('[data-testid="reading-list-PHIL1002-content"]')
-                .should('exist')
-                .should('contain', 'Reading list for Semester 3 2020 at St Lucia'),
-        );
+        cy.waitUntil(() => cy.get('[data-testid="reading-list-link"]').contains('PHIL1002 (has 2 reading lists)'));
 
-        cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'PHIL1002');
         cy.get('[data-testid="learning-resource-subject-title"]').should(
             'contain',
-            'Introduction to Philosophy: What is Philosophy?',
+            'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
         );
-
-        cy.get('[data-testid="reading-list-PHIL1002-content"]').should(
-            'contain',
-            'Reading list for Semester 3 2020 at St Lucia',
-        );
-        cy.get('[data-testid="reading-list-multiple-label"]').should(
-            'contain',
-            'More than one reading list found for PHIL1002. Please select a list:',
-        );
-        cy.get('[data-testid="reading-list-link-0"]').should('contain', 'PHIL1002 St Lucia, Summer 2022/23');
-        cy.get('[data-testid="reading-list-link-1"]').should('contain', 'PHIL1002 St Lucia, Summer 2022/23');
-        cy.get('[data-testid="reading-list-multiple-label"]')
-            .parent()
-            .children()
-            .should('have.length', 4);
-
-        cy.get('[data-testid="multiple-reading-list-search-link"]').should('contain', 'Search other reading lists');
 
         cy.get('[data-testid="past-exams-PHIL1002-content"] > div')
             .children()
@@ -698,5 +658,14 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="guide-0"]').should('contain', 'PHIL1002');
         cy.get('[data-testid="guide-1"]').should('contain', 'Philosophy');
         cy.get('[data-testid="guide-2"]').should('contain', 'Stuff');
+    });
+
+    it('a user who manages to load a subject that has no reading list informed so', () => {
+        cy.visit(
+            '/learning-resources?user=s3333333&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        cy.waitUntil(() =>
+            cy.get('[data-testid="reading-list-PHYS1101E-content"]').contains('No Reading list for this course'),
+        );
     });
 });

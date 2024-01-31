@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import { default as locale } from '../learningResources.locale';
 import { Guides } from '../panels/Guides';
 import { PastExamPapers } from '../panels/PastExamPapers';
-import { ReadingLists } from '../panels/ReadingLists';
+import { default as ReadingLists } from '../panels/ReadingLists';
 import { SubjectLinks } from '../panels/SubjectLinks';
 
 import Grid from '@mui/material/Grid';
@@ -14,17 +14,6 @@ import { unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     theme => ({
-        learningResourceLineItem: {
-            borderTop: '1px solid #e8e8e8',
-            padding: '15px 0',
-            '& a': {
-                display: 'flex',
-                alignItems: 'center',
-            },
-        },
-        studyLinks: {
-            minHeight: '10rem',
-        },
         panelGap: {
             [theme.breakpoints.up('md')]: {
                 paddingLeft: 16,
@@ -40,6 +29,7 @@ const useStyles = makeStyles(
         contentBlock: {
             paddingLeft: 12,
             paddingRight: 12,
+            marginBlock: 6,
         },
     }),
     { withTheme: true },
@@ -62,6 +52,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
         return `${course.classnumber} ${title}`;
     };
 
+    const readingListError =
+        subject.classnumber === readingList.coursecode ? /* istanbul ignore next */ readingList.error : null;
     return (
         <React.Fragment>
             <Typography
@@ -80,19 +72,16 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 className={classes.contentBlock}
                 data-testid="learning-resource-subject-reading-list"
             >
-                <Grid item xs={12}>
+                <Grid item xs={12} md={6} className={classes.panelGap}>
                     <ReadingLists
-                        subject={subject}
-                        readingList={readingList.list[[coursecode]]}
+                        courseCode={coursecode}
+                        readingList={readingList.list[coursecode]}
                         readingListLoading={readingList.loading}
-                        readingListError={readingList.error}
+                        readingListError={readingListError}
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-            </Grid>
-
-            <Grid container className={classes.contentBlock}>
-                <Grid item xs={12} md={4} data-testid="learning-resource-subject-exams">
+                <Grid item xs={12} md={6} data-testid="learning-resource-subject-exams" className={classes.panelGap}>
                     <PastExamPapers
                         examList={examList.list[coursecode]}
                         examListLoading={examList.loading}
@@ -100,7 +89,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-                <Grid item xs={12} md={4} className={classes.panelGap}>
+                <Grid item xs={12} md={6}>
                     <Guides
                         guideList={guideList.list[coursecode]}
                         guideListLoading={guideList.loading}
@@ -108,7 +97,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-                <Grid item xs={12} md={4} className={classes.panelGap}>
+                <Grid item xs={12} md={6}>
                     <SubjectLinks subject={subject} headingLevel={panelHeadingLevel} />
                 </Grid>
             </Grid>
