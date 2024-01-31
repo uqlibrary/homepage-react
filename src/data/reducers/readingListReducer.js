@@ -17,14 +17,15 @@ const handlers = {
         ...initialState,
         ...state,
         readingListLoading: false,
-        readingList: action.payload,
         readingListError: false,
+        readingList: action.payload,
     }),
     [actions.READING_LIST_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         readingListLoading: false,
         readingListError: action.payload,
+        readingList: null,
     }),
     [actions.READING_LIST_CLEAR]: () => ({
         ...initialState,
@@ -33,8 +34,13 @@ const handlers = {
 
 export default function readingListReducer(state = initialState, action) {
     const handler = handlers[action.type];
-    if (!handler) {
+    if (
+        !handler
+        // || (state.readingList === undefined && state.readingListLoading === false && state.readingListError === false)
+    ) {
+        // console.log('action: NOPE ', action.type);
         return state;
     }
+    console.log('LR action:', action.type, state, action);
     return handler(state, action);
 }

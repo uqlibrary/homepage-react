@@ -4,7 +4,6 @@ import {
     a11yProps,
     extractSubjectCodeFromName,
     reverseA11yProps,
-    trimNotes,
 } from './learningResourcesHelpers';
 import { getQueryParams, isValidInput } from '../LearningResources';
 
@@ -99,11 +98,6 @@ describe('filterProps helper', () => {
             semester: 'Semester 2 2020',
         };
         expect(isValidInput(params8)).toBe(true);
-    });
-
-    it('should trim text properly', () => {
-        expect(trimNotes('the quick brown fox jumped over the lazy yellow dog', 10)).toEqual('the quick...');
-        expect(trimNotes('good test', 20)).toEqual('good test');
     });
 
     it('should extract parameters from the url  correctly', () => {

@@ -3,11 +3,7 @@
  * "This DOM element likely became detached somewhere between the previous and current command.'
  * Try this function when that error occurs occasionally in tests when clicking a button
  * per https://github.com/cypress-io/cypress/issues/7306#issuecomment-639828954
- *
- * @param string selector
- * @param string expectedButtonLabel
  */
-import { default as locale } from '../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 
 export function clickButton(selector) {
     cy.waitUntil(() => cy.get(selector).should('exist'));
@@ -53,18 +49,6 @@ export function readingListLength(courseReadingList) {
         0
     );
 }
-
-/**
- * @param courseReadingList
- * @return string
- */
-export const getReadingListHeader = courseReadingList => {
-    const readingList = courseReadingList?.reading_lists?.[0];
-    const campusMarker = !!readingList.campus ? ` at ${readingList.campus}` : '';
-    return `${locale.myCourses.readingLists.title} for ${readingList.period}${campusMarker} (${readingListLength(
-        courseReadingList,
-    )} items)`;
-};
 
 export function waitUntilSpotlightListPageHasLoaded() {
     cy.waitUntil(() =>
