@@ -1,16 +1,16 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 import locale from '../shared/learningResources.locale';
-import { _pluralise, trimNotes } from '../shared/learningResourcesHelpers';
+import { _pluralise } from '../shared/learningResourcesHelpers';
+import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Typography from '@mui/material/Typography';
+
 import { makeStyles } from '@mui/styles';
-import { getCampusByCode, unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     () => ({
@@ -22,119 +22,44 @@ const useStyles = makeStyles(
                 alignItems: 'center',
             },
         },
-        studyLinks: {
-            borderBottom: '1px solid #e8e8e8',
-            minHeight: '10rem',
+        presentLabel: {
+            paddingBottom: '1rem',
+            lineHeight: 1.3,
         },
     }),
     { withTheme: true },
 );
 
-export const ReadingLists = ({ subject, headingLevel, readingList, readingListLoading, readingListError }) => {
+const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoading, readingListError }) => {
     const classes = useStyles();
-    const semester = () => {
-        const value = subject?.semester || readingList?.period || readingList?.reading_lists?.[0]?.period || '';
-        return value ? ` for ${value}` : value;
+
+    const talisSubjectUrl = courseCode => {
+        return locale.myCourses.readingLists.courseLink.replace('[coursecode]', courseCode.toLowerCase());
     };
-    const campus = () => {
-        const value =
-            (subject.CAMPUS && getCampusByCode(subject.CAMPUS)) ||
-            readingList?.campus ||
-            readingList?.reading_lists?.[0]?.campus ||
-            '';
-        return value ? ` at ${value}` : value;
-    };
-    // with the new api of calling for reading list by course code, campus and semester,
-    // we should theoretically only ever have one reading list
-    // but handle multiple anyway...
-    const renderMultipleReadingListReference = (readingLists, coursecode) => {
-        const chooseListPrompt = localCourseCode =>
-            locale.myCourses.readingLists.error.multiple.replace('[classnumber]', localCourseCode);
-        return (
-            <Grid container style={{ paddingBottom: 12 }}>
-                {!!readingLists && readingLists.length > 1 && (
-                    <Typography style={{ paddingBottom: '15px' }} data-testid="reading-list-multiple-label">
-                        {chooseListPrompt(coursecode)}
+
+    const listOfReadingLists =
+        !!readingList && !!readingList.reading_lists && readingList.reading_lists.length > 0
+            ? readingList.reading_lists
+            : false;
+    console.log('LR -----');
+    console.log('readingListLoading=', readingListLoading);
+    console.log('readingListError=', readingListError);
+    console.log('readingList=', readingList);
+    console.log('** listOfReadingLists=', listOfReadingLists);
+    return (
+        <StandardCard fullHeight noHeader standardCardId={`reading-list-${courseCode}`}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+                {locale.myCourses.readingLists.title}
+            </Typography>
+            <Grid container className={'readinglists'}>
+                {!!readingListError && (
+                    /* istanbul ignore next */
+                    <Typography data-testid={`unavailable-${courseCode}`}>
+                        Reading list currently unavailable - <a href={talisSubjectUrl(courseCode)}>Try manually</a>
                     </Typography>
                 )}
-                {!!readingLists &&
-                    readingLists.length > 0 &&
-                    readingLists.map((list, index) => {
-                        return (
-                            <Grid
-                                item
-                                xs={12}
-                                data-testid={`multiple-reading-lists-${index}`}
-                                key={`multiple-reading-lists-${index}`}
-                                className={classes.learningResourceLineItem}
-                            >
-                                <a
-                                    aria-label={`Reading list for ${list.title} ${list.period}`}
-                                    href={list.url}
-                                    key={`reading-list-link-${index}`}
-                                    data-testid={`reading-list-link-${index}`}
-                                >
-                                    {`${coursecode} ${list.campus}, ${list.period}`}
-                                </a>
-                            </Grid>
-                        );
-                    })}
-                <Grid item xs={12} className={classes.learningResourceLineItem}>
-                    <a
-                        data-testid="multiple-reading-list-search-link"
-                        href={locale.myCourses.readingLists.error.footer.linkOut}
-                    >
-                        <SpacedArrowForwardIcon />
-                        {locale.myCourses.readingLists.error.footer.linkLabel}
-                    </a>
-                </Grid>
-            </Grid>
-        );
-    };
-    const readingListItemAriaLabel = l => `Reading list item ${l.title}, ${l.referenceType}, ${l.importance}`;
-    const singleReadingListLength = readingList => {
-        return !readingListError &&
-            !!readingList &&
-            !!readingList.reading_lists &&
-            readingList.reading_lists.length === 1 &&
-            !!readingList.reading_lists[0] &&
-            !!readingList.reading_lists[0].totalCount
-            ? readingList.reading_lists[0].totalCount
-            : 0;
-    };
-    const numberExcessReadingLists =
-        singleReadingListLength(readingList) > locale.myCourses.readingLists.visibleItemsCount
-            ? singleReadingListLength(readingList) - locale.myCourses.readingLists.visibleItemsCount
-            : 0;
-    const itemCountLabel = _pluralise('item', singleReadingListLength(readingList));
-    const singleReadingListLengthTitle = readingList =>
-        singleReadingListLength(readingList) > 0 ? `(${singleReadingListLength(readingList)} ${itemCountLabel})` : '';
-    const readingListTitle = `${
-        locale.myCourses.readingLists.title
-    }${semester()}${campus()} ${singleReadingListLengthTitle(readingList)}`;
-    const courseCode = (!!readingList && readingList.coursecode) || 'unknown';
-
-    return (
-        <StandardCard
-            noHeader
-            standardCardId={`reading-list-${courseCode}`}
-            style={{ marginBottom: '1rem', marginTop: '1rem' }}
-        >
-            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
-                {readingListTitle}
-            </Typography>
-            <Grid container>
-                {!!readingListLoading && (
-                    <Grid
-                        item
-                        xs={'auto'}
-                        style={{
-                            width: 80,
-                            marginRight: 20,
-                            marginBottom: 6,
-                            opacity: 0.3,
-                        }}
-                    >
+                {!readingListError && !!readingListLoading && (
+                    <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
                         <CircularProgress
                             color="primary"
                             size={20}
@@ -143,133 +68,53 @@ export const ReadingLists = ({ subject, headingLevel, readingList, readingListLo
                         />
                     </Grid>
                 )}
-
-                {!!readingListError && (
-                    /* istanbul ignore next */ <Fragment>
+                {/* eslint-disable-next-line max-len */}
+                {!readingListError && !readingListLoading && (!listOfReadingLists || listOfReadingLists.length === 0) && (
+                    <React.Fragment>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <Typography>
-                                {locale.myCourses.readingLists.error.unavailable.label}
-                                <a
-                                    style={{ display: 'inline' }}
-                                    aria-label={`Reading list for ${subject.classnumber}`}
-                                    href={locale.myCourses.readingLists.error.unavailable.linkOut.replace(
-                                        '[coursecode]',
-                                        subject.classnumber.toLowerCase(),
-                                    )}
-                                >
-                                    {locale.myCourses.readingLists.error.unavailable.tryManually}
-                                </a>
-                            </Typography>
+                            <Typography data-testid="no-reading-lists">No Reading list for this course.</Typography>
                         </Grid>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <a
-                                data-testid="multiple-reading-list-search-link"
-                                href={locale.myCourses.readingLists.error.footer.linkOut}
-                            >
+                            <a href={talisSubjectUrl(courseCode)}>
                                 <SpacedArrowForwardIcon />
-                                {locale.myCourses.readingLists.error.footer.linkLabel}
+                                View older lists
                             </a>
                         </Grid>
-                    </Fragment>
+                    </React.Fragment>
                 )}
-
-                {!readingListError &&
-                    !readingListLoading &&
-                    (!readingList || (!!readingList.reading_lists && readingList.reading_lists.length === 0)) && (
-                        <Fragment>
-                            <Grid item xs={12} className={classes.learningResourceLineItem}>
-                                <Typography>{locale.myCourses.readingLists.error.none}</Typography>
-                            </Grid>
-                            <Grid item xs={12} className={classes.learningResourceLineItem}>
-                                <a
-                                    data-testid="multiple-reading-list-search-link"
-                                    href={locale.myCourses.readingLists.error.footer.linkOut}
-                                >
-                                    <SpacedArrowForwardIcon />
-                                    {locale.myCourses.readingLists.error.footer.linkLabel}
-                                </a>
-                            </Grid>
-                        </Fragment>
-                    )}
-
-                {!readingListError && !readingListLoading && !!readingList && readingList.reading_lists.length > 1 && (
-                    <Grid item>{renderMultipleReadingListReference(readingList.reading_lists, courseCode)}</Grid>
-                )}
-
-                {!readingListError &&
-                    !readingListLoading &&
-                    !!readingList &&
-                    !!readingList.reading_lists &&
-                    readingList.reading_lists.length === 1 &&
-                    !!readingList.reading_lists[0] &&
-                    !!readingList.reading_lists[0].list &&
-                    !!readingList.reading_lists[0].list.length > 0 &&
-                    readingList.reading_lists[0].list
-                        // we only show a small number - theres a link to viewall on Talis if there are more
-                        .slice(0, locale.myCourses.readingLists.visibleItemsCount)
-                        .map((list, index) => {
-                            return (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    data-testid={`reading-list-${index}`}
-                                    key={`reading-list-${index}`}
-                                    className={classes.learningResourceLineItem}
-                                >
-                                    {!!list.itemLink && !!list.title && (
-                                        <a
-                                            aria-label={readingListItemAriaLabel(list)}
-                                            className="reading-list-item"
-                                            href={list.itemLink}
-                                        >
-                                            {unescapeString(list.title)}
-                                        </a>
-                                    )}
-                                    {!list.itemLink && !!list.title && <Typography>{list.title}</Typography>}
-                                    {!!list.author && (
-                                        <Typography style={{ fontStyle: 'italic' }}>
-                                            {list.author}
-                                            {!!list.year && <Fragment>{`, ${list.year} `}</Fragment>}
-                                        </Typography>
-                                    )}
-                                    {!!list.startPage && (
-                                        <Typography>
-                                            Pages from {list.startPage}
-                                            {!!list.endPage && <Fragment>{` to  ${list.endPage}`}</Fragment>}
-                                        </Typography>
-                                    )}
-                                    {!!list.studentNote && (
-                                        <Typography>{trimNotes(list.studentNote, locale.notesTrimLength)}</Typography>
-                                    )}
-                                    <Typography>
-                                        {list.referenceType}
-                                        {!!list.importance && <Fragment>{` - ${list.importance}`}</Fragment>}
-                                    </Typography>
-                                </Grid>
-                            );
-                        })}
-                {/* eg MATH4091 has 12 reading list items */}
-                {!readingListError &&
-                    !readingListLoading &&
-                    !!numberExcessReadingLists &&
-                    !!readingList &&
-                    !!readingList.reading_lists &&
-                    readingList.reading_lists.length === 1 &&
-                    !!readingList.reading_lists[0].url && (
-                        <Grid
-                            item
-                            xs={12}
-                            className={classes.learningResourceLineItem}
-                            data-testid="reading-list-more-link"
-                        >
-                            <a href={readingList.reading_lists[0].url}>
+                {/* eslint-disable-next-line max-len */}
+                {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length === 1 && (
+                    <React.Fragment>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                            <span className={classes.presentLabel}>{locale.myCourses.readingLists.presentLabel}</span>
+                        </Grid>
+                        <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
+                            <a href={listOfReadingLists[0].url}>
                                 <SpacedArrowForwardIcon />
-                                {locale.myCourses.readingLists.footer.linkLabel
-                                    .replace('[numberExcessReadingLists]', numberExcessReadingLists)
-                                    .replace('[readingListNumber]', _pluralise('item', numberExcessReadingLists))}
+                                {`${courseCode} Reading list (contains ${listOfReadingLists[0].totalCount} ${_pluralise(
+                                    'item',
+                                    listOfReadingLists[0].totalCount,
+                                )})`}
                             </a>
                         </Grid>
-                    )}
+                    </React.Fragment>
+                )}
+                {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length > 1 && (
+                    <React.Fragment>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                            <span className={classes.presentLabel}>{locale.myCourses.readingLists.presentLabel}</span>
+                        </Grid>
+                        <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
+                            <a href={talisSubjectUrl(courseCode)}>
+                                <SpacedArrowForwardIcon />
+                                {`${courseCode} (has ${listOfReadingLists.length} ${_pluralise(
+                                    'reading list',
+                                    listOfReadingLists.length,
+                                )})`}
+                            </a>
+                        </Grid>
+                    </React.Fragment>
+                )}
             </Grid>
         </StandardCard>
     );
@@ -277,6 +122,7 @@ export const ReadingLists = ({ subject, headingLevel, readingList, readingListLo
 
 ReadingLists.propTypes = {
     subject: PropTypes.object,
+    courseCode: PropTypes.string,
     headingLevel: PropTypes.string,
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
