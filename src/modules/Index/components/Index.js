@@ -7,6 +7,7 @@ import Hidden from '@mui/material/Hidden';
 
 import { useDispatch } from 'react-redux';
 import {
+    loadAccountTalisList,
     loadPrintBalance,
     loadLoans,
     searcheSpacePossiblePublications,
@@ -52,6 +53,9 @@ const MyLoader = props => (
 export const Index = ({
     account,
     accountLoading,
+    accountTalisList,
+    accountTalisListLoading,
+    accountTalisListError,
     author,
     spotlightsCurrent,
     spotlightsCurrentLoading,
@@ -104,6 +108,11 @@ export const Index = ({
             dispatch(loadPrintBalance());
         }
     }, [accountLoading, account, printBalance, printBalanceLoading, dispatch]);
+    useEffect(() => {
+        if (accountLoading === false && !!account && !accountTalisList && accountTalisListLoading === null && !accountTalisListError) {
+            dispatch(loadAccountTalisList());
+        }
+    }, [accountLoading, account, accountTalisList, accountTalisListLoading, accountTalisListError, dispatch]);
     useEffect(() => {
         if (accountLoading === false && !!account && !loans && loansLoading === null) {
             dispatch(loadLoans());

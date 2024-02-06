@@ -1,4 +1,5 @@
 export { default as accountReducer } from './account';
+export { default as accountTalisListReducer } from './accountTalisListReducer';
 export { default as alertsReducer } from './alertsReducer';
 export { default as alertReducer } from './alertReducer';
 export { default as homeReducer } from './homeReducer';

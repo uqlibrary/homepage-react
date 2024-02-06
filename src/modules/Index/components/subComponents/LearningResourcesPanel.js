@@ -43,7 +43,7 @@ export const getUrlForLearningResourceSpecificTab = (
     return url;
 };
 
-export const LearningResourcesPanel = ({ account, history }) => {
+export const LearningResourcesPanel = ({ account, accountTalisList, accountTalisListLoading, accountTalisListError history }) => {
     const pageLocation = useLocation();
     const classes = useStyles();
 
