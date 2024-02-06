@@ -83,9 +83,9 @@ export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
     availableOptions.set('papercut', 'Manage your print balance');
     availableOptions.set('loans', 'Manage your library loans');
     availableOptions.set('fines', 'Manage your library fines');
-    availableOptions.set('espace-possible', 'possible eSpace records');
-    availableOptions.set('espace-orcid', 'Link ORCiD account to eSpace');
-    availableOptions.set('espace-ntro', 'NTRO records in eSpace');
+    availableOptions.set('espace-possible', 'UQ eSpace records');
+    availableOptions.set('espace-orcid', 'Link ORCiD account to UQ eSpace');
+    availableOptions.set('espace-ntro', 'NTRO records in UQ eSpace');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
