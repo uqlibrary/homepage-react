@@ -378,7 +378,7 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('dispatches expected actions when possible espace publications call fails', async () => {
+    it('dispatches expected actions when possible-espace publications call fails', async () => {
         mockApi.onGet(repositories.routes.POSSIBLE_RECORDS_API().apiUrl).reply(500);
 
         const expectedActions = [actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING, actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED];
@@ -387,7 +387,7 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('dispatches expected actions when possible espace publications call succeeds', async () => {
+    it('dispatches expected actions when possible-espace publications call succeeds', async () => {
         mockApi.onGet(repositories.routes.POSSIBLE_RECORDS_API().apiUrl).reply(200);
 
         const expectedActions = [actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING, actions.POSSIBLY_YOUR_PUBLICATIONS_LOADED];
@@ -468,7 +468,7 @@ describe('Account action creators', () => {
         await mockActionsStore.dispatch(loadLoans());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
-    it('dispatches expected actions when possible espace publications call is unauthorised (fails with 403)', async () => {
+    it('dispatches expected actions when possible-espace publications call is unauthorised (fails with 403)', async () => {
         mockApi.onGet(repositories.routes.POSSIBLE_RECORDS_API().apiUrl).reply(403);
 
         const expectedActions = [actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED];
