@@ -7,6 +7,7 @@ import {
     clearExamLearningResources,
     clearLearningResourceSuggestions,
     clearGuides,
+    loadAccountTalisList,
     loadCourseReadingListsSuggestions,
     loadExamLearningResources,
     loadGuides,
@@ -28,6 +29,39 @@ describe('Account action creators', () => {
         MockDate.reset();
         mockApi.reset();
         mockSessionApi.reset();
+    });
+
+    describe('Account Talis List actions', () => {
+        console.log('Account Talis List actions');
+        const subj1 = { courseCode: 'PHIL2050', campus: 'St Lucia', semester: 'Semester  2  2017' };
+        const subj2 = { courseCode: 'POLS3804', campus: 'St Lucia', semester: 'Semester  2  2029' };
+        const payload = [subj1, subj2];
+        it('dispatches expected actions when Account Talis List call fails', async () => {
+            mockApi.onAny(repositories.routes.ACCOUNT_TALIS_API().apiUrl).reply(500);
+
+            const expectedActions = [
+                actions.ACCOUNT_TALIS_LOADING,
+                actions.APP_ALERT_SHOW,
+                actions.ACCOUNT_TALIS_FAILED,
+            ];
+
+            await mockActionsStore.dispatch(loadAccountTalisList(payload));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('handles an Account Talis List request', async () => {
+            const subj1 = { PHIL2050: 'https://uq.rl.talis.com/lists/9630917C-F559-A142-A347-4F4F1A74B835?login=1' };
+            const subj2 = { POLS3804: 'https://uq.rl.talis.com/lists/81A8819E-A3C7-C703-1344-3C220AB31C4F?login=1' };
+            const expected = [subj1, subj2];
+            mockApi.onAny(repositories.routes.ACCOUNT_TALIS_API().apiUrl).reply(200, {
+                ...expected,
+            });
+
+            const expectedActions = [actions.ACCOUNT_TALIS_LOADING, actions.ACCOUNT_TALIS_LOADED];
+
+            await mockActionsStore.dispatch(loadAccountTalisList(payload));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
     });
 
     describe('Guides actions', () => {

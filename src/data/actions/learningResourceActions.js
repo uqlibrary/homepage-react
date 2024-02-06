@@ -1,12 +1,35 @@
 import * as actions from './actionTypes';
-import { get } from 'repositories/generic';
+import { get, post } from 'repositories/generic';
 import {
+    ACCOUNT_TALIS_API,
     GUIDES_API,
     LEARNING_RESOURCES_EXAMS_API,
     READING_LIST_API,
     LEARNING_RESOURCES_COURSE_SUGGESTIONS_API,
 } from 'repositories/routes';
 import { throwFetchErrors } from 'helpers/general';
+
+export const loadAccountTalisList = courseCodeList => {
+    console.log('loadAccountTalisList');
+    // return async dispatch => {
+    return dispatch => {
+        console.log('ACCOUNT_TALIS_API()=', ACCOUNT_TALIS_API());
+        dispatch({ type: actions.ACCOUNT_TALIS_LOADING });
+        return post(ACCOUNT_TALIS_API(), courseCodeList)
+            .then(data => {
+                dispatch({
+                    type: actions.ACCOUNT_TALIS_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.ACCOUNT_TALIS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+};
 
 export function loadGuides(keyword) {
     return dispatch => {
@@ -88,12 +111,15 @@ export function loadReadingLists(coursecode, campus, semester) {
 }
 
 export function loadCourseReadingListsSuggestions(keyword) {
+    console.log('loadCourseReadingListsSuggestions');
     return dispatch => {
+        console.log('AAA');
         dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING });
         return fetch(LEARNING_RESOURCES_COURSE_SUGGESTIONS_API({ keyword }).apiUrl)
             .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
+                console.log('BBB');
                 /* istanbul ignore next */
                 if (keyword.length === 0) {
                     // just trying this as it helps with the mock data

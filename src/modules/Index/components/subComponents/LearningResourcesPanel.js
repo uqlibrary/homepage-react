@@ -14,6 +14,7 @@ import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourc
 import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+import { getClassNumberFromPieces, loadAccountTalisList } from 'data/actions';
 
 const useStyles = makeStyles(() => ({
     myCourses: {
@@ -56,6 +57,20 @@ export const LearningResourcesPanel = ({ account, history }) => {
     React.useEffect(() => {
         loadSearchResult(searchUrl);
     }, [searchUrl, loadSearchResult]);
+    React.useEffect(() => {
+        console.log('start LearningResourcesPanel', account.current_classes);
+        if (!!account?.current_classes) {
+            const courseList = account.current_classes.map(list => {
+                return {
+                    ['courseCode']: getClassNumberFromPieces(list),
+                    ['campus']: getCampusByCode(list.CAMPUS),
+                    ['semester']: list.semester,
+                };
+            });
+            console.log('ask api for talis urls for account codes:=', courseList);
+            loadAccountTalisList(courseList);
+        }
+    }, [account]);
 
     const navigateToLearningResourcePage = option => {
         /* istanbul ignore next */
