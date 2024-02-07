@@ -80,7 +80,7 @@ export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
 export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 
-export const ACCOUNT_TALIS_API = () => ({ apiUrl: 'learning_resources/suggestions/account' });
+export const ACCOUNT_TALIS_API = () => ({ apiUrl: 'learning_resources/course_code/talis_url' });
 
 export const LEARNING_RESOURCES_EXAMS_API = ({ keyword }) => ({ apiUrl: `exams/course/${keyword}/summary` });
 

@@ -5,6 +5,7 @@ import * as actions from 'data/actions';
 import Index from '../components/Index';
 
 const mapStateToProps = state => {
+    console.log('mapStateToProps');
     return {
         ...state.get('accountReducer'),
         ...state.get('accountTalisListReducer'),
@@ -14,6 +15,7 @@ const mapStateToProps = state => {
 };
 
 function mapDispatchToProps(dispatch) {
+    console.log('mapDispatchToProps');
     return {
         actions: bindActionCreators(actions, dispatch),
     };

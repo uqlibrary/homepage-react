@@ -9,12 +9,12 @@ import {
 } from 'repositories/routes';
 import { throwFetchErrors } from 'helpers/general';
 
-export const loadAccountTalisList = courseCodeList => {
-    console.log('loadAccountTalisList');
-    // return async dispatch => {
+export function loadAccountTalisList(courseCodeList) {
+    console.log('loadAccountTalisList', courseCodeList);
     return dispatch => {
         console.log('ACCOUNT_TALIS_API()=', ACCOUNT_TALIS_API());
         dispatch({ type: actions.ACCOUNT_TALIS_LOADING });
+        // return get(LEARNING_RESOURCES_EXAMS_API(), courseCodeList)
         return post(ACCOUNT_TALIS_API(), courseCodeList)
             .then(data => {
                 dispatch({
@@ -29,7 +29,7 @@ export const loadAccountTalisList = courseCodeList => {
                 });
             });
     };
-};
+}
 
 export function loadGuides(keyword) {
     return dispatch => {

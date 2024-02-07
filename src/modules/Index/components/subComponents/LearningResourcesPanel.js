@@ -43,7 +43,13 @@ export const getUrlForLearningResourceSpecificTab = (
     return url;
 };
 
-export const LearningResourcesPanel = ({ account, accountTalisList, accountTalisListLoading, accountTalisListError history }) => {
+export const LearningResourcesPanel = ({
+    account,
+    accountTalisList,
+    accountTalisListLoading,
+    accountTalisListError,
+    history,
+}) => {
     const pageLocation = useLocation();
     const classes = useStyles();
 
@@ -114,33 +120,53 @@ export const LearningResourcesPanel = ({ account, accountTalisList, accountTalis
                             {locale.homepagePanel.userCourseTitle}
                         </Typography>
                     </Grid>
-                    {account.current_classes.map((item, index) => {
-                        return (
-                            <Grid
-                                item
-                                xs={12}
-                                data-testid={`hcr-${index}`}
-                                data-analyticsid={`hcr-${index}`}
-                                key={`hcr-${index}`}
-                                style={{
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    paddingBottom: 8,
-                                }}
-                            >
-                                <Link
-                                    to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
-                                    data-testid={`learning-resource-panel-course-link-${index}`}
-                                >
-                                    {item.classnumber}
-                                </Link>{' '}
-                                {/* because the panel width is driven by window size, show a title
-                                    so ellipsis doesn't hide some meaningful difference between course titles */}
-                                <span title={item.DESCR}>{item.DESCR}</span>
-                            </Grid>
-                        );
-                    })}
+                    {!!accountTalisListLoading && <p>loading</p>}
+                    {!accountTalisListLoading && !!accountTalisListError && <p>error</p>}
+                    {!accountTalisListLoading &&
+                        !accountTalisListError &&
+                        !!accountTalisList &&
+                        accountTalisList.map((item, courseCode) => {
+                            return (
+                                <Grid container>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        data-testid={`hcr-${courseCode}`}
+                                        data-analyticsid={`hcr-${courseCode}`}
+                                        key={`hcr-${courseCode}`}
+                                        style={{
+                                            paddingBottom: 8,
+                                        }}
+                                    >
+                                        {item.classnumber}
+                                        {item.DESCR}
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        data-testid={`hcr-${courseCode}`}
+                                        data-analyticsid={`hcr-${courseCode}`}
+                                        key={`hcr-${courseCode}`}
+                                        style={{
+                                            paddingBottom: 8,
+                                        }}
+                                    >
+                                        <Link
+                                            to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
+                                            data-testid={`learning-resource-panel-course-link-${courseCount}`}
+                                        >
+                                            View Reading list
+                                        </Link>{' '}
+                                        <Link
+                                            to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
+                                            data-testid={`learning-resource-panel-course-link-${courseCount}`}
+                                        >
+                                            View all Learning resources
+                                        </Link>{' '}
+                                    </Grid>
+                                </Grid>
+                            );
+                        })}
                 </Grid>
             ) : (
                 <div style={{ marginLeft: 16 }}>{locale.homepagePanel.noCourses}</div>
@@ -152,6 +178,9 @@ export const LearningResourcesPanel = ({ account, accountTalisList, accountTalis
 LearningResourcesPanel.propTypes = {
     account: PropTypes.object,
     history: PropTypes.object,
+    accountTalisList: PropTypes.object,
+    accountTalisListLoading: PropTypes.bool,
+    accountTalisListError: PropTypes.bool,
 };
 
 export default withRouter(LearningResourcesPanel);

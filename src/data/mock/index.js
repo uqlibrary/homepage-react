@@ -759,9 +759,9 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [500, []];
     })
-    .onPost(routes.ACCOUNT_TALIS_API().apiUrl)
+    .onAny(routes.ACCOUNT_TALIS_API().apiUrl)
     .reply(() => {
-        console.log('returning mock');
+        console.log('returning mock for ', routes.ACCOUNT_TALIS_API().apiUrl);
         return withDelay([
             200,
             {
