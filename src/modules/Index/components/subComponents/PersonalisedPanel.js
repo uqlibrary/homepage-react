@@ -106,7 +106,7 @@ const useStyles = makeStyles(theme => ({
     },
     menuItemLabel: {
         fontSize: 14,
-        paddingRight: 40,
+        paddingRight: 45,
         paddingBottom: 6,
         color: theme.palette.accent.dark,
         '&:hover': {
@@ -227,7 +227,12 @@ const PersonalisedPanel = ({
                         data-testid={getPapercutId('menu-button')}
                     >
                         <Grid container spacing={0}>
-                            <Grid item xs className={classes.menuItemLabel} style={{ lineHeight: 1 }}>
+                            <Grid
+                                item
+                                xs
+                                className={classes.menuItemLabel}
+                                style={{ lineHeight: 1.2, paddingRight: 0 }}
+                            >
                                 {ppLocale.items.papercut.label.replace(
                                     '[balance]',
                                     printBalance && printBalance.balance ? `($${printBalance.balance})` : '',
