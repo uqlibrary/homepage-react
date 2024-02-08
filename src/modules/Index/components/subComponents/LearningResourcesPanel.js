@@ -135,21 +135,17 @@ export const LearningResourcesPanel = ({
                         !!classDetails &&
                         !!classDetails.length > 0 &&
                         classDetails.map(item => {
-                            console.log('XXXX item=', item);
                             return (
-                                <Grid container>
+                                <Grid container style={{ marginTop: 8 }}>
                                     <Grid
                                         item
                                         xs={12}
                                         data-testid={`hcr-${item.courseCode}`}
                                         data-analyticsid={`hcr-${item.courseCode}`}
                                         key={`hcr-${item.courseCode}`}
-                                        style={{
-                                            paddingBottom: 8,
-                                        }}
                                     >
                                         {item.courseCode}
-                                        {item.courseName}
+                                        <span style={{ marginLeft: 6 }}>{item.courseName}</span>
                                     </Grid>
                                     <Grid
                                         item
@@ -159,6 +155,8 @@ export const LearningResourcesPanel = ({
                                         key={`hcr-${item.courseCode}`}
                                         style={{
                                             paddingBottom: 8,
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
                                         }}
                                     >
                                         <Link
@@ -172,7 +170,7 @@ export const LearningResourcesPanel = ({
                                             to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
                                             data-testid={`learning-resource-panel-course-link-${item.courseCode}`}
                                         >
-                                            View all Learning resources
+                                            All Learning resources
                                         </Link>{' '}
                                     </Grid>
                                 </Grid>
