@@ -71,7 +71,6 @@ import {
     mockPublicPanel,
     promoPanelMocks,
 } from './data/promoPanelsLong';
-import { ACCOUNT_TALIS_API } from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -390,6 +389,15 @@ mock.onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]));
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 // .reply(withDelay([500, {}]));
+
+const talisList = {
+    HIST1201: 'https://uq.rl.talis.com/lists/9630917C-F559-A142-A347-4F4F1A74B835?login=1',
+    FREN1010: 'https://uq.rl.talis.com/lists/81A8819E-A3C7-C703-1344-3C220AB31C4F?login=1',
+    PHIL1002: 'https://uq.rl.talis.com/lists/81A8819E-GGGG-C703-1344-3C220AB31C4F?login=1',
+};
+
+mock.onAny(routes.ACCOUNT_TALIS_API().apiUrl).reply(withDelay([200, talisList]));
+// mock.onAny('learning_resources/course_code/talis_url')
 
 // mock cant tell the difference between 'possible' and 'ntro incomplete' calls :(
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
@@ -758,18 +766,6 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
-    })
-    .onAny(routes.ACCOUNT_TALIS_API().apiUrl)
-    .reply(() => {
-        console.log('returning mock for ', routes.ACCOUNT_TALIS_API().apiUrl);
-        return withDelay([
-            200,
-            {
-                HIST1201: 'https://uq.rl.talis.com/lists/9630917C-F559-A142-A347-4F4F1A74B835?login=1',
-                FREN1010: 'https://uq.rl.talis.com/lists/81A8819E-A3C7-C703-1344-3C220AB31C4F?login=1',
-                PHIL1002: 'https://uq.rl.talis.com/lists/81A8819E-GGGG-C703-1344-3C220AB31C4F?login=1',
-            },
-        ]);
     })
 
     /** TEST AND TAG ROUTES **/

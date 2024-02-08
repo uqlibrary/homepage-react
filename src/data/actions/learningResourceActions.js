@@ -7,15 +7,24 @@ import {
     READING_LIST_API,
     LEARNING_RESOURCES_COURSE_SUGGESTIONS_API,
 } from 'repositories/routes';
-import { throwFetchErrors } from 'helpers/general';
+import { getCampusByCode, throwFetchErrors } from 'helpers/general';
+import { getClassNumberFromPieces } from './account';
 
-export function loadAccountTalisList(courseCodeList) {
-    console.log('loadAccountTalisList', courseCodeList);
+export function loadAccountTalisList(currentClasses) {
+    console.log('loadAccountTalisList', currentClasses);
     return dispatch => {
-        console.log('ACCOUNT_TALIS_API()=', ACCOUNT_TALIS_API());
+        // from account
+        const courseList = currentClasses.map(list => {
+            return {
+                ['courseCode']: getClassNumberFromPieces(list),
+                ['campus']: getCampusByCode(list.CAMPUS),
+                ['semester']: list.semester,
+            };
+        });
+        console.log('ask api for talis urls for account codes:=', courseList);
         dispatch({ type: actions.ACCOUNT_TALIS_LOADING });
-        // return get(LEARNING_RESOURCES_EXAMS_API(), courseCodeList)
-        return post(ACCOUNT_TALIS_API(), courseCodeList)
+        console.log('ACCOUNT_TALIS_API()=', ACCOUNT_TALIS_API());
+        return post(ACCOUNT_TALIS_API(), courseList)
             .then(data => {
                 dispatch({
                     type: actions.ACCOUNT_TALIS_LOADED,
@@ -23,6 +32,7 @@ export function loadAccountTalisList(courseCodeList) {
                 });
             })
             .catch(error => {
+                console.log('failed:', error);
                 dispatch({
                     type: actions.ACCOUNT_TALIS_FAILED,
                     payload: error.message,

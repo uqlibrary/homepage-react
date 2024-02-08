@@ -36,6 +36,6 @@ export default function accountTalisListReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log('accountTalisListReducer', state, action);
+    console.log('accountTalisListReducer', action.type, state, action);
     return handler(state, action);
 }

@@ -91,6 +91,12 @@ export const Index = ({
     }, [accountLoading, dispatch]);
 
     useEffect(() => {
+        if (accountLoading === false && !!account?.current_classes) {
+            dispatch(loadAccountTalisList(account?.current_classes));
+        }
+    }, [account, accountLoading, dispatch]);
+
+    useEffect(() => {
         if (accountLoading === false) {
             dispatch(loadTrainingEvents(account));
             // Grab the relevant promo panel here.
@@ -108,11 +114,11 @@ export const Index = ({
             dispatch(loadPrintBalance());
         }
     }, [accountLoading, account, printBalance, printBalanceLoading, dispatch]);
-    useEffect(() => {
-        if (accountLoading === false && !!account && !accountTalisList && accountTalisListLoading === null && !accountTalisListError) {
-            dispatch(loadAccountTalisList());
-        }
-    }, [accountLoading, account, accountTalisList, accountTalisListLoading, accountTalisListError, dispatch]);
+    // useEffect(() => {
+    //     if (accountLoading === false && !!account && !accountTalisList && accountTalisListLoading === null && !accountTalisListError) {
+    //         dispatch(loadAccountTalisList());
+    //     }
+    // }, [accountLoading, account, accountTalisList, accountTalisListLoading, accountTalisListError, dispatch]);
     useEffect(() => {
         if (accountLoading === false && !!account && !loans && loansLoading === null) {
             dispatch(loadLoans());
@@ -226,7 +232,13 @@ export const Index = ({
 
                     {canSeeLearningResources(account) && (
                         <Grid item xs={12} md={4} data-testid="learning-resources-panel">
-                            <LearningResourcesPanel account={account} history={history} />
+                            <LearningResourcesPanel
+                                account={account}
+                                accountTalisList={accountTalisList}
+                                accountTalisListLoading={accountTalisListLoading}
+                                accountTalisListError={accountTalisListError}
+                                history={history}
+                            />
                         </Grid>
                     )}
 
@@ -256,6 +268,9 @@ export const Index = ({
 Index.propTypes = {
     account: PropTypes.object,
     accountLoading: PropTypes.bool,
+    accountTalisList: PropTypes.object,
+    accountTalisListLoading: PropTypes.bool,
+    accountTalisListError: PropTypes.bool,
     author: PropTypes.object,
     actions: PropTypes.any,
     spotlightsCurrent: PropTypes.any,

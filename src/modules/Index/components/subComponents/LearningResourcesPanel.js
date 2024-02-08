@@ -1,11 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { useLocation } from 'react-router';
-import { withRouter } from 'react-router-dom';
-
-import { getCampusByCode } from 'helpers/general';
-import { fullPath } from 'config/routes';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -14,7 +10,7 @@ import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourc
 import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
-import { getClassNumberFromPieces, loadAccountTalisList } from 'data/actions';
+import { getClassNumberFromPieces } from 'data/actions';
 
 const useStyles = makeStyles(() => ({
     myCourses: {
@@ -25,6 +21,15 @@ const useStyles = makeStyles(() => ({
         marginLeft: -16,
         padding: '0 30px 8px',
     },
+    visuallyHidden: {
+        position: 'absolute',
+        top: 'auto',
+        overflow: 'hidden',
+        clip: 'rect(1px, 1px, 1px, 1px)',
+        width: 1,
+        height: 1,
+        whiteSpace: 'nowrap',
+    },
 }));
 
 export const getUrlForLearningResourceSpecificTab = (
@@ -33,14 +38,16 @@ export const getUrlForLearningResourceSpecificTab = (
     includeFullPath = false,
     isAccurateCampus = false,
 ) => {
-    const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
-    const learningResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
-    const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
-    const url =
-        !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
-            : `${prefix}?${learningResourceParams}`;
-    return url;
+    console.log(includeFullPath, isAccurateCampus);
+    return 'http://example.com';
+    // const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
+    // const learningResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
+    // const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
+    // const url =
+    //     !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+    //         ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
+    //         : `${prefix}?${learningResourceParams}`;
+    // return url;
 };
 
 export const LearningResourcesPanel = ({
@@ -63,20 +70,6 @@ export const LearningResourcesPanel = ({
     React.useEffect(() => {
         loadSearchResult(searchUrl);
     }, [searchUrl, loadSearchResult]);
-    React.useEffect(() => {
-        console.log('start LearningResourcesPanel', account.current_classes);
-        if (!!account?.current_classes) {
-            const courseList = account.current_classes.map(list => {
-                return {
-                    ['courseCode']: getClassNumberFromPieces(list),
-                    ['campus']: getCampusByCode(list.CAMPUS),
-                    ['semester']: list.semester,
-                };
-            });
-            console.log('ask api for talis urls for account codes:=', courseList);
-            loadAccountTalisList(courseList);
-        }
-    }, [account]);
 
     const navigateToLearningResourcePage = option => {
         /* istanbul ignore next */
@@ -92,7 +85,22 @@ export const LearningResourcesPanel = ({
     };
 
     const learningResourceId = 'homepage-learningresource';
-
+    console.log('LearningResourcesPanel accountTalisListLoading=', accountTalisListLoading);
+    console.log('LearningResourcesPanel accountTalisList=', accountTalisList);
+    console.log('LearningResourcesPanel accountTalisListError=', accountTalisListError);
+    console.log('current_classes=', account.current_classes);
+    const classDetails =
+        !accountTalisListLoading &&
+        !accountTalisListError &&
+        !!accountTalisList &&
+        account.current_classes.map(classInfo => {
+            return {
+                courseCode: getClassNumberFromPieces(classInfo),
+                courseName: classInfo.DESCR,
+                talisLink: accountTalisList[classInfo.courseCode] || '',
+            };
+        });
+    console.log('classDetails=', classDetails);
     return (
         <StandardCard
             fullHeight
@@ -124,42 +132,45 @@ export const LearningResourcesPanel = ({
                     {!accountTalisListLoading && !!accountTalisListError && <p>error</p>}
                     {!accountTalisListLoading &&
                         !accountTalisListError &&
-                        !!accountTalisList &&
-                        accountTalisList.map((item, courseCode) => {
+                        !!classDetails &&
+                        !!classDetails.length > 0 &&
+                        classDetails.map(item => {
+                            console.log('XXXX item=', item);
                             return (
                                 <Grid container>
                                     <Grid
                                         item
                                         xs={12}
-                                        data-testid={`hcr-${courseCode}`}
-                                        data-analyticsid={`hcr-${courseCode}`}
-                                        key={`hcr-${courseCode}`}
+                                        data-testid={`hcr-${item.courseCode}`}
+                                        data-analyticsid={`hcr-${item.courseCode}`}
+                                        key={`hcr-${item.courseCode}`}
                                         style={{
                                             paddingBottom: 8,
                                         }}
                                     >
-                                        {item.classnumber}
-                                        {item.DESCR}
+                                        {item.courseCode}
+                                        {item.courseName}
                                     </Grid>
                                     <Grid
                                         item
                                         xs={12}
-                                        data-testid={`hcr-${courseCode}`}
-                                        data-analyticsid={`hcr-${courseCode}`}
-                                        key={`hcr-${courseCode}`}
+                                        data-testid={`hcr-${item.courseCode}`}
+                                        data-analyticsid={`hcr-${item.courseCode}`}
+                                        key={`hcr-${item.courseCode}`}
                                         style={{
                                             paddingBottom: 8,
                                         }}
                                     >
                                         <Link
                                             to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
-                                            data-testid={`learning-resource-panel-course-link-${courseCount}`}
+                                            data-testid={`learning-resource-panel-course-link-${item.courseCode}`}
                                         >
-                                            View Reading list
+                                            <span className={classes.visuallyHidden}>{item.courseCode}</span> Reading
+                                            list
                                         </Link>{' '}
                                         <Link
                                             to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
-                                            data-testid={`learning-resource-panel-course-link-${courseCount}`}
+                                            data-testid={`learning-resource-panel-course-link-${item.courseCode}`}
                                         >
                                             View all Learning resources
                                         </Link>{' '}

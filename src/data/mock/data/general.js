@@ -81,3 +81,26 @@ export const spotlights = [{
     'active': 1,
     'admin_notes': '',
 }];
+
+export const talisList = [
+    { 'courseCode': 'HIST1201', 'talisUrl': 'https://uq.rl.talis.com/lists/9630917C-F559-A142-A347-4F4F1A74B835?login=1' },
+    {'courseCode': 'FREN1010', 'talisUrl': 'https://uq.rl.talis.com/lists/81A8819E-A3C7-C703-1344-3C220AB31C4F?login=1'},
+    {
+        'coursecode': 'PHIL1002', 'talisUrl': 'https://uq.rl.talis.com/lists/81A8819E-GGGG-C703-1344-3C220AB31C4F?login=1'
+    },
+];
+/*
+export const talisList = [{
+    'courseCode': 'HIST1201',
+    'talisUrl': 'https://uq.rl.talis.com/lists/9630917C-F559-A142-A347-4F4F1A74B835?login=1',
+    'courseName': 'Introductory French 1'
+}, {
+    'courseCode': 'FREN1010',
+    'talisUrl': 'https://uq.rl.talis.com/lists/81A8819E-A3C7-C703-1344-3C220AB31C4F?login=1',
+    'courseName': 'The Australian Experience',
+}, {
+    'coursecode': 'PHIL1002',
+    'talisUrl': 'https://uq.rl.talis.com/lists/81A8819E-GGGG-C703-1344-3C220AB31C4F?login=1'
+    'courseName': 'Introduction to Philosophy: What is Philosophy?',
+}];
+ */

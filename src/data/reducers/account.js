@@ -161,5 +161,6 @@ export default function accountReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
+    action.type.startsWith('LIB_HOURS') && console.log('accountReducer', action.type, state, action);
     return handler(state, action);
 }
