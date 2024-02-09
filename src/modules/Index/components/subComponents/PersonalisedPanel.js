@@ -106,6 +106,7 @@ const useStyles = makeStyles(theme => ({
     },
     menuItemLabel: {
         fontSize: 14,
+        minHeight: 28,
         paddingRight: 45,
         paddingBottom: 6,
         color: theme.palette.accent.dark,

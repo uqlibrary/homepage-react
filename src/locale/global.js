@@ -83,5 +83,6 @@ export default {
         GATTN: 'Gatton',
         IPSWC: 'Ipswich',
         HERST: 'Herston',
+        DUTPK: 'Dutton Park',
     },
 };
