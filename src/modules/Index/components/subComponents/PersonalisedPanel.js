@@ -106,6 +106,7 @@ const useStyles = makeStyles(theme => ({
     },
     menuItemLabel: {
         fontSize: 14,
+        minHeight: 28,
         paddingRight: 45,
         paddingBottom: 6,
         color: theme.palette.accent.dark,
@@ -282,7 +283,7 @@ const PersonalisedPanel = ({
     const Loans = () => {
         const getElementIdentifier = tag => `pp-loans${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor} style={{ minHeight: 30 }}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
@@ -367,7 +368,7 @@ const PersonalisedPanel = ({
     const EspacePossible = () => {
         const getElementIdentifier = tag => `pp-espace-possible${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor} style={{ minHeight: 30 }}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
