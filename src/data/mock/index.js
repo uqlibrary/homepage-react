@@ -22,15 +22,10 @@ import courseReadingList_PHIL1002 from './data/records/learningResources/courseR
 import courseReadingList_ACCT1101 from './data/records/learningResources/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResources/learningResourceSearchSuggestions';
 import examSuggestion_FREN from './data/records/learningResources/examSuggestion_FREN';
-import {
-    computerAvailability,
-    espaceSearchResponse,
-    libHours,
-    loans,
-    printBalance,
-    spotlights as spotlightsHomepage,
-    training_object,
-} from './data/general';
+import { computerAvailability } from './data/computerAvailability';
+import { libHours } from './data/libHours';
+import { training_object } from './data/training';
+import { espaceSearchResponse, loans, printBalance, spotlights as spotlightsHomepage } from './data/general';
 import { alertList } from './data/alertsLong';
 import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
