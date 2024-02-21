@@ -106,7 +106,8 @@ const useStyles = makeStyles(theme => ({
     },
     menuItemLabel: {
         fontSize: 14,
-        paddingRight: 40,
+        minHeight: 28,
+        paddingRight: 48,
         paddingBottom: 6,
         color: theme.palette.accent.dark,
         '&:hover': {
@@ -227,7 +228,12 @@ const PersonalisedPanel = ({
                         data-testid={getPapercutId('menu-button')}
                     >
                         <Grid container spacing={0}>
-                            <Grid item xs className={classes.menuItemLabel} style={{ lineHeight: 1 }}>
+                            <Grid
+                                item
+                                xs
+                                className={classes.menuItemLabel}
+                                style={{ lineHeight: 1.2, paddingRight: 0 }}
+                            >
                                 {ppLocale.items.papercut.label.replace(
                                     '[balance]',
                                     printBalance && printBalance.balance ? `($${printBalance.balance})` : '',
@@ -277,7 +283,7 @@ const PersonalisedPanel = ({
     const Loans = () => {
         const getElementIdentifier = tag => `pp-loans${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor} style={{ minHeight: 30 }}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
@@ -362,7 +368,7 @@ const PersonalisedPanel = ({
     const EspacePossible = () => {
         const getElementIdentifier = tag => `pp-espace-possible${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor} style={{ minHeight: 30 }}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
