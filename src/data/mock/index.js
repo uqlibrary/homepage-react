@@ -22,15 +22,10 @@ import courseReadingList_PHIL1002 from './data/records/learningResources/courseR
 import courseReadingList_ACCT1101 from './data/records/learningResources/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResources/learningResourceSearchSuggestions';
 import examSuggestion_FREN from './data/records/learningResources/examSuggestion_FREN';
-import {
-    computerAvailability,
-    espaceSearchResponse,
-    libHours,
-    loans,
-    printBalance,
-    spotlights as spotlightsHomepage,
-    training_object,
-} from './data/general';
+import { computerAvailability } from './data/computerAvailability';
+import { libHours } from './data/libHours';
+import { training_object } from './data/training';
+import { espaceSearchResponse, loans, printBalance, spotlights as spotlightsHomepage } from './data/general';
 import { alertList } from './data/alertsLong';
 import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
@@ -59,8 +54,6 @@ import test_tag_tagged_building_list from './data/records/testAndTag/test_tag_ta
 import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_assets_report_assets';
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
-
-import { accounts, currentAuthor } from './data';
 
 import {
     currentPanels,
