@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { setupCache } from 'axios-cache-adapter';
+import { setupCache } from 'axios-cache-interceptor';
 import { API_URL, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, TOKEN_NAME } from './general';
 import { store } from 'config/store';
 import { logout } from 'data/actions/account';
@@ -11,18 +11,38 @@ import * as Sentry from '@sentry/browser';
 
 import { COMP_AVAIL_API, LIB_HOURS_API, LOANS_API, PRINTING_API, TRAINING_API } from '../repositories/routes';
 
-export const cache = setupCache({
-    maxAge: 15 * 60 * 1000,
-    key: request => {
-        return `${request.url}${JSON.stringify(request.params)}`;
-    },
-});
-
-export const api = axios.create({
+let apiClient = axios.create({
     baseURL: API_URL,
-    adapter: process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc' ? undefined : cache.adapter,
     crossdomain: true,
 });
+if (!['test', 'cc', 'development'].includes(process.env.NODE_ENV)) {
+    apiClient = setupCache(apiClient, {
+        // unfortunately the below doesn't work for tests
+        // cache: process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'cc'
+        // debug: dc,
+        ttl: 15 * 60 * 1000,
+        generateKey: request => `${request.url}${JSON.stringify(request.params)}`,
+    });
+
+    // the place the below is declared matters - see https://axios-cache-interceptor.js.org/guide/interceptors
+    const nonCachedRoutes = ['records/search', 'orcid'];
+    apiClient.interceptors.request.use(request => {
+        const queryStringParams = Object.keys(request.params || {});
+        if (
+            request.cache &&
+            // disabled it when querystring params are present or when it partially matches a non cached route
+            (queryStringParams.length ||
+                request.url.includes('?') ||
+                nonCachedRoutes.find(route => request.url.includes(route)))
+        ) {
+            // disabled cache
+            request.cache = false;
+        }
+        return request;
+    });
+}
+
+export const api = apiClient;
 
 export const sessionApi = axios.create({
     baseURL: API_URL,
@@ -119,10 +139,11 @@ function backendHasSanitisedErrorMessages(response) {
     return !!responseURL && responseURL.startsWith(`${urlRoot}/test-and-tag`);
 }
 
-api.interceptors.response.use(
+apiClient.interceptors.response.use(
     response => {
         if (!isGet) {
-            return cache.store.clear().then(() => Promise.resolve(response.data));
+            const promise = Promise.resolve(response.status === 201 ? response : response.data);
+            return api.store?.clear ? api.store?.clear().then(() => promise) : promise;
         }
         return Promise.resolve(response.data);
     },
@@ -135,7 +156,7 @@ api.interceptors.response.use(
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
-                    delete api.defaults.headers.common[TOKEN_NAME];
+                    delete apiClient.defaults.headers.common[TOKEN_NAME];
                 }
 
                 if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {

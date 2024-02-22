@@ -77,7 +77,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
                             <a href={talisSubjectUrl(courseCode)}>
                                 <SpacedArrowForwardIcon />
-                                Search for older lists
+                                View older lists
                             </a>
                         </Grid>
                     </React.Fragment>
