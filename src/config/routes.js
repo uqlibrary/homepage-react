@@ -39,6 +39,7 @@ export const flattedPathConfigExact = [
     '/book-exam-booth',
     '/exams',
     '/exams/',
+    '/dlor',
     'https://www.library.uq.edu.au/404.js',
 ];
 export const flattedPathConfig = [
@@ -75,6 +76,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.BookExamBooth,
             exact: false,
             pageTitle: locale.pages.bookExamBooth.title,
+        },
+        {
+            path: pathConfig.dlorHome,
+            component: components.DLOList,
+            exact: false,
+            pageTitle: 'Digital Learning Object Repository',
         },
         {
             path: pathConfig.pastExamPaperList(examSearchCourseHint),

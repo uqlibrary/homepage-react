@@ -324,3 +324,5 @@ export const TEST_TAG_USER_LIST_API = () => ({ apiUrl: 'test-and-tag/users/all' 
 export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
 export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
 export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
+
+export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/list/full' });

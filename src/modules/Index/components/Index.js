@@ -137,65 +137,6 @@ export const Index = ({
         <React.Suspense fallback={<ContentLoader message="Loading" />}>
             <StandardPage>
                 <Grid container spacing={4}>
-                    {/* Search */}
-                    <Grid item xs={12} style={{ marginTop: 12 }}>
-                        <search-portal />
-                    </Grid>
-                    {accountLoading === false && !!account && (
-                        <Hidden mdUp>
-                            <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel
-                                    account={account}
-                                    author={author}
-                                    loans={loans}
-                                    printBalance={printBalance}
-                                    possibleRecords={possibleRecords && possibleRecords.total}
-                                    incompleteNTRORecords={incompleteNTRO}
-                                />
-                            </Grid>
-                        </Hidden>
-                    )}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                        <Spotlights
-                            spotlights={spotlightsCurrent}
-                            spotlightsLoading={spotlightsCurrentLoading}
-                            account={account}
-                        />
-                    </Grid>
-                    {/* Personalisation panel or hours */}
-                    {!!accountLoading && (
-                        /* istanbul ignore next */
-                        <Grid item xs={12} md={4}>
-                            <MyLoader />
-                        </Grid>
-                    )}
-                    {/* Personalisation panel, desktop */}
-                    {accountLoading === false && !!account && (
-                        <Hidden mdDown>
-                            <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel
-                                    account={account}
-                                    author={author}
-                                    loans={loans}
-                                    printBalance={printBalance}
-                                    possibleRecords={possibleRecords && possibleRecords.total}
-                                    incompleteNTRORecords={incompleteNTRO}
-                                    isNextToSpotlights
-                                />
-                            </Grid>
-                        </Hidden>
-                    )}
-                    {/* Hours panel, logged out */}
-                    {accountLoading === false && !account && (
-                        <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours
-                                libHours={libHours}
-                                libHoursLoading={libHoursLoading}
-                                libHoursError={libHoursError}
-                                account={account}
-                            />
-                        </Grid>
-                    )}
                     <Grid item xs={12} md={4} data-testid="computer-availability-panel">
                         <Computers
                             computerAvailability={computerAvailability}

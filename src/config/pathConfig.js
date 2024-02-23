@@ -33,6 +33,7 @@ export const pathConfig = {
         testntagmanageusers: '/admin/testntag/manage/users',
     },
     bookExamBooth: '/book-exam-booth',
+    dlorHome: '/dlor',
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
     pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
