@@ -28,3 +28,4 @@ export { default as testTagAssetsByFiltersReducer } from './testTagAssetsByFilte
 export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpdateReducer';
 export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspectionDetailsUpdateReducer';
 export { default as testTagUserListReducer } from './testTagUserListReducer';
+export { default as dlorReducer } from './dlorReducer';

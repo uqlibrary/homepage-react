@@ -41,7 +41,6 @@ import testTag_floorList from './data/records/testAndTag/test_tag_floors';
 import testTag_roomList from './data/records/testAndTag/test_tag_rooms';
 import testTag_inspectionDevices from './data/records/testAndTag/test_tag_inspection_devices';
 import testTag_assets from './data/records/testAndTag/test_tag_assets';
-// Test and Tag Asset Types
 import test_tag_asset_types from './data/records/testAndTag/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/testAndTag/test_tag_pending_inspections';
 import test_tag_pending_inspections_site from './data/records/testAndTag/test_tag_pending_inspections_site';
@@ -66,6 +65,7 @@ import {
     mockPublicPanel,
     promoPanelMocks,
 } from './data/promoPanelsLong';
+import dlor_all from './data/records/dlor/dlor_all';
 
 const moment = require('moment');
 
@@ -575,7 +575,11 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
     },
 ]);
 
-mock.onGet('exams/course/FREN1010/summary')
+mock.onGet('dlor/list/full')
+    .reply(() => {
+        return [200, dlor_all];
+    })
+    .onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, exams_FREN1010];
     })
