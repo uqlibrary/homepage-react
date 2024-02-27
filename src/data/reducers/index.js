@@ -29,3 +29,4 @@ export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpda
 export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspectionDetailsUpdateReducer';
 export { default as testTagUserListReducer } from './testTagUserListReducer';
 export { default as dlorReducer } from './dlorReducer';
+export { default as dlorSingleReducer } from './dlorSingleReducer';
