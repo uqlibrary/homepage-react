@@ -34,6 +34,7 @@ export const pathConfig = {
     },
     bookExamBooth: '/book-exam-booth',
     dlorHome: '/dlor',
+    dlorView: dlorId => `/dlor/view/${dlorId}`,
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
     pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',

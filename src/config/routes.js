@@ -52,12 +52,17 @@ export const flattedPathConfig = [
     '/admin/promopanel/edit',
     '/admin/promopanel/view',
     '/admin/promopanel/clone',
+    '/dlor/view',
     '/exams/course',
 ];
 
 export const getRoutesConfig = ({ components = {}, account = null }) => {
     const examSearchRegExp = '.*';
     const examSearchCourseHint = `:courseHint(${examSearchRegExp})`;
+
+    const dloridRegExp = '.*';
+    const dlorid = `:dlorid(${dloridRegExp})`;
+
     const publicPages = [
         {
             path: pathConfig.index,
@@ -78,9 +83,15 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.bookExamBooth.title,
         },
         {
+            path: pathConfig.dlorView(dlorid),
+            component: components.DLOView,
+            // exact: false,
+            pageTitle: 'Digital Learning Object Repository',
+        },
+        {
             path: pathConfig.dlorHome,
             component: components.DLOList,
-            exact: false,
+            exact: true,
             pageTitle: 'Digital Learning Object Repository',
         },
         {
@@ -279,14 +290,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.testntag.title,
         },
     ];
-    // const testntagManageAssetTypes = [
-    //     {
-    //         path: pathConfig.admin.testntagmanageassettypes,
-    //         component: components.TestTagManageAssetTypes,
-    //         exact: true,
-    //         pageTitle: locale.pages.admin.testntag.title,
-    //     },
-    // ];
 
     return [
         ...publicPages,
@@ -296,7 +299,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
         ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
-        // ...(account && isTestTagAdminUser(account) ? testntagManageAssetTypes : []),
         {
             component: components.NotFound,
         },

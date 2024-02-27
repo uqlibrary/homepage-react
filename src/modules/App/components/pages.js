@@ -8,6 +8,7 @@ export const LearningResources = lazy(() => lazyRetry(() => import('modules/Page
 export const PaymentReceipt = lazy(() => lazyRetry(() => import('modules/Pages/PaymentReceipt/PaymentReceipt')));
 export const BookExamBooth = lazy(() => lazyRetry(() => import('modules/Pages/BookExamBooth/BookExamBoothContainer')));
 export const DLOList = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Index/DLOListContainer')));
+export const DLOView = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/View/DLOViewContainer')));
 export const AlertsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Add/AlertsAddContainer')));
 export const AlertsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Edit/AlertsEditContainer')));
 export const AlertsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Clone/AlertsCloneContainer')));

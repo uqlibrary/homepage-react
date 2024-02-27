@@ -1,5 +1,4 @@
 import * as actions from 'data/actions/actionTypes';
-import { DLOR_HOMEPAGE_LOADING } from 'data/actions/actionTypes';
 
 export const initialState = {
     dlorList: null,
