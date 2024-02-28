@@ -28,24 +28,30 @@ const useStyles = makeStyles(
         },
         icon: {
             width: 20,
-            paddingRight: 2,
+            paddingRight: 4,
+            '& > path': {
+                fill: theme.palette.primary.light,
+            },
         },
         panelHeader: {
             marginBottom: 24,
             '& .highlightedText': {
-                color: '#51247A',
+                color: theme.palette.primary.light,
                 fontWeight: 400,
             },
         },
         panelFooter: {
             marginTop: 24,
-            color: '#51247A',
+            color: theme.palette.primary.light,
             fontWeight: 400,
-            '&> div': {
+            '& > div': {
                 display: 'flex',
                 alignItems: 'center',
                 paddingBlock: 3,
             },
+        },
+        highlighted: {
+            color: theme.palette.primary.light,
         },
     }),
     { withTheme: true },
@@ -67,30 +73,6 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
         return <p>loading</p>;
     }
 
-    // !!dlorList &&
-    //     !!dlorList.length > 0 &&
-    //     dlorList.map(object => {
-    //         const cleanedFilters = [];
-    //         console.log('object.filters=', object.filters);
-    //         // console.log('object.filters.length=', object.filters.length);
-    //         !!object?.filters &&
-    //             // object.filters.length > 0 &&
-    //             Object.entries(object.filters).map(([filterType, filterTypeList], index) => {
-    //                 // object.filters.map((filterTypeList, filterType) => {
-    //                 const filterItem = {
-    //                     type: filterType,
-    //                     list: filterTypeList,
-    //                 };
-    //                 // console.log('filterType=', index, filterType);
-    //                 // console.log('filterTypeList=', filterTypeList);
-    //                 // console.log('filterItem=', filterItem);
-    //                 // console.log('----------');
-    //                 cleanedFilters.push(filterItem);
-    //             });
-    //         object.cleanedFilters = cleanedFilters;
-    //         console.log('object.cleanedFilters=', object.cleanedFilters);
-    //     });
-
     // https://mui.com/material-ui/material-icons/?query=note&selected=Description
     const MUI_DESCRIPTION_ICON =
         'M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm2 16H8v-2h8zm0-4H8v-2h8zm-3-5V3.5L18.5 9z';
@@ -111,81 +93,53 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
         // fallback={<ContentLoader message="Loading" />}
         >
             <StandardPage style={{ backgroundColor: '#f7f7f7', borderWidth: 0, borderRadius: 0 }}>
-                <StandardCard
-                    title="Digital Learning Objects"
-                    classname={classes.dlorWrapper}
-                    style={{ backgroundColor: '#f7f7f7' }}
-                    standardCardId="dlor-list-card"
-                >
-                    <Grid container spacing={3} className={classes.panelGrid}>
-                        {dlorList.map(object => {
-                            console.log('object=', object);
-                            return (
-                                <Grid item xs={12} md={4} className={classes.panelGap} key={object.object_id}>
-                                    <StandardCard noHeader fullHeight className={classes.dlorEntry}>
-                                        <section>
-                                            <header className={classes.panelHeader}>
-                                                {!!object?.filters?.topic && object.filters.topic.length > 0 && (
-                                                    <Typography className="highlightedText">
-                                                        {object.filters.topic.join(', ')}
-                                                    </Typography>
-                                                )}
-                                                <Typography component={'h3'} variant={'h6'}>
-                                                    {object.object_title}
+                <Typography component={'h1'} variant={'h6'}>
+                    Digital learning objects
+                </Typography>
+                <Grid container spacing={3} className={classes.panelGrid}>
+                    {dlorList.map(object => {
+                        return (
+                            <Grid item xs={12} md={4} className={classes.panelGap} key={object.object_id}>
+                                <StandardCard noHeader fullHeight className={classes.dlorEntry}>
+                                    <section>
+                                        <header className={classes.panelHeader}>
+                                            {!!object?.filters?.topic && object.filters.topic.length > 0 && (
+                                                <Typography className={classes.highlighted}>
+                                                    {object.filters.topic.join(', ')}
                                                 </Typography>
-                                            </header>
-                                            {object.object_description}
-                                            {/*// graduate_attributes*/}
-                                            {/*// how_to_add*/}
-                                            {/*// subject*/}
-                                            {/*// keywords*/}
+                                            )}
+                                            <Typography component={'h3'} variant={'h6'}>
+                                                {object.object_title}
+                                            </Typography>
+                                        </header>
+                                        {object.object_description}
 
-                                            <footer className={classes.panelFooter}>
-                                                {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
-                                                    <div>
-                                                        {FooterIcon(MUI_ICON_LAPTOP)}
-                                                        {object.filters.item_type.join(', ')}
-                                                    </div>
-                                                )}
-                                                {!!object?.filters?.media_format &&
-                                                    object.filters.media_format.length > 0 && (
-                                                        <div>
-                                                            {FooterIcon(MUI_DESCRIPTION_ICON)}
-                                                            {object.filters.media_format.join(', ')}
-                                                        </div>
-                                                    )}
-                                                {!!object?.filters?.licence && object.filters.licence.length > 0 && (
-                                                    <div>
-                                                        {FooterIcon(MUI_COPYRIGHT_ICON)}
-                                                        {object.filters.licence.join(', ')}
-                                                    </div>
-                                                )}
-                                            </footer>
-
-                                            {/* {!!object.cleanedFilters && object.cleanedFilters.length > 0 ? (*/}
-                                            {/*    <div>*/}
-                                            {/*        {object.cleanedFilters.map(filter => {*/}
-                                            {/*            <div key={filter.type}>*/}
-                                            {/*                <h3>{filter.type}</h3>*/}
-                                            {/*                /!* <ul>*!/*/}
-                                            {/*                /!*    {!!filter.list &&*!/*/}
-                                            {/*                /!*        filter.list.map((value, subIndex) => (*!/*/}
-                                            {/*                /!*            <li key={subIndex}>{value}</li>*!/*/}
-                                            {/*                /!*        ))}*!/*/}
-                                            {/*                /!* </ul>*!/*/}
-                                            {/*            </div>;*/}
-                                            {/*        })}*/}
-                                            {/*    </div>*/}
-                                            {/* ) : (*/}
-                                            {/*    <p>no filters</p>*/}
-                                            {/* )}*/}
-                                        </section>
-                                    </StandardCard>
-                                </Grid>
-                            );
-                        })}
-                    </Grid>
-                </StandardCard>
+                                        <footer className={classes.panelFooter}>
+                                            {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
+                                                <div>
+                                                    {FooterIcon(MUI_ICON_LAPTOP)}
+                                                    {object.filters.item_type.join(', ')}
+                                                </div>
+                                            )}
+                                            {!!object?.filters?.media_format && object.filters.media_format.length > 0 && (
+                                                <div>
+                                                    {FooterIcon(MUI_DESCRIPTION_ICON)}
+                                                    {object.filters.media_format.join(', ')}
+                                                </div>
+                                            )}
+                                            {!!object?.filters?.licence && object.filters.licence.length > 0 && (
+                                                <div>
+                                                    {FooterIcon(MUI_COPYRIGHT_ICON)}
+                                                    {object.filters.licence.join(', ')}
+                                                </div>
+                                            )}
+                                        </footer>
+                                    </section>
+                                </StandardCard>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
             </StandardPage>
         </React.Suspense>
     );

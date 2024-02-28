@@ -575,47 +575,12 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
     },
 ]);
 
-mock.onGet('dlor/view/987y_isjgt_9866')
-    // .onGet(routes.DLOR_GET_BY_ID_API({ id: '987y_isjgt_9866' }).apiUrl)
-    .reply(() => {
-        return [
-            200,
-            {
-                object_id: '123456',
-                object_public_uuid: '987y_isjgt_9866',
-                object_title: 'Accessibility - Digital Essentials',
-                object_description:
-                    'Understanding the importance of accessibility online and creating accessible content.',
-                object_quality_check: 'I dont know what goes here',
-                owner: {
-                    publishing_user_username: 'uqldegro',
-                    team_name: 'LIB DX Digital Content',
-                    team_email: 'dxdc@library.uq.edu.au',
-                    team_manager_username: 'uqjsmi',
-                },
-                object_embed_type: 'link',
-                object_link: 'https://uq.pressbooks.pub/digital-essentials-accessibility/chapter/module-overview/',
-                filters: {
-                    topic: ['Aboriginal and Torres Strait Islander ', 'Assignments'],
-                    graduate_attributes: ['Accomplished scholars', 'Courageous thinkers'],
-                },
-                object_download_instructions: 'Download the Common Cartridge file and H5P quiz to embed in Blackboard',
-                next_review_date: '2022-02-01 10:00:00',
-                created_at: '2020-01-01 10:00:00',
-                updated_at: '2021-02-01 10:00:00',
-            },
-        ];
-    })
-    .onGet(/dlor\/view\/.*/)
+mock.onGet(/dlor\/view\/.*/)
     .reply(config => {
-        console.log('mock::config=', config);
-        console.log('mock::config.url=', config.url);
         const urlparts = config.url.split('/').pop();
-        console.log('mock::urlparts=', urlparts);
         const dlorId = urlparts.split('?')[0];
         const record = dlor_all.filter(o => o.object_public_uuid === dlorId);
-        console.log('mock record = ', record);
-        return record.length > 0 ? [200, record] : [404, {}];
+        return record.length > 0 ? [200, record.pop()] : [404, {}];
     })
     .onGet('dlor/list/full')
     .reply(() => {
