@@ -60,8 +60,8 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const examSearchRegExp = '.*';
     const examSearchCourseHint = `:courseHint(${examSearchRegExp})`;
 
-    const dloridRegExp = '.*';
-    const dlorid = `:dlorid(${dloridRegExp})`;
+    const dlorIdRegExp = '.*';
+    const dlorId = `:dlorId(${dlorIdRegExp})`;
 
     const publicPages = [
         {
@@ -83,7 +83,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.bookExamBooth.title,
         },
         {
-            path: pathConfig.dlorView(dlorid),
+            path: pathConfig.dlorView(dlorId),
             component: components.DLOView,
             // exact: false,
             pageTitle: 'Digital Learning Object Repository',
