@@ -1,5 +1,5 @@
 import React from 'react';
-// import ContentLoader from 'react-content-loader';
+import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 
 import { Grid } from '@mui/material';
@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -72,10 +73,6 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (!dlorList || dlorList.length === 0) {
-        return <p>loading</p>;
-    }
-
     // https://mui.com/material-ui/material-icons/?query=note&selected=Description
     const MUI_DESCRIPTION_ICON =
         'M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm2 16H8v-2h8zm0-4H8v-2h8zm-3-5V3.5L18.5 9z';
@@ -91,66 +88,84 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
         </svg>
     );
 
-    return (
-        <React.Suspense
-        // fallback={<ContentLoader message="Loading" />}
-        >
-            <StandardPage style={{ backgroundColor: '#f7f7f7', borderWidth: 0, borderRadius: 0 }}>
+    function showPanel(object) {
+        return (
+            <Grid item xs={12} md={4} className={classes.panelGap} key={object.object_id}>
+                <a className={classes.navigateToDetail} href={`/dlor/view/${object.object_public_uuid}`}>
+                    <StandardCard noHeader fullHeight className={classes.dlorEntry}>
+                        <section>
+                            <header className={classes.panelHeader}>
+                                {!!object?.filters?.topic && object.filters.topic.length > 0 && (
+                                    <Typography className={classes.highlighted}>
+                                        {object.filters.topic.join(', ')}
+                                    </Typography>
+                                )}
+                                <Typography component={'h3'} variant={'h6'}>
+                                    {object.object_title}
+                                </Typography>
+                            </header>
+                            {object.object_description}
+
+                            <footer className={classes.panelFooter}>
+                                {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
+                                    <div>
+                                        {FooterIcon(MUI_ICON_LAPTOP)}
+                                        {object.filters.item_type.join(', ')}
+                                    </div>
+                                )}
+                                {!!object?.filters?.media_format && object.filters.media_format.length > 0 && (
+                                    <div>
+                                        {FooterIcon(MUI_DESCRIPTION_ICON)}
+                                        {object.filters.media_format.join(', ')}
+                                    </div>
+                                )}
+                                {!!object?.filters?.licence && object.filters.licence.length > 0 && (
+                                    <div>
+                                        {FooterIcon(MUI_COPYRIGHT_ICON)}
+                                        {object.filters.licence.join(', ')}
+                                    </div>
+                                )}
+                            </footer>
+                        </section>
+                    </StandardCard>
+                </a>
+            </Grid>
+        );
+    }
+
+    if (!!dlorListLoading) {
+        return (
+            <div style={{ minHeight: 600 }}>
+                <InlineLoader message="Loading" />
+            </div>
+        );
+    }
+    if (!!dlorListError) {
+        return (
+            <StandardPage>
                 <Typography component={'h1'} variant={'h6'}>
                     Digital learning objects
                 </Typography>
+                <p>An error occurred: {dlorListError}</p>
+            </StandardPage>
+        );
+    }
+
+    return (
+        <StandardPage>
+            <Typography component={'h1'} variant={'h6'}>
+                Digital learning objects
+            </Typography>
+            {!dlorList || dlorList.length === 0 ? (
+                <p>We did not find any entries in the system - please try again later.</p>
+            ) : (
                 <Grid container spacing={3} className={classes.panelGrid}>
                     {dlorList.map(object => {
-                        return (
-                            <Grid item xs={12} md={4} className={classes.panelGap} key={object.object_id}>
-                                <a
-                                    className={classes.navigateToDetail}
-                                    href={`/dlor/view/${object.object_public_uuid}`}
-                                >
-                                    <StandardCard noHeader fullHeight className={classes.dlorEntry}>
-                                        <section>
-                                            <header className={classes.panelHeader}>
-                                                {!!object?.filters?.topic && object.filters.topic.length > 0 && (
-                                                    <Typography className={classes.highlighted}>
-                                                        {object.filters.topic.join(', ')}
-                                                    </Typography>
-                                                )}
-                                                <Typography component={'h3'} variant={'h6'}>
-                                                    {object.object_title}
-                                                </Typography>
-                                            </header>
-                                            {object.object_description}
-
-                                            <footer className={classes.panelFooter}>
-                                                {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
-                                                    <div>
-                                                        {FooterIcon(MUI_ICON_LAPTOP)}
-                                                        {object.filters.item_type.join(', ')}
-                                                    </div>
-                                                )}
-                                                {!!object?.filters?.media_format &&
-                                                    object.filters.media_format.length > 0 && (
-                                                        <div>
-                                                            {FooterIcon(MUI_DESCRIPTION_ICON)}
-                                                            {object.filters.media_format.join(', ')}
-                                                        </div>
-                                                    )}
-                                                {!!object?.filters?.licence && object.filters.licence.length > 0 && (
-                                                    <div>
-                                                        {FooterIcon(MUI_COPYRIGHT_ICON)}
-                                                        {object.filters.licence.join(', ')}
-                                                    </div>
-                                                )}
-                                            </footer>
-                                        </section>
-                                    </StandardCard>
-                                </a>
-                            </Grid>
-                        );
+                        return showPanel(object);
                     })}
                 </Grid>
-            </StandardPage>
-        </React.Suspense>
+            )}
+        </StandardPage>
     );
 };
 
