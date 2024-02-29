@@ -23,7 +23,7 @@ describe('Alert actions', () => {
         it('dispatches expected actions when all dlors call fails', async () => {
             mockApi.onGet(repositories.routes.DLOR_ALL_API()).reply(500);
 
-            const expectedActions = [actions.DLOR_HOMEPAGE_LOADING, actions.DLOR_HOMEPAGE_FAILED];
+            const expectedActions = [actions.DLOR_LIST_LOADING, actions.DLOR_LIST_FAILED];
 
             await mockActionsStore.dispatch(loadAllDLORs());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -32,7 +32,7 @@ describe('Alert actions', () => {
         it('handles dlor list', async () => {
             mockApi.onGet(repositories.routes.DLOR_ALL_API().apiUrl).reply(200, []);
 
-            const expectedActions = [actions.DLOR_HOMEPAGE_LOADING, actions.DLOR_HOMEPAGE_LOADED];
+            const expectedActions = [actions.DLOR_LIST_LOADING, actions.DLOR_LIST_LOADED];
 
             await mockActionsStore.dispatch(loadAllDLORs());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -41,11 +41,7 @@ describe('Alert actions', () => {
         it('dispatches expected actions when alert list call fails', async () => {
             mockApi.onGet(repositories.routes.DLOR_ALL_API().apiUrl).reply(500);
 
-            const expectedActions = [
-                actions.DLOR_HOMEPAGE_LOADING,
-                actions.APP_ALERT_SHOW,
-                actions.DLOR_HOMEPAGE_FAILED,
-            ];
+            const expectedActions = [actions.DLOR_LIST_LOADING, actions.APP_ALERT_SHOW, actions.DLOR_LIST_FAILED];
 
             await mockActionsStore.dispatch(loadAllDLORs());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -58,7 +54,7 @@ describe('Alert actions', () => {
                 .onGet(repositories.routes.DLOR_GET_BY_ID_API({ id: 'e895b270-d62b-11e7-954e-57c2cc19d151' }))
                 .reply(500);
 
-            const expectedActions = [actions.DLOR_VIEWPAGE_LOADING, actions.DLOR_VIEWPAGE_FAILED];
+            const expectedActions = [actions.DLOR_DETAIL_LOADING, actions.DLOR_DETAIL_FAILED];
 
             await mockActionsStore.dispatch(loadADLOR('e895b270-d62b-11e7-954e-57c2cc19d151'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -76,7 +72,7 @@ describe('Alert actions', () => {
                     object_title: 'Test digital learning object',
                 });
 
-            const expectedActions = [actions.DLOR_VIEWPAGE_LOADING, actions.DLOR_VIEWPAGE_LOADED];
+            const expectedActions = [actions.DLOR_DETAIL_LOADING, actions.DLOR_DETAIL_LOADED];
 
             await mockActionsStore.dispatch(loadADLOR('e895b270-d62b-11e7-954e-57c2cc19d151'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -91,11 +87,7 @@ describe('Alert actions', () => {
                 )
                 .reply(500);
 
-            const expectedActions = [
-                actions.DLOR_VIEWPAGE_LOADING,
-                actions.APP_ALERT_SHOW,
-                actions.DLOR_VIEWPAGE_FAILED,
-            ];
+            const expectedActions = [actions.DLOR_DETAIL_LOADING, actions.APP_ALERT_SHOW, actions.DLOR_DETAIL_FAILED];
 
             await mockActionsStore.dispatch(loadADLOR('e895b270-d62b-11e7-954e-57c2cc19d151'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);

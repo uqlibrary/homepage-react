@@ -7,28 +7,25 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.DLOR_HOMEPAGE_LOADING]: state => ({
+    [actions.DLOR_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
         dlorListLoading: true,
         dlorListError: false,
     }),
-    [actions.DLOR_HOMEPAGE_LOADED]: (state, action) => ({
+    [actions.DLOR_LIST_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         dlorListLoading: false,
         dlorListError: false,
         dlorList: action.payload,
     }),
-    [actions.DLOR_HOMEPAGE_FAILED]: (state, action) => ({
+    [actions.DLOR_LIST_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         dlorListLoading: false,
         dlorListError: action.payload,
     }),
-    // [actions.DLOR_HOMEPAGE_CLEAR]: () => ({
-    //     ...initialState,
-    // }),
 };
 
 export default function dlorReducer(state = initialState, action) {
