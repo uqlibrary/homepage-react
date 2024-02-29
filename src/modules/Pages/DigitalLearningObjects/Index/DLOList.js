@@ -32,14 +32,29 @@ const useStyles = makeStyles(theme => ({
             fill: theme.palette.primary.light,
         },
     },
-    panelHeader: {
-        marginBottom: 24,
+    // dlorCard: {
+    //     border: '1px solid green',
+    //     '& > div': {
+    //         border: '1px solid blue',
+    //     },
+    // },
+    // article: {
+    //     border: '1px solid red',
+    // },
+    articleHeader: {
+        '& h2': {
+            lineHeight: 1.3,
+        },
         '& .highlightedText': {
             color: theme.palette.primary.light,
             fontWeight: 400,
         },
+        // backgroundColor: '#ffffd1',
     },
-    panelFooter: {
+    // articleContents: {
+    //     backgroundColor: '#fbe4ff',
+    // },
+    articleFooter: {
         marginTop: 24,
         color: theme.palette.primary.light,
         fontWeight: 400,
@@ -48,6 +63,7 @@ const useStyles = makeStyles(theme => ({
             alignItems: 'center',
             paddingBlock: 3,
         },
+        // backgroundColor: '#dbffd6',
     },
     highlighted: {
         color: theme.palette.primary.light,
@@ -98,9 +114,9 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
                 data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
             >
                 <a className={classes.navigateToDetail} href={`/dlor/view/${object.object_public_uuid}`}>
-                    <StandardCard noHeader fullHeight className={classes.dlorEntry}>
-                        <article>
-                            <header className={classes.panelHeader}>
+                    <StandardCard noHeader fullHeight className={classes.dlorCard}>
+                        <article className={classes.article}>
+                            <header className={classes.articleHeader}>
                                 {!!object?.filters?.topic && object.filters.topic.length > 0 && (
                                     <Typography className={classes.highlighted}>
                                         {object.filters.topic.join(', ')}
@@ -110,9 +126,11 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
                                     {object.object_title}
                                 </Typography>
                             </header>
-                            {object.object_description}
+                            <div className={classes.articleContents}>
+                                <p>{object.object_description}</p>
+                            </div>
 
-                            <footer className={classes.panelFooter}>
+                            <footer className={classes.articleFooter}>
                                 {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
                                     <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
                                         {FooterIcon(MUI_ICON_LAPTOP)}
