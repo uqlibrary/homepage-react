@@ -34,40 +34,36 @@ const useStyles = makeStyles(theme => ({
     //         border: '1px solid blue',
     //     },
     // },
-    // article: {
-    //     border: '1px solid red',
-    // },
-    articleHeader: {
-        '& h2': {
-            lineHeight: 1.3,
+    article: {
+        // border: '1px solid red',
+        '& header': {
+            '& h2': {
+                lineHeight: 1.3,
+            },
+            // backgroundColor: '#ffffd1',
         },
-        '& .highlightedText': {
+        '& footer': {
+            marginTop: 24,
             color: theme.palette.primary.light,
             fontWeight: 400,
+            '& > div': {
+                display: 'flex',
+                alignItems: 'center',
+                paddingBlock: 3,
+            },
+            '& svg': {
+                width: 20,
+                paddingRight: 4,
+                '& > path': {
+                    fill: theme.palette.primary.light,
+                },
+            },
+            // backgroundColor: '#dbffd6',
         },
-        // backgroundColor: '#ffffd1',
     },
     // articleContents: {
     //     backgroundColor: '#fbe4ff',
     // },
-    articleFooter: {
-        marginTop: 24,
-        color: theme.palette.primary.light,
-        fontWeight: 400,
-        '& > div': {
-            display: 'flex',
-            alignItems: 'center',
-            paddingBlock: 3,
-        },
-        '& svg': {
-            width: 20,
-            paddingRight: 4,
-            '& > path': {
-                fill: theme.palette.primary.light,
-            },
-        },
-        // backgroundColor: '#dbffd6',
-    },
     highlighted: {
         color: theme.palette.primary.light,
     },
@@ -104,7 +100,7 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
                 <a className={classes.navigateToDetail} href={`/dlor/view/${object.object_public_uuid}`}>
                     <StandardCard noHeader fullHeight className={classes.dlorCard}>
                         <article className={classes.article}>
-                            <header className={classes.articleHeader}>
+                            <header>
                                 {!!object?.filters?.topic && object.filters.topic.length > 0 && (
                                     <Typography className={classes.highlighted}>
                                         {object.filters.topic.join(', ')}
@@ -118,7 +114,7 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
                                 <p>{object.object_description}</p>
                             </div>
 
-                            <footer className={classes.articleFooter}>
+                            <footer>
                                 {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
                                     <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
                                         <LaptopIcon />
