@@ -164,12 +164,14 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                 {!dlorItem || dlorItem.length === 0 ? (
                     <p>We did not find that item in the system.</p>
                 ) : (
-                    <Grid container spacing={4}>
+                    <Grid container spacing={4} data-testid="dlor-detailpage">
                         <Grid item xs={12} md={8}>
-                            <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
+                            <Typography className={classes.highlighted} component={'h2'} variant={'h4'}>
                                 {dlorItem.object_title}
                             </Typography>
-                            <p>{dlorItem.object_description}</p>
+                            <div data-testid="dlor-detailpage-description">
+                                <p>{dlorItem.object_description}</p>
+                            </div>
                             {dlorItem?.object_embed_type === 'link' && (
                                 <div className={classes.uqActionButton}>
                                     <a href={dlorItem.object_link}>Access the module</a>
@@ -184,8 +186,8 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                 </React.Fragment>
                             )}
                         </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Typography component={'h2'} variant={'h6'} className={classes.metaHeader}>
+                        <Grid item xs={12} md={4} data-testid="detaipage-metadata">
+                            <Typography component={'h3'} variant={'h6'} className={classes.metaHeader}>
                                 <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24">
                                     <path d={MUI_ICON_LAPTOP} />
                                 </svg>
@@ -195,10 +197,10 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                 <div>
                                     {cleanedFilters.map(filter => {
                                         return (
-                                            <div key={filter.type}>
+                                            <div key={filter.type} data-testid={`detailpage-filter-${filter.type}`}>
                                                 <Typography
                                                     className={classes.highlighted}
-                                                    component={'h3'}
+                                                    component={'h4'}
                                                     variant={'h6'}
                                                 >
                                                     {deslugify(filter.type)}

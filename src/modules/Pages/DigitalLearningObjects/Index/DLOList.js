@@ -89,17 +89,24 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
 
     function showPanel(object) {
         return (
-            <Grid item xs={12} md={4} className={classes.panelGap} key={object.object_id}>
+            <Grid
+                item
+                xs={12}
+                md={4}
+                className={classes.panelGap}
+                key={object.object_id}
+                data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
+            >
                 <a className={classes.navigateToDetail} href={`/dlor/view/${object.object_public_uuid}`}>
                     <StandardCard noHeader fullHeight className={classes.dlorEntry}>
-                        <section>
+                        <article>
                             <header className={classes.panelHeader}>
                                 {!!object?.filters?.topic && object.filters.topic.length > 0 && (
                                     <Typography className={classes.highlighted}>
                                         {object.filters.topic.join(', ')}
                                     </Typography>
                                 )}
-                                <Typography component={'h3'} variant={'h6'}>
+                                <Typography component={'h2'} variant={'h6'}>
                                     {object.object_title}
                                 </Typography>
                             </header>
@@ -107,25 +114,27 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
 
                             <footer className={classes.panelFooter}>
                                 {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
-                                    <div>
+                                    <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
                                         {FooterIcon(MUI_ICON_LAPTOP)}
                                         {object.filters.item_type.join(', ')}
                                     </div>
                                 )}
                                 {!!object?.filters?.media_format && object.filters.media_format.length > 0 && (
-                                    <div>
+                                    <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}>
                                         {FooterIcon(MUI_DESCRIPTION_ICON)}
                                         {object.filters.media_format.join(', ')}
                                     </div>
                                 )}
                                 {!!object?.filters?.licence && object.filters.licence.length > 0 && (
-                                    <div>
+                                    <div
+                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
+                                    >
                                         {FooterIcon(MUI_COPYRIGHT_ICON)}
                                         {object.filters.licence.join(', ')}
                                     </div>
                                 )}
                             </footer>
-                        </section>
+                        </article>
                     </StandardCard>
                 </a>
             </Grid>
@@ -158,7 +167,7 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
             {!dlorList || dlorList.length === 0 ? (
                 <p>We did not find any entries in the system - please try again later.</p>
             ) : (
-                <Grid container spacing={3} className={classes.panelGrid}>
+                <Grid container spacing={3} className={classes.panelGrid} data-testid="dlor-homepage-list">
                     {dlorList.map(object => {
                         return showPanel(object);
                     })}
