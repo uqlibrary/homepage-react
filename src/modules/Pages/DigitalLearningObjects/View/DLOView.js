@@ -11,6 +11,12 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
+// https://mui.com/material-ui/material-icons/?query=computer&selected=Laptop
+const MUI_ICON_LAPTOP =
+    'M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2zM4 6h16v10H4z';
+// https://mui.com/material-ui/material-icons/?query=arrow&selected=ArrowForwardIos
+const MUI_ICON_FORWARDARROW = 'M6.23 20.23 8 22l10-10L8 2 6.23 3.77 14.46 12z';
+
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
         listStyleType: 'none',
@@ -50,6 +56,45 @@ const useStyles = makeStyles(theme => ({
     highlighted: {
         color: theme.palette.primary.light,
     },
+    titleBlock: {
+        display: 'flex',
+        alignItems: 'center',
+        paddingBottom: 10,
+        '& > svg': {
+            //     minHeight: 'auto',
+            marginBottom: 10,
+        },
+        '& > p': {
+            // minHeight: 35,
+            padding: 0,
+            marginBottom: 10,
+        },
+        '& h1': {
+            padding: 0,
+            // paddingBottom: 0,
+            // fontWeight: 300,
+            fontSize: 16,
+            minHeight: 40,
+            '& a': {
+                minHeight: 40, // match * above or hard to mouse over
+                color: 'rgba(0, 0, 0, 0.87)',
+                // a gap above the underline
+                textDecoration: 'none',
+                borderBottom: '1px solid #000',
+                paddingBottom: 1,
+                // end of gap block
+                '&:hover': {
+                    backgroundColor: theme.palette.secondary.main,
+                    borderBottomColor: theme.palette.white.main,
+                },
+            },
+        },
+    },
+    dlorEntry: {
+        '& div': {
+            paddingTop: 0,
+        },
+    },
 }));
 
 export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) => {
@@ -78,9 +123,20 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         return words.charAt(0).toUpperCase() + words.slice(1);
     };
 
-    // https://mui.com/material-ui/material-icons/?query=computer&selected=Laptop
-    const MUI_ICON_LAPTOP =
-        'M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2zM4 6h16v10H4z';
+    function getTitleBlock(detailTitle = 'View an entry') {
+        return (
+            <div className={classes.titleBlock}>
+                <Typography component={'h1'} variant={'h6'}>
+                    <a href="/dlor">Digital learning objects</a>
+                </Typography>
+                {/* convert this to a background svg on the ::before of the span? */}
+                <svg style={{ width: 10, marginInline: 6 }} focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d={MUI_ICON_FORWARDARROW} />
+                </svg>
+                <Typography>{detailTitle}</Typography>
+            </div>
+        );
+    }
 
     if (!!dlorItemLoading) {
         return (
@@ -93,10 +149,10 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     if (!!dlorItemError) {
         return (
             <StandardPage>
-                <Typography component={'h1'} variant={'h6'}>
-                    Digital learning objects
-                </Typography>
-                <p>An error occurred: {dlorItemError}</p>
+                <StandardCard className={classes.dlorEntry}>
+                    {getTitleBlock()}
+                    <p>An error occurred: {dlorItemError}</p>
+                </StandardCard>
             </StandardPage>
         );
     }
@@ -104,9 +160,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     return (
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
-                <Typography component={'h1'} variant={'h6'}>
-                    Digital learning objects
-                </Typography>
+                {getTitleBlock()}
                 {!dlorItem || dlorItem.length === 0 ? (
                     <p>We did not find that item in the system.</p>
                 ) : (
@@ -132,12 +186,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         </Grid>
                         <Grid item xs={12} md={4}>
                             <Typography component={'h2'} variant={'h6'} className={classes.metaHeader}>
-                                <svg
-                                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeLarge  css-c1sh5i"
-                                    focusable="false"
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                >
+                                <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24">
                                     <path d={MUI_ICON_LAPTOP} />
                                 </svg>
                                 Details
