@@ -125,7 +125,7 @@ export const DLOList = ({
                                 </Typography>
                             </header>
                             <div className={classes.articleContents}>
-                                <p>{object.object_description}</p>
+                                <p>{object.object_summary}</p>
                             </div>
 
                             <footer>

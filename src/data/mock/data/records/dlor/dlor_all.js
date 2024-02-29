@@ -2,6 +2,7 @@ export default [{
     object_id: "123456",
     object_public_uuid: "987y_isjgt_9866",
     object_title: "Accessibility - Digital Essentials",
+    object_summary: "Understanding the importance of accessibility online and creating accessible content.",
     object_description: "Understanding the importance of accessibility online and creating accessible content.",
     // object_quality_check: "I dont know what goes here", // maybe date of last check?
     // owner: {
@@ -31,6 +32,7 @@ export default [{
     object_id: "234567",
     object_public_uuid: "98s0_dy5k3_98h4",
     object_title: "Advanced literature searching",
+    object_summary: "This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping, systematic or literature review.",
     object_description: "This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping, systematic or literature review. Start with the Advanced literature searching tutorial before undertaking the discipline specific ones.",
     // object_quality_check: "I dont know what goes here",
     // owner: {
@@ -77,6 +79,7 @@ export default [{
     object_id: "345678",
     object_public_uuid: "9jkh_9j4ld_0dff",
     object_title: "Advanced literature searching for health and medicine",
+    object_summary: "Learn how to conduct advanced literature searching for health and medicine.",
     object_description: "Learn how to conduct advanced literature searching for health and medicine. We recommend you do the Advanced literature searching module first, to become familiar with the common advanced literature searching techniques.",
     // object_quality_check: "I dont know what goes here",
     // owner: {
