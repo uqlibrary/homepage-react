@@ -28,7 +28,7 @@ const handlers = {
     }),
 };
 
-export default function dlorReducer(state = initialState, action) {
+export default function dlorListReducer(state = initialState, action) {
     const handler = handlers[action.type];
     if (!handler) {
         return state;

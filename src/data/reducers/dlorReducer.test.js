@@ -1,4 +1,4 @@
-import dlorReducer, { initialState } from './dlorReducer';
+import dlorListReducer, { initialState } from './dlorListReducer';
 import * as actions from '../actions/actionTypes';
 
 describe('dlor list reducer', () => {
@@ -13,7 +13,7 @@ describe('dlor list reducer', () => {
     });
 
     it('should set dlor values when successfully loaded', () => {
-        const test = dlorReducer(emptyState, { type: actions.DLOR_LIST_LOADED, payload: mockDlorList });
+        const test = dlorListReducer(emptyState, { type: actions.DLOR_LIST_LOADED, payload: mockDlorList });
         expect(test).toEqual({
             ...emptyState,
             dlorList: mockDlorList,
@@ -23,7 +23,7 @@ describe('dlor list reducer', () => {
     });
 
     it('should handle a failing Dlor API call', () => {
-        const test = dlorReducer(emptyState, {
+        const test = dlorListReducer(emptyState, {
             type: actions.DLOR_LIST_FAILED,
             payload: 'failed!',
         });
@@ -35,7 +35,7 @@ describe('dlor list reducer', () => {
     });
 
     it('should set dlor Status flags to loading when loading dlor', () => {
-        const test = dlorReducer(emptyState, { type: actions.DLOR_LIST_LOADING });
+        const test = dlorListReducer(emptyState, { type: actions.DLOR_LIST_LOADING });
         expect(test).toEqual({
             ...emptyState,
             dlorList: null,

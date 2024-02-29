@@ -11,6 +11,7 @@ import CopyrightIcon from '@mui/icons-material/Copyright';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { loadAllFilters } from '../../../../data/actions';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -77,12 +78,25 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) => {
+export const DLOList = ({
+    actions,
+    dlorList,
+    dlorListLoading,
+    dlorListError,
+    dlorFilterList,
+    dlorFilterListLoading,
+    dlorFilterListError,
+}) => {
     const classes = useStyles();
+
+    console.log('loading=', dlorFilterListLoading, 'error=', dlorFilterListError, 'list=', dlorFilterList);
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
+        }
+        if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
+            actions.loadAllFilters();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -184,6 +198,9 @@ DLOList.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
+    dlorFilterList: PropTypes.array,
+    dlorFilterListLoading: PropTypes.bool,
+    dlorFilterListError: PropTypes.any,
 };
 
 export default React.memo(DLOList);

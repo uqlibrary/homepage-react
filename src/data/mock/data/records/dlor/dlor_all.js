@@ -62,10 +62,6 @@ export default [{
             "Influential communicators",
             "Accomplished scholars",
         ],
-        how_to_add: [
-            "Embed",
-            "Link",
-        ],
     },
     // keywords: [
     //     "search",
@@ -112,10 +108,6 @@ export default [{
         graduate_attributes: [
             "Influential communicators",
             "Accomplished scholars",
-        ],
-        how_to_add: [
-            "Embed",
-            "Link",
         ],
     },
     // keywords: [

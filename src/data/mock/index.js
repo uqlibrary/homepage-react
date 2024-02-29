@@ -66,6 +66,7 @@ import {
     promoPanelMocks,
 } from './data/promoPanelsLong';
 import dlor_all from './data/records/dlor/dlor_all';
+import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 
 const moment = require('moment');
 
@@ -585,6 +586,10 @@ mock.onGet(/dlor\/view\/.*/)
     .onGet('dlor/list/full')
     .reply(() => {
         return [200, dlor_all];
+    })
+    .onGet('dlor/facets/list')
+    .reply(() => {
+        return [200, dlor_filter_list];
     });
 
 mock.onGet('exams/course/FREN1010/summary')
