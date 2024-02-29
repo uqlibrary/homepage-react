@@ -36,6 +36,5 @@ export default function dlorReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log('dlorReducer', action.type, state, action);
     return handler(state, action);
 }

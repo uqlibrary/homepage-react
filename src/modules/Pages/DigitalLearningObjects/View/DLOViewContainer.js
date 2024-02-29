@@ -6,15 +6,12 @@ import * as actions from 'data/actions';
 import DLOView from './DLOView';
 
 const mapStateToProps = state => {
-    console.log('DLOViewContainer mapStateToProps', state);
     return {
         ...state.get('dlorSingleReducer'),
     };
 };
 
 const mapDispatchToProps = dispatch => {
-    console.log('DLOViewContainer mapDispatchToProps dispatch', dispatch);
-    console.log('DLOViewContainer mapDispatchToProps actions', actions);
     return {
         actions: bindActionCreators(actions, dispatch),
     };

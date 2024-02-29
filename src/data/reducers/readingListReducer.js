@@ -41,6 +41,5 @@ export default function readingListReducer(state = initialState, action) {
         // console.log('action: NOPE ', action.type);
         return state;
     }
-    console.log('LR action:', action.type, state, action);
     return handler(state, action);
 }
