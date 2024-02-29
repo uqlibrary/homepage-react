@@ -9,60 +9,63 @@ import Typography from '@mui/material/Typography';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-const useStyles = makeStyles(
-    theme => ({
-        panelGap: {
-            [theme.breakpoints.up('md')]: {
-                paddingLeft: 16,
-            },
-            [theme.breakpoints.down('md')]: {
-                paddingTop: 16,
-            },
+const useStyles = makeStyles(theme => ({
+    panelGap: {
+        [theme.breakpoints.up('md')]: {
+            paddingLeft: 16,
         },
-        panelGrid: {
-            paddingLeft: 12,
-            paddingRight: 12,
-            marginBlock: 6,
-            display: 'flex',
-            alignItems: 'stretch',
+        [theme.breakpoints.down('md')]: {
+            paddingTop: 16,
         },
-        icon: {
-            width: 20,
-            paddingRight: 4,
-            '& > path': {
-                fill: theme.palette.primary.light,
-            },
+    },
+    panelGrid: {
+        paddingLeft: 12,
+        paddingRight: 12,
+        marginBlock: 6,
+        display: 'flex',
+        alignItems: 'stretch',
+    },
+    icon: {
+        width: 20,
+        paddingRight: 4,
+        '& > path': {
+            fill: theme.palette.primary.light,
         },
-        panelHeader: {
-            marginBottom: 24,
-            '& .highlightedText': {
-                color: theme.palette.primary.light,
-                fontWeight: 400,
-            },
-        },
-        panelFooter: {
-            marginTop: 24,
+    },
+    panelHeader: {
+        marginBottom: 24,
+        '& .highlightedText': {
             color: theme.palette.primary.light,
             fontWeight: 400,
+        },
+    },
+    panelFooter: {
+        marginTop: 24,
+        color: theme.palette.primary.light,
+        fontWeight: 400,
+        '& > div': {
+            display: 'flex',
+            alignItems: 'center',
+            paddingBlock: 3,
+        },
+    },
+    highlighted: {
+        color: theme.palette.primary.light,
+    },
+    navigateToDetail: {
+        '&:hover': {
+            textDecoration: 'none',
             '& > div': {
-                display: 'flex',
-                alignItems: 'center',
-                paddingBlock: 3,
+                backgroundColor: '#f2f2f2',
             },
         },
-        highlighted: {
-            color: theme.palette.primary.light,
-        },
-    }),
-    { withTheme: true },
-);
+    },
+}));
 
 export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) => {
-    console.log('DLOList', dlorListLoading, dlorListError, dlorList);
     const classes = useStyles();
 
     React.useEffect(() => {
-        console.log('useEffect');
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
@@ -100,42 +103,48 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
                     {dlorList.map(object => {
                         return (
                             <Grid item xs={12} md={4} className={classes.panelGap} key={object.object_id}>
-                                <StandardCard noHeader fullHeight className={classes.dlorEntry}>
-                                    <section>
-                                        <header className={classes.panelHeader}>
-                                            {!!object?.filters?.topic && object.filters.topic.length > 0 && (
-                                                <Typography className={classes.highlighted}>
-                                                    {object.filters.topic.join(', ')}
+                                <a
+                                    className={classes.navigateToDetail}
+                                    href={`/dlor/view/${object.object_public_uuid}`}
+                                >
+                                    <StandardCard noHeader fullHeight className={classes.dlorEntry}>
+                                        <section>
+                                            <header className={classes.panelHeader}>
+                                                {!!object?.filters?.topic && object.filters.topic.length > 0 && (
+                                                    <Typography className={classes.highlighted}>
+                                                        {object.filters.topic.join(', ')}
+                                                    </Typography>
+                                                )}
+                                                <Typography component={'h3'} variant={'h6'}>
+                                                    {object.object_title}
                                                 </Typography>
-                                            )}
-                                            <Typography component={'h3'} variant={'h6'}>
-                                                {object.object_title}
-                                            </Typography>
-                                        </header>
-                                        {object.object_description}
+                                            </header>
+                                            {object.object_description}
 
-                                        <footer className={classes.panelFooter}>
-                                            {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
-                                                <div>
-                                                    {FooterIcon(MUI_ICON_LAPTOP)}
-                                                    {object.filters.item_type.join(', ')}
-                                                </div>
-                                            )}
-                                            {!!object?.filters?.media_format && object.filters.media_format.length > 0 && (
-                                                <div>
-                                                    {FooterIcon(MUI_DESCRIPTION_ICON)}
-                                                    {object.filters.media_format.join(', ')}
-                                                </div>
-                                            )}
-                                            {!!object?.filters?.licence && object.filters.licence.length > 0 && (
-                                                <div>
-                                                    {FooterIcon(MUI_COPYRIGHT_ICON)}
-                                                    {object.filters.licence.join(', ')}
-                                                </div>
-                                            )}
-                                        </footer>
-                                    </section>
-                                </StandardCard>
+                                            <footer className={classes.panelFooter}>
+                                                {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
+                                                    <div>
+                                                        {FooterIcon(MUI_ICON_LAPTOP)}
+                                                        {object.filters.item_type.join(', ')}
+                                                    </div>
+                                                )}
+                                                {!!object?.filters?.media_format &&
+                                                    object.filters.media_format.length > 0 && (
+                                                        <div>
+                                                            {FooterIcon(MUI_DESCRIPTION_ICON)}
+                                                            {object.filters.media_format.join(', ')}
+                                                        </div>
+                                                    )}
+                                                {!!object?.filters?.licence && object.filters.licence.length > 0 && (
+                                                    <div>
+                                                        {FooterIcon(MUI_COPYRIGHT_ICON)}
+                                                        {object.filters.licence.join(', ')}
+                                                    </div>
+                                                )}
+                                            </footer>
+                                        </section>
+                                    </StandardCard>
+                                </a>
                             </Grid>
                         );
                     })}
