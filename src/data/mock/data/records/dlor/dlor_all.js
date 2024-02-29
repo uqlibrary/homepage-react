@@ -47,7 +47,7 @@ export default [{
             "Assignments",
         ],
         media_format: [
-            "H5P",
+            "Pressbook",
         ],
         subject: [
             "Relevant to all subject areas",
@@ -56,7 +56,7 @@ export default [{
             "CC BY-NC",
         ],
         item_type: [
-            "Module",
+            "Guide",
         ],
         graduate_attributes: [
             "Influential communicators",
@@ -104,7 +104,7 @@ export default [{
             "Medicine; Biomedical Sciences",
         ],
         licence: [
-            "CC BY-NC",
+            "UQ copyright",
         ],
         item_type: [
             "Module",
@@ -128,7 +128,7 @@ export default [{
     //     "review",
     //     "journal article",
     // ],
-    object_download_instructions: "",
+    object_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
     // next_review_date: "2022-02-01 10:00:00",
     created_at: "2020-01-01 10:00:00",
     updated_at: "2021-02-01 10:00:00",
