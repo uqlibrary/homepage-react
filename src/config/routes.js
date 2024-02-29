@@ -57,11 +57,10 @@ export const flattedPathConfig = [
 ];
 
 export const getRoutesConfig = ({ components = {}, account = null }) => {
-    const examSearchRegExp = '.*';
-    const examSearchCourseHint = `:courseHint(${examSearchRegExp})`;
+    const standardRegExp = '.*';
+    const examSearchCourseHint = `:courseHint(${standardRegExp})`;
 
-    const dlorIdRegExp = '.*';
-    const dlorId = `:dlorId(${dlorIdRegExp})`;
+    const dlorId = `:dlorId(${standardRegExp})`;
 
     const publicPages = [
         {
@@ -116,8 +115,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const alertidRegExp = '.*';
-    const alertid = `:alertid(${alertidRegExp})`;
+    const alertid = `:alertid(${standardRegExp})`;
     const alertsDisplay = [
         {
             path: pathConfig.admin.alerts,
@@ -157,8 +155,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const promopanelidRegExp = '.*';
-    const promopanelid = `:promopanelid(${promopanelidRegExp})`;
+    const promopanelid = `:promopanelid(${standardRegExp})`;
     const promoPanelDisplay = [
         {
             path: pathConfig.admin.promopanel,
@@ -184,8 +181,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const spotlightidRegExp = '.*';
-    const spotlightid = `:spotlightid(${spotlightidRegExp})`;
+    const spotlightid = `:spotlightid(${standardRegExp})`;
     const spotlightsDisplay = [
         {
             path: pathConfig.admin.spotlights,
