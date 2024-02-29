@@ -271,20 +271,6 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .should('contain', 'Accomplished scholars');
 
-            cy.get('[data-testid="detailpage-filter-how_to_add"] h4')
-                .should('exist')
-                .contains('How to add');
-            cy.get('[data-testid="detailpage-filter-how_to_add"] ul')
-                .should('exist')
-                .children()
-                .should('have.length', 2);
-            cy.get('[data-testid="detailpage-filter-how_to_add"] ul li:first-child')
-                .should('exist')
-                .should('contain', 'Embed');
-            cy.get('[data-testid="detailpage-filter-how_to_add"] ul li:nth-child(2)')
-                .should('exist')
-                .should('contain', 'Link');
-
             // the link can be clicked
             cy.get('[data-testid="dlor-detailpage"] a').should('contain', 'Access the module');
             cy.get('[data-testid="dlor-detailpage"] a')

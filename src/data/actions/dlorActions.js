@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { DLOR_ALL_API, DLOR_GET_BY_ID_API } from 'repositories/routes';
+import { DLOR_ALL_API, DLOR_GET_BY_ID_API, DLOR_GET_FILTER_LIST } from 'repositories/routes';
 
 export function loadAllDLORs() {
     return dispatch => {
@@ -34,6 +34,25 @@ export function loadADLOR(dlorId) {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_DETAIL_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function loadAllFilters() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FILTER_LIST_LOADING });
+        return get(DLOR_GET_FILTER_LIST())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FILTER_LIST_LOADED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FILTER_LIST_FAILED,
                     payload: error.message,
                 });
             });
