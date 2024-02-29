@@ -76,7 +76,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
 
     const cleanedFilters = [];
     !!dlorItem?.filters &&
-        Object.entries(dlorItem.filters).map(([filterType, filterTypeList], index) => {
+        Object.entries(dlorItem.filters).map(([filterType, filterTypeList]) => {
             const filterItem = {
                 type: filterType,
                 list: filterTypeList,
@@ -112,7 +112,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                             )}
                             {!!dlorItem.object_download_instructions && (
                                 <React.Fragment>
-                                    <Typography component={'h3'} variant={'h6'}>
+                                    <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
                                         How to use this module
                                     </Typography>
                                     <p>{dlorItem.object_download_instructions}</p>
@@ -127,7 +127,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                     aria-hidden="true"
                                     viewBox="0 0 24 24"
                                 >
-                                    <path d={MUI_ICON_LAPTOP}></path>
+                                    <path d={MUI_ICON_LAPTOP} />
                                 </svg>
                                 Details
                             </Typography>
