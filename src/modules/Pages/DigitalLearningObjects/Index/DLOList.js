@@ -1,5 +1,4 @@
 import React from 'react';
-import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 
 import { Grid } from '@mui/material';
