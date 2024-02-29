@@ -9,6 +9,7 @@ import { Grid } from '@mui/material';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
@@ -62,18 +63,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (!!dlorItemLoading) {
-        return <p>loading</p>;
-    }
-
-    if (!!dlorItemError) {
-        return <p>An error occurred: {dlorItemError}</p>;
-    }
-
-    if (!dlorItem || dlorItem.length === 0) {
-        return <p>no objects</p>;
-    }
-
     const cleanedFilters = [];
     !!dlorItem?.filters &&
         Object.entries(dlorItem.filters).map(([filterType, filterTypeList]) => {
@@ -93,12 +82,34 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     const MUI_ICON_LAPTOP =
         'M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2zM4 6h16v10H4z';
 
-    return (
-        <React.Suspense
-        // fallback={<ContentLoader message="Loading" />}
-        >
+    if (!!dlorItemLoading) {
+        return (
+            <div style={{ minHeight: 600 }}>
+                <InlineLoader message="Loading" />
+            </div>
+        );
+    }
+
+    if (!!dlorItemError) {
+        return (
             <StandardPage>
-                <StandardCard className={classes.dlorEntry} title="Digital learning objects">
+                <Typography component={'h1'} variant={'h6'}>
+                    Digital learning objects
+                </Typography>
+                <p>An error occurred: {dlorItemError}</p>
+            </StandardPage>
+        );
+    }
+
+    return (
+        <StandardPage>
+            <StandardCard className={classes.dlorEntry}>
+                <Typography component={'h1'} variant={'h6'}>
+                    Digital learning objects
+                </Typography>
+                {!dlorItem || dlorItem.length === 0 ? (
+                    <p>We did not find that item in the system.</p>
+                ) : (
                     <Grid container spacing={4}>
                         <Grid item xs={12} md={8}>
                             <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
@@ -158,9 +169,9 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                             )}
                         </Grid>
                     </Grid>
-                </StandardCard>
-            </StandardPage>
-        </React.Suspense>
+                )}
+            </StandardCard>
+        </StandardPage>
     );
 };
 
