@@ -7,26 +7,26 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.DLOR_VIEWPAGE_LOADING]: state => ({
+    [actions.DLOR_DETAIL_LOADING]: state => ({
         ...initialState,
         ...state,
         dlorItemLoading: true,
         dlorItemError: false,
     }),
-    [actions.DLOR_VIEWPAGE_LOADED]: (state, action) => ({
+    [actions.DLOR_DETAIL_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         dlorItemLoading: false,
         dlorItemError: false,
         dlorItem: action.payload,
     }),
-    [actions.DLOR_VIEWPAGE_FAILED]: (state, action) => ({
+    [actions.DLOR_DETAIL_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         dlorItemLoading: false,
         dlorItemError: action.payload,
     }),
-    // [actions.DLOR_VIEWPAGE_CLEAR]: () => ({
+    // [actions.DLOR_DETAIL_CLEAR]: () => ({
     //     ...initialState,
     // }),
 };

@@ -4,18 +4,17 @@ import { DLOR_ALL_API, DLOR_GET_BY_ID_API } from 'repositories/routes';
 
 export function loadAllDLORs() {
     return dispatch => {
-        // dispatch({ type: actions.DLOR_HOMEPAGE_CLEAR });
-        dispatch({ type: actions.DLOR_HOMEPAGE_LOADING });
+        dispatch({ type: actions.DLOR_LIST_LOADING });
         return get(DLOR_ALL_API())
             .then(response => {
                 dispatch({
-                    type: actions.DLOR_HOMEPAGE_LOADED,
+                    type: actions.DLOR_LIST_LOADED,
                     payload: response,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.DLOR_HOMEPAGE_FAILED,
+                    type: actions.DLOR_LIST_FAILED,
                     payload: error.message,
                 });
             });
@@ -24,17 +23,17 @@ export function loadAllDLORs() {
 
 export function loadADLOR(dlorId) {
     return dispatch => {
-        dispatch({ type: actions.DLOR_VIEWPAGE_LOADING });
+        dispatch({ type: actions.DLOR_DETAIL_LOADING });
         return get(DLOR_GET_BY_ID_API({ id: dlorId }))
             .then(data => {
                 dispatch({
-                    type: actions.DLOR_VIEWPAGE_LOADED,
+                    type: actions.DLOR_DETAIL_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.DLOR_VIEWPAGE_FAILED,
+                    type: actions.DLOR_DETAIL_FAILED,
                     payload: error.message,
                 });
             });

@@ -13,7 +13,7 @@ describe('dlor single reducer', () => {
     });
 
     it('should set dlor values when successfully loaded', () => {
-        const test = dlorSingleReducer(emptyState, { type: actions.DLOR_VIEWPAGE_LOADED, payload: mockDlorEntry });
+        const test = dlorSingleReducer(emptyState, { type: actions.DLOR_DETAIL_LOADED, payload: mockDlorEntry });
         expect(test).toEqual({
             ...emptyState,
             dlorItem: mockDlorEntry,
@@ -24,7 +24,7 @@ describe('dlor single reducer', () => {
 
     it('should handle a failing Dlor API call', () => {
         const test = dlorSingleReducer(emptyState, {
-            type: actions.DLOR_VIEWPAGE_FAILED,
+            type: actions.DLOR_DETAIL_FAILED,
             payload: 'failed!',
         });
         expect(test).toEqual({
@@ -35,7 +35,7 @@ describe('dlor single reducer', () => {
     });
 
     it('should set dlor Status flags to loading when loading dlor', () => {
-        const test = dlorSingleReducer(emptyState, { type: actions.DLOR_VIEWPAGE_LOADING });
+        const test = dlorSingleReducer(emptyState, { type: actions.DLOR_DETAIL_LOADING });
         expect(test).toEqual({
             ...emptyState,
             dlorItem: null,
