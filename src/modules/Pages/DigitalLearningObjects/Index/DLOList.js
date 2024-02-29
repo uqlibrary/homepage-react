@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+import DescriptionIcon from '@mui/icons-material/Description';
+import LaptopIcon from '@mui/icons-material/Laptop';
+import CopyrightIcon from '@mui/icons-material/Copyright';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -24,13 +27,6 @@ const useStyles = makeStyles(theme => ({
         marginBlock: 6,
         display: 'flex',
         alignItems: 'stretch',
-    },
-    icon: {
-        width: 20,
-        paddingRight: 4,
-        '& > path': {
-            fill: theme.palette.primary.light,
-        },
     },
     // dlorCard: {
     //     border: '1px solid green',
@@ -63,6 +59,13 @@ const useStyles = makeStyles(theme => ({
             alignItems: 'center',
             paddingBlock: 3,
         },
+        '& svg': {
+            width: 20,
+            paddingRight: 4,
+            '& > path': {
+                fill: theme.palette.primary.light,
+            },
+        },
         // backgroundColor: '#dbffd6',
     },
     highlighted: {
@@ -87,21 +90,6 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    // https://mui.com/material-ui/material-icons/?query=note&selected=Description
-    const MUI_DESCRIPTION_ICON =
-        'M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm2 16H8v-2h8zm0-4H8v-2h8zm-3-5V3.5L18.5 9z';
-    // https://mui.com/material-ui/material-icons/?query=computer&selected=Laptop
-    const MUI_ICON_LAPTOP =
-        'M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2zM4 6h16v10H4z';
-    // https://mui.com/material-ui/material-icons/?query=copyright&selected=Copyright
-    const MUI_COPYRIGHT_ICON =
-        'M11.88 9.14c1.28.06 1.61 1.15 1.63 1.66h1.79c-.08-1.98-1.49-3.19-3.45-3.19C9.64 7.61 8 9 8 12.14c0 1.94.93 4.24 3.84 4.24 2.22 0 3.41-1.65 3.44-2.95h-1.79c-.03.59-.45 1.38-1.63 1.44-1.31-.04-1.86-1.06-1.86-2.73 0-2.89 1.28-2.98 1.88-3M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8';
-    const FooterIcon = iconsvg => (
-        <svg className={classes.icon} focusable="false" aria-hidden="true" viewBox="0 0 24 24">
-            <path d={iconsvg} />
-        </svg>
-    );
 
     function showPanel(object) {
         return (
@@ -133,13 +121,13 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
                             <footer className={classes.articleFooter}>
                                 {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
                                     <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
-                                        {FooterIcon(MUI_ICON_LAPTOP)}
+                                        <LaptopIcon />
                                         {object.filters.item_type.join(', ')}
                                     </div>
                                 )}
                                 {!!object?.filters?.media_format && object.filters.media_format.length > 0 && (
                                     <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}>
-                                        {FooterIcon(MUI_DESCRIPTION_ICON)}
+                                        <DescriptionIcon />
                                         {object.filters.media_format.join(', ')}
                                     </div>
                                 )}
@@ -147,7 +135,7 @@ export const DLOList = ({ actions, dlorList, dlorListLoading, dlorListError }) =
                                     <div
                                         data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
                                     >
-                                        {FooterIcon(MUI_COPYRIGHT_ICON)}
+                                        <CopyrightIcon />
                                         {object.filters.licence.join(', ')}
                                     </div>
                                 )}
