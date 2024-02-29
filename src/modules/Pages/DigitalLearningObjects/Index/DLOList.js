@@ -157,38 +157,37 @@ export const DLOList = ({
         );
     }
 
-    if (!!dlorListLoading) {
-        return (
-            <div style={{ minHeight: 600 }}>
-                <InlineLoader message="Loading" />
-            </div>
-        );
-    }
-    if (!!dlorListError) {
-        return (
-            <StandardPage>
-                <Typography component={'h1'} variant={'h6'}>
-                    Digital learning objects
-                </Typography>
-                <p>An error occurred: {dlorListError}</p>
-            </StandardPage>
-        );
-    }
-
     return (
         <StandardPage>
             <Typography component={'h1'} variant={'h6'}>
                 Digital learning objects
             </Typography>
-            {!dlorList || dlorList.length === 0 ? (
-                <p>We did not find any entries in the system - please try again later.</p>
-            ) : (
-                <Grid container spacing={3} className={classes.panelGrid} data-testid="dlor-homepage-list">
-                    {dlorList.map(object => {
-                        return showPanel(object);
-                    })}
-                </Grid>
-            )}
+            {(() => {
+                if (!dlorList) {
+                    return (
+                        <div style={{ minHeight: 600 }}>
+                            <InlineLoader message="Loading" />
+                        </div>
+                    );
+                } else if (!!dlorListError) {
+                    return (
+                        <StandardPage>
+                            <Typography component={'h1'} variant={'h6'}>
+                                Digital learning objects
+                            </Typography>
+                            <p>An error occurred: {dlorListError}</p>
+                        </StandardPage>
+                    );
+                } else if (dlorList.length === 0) {
+                    return <p>We did not find any entries in the system - please try again later.</p>;
+                } else {
+                    return (
+                        <Grid container spacing={3} className={classes.panelGrid} data-testid="dlor-homepage-list">
+                            {dlorList.map(object => showPanel(object))}
+                        </Grid>
+                    );
+                }
+            })()}
         </StandardPage>
     );
 };
