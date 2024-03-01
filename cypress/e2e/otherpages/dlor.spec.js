@@ -99,6 +99,29 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('region h2')
                 .should('exist')
                 .contains('Filters');
+
+            // sidebar panel loads open
+            cy.get('[data-testid="sidebar-panel-1"]')
+                .should('exist')
+                .contains('Aboriginal and Torres Strait Islander')
+                .should('be.visible');
+
+            // click button, close panel
+            cy.get('[data-testid="panel-minimisation-icon-1"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="sidebar-panel-1"]')
+                .should('exist')
+                .should('not.be.visible');
+
+            // click button again, reopen
+            cy.get('[data-testid="panel-minimisation-icon-1"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="sidebar-panel-1"]')
+                .should('exist')
+                .contains('Aboriginal and Torres Strait Islander')
+                .should('be.visible');
         });
     });
 

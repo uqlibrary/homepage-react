@@ -4,12 +4,15 @@ import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import CopyrightIcon from '@mui/icons-material/Copyright';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -148,6 +151,53 @@ export const DLOList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const getSidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
+
+    function hideElement(element, displayproperty = null) {
+        !!element && (element.style.visibility = 'hidden');
+        !!element && (element.style.opacity = 0);
+        !!element && (element.style.height = 0);
+        !!displayproperty && !!element && (element.style.display = displayproperty);
+    }
+
+    function showElement(element, displayproperty = null) {
+        !!element && (element.style.visibility = 'visible');
+        !!element && (element.style.opacity = 1);
+        !!element && (element.style.height = 'auto');
+        !!displayproperty && !!element && (element.style.display = displayproperty);
+    }
+
+    function hidePanel(index) {
+        const facetPanel = document.getElementById(panelId(index));
+        const upArrowIcon = document.getElementById(UpArrowId(index));
+        const downArrowIcon = document.getElementById(DownArrowId(index));
+        hideElement(facetPanel);
+        showElement(downArrowIcon, 'inline-block');
+        hideElement(upArrowIcon, 'none');
+    }
+
+    function showPanel(index) {
+        const facetPanel = document.getElementById(panelId(index));
+        const upArrowIcon = document.getElementById(UpArrowId(index));
+        const downArrowIcon = document.getElementById(DownArrowId(index));
+        showElement(facetPanel);
+        hideElement(downArrowIcon, 'none');
+        showElement(upArrowIcon, 'inline-block');
+    }
+
+    const panelId = index => getSidebarElementId(index);
+    const UpArrowId = index => getSidebarElementId(index, 'panel-uparrow');
+    const DownArrowId = index => getSidebarElementId(index, 'panel-downarrow');
+
+    function showHidePanel(index) {
+        const downArrowIcon = document.getElementById(DownArrowId(index));
+        if (!!downArrowIcon && downArrowIcon.style.display === 'none') {
+            hidePanel(index);
+        } else if (!!downArrowIcon && downArrowIcon.style.display === 'inline-block') {
+            showPanel(index);
+        }
+    }
+
     function showFilterSidebar() {
         return (
             <>
@@ -172,23 +222,33 @@ export const DLOList = ({
                                         </Typography>
                                     </Grid>
                                     <Grid item md={1}>
-                                        <button aria-label="Minimise the filter section">
-                                            <KeyboardArrowUpIcon />
-                                        </button>
+                                        <IconButton
+                                            aria-label="Minimise the filter section"
+                                            data-testid={getSidebarElementId(index, 'panel-minimisation-icon')}
+                                            onClick={() => showHidePanel(index)}
+                                        >
+                                            <KeyboardArrowUpIcon id={getSidebarElementId(index, 'panel-uparrow')} />
+                                            <KeyboardArrowDownIcon
+                                                id={getSidebarElementId(index, 'panel-downarrow')}
+                                                style={{ display: 'none', visibility: 'hidden', opacity: 0, height: 0 }}
+                                            />
+                                        </IconButton>
                                     </Grid>
                                 </Grid>
-                                {!!type.filter_facet_list &&
-                                    type.filter_facet_list.length > 0 &&
-                                    type.filter_facet_list.map(facet => {
-                                        return (
-                                            <FormControlLabel
-                                                key={`${type.filter_slug}-${facet.facet_slug}`}
-                                                className={classes.filterSidebarCheckboxControl}
-                                                control={<Checkbox className={classes.filterSidebarCheckbox} />}
-                                                label={facet.facet_name}
-                                            />
-                                        );
-                                    })}
+                                <div id={getSidebarElementId(index)} data-testid={getSidebarElementId(index)}>
+                                    {!!type.filter_facet_list &&
+                                        type.filter_facet_list.length > 0 &&
+                                        type.filter_facet_list.map(facet => {
+                                            return (
+                                                <FormControlLabel
+                                                    key={`${type.filter_slug}-${facet.facet_slug}`}
+                                                    className={classes.filterSidebarCheckboxControl}
+                                                    control={<Checkbox className={classes.filterSidebarCheckbox} />}
+                                                    label={facet.facet_name}
+                                                />
+                                            );
+                                        })}
+                                </div>
                             </Grid>
                         );
                     })}
@@ -266,7 +326,7 @@ export const DLOList = ({
             <Typography component={'h1'} variant={'h6'}>
                 Digital learning objects
             </Typography>
-            <Grid container>
+            <Grid container spacing={2}>
                 <Grid item md={3} className={classes.filterSidebar}>
                     <region>
                         {(() => {
