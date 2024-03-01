@@ -190,11 +190,16 @@ export const DLOList = ({
                             <button>reset</button>
                         </Grid>
                     </Grid>
-                    {!!dlorFilterList &&
+                    {!!dlorListLoading || dlorListLoading === null ? (
+                        <div style={{ minHeight: 600 }}>
+                            <InlineLoader message="Loading" />
+                        </div>
+                    ) : (
+                        !!dlorFilterList &&
                         dlorFilterList.map((type, index) => {
                             return (
                                 <div key={index}>
-                                    <Grid container key={index}>
+                                    <Grid container>
                                         <Grid item md={11}>
                                             <Typography
                                                 component={'h3'}
@@ -225,7 +230,8 @@ export const DLOList = ({
                                         })}
                                 </div>
                             );
-                        })}
+                        })
+                    )}
                 </Grid>
                 <Grid item md={9}>
                     {(() => {
