@@ -94,6 +94,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 'contain',
                 'UQ copyright',
             );
+
+            // filter sidebar
+            cy.get('region h2')
+                .should('exist')
+                .contains('Filters');
         });
     });
 
