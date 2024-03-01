@@ -7,11 +7,11 @@ import Typography from '@mui/material/Typography';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import CopyrightIcon from '@mui/icons-material/Copyright';
+import Checkbox from '@mui/material/Checkbox';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { loadAllFilters } from '../../../../data/actions';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -75,6 +75,22 @@ const useStyles = makeStyles(theme => ({
                 backgroundColor: '#f2f2f2',
             },
         },
+    },
+    filterSidebar: {
+        fontSize: 10,
+    },
+    filterSidebarSubheading: {
+        fontWeight: 500,
+    },
+    filterSidebarEntry: {
+        display: 'flex',
+        alignItems: 'flex-start',
+    },
+    filterSidebarCheckbox: {
+        paddingTop: 0,
+    },
+    filterSidebarLabel: {
+        display: 'inline',
     },
 }));
 
@@ -162,32 +178,89 @@ export const DLOList = ({
             <Typography component={'h1'} variant={'h6'}>
                 Digital learning objects
             </Typography>
-            {(() => {
-                if (!dlorList) {
-                    return (
-                        <div style={{ minHeight: 600 }}>
-                            <InlineLoader message="Loading" />
-                        </div>
-                    );
-                } else if (!!dlorListError) {
-                    return (
-                        <StandardPage>
-                            <Typography component={'h1'} variant={'h6'}>
-                                Digital learning objects
+            <Grid container>
+                <Grid item md={3} className={classes.filterSidebar}>
+                    <Grid container>
+                        <Grid item md={11}>
+                            <Typography component={'h2'} variant={'h6'}>
+                                Filters
                             </Typography>
-                            <p>An error occurred: {dlorListError}</p>
-                        </StandardPage>
-                    );
-                } else if (dlorList.length === 0) {
-                    return <p>We did not find any entries in the system - please try again later.</p>;
-                } else {
-                    return (
-                        <Grid container spacing={3} className={classes.panelGrid} data-testid="dlor-homepage-list">
-                            {dlorList.map(object => showPanel(object))}
                         </Grid>
-                    );
-                }
-            })()}
+                        <Grid item md={1}>
+                            <button>reset</button>
+                        </Grid>
+                    </Grid>
+                    {!!dlorFilterList &&
+                        dlorFilterList.map((type, index) => {
+                            return (
+                                <div key={index}>
+                                    <Grid container key={index}>
+                                        <Grid item md={11}>
+                                            <Typography
+                                                component={'h3'}
+                                                variant="subtitle1"
+                                                className={classes.filterSidebarSubheading}
+                                            >
+                                                {type.filter_name}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item md={1}>
+                                            <button>^</button>
+                                        </Grid>
+                                    </Grid>
+                                    {!!type.filter_facet_list &&
+                                        type.filter_facet_list.length > 0 &&
+                                        type.filter_facet_list.map(facet => {
+                                            return (
+                                                <div
+                                                    key={`${type.filter_slug}-${facet.facet_slug}`}
+                                                    className={classes.filterSidebarEntry}
+                                                >
+                                                    <Checkbox className={classes.filterSidebarCheckbox} />
+                                                    <Typography variant="body1" className={classes.filterSidebarLabel}>
+                                                        {facet.facet_name}
+                                                    </Typography>
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            );
+                        })}
+                </Grid>
+                <Grid item md={9}>
+                    {(() => {
+                        if (!!dlorListLoading || dlorListLoading === null) {
+                            return (
+                                <div style={{ minHeight: 600 }}>
+                                    <InlineLoader message="Loading" />
+                                </div>
+                            );
+                        } else if (!!dlorListError) {
+                            return (
+                                <StandardPage>
+                                    <Typography component={'h1'} variant={'h6'}>
+                                        Digital learning objects
+                                    </Typography>
+                                    <p>An error occurred: {dlorListError}</p>
+                                </StandardPage>
+                            );
+                        } else if (!dlorList || dlorList.length === 0) {
+                            return <p>We did not find any entries in the system - please try again later.</p>;
+                        } else {
+                            return (
+                                <Grid
+                                    container
+                                    spacing={3}
+                                    className={classes.panelGrid}
+                                    data-testid="dlor-homepage-list"
+                                >
+                                    {dlorList.map(object => showPanel(object))}
+                                </Grid>
+                            );
+                        }
+                    })()}
+                </Grid>
+            </Grid>
         </StandardPage>
     );
 };

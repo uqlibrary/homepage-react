@@ -17,11 +17,11 @@ export default [{
         facet_slug: "connected_citizens",
         facet_name: "Connected citizens",
     }, {
-        facet_slug: "influential_communicators",
-        facet_name: "Influential communicators",
-    }, {
         facet_slug: "respectful_leaders",
         facet_name: "Respectful leaders",
+    }, {
+        facet_slug: "culturally_capable",
+        facet_name: "Culturally capable ",
     }]
 }, {
     filter_id: 2,
