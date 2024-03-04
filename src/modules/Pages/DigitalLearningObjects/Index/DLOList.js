@@ -17,7 +17,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import locale from '../../Admin/TestTag/testTag.locale';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -141,7 +140,14 @@ export const DLOList = ({
 
     console.log('loading=', dlorFilterListLoading, 'error=', dlorFilterListError, 'list=', dlorFilterList);
 
+    const [selectedFilters, setSelectedFilters2] = React.useState([]);
+    const setSelectedFilters = newfilter => {
+        console.log('setSelectedFilters setting ', newfilter);
+        setSelectedFilters2(newfilter);
+    };
+
     React.useEffect(() => {
+        console.log('ONLOAD USEEFFECT');
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
@@ -198,6 +204,34 @@ export const DLOList = ({
         }
     }
 
+    const handleChange = prop => e => {
+        // TODO: handle uncheck
+        console.log('handleChange', prop, e); // , e);
+        console.log('e.target,vale=', e.target.value);
+        console.log('selectedFilters=', selectedFilters);
+        const topicSlug = prop.replace('checkbox-', '');
+        const filterSlug = e.target.value; // social-sciences
+        console.log('topicSlug=', topicSlug);
+        console.log('filterSlug=', filterSlug);
+
+        const existingObject = selectedFilters.find(f => f.filter_key === topicSlug);
+        console.log('existingObject=', existingObject);
+        if (existingObject) {
+            existingObject.vals.push(filterSlug);
+
+            const tempfilters = [...selectedFilters, existingObject];
+            console.log('filters-- create', tempfilters);
+            setSelectedFilters(tempfilters);
+        } else {
+            // If the key does not exist, add a new object with the given key and val
+            const tempfilters = [{ filter_key: topicSlug, filter_values: [filterSlug] }, ...selectedFilters];
+            console.log('filters-- add', tempfilters);
+            setSelectedFilters(tempfilters);
+        }
+    };
+
+    // filter the list according to
+
     function showFilterSidebar() {
         return (
             <>
@@ -239,11 +273,18 @@ export const DLOList = ({
                                     {!!type.filter_facet_list &&
                                         type.filter_facet_list.length > 0 &&
                                         type.filter_facet_list.map(facet => {
+                                            const checkBoxid = `checkbox-${type.filter_slug}`; // --${facet.facet_slug}`;
                                             return (
                                                 <FormControlLabel
                                                     key={`${type.filter_slug}-${facet.facet_slug}`}
                                                     className={classes.filterSidebarCheckboxControl}
-                                                    control={<Checkbox className={classes.filterSidebarCheckbox} />}
+                                                    control={
+                                                        <Checkbox
+                                                            className={classes.filterSidebarCheckbox}
+                                                            onChange={handleChange(checkBoxid)}
+                                                            value={facet.facet_name}
+                                                        />
+                                                    }
                                                     label={facet.facet_name}
                                                 />
                                             );
@@ -257,66 +298,170 @@ export const DLOList = ({
         );
     }
 
-    function showBody() {
+    const filterDlorList = () => {
+        console.log('filterDlorList start: filters=', selectedFilters);
+        console.log('filterDlorList start: dlorList=', dlorList);
+        if (!selectedFilters || Object.keys(selectedFilters).length === 0) {
+            console.log('filterDlorList: NO FILTERS! dlorList length =', dlorList.length);
+            return dlorList;
+        } else {
+            console.log('filterDlorList: filters usable: ', selectedFilters);
+        }
+
+        const newDlorList = dlorList.filter(d => {
+            // return true; // show all
+            // return false; // show none
+            console.log('------', d.object_title);
+            // console.log('selectedFilters=', selectedFilters);
+            // console.log('object filters=', d.object_filters);
+            // for (const [topicName, topiclist] of Object.entries(filters)) {
+            return selectedFilters.some(selectedFilter => {
+                // console.log('selectedFilter=', selectedFilter);
+                console.log('1 checking d.object_filters = ', d.object_filters);
+                console.log('1 against ', selectedFilter);
+
+                // filter parent object_key not found in object
+                if (!d.object_filters.some(obj => obj.filter_key === selectedFilter.filter_key)) {
+                    console.log('1 did not find', selectedFilter.filter_key, 'in', d.object_filters);
+                    return false;
+                } else {
+                    console.log('1 found', selectedFilter.filter_key, 'in', d.object_filters);
+                }
+
+                return selectedFilter.filter_values.some(subFilter => {
+                    console.log('2 checking d.object_filters = ', d.object_filters);
+                    console.log('2 against subFilter', subFilter);
+                    if (
+                        !d.object_filters.some(obj => {
+                            console.log('2A checking obj = ', obj);
+                            console.log('2A checking obj.filter_values = ', obj.filter_values);
+                            console.log('2A against subFilter', subFilter);
+                            console.log('2A includes?', obj.filter_values.includes(subFilter));
+                            return obj.filter_values.includes(subFilter);
+                        })
+                    ) {
+                        console.log('2 did not find', subFilter, 'in', d.object_filters.filter_values);
+                        return false;
+                    } else {
+                        console.log('2 found', subFilter, 'in', d.object_filters.filter_values);
+                    }
+                    return true;
+                });
+
+                // if (
+                //     !d.object_filters.some(k => {
+                //         return (k.filter_key = selectedFilter);
+                //     })
+                // ) {
+                //     console.log(
+                //         'did not find top level filter on object',
+                //         `"${objectFilterEntry.filter_key}" - has entries:`,
+                //         selectedFilters,
+                //     );
+                //     return false;
+                // } else {
+                //     console.log(
+                //         'contineu, top level filter found',
+                //         objectFilterEntry.filter_key,
+                //         objectFilterEntry.filter_values,
+                //     );
+                //     console.log('objectFilterEntry=', objectFilterEntry);
+                //     // for (const [subTopicName, subTopicValue] of Object.entries(objectFilterEntry)) {
+                //     objectFilterEntry.filter_values.map(subTopicName => {
+                //         // if (selectedFilters[objectFilterEntry].includes(subTopicName)) {
+                //         //     console.log('did not find second level filter on object', subTopicName, objectFilterEntry);
+                //         //     return false;
+                //         // } else {
+                //         //     console.log('OK second level filter', subTopicName);
+                //         // }
+                //     });
+                //     // }
+                // }
+                console.log('should show');
+                return true;
+            });
+        });
+        // }
+
+        console.log('filterDlorList newDlorList=', newDlorList);
+        return newDlorList;
+    };
+
+    function showBody(dlorData) {
+        console.log('showBody dlorData=', dlorData);
+        console.log('showBody filters=', selectedFilters);
+
+        // loop over the filters array and match it with the dlorData array
+
+        // foreach filter type
+        //     if the dlordata does not have the type or does not have any of the subtypes on this filter type
+        //     return null
+
         return (
             <Grid container spacing={3} className={classes.panelGrid} data-testid="dlor-homepage-list">
-                {dlorList.map(object => (
-                    <Grid
-                        item
-                        xs={12}
-                        md={4}
-                        className={classes.panelGap}
-                        key={object.object_id}
-                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
-                    >
-                        <a className={classes.navigateToDetail} href={`/dlor/view/${object.object_public_uuid}`}>
-                            <StandardCard noHeader fullHeight className={classes.dlorCard}>
-                                <article className={classes.article}>
-                                    <header>
-                                        {!!object?.filters?.topic && object.filters.topic.length > 0 && (
-                                            <Typography className={classes.highlighted}>
-                                                {object.filters.topic.join(', ')}
+                {!!dlorData &&
+                    dlorData.length > 0 &&
+                    dlorData.map(object => (
+                        <Grid
+                            item
+                            xs={12}
+                            md={4}
+                            className={classes.panelGap}
+                            key={object.object_id}
+                            data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
+                        >
+                            <a className={classes.navigateToDetail} href={`/dlor/view/${object.object_public_uuid}`}>
+                                <StandardCard noHeader fullHeight className={classes.dlorCard}>
+                                    <article className={classes.article}>
+                                        <header>
+                                            {!!object?.object_filters?.topic &&
+                                                object.object_filters.topic.length > 0 && (
+                                                    <Typography className={classes.highlighted}>
+                                                        {object.object_filters.topic.join(', ')}
+                                                    </Typography>
+                                                )}
+                                            <Typography component={'h2'} variant={'h6'}>
+                                                {object.object_title}
                                             </Typography>
-                                        )}
-                                        <Typography component={'h2'} variant={'h6'}>
-                                            {object.object_title}
-                                        </Typography>
-                                    </header>
-                                    <div className={classes.articleContents}>
-                                        <p>{object.object_summary}</p>
-                                    </div>
+                                        </header>
+                                        <div className={classes.articleContents}>
+                                            <p>{object.object_summary}</p>
+                                        </div>
 
-                                    <footer>
-                                        {!!object?.filters?.item_type && object.filters.item_type.length > 0 && (
-                                            <div
-                                                data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
-                                            >
-                                                <LaptopIcon />
-                                                {object.filters.item_type.join(', ')}
-                                            </div>
-                                        )}
-                                        {!!object?.filters?.media_format && object.filters.media_format.length > 0 && (
-                                            <div
-                                                data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
-                                            >
-                                                <DescriptionIcon />
-                                                {object.filters.media_format.join(', ')}
-                                            </div>
-                                        )}
-                                        {!!object?.filters?.licence && object.filters.licence.length > 0 && (
-                                            <div
-                                                data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
-                                            >
-                                                <CopyrightIcon />
-                                                {object.filters.licence.join(', ')}
-                                            </div>
-                                        )}
-                                    </footer>
-                                </article>
-                            </StandardCard>
-                        </a>
-                    </Grid>
-                ))}
+                                        <footer>
+                                            {!!object?.object_filters?.item_type &&
+                                                object.object_filters.item_type.length > 0 && (
+                                                    <div
+                                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
+                                                    >
+                                                        <LaptopIcon />
+                                                        {object.object_filters.item_type.join(', ')}
+                                                    </div>
+                                                )}
+                                            {!!object?.object_filters?.media_format &&
+                                                object.object_filters.media_format.length > 0 && (
+                                                    <div
+                                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
+                                                    >
+                                                        <DescriptionIcon />
+                                                        {object.object_filters.media_format.join(', ')}
+                                                    </div>
+                                                )}
+                                            {!!object?.object_filters?.licence &&
+                                                object.object_filters.licence.length > 0 && (
+                                                    <div
+                                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
+                                                    >
+                                                        <CopyrightIcon />
+                                                        {object.object_filters.licence.join(', ')}
+                                                    </div>
+                                                )}
+                                        </footer>
+                                    </article>
+                                </StandardCard>
+                            </a>
+                        </Grid>
+                    ))}
             </Grid>
         );
     }
@@ -367,7 +512,7 @@ export const DLOList = ({
                         } else if (!dlorList || dlorList.length === 0) {
                             return <p>We did not find any entries in the system - please try again later.</p>;
                         } else {
-                            return showBody();
+                            return showBody(filterDlorList());
                         }
                     })()}
                 </Grid>

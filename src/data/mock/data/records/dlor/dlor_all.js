@@ -13,16 +13,22 @@ export default [{
     // },
     object_embed_type: "link",
     object_link: "https://uq.pressbooks.pub/digital-essentials-accessibility/chapter/module-overview/",
-    filters: {
-        topic: [
-            "Aboriginal and Torres Strait Islander",
-            "Assignments",
-        ],
-        graduate_attributes: [
-            "Accomplished scholars",
-            "Courageous thinkers",
-        ],
-    },
+    object_filters: [
+        {
+            filter_key: 'topic',
+            filter_values: [
+                "Aboriginal and Torres Strait Islander",
+                "Assignments",
+            ],
+        },
+        {
+            filter_key: 'graduate_attributes',
+            filter_values: [
+                "Accomplished scholars",
+                "Courageous thinkers",
+            ],
+        }
+    ],
     // keywords: [],
     object_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
     // next_review_date: "2022-02-01 10:00:00",
@@ -43,28 +49,41 @@ export default [{
     // },
     object_embed_type: "link",
     object_link: "https://uq.h5p.com/content/1291624605868350759",
-    filters: {
-        topic: [
-            "Research",
-            "Assignments",
-        ],
-        media_format: [
-            "Pressbook",
-        ],
-        subject: [
-            "Relevant to all subject areas",
-        ],
-        licence: [
-            "CC BY-NC",
-        ],
-        item_type: [
-            "Guide",
-        ],
-        graduate_attributes: [
-            "Influential communicators",
-            "Accomplished scholars",
-        ],
-    },
+    object_filters: [
+        {
+            filter_key: 'topic',
+            filter_values: [
+                "Research",
+                "Assignments",
+            ]
+        }, {
+            filter_key: 'media_format',
+            filter_values: [
+                "Pressbook",
+            ],
+        }, {
+            filter_key: 'subject',
+            filter_values: [
+                "Relevant to all subject areas",
+            ],
+        }, {
+            filter_key: 'licence',
+            filter_values: [
+                "CC BY-NC",
+            ],
+        }, {
+            filter_key: 'item_type',
+            filter_values: [
+                "Guide",
+            ],
+        }, {
+            filter_key: 'graduate_attributes',
+            filter_values: [
+                "Influential communicators",
+                "Accomplished scholars",
+            ],
+        }
+    ],
     // keywords: [
     //     "search",
     //     "evaluate",
@@ -90,29 +109,40 @@ export default [{
     // },
     object_embed_type: "link",
     object_link: "https://uq.h5p.com/content/1291624610498497569",
-    filters: {
-        topic: [
-            "Research",
-            "Assignments",
-        ],
-        media_format: [
-            "H5P",
-        ],
-        subject: [
-            "Health; Behavioural Sciences",
-            "Medicine; Biomedical Sciences",
-        ],
-        licence: [
-            "UQ copyright",
-        ],
-        item_type: [
-            "Module",
-        ],
-        graduate_attributes: [
-            "Influential communicators",
-            "Accomplished scholars",
-        ],
-    },
+    object_filters: [{
+        //     filter_key: 'topic',
+        //     filter_values: [
+        //         "Research",
+        //         "Assignments",
+        //     ],
+        // }, {
+            filter_key: 'media_format',
+            filter_values: [
+                "H5P",
+            ],
+        }, {
+            filter_key: 'subject',
+            filter_values: [
+                "Health; Behavioural Sciences",
+                "Medicine; Biomedical Sciences",
+            ],
+        }, {
+            filter_key: 'licence',
+            filter_values: [
+                "UQ copyright",
+            ],
+        }, {
+            filter_key: 'item_type',
+            filter_values: [
+                "Module",
+            ],
+        }, {
+            filter_key: 'graduate_attributes',
+            filter_values: [
+                "Influential communicators",
+                "Accomplished scholars",
+            ],
+    }],
     // keywords: [
     //     "evidence-based practice",
     //     "search strategy",
