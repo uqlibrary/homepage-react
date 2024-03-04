@@ -485,31 +485,29 @@ export const DLOList = ({
             </Typography>
             <Grid container spacing={2}>
                 <Grid item md={3} className={classes.filterSidebar}>
-                    <region>
-                        {(() => {
-                            if (!!dlorFilterListLoading || dlorFilterListLoading === null) {
-                                return (
-                                    <div style={{ minHeight: 600 }}>
-                                        <InlineLoader message="Loading" />
-                                    </div>
-                                );
-                            } else if (!!dlorFilterListError) {
-                                return (
-                                    <Typography variant="body1">
-                                        An error occurred: {dlorFilterListError}; Please refesh or try again later.
-                                    </Typography>
-                                );
-                            } else if (!dlorFilterList || dlorFilterList.length === 0) {
-                                return (
-                                    <Typography variant="body1">
-                                        We did not find any entries in the system - please try again later.
-                                    </Typography>
-                                );
-                            } else {
-                                return showFilterSidebar();
-                            }
-                        })()}
-                    </region>
+                    {(() => {
+                        if (!!dlorFilterListLoading || dlorFilterListLoading === null) {
+                            return (
+                                <div style={{ minHeight: 600 }}>
+                                    <InlineLoader message="Loading" />
+                                </div>
+                            );
+                        } else if (!!dlorFilterListError) {
+                            return (
+                                <Typography variant="body1">
+                                    An error occurred: {dlorFilterListError}; Please refesh or try again later.
+                                </Typography>
+                            );
+                        } else if (!dlorFilterList || dlorFilterList.length === 0) {
+                            return (
+                                <Typography variant="body1">
+                                    We did not find any entries in the system - please try again later.
+                                </Typography>
+                            );
+                        } else {
+                            return showFilterSidebar();
+                        }
+                    })()}
                 </Grid>
                 <Grid item md={9}>
                     {(() => {
