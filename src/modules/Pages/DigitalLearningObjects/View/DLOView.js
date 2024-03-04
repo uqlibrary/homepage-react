@@ -109,8 +109,8 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     }, []);
 
     const cleanedFilters = [];
-    !!dlorItem?.filters &&
-        Object.entries(dlorItem.filters).map(([filterType, filterTypeList]) => {
+    !!dlorItem?.object_filters &&
+        Object.entries(dlorItem.object_filters).map(([filterType, filterTypeList]) => {
             const filterItem = {
                 type: filterType,
                 list: filterTypeList,
