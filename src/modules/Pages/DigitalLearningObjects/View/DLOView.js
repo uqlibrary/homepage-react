@@ -108,16 +108,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const cleanedFilters = [];
-    !!dlorItem?.object_filters &&
-        Object.entries(dlorItem.object_filters).map(([filterType, filterTypeList]) => {
-            const filterItem = {
-                type: filterType,
-                list: filterTypeList,
-            };
-            cleanedFilters.push(filterItem);
-        });
-
     const deslugify = slug => {
         const words = slug.replace(/_/g, ' ');
         return words.charAt(0).toUpperCase() + words.slice(1);
@@ -193,21 +183,24 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                 </svg>
                                 Details
                             </Typography>
-                            {!!cleanedFilters && cleanedFilters.length > 0 ? (
+                            {dlorItem?.object_filters?.length > 0 ? (
                                 <div>
-                                    {cleanedFilters.map(filter => {
+                                    {dlorItem.object_filters.map(filter => {
                                         return (
-                                            <div key={filter.type} data-testid={`detailpage-filter-${filter.type}`}>
+                                            <div
+                                                key={filter.filter_key}
+                                                data-testid={`detailpage-filter-${filter.filter_key}`}
+                                            >
                                                 <Typography
                                                     className={classes.highlighted}
                                                     component={'h4'}
                                                     variant={'h6'}
                                                 >
-                                                    {deslugify(filter.type)}
+                                                    {deslugify(filter.filter_key)}
                                                 </Typography>
                                                 <ul className={classes.filterDisplayList}>
-                                                    {!!filter.list &&
-                                                        filter.list.map((value, subIndex) => {
+                                                    {!!filter.filter_values &&
+                                                        filter.filter_values.map((value, subIndex) => {
                                                             return <li key={subIndex}>{value}</li>;
                                                         })}
                                                 </ul>
@@ -216,7 +209,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                     })}
                                 </div>
                             ) : (
-                                <p>no filters</p>
+                                <p>No details for this entry</p>
                             )}
                         </Grid>
                     </Grid>
