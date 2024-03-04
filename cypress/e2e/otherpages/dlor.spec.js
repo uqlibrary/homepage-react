@@ -6,7 +6,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
 
     context('homepage', () => {
         it('is accessible', () => {
-            cy.visit('dlor/');
+            cy.visit('dlor');
             cy.injectAxe();
             cy.viewport(1300, 1000);
 
@@ -19,7 +19,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             });
         });
         it('appears as expected', () => {
-            cy.visit('dlor/');
+            cy.visit('dlor');
             cy.viewport(1300, 1000);
 
             cy.waitUntil(() => cy.get('h1').should('exist'));
@@ -123,11 +123,93 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .contains('Aboriginal and Torres Strait Islander')
                 .should('be.visible');
         });
+        it.only('has a working sidebar filter', () => {
+            cy.visit('dlor');
+            cy.viewport(1300, 1000);
+
+            // 3 panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 3);
+
+            // check the "Assignments" checkbox
+            cy.get('[data-testid="checkbox-topic-Assignments"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+
+            // 2 panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2);
+
+            // check the "Digital" checkbox
+            cy.get('[data-testid="checkbox-topic-digital_skills"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+
+            // 2 panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2);
+
+            // check the "ATSIC" checkbox
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+
+            // 3 panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 3);
+
+            // UNcheck the "Digital" checkbox
+            cy.get('[data-testid="checkbox-topic-digital_skills"] input[type=checkbox]')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+
+            // 3 panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 3);
+
+            // UNcheck the "Assignments" checkbox
+            cy.get('[data-testid="checkbox-topic-Assignments"] input[type=checkbox]')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+
+            // 1 panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 1);
+
+            // UNcheck the "ATSIC" checkbox
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+
+            // original 3 panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 3);
+        });
     });
 
     context('has working site navigation', () => {
         it('can move around the pages', () => {
-            cy.visit('dlor/');
+            cy.visit('dlor');
             cy.viewport(1300, 1000);
 
             cy.waitUntil(() => cy.get('h1').should('exist'));

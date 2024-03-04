@@ -18,7 +18,6 @@ export default [{
             filter_key: 'topic',
             filter_values: [
                 "Aboriginal and Torres Strait Islander",
-                "Assignments",
             ],
         },
         {
