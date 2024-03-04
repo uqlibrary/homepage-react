@@ -204,11 +204,17 @@ export const DLOList = ({
         }
     }
 
-    const handleChange = prop => e => {
+    const handleCheckboxAction = prop => e => {
         // TODO: handle uncheck
-        console.log('handleChange', prop, e); // , e);
+        console.log('handleCheckboxAction', prop, e); // , e);
+        console.log('e.target=', e.target);
         console.log('e.target,vale=', e.target.value);
         console.log('selectedFilters=', selectedFilters);
+        if (e.target.checked) {
+            console.log('Checkbox is checked');
+        } else {
+            console.log('Checkbox is unchecked');
+        }
         const topicSlug = prop.replace('checkbox-', '');
         const filterSlug = e.target.value; // social-sciences
         console.log('topicSlug=', topicSlug);
@@ -216,17 +222,44 @@ export const DLOList = ({
 
         const existingObject = selectedFilters.find(f => f.filter_key === topicSlug);
         console.log('existingObject=', existingObject);
+        console.log('existingObject=', JSON.stringify(existingObject));
         if (existingObject) {
-            existingObject.vals.push(filterSlug);
+            console.log('222HERE');
+            if (e.target.checked) {
+                existingObject.vals.push(filterSlug);
 
-            const tempfilters = [...selectedFilters, existingObject];
-            console.log('filters-- create', tempfilters);
-            setSelectedFilters(tempfilters);
+                const tempfilters = [...selectedFilters, existingObject];
+                console.log('filters-- create', tempfilters);
+                setSelectedFilters(tempfilters);
+            } else {
+                console.log('unchecking:: start');
+                let updateFilters = selectedFilters.map(f => {
+                    if (f.filter_key === topicSlug) {
+                        // Remove the specific value from the filter_values array
+                        console.log('unchecking:: remove ', filterSlug, ' from', topicSlug);
+                        f.filter_values = f.filter_values.filter(val => val !== filterSlug);
+                    }
+                    if (f.filter_values.length === 0) {
+                        console.log('unchecking:: ', topicSlug, 'now empty');
+                        return null;
+                    }
+                    console.log('unchecking:: return', f);
+                    return f;
+                });
+                if (updateFilters.length === 1 && updateFilters[0] === null) {
+                    updateFilters = [];
+                }
+                setSelectedFilters(updateFilters);
+            }
         } else {
-            // If the key does not exist, add a new object with the given key and val
-            const tempfilters = [{ filter_key: topicSlug, filter_values: [filterSlug] }, ...selectedFilters];
-            console.log('filters-- add', tempfilters);
-            setSelectedFilters(tempfilters);
+            if (e.target.checked) {
+                // If the key does not exist, add a new object with the given key and val
+                const tempfilters = [{ filter_key: topicSlug, filter_values: [filterSlug] }, ...selectedFilters];
+                console.log('filters-- add', tempfilters);
+                setSelectedFilters(tempfilters);
+            } else {
+                console.log('needs handling?');
+            }
         }
     };
 
@@ -281,7 +314,7 @@ export const DLOList = ({
                                                     control={
                                                         <Checkbox
                                                             className={classes.filterSidebarCheckbox}
-                                                            onChange={handleChange(checkBoxid)}
+                                                            onChange={handleCheckboxAction(checkBoxid)}
                                                             value={facet.facet_name}
                                                         />
                                                     }
@@ -299,9 +332,12 @@ export const DLOList = ({
     }
 
     const filterDlorList = () => {
+        const testvar = [];
+        console.log('testvar=', testvar);
         console.log('filterDlorList start: filters=', selectedFilters);
         console.log('filterDlorList start: dlorList=', dlorList);
-        if (!selectedFilters || Object.keys(selectedFilters).length === 0) {
+        // if (!selectedFilters || Object.keys(selectedFilters).length === 0) {
+        if (!selectedFilters || selectedFilters.length === 0) {
             console.log('filterDlorList: NO FILTERS! dlorList length =', dlorList.length);
             return dlorList;
         } else {
