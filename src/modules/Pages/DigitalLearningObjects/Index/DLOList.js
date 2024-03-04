@@ -148,14 +148,9 @@ export const DLOList = ({
 
     console.log('loading=', dlorFilterListLoading, 'error=', dlorFilterListError, 'list=', dlorFilterList);
 
-    const [selectedFilters, setSelectedFilters2] = React.useState([]);
-    const setSelectedFilters = newfilter => {
-        console.log('setSelectedFilters setting ', newfilter);
-        setSelectedFilters2(newfilter);
-    };
+    const [selectedFilters, setSelectedFilters] = React.useState([]);
 
     React.useEffect(() => {
-        console.log('ONLOAD USEEFFECT');
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
@@ -213,47 +208,26 @@ export const DLOList = ({
     }
 
     const handleCheckboxAction = prop => e => {
-        // TODO: handle uncheck
-        console.log('handleCheckboxAction', prop, e); // , e);
-        console.log('e.target=', e.target);
-        console.log('e.target,vale=', e.target.value);
-        console.log('selectedFilters=', selectedFilters);
-        if (e.target.checked) {
-            console.log('Checkbox is checked');
-        } else {
-            console.log('Checkbox is unchecked');
-        }
         const topicSlug = prop.replace('checkbox-', '');
-        const filterSlug = e.target.value; // social-sciences
-        console.log('topicSlug=', topicSlug);
-        console.log('filterSlug=', filterSlug);
+        const filterSlug = e.target.value;
 
         const existingObject = selectedFilters.find(f => f.filter_key === topicSlug);
-        console.log('existingObject=', existingObject);
-        console.log('existingObject=', JSON.stringify(existingObject));
         if (existingObject) {
-            console.log('222HERE');
             if (e.target.checked) {
-                console.log('filterSlug=', filterSlug);
-                console.log('existingObject=', existingObject);
                 existingObject.filter_values.push(filterSlug);
 
                 const tempfilters = [...selectedFilters, existingObject];
                 console.log('filters-- create', tempfilters);
                 setSelectedFilters(tempfilters);
             } else {
-                console.log('unchecking:: start');
                 let updateFilters = selectedFilters.map(f => {
                     if (f.filter_key === topicSlug) {
                         // Remove the specific value from the filter_values array
-                        console.log('unchecking:: remove ', filterSlug, ' from', topicSlug);
                         f.filter_values = f.filter_values.filter(val => val !== filterSlug);
                     }
                     if (f.filter_values.length === 0) {
-                        console.log('unchecking:: ', topicSlug, 'now empty');
                         return null;
                     }
-                    console.log('unchecking:: return', f);
                     return f;
                 });
                 updateFilters = updateFilters.filter(item => item !== null);
@@ -263,15 +237,10 @@ export const DLOList = ({
             if (e.target.checked) {
                 // If the key does not exist, add a new object with the given key and val
                 const tempfilters = [{ filter_key: topicSlug, filter_values: [filterSlug] }, ...selectedFilters];
-                console.log('filters-- add', tempfilters);
                 setSelectedFilters(tempfilters);
-            } else {
-                console.log('needs handling?');
             }
         }
     };
-
-    // filter the list according to
 
     function showFilterSidebar() {
         return (
@@ -318,7 +287,7 @@ export const DLOList = ({
                                     {!!type.filter_facet_list &&
                                         type.filter_facet_list.length > 0 &&
                                         type.filter_facet_list.map(facet => {
-                                            const checkBoxid = `checkbox-${type.filter_slug}`; // --${facet.facet_slug}`;
+                                            const checkBoxid = `checkbox-${type.filter_slug}`;
                                             return (
                                                 <FormControlLabel
                                                     key={`${type.filter_slug}-${facet.facet_slug}`}
@@ -345,67 +314,35 @@ export const DLOList = ({
 
     const filterDlorList = () => {
         const testvar = [];
-        console.log('testvar=', testvar);
-        console.log('filterDlorList start: filters=', selectedFilters);
-        console.log('filterDlorList start: dlorList=', dlorList);
-        // if (!selectedFilters || Object.keys(selectedFilters).length === 0) {
         if (!selectedFilters || selectedFilters.length === 0) {
-            console.log('filterDlorList: NO FILTERS! dlorList length =', dlorList.length);
             return dlorList;
-        } else {
-            console.log('filterDlorList: filters usable: ', selectedFilters);
         }
 
         const newDlorList = dlorList.filter(d => {
-            // return true; // show all
-            // return false; // show none
-            console.log('------', d.object_title);
-            console.log('selectedFilters=', selectedFilters);
-            // console.log('object filters=', d.object_filters);
-            // for (const [topicName, topiclist] of Object.entries(filters)) {
             return (
                 !!selectedFilters &&
                 selectedFilters.some(selectedFilter => {
-                    // console.log('selectedFilter=', selectedFilter);
-                    console.log('1 checking d.object_filters = ', d.object_filters);
-                    console.log('1 against ', selectedFilter);
-
                     // filter parent object_key not found in object
                     if (!d?.object_filters?.some(obj => obj.filter_key === selectedFilter.filter_key)) {
-                        console.log('1 did not find', selectedFilter.filter_key, 'in', d.object_filters);
                         return false;
-                    } else {
-                        console.log('1 found', selectedFilter.filter_key, 'in', d.object_filters);
                     }
 
                     return selectedFilter.filter_values.some(subFilter => {
-                        console.log('2 checking d.object_filters = ', d.object_filters);
-                        console.log('2 against subFilter', subFilter);
                         if (
                             !d.object_filters.some(obj => {
-                                console.log('2A checking obj = ', obj);
-                                console.log('2A checking obj.filter_values = ', obj.filter_values);
-                                console.log('2A against subFilter', subFilter);
-                                console.log('2A includes?', obj.filter_values.includes(subFilter));
                                 return obj.filter_values.includes(subFilter);
                             })
                         ) {
-                            console.log('2 did not find', subFilter, 'in', d.object_filters.filter_values);
                             return false;
-                        } else {
-                            console.log('2 found', subFilter, 'in', d.object_filters.filter_values);
                         }
                         return true;
                     });
 
-                    console.log('should show');
                     return true;
                 })
             );
         });
-        // }
 
-        console.log('filterDlorList newDlorList=', newDlorList);
         return newDlorList;
     };
 
