@@ -7,15 +7,12 @@ import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-
-// https://mui.com/material-ui/material-icons/?query=tag&selected=Bookmarks
-const MUI_ICON_BOOKMARKS =
-    'm19 18 2 1V3c0-1.1-.9-2-2-2H8.99C7.89 1 7 1.9 7 3h10c1.1 0 2 .9 2 2zM15 5H5c-1.1 0-2 .9-2 2v16l7-3 7 3V7c0-1.1-.9-2-2-2';
-// https://mui.com/material-ui/material-icons/?query=arrow&selected=ArrowForwardIos
-const MUI_ICON_FORWARDARROW = 'M6.23 20.23 8 22l10-10L8 2 6.23 3.77 14.46 12z';
 
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
@@ -48,7 +45,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         marginBottom: 12,
-        '& > svg': {
+        '& svg': {
             width: 30,
             paddingRight: 6,
         },
@@ -60,9 +57,10 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         paddingBottom: 10,
-        '& > svg': {
-            //     minHeight: 'auto',
+        '& svg': {
             marginBottom: 10,
+            width: 10,
+            marginInline: 6,
         },
         '& > p': {
             // minHeight: 35,
@@ -119,10 +117,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                 <Typography component={'h1'} variant={'h6'}>
                     <a href="/dlor">Digital learning objects</a>
                 </Typography>
-                {/* convert this to a background svg on the ::before of the span? */}
-                <svg style={{ width: 10, marginInline: 6 }} focusable="false" aria-hidden="true" viewBox="0 0 24 24">
-                    <path d={MUI_ICON_FORWARDARROW} />
-                </svg>
+                <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>
             </div>
         );
@@ -178,9 +173,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         </Grid>
                         <Grid item xs={12} md={4} data-testid="detaipage-metadata">
                             <Typography component={'h3'} variant={'h6'} className={classes.metaHeader}>
-                                <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24">
-                                    <path d={MUI_ICON_BOOKMARKS} />
-                                </svg>
+                                <BookmarksIcon />
                                 Details
                             </Typography>
                             {dlorItem?.object_filters?.length > 0 ? (
