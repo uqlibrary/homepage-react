@@ -27,6 +27,11 @@ export default [{
                 "Accomplished scholars",
                 "Courageous thinkers",
             ],
+        }, {
+            filter_key: 'item_type',
+            filter_values: [
+                "Guide",
+            ],
         }
     ],
     // keywords: [],
@@ -110,12 +115,12 @@ export default [{
     object_embed_type: "link",
     object_link: "https://uq.h5p.com/content/1291624610498497569",
     object_filters: [{
-        //     filter_key: 'topic',
-        //     filter_values: [
-        //         "Research",
-        //         "Assignments",
-        //     ],
-        // }, {
+            filter_key: 'topic',
+            filter_values: [
+                "Software",
+                "Assignments",
+            ],
+        }, {
             filter_key: 'media_format',
             filter_values: [
                 "H5P",
