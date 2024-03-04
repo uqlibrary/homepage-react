@@ -297,6 +297,7 @@ export const DLOList = ({
                                                             className={classes.filterSidebarCheckbox}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             value={facet.facet_name}
+                                                            data-testid={`checkbox-${type.filter_slug}-${facet.facet_slug}`}
                                                         />
                                                     }
                                                     label={facet.facet_name}
@@ -318,7 +319,7 @@ export const DLOList = ({
             return dlorList;
         }
 
-        const newDlorList = dlorList.filter(d => {
+        return dlorList.filter(d => {
             return (
                 !!selectedFilters &&
                 selectedFilters.some(selectedFilter => {
@@ -328,22 +329,13 @@ export const DLOList = ({
                     }
 
                     return selectedFilter.filter_values.some(subFilter => {
-                        if (
-                            !d.object_filters.some(obj => {
-                                return obj.filter_values.includes(subFilter);
-                            })
-                        ) {
-                            return false;
-                        }
-                        return true;
+                        return !!d.object_filters.some(obj => {
+                            return obj.filter_values.includes(subFilter);
+                        });
                     });
-
-                    return true;
                 })
             );
         });
-
-        return newDlorList;
     };
 
     function showBody(dlorData) {
