@@ -73,6 +73,7 @@ const useStyles = makeStyles(theme => ({
     // },
     highlighted: {
         color: theme.palette.primary.light,
+        fontWeight: 400,
     },
     navigateToDetail: {
         '&:hover': {
@@ -398,14 +399,19 @@ export const DLOList = ({
     };
 
     function showBody(dlorData) {
-        console.log('showBody dlorData=', dlorData);
-        console.log('showBody filters=', selectedFilters);
+        const getFilters = (topicSlug, object) => {
+            const f = object.object_filters?.filter(o => o.filter_key === topicSlug);
+            if (!f || f.length === 0) {
+                return false;
+            }
+            const output = f.pop();
+            return output?.filter_values?.length > 0 ? output.filter_values.join(', ') : false;
+        };
 
-        // loop over the filters array and match it with the dlorData array
-
-        // foreach filter type
-        //     if the dlordata does not have the type or does not have any of the subtypes on this filter type
-        //     return null
+        const footerElementType = object => getFilters('item_type', object);
+        const footerElementMedia = object => getFilters('media_format', object);
+        const footerElementLicence = object => getFilters('licence', object);
+        const headerElementTopic = object => getFilters('topic', object);
 
         return (
             <Grid container spacing={3} className={classes.panelGrid} data-testid="dlor-homepage-list">
@@ -424,12 +430,11 @@ export const DLOList = ({
                                 <StandardCard noHeader fullHeight className={classes.dlorCard}>
                                     <article className={classes.article}>
                                         <header>
-                                            {!!object?.object_filters?.topic &&
-                                                object.object_filters.topic.length > 0 && (
-                                                    <Typography className={classes.highlighted}>
-                                                        {object.object_filters.topic.join(', ')}
-                                                    </Typography>
-                                                )}
+                                            {headerElementTopic(object).length > 0 && (
+                                                <Typography className={classes.highlighted}>
+                                                    {headerElementTopic(object)}
+                                                </Typography>
+                                            )}
                                             <Typography component={'h2'} variant={'h6'}>
                                                 {object.object_title}
                                             </Typography>
@@ -439,33 +444,30 @@ export const DLOList = ({
                                         </div>
 
                                         <footer>
-                                            {!!object?.object_filters?.item_type &&
-                                                object.object_filters.item_type.length > 0 && (
-                                                    <div
-                                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
-                                                    >
-                                                        <LaptopIcon />
-                                                        {object.object_filters.item_type.join(', ')}
-                                                    </div>
-                                                )}
-                                            {!!object?.object_filters?.media_format &&
-                                                object.object_filters.media_format.length > 0 && (
-                                                    <div
-                                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
-                                                    >
-                                                        <DescriptionIcon />
-                                                        {object.object_filters.media_format.join(', ')}
-                                                    </div>
-                                                )}
-                                            {!!object?.object_filters?.licence &&
-                                                object.object_filters.licence.length > 0 && (
-                                                    <div
-                                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
-                                                    >
-                                                        <CopyrightIcon />
-                                                        {object.object_filters.licence.join(', ')}
-                                                    </div>
-                                                )}
+                                            {footerElementType(object).length > 0 && (
+                                                <div
+                                                    data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
+                                                >
+                                                    <LaptopIcon />
+                                                    {footerElementType(object)}
+                                                </div>
+                                            )}
+                                            {footerElementMedia(object).length > 0 && (
+                                                <div
+                                                    data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
+                                                >
+                                                    <DescriptionIcon />
+                                                    {footerElementMedia(object)}
+                                                </div>
+                                            )}
+                                            {footerElementLicence(object).length > 0 && (
+                                                <div
+                                                    data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
+                                                >
+                                                    <CopyrightIcon />
+                                                    {footerElementLicence(object)}
+                                                </div>
+                                            )}
                                         </footer>
                                     </article>
                                 </StandardCard>
