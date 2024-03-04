@@ -123,7 +123,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .contains('Aboriginal and Torres Strait Islander')
                 .should('be.visible');
         });
-        it.only('has a working sidebar filter', () => {
+        it('has a working sidebar filter', () => {
             cy.visit('dlor');
             cy.viewport(1300, 1000);
 
