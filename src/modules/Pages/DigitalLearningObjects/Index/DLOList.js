@@ -226,7 +226,9 @@ export const DLOList = ({
         if (existingObject) {
             console.log('222HERE');
             if (e.target.checked) {
-                existingObject.vals.push(filterSlug);
+                console.log('filterSlug=', filterSlug);
+                console.log('existingObject=', existingObject);
+                existingObject.filter_values.push(filterSlug);
 
                 const tempfilters = [...selectedFilters, existingObject];
                 console.log('filters-- create', tempfilters);
@@ -246,9 +248,7 @@ export const DLOList = ({
                     console.log('unchecking:: return', f);
                     return f;
                 });
-                if (updateFilters.length === 1 && updateFilters[0] === null) {
-                    updateFilters = [];
-                }
+                updateFilters = updateFilters.filter(item => item !== null);
                 setSelectedFilters(updateFilters);
             }
         } else {
@@ -348,74 +348,48 @@ export const DLOList = ({
             // return true; // show all
             // return false; // show none
             console.log('------', d.object_title);
-            // console.log('selectedFilters=', selectedFilters);
+            console.log('selectedFilters=', selectedFilters);
             // console.log('object filters=', d.object_filters);
             // for (const [topicName, topiclist] of Object.entries(filters)) {
-            return selectedFilters.some(selectedFilter => {
-                // console.log('selectedFilter=', selectedFilter);
-                console.log('1 checking d.object_filters = ', d.object_filters);
-                console.log('1 against ', selectedFilter);
+            return (
+                !!selectedFilters &&
+                selectedFilters.some(selectedFilter => {
+                    // console.log('selectedFilter=', selectedFilter);
+                    console.log('1 checking d.object_filters = ', d.object_filters);
+                    console.log('1 against ', selectedFilter);
 
-                // filter parent object_key not found in object
-                if (!d.object_filters.some(obj => obj.filter_key === selectedFilter.filter_key)) {
-                    console.log('1 did not find', selectedFilter.filter_key, 'in', d.object_filters);
-                    return false;
-                } else {
-                    console.log('1 found', selectedFilter.filter_key, 'in', d.object_filters);
-                }
-
-                return selectedFilter.filter_values.some(subFilter => {
-                    console.log('2 checking d.object_filters = ', d.object_filters);
-                    console.log('2 against subFilter', subFilter);
-                    if (
-                        !d.object_filters.some(obj => {
-                            console.log('2A checking obj = ', obj);
-                            console.log('2A checking obj.filter_values = ', obj.filter_values);
-                            console.log('2A against subFilter', subFilter);
-                            console.log('2A includes?', obj.filter_values.includes(subFilter));
-                            return obj.filter_values.includes(subFilter);
-                        })
-                    ) {
-                        console.log('2 did not find', subFilter, 'in', d.object_filters.filter_values);
+                    // filter parent object_key not found in object
+                    if (!d?.object_filters?.some(obj => obj.filter_key === selectedFilter.filter_key)) {
+                        console.log('1 did not find', selectedFilter.filter_key, 'in', d.object_filters);
                         return false;
                     } else {
-                        console.log('2 found', subFilter, 'in', d.object_filters.filter_values);
+                        console.log('1 found', selectedFilter.filter_key, 'in', d.object_filters);
                     }
-                    return true;
-                });
 
-                // if (
-                //     !d.object_filters.some(k => {
-                //         return (k.filter_key = selectedFilter);
-                //     })
-                // ) {
-                //     console.log(
-                //         'did not find top level filter on object',
-                //         `"${objectFilterEntry.filter_key}" - has entries:`,
-                //         selectedFilters,
-                //     );
-                //     return false;
-                // } else {
-                //     console.log(
-                //         'contineu, top level filter found',
-                //         objectFilterEntry.filter_key,
-                //         objectFilterEntry.filter_values,
-                //     );
-                //     console.log('objectFilterEntry=', objectFilterEntry);
-                //     // for (const [subTopicName, subTopicValue] of Object.entries(objectFilterEntry)) {
-                //     objectFilterEntry.filter_values.map(subTopicName => {
-                //         // if (selectedFilters[objectFilterEntry].includes(subTopicName)) {
-                //         //     console.log('did not find second level filter on object', subTopicName, objectFilterEntry);
-                //         //     return false;
-                //         // } else {
-                //         //     console.log('OK second level filter', subTopicName);
-                //         // }
-                //     });
-                //     // }
-                // }
-                console.log('should show');
-                return true;
-            });
+                    return selectedFilter.filter_values.some(subFilter => {
+                        console.log('2 checking d.object_filters = ', d.object_filters);
+                        console.log('2 against subFilter', subFilter);
+                        if (
+                            !d.object_filters.some(obj => {
+                                console.log('2A checking obj = ', obj);
+                                console.log('2A checking obj.filter_values = ', obj.filter_values);
+                                console.log('2A against subFilter', subFilter);
+                                console.log('2A includes?', obj.filter_values.includes(subFilter));
+                                return obj.filter_values.includes(subFilter);
+                            })
+                        ) {
+                            console.log('2 did not find', subFilter, 'in', d.object_filters.filter_values);
+                            return false;
+                        } else {
+                            console.log('2 found', subFilter, 'in', d.object_filters.filter_values);
+                        }
+                        return true;
+                    });
+
+                    console.log('should show');
+                    return true;
+                })
+            );
         });
         // }
 
