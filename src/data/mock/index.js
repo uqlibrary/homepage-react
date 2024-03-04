@@ -455,7 +455,7 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }
 );
 // mock.onAny(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(withDelay([500, {}]));
 
-mock.onGet(routes.ALERT_BY_ID_API({ id: '11db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([
         200,
         {
