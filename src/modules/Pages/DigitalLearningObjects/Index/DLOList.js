@@ -101,13 +101,14 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: '#f7f7f7',
         },
     },
-    filterSidebarEntry: {
-        display: 'flex',
-        alignItems: 'flex-start', // align checkbox and label to top of the grid
+    filterSidebarCheckboxWrapper: {
+        '& label': {
+            display: 'flex',
+            alignItems: 'flex-start', // align items vertically at the top
+        },
     },
     filterSidebarCheckboxControl: {
         display: 'block',
-        alignItems: 'flex-start', // align checkbox and label to top of the grid
         '& span:first-child': {
             paddingBlock: 0,
         },
@@ -303,7 +304,11 @@ export const DLOList = ({
                                         </IconButton>
                                     </Grid>
                                 </Grid>
-                                <div id={getSidebarElementId(index)} data-testid={getSidebarElementId(index)}>
+                                <div
+                                    className={classes.filterSidebarCheckboxWrapper}
+                                    id={getSidebarElementId(index)}
+                                    data-testid={getSidebarElementId(index)}
+                                >
                                     {!!type.filter_facet_list &&
                                         type.filter_facet_list.length > 0 &&
                                         type.filter_facet_list.map(facet => {
