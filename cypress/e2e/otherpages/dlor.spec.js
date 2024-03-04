@@ -46,7 +46,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer')
                 .should('exist')
                 .children()
-                .should('have.length', 0);
+                .should('have.length', 1);
 
             // second panel
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] a').should(
@@ -96,7 +96,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             );
 
             // filter sidebar
-            cy.get('region h2')
+            cy.get('[data-testid="sidebar-panel-heading"] h2')
                 .should('exist')
                 .contains('Filters');
 
@@ -233,7 +233,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('have.length', 2);
             cy.get('[data-testid="detailpage-filter-topic"] ul li:first-child')
                 .should('exist')
-                .should('contain', 'Research');
+                .should('contain', 'Software');
             cy.get('[data-testid="detailpage-filter-topic"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Assignments');

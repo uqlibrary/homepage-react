@@ -86,6 +86,9 @@ const useStyles = makeStyles(theme => ({
     filterSidebar: {
         fontSize: 10,
     },
+    filterSidebarHeading: {
+        alignItems: 'center',
+    },
     filterSidebarType: {
         width: '100%',
         borderBottom: '1px solid #e1e1e1',
@@ -113,6 +116,9 @@ const useStyles = makeStyles(theme => ({
             paddingBlock: 0,
         },
         paddingBottom: 5,
+        '& .MuiFormControlLabel-label': {
+            fontSize: '0.9rem',
+        },
     },
     filterResetButton: {
         borderWidth: 0,
@@ -270,8 +276,8 @@ export const DLOList = ({
     function showFilterSidebar() {
         return (
             <>
-                <Grid container style={{ alignItems: 'center' }}>
-                    <Grid item md={9} className={classes.filterSidebarHeading}>
+                <Grid container className={classes.filterSidebarHeading} data-testid="sidebar-panel-heading">
+                    <Grid item md={9}>
                         <Typography component={'h2'} variant={'h6'} style={{ marginLeft: -10 }}>
                             Filters
                         </Typography>
