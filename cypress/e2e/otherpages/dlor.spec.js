@@ -145,8 +145,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 2);
 
-            // check the "Digital" checkbox
-            cy.get('[data-testid="checkbox-topic-digital_skills"] input[type=checkbox]')
+            // check the "Media format, Module" checkbox
+            cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -169,8 +169,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 3);
 
-            // UNcheck the "Digital" checkbox
-            cy.get('[data-testid="checkbox-topic-digital_skills"] input[type=checkbox]')
+            // UNcheck the "Media format, Module" checkbox
+            cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();

@@ -104,7 +104,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
             actions.loadADLOR(dlorId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [dlorItem]);
 
     const deslugify = slug => {
         const words = slug.replace(/_/g, ' ');

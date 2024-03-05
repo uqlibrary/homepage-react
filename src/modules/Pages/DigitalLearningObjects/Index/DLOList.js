@@ -208,34 +208,28 @@ export const DLOList = ({
         const topicSlug = prop.replace('checkbox-', '');
         const filterSlug = e.target.value;
 
-        const existingObject = selectedFilters.find(f => f.filter_key === topicSlug);
-        if (existingObject) {
+        const thisFilterGroup = selectedFilters.find(f1 => f1.filter_key === topicSlug);
+        if (thisFilterGroup) {
+            // a subfilter from this group has been previously checked (group, is "Topic" Licence" etc)
             if (e.target.checked) {
-                existingObject.filter_values.push(filterSlug);
-
-                const tempfilters = [...selectedFilters, existingObject];
-                console.log('filters-- create', tempfilters);
-                setSelectedFilters(tempfilters);
+                thisFilterGroup.filter_values.push(filterSlug);
+                setSelectedFilters([...selectedFilters, thisFilterGroup]);
             } else {
-                let updateFilters = selectedFilters.map(f => {
-                    if (f.filter_key === topicSlug) {
-                        // Remove the specific value from the filter_values array
-                        f.filter_values = f.filter_values.filter(val => val !== filterSlug);
-                    }
-                    if (f.filter_values.length === 0) {
+                let updateFilters = selectedFilters.map(f2 => {
+                    // Remove the specific value from the filter_values array
+                    f2.filter_values = f2.filter_values.filter(val => val !== filterSlug);
+                    if (f2.filter_values.length === 0) {
                         return null;
                     }
-                    return f;
+                    return f2;
                 });
                 updateFilters = updateFilters.filter(item => item !== null);
                 setSelectedFilters(updateFilters);
             }
         } else {
-            if (e.target.checked) {
-                // If the key does not exist, add a new object with the given key and val
-                const tempfilters = [{ filter_key: topicSlug, filter_values: [filterSlug] }, ...selectedFilters];
-                setSelectedFilters(tempfilters);
-            }
+            // no subfilters from this group have been selected until now
+            // add a new object with the given key and val
+            setSelectedFilters([{ filter_key: topicSlug, filter_values: [filterSlug] }, ...selectedFilters]);
         }
     };
 
