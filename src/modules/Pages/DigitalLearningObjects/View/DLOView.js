@@ -104,7 +104,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
             actions.loadADLOR(dlorId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [dlorItem]);
 
     const deslugify = slug => {
         const words = slug.replace(/_/g, ' ');
@@ -123,7 +123,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         );
     }
 
-    if (!!dlorItemLoading) {
+    if (!!dlorItemLoading || dlorItemLoading === null) {
         return (
             <div style={{ minHeight: 600 }}>
                 <InlineLoader message="Loading" />
@@ -144,71 +144,75 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         );
     }
 
+    if (!dlorItem || Object.keys(dlorItem).length === 0) {
+        return (
+            <StandardPage>
+                <StandardCard className={classes.dlorEntry}>
+                    {getTitleBlock()}
+                    <Typography variant="body1" data-testid="dlor-detailpage-empty">
+                        We could not find the requested entry - please check the web address.
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
+    }
+
+    console.log('report');
     return (
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
                 {getTitleBlock()}
-                {!dlorItem || dlorItem.length === 0 ? (
-                    <p>We did not find that item in the system.</p>
-                ) : (
-                    <Grid container spacing={4} data-testid="dlor-detailpage">
-                        <Grid item xs={12} md={8}>
-                            <Typography className={classes.highlighted} component={'h2'} variant={'h4'}>
-                                {dlorItem.object_title}
-                            </Typography>
-                            <div data-testid="dlor-detailpage-description">
-                                <p>{dlorItem.object_description}</p>
+                <Grid container spacing={4} data-testid="dlor-detailpage">
+                    <Grid item xs={12} md={8}>
+                        <Typography className={classes.highlighted} component={'h2'} variant={'h4'}>
+                            {dlorItem.object_title}
+                        </Typography>
+                        <div data-testid="dlor-detailpage-description">
+                            <p>{dlorItem.object_description}</p>
+                        </div>
+                        {dlorItem.object_embed_type === 'link' && (
+                            <div className={classes.uqActionButton}>
+                                <a href={dlorItem.object_link}>Access the module</a>
                             </div>
-                            {dlorItem?.object_embed_type === 'link' && (
-                                <div className={classes.uqActionButton}>
-                                    <a href={dlorItem.object_link}>Access the module</a>
-                                </div>
-                            )}
-                            {!!dlorItem.object_download_instructions && (
-                                <React.Fragment>
-                                    <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
-                                        How to use this module
-                                    </Typography>
-                                    <p>{dlorItem.object_download_instructions}</p>
-                                </React.Fragment>
-                            )}
-                        </Grid>
-                        <Grid item xs={12} md={4} data-testid="detaipage-metadata">
-                            <Typography component={'h3'} variant={'h6'} className={classes.metaHeader}>
-                                <BookmarksIcon />
-                                Details
-                            </Typography>
-                            {dlorItem?.object_filters?.length > 0 ? (
-                                <div>
-                                    {dlorItem.object_filters.map(filter => {
-                                        return (
-                                            <div
-                                                key={filter.filter_key}
-                                                data-testid={`detailpage-filter-${filter.filter_key}`}
-                                            >
-                                                <Typography
-                                                    className={classes.highlighted}
-                                                    component={'h4'}
-                                                    variant={'h6'}
-                                                >
-                                                    {deslugify(filter.filter_key)}
-                                                </Typography>
-                                                <ul className={classes.filterDisplayList}>
-                                                    {!!filter.filter_values &&
-                                                        filter.filter_values.map((value, subIndex) => {
-                                                            return <li key={subIndex}>{value}</li>;
-                                                        })}
-                                                </ul>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <p>No details for this entry</p>
-                            )}
-                        </Grid>
+                        )}
+                        {!!dlorItem.object_download_instructions && (
+                            <>
+                                <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
+                                    How to use this module
+                                </Typography>
+                                <p>{dlorItem.object_download_instructions}</p>
+                            </>
+                        )}
                     </Grid>
-                )}
+                    <Grid item xs={12} md={4} data-testid="detaipage-metadata">
+                        {dlorItem.object_filters?.length > 0 && (
+                            <>
+                                <Typography component={'h3'} variant={'h6'} className={classes.metaHeader}>
+                                    <BookmarksIcon />
+                                    Details
+                                </Typography>
+                                {dlorItem.object_filters.map(filter => {
+                                    return (
+                                        <div
+                                            key={filter.filter_key}
+                                            data-testid={`detailpage-filter-${filter.filter_key}`}
+                                        >
+                                            <Typography className={classes.highlighted} component={'h4'} variant={'h6'}>
+                                                {deslugify(filter.filter_key)}
+                                            </Typography>
+                                            <ul className={classes.filterDisplayList}>
+                                                {!!filter.filter_values &&
+                                                    filter.filter_values.map((value, subIndex) => {
+                                                        return <li key={subIndex}>{value}</li>;
+                                                    })}
+                                            </ul>
+                                        </div>
+                                    );
+                                })}
+                            </>
+                        )}
+                    </Grid>
+                </Grid>
             </StandardCard>
         </StandardPage>
     );

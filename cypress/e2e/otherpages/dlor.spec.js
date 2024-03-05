@@ -145,8 +145,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 2);
 
-            // check the "Digital" checkbox
-            cy.get('[data-testid="checkbox-topic-digital_skills"] input[type=checkbox]')
+            // check the "Media format, Module" checkbox
+            cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -169,8 +169,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 3);
 
-            // UNcheck the "Digital" checkbox
-            cy.get('[data-testid="checkbox-topic-digital_skills"] input[type=checkbox]')
+            // UNcheck the "Media format, Module" checkbox
+            cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -211,7 +211,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-error"]')
                 .should('exist')
                 .contains('Error has occurred during request');
-            cy.get('data-testid="dlor-homepage-filter-error"]')
+            cy.get('[data-testid="dlor-homepage-filter-error"]')
                 .should('exist')
                 .contains('Filters currently unavailable - please try again later.');
         });
@@ -410,6 +410,14 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-detailpage-error"]')
                 .should('exist')
                 .contains('Error has occurred during request');
+        });
+        it('can handle an empty result', () => {
+            // this should never happen. Maybe immediately after intial upload
+            cy.visit('dlor/view/not-found?user=emptyResult');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-detailpage-empty"]')
+                .should('exist')
+                .contains('We could not find the requested entry - please check the web address.');
         });
     });
 });
