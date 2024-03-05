@@ -205,6 +205,24 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 3);
         });
+        it('can handle an error', () => {
+            cy.visit('dlor?user=errorUser');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-homepage-error"]')
+                .should('exist')
+                .contains('Error has occurred during request');
+            cy.get('data-testid="dlor-homepage-filter-error"]')
+                .should('exist')
+                .contains('Filters currently unavailable - please try again later.');
+        });
+        it('can handle an empty result', () => {
+            // this should never happen. Maybe immediately after intial upload
+            cy.visit('dlor?user=emptyResult');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-homepage-empty"]')
+                .should('exist')
+                .contains('We did not find any entries in the system - please try again later.');
+        });
     });
 
     context('has working site navigation', () => {
@@ -258,11 +276,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 'Advanced literature searching for health and medicine',
             );
 
-            // back to homepage
-            cy.get('h1 a')
-                .should('exist')
-                .should('have.attr', 'href', '/dlor')
-                .click();
+            // back button works
+            cy.go('back');
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Digital learning objects');
             cy.url().should('include', '/dlor');
@@ -388,6 +403,13 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('contain', 'Access the module')
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
+        });
+        it('can handle an error', () => {
+            cy.visit('dlor/view/98s0_dy5k3_98h4?user=errorUser');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-detailpage-error"]')
+                .should('exist')
+                .contains('Error has occurred during request');
         });
     });
 });

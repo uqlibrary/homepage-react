@@ -578,18 +578,32 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
 
 mock.onGet(/dlor\/view\/.*/)
     .reply(config => {
-        const urlparts = config.url.split('/').pop();
-        const dlorId = urlparts.split('?')[0];
-        const record = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
-        return record.length > 0 ? [200, record.pop()] : [404, {}];
+        if (user === 'errorUser') {
+            return [500, {}];
+        } else {
+            const urlparts = config.url.split('/').pop();
+            const dlorId = urlparts.split('?')[0];
+            const record = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
+            return record.length > 0 ? [200, record.pop()] : [404, {}];
+        }
     })
     .onGet('dlor/list/full')
     .reply(() => {
-        return [200, dlor_all];
+        if (user === 'errorUser') {
+            return [500, {}];
+        } else if (user === 'emptyResult') {
+            return [200, { data: [] }];
+        } else {
+            return [200, dlor_all];
+        }
     })
     .onGet('dlor/facets/list')
     .reply(() => {
-        return [200, dlor_filter_list];
+        if (user === 'errorUser') {
+            return [500, {}];
+        } else {
+            return [200, dlor_filter_list];
+        }
     });
 
 mock.onGet('exams/course/FREN1010/summary')

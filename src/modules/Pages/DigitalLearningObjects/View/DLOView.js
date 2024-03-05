@@ -136,7 +136,9 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
             <StandardPage>
                 <StandardCard className={classes.dlorEntry}>
                     {getTitleBlock()}
-                    <p>An error occurred: {dlorItemError}</p>
+                    <Typography variant="body1" data-testid="dlor-detailpage-error">
+                        {dlorItemError}
+                    </Typography>
                 </StandardCard>
             </StandardPage>
         );
