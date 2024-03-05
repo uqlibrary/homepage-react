@@ -205,6 +205,13 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 3);
         });
+        it('can handle an error', () => {
+            cy.visit('dlor?user=errorUser');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-homepage-error"]')
+                .should('exist')
+                .contains('Error has occurred during request');
+        });
     });
 
     context('has working site navigation', () => {
@@ -388,6 +395,13 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('contain', 'Access the module')
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
+        });
+        it('can handle an error', () => {
+            cy.visit('dlor/view/98s0_dy5k3_98h4?user=errorUser');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-detailpage-error"]')
+                .should('exist')
+                .contains('Error has occurred during request');
         });
     });
 });

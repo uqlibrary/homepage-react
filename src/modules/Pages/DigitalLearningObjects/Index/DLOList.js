@@ -434,8 +434,8 @@ export const DLOList = ({
                             );
                         } else if (!!dlorFilterListError) {
                             return (
-                                <Typography variant="body1">
-                                    An error occurred: {dlorFilterListError}; Please refesh or try again later.
+                                <Typography variant="body1" data-testid="dlor-homepage-filter-error">
+                                    {dlorFilterListError}
                                 </Typography>
                             );
                         } else if (!dlorFilterList || dlorFilterList.length === 0) {
@@ -458,9 +458,17 @@ export const DLOList = ({
                                 </div>
                             );
                         } else if (!!dlorListError) {
-                            return <p>An error occurred: {dlorListError}</p>;
+                            return (
+                                <Typography variant="body1" data-testid="dlor-homepage-error">
+                                    {dlorListError}
+                                </Typography>
+                            );
                         } else if (!dlorList || dlorList.length === 0) {
-                            return <p>We did not find any entries in the system - please try again later.</p>;
+                            return (
+                                <Typography variant="body1">
+                                    We did not find any entries in the system - please try again later.
+                                </Typography>
+                            );
                         } else {
                             return showBody(filterDlorList());
                         }
