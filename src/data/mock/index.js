@@ -578,14 +578,12 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
 
 mock.onGet(/dlor\/view\/.*/)
     .reply(config => {
-        console.log('dlor/view user=', user);
         if (user === 'errorUser') {
-            console.log('error user');
             return [500, {}];
         } else {
             const urlparts = config.url.split('/').pop();
             const dlorId = urlparts.split('?')[0];
-            const record = dlor_all.filter(o => o.object_public_uuid === dlorId);
+            const record = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
             return record.length > 0 ? [200, record.pop()] : [404, {}];
         }
     })
@@ -594,7 +592,7 @@ mock.onGet(/dlor\/view\/.*/)
         if (user === 'errorUser') {
             return [500, {}];
         } else if (user === 'emptyResult') {
-            return [200, []];
+            return [200, { data: [] }];
         } else {
             return [200, dlor_all];
         }

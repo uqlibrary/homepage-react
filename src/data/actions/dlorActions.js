@@ -9,7 +9,7 @@ export function loadAllDLORs() {
             .then(response => {
                 dispatch({
                     type: actions.DLOR_LIST_LOADED,
-                    payload: response,
+                    payload: response.data,
                 });
             })
             .catch(error => {
@@ -47,7 +47,7 @@ export function loadAllFilters() {
             .then(response => {
                 dispatch({
                     type: actions.DLOR_FILTER_LIST_LOADED,
-                    payload: response,
+                    payload: response.data,
                 });
             })
             .catch(error => {
