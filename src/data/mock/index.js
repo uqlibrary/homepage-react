@@ -580,11 +580,13 @@ mock.onGet(/dlor\/view\/.*/)
     .reply(config => {
         if (user === 'errorUser') {
             return [500, {}];
+        } else if (user === 'emptyResult') {
+            return [200, { data: {} }]; // this would probably be a 404, but let's cover the case anyway...
         } else {
             const urlparts = config.url.split('/').pop();
             const dlorId = urlparts.split('?')[0];
             const record = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
-            return record.length > 0 ? [200, record.pop()] : [404, {}];
+            return record.length > 0 ? [200, { data: record.pop() }] : [404, {}];
         }
     })
     .onGet('dlor/list/full')
@@ -592,7 +594,7 @@ mock.onGet(/dlor\/view\/.*/)
         if (user === 'errorUser') {
             return [500, {}];
         } else if (user === 'emptyResult') {
-            return [200, { data: [] }];
+            return [200, { data: [] }]; // this should really be a 404, but lets
         } else {
             return [200, dlor_all];
         }

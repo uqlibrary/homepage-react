@@ -25,10 +25,10 @@ export function loadADLOR(dlorId) {
     return dispatch => {
         dispatch({ type: actions.DLOR_DETAIL_LOADING });
         return get(DLOR_GET_BY_ID_API({ id: dlorId }))
-            .then(data => {
+            .then(response => {
                 dispatch({
                     type: actions.DLOR_DETAIL_LOADED,
-                    payload: data,
+                    payload: response.data,
                 });
             })
             .catch(error => {
