@@ -334,6 +334,85 @@ export const DLOList = ({
     const getPublicHelp = topicSlug =>
         !!dlorFilterList ? dlorFilterList.filter(f => f.filter_slug === topicSlug).pop().filter_help_public : '';
 
+    function displayItemPanel(object) {
+        const getConcatenatedFilterLabels = topicSlug => {
+            const f = object.object_filters?.filter(o => o.filter_key === topicSlug);
+            if (!f || f.length === 0) {
+                return false;
+            }
+            const output = f.pop();
+            return output?.filter_values?.length > 0
+                ? output.filter_values.join(', ')
+                : /* istanbul ignore next */ false;
+        };
+        const footerElementType = getConcatenatedFilterLabels('item_type');
+        const footerElementMedia = getConcatenatedFilterLabels('media_format');
+        const footerElementLicence = getConcatenatedFilterLabels('licence');
+        const headerElementTopic = getConcatenatedFilterLabels('topic');
+
+        return (
+            <Grid
+                item
+                xs={12}
+                md={4}
+                className={classes.panelGap}
+                key={object.object_id}
+                data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
+            >
+                <a
+                    className={classes.navigateToDetail}
+                    href={`${getHomepageLink()}dlor/view/${object.object_public_uuid}`}
+                >
+                    <StandardCard noHeader fullHeight className={classes.dlorCard}>
+                        <article className={classes.article}>
+                            <header>
+                                {!!headerElementTopic && (
+                                    <Typography className={classes.highlighted}>{headerElementTopic}</Typography>
+                                )}
+                                <Typography component={'h2'} variant={'h6'}>
+                                    {object.object_title}
+                                </Typography>
+                            </header>
+                            <div className={classes.articleContents}>
+                                <p>{object.object_summary}</p>
+                            </div>
+
+                            <footer>
+                                {!!footerElementType && (
+                                    <div
+                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
+                                        title={getPublicHelp('item_type')}
+                                    >
+                                        <LaptopIcon />
+                                        {footerElementType}
+                                    </div>
+                                )}
+                                {!!footerElementMedia && (
+                                    <div
+                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
+                                        title={getPublicHelp('media_format')}
+                                    >
+                                        <DescriptionIcon />
+                                        {footerElementMedia}
+                                    </div>
+                                )}
+                                {!!footerElementLicence && (
+                                    <div
+                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
+                                        title={getPublicHelp('licence')}
+                                    >
+                                        <CopyrightIcon />
+                                        {footerElementLicence}
+                                    </div>
+                                )}
+                            </footer>
+                        </article>
+                    </StandardCard>
+                </a>
+            </Grid>
+        );
+    }
+
     return (
         <StandardPage>
             <Typography component={'h1'} variant={'h6'}>
@@ -403,96 +482,7 @@ export const DLOList = ({
                                         className={classes.panelGrid}
                                         data-testid="dlor-homepage-list"
                                     >
-                                        {!!dlorData &&
-                                            dlorData.length > 0 &&
-                                            dlorData.map(object => {
-                                                const getConcatenatedFilterLabels = topicSlug => {
-                                                    const f = object.object_filters?.filter(
-                                                        o => o.filter_key === topicSlug,
-                                                    );
-                                                    if (!f || f.length === 0) {
-                                                        return false;
-                                                    }
-                                                    const output = f.pop();
-                                                    return output?.filter_values?.length > 0
-                                                        ? output.filter_values.join(', ')
-                                                        : /* istanbul ignore next */ false;
-                                                };
-                                                const footerElementType = getConcatenatedFilterLabels('item_type');
-                                                const footerElementMedia = getConcatenatedFilterLabels('media_format');
-                                                const footerElementLicence = getConcatenatedFilterLabels('licence');
-                                                const headerElementTopic = getConcatenatedFilterLabels('topic');
-
-                                                return (
-                                                    <Grid
-                                                        item
-                                                        xs={12}
-                                                        md={4}
-                                                        className={classes.panelGap}
-                                                        key={object.object_id}
-                                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
-                                                    >
-                                                        <a
-                                                            className={classes.navigateToDetail}
-                                                            href={`${getHomepageLink()}dlor/view/${
-                                                                object.object_public_uuid
-                                                            }`}
-                                                        >
-                                                            <StandardCard
-                                                                noHeader
-                                                                fullHeight
-                                                                className={classes.dlorCard}
-                                                            >
-                                                                <article className={classes.article}>
-                                                                    <header>
-                                                                        {!!headerElementTopic && (
-                                                                            <Typography className={classes.highlighted}>
-                                                                                {headerElementTopic}
-                                                                            </Typography>
-                                                                        )}
-                                                                        <Typography component={'h2'} variant={'h6'}>
-                                                                            {object.object_title}
-                                                                        </Typography>
-                                                                    </header>
-                                                                    <div className={classes.articleContents}>
-                                                                        <p>{object.object_summary}</p>
-                                                                    </div>
-
-                                                                    <footer>
-                                                                        {!!footerElementType && (
-                                                                            <div
-                                                                                data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
-                                                                                title={getPublicHelp('item_type')}
-                                                                            >
-                                                                                <LaptopIcon />
-                                                                                {footerElementType}
-                                                                            </div>
-                                                                        )}
-                                                                        {!!footerElementMedia && (
-                                                                            <div
-                                                                                data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
-                                                                                title={getPublicHelp('media_format')}
-                                                                            >
-                                                                                <DescriptionIcon />
-                                                                                {footerElementMedia}
-                                                                            </div>
-                                                                        )}
-                                                                        {!!footerElementLicence && (
-                                                                            <div
-                                                                                data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
-                                                                                title={getPublicHelp('licence')}
-                                                                            >
-                                                                                <CopyrightIcon />
-                                                                                {footerElementLicence}
-                                                                            </div>
-                                                                        )}
-                                                                    </footer>
-                                                                </article>
-                                                            </StandardCard>
-                                                        </a>
-                                                    </Grid>
-                                                );
-                                            })}
+                                        {!!dlorData && dlorData.length > 0 && dlorData.map(o => displayItemPanel(o))}
                                     </Grid>
                                 );
                             }

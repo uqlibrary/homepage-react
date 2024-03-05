@@ -158,7 +158,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         );
     }
 
-    console.log('report');
     return (
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
