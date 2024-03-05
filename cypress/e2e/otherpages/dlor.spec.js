@@ -33,7 +33,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] a').should(
                 'have.attr',
                 'href',
-                '/dlor/view/987y_isjgt_9866',
+                'http://localhost:2020/dlor/view/987y_isjgt_9866',
             );
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article header h2').should(
                 'contain',
@@ -52,7 +52,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] a').should(
                 'have.attr',
                 'href',
-                '/dlor/view/98s0_dy5k3_98h4',
+                'http://localhost:2020/dlor/view/98s0_dy5k3_98h4',
             );
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article header h2').should(
                 'contain',
@@ -74,7 +74,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff"] a').should(
                 'have.attr',
                 'href',
-                '/dlor/view/9jkh_9j4ld_0dff',
+                'http://localhost:2020/dlor/view/9jkh_9j4ld_0dff',
             );
             cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff"] article header h2').should(
                 'contain',
@@ -232,45 +232,45 @@ describe('Digital Object learning Repository (DLOR)', () => {
 
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] a')
-                .should('have.attr', 'href', '/dlor/view/987y_isjgt_9866')
+                .should('have.attr', 'href', 'http://localhost:2020/dlor/view/987y_isjgt_9866')
                 .click();
             // the first detail page loads
-            cy.url().should('include', '/dlor/view/987y_isjgt_9866');
+            cy.url().should('include', 'http://localhost:2020/dlor/view/987y_isjgt_9866');
             cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'Accessibility - Digital Essentials');
             cy.get('h1 a')
                 .should('exist')
-                .should('have.attr', 'href', '/dlor')
+                .should('have.attr', 'href', 'http://localhost:2020/dlor')
                 .click();
             // back to homepage
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Digital learning objects');
-            cy.url().should('include', '/dlor');
+            cy.url().should('include', 'http://localhost:2020/dlor');
 
             // check the second panel
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] a')
-                .should('have.attr', 'href', '/dlor/view/98s0_dy5k3_98h4')
+                .should('have.attr', 'href', 'http://localhost:2020/dlor/view/98s0_dy5k3_98h4')
                 .click();
 
             // the second detail page loads
-            cy.url().should('include', '/dlor/view/98s0_dy5k3_98h4');
+            cy.url().should('include', 'http://localhost:2020/dlor/view/98s0_dy5k3_98h4');
             cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'Advanced literature searching');
 
             // back to homepage
             cy.get('h1 a')
                 .should('exist')
-                .should('have.attr', 'href', '/dlor')
+                .should('have.attr', 'href', 'http://localhost:2020/dlor')
                 .click();
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Digital learning objects');
-            cy.url().should('include', '/dlor');
+            cy.url().should('include', 'http://localhost:2020/dlor');
 
             // check the third panel
             cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff"] a')
-                .should('have.attr', 'href', '/dlor/view/9jkh_9j4ld_0dff')
+                .should('have.attr', 'href', 'http://localhost:2020/dlor/view/9jkh_9j4ld_0dff')
                 .click();
 
             // the third detail page loads
-            cy.url().should('include', '/dlor/view/9jkh_9j4ld_0dff');
+            cy.url().should('include', 'http://localhost:2020/dlor/view/9jkh_9j4ld_0dff');
             cy.get('[data-testid="dlor-detailpage"] h2').should(
                 'contain',
                 'Advanced literature searching for health and medicine',
@@ -280,7 +280,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.go('back');
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Digital learning objects');
-            cy.url().should('include', '/dlor');
+            cy.url().should('include', 'http://localhost:2020/dlor');
         });
     });
 
