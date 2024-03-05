@@ -17,6 +17,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { getHomepageLink } from 'helpers/access';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -360,7 +361,10 @@ export const DLOList = ({
                             key={object.object_id}
                             data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
                         >
-                            <a className={classes.navigateToDetail} href={`/dlor/view/${object.object_public_uuid}`}>
+                            <a
+                                className={classes.navigateToDetail}
+                                href={`${getHomepageLink()}dlor/view/${object.object_public_uuid}`}
+                            >
                                 <StandardCard noHeader fullHeight className={classes.dlorCard}>
                                     <article className={classes.article}>
                                         <header>

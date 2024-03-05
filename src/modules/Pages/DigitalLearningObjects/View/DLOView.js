@@ -13,6 +13,7 @@ import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { getHomepageLink } from 'helpers/access';
 
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
@@ -115,7 +116,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         return (
             <div className={classes.titleBlock}>
                 <Typography component={'h1'} variant={'h6'}>
-                    <a href="/dlor">Digital learning objects</a>
+                    <a href={`${getHomepageLink()}dlor`}>Digital learning objects</a>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>
