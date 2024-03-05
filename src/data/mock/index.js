@@ -576,7 +576,7 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
     },
 ]);
 
-mock.onGet(/dlor\/view\/.*/)
+mock.onGet(/dlor\/find\/.*/)
     .reply(config => {
         if (user === 'errorUser') {
             return [500, {}];
