@@ -123,7 +123,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         );
     }
 
-    if (!!dlorItemLoading) {
+    if (!!dlorItemLoading || dlorItemLoading === null) {
         return (
             <div style={{ minHeight: 600 }}>
                 <InlineLoader message="Loading" />
@@ -170,22 +170,22 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         <div data-testid="dlor-detailpage-description">
                             <p>{dlorItem.object_description}</p>
                         </div>
-                        {dlorItem?.object_embed_type === 'link' && (
+                        {dlorItem.object_embed_type === 'link' && (
                             <div className={classes.uqActionButton}>
                                 <a href={dlorItem.object_link}>Access the module</a>
                             </div>
                         )}
                         {!!dlorItem.object_download_instructions && (
-                            <React.Fragment>
+                            <>
                                 <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
                                     How to use this module
                                 </Typography>
                                 <p>{dlorItem.object_download_instructions}</p>
-                            </React.Fragment>
+                            </>
                         )}
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="detaipage-metadata">
-                        {dlorItem?.object_filters?.length > 0 && (
+                        {dlorItem.object_filters?.length > 0 && (
                             <>
                                 <Typography component={'h3'} variant={'h6'} className={classes.metaHeader}>
                                     <BookmarksIcon />
