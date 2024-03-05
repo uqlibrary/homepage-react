@@ -432,16 +432,10 @@ export const DLOList = ({
                                     <InlineLoader message="Loading" />
                                 </div>
                             );
-                        } else if (!!dlorFilterListError) {
-                            return (
-                                <Typography variant="body1" data-testid="dlor-homepage-filter-error">
-                                    {dlorFilterListError}
-                                </Typography>
-                            );
-                        } else if (!dlorFilterList || dlorFilterList.length === 0) {
+                        } else if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
                             return (
                                 <Typography variant="body1">
-                                    We did not find any entries in the system - please try again later.
+                                    Filters currently unavailable - please try again later.
                                 </Typography>
                             );
                         } else {

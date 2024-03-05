@@ -599,7 +599,11 @@ mock.onGet(/dlor\/view\/.*/)
     })
     .onGet('dlor/facets/list')
     .reply(() => {
-        return [200, dlor_filter_list];
+        if (user === 'errorUser') {
+            return [500, {}];
+        } else {
+            return [200, dlor_filter_list];
+        }
     });
 
 mock.onGet('exams/course/FREN1010/summary')
