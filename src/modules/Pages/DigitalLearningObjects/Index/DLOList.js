@@ -146,8 +146,6 @@ export const DLOList = ({
 }) => {
     const classes = useStyles();
 
-    console.log('loading=', dlorFilterListLoading, 'error=', dlorFilterListError, 'list=', dlorFilterList);
-
     const [selectedFilters, setSelectedFilters] = React.useState([]);
 
     React.useEffect(() => {
@@ -157,8 +155,7 @@ export const DLOList = ({
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [dlorList, dlorFilterList]);
 
     const getSidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
 
@@ -324,6 +321,7 @@ export const DLOList = ({
                 !!selectedFilters &&
                 selectedFilters.some(selectedFilter => {
                     // filter parent object_key not found in object
+                    /* istanbul ignore next */
                     if (!d?.object_filters?.some(obj => obj.filter_key === selectedFilter.filter_key)) {
                         return false;
                     }
@@ -345,7 +343,9 @@ export const DLOList = ({
                 return false;
             }
             const output = f.pop();
-            return output?.filter_values?.length > 0 ? output.filter_values.join(', ') : false;
+            return output?.filter_values?.length > 0
+                ? output.filter_values.join(', ')
+                : /* istanbul ignore next */ false;
         };
 
         const footerElementType = object => getFilters('item_type', object);
@@ -465,12 +465,29 @@ export const DLOList = ({
                             );
                         } else if (!dlorList || dlorList.length === 0) {
                             return (
-                                <Typography variant="body1">
-                                    We did not find any entries in the system - please try again later.
-                                </Typography>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12}>
+                                        <Typography variant="body1" data-testid="dlor-homepage-empty">
+                                            We did not find any entries in the system - please try again later.
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
                             );
                         } else {
-                            return showBody(filterDlorList());
+                            const dlorData = filterDlorList();
+                            if (!dlorData || dlorData.length === 0) {
+                                return (
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}>
+                                            <Typography variant="body1">
+                                                No records satisfied this filter selection.
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                );
+                            } else {
+                                return showBody(dlorData);
+                            }
                         }
                     })()}
                 </Grid>

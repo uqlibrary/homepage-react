@@ -592,8 +592,9 @@ mock.onGet(/dlor\/view\/.*/)
     .onGet('dlor/list/full')
     .reply(() => {
         if (user === 'errorUser') {
-            console.log('error user');
             return [500, {}];
+        } else if (user === 'emptyResult') {
+            return [200, []];
         } else {
             return [200, dlor_all];
         }

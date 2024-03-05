@@ -212,6 +212,14 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .contains('Error has occurred during request');
         });
+        it('can handle an empty result', () => {
+            // this should never happen. Maybe immediately after intial upload
+            cy.visit('dlor?user=emptyResult');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-homepage-empty"]')
+                .should('exist')
+                .contains('We did not find any entries in the system - please try again later.');
+        });
     });
 
     context('has working site navigation', () => {
