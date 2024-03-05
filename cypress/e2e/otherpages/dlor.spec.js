@@ -273,11 +273,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 'Advanced literature searching for health and medicine',
             );
 
-            // back to homepage
-            cy.get('h1 a')
-                .should('exist')
-                .should('have.attr', 'href', '/dlor')
-                .click();
+            // back button works
+            cy.go('back');
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Digital learning objects');
             cy.url().should('include', '/dlor');
