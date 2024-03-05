@@ -434,7 +434,7 @@ export const DLOList = ({
                             );
                         } else if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
                             return (
-                                <Typography variant="body1">
+                                <Typography variant="body1" data-testid="dlor-homepage-filter-error">
                                     Filters currently unavailable - please try again later.
                                 </Typography>
                             );

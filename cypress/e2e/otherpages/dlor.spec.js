@@ -211,7 +211,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-error"]')
                 .should('exist')
                 .contains('Error has occurred during request');
-            cy.get('data-testid="dlor-homepage-filter-error"]')
+            cy.get('[data-testid="dlor-homepage-filter-error"]')
                 .should('exist')
                 .contains('Filters currently unavailable - please try again later.');
         });
