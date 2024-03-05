@@ -580,7 +580,7 @@ mock.onGet(/dlor\/view\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const dlorId = urlparts.split('?')[0];
-        const record = dlor_all.filter(o => o.object_public_uuid === dlorId);
+        const record = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
         return record.length > 0 ? [200, record.pop()] : [404, {}];
     })
     .onGet('dlor/list/full')
