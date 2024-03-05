@@ -29,7 +29,7 @@ export default {
             filter_id: 2,
             filter_slug: 'topic',
             filter_name: 'Topic',
-            filter_help_public: 'xxx',
+            filter_help_public: 'The area this object covers',
             filter_help_admin: 'xxx',
             filter_facet_list: [{
                 facet_slug: "aboriginal_and_torres_strait_islander",
@@ -60,7 +60,7 @@ export default {
             filter_id: 3,
             filter_slug: 'media_format',
             filter_name: 'Media format',
-            filter_help_public: 'xxx',
+            filter_help_public: 'What type of media is provided',
             filter_help_admin: 'xxx',
             filter_facet_list: [{
                 facet_slug: "module",
@@ -85,7 +85,7 @@ export default {
             filter_id: 4,
             filter_slug: 'subject',
             filter_name: 'Subject',
-            filter_help_public: 'xxx',
+            filter_help_public: 'The area covered',
             filter_help_admin: 'xxx',
             filter_facet_list: [{
                 facet_slug: "all-cross-disciplinary)", // needed?
@@ -119,7 +119,7 @@ export default {
             filter_id: 5,
             filter_slug: 'licence',
             filter_name: 'Licence',
-            filter_help_public: 'xxx',
+            filter_help_public: 'The licence under which you can use this content',
             filter_help_admin: 'xxx',
             filter_facet_list: [{
                 facet_slug: "cco-public-domain",
@@ -151,7 +151,7 @@ export default {
             filter_id: 6,
             filter_slug: 'item_type',
             filter_name: 'Item type',
-            filter_help_public: 'xxx',
+            filter_help_public: 'the type of the content',
             filter_help_admin: 'xxx',
             filter_facet_list: [{
                 facet_slug: "module",
