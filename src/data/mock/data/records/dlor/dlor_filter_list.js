@@ -1,12 +1,12 @@
 export default {
     data: [
         {
-            filter_id: 1,
-            filter_slug: 'graduate_attributes',
-            filter_name: 'Graduate attributes',
-            filter_help_public: 'Graduate attributes identify specific skills, attributes and understandings students should seek to develop.',
-            filter_help_admin: 'Graduate attributes can be used by teaching staff to identify specific skills, attributes and understandings they would like to develop.',
-            filter_facet_list: [{
+            facet_type_id: 1,
+            facet_type_slug: 'graduate_attributes',
+            facet_type_name: 'Graduate attributes',
+            facet_type_help_public: 'Graduate attributes identify specific skills, attributes and understandings students should seek to develop.',
+            facet_type_help_admin: 'Graduate attributes can be used by teaching staff to identify specific skills, attributes and understandings they would like to develop.',
+            facet_list: [{
                 facet_slug: "influential_communicators",
                 facet_name: "Influential communicators",
             }, {
@@ -26,12 +26,12 @@ export default {
                 facet_name: "Culturally capable ",
             }]
         }, {
-            filter_id: 2,
-            filter_slug: 'topic',
-            filter_name: 'Topic',
-            filter_help_public: 'The area this object covers',
-            filter_help_admin: 'xxx',
-            filter_facet_list: [{
+            facet_type_id: 2,
+            facet_type_slug: 'topic',
+            facet_type_name: 'Topic',
+            facet_type_help_public: 'The area this object covers',
+            facet_type_help_admin: 'xxx',
+            facet_list: [{
                 facet_slug: "aboriginal_and_torres_strait_islander",
                 facet_name: "Aboriginal and Torres Strait Islander",
             },{
@@ -50,126 +50,126 @@ export default {
                 facet_slug: "referencing",
                 facet_name: "Referencing",
             }, {
-                facet_slug: "research",
+                facet_slug: "topic_research",
                 facet_name: "Research",
             }, {
                 facet_slug: "software",
                 facet_name: "Software",
             }],
         }, {
-            filter_id: 3,
-            filter_slug: 'media_format',
-            filter_name: 'Media format',
-            filter_help_public: 'What type of media is provided',
-            filter_help_admin: 'xxx',
-            filter_facet_list: [{
+            facet_type_id: 3,
+            facet_type_slug: 'media_format',
+            facet_type_name: 'Media format',
+            facet_type_help_public: 'What type of media is provided',
+            facet_type_help_admin: 'xxx',
+            facet_list: [{
                 facet_slug: "module",
                 facet_name: "Module",
             }, {
-                facet_slug: "interactive_activity",
+                facet_slug: "media_interactive_activity",
                 facet_name: "Interactive activity",
             }, {
-                facet_slug: "training_recording",
+                facet_slug: "media_training_recording",
                 facet_name: "Training recording",
             }, {
-                facet_slug: "guide",
+                facet_slug: "media_guide",
                 facet_name: "Guide",
             }, {
                 facet_slug: "presentation",
                 facet_name: "Presentation",
             }, {
-                facet_slug: "other",
+                facet_slug: "media_other",
                 facet_name: "Other",
             }],
         }, {
-            filter_id: 4,
-            filter_slug: 'subject',
-            filter_name: 'Subject',
-            filter_help_public: 'The area covered',
-            filter_help_admin: 'xxx',
-            filter_facet_list: [{
-                facet_slug: "all-cross-disciplinary)", // needed?
+            facet_type_id: 4,
+            facet_type_slug: 'subject',
+            facet_type_name: 'Subject',
+            facet_type_help_public: 'The area covered',
+            facet_type_help_admin: 'xxx',
+            facet_list: [{
+                facet_slug: "all_cross_disciplinary", // needed?
                 facet_name: "All (Cross-disciplinary)", // needed?
             }, {
-                facet_slug: "business-economics",
+                facet_slug: "business_economics",
                 facet_name: "Business; Economics",
             }, {
-                facet_slug: "engineering-architecture-information-technology",
+                facet_slug: "engineering_architecture_information_technology",
                 facet_name: "Engineering: Architecture; Information Technology",
             }, {
-                facet_slug: "health-behavioural-sciences",
+                facet_slug: "health_behavioural_sciences",
                 facet_name: "Health; Behavioural Sciences",
             }, {
-                facet_slug: "humanities-arts",
+                facet_slug: "humanities_arts",
                 facet_name: "Humanities; Arts",
             }, {
                 facet_slug: "law",
                 facet_name: "Law",
             }, {
-                facet_slug: "medicine-biomedical-sciences",
+                facet_slug: "medicine_biomedical_sciences",
                 facet_name: "Medicine; Biomedical Sciences",
             }, {
                 facet_slug: "science",
                 facet_name: "Science",
             }, {
-                facet_slug: "social-sciences",
+                facet_slug: "social_sciences",
                 facet_name: "Social Sciences",
             }],
         }, {
-            filter_id: 5,
-            filter_slug: 'licence',
-            filter_name: 'Licence',
-            filter_help_public: 'The licence under which you can use this content',
-            filter_help_admin: 'xxx',
-            filter_facet_list: [{
-                facet_slug: "cco-public-domain",
+            facet_type_id: 5,
+            facet_type_slug: 'licence',
+            facet_type_name: 'Licence',
+            facet_type_help_public: 'The licence under which you can use this content',
+            facet_type_help_admin: 'xxx',
+            facet_list: [{
+                facet_slug: "cco_public_domain",
                 facet_name: "CC0/Public domain",
             }, {
-                facet_slug: "cc-by-attribution",
+                facet_slug: "cc_by_attribution",
                 facet_name: "CC BY Attribution",
             }, {
-                facet_slug: "cc-by-sa-attribution-share-alike",
+                facet_slug: "cc_by_sa_attribution_share_alike",
                 facet_name: "CC BY-SA Attribution Share Alike",
             }, {
-                facet_slug: "cc-by-nc-attribution-noncommercial",
+                facet_slug: "cc_by_nc_attribution_noncommercial",
                 facet_name: "CC BY-NC Attribution NonCommercial",
             }, {
-                facet_slug: "cc-by-nc-SsaA-attribution-noncommercial-share-alike",
+                facet_slug: "cc_by_nc_SsaA_attribution_noncommercial_share_alike",
                 facet_name: "CC BY-NC-SA Attribution NonCommercial Share Alike",
             }, {
-                facet_slug: "cc-by-no-attribution-no-derivatives",
+                facet_slug: "cc_by_no_attribution_no_derivatives",
                 facet_name: "CC BY-ND Attribution No-Derivatives",
             }, {
-                facet_slug: "cc-by-nc-no-attribution-noncommercial-no-derivatives",
+                facet_slug: "cc_by_nc_no_attribution_noncommercial_no_derivatives",
                 facet_name: "CC BY-NC-ND Attribution NonCommercial No-Derivatives",
             }, {
-                facet_slug: "other",
+                facet_slug: "licence_other",
                 facet_name: "Other",
             }
             ],
         }, {
-            filter_id: 6,
-            filter_slug: 'item_type',
-            filter_name: 'Item type',
-            filter_help_public: 'the type of the content',
-            filter_help_admin: 'xxx',
-            filter_facet_list: [{
+            facet_type_id: 6,
+            facet_type_slug: 'item_type',
+            facet_type_name: 'Item type',
+            facet_type_help_public: 'the type of the content',
+            facet_type_help_admin: 'xxx',
+            facet_list: [{
                 facet_slug: "module",
                 facet_name: "Module",
             }, {
-                facet_slug: "interactive-activity",
+                facet_slug: "type_interactive_activity",
                 facet_name: "Interactive activity",
             }, {
-                facet_slug: "training-recording",
+                facet_slug: "type_training_recording",
                 facet_name: "Training recording",
             }, {
-                facet_slug: "guide",
+                facet_slug: "type_guide",
                 facet_name: "Guide",
             }, {
-                facet_slug: "presentation",
+                facet_slug: "type_presentation",
                 facet_name: "Presentation",
             }, {
-                facet_slug: "other",
+                facet_slug: "type_other",
                 facet_name: "Other",
             }]
         }
