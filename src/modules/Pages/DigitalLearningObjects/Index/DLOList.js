@@ -415,6 +415,23 @@ export const DLOList = ({
         );
     }
 
+    if (!!dlorFilterListLoading || dlorFilterListLoading === null || !!dlorListLoading || dlorListLoading === null) {
+        return (
+            <StandardPage>
+                <Typography component={'h1'} variant={'h6'}>
+                    Digital learning objects
+                </Typography>
+                <Grid container spacing={2}>
+                    <Grid item md={12}>
+                        <div style={{ minHeight: 600 }}>
+                            <InlineLoader message="Loading" />
+                        </div>
+                    </Grid>
+                </Grid>
+            </StandardPage>
+        );
+    }
+
     return (
         <StandardPage>
             <Typography component={'h1'} variant={'h6'}>
@@ -423,13 +440,7 @@ export const DLOList = ({
             <Grid container spacing={2}>
                 <Grid item md={3} className={classes.filterSidebar}>
                     {(() => {
-                        if (!!dlorFilterListLoading || dlorFilterListLoading === null) {
-                            return (
-                                <div style={{ minHeight: 600 }}>
-                                    <InlineLoader message="Loading" />
-                                </div>
-                            );
-                        } else if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
+                        if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
                             return (
                                 <Typography variant="body1" data-testid="dlor-homepage-filter-error">
                                     Filters currently unavailable - please try again later.
@@ -442,13 +453,7 @@ export const DLOList = ({
                 </Grid>
                 <Grid item md={9}>
                     {(() => {
-                        if (!!dlorListLoading || dlorListLoading === null) {
-                            return (
-                                <div style={{ minHeight: 600 }}>
-                                    <InlineLoader message="Loading" />
-                                </div>
-                            );
-                        } else if (!!dlorListError) {
+                        if (!!dlorListError) {
                             return (
                                 <Typography variant="body1" data-testid="dlor-homepage-error">
                                     {dlorListError}
