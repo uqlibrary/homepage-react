@@ -21,12 +21,8 @@ import { getHomepageLink } from 'helpers/access';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
-        [theme.breakpoints.up('md')]: {
-            paddingLeft: 16,
-        },
-        [theme.breakpoints.down('md')]: {
-            paddingTop: 16,
-        },
+        paddingLeft: 16,
+        paddingBottom: 24,
         paddingTop: '0 !important',
     },
     panelGrid: {

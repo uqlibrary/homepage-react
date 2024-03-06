@@ -27,7 +27,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 4);
 
             // first panel
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] a').should(
@@ -131,7 +131,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 4);
 
             // check the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-Assignments"] input[type=checkbox]')
@@ -139,11 +139,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('not.be.checked')
                 .check();
 
-            // 2 panels showing
+            // 3 panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 2);
+                .should('have.length', 3);
 
             // check the "Media format, Module" checkbox
             cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
@@ -151,11 +151,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('not.be.checked')
                 .check();
 
-            // 2 panels showing
+            // 3panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 2);
+                .should('have.length', 3);
 
             // check the "ATSIC" checkbox
             cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
@@ -163,11 +163,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('not.be.checked')
                 .check();
 
-            // 3 panels showing
+            // 4 panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 4);
 
             // UNcheck the "Media format, Module" checkbox
             cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
@@ -175,11 +175,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('be.checked')
                 .uncheck();
 
-            // 3 panels showing
+            // 4 panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 4);
 
             // UNcheck the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-Assignments"] input[type=checkbox]')
@@ -199,11 +199,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('be.checked')
                 .uncheck();
 
-            // original 3 panels showing
+            // original 4 panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 4);
         });
         it('can handle an error', () => {
             cy.visit('dlor?user=errorUser');

@@ -163,6 +163,69 @@ export default {
             // next_review_date: "2022-02-01 10:00:00",
             created_at: "2020-01-01 10:00:00",
             updated_at: "2021-02-01 10:00:00",
+        }, {
+            object_id: "345671",
+            object_public_uuid: "9jkh_9j4ld_0ddd",
+            object_title: "Advanced literature searching for health and medicine zxx",
+            object_summary: "Learn how to conduct advanced literature searching for health and medicine.",
+            object_description: "Learn how to conduct advanced literature searching for health and medicine. We recommend you do the Advanced literature searching module first, to become familiar with the common advanced literature searching techniques.",
+            // object_quality_check: "I dont know what goes here",
+            // owner: {
+            //     publishing_user_username: "uqmsato",
+            //     team_name: "LIB Other team",
+            //     team_email: "aaaa@library.uq.edu.au",
+            //     team_manager_username: "uqjsmi",
+            // },
+            object_embed_type: "link",
+            object_link: "https://uq.h5p.com/content/1291624610498497569",
+            object_filters: [{
+                    filter_key: 'topic',
+                    filter_values: [
+                        "Software",
+                        "Assignments",
+                    ],
+                }, {
+                    filter_key: 'media_format',
+                    filter_values: [
+                        "H5P",
+                    ],
+                }, {
+                    filter_key: 'subject',
+                    filter_values: [
+                        "Health; Behavioural Sciences",
+                        "Medicine; Biomedical Sciences",
+                    ],
+                }, {
+                    filter_key: 'licence',
+                    filter_values: [
+                        "UQ copyright",
+                    ],
+                }, {
+                    filter_key: 'item_type',
+                    filter_values: [
+                        "Module",
+                    ],
+                }, {
+                    filter_key: 'graduate_attributes',
+                    filter_values: [
+                        "Influential communicators",
+                        "Accomplished scholars",
+                    ],
+            }],
+            // keywords: [
+            //     "evidence-based practice",
+            //     "search strategy",
+            //     "evidence",
+            //     "database",
+            //     "PICO",
+            //     "MeSH",
+            //     "review",
+            //     "journal article",
+            // ],
+            object_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
+            // next_review_date: "2022-02-01 10:00:00",
+            created_at: "2020-01-01 10:00:00",
+            updated_at: "2021-02-01 10:00:00",
         }
     ]
 };
