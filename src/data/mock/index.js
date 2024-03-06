@@ -599,7 +599,7 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, dlor_all];
         }
     })
-    .onGet('dlor/facets/list')
+    .onGet('dlor/facet/list')
     .reply(() => {
         if (user === 'errorUser') {
             return [500, {}];
