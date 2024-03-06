@@ -13,6 +13,8 @@ import LaptopIcon from '@mui/icons-material/Laptop';
 import CopyrightIcon from '@mui/icons-material/Copyright';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -82,6 +84,25 @@ const useStyles = makeStyles(theme => ({
     },
     filterSidebar: {
         fontSize: 10,
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        },
+    },
+    showFilterSidebarIcon: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+        },
+    },
+    hideFilterSidebarIcon: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+        },
     },
     filterSidebarHeading: {
         alignItems: 'center',
@@ -201,6 +222,28 @@ export const DLOList = ({
         }
     }
 
+    function showFilters() {
+        // hide the filter icon
+        const icon = document.getElementById('filterIconShowId');
+        console.log('icon=', icon);
+        !!icon && (icon.style.display = 'none');
+
+        // show the filter sidebar
+        const block = document.getElementById('filterSidebar');
+        console.log('block=', block);
+        !!block && (block.style.display = 'block');
+    }
+    function hideFilters() {
+        // show the filter icon
+        const icon = document.getElementById('filterIconShowId');
+        !!icon && (icon.style.display = 'flex');
+
+        // hide the filter sidebar
+        const block = document.getElementById('filterSidebar');
+        console.log('block=', block);
+        !!block && (block.style.display = 'none');
+    }
+
     const handleCheckboxAction = prop => e => {
         const facetTypeSlug = prop.replace('checkbox-', '');
         const filterSlug = e.target.value;
@@ -230,11 +273,20 @@ export const DLOList = ({
         }
     };
 
-    function showFilterSidebar() {
+    function displayFilterSidebarContents() {
         return (
             <>
                 <Grid container className={classes.filterSidebarHeading} data-testid="sidebar-panel-heading">
                     <Grid item md={9}>
+                        <div
+                            id="filterIconHideId"
+                            data-testid="filterIconHideId"
+                            className={classes.hideFilterSidebarIcon}
+                        >
+                            <IconButton aria-label="hide the filters" onClick={() => hideFilters()}>
+                                <CloseIcon />
+                            </IconButton>
+                        </div>
                         <Typography component={'h2'} variant={'h6'} style={{ marginLeft: -10 }}>
                             Filters
                         </Typography>
@@ -434,7 +486,7 @@ export const DLOList = ({
                 Digital learning objects
             </Typography>
             <Grid container spacing={2}>
-                <Grid item md={3} className={classes.filterSidebar}>
+                <Grid item md={3} className={classes.filterSidebar} id="filterSidebar" data-testid="filterSidebar">
                     {(() => {
                         if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
                             return (
@@ -443,11 +495,11 @@ export const DLOList = ({
                                 </Typography>
                             );
                         } else {
-                            return showFilterSidebar();
+                            return displayFilterSidebarContents();
                         }
                     })()}
                 </Grid>
-                <Grid item md={9}>
+                <Grid item xs={12} md={9}>
                     {(() => {
                         if (!!dlorListError) {
                             return (
@@ -479,14 +531,27 @@ export const DLOList = ({
                                 );
                             } else {
                                 return (
-                                    <Grid
-                                        container
-                                        spacing={3}
-                                        className={classes.panelGrid}
-                                        data-testid="dlor-homepage-list"
-                                    >
-                                        {!!dlorData && dlorData.length > 0 && dlorData.map(o => displayItemPanel(o))}
-                                    </Grid>
+                                    <>
+                                        <Grid
+                                            container
+                                            spacing={3}
+                                            className={classes.panelGrid}
+                                            data-testid="dlor-homepage-list"
+                                        >
+                                            <div
+                                                id="filterIconShowId"
+                                                data-testid="filterIconShowId"
+                                                className={classes.showFilterSidebarIcon}
+                                            >
+                                                <IconButton aria-label="show the filters" onClick={() => showFilters()}>
+                                                    <FilterAltIcon />
+                                                </IconButton>
+                                            </div>
+                                            {!!dlorData &&
+                                                dlorData.length > 0 &&
+                                                dlorData.map(o => displayItemPanel(o))}
+                                        </Grid>
+                                    </>
                                 );
                             }
                         }

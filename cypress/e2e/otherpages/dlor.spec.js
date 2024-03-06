@@ -27,7 +27,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"')
                 .should('exist')
                 .children()
-                .should('have.length', 4);
+                .should('have.length', 4 + 1);
 
             // first panel
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] a').should(
@@ -131,7 +131,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4);
+                .should('have.length', 4 + 1);
 
             // check the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-Assignments"] input[type=checkbox]')
@@ -143,7 +143,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 3 + 1);
 
             // check the "Media format, Module" checkbox
             cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
@@ -155,7 +155,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 3 + 1);
 
             // check the "ATSIC" checkbox
             cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
@@ -167,7 +167,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4);
+                .should('have.length', 4 + 1);
 
             // UNcheck the "Media format, Module" checkbox
             cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
@@ -179,7 +179,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4);
+                .should('have.length', 4 + 1);
 
             // UNcheck the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-Assignments"] input[type=checkbox]')
@@ -191,7 +191,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 1);
+                .should('have.length', 1 + 1);
 
             // UNcheck the "ATSIC" checkbox
             cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
@@ -203,7 +203,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4);
+                .should('have.length', 4 + 1);
         });
         it('can handle an error', () => {
             cy.visit('dlor?user=errorUser');
@@ -222,6 +222,50 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-empty"]')
                 .should('exist')
                 .contains('We did not find any entries in the system - please try again later.');
+        });
+        it('still filters on mobile page', () => {
+            cy.visit('dlor');
+            cy.viewport(800, 900);
+
+            cy.get('[data-testid="filterSidebar"]')
+                .should('exist')
+                .should('not.be.visible');
+
+            cy.get('[data-testid="filterIconShowId"]')
+                .should('exist')
+                .should('be.visible')
+                .find('button')
+                .click();
+            cy.get('[data-testid="filterSidebar"]').scrollIntoView();
+            cy.get('[data-testid="filterIconShowId"]')
+                .should('exist')
+                .should('not.be.visible');
+
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 4 + 1); // 4 panels plus filter button
+
+            // a checkbox filters the list
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2); // one panel plus filter button
+
+            // hide the filter section
+            cy.get('[data-testid="filterIconHideId"]')
+                .should('exist')
+                .should('be.visible')
+                .find('button')
+                .click();
+            cy.get('[data-testid="filterSidebar"]')
+                .should('exist')
+                .should('not.be.visible');
         });
     });
 
