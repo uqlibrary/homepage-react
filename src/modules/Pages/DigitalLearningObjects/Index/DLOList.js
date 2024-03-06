@@ -158,7 +158,7 @@ export const DLOList = ({
         }
     }, [dlorList, dlorFilterList]);
 
-    const getSidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
+    const sidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
 
     function hideElement(element, displayproperty = null) {
         !!element && (element.style.visibility = 'hidden');
@@ -192,9 +192,9 @@ export const DLOList = ({
         showElement(upArrowIcon, 'inline-block');
     }
 
-    const panelId = index => getSidebarElementId(index);
-    const UpArrowId = index => getSidebarElementId(index, 'panel-uparrow');
-    const DownArrowId = index => getSidebarElementId(index, 'panel-downarrow');
+    const panelId = index => sidebarElementId(index);
+    const UpArrowId = index => sidebarElementId(index, 'panel-uparrow');
+    const DownArrowId = index => sidebarElementId(index, 'panel-downarrow');
 
     function showHidePanel(index) {
         const downArrowIcon = document.getElementById(DownArrowId(index));
@@ -206,10 +206,10 @@ export const DLOList = ({
     }
 
     const handleCheckboxAction = prop => e => {
-        const topicSlug = prop.replace('checkbox-', '');
+        const facetTypeSlug = prop.replace('checkbox-', '');
         const filterSlug = e.target.value;
 
-        const thisFilterGroup = selectedFilters.find(f1 => f1.filter_key === topicSlug);
+        const thisFilterGroup = selectedFilters.find(f1 => f1.filter_key === facetTypeSlug);
         if (thisFilterGroup) {
             // a subfilter from this group has been previously checked (group, is "Topic" Licence" etc)
             if (e.target.checked) {
@@ -230,7 +230,7 @@ export const DLOList = ({
         } else {
             // no subfilters from this group have been selected until now
             // add a new object with the given key and val
-            setSelectedFilters([{ filter_key: topicSlug, filter_values: [filterSlug] }, ...selectedFilters]);
+            setSelectedFilters([{ filter_key: facetTypeSlug, filter_values: [filterSlug] }, ...selectedFilters]);
         }
     };
 
@@ -248,24 +248,24 @@ export const DLOList = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    {dlorFilterList.map((type, index) => {
+                    {dlorFilterList.map((facetType, index) => {
                         return (
-                            <Grid item key={index} className={classes.filterSidebarType}>
+                            <Grid item key={facetType.facet_type_slug} className={classes.filterSidebarType}>
                                 <Grid container className={classes.filterSidebarTypeHeading}>
                                     <Grid item md={11}>
                                         <Typography component={'h3'} variant="subtitle1">
-                                            {type.filter_name}
+                                            {facetType.facet_type_name}
                                         </Typography>
                                     </Grid>
                                     <Grid item md={1}>
                                         <IconButton
                                             aria-label="Minimise the filter section"
-                                            data-testid={getSidebarElementId(index, 'panel-minimisation-icon')}
+                                            data-testid={sidebarElementId(index, 'panel-minimisation-icon')}
                                             onClick={() => showHidePanel(index)}
                                         >
-                                            <KeyboardArrowUpIcon id={getSidebarElementId(index, 'panel-uparrow')} />
+                                            <KeyboardArrowUpIcon id={sidebarElementId(index, 'panel-uparrow')} />
                                             <KeyboardArrowDownIcon
-                                                id={getSidebarElementId(index, 'panel-downarrow')}
+                                                id={sidebarElementId(index, 'panel-downarrow')}
                                                 style={{ display: 'none', visibility: 'hidden', opacity: 0, height: 0 }}
                                             />
                                         </IconButton>
@@ -273,23 +273,23 @@ export const DLOList = ({
                                 </Grid>
                                 <div
                                     className={classes.filterSidebarCheckboxWrapper}
-                                    id={getSidebarElementId(index)}
-                                    data-testid={getSidebarElementId(index)}
+                                    id={sidebarElementId(index)}
+                                    data-testid={sidebarElementId(index)}
                                 >
-                                    {!!type.filter_facet_list &&
-                                        type.filter_facet_list.length > 0 &&
-                                        type.filter_facet_list.map(facet => {
-                                            const checkBoxid = `checkbox-${type.filter_slug}`;
+                                    {!!facetType.facet_list &&
+                                        facetType.facet_list.length > 0 &&
+                                        facetType.facet_list.map(facet => {
+                                            const checkBoxid = `checkbox-${facetType.facet_type_slug}`;
                                             return (
                                                 <FormControlLabel
-                                                    key={`${type.filter_slug}-${facet.facet_slug}`}
+                                                    key={`${facetType.facet_type_slug}-${facet.facet_slug}`}
                                                     className={classes.filterSidebarCheckboxControl}
                                                     control={
                                                         <Checkbox
                                                             className={classes.filterSidebarCheckbox}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             value={facet.facet_name}
-                                                            data-testid={`checkbox-${type.filter_slug}-${facet.facet_slug}`}
+                                                            data-testid={`checkbox-${facetType.facet_type_slug}-${facet.facet_slug}`}
                                                         />
                                                     }
                                                     label={facet.facet_name}
@@ -331,9 +331,14 @@ export const DLOList = ({
         });
     };
 
-    function showBody(dlorData) {
-        const getFilters = (topicSlug, object) => {
-            const f = object.object_filters?.filter(o => o.filter_key === topicSlug);
+    const getPublicHelp = facetTypeSlug =>
+        !!dlorFilterList
+            ? dlorFilterList.filter(f => f.facet_type_slug === facetTypeSlug).pop().facet_type_help_public
+            : '';
+
+    function displayItemPanel(object) {
+        const getConcatenatedFilterLabels = facetTypeSlug => {
+            const f = object.object_filters?.filter(o => o.filter_key === facetTypeSlug);
             if (!f || f.length === 0) {
                 return false;
             }
@@ -342,77 +347,88 @@ export const DLOList = ({
                 ? output.filter_values.join(', ')
                 : /* istanbul ignore next */ false;
         };
-
-        const footerElementType = object => getFilters('item_type', object);
-        const footerElementMedia = object => getFilters('media_format', object);
-        const footerElementLicence = object => getFilters('licence', object);
-        const headerElementTopic = object => getFilters('topic', object);
+        const footerElementType = getConcatenatedFilterLabels('item_type');
+        const footerElementMedia = getConcatenatedFilterLabels('media_format');
+        const footerElementLicence = getConcatenatedFilterLabels('licence');
+        const headerElementTopic = getConcatenatedFilterLabels('topic');
 
         return (
-            <Grid container spacing={3} className={classes.panelGrid} data-testid="dlor-homepage-list">
-                {!!dlorData &&
-                    dlorData.length > 0 &&
-                    dlorData.map(object => (
-                        <Grid
-                            item
-                            xs={12}
-                            md={4}
-                            className={classes.panelGap}
-                            key={object.object_id}
-                            data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
-                        >
-                            <a
-                                className={classes.navigateToDetail}
-                                href={`${getHomepageLink()}dlor/view/${object.object_public_uuid}`}
-                            >
-                                <StandardCard noHeader fullHeight className={classes.dlorCard}>
-                                    <article className={classes.article}>
-                                        <header>
-                                            {headerElementTopic(object).length > 0 && (
-                                                <Typography className={classes.highlighted}>
-                                                    {headerElementTopic(object)}
-                                                </Typography>
-                                            )}
-                                            <Typography component={'h2'} variant={'h6'}>
-                                                {object.object_title}
-                                            </Typography>
-                                        </header>
-                                        <div className={classes.articleContents}>
-                                            <p>{object.object_summary}</p>
-                                        </div>
+            <Grid
+                item
+                xs={12}
+                md={4}
+                className={classes.panelGap}
+                key={object.object_id}
+                data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
+            >
+                <a
+                    className={classes.navigateToDetail}
+                    href={`${getHomepageLink()}dlor/view/${object.object_public_uuid}`}
+                >
+                    <StandardCard noHeader fullHeight className={classes.dlorCard}>
+                        <article className={classes.article}>
+                            <header>
+                                {!!headerElementTopic && (
+                                    <Typography className={classes.highlighted}>{headerElementTopic}</Typography>
+                                )}
+                                <Typography component={'h2'} variant={'h6'}>
+                                    {object.object_title}
+                                </Typography>
+                            </header>
+                            <div className={classes.articleContents}>
+                                <p>{object.object_summary}</p>
+                            </div>
 
-                                        <footer>
-                                            {footerElementType(object).length > 0 && (
-                                                <div
-                                                    data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
-                                                >
-                                                    <LaptopIcon />
-                                                    {footerElementType(object)}
-                                                </div>
-                                            )}
-                                            {footerElementMedia(object).length > 0 && (
-                                                <div
-                                                    data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
-                                                >
-                                                    <DescriptionIcon />
-                                                    {footerElementMedia(object)}
-                                                </div>
-                                            )}
-                                            {footerElementLicence(object).length > 0 && (
-                                                <div
-                                                    data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
-                                                >
-                                                    <CopyrightIcon />
-                                                    {footerElementLicence(object)}
-                                                </div>
-                                            )}
-                                        </footer>
-                                    </article>
-                                </StandardCard>
-                            </a>
-                        </Grid>
-                    ))}
+                            <footer>
+                                {!!footerElementType && (
+                                    <div
+                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
+                                        title={getPublicHelp('item_type')}
+                                    >
+                                        <LaptopIcon />
+                                        {footerElementType}
+                                    </div>
+                                )}
+                                {!!footerElementMedia && (
+                                    <div
+                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
+                                        title={getPublicHelp('media_format')}
+                                    >
+                                        <DescriptionIcon />
+                                        {footerElementMedia}
+                                    </div>
+                                )}
+                                {!!footerElementLicence && (
+                                    <div
+                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
+                                        title={getPublicHelp('licence')}
+                                    >
+                                        <CopyrightIcon />
+                                        {footerElementLicence}
+                                    </div>
+                                )}
+                            </footer>
+                        </article>
+                    </StandardCard>
+                </a>
             </Grid>
+        );
+    }
+
+    if (!!dlorFilterListLoading || dlorFilterListLoading === null || !!dlorListLoading || dlorListLoading === null) {
+        return (
+            <StandardPage>
+                <Typography component={'h1'} variant={'h6'}>
+                    Digital learning objects
+                </Typography>
+                <Grid container spacing={2}>
+                    <Grid item md={12}>
+                        <div style={{ minHeight: 600 }}>
+                            <InlineLoader message="Loading" />
+                        </div>
+                    </Grid>
+                </Grid>
+            </StandardPage>
         );
     }
 
@@ -424,13 +440,7 @@ export const DLOList = ({
             <Grid container spacing={2}>
                 <Grid item md={3} className={classes.filterSidebar}>
                     {(() => {
-                        if (!!dlorFilterListLoading || dlorFilterListLoading === null) {
-                            return (
-                                <div style={{ minHeight: 600 }}>
-                                    <InlineLoader message="Loading" />
-                                </div>
-                            );
-                        } else if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
+                        if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
                             return (
                                 <Typography variant="body1" data-testid="dlor-homepage-filter-error">
                                     Filters currently unavailable - please try again later.
@@ -443,13 +453,7 @@ export const DLOList = ({
                 </Grid>
                 <Grid item md={9}>
                     {(() => {
-                        if (!!dlorListLoading || dlorListLoading === null) {
-                            return (
-                                <div style={{ minHeight: 600 }}>
-                                    <InlineLoader message="Loading" />
-                                </div>
-                            );
-                        } else if (!!dlorListError) {
+                        if (!!dlorListError) {
                             return (
                                 <Typography variant="body1" data-testid="dlor-homepage-error">
                                     {dlorListError}
@@ -478,7 +482,16 @@ export const DLOList = ({
                                     </Grid>
                                 );
                             } else {
-                                return showBody(dlorData);
+                                return (
+                                    <Grid
+                                        container
+                                        spacing={3}
+                                        className={classes.panelGrid}
+                                        data-testid="dlor-homepage-list"
+                                    >
+                                        {!!dlorData && dlorData.length > 0 && dlorData.map(o => displayItemPanel(o))}
+                                    </Grid>
+                                );
                             }
                         }
                     })()}
