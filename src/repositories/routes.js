@@ -327,4 +327,4 @@ export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id
 
 export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/list/full' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/find/${id}` });
-export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/facets/list' });
+export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/facet/list' });
