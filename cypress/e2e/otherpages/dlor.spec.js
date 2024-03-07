@@ -101,34 +101,24 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .contains('Filters');
 
             // sidebar topic panel loads hidden
-            cy.get('[data-testid="sidebar-panel-1"]')
+            cy.get('[data-testid="sidebar-panel-0"]')
                 .should('exist')
-                .should('have.attr', 'style', 'display: none; visibility: hidden; opacity: 0; height: 0px;');
-            cy.get('[data-testid="panel-uparrow-1"]')
-                .should('exist')
-                .should('have.attr', 'style', 'display: none; visibility: hidden; opacity: 0; height: 0px;');
-            cy.get('[data-testid="panel-downarrow-1"]')
-                .should('exist')
-                .should('be.visible')
-                .click();
-            // and can be unhidden
-            cy.get('[data-testid="sidebar-panel-1"]')
-                .should('exist')
+                .contains('Aboriginal and Torres Strait Islander')
                 .should('be.visible');
 
             // click button, hide panel
-            cy.get('[data-testid="panel-minimisation-icon-1"]')
+            cy.get('[data-testid="panel-minimisation-icon-0"]')
                 .should('exist')
                 .click();
-            cy.get('[data-testid="sidebar-panel-1"]')
+            cy.get('[data-testid="sidebar-panel-0"]')
                 .should('exist')
                 .should('not.be.visible');
 
             // click button again, unhide
-            cy.get('[data-testid="panel-minimisation-icon-1"]')
+            cy.get('[data-testid="panel-minimisation-icon-0"]')
                 .should('exist')
                 .click();
-            cy.get('[data-testid="sidebar-panel-1"]')
+            cy.get('[data-testid="sidebar-panel-0"]')
                 .should('exist')
                 .contains('Aboriginal and Torres Strait Islander')
                 .should('be.visible');
@@ -137,20 +127,16 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.visit('dlor');
             cy.viewport(1300, 1000);
 
-            // 3 panels showing
+            // initially, all panels are showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
                 .should('have.length', 4 + 1);
 
-            // unhide the Topics panel
-            cy.get('[data-testid="panel-downarrow-1"]')
-                .should('exist')
-                .should('be.visible')
-                .click();
-            // check the "Assignments" checkbox
+            // select the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
+                // .should('be.visible')
                 .should('not.be.checked')
                 .check();
 
@@ -166,7 +152,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('be.visible')
                 .click();
             // check the "Media format, Module" checkbox
-            cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -190,7 +176,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('have.length', 4 + 1);
 
             // UNcheck the "Media format, Module" checkbox
-            cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -266,12 +252,6 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 4 + 1); // 4 panels plus filter button
 
-            // unhide the Topics panel
-            cy.get('[data-testid="panel-downarrow-1"]')
-                .should('exist')
-                .should('be.visible')
-                .click();
-            // a checkbox filters the list
             cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
