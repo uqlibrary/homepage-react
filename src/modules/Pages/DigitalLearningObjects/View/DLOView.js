@@ -172,15 +172,15 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         </div>
                         {dlorItem.object_embed_type === 'link' && (
                             <div className={classes.uqActionButton}>
-                                <a href={dlorItem.object_link}>Access the module</a>
+                                <a href={dlorItem.obj_link_url}>Access the module</a>
                             </div>
                         )}
-                        {!!dlorItem.object_download_instructions && (
+                        {!!dlorItem.obj_download_instructions && (
                             <>
                                 <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
                                     How to use this module
                                 </Typography>
-                                <p>{dlorItem.object_download_instructions}</p>
+                                <p>{dlorItem.obj_download_instructions}</p>
                             </>
                         )}
                     </Grid>
