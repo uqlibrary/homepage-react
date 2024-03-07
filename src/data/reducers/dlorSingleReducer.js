@@ -26,9 +26,9 @@ const handlers = {
         dlorItemLoading: false,
         dlorItemError: action.payload,
     }),
-    // [actions.DLOR_DETAIL_CLEAR]: () => ({
-    //     ...initialState,
-    // }),
+    [actions.DLOR_DETAIL_CLEAR]: () => ({
+        ...initialState,
+    }),
 };
 
 export default function dlorSingleReducer(state = initialState, action) {

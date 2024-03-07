@@ -58,3 +58,9 @@ export function loadAllFilters() {
             });
     };
 }
+
+export function clearDlor() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DETAIL_CLEAR });
+    };
+}

@@ -104,6 +104,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
 
     React.useEffect(() => {
         if (!dlorItemError && !dlorItemLoading && !dlorItem) {
+            actions.clearDlor();
             actions.loadADLOR(dlorId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

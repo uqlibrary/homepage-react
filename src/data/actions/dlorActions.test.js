@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadAllDLORs, loadADLOR } from './dlorActions';
+import { loadAllDLORs, loadADLOR, clearDlor } from './dlorActions';
 
 jest.mock('@sentry/browser');
 
@@ -38,7 +38,7 @@ describe('Alert actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
-        it('dispatches expected actions when alert list call fails', async () => {
+        it('dispatches expected actions when dlor list call fails', async () => {
             mockApi.onGet(repositories.routes.DLOR_ALL_API().apiUrl).reply(500);
 
             const expectedActions = [actions.DLOR_LIST_LOADING, actions.APP_ALERT_SHOW, actions.DLOR_LIST_FAILED];
@@ -49,7 +49,7 @@ describe('Alert actions', () => {
     });
 
     describe('DLOR get actions', () => {
-        it('dispatches expected actions when specific alerts call fails', async () => {
+        it('dispatches expected actions when specific dlors call fails', async () => {
             mockApi
                 .onGet(repositories.routes.DLOR_GET_BY_ID_API({ id: 'e895b270-d62b-11e7-954e-57c2cc19d151' }))
                 .reply(500);
@@ -78,7 +78,7 @@ describe('Alert actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
-        it('dispatches expected actions when an alert get fails', async () => {
+        it('dispatches expected actions when a dlor get fails', async () => {
             mockApi
                 .onGet(
                     repositories.routes.DLOR_GET_BY_ID_API({
@@ -90,6 +90,13 @@ describe('Alert actions', () => {
             const expectedActions = [actions.DLOR_DETAIL_LOADING, actions.APP_ALERT_SHOW, actions.DLOR_DETAIL_FAILED];
 
             await mockActionsStore.dispatch(loadADLOR('e895b270-d62b-11e7-954e-57c2cc19d151'));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('should dispatch clear a dlor action', async () => {
+            const expectedActions = [actions.DLOR_DETAIL_CLEAR];
+
+            await mockActionsStore.dispatch(clearDlor());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });
