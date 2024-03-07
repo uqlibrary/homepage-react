@@ -172,7 +172,8 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                             {dlorItem.object_title}
                         </Typography>
                         <div data-testid="dlor-detailpage-description">
-                            <p>{dlorItem.object_description}</p>
+                            {!!dlorItem.object_description &&
+                                dlorItem.object_description.split('\n').map((line, index) => <p key={index}>{line}</p>)}
                         </div>
                         {dlorItem.object_embed_type === 'link' && (
                             <div className={classes.uqActionButton}>
@@ -184,7 +185,10 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                 <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
                                     How to use this module
                                 </Typography>
-                                <p>{dlorItem.obj_download_instructions}</p>
+                                {!!dlorItem.obj_download_instructions &&
+                                    dlorItem.obj_download_instructions
+                                        .split('\n')
+                                        .map((line, index) => <p key={index}>{line}</p>)}
                             </>
                         )}
                     </Grid>
