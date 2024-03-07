@@ -35,7 +35,7 @@ export default {
                 facet_slug: "aboriginal_and_torres_strait_islander",
                 facet_name: "Aboriginal and Torres Strait Islander",
             },{
-                facet_slug: "Assignments",
+                facet_slug: "assignments",
                 facet_name: "Assignments",
             }, {
                 facet_slug: "digital_skills",

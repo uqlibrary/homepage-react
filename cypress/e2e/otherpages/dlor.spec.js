@@ -133,8 +133,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 4 + 1);
 
-            // check the "Assignments" checkbox
-            cy.get('[data-testid="checkbox-topic-Assignments"] input[type=checkbox]')
+            // check the "assignments" checkbox
+            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -181,8 +181,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 4 + 1);
 
-            // UNcheck the "Assignments" checkbox
-            cy.get('[data-testid="checkbox-topic-Assignments"] input[type=checkbox]')
+            // UNcheck the "assignments" checkbox
+            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();

@@ -14,7 +14,7 @@ export default {
             //     team_manager_username: "uqjsmi",
             // },
             object_embed_type: "link",
-            object_link: "https://uq.pressbooks.pub/digital-essentials-accessibility/chapter/module-overview/",
+            obj_link_url: "https://uq.pressbooks.pub/digital-essentials-accessibility/chapter/module-overview/",
             object_filters: [
                 {
                     filter_key: 'topic',
@@ -36,7 +36,7 @@ export default {
                 }
             ],
             // keywords: [],
-            object_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
+            obj_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
             // next_review_date: "2022-02-01 10:00:00",
             created_at: "2020-01-01 10:00:00",
             updated_at: "2021-02-01 10:00:00",
@@ -54,7 +54,7 @@ export default {
             //     team_manager_username: "uqjsmi",
             // },
             object_embed_type: "link",
-            object_link: "https://uq.h5p.com/content/1291624605868350759",
+            obj_link_url: "https://uq.h5p.com/content/1291624605868350759",
             object_filters: [
                 {
                     filter_key: 'topic',
@@ -96,7 +96,7 @@ export default {
             //     "literature",
             //     "strategy",
             // ],
-            object_download_instructions: "",
+            obj_download_instructions: "",
             // next_review_date: "2022-02-01 10:00:00",
             created_at: "2020-01-01 10:00:00",
             updated_at: "2021-02-01 10:00:00",
@@ -114,7 +114,7 @@ export default {
             //     team_manager_username: "uqjsmi",
             // },
             object_embed_type: "link",
-            object_link: "https://uq.h5p.com/content/1291624610498497569",
+            obj_link_url: "https://uq.h5p.com/content/1291624610498497569",
             object_filters: [{
                     filter_key: 'topic',
                     filter_values: [
@@ -159,7 +159,7 @@ export default {
             //     "review",
             //     "journal article",
             // ],
-            object_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
+            obj_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
             // next_review_date: "2022-02-01 10:00:00",
             created_at: "2020-01-01 10:00:00",
             updated_at: "2021-02-01 10:00:00",
@@ -177,7 +177,7 @@ export default {
             //     team_manager_username: "uqjsmi",
             // },
             object_embed_type: "link",
-            object_link: "https://uq.h5p.com/content/1291624610498497569",
+            obj_link_url: "https://uq.h5p.com/content/1291624610498497569",
             object_filters: [{
                     filter_key: 'topic',
                     filter_values: [
@@ -222,7 +222,7 @@ export default {
             //     "review",
             //     "journal article",
             // ],
-            object_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
+            obj_download_instructions: "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
             // next_review_date: "2022-02-01 10:00:00",
             created_at: "2020-01-01 10:00:00",
             updated_at: "2021-02-01 10:00:00",
