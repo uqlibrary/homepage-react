@@ -100,6 +100,8 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     const { dlorId } = useParams();
     const classes = useStyles();
 
+    console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
+
     React.useEffect(() => {
         if (!dlorItemError && !dlorItemLoading && !dlorItem) {
             actions.loadADLOR(dlorId);

@@ -54,16 +54,14 @@ import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_as
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 
-import { accounts, currentAuthor } from './data';
-
 import {
-    currentPanels,
-    userListPanels,
     activePanels,
-    mockScheduleReturn,
+    currentPanels,
     mockAuthenticatedPanel,
     mockPublicPanel,
+    mockScheduleReturn,
     promoPanelMocks,
+    userListPanels,
 } from './data/promoPanelsLong';
 import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
