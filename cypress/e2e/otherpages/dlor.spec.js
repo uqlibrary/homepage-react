@@ -27,7 +27,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"')
                 .should('exist')
                 .children()
-                .should('have.length', 4 + 1);
+                .should('have.length', 8 + 1);
 
             // first panel
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] a').should(
@@ -46,7 +46,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer')
                 .should('exist')
                 .children()
-                .should('have.length', 1);
+                .should('have.length', 3);
 
             // second panel
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] a').should(
@@ -60,7 +60,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             );
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article').should(
                 'contain',
-                'This tutorial covers the advanced searching techniques that can be used for all topics',
+                'Using advanced searching techniques',
             );
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article footer')
                 .should('exist')
@@ -70,27 +70,27 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-media"]').should('contain', 'Pressbook');
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-licence"]').should('contain', 'CC BY-NC');
 
-            // third panel
-            cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff"] a').should(
+            // fourth panel
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] a').should(
                 'have.attr',
                 'href',
-                'http://localhost:2020/dlor/view/9jkh_9j4ld_0dff',
+                'http://localhost:2020/dlor/view/938h_4986_654f',
             );
-            cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff"] article header h2').should(
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article header h2').should(
                 'contain',
-                'Advanced literature searching for health and medicine',
+                'Artificial Intelligence - Digital Essentials',
             );
-            cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff"] article').should(
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article').should(
                 'contain',
-                'Learn how to conduct advanced literature searching for health and medicine.',
+                'Types of AI, implications for society, using AI in your studies and how UQ is involved.',
             );
-            cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff"] article footer')
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article footer')
                 .should('exist')
                 .children()
                 .should('have.length', 3);
-            cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff-footer-type"]').should('contain', 'Module');
-            cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff-footer-media"]').should('contain', 'H5P');
-            cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff-footer-licence"]').should(
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-type"]').should('contain', 'Module');
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-media"]').should('contain', 'H5P');
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-licence"]').should(
                 'contain',
                 'UQ copyright',
             );
@@ -131,7 +131,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4 + 1);
+                .should('have.length', 8 + 1);
 
             // select the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
@@ -140,11 +140,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('not.be.checked')
                 .check();
 
-            // 3 panels showing
+            // reduces to 4 panels
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3 + 1);
+                .should('have.length', 4 + 1);
 
             // unhide the Media format panel
             cy.get('[data-testid="panel-downarrow-2"]')
@@ -157,11 +157,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('not.be.checked')
                 .check();
 
-            // 3panels showing
+            // all panels showing again
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3 + 1);
+                .should('have.length', 8 + 1);
 
             // check the "ATSIC" checkbox
             cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
@@ -169,26 +169,26 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('not.be.checked')
                 .check();
 
-            // 4 panels showing
+            // all panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4 + 1);
+                .should('have.length', 8 + 1);
 
-            // UNcheck the "Media format, Module" checkbox
-            cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
+            // UNcheck the "assignments" checkbox
+            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
 
-            // 4 panels showing
+            // all panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4 + 1);
+                .should('have.length', 7 + 1);
 
-            // UNcheck the "assignments" checkbox
-            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
+            // UNcheck the "Media format, Module" checkbox
+            cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -205,11 +205,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('be.checked')
                 .uncheck();
 
-            // original 4 panels showing
+            // all panels showing again
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4 + 1);
+                .should('have.length', 8 + 1);
         });
         it('can handle an error', () => {
             cy.visit('dlor?user=errorUser');
@@ -250,7 +250,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4 + 1); // 4 panels plus filter button
+                .should('have.length', 8 + 1); // all panels plus filter button
 
             cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
                 .should('exist')
@@ -313,19 +313,19 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('h1').should('contain', 'Digital learning objects');
             cy.url().should('include', 'http://localhost:2020/dlor');
 
-            // check the third panel
-            cy.get('[data-testid="dlor-homepage-panel-9jkh_9j4ld_0dff"] a')
-                .should('have.attr', 'href', 'http://localhost:2020/dlor/view/9jkh_9j4ld_0dff')
+            // check the fourth panel
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] a')
+                .should('have.attr', 'href', 'http://localhost:2020/dlor/view/938h_4986_654f')
                 .click();
 
             // the third detail page loads
-            cy.url().should('include', 'http://localhost:2020/dlor/view/9jkh_9j4ld_0dff');
+            cy.url().should('include', 'http://localhost:2020/dlor/view/938h_4986_654f');
             cy.get('[data-testid="dlor-detailpage"] h2').should(
                 'contain',
-                'Advanced literature searching for health and medicine',
+                'Artificial Intelligence - Digital Essentials',
             );
 
-            // back button works
+            // back button, alternate route back to homepage, works
             cy.go('back');
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Digital learning objects');
@@ -353,15 +353,15 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 body: 'user has navigated to pressbook link',
             });
 
-            cy.visit('dlor/view/9jkh_9j4ld_0dff');
+            cy.visit('dlor/view/938h_4986_654f');
             // body contewnt is as expected
             cy.get('[data-testid="dlor-detailpage"] h2').should(
                 'contain',
-                'Advanced literature searching for health and medicine',
+                'Artificial Intelligence - Digital Essentials',
             );
             cy.get('[data-testid="dlor-detailpage-description"]').should(
                 'contain',
-                'Learn how to conduct advanced literature searching for health and medicine',
+                'Types of AI, implications for society, using AI in your studies and how UQ is involved. (longer lines)',
             );
             cy.get('[data-testid="dlor-detailpage"] h3').should('contain', 'How to use this module');
             cy.get('[data-testid="dlor-detailpage"] div:first-child > p').should(
@@ -383,6 +383,17 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="detailpage-filter-topic"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Assignments');
+
+            cy.get('[data-testid="detailpage-filter-item_type"] h4')
+                .should('exist')
+                .contains('Item type');
+            cy.get('[data-testid="detailpage-filter-item_type"] ul')
+                .should('exist')
+                .children()
+                .should('have.length', 1);
+            cy.get('[data-testid="detailpage-filter-item_type"] ul li:first-child')
+                .should('exist')
+                .should('contain', 'Module');
 
             cy.get('[data-testid="detailpage-filter-media_format"] h4')
                 .should('exist')
@@ -419,17 +430,6 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="detailpage-filter-licence"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'UQ copyright');
-
-            cy.get('[data-testid="detailpage-filter-item_type"] h4')
-                .should('exist')
-                .contains('Item type');
-            cy.get('[data-testid="detailpage-filter-item_type"] ul')
-                .should('exist')
-                .children()
-                .should('have.length', 1);
-            cy.get('[data-testid="detailpage-filter-item_type"] ul li:first-child')
-                .should('exist')
-                .should('contain', 'Module');
 
             cy.get('[data-testid="detailpage-filter-graduate_attributes"] h4')
                 .should('exist')
