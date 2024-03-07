@@ -175,9 +175,8 @@ export const DLOList = ({
         }
     }, [dlorList, dlorFilterList]);
 
-    const sidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
-
     function hideElement(element, displayproperty = null) {
+        !!element && (element.style.display = 'none');
         !!element && (element.style.visibility = 'hidden');
         !!element && (element.style.opacity = 0);
         !!element && (element.style.height = 0);
@@ -185,11 +184,20 @@ export const DLOList = ({
     }
 
     function showElement(element, displayproperty = null) {
+        console.log('showElement before', element.id, element);
+        !!element && (element.style.display = 'inline-block');
         !!element && (element.style.visibility = 'visible');
         !!element && (element.style.opacity = 1);
         !!element && (element.style.height = 'auto');
         !!displayproperty && !!element && (element.style.display = displayproperty);
+        console.log('showElement after', element.id, element);
     }
+
+    const sidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
+
+    const panelId = index => sidebarElementId(index);
+    const UpArrowId = index => sidebarElementId(index, 'panel-uparrow');
+    const DownArrowId = index => sidebarElementId(index, 'panel-downarrow');
 
     function hidePanel(index) {
         const facetPanel = document.getElementById(panelId(index));
@@ -202,6 +210,7 @@ export const DLOList = ({
 
     function showPanel(index) {
         const facetPanel = document.getElementById(panelId(index));
+        console.log('showPanel', index, facetPanel);
         const upArrowIcon = document.getElementById(UpArrowId(index));
         const downArrowIcon = document.getElementById(DownArrowId(index));
         showElement(facetPanel);
@@ -209,16 +218,25 @@ export const DLOList = ({
         showElement(upArrowIcon, 'inline-block');
     }
 
-    const panelId = index => sidebarElementId(index);
-    const UpArrowId = index => sidebarElementId(index, 'panel-uparrow');
-    const DownArrowId = index => sidebarElementId(index, 'panel-downarrow');
-
     function showHidePanel(index) {
+        const upArrowIcon = document.getElementById(UpArrowId(index));
         const downArrowIcon = document.getElementById(DownArrowId(index));
-        if (!!downArrowIcon && downArrowIcon.style.display === 'none') {
+        console.log('showHidePanel index=', index, '; upArrowIcon', upArrowIcon);
+        console.log('showHidePanel index=', index, '; downArrowIcon', downArrowIcon);
+        if (
+            (!!downArrowIcon && downArrowIcon.style.display === 'none') ||
+            (!!downArrowIcon && upArrowIcon.style.display !== 'none')
+        ) {
+            console.log('hide');
             hidePanel(index);
-        } else if (!!downArrowIcon && downArrowIcon.style.display === 'inline-block') {
+        } else if (
+            (!!downArrowIcon && downArrowIcon.style.display !== 'none') ||
+            (!!downArrowIcon && upArrowIcon.style.display === 'none')
+        ) {
+            console.log('show');
             showPanel(index);
+        } else {
+            console.log('other');
         }
     }
 
@@ -311,10 +329,33 @@ export const DLOList = ({
                                             data-testid={sidebarElementId(index, 'panel-minimisation-icon')}
                                             onClick={() => showHidePanel(index)}
                                         >
-                                            <KeyboardArrowUpIcon id={sidebarElementId(index, 'panel-uparrow')} />
+                                            <KeyboardArrowUpIcon
+                                                id={sidebarElementId(index, 'panel-uparrow')}
+                                                data-testid={sidebarElementId(index, 'panel-uparrow')}
+                                                style={
+                                                    index > 0
+                                                        ? {
+                                                              display: 'none',
+                                                              visibility: 'hidden',
+                                                              opacity: 0,
+                                                              height: 0,
+                                                          }
+                                                        : {}
+                                                }
+                                            />
                                             <KeyboardArrowDownIcon
                                                 id={sidebarElementId(index, 'panel-downarrow')}
-                                                style={{ display: 'none', visibility: 'hidden', opacity: 0, height: 0 }}
+                                                data-testid={sidebarElementId(index, 'panel-downarrow')}
+                                                style={
+                                                    index === 0
+                                                        ? {
+                                                              display: 'none',
+                                                              visibility: 'hidden',
+                                                              opacity: 0,
+                                                              height: 0,
+                                                          }
+                                                        : {}
+                                                }
                                             />
                                         </IconButton>
                                     </Grid>
@@ -323,6 +364,16 @@ export const DLOList = ({
                                     className={classes.filterSidebarCheckboxWrapper}
                                     id={sidebarElementId(index)}
                                     data-testid={sidebarElementId(index)}
+                                    style={
+                                        index > 0
+                                            ? {
+                                                  display: 'none',
+                                                  visibility: 'hidden',
+                                                  opacity: 0,
+                                                  height: 0,
+                                              }
+                                            : {}
+                                    }
                                 >
                                     {!!facetType.facet_list &&
                                         facetType.facet_list.length > 0 &&

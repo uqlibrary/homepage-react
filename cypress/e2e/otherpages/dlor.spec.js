@@ -100,13 +100,23 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .contains('Filters');
 
-            // sidebar panel loads open
+            // sidebar topic panel loads hidden
             cy.get('[data-testid="sidebar-panel-1"]')
                 .should('exist')
-                .contains('Aboriginal and Torres Strait Islander')
+                .should('have.attr', 'style', 'display: none; visibility: hidden; opacity: 0; height: 0px;');
+            cy.get('[data-testid="panel-uparrow-1"]')
+                .should('exist')
+                .should('have.attr', 'style', 'display: none; visibility: hidden; opacity: 0; height: 0px;');
+            cy.get('[data-testid="panel-downarrow-1"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            // and can be unhidden
+            cy.get('[data-testid="sidebar-panel-1"]')
+                .should('exist')
                 .should('be.visible');
 
-            // click button, close panel
+            // click button, hide panel
             cy.get('[data-testid="panel-minimisation-icon-1"]')
                 .should('exist')
                 .click();
@@ -114,7 +124,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .should('not.be.visible');
 
-            // click button again, reopen
+            // click button again, unhide
             cy.get('[data-testid="panel-minimisation-icon-1"]')
                 .should('exist')
                 .click();
@@ -133,7 +143,12 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 4 + 1);
 
-            // check the "assignments" checkbox
+            // unhide the Topics panel
+            cy.get('[data-testid="panel-downarrow-1"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            // check the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
@@ -145,6 +160,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 3 + 1);
 
+            // unhide the Media format panel
+            cy.get('[data-testid="panel-downarrow-2"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
             // check the "Media format, Module" checkbox
             cy.get('[data-testid="checkbox-media_format-module"] input[type=checkbox]')
                 .should('exist')
@@ -246,6 +266,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 4 + 1); // 4 panels plus filter button
 
+            // unhide the Topics panel
+            cy.get('[data-testid="panel-downarrow-1"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
             // a checkbox filters the list
             cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
                 .should('exist')
