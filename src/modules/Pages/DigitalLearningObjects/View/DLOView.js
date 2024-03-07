@@ -103,12 +103,13 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
 
     React.useEffect(() => {
+        console.log('loading data through actions');
         if (!dlorItemError && !dlorItemLoading && !dlorItem) {
             actions.clearDlor();
             actions.loadADLOR(dlorId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dlorId]);
+    }, [dlorId, dlorItem]);
 
     const deslugify = slug => {
         const words = slug.replace(/_/g, ' ');
@@ -223,7 +224,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
 
 DLOView.propTypes = {
     actions: PropTypes.any,
-    dlorItem: PropTypes.object,
+    dlorItem: PropTypes.any,
     dlorItemLoading: PropTypes.bool,
     dlorItemError: PropTypes.any,
 };
