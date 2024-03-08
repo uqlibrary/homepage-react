@@ -184,9 +184,8 @@ export function getHomepageLink(hostname = null, protocol = null, port = null, p
         homepagelink = `${_protocol}//${_hostname}${_pathname}#/`;
     } else if (_hostname === 'dev-homepage.library.uq.edu.au') {
         // local dev against staging api eg http://dev-homepage.library.uq.edu.au:2020/#/dlor with npm run start:url
-        // console.log('getHomepageLink::local dev');
         const _port = port === null ? window.location.port : port;
-        homepagelink = `${_protocol}://${_hostname}:${_port}/#/`;
+        homepagelink = `${_protocol}//${_hostname}:${_port}/#/`;
     } else if (_hostname.endsWith('.library.uq.edu.au')) {
         homepagelink = `${_protocol}//${_hostname}`;
     } else if (_hostname === 'localhost') {
