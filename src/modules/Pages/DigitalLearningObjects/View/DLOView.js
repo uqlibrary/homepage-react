@@ -175,7 +175,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                             {!!dlorItem.object_description &&
                                 dlorItem.object_description.split('\n').map((line, index) => <p key={index}>{line}</p>)}
                         </div>
-                        {dlorItem.object_embed_type === 'link' && (
+                        {dlorItem.object_embed_type === 'link' && !!dlorItem.obj_link_url && (
                             <div className={classes.uqActionButton}>
                                 <a href={dlorItem.obj_link_url}>Access the module</a>
                             </div>
