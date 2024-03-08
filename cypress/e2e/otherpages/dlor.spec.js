@@ -229,6 +229,57 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .contains('We did not find any entries in the system - please try again later.');
         });
+        it('reset button works', () => {
+            cy.visit('dlor');
+            cy.viewport(1300, 1000);
+            // all panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 8 + 1);
+
+            // check the "ATSIC" checkbox
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+
+            // 1 panel showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + 1);
+
+            // interactive activity not visible
+            cy.get('[data-testid="checkbox-item_type-type_interactive_activity"]')
+                .should('exist')
+                .should('not.be.visible');
+            // expand a filter panel
+            cy.get('[data-testid="panel-downarrow-2"]').click();
+            // now the element appears
+            cy.get('[data-testid="checkbox-item_type-type_interactive_activity"]')
+                .should('exist')
+                .should('be.visible');
+
+            // click reset
+            cy.get('[data-testid="sidebar-filter-reset-button"]')
+                .should('exist')
+                .should('be.visible')
+                .click({ force: true });
+
+            // interactive activity not visible
+            cy.get('[data-testid="checkbox-item_type-type_interactive_activity"]')
+                .should('exist')
+                .should('not.be.visible');
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked');
+            // all panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 8 + 1);
+        });
         it('still filters on mobile page', () => {
             cy.visit('dlor');
             cy.viewport(800, 900);

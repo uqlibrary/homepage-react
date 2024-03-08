@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Grid } from '@mui/material';
@@ -106,6 +106,7 @@ const useStyles = makeStyles(theme => ({
     },
     filterSidebarHeading: {
         alignItems: 'center',
+        paddingBottom: 4,
     },
     filterSidebarType: {
         width: '100%',
@@ -165,6 +166,7 @@ export const DLOList = ({
     const classes = useStyles();
 
     const [selectedFilters, setSelectedFilters] = React.useState([]);
+    const checkBoxArrayRef = useRef([]);
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
@@ -175,6 +177,10 @@ export const DLOList = ({
         }
     }, [dlorList, dlorFilterList]);
 
+    // useEffect(() => {
+    //     checkBoxArrayRef.current = checkBoxArrayRef.current.slice(0, dlorFilterList.length);
+    // }, [dlorFilterList]);
+
     function hideElement(element, displayproperty = null) {
         !!element && (element.style.display = 'none');
         !!element && (element.style.visibility = 'hidden');
@@ -184,13 +190,11 @@ export const DLOList = ({
     }
 
     function showElement(element, displayproperty = null) {
-        console.log('showElement before', element.id, element);
         !!element && (element.style.display = 'inline-block');
         !!element && (element.style.visibility = 'visible');
         !!element && (element.style.opacity = 1);
         !!element && (element.style.height = 'auto');
         !!displayproperty && !!element && (element.style.display = displayproperty);
-        console.log('showElement after', element.id, element);
     }
 
     const sidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
@@ -210,7 +214,6 @@ export const DLOList = ({
 
     function showPanel(index) {
         const facetPanel = document.getElementById(panelId(index));
-        console.log('showPanel', index, facetPanel);
         const upArrowIcon = document.getElementById(UpArrowId(index));
         const downArrowIcon = document.getElementById(DownArrowId(index));
         showElement(facetPanel);
@@ -221,34 +224,26 @@ export const DLOList = ({
     function showHidePanel(index) {
         const upArrowIcon = document.getElementById(UpArrowId(index));
         const downArrowIcon = document.getElementById(DownArrowId(index));
-        console.log('showHidePanel index=', index, '; upArrowIcon', upArrowIcon);
-        console.log('showHidePanel index=', index, '; downArrowIcon', downArrowIcon);
         if (
             (!!downArrowIcon && downArrowIcon.style.display === 'none') ||
             (!!downArrowIcon && upArrowIcon.style.display !== 'none')
         ) {
-            console.log('hide');
             hidePanel(index);
         } else if (
             (!!downArrowIcon && downArrowIcon.style.display !== 'none') ||
             (!!downArrowIcon && upArrowIcon.style.display === 'none')
         ) {
-            console.log('show');
             showPanel(index);
-        } else {
-            console.log('other');
         }
     }
 
     function showFilters() {
         // hide the filter icon
         const icon = document.getElementById('filterIconShowId');
-        console.log('icon=', icon);
         !!icon && (icon.style.display = 'none');
 
         // show the filter sidebar
         const block = document.getElementById('filterSidebar');
-        console.log('block=', block);
         !!block && (block.style.display = 'block');
     }
     function hideFilters() {
@@ -258,24 +253,40 @@ export const DLOList = ({
 
         // hide the filter sidebar
         const block = document.getElementById('filterSidebar');
-        console.log('block=', block);
         !!block && (block.style.display = 'none');
+    }
+
+    function findFacetSlugByName(facetName) {
+        for (const facetType of dlorFilterList) {
+            for (const facet of facetType.facet_list) {
+                if (facet.facet_name === facetName) {
+                    return facet.facet_slug;
+                }
+            }
+        }
+
+        return null; // Return null if no matching facet_name is found
     }
 
     const handleCheckboxAction = prop => e => {
         const facetTypeSlug = prop.replace('checkbox-', '');
-        const filterSlug = e.target.value;
+        const facetName = e.target.value;
 
         const thisFilterGroup = selectedFilters.find(f1 => f1.filter_key === facetTypeSlug);
+        const facetSlug = findFacetSlugByName(facetName);
+        const checkboxId = `${facetTypeSlug}-${facetSlug}`;
+
         if (thisFilterGroup) {
             // a subfilter from this group has been previously checked (group, is "Topic" Licence" etc)
             if (e.target.checked) {
-                thisFilterGroup.filter_values.push(filterSlug);
+                thisFilterGroup.filter_values.push(facetName);
                 setSelectedFilters([...selectedFilters, thisFilterGroup]);
+
+                checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
             } else {
                 let updateFilters = selectedFilters.map(f2 => {
                     // Remove the specific value from the filter_values array
-                    f2.filter_values = f2.filter_values.filter(val => val !== filterSlug);
+                    f2.filter_values = f2.filter_values.filter(val => val !== facetName);
                     if (f2.filter_values.length === 0) {
                         return null;
                     }
@@ -283,13 +294,38 @@ export const DLOList = ({
                 });
                 updateFilters = updateFilters.filter(item => item !== null);
                 setSelectedFilters(updateFilters);
+
+                checkBoxArrayRef.current = checkBoxArrayRef.current.filter(item => item !== checkboxId);
             }
         } else {
             // no subfilters from this group have been selected until now
             // add a new object with the given key and val
-            setSelectedFilters([{ filter_key: facetTypeSlug, filter_values: [filterSlug] }, ...selectedFilters]);
+            setSelectedFilters([{ filter_key: facetTypeSlug, filter_values: [facetName] }, ...selectedFilters]);
+
+            checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
         }
     };
+
+    function isFirstFilterPanel(index) {
+        return index > 0;
+    }
+
+    function resetFilters() {
+        // reshow the panels
+        setSelectedFilters([]);
+
+        // clear the filter checkboxes
+        checkBoxArrayRef.current = [];
+
+        // reset panel open-close to initial position
+        dlorFilterList.map((facetType, index) => {
+            if (isFirstFilterPanel(index)) {
+                hidePanel(index);
+            } else {
+                showPanel(index);
+            }
+        });
+    }
 
     function displayFilterSidebarContents() {
         return (
@@ -310,7 +346,13 @@ export const DLOList = ({
                         </Typography>
                     </Grid>
                     <Grid item md={3}>
-                        <button className={classes.filterResetButton}>Reset</button>
+                        <button
+                            data-testid="sidebar-filter-reset-button"
+                            className={classes.filterResetButton}
+                            onClick={() => resetFilters()}
+                        >
+                            Reset
+                        </button>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
@@ -333,7 +375,7 @@ export const DLOList = ({
                                                 id={sidebarElementId(index, 'panel-uparrow')}
                                                 data-testid={sidebarElementId(index, 'panel-uparrow')}
                                                 style={
-                                                    index > 0
+                                                    isFirstFilterPanel(index)
                                                         ? {
                                                               display: 'none',
                                                               visibility: 'hidden',
@@ -347,7 +389,7 @@ export const DLOList = ({
                                                 id={sidebarElementId(index, 'panel-downarrow')}
                                                 data-testid={sidebarElementId(index, 'panel-downarrow')}
                                                 style={
-                                                    index === 0
+                                                    !isFirstFilterPanel(index)
                                                         ? {
                                                               display: 'none',
                                                               visibility: 'hidden',
@@ -379,6 +421,7 @@ export const DLOList = ({
                                         facetType.facet_list.length > 0 &&
                                         facetType.facet_list.map(facet => {
                                             const checkBoxid = `checkbox-${facetType.facet_type_slug}`;
+                                            const checkBoxidShort = `${facetType.facet_type_slug}-${facet.facet_slug}`;
                                             return (
                                                 <FormControlLabel
                                                     key={`${facetType.facet_type_slug}-${facet.facet_slug}`}
@@ -389,6 +432,10 @@ export const DLOList = ({
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             value={facet.facet_name}
                                                             data-testid={`checkbox-${facetType.facet_type_slug}-${facet.facet_slug}`}
+                                                            ref={checkBoxArrayRef.current[checkBoxidShort]}
+                                                            checked={
+                                                                !!checkBoxArrayRef.current.includes(checkBoxidShort)
+                                                            }
                                                         />
                                                     }
                                                     label={facet.facet_name}
@@ -623,4 +670,5 @@ DLOList.propTypes = {
     dlorFilterListError: PropTypes.any,
 };
 
-export default React.memo(DLOList);
+// export default React.memo(DLOList);
+export default DLOList;
