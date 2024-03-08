@@ -104,12 +104,12 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
 
     React.useEffect(() => {
         console.log('loading data through actions');
-        if (!dlorItemError && !dlorItemLoading && !dlorItem) {
+        if (!!dlorId) {
             actions.clearDlor();
             actions.loadADLOR(dlorId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dlorId, dlorItem]);
+    }, [dlorId]);
 
     const deslugify = slug => {
         const words = slug.replace(/_/g, ' ');
