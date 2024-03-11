@@ -111,16 +111,28 @@ const useStyles = makeStyles(theme => ({
     filterSidebarType: {
         width: '100%',
         borderBottom: '1px solid #e1e1e1',
+        paddingTop: '0!important',
+        paddingBottom: 16,
+        marginTop: 24,
+        paddingLeft: '0!important',
+        marginLeft: 24,
     },
     filterSidebarTypeHeading: {
+        display: 'flex',
         paddingLeft: 0,
         justifyContent: 'space-between',
+        paddingTop: 0,
         '& h3': {
             fontWeight: 500,
         },
         '& button': {
             borderWidth: 0,
             backgroundColor: '#f7f7f7',
+        },
+    },
+    facetPanelControl: {
+        '& button': {
+            padding: 0,
         },
     },
     filterSidebarCheckboxWrapper: {
@@ -341,7 +353,7 @@ export const DLOList = ({
                                 <CloseIcon />
                             </IconButton>
                         </div>
-                        <Typography component={'h2'} variant={'h6'} style={{ marginLeft: -10 }}>
+                        <Typography component={'h2'} variant={'h6'}>
                             Filters
                         </Typography>
                     </Grid>
@@ -350,6 +362,7 @@ export const DLOList = ({
                             data-testid="sidebar-filter-reset-button"
                             className={classes.filterResetButton}
                             onClick={() => resetFilters()}
+                            aria-label="Reset filter to default"
                         >
                             Reset
                         </button>
@@ -365,9 +378,9 @@ export const DLOList = ({
                                             {facetType.facet_type_name}
                                         </Typography>
                                     </Grid>
-                                    <Grid item md={1}>
+                                    <Grid item md={1} className={classes.facetPanelControl}>
                                         <IconButton
-                                            aria-label="Minimise the filter section"
+                                            aria-label="Minimise the filter section" // TODO needs to be generated according to open/closed
                                             data-testid={sidebarElementId(index, 'panel-minimisation-icon')}
                                             onClick={() => showHidePanel(index)}
                                         >
@@ -430,6 +443,7 @@ export const DLOList = ({
                                                         <Checkbox
                                                             className={classes.filterSidebarCheckbox}
                                                             onChange={handleCheckboxAction(checkBoxid)}
+                                                            aria-label={'Include'}
                                                             value={facet.facet_name}
                                                             data-testid={`checkbox-${facetType.facet_type_slug}-${facet.facet_slug}`}
                                                             ref={checkBoxArrayRef.current[checkBoxidShort]}

@@ -336,8 +336,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .click();
             // the first detail page loads
             cy.url().should('include', 'http://localhost:2020/dlor/view/987y_isjgt_9866');
-            cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'Accessibility - Digital Essentials');
-            cy.get('h1 a')
+            cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'Accessibility - Digital Essentials');
+            cy.get('[data-testid="dlor-detailpage-sitelabel"] a')
                 .should('exist')
                 .should('have.attr', 'href', 'http://localhost:2020/dlor')
                 .click();
@@ -353,10 +353,10 @@ describe('Digital Object learning Repository (DLOR)', () => {
 
             // the second detail page loads
             cy.url().should('include', 'http://localhost:2020/dlor/view/98s0_dy5k3_98h4');
-            cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'Advanced literature searching');
+            cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'Advanced literature searching');
 
             // back to homepage
-            cy.get('h1 a')
+            cy.get('[data-testid="dlor-detailpage-sitelabel"] a')
                 .should('exist')
                 .should('have.attr', 'href', 'http://localhost:2020/dlor')
                 .click();
@@ -371,7 +371,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
 
             // the third detail page loads
             cy.url().should('include', 'http://localhost:2020/dlor/view/938h_4986_654f');
-            cy.get('[data-testid="dlor-detailpage"] h2').should(
+            cy.get('[data-testid="dlor-detailpage"] h1').should(
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
             );
@@ -390,8 +390,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
 
-            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage"] h2').should('exist'));
-            cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'Advanced literature searching');
+            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage"] h1').should('exist'));
+            cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'Advanced literature searching');
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'dlor',
                 scopeName: 'Content',
@@ -406,7 +406,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
 
             cy.visit('dlor/view/938h_4986_654f');
             // body contewnt is as expected
-            cy.get('[data-testid="dlor-detailpage"] h2').should(
+            cy.get('[data-testid="dlor-detailpage"] h1').should(
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
             );
@@ -414,14 +414,14 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 'contain',
                 'Types of AI, implications for society, using AI in your studies and how UQ is involved. (longer lines)',
             );
-            cy.get('[data-testid="dlor-detailpage"] h3').should('contain', 'How to use this module');
+            cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'How to use this module');
             cy.get('[data-testid="dlor-detailpage"] div:first-child > p').should(
                 'contain',
                 'Download the Common Cartridge file and H5P quiz to embed in Blackboard',
             );
 
             // meta data in sidebar is as expected
-            cy.get('[data-testid="detailpage-filter-topic"] h4')
+            cy.get('[data-testid="detailpage-filter-topic"] h3')
                 .should('exist')
                 .contains('Topic');
             cy.get('[data-testid="detailpage-filter-topic"] ul')
@@ -435,7 +435,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .should('contain', 'Assignments');
 
-            cy.get('[data-testid="detailpage-filter-item_type"] h4')
+            cy.get('[data-testid="detailpage-filter-item_type"] h3')
                 .should('exist')
                 .contains('Item type');
             cy.get('[data-testid="detailpage-filter-item_type"] ul')
@@ -446,7 +446,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .should('contain', 'Module');
 
-            cy.get('[data-testid="detailpage-filter-media_format"] h4')
+            cy.get('[data-testid="detailpage-filter-media_format"] h3')
                 .should('exist')
                 .contains('Media format');
             cy.get('[data-testid="detailpage-filter-media_format"] ul')
@@ -457,7 +457,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .should('contain', 'H5P');
 
-            cy.get('[data-testid="detailpage-filter-subject"] h4')
+            cy.get('[data-testid="detailpage-filter-subject"] h3')
                 .should('exist')
                 .contains('Subject');
             cy.get('[data-testid="detailpage-filter-subject"] ul')
@@ -471,7 +471,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .should('contain', 'Medicine; Biomedical Sciences');
 
-            cy.get('[data-testid="detailpage-filter-licence"] h4')
+            cy.get('[data-testid="detailpage-filter-licence"] h3')
                 .should('exist')
                 .contains('Licence');
             cy.get('[data-testid="detailpage-filter-licence"] ul')
@@ -482,7 +482,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .should('contain', 'UQ copyright');
 
-            cy.get('[data-testid="detailpage-filter-graduate_attributes"] h4')
+            cy.get('[data-testid="detailpage-filter-graduate_attributes"] h3')
                 .should('exist')
                 .contains('Graduate attributes');
             cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul')

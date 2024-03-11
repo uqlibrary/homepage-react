@@ -57,36 +57,20 @@ const useStyles = makeStyles(theme => ({
     titleBlock: {
         display: 'flex',
         alignItems: 'center',
-        paddingBottom: 10,
+        marginBottom: 20,
+        '& p:first-child': {
+            padding: 0,
+            fontSize: 16,
+            '& a': {
+                color: 'rgba(0, 0, 0, 0.87)',
+            },
+        },
         '& svg': {
-            marginBottom: 10,
             width: 10,
             marginInline: 6,
         },
-        '& > p': {
-            // minHeight: 35,
+        '& > p:nth-child(2)': {
             padding: 0,
-            marginBottom: 10,
-        },
-        '& h1': {
-            padding: 0,
-            // paddingBottom: 0,
-            // fontWeight: 300,
-            fontSize: 16,
-            minHeight: 40,
-            '& a': {
-                minHeight: 40, // match * above or hard to mouse over
-                color: 'rgba(0, 0, 0, 0.87)',
-                // a gap above the underline
-                textDecoration: 'none',
-                borderBottom: '1px solid #000',
-                paddingBottom: 1,
-                // end of gap block
-                '&:hover': {
-                    backgroundColor: theme.palette.secondary.main,
-                    borderBottomColor: theme.palette.white.main,
-                },
-            },
         },
     },
     dlorEntry: {
@@ -119,7 +103,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     function getTitleBlock(detailTitle = 'View an entry') {
         return (
             <div className={classes.titleBlock}>
-                <Typography component={'h1'} variant={'h6'}>
+                <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                     <a href={`${getHomepageLink()}dlor`}>Digital learning objects</a>
                 </Typography>
                 <ArrowForwardIcon />
@@ -168,7 +152,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                 {getTitleBlock()}
                 <Grid container spacing={4} data-testid="dlor-detailpage">
                     <Grid item xs={12} md={8}>
-                        <Typography className={classes.highlighted} component={'h2'} variant={'h4'}>
+                        <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
                             {dlorItem.object_title}
                         </Typography>
                         <div data-testid="dlor-detailpage-description">
@@ -177,12 +161,14 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         </div>
                         {dlorItem.object_embed_type === 'link' && !!dlorItem.obj_link_url && (
                             <div className={classes.uqActionButton}>
-                                <a href={dlorItem.obj_link_url}>Access the module</a>
+                                <a aria-label="Click to visit the Learning Resource" href={dlorItem.obj_link_url}>
+                                    Access the module
+                                </a>
                             </div>
                         )}
                         {!!dlorItem.obj_download_instructions && (
                             <>
-                                <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
+                                <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
                                     How to use this module
                                 </Typography>
                                 {!!dlorItem.obj_download_instructions &&
@@ -195,7 +181,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                     <Grid item xs={12} md={4} data-testid="detaipage-metadata">
                         {dlorItem.object_filters?.length > 0 && (
                             <>
-                                <Typography component={'h3'} variant={'h6'} className={classes.metaHeader}>
+                                <Typography component={'h2'} variant={'h6'} className={classes.metaHeader}>
                                     <BookmarksIcon />
                                     Details
                                 </Typography>
@@ -205,7 +191,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                             key={filter.filter_key}
                                             data-testid={`detailpage-filter-${filter.filter_key}`}
                                         >
-                                            <Typography className={classes.highlighted} component={'h4'} variant={'h6'}>
+                                            <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
                                                 {deslugify(filter.filter_key)}
                                             </Typography>
                                             <ul className={classes.filterDisplayList}>
