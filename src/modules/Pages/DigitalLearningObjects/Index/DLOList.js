@@ -287,39 +287,22 @@ export const DLOList = ({
 
     const handleCheckboxAction = prop => e => {
         const facetTypeSlug = prop.replace('checkbox-', '');
+
         const facetName = e.target.value;
-
-        const thisFilterGroup = selectedFilters.find(f1 => f1.filter_key === facetTypeSlug);
         const facetSlug = findFacetSlugByName(facetName);
+
         const checkboxId = `${facetTypeSlug}-${facetSlug}`;
+        const individualFilterSlug = `${facetTypeSlug}-${facetSlug}`;
 
-        if (thisFilterGroup) {
-            // a subfilter from this group has been previously checked (group, is "Topic" Licence" etc)
-            if (e.target.checked) {
-                thisFilterGroup.filter_values.push(facetName);
-                setSelectedFilters([...selectedFilters, thisFilterGroup]);
-
-                checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
-            } else {
-                let updateFilters = selectedFilters.map(f2 => {
-                    // Remove the specific value from the filter_values array
-                    f2.filter_values = f2.filter_values.filter(val => val !== facetName);
-                    if (f2.filter_values.length === 0) {
-                        return null;
-                    }
-                    return f2;
-                });
-                updateFilters = updateFilters.filter(item => item !== null);
-                setSelectedFilters(updateFilters);
-
-                checkBoxArrayRef.current = checkBoxArrayRef.current.filter(item => item !== checkboxId);
-            }
-        } else {
-            // no subfilters from this group have been selected until now
-            // add a new object with the given key and val
-            setSelectedFilters([{ filter_key: facetTypeSlug, filter_values: [facetName] }, ...selectedFilters]);
+        if (e.target.checked) {
+            setSelectedFilters([...selectedFilters, individualFilterSlug]);
 
             checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
+        } else {
+            const updateFilters = selectedFilters.filter(f2 => f2 !== individualFilterSlug);
+            setSelectedFilters(updateFilters);
+
+            checkBoxArrayRef.current = checkBoxArrayRef.current.filter(item => item !== checkboxId);
         }
     };
 
@@ -474,6 +457,19 @@ export const DLOList = ({
         );
     }
 
+    const slugifyName = text => {
+        // Trim hyphens from the end of the text
+        return text
+            .toString() // Ensure the input is a string
+            .toLowerCase() // Convert the string to lowercase
+            .replace(/\s+/g, '_') // Replace spaces with hyphens
+            .replace(/-/g, '_') // Replace spaces with hyphens
+            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
+            .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
+            .replace(/^-+/, '') // Trim hyphens from the start of the text
+            .replace(/-+$/, '');
+    };
+
     const filterDlorList = () => {
         const testvar = [];
         if (!selectedFilters || selectedFilters.length === 0) {
@@ -482,20 +478,9 @@ export const DLOList = ({
 
         return dlorList.filter(d => {
             return (
+                !!d?.constructedFilters &&
                 !!selectedFilters &&
-                selectedFilters.some(selectedFilter => {
-                    // filter parent object_key not found in object
-                    /* istanbul ignore next */
-                    if (!d?.object_filters?.some(obj => obj.filter_key === selectedFilter.filter_key)) {
-                        return false;
-                    }
-
-                    return selectedFilter.filter_values.some(subFilter => {
-                        return !!d.object_filters.some(obj => {
-                            return obj.filter_values.includes(subFilter);
-                        });
-                    });
-                })
+                selectedFilters.every(el => d?.constructedFilters.includes(el))
             );
         });
     };
@@ -639,6 +624,13 @@ export const DLOList = ({
                                 </Grid>
                             );
                         } else {
+                            dlorList.forEach(d => {
+                                // add a constructed array of facet-parent_facet-child
+                                d.constructedFilters = d.object_filters.flatMap(filter =>
+                                    filter.filter_values.map(value => `${filter.filter_key}-${slugifyName(value)}`),
+                                );
+                            });
+
                             const dlorData = filterDlorList();
                             if (!dlorData || dlorData.length === 0) {
                                 return (

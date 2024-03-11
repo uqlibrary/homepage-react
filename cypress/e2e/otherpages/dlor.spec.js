@@ -163,23 +163,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('not.be.checked')
                 .check();
 
-            // all panels showing again
+            // some panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
-
-            // check the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
-
-            // all panels showing
-            cy.get('[data-testid="dlor-homepage-list"]')
-                .should('exist')
-                .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', 3 + 1);
 
             // UNcheck the "assignments" checkbox
             cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
@@ -187,7 +175,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('be.checked')
                 .uncheck();
 
-            // all panels showing
+            // many panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
@@ -199,7 +187,19 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('be.checked')
                 .uncheck();
 
-            // 1 panels showing
+            // all panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 8 + 1);
+
+            // check the "ATSIC" checkbox
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+
+            // one panel showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
@@ -317,7 +317,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 2); // one panel plus filter button
+                .should('have.length', 1 + 1); // one panel plus filter button
 
             // hide the filter section
             cy.get('[data-testid="filterIconHideId"]')
