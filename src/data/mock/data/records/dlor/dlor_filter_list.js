@@ -45,7 +45,7 @@ export default {
         {
             "facet_type_id": 3,
             "facet_type_order": 2,
-            "facet_type_name": "Graduate Attributes",
+            "facet_type_name": "Graduate attributes",
             "facet_type_slug": "graduate_attributes",
             "facet_type_help_public": "Graduate attributes identify specific skills, attributes and understandings students should seek to develop.",
             "facet_type_help_admin": "Graduate attributes can be used by teaching staff to identify specific skills, attributes and understandings they would like to develop.",
@@ -79,7 +79,7 @@ export default {
         {
             "facet_type_id": 6,
             "facet_type_order": 3,
-            "facet_type_name": "Item Type",
+            "facet_type_name": "Item type",
             "facet_type_slug": "item_type",
             "facet_type_help_public": "it",
             "facet_type_help_admin": "it",
@@ -113,7 +113,7 @@ export default {
         {
             "facet_type_id": 2,
             "facet_type_order": 4,
-            "facet_type_name": "Media Format",
+            "facet_type_name": "Media format",
             "facet_type_slug": "media_format",
             "facet_type_help_public": "MF",
             "facet_type_help_admin": "MF",

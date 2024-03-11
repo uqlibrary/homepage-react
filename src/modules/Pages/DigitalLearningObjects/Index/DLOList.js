@@ -113,7 +113,7 @@ const useStyles = makeStyles(theme => ({
         borderBottom: '1px solid #e1e1e1',
         paddingTop: '0!important',
         paddingBottom: 16,
-        marginTop: 24,
+        marginTop: 16,
         paddingLeft: '0!important',
         marginLeft: 24,
     },
