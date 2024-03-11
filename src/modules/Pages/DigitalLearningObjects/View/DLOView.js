@@ -87,7 +87,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
 
     React.useEffect(() => {
-        console.log('loading data through actions');
         if (!!dlorId) {
             actions.clearDlor();
             actions.loadADLOR(dlorId);

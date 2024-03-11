@@ -200,11 +200,11 @@ const webpackConfig = {
         minimizer: [
             new TerserPlugin({
                 parallel: true,
-                // terserOptions: { // comment out for debug, feature branch only
-                //     compress: {
-                //         drop_console: config.removeConsoleLog,
-                //     },
-                // },
+                terserOptions: {
+                    compress: {
+                        drop_console: config.removeConsoleLog,
+                    },
+                },
             }),
         ],
     },
