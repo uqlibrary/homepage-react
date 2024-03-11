@@ -146,12 +146,18 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .children()
                 .should('have.length', 4 + 1);
 
-            // unhide the Media format panel
+            // unhide the Item type panel
+            cy.get('[data-testid="panel-minimisation-icon-2"]')
+                .should('exist')
+                .should('have.attr', 'aria-label', 'Open this filter section');
             cy.get('[data-testid="panel-downarrow-2"]')
                 .should('exist')
                 .should('be.visible')
                 .click();
-            // check the "Media format, Module" checkbox
+            cy.get('[data-testid="panel-minimisation-icon-2"]')
+                .should('exist')
+                .should('have.attr', 'aria-label', 'Close this filter section');
+            // check the "Item type, Module" checkbox
             cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')

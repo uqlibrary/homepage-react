@@ -215,12 +215,16 @@ export const DLOList = ({
     const UpArrowId = index => sidebarElementId(index, 'panel-uparrow');
     const DownArrowId = index => sidebarElementId(index, 'panel-downarrow');
 
+    const filterButtonLabel = actionLabel => actionLabel + ' this filter section';
+    const filterMaximiseButtonLabel = filterButtonLabel('Open');
+    const filterMinimiseButtonLabel = filterButtonLabel('Close');
     function hidePanel(index) {
         const facetPanel = document.getElementById(panelId(index));
         const upArrowIcon = document.getElementById(UpArrowId(index));
         const downArrowIcon = document.getElementById(DownArrowId(index));
         hideElement(facetPanel);
         showElement(downArrowIcon, 'inline-block');
+        !!downArrowIcon && downArrowIcon.parentElement.setAttribute('aria-label', filterMaximiseButtonLabel);
         hideElement(upArrowIcon, 'none');
     }
 
@@ -231,6 +235,7 @@ export const DLOList = ({
         showElement(facetPanel);
         hideElement(downArrowIcon, 'none');
         showElement(upArrowIcon, 'inline-block');
+        !!upArrowIcon && upArrowIcon.parentElement.setAttribute('aria-label', filterMinimiseButtonLabel);
     }
 
     function showHidePanel(index) {
@@ -380,7 +385,11 @@ export const DLOList = ({
                                     </Grid>
                                     <Grid item md={1} className={classes.facetPanelControl}>
                                         <IconButton
-                                            aria-label="Minimise the filter section" // TODO needs to be generated according to open/closed
+                                            aria-label={
+                                                isFirstFilterPanel(index)
+                                                    ? filterMaximiseButtonLabel
+                                                    : filterMinimiseButtonLabel
+                                            }
                                             data-testid={sidebarElementId(index, 'panel-minimisation-icon')}
                                             onClick={() => showHidePanel(index)}
                                         >
