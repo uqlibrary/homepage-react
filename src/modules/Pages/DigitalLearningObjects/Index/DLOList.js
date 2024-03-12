@@ -535,29 +535,22 @@ export const DLOList = ({
 
                             <footer>
                                 {!!footerElementType && (
-                                    <div
-                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}
-                                        title={getPublicHelp('item_type')}
-                                    >
-                                        <LaptopIcon />
+                                    <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
+                                        <LaptopIcon aria-label={getPublicHelp('item_type')} />
                                         {footerElementType}
                                     </div>
                                 )}
                                 {!!footerElementMedia && (
-                                    <div
-                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}
-                                        title={getPublicHelp('media_format')}
-                                    >
-                                        <DescriptionIcon />
+                                    <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}>
+                                        <DescriptionIcon aria-label={getPublicHelp('media_format')} />
                                         {footerElementMedia}
                                     </div>
                                 )}
                                 {!!footerElementLicence && (
                                     <div
                                         data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
-                                        title={getPublicHelp('licence')}
                                     >
-                                        <CopyrightIcon />
+                                        <CopyrightIcon aria-label={getPublicHelp('licence')} />
                                         {footerElementLicence}
                                     </div>
                                 )}
