@@ -122,6 +122,14 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .contains('Aboriginal and Torres Strait Islander')
                 .should('be.visible');
+
+            cy.get('[data-testid="dlor-homepage-loginprompt"]').should('not.exist');
+
+            cy.visit('dlor?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-homepage-loginprompt"]')
+                .should('exist')
+                .contains('Login for a better experience');
         });
         it('has a working sidebar filter', () => {
             cy.visit('dlor');

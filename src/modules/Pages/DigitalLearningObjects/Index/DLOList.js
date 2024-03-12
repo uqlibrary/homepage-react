@@ -15,6 +15,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseIcon from '@mui/icons-material/Close';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -164,6 +165,21 @@ const useStyles = makeStyles(theme => ({
             textDecorationColor: 'rgb(13, 109, 205)',
         },
     },
+    loginAlert: {
+        backgroundColor: '#dcedfd',
+        color: 'rgba(0, 0, 0, 0.87)',
+        fontWeight: 400,
+        lineHeight: 1.5,
+        marginRight: 12,
+        marginLeft: 12,
+        marginBottom: 12,
+        padding: 12,
+        display: 'flex',
+        alignItems: 'center',
+        '& span': {
+            marginLeft: 10,
+        },
+    },
 }));
 
 export const DLOList = ({
@@ -174,6 +190,7 @@ export const DLOList = ({
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
+    account,
 }) => {
     const classes = useStyles();
 
@@ -636,8 +653,22 @@ export const DLOList = ({
                                     </Grid>
                                 );
                             } else {
+                                const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(
+                                    window.location.href,
+                                )}`;
                                 return (
                                     <>
+                                        {!account?.id && (
+                                            <div data-testid="dlor-homepage-loginprompt" className={classes.loginAlert}>
+                                                <InfoIcon />
+                                                <span>
+                                                    <a style={{ color: '#1e72c6' }} href={loginLink}>
+                                                        Login
+                                                    </a>{' '}
+                                                    for a better experience
+                                                </span>
+                                            </div>
+                                        )}
                                         <Grid
                                             container
                                             spacing={3}
@@ -676,6 +707,7 @@ DLOList.propTypes = {
     dlorFilterList: PropTypes.array,
     dlorFilterListLoading: PropTypes.bool,
     dlorFilterListError: PropTypes.any,
+    account: PropTypes.object,
 };
 
 // export default React.memo(DLOList);

@@ -7,6 +7,7 @@ import DLOList from './DLOList';
 
 const mapStateToProps = state => {
     return {
+        ...state.get('accountReducer'),
         ...state.get('dlorListReducer'),
         ...state.get('dlorFilterListReducer'),
     };
