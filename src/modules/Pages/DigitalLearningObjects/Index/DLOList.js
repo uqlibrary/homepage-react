@@ -83,11 +83,28 @@ const useStyles = makeStyles(theme => ({
             },
         },
     },
+    panelBody: {
+        maxHeight: 900,
+        scrollbarGutter: 'stable',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        paddingTop: 0,
+        marginTop: 24,
+    },
     filterSidebar: {
         fontSize: 10,
+        paddingTop: 0,
+        marginTop: 24,
         [theme.breakpoints.down('md')]: {
             display: 'none',
         },
+    },
+    filterSidebarBody: {
+        maxHeight: 856, // 900 - 44,
+        scrollbarGutter: 'stable',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        marginTop: 0,
     },
     showFilterSidebarIcon: {
         display: 'flex',
@@ -114,15 +131,16 @@ const useStyles = makeStyles(theme => ({
         borderBottom: '1px solid #e1e1e1',
         paddingTop: '0!important',
         paddingBottom: 16,
-        marginTop: 16,
+        // marginTop: 16,
         paddingLeft: '0!important',
         marginLeft: 24,
+        paddingRight: 8,
     },
     filterSidebarTypeHeading: {
         display: 'flex',
         paddingLeft: 0,
         justifyContent: 'space-between',
-        paddingTop: 0,
+        paddingTop: 16,
         '& h3': {
             fontWeight: 500,
         },
@@ -399,7 +417,7 @@ export const DLOList = ({
                         </button>
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} className={classes.filterSidebarBody}>
                     {dlorFilterList.map((facetType, index) => {
                         return (
                             <Grid item key={facetType.facet_type_slug} className={classes.filterSidebarType}>
@@ -565,12 +583,12 @@ export const DLOList = ({
                     <StandardCard noHeader fullHeight className={classes.dlorCard}>
                         <article className={classes.article}>
                             <header>
-                                {!!headerElementTopic && (
-                                    <Typography className={classes.highlighted}>{headerElementTopic}</Typography>
-                                )}
                                 <Typography component={'h2'} variant={'h6'}>
                                     {object.object_title}
                                 </Typography>
+                                {!!headerElementTopic && (
+                                    <Typography className={classes.highlighted}>{headerElementTopic}</Typography>
+                                )}
                             </header>
                             <div className={classes.articleContents}>
                                 <p>{object.object_summary}</p>
@@ -644,7 +662,7 @@ export const DLOList = ({
                         }
                     })()}
                 </Grid>
-                <Grid item xs={12} md={9}>
+                <Grid item xs={12} md={9} className={classes.panelBody}>
                     {(() => {
                         if (!!dlorListError) {
                             return (
