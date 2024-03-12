@@ -180,6 +180,31 @@ const useStyles = makeStyles(theme => ({
             marginLeft: 10,
         },
     },
+    skipLink: {
+        // hidden when not focused
+        position: 'absolute',
+        left: -1000,
+
+        // uqActionButton layout
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        borderColor: theme.palette.primary.main,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: 6,
+        padding: '8px 12px',
+        fontWeight: 400,
+
+        marginLeft: 10,
+        '&:focus': {
+            left: 'auto',
+
+            // uqActionButton layout
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.primary.main,
+            textDecoration: 'none',
+        },
+    },
 }));
 
 export const DLOList = ({
@@ -197,6 +222,11 @@ export const DLOList = ({
     const [selectedFilters, setSelectedFilters] = React.useState([]);
     const checkBoxArrayRef = useRef([]);
 
+    function skipToElement() {
+        const skipNavLander = document.querySelector('#dlor-homepage-list a:first-child');
+        !!skipNavLander && skipNavLander.focus();
+    }
+
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
@@ -205,10 +235,6 @@ export const DLOList = ({
             actions.loadAllFilters();
         }
     }, [dlorList, dlorFilterList]);
-
-    // useEffect(() => {
-    //     checkBoxArrayRef.current = checkBoxArrayRef.current.slice(0, dlorFilterList.length);
-    // }, [dlorFilterList]);
 
     function hideElement(element, displayproperty = null) {
         !!element && (element.style.display = 'none');
@@ -600,6 +626,9 @@ export const DLOList = ({
         <StandardPage>
             <Typography component={'h1'} variant={'h6'}>
                 Digital learning objects
+                <button className={classes.skipLink} id="skip-filters" onClick={() => skipToElement()}>
+                    Skip facet selection to view DLOR entries
+                </button>
             </Typography>
             <Grid container spacing={2}>
                 <Grid item md={3} className={classes.filterSidebar} id="filterSidebar" data-testid="filterSidebar">
@@ -674,6 +703,7 @@ export const DLOList = ({
                                             spacing={3}
                                             className={classes.panelGrid}
                                             data-testid="dlor-homepage-list"
+                                            id="dlor-homepage-list"
                                         >
                                             <div
                                                 id="filterIconShowId"
