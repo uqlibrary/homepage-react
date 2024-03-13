@@ -379,7 +379,7 @@ export const DLOList = ({
     };
 
     function isFirstFilterPanel(index) {
-        return index > 0;
+        return index === 0;
     }
 
     function resetFilters() {
@@ -392,9 +392,9 @@ export const DLOList = ({
         // reset panel open-close to initial position
         dlorFilterList.map((facetType, index) => {
             if (isFirstFilterPanel(index)) {
-                hidePanel(index);
-            } else {
                 showPanel(index);
+            } else {
+                hidePanel(index);
             }
         });
     }
@@ -442,8 +442,8 @@ export const DLOList = ({
                                         <IconButton
                                             aria-label={
                                                 isFirstFilterPanel(index)
-                                                    ? filterMaximiseButtonLabel
-                                                    : filterMinimiseButtonLabel
+                                                    ? filterMinimiseButtonLabel
+                                                    : filterMaximiseButtonLabel
                                             }
                                             data-testid={sidebarElementId(index, 'panel-minimisation-icon')}
                                             onClick={() => showHidePanel(index)}
@@ -453,20 +453,20 @@ export const DLOList = ({
                                                 data-testid={sidebarElementId(index, 'panel-uparrow')}
                                                 style={
                                                     isFirstFilterPanel(index)
-                                                        ? {
+                                                        ? {}
+                                                        : {
                                                               display: 'none',
                                                               visibility: 'hidden',
                                                               opacity: 0,
                                                               height: 0,
                                                           }
-                                                        : {}
                                                 }
                                             />
                                             <KeyboardArrowDownIcon
                                                 id={sidebarElementId(index, 'panel-downarrow')}
                                                 data-testid={sidebarElementId(index, 'panel-downarrow')}
                                                 style={
-                                                    !isFirstFilterPanel(index)
+                                                    isFirstFilterPanel(index)
                                                         ? {
                                                               display: 'none',
                                                               visibility: 'hidden',
