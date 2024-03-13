@@ -48,6 +48,8 @@ const useStyles = makeStyles(theme => ({
                 lineHeight: 1.3,
             },
             // backgroundColor: '#ffffd1',
+            display: 'flex',
+            flexDirection: 'column-reverse',
         },
         '& footer': {
             marginTop: 24,
