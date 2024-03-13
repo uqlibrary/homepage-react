@@ -78,7 +78,16 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 400,
     },
     navigateToDetail: {
+        height: '100%',
+        borderWidth: 0,
+        paddingInline: 0,
+        fontFamily: 'Roboto, sans-serif',
+        '& *:not(h2)': {
+            textAlign: 'left',
+            fontSize: '1rem',
+        },
         '&:hover': {
+            cursor: 'pointer',
             textDecoration: 'none',
             '& > div': {
                 backgroundColor: '#f2f2f2',
@@ -243,8 +252,8 @@ export const DLOList = ({
     const checkBoxArrayRef = useRef([]);
 
     function skipToElement() {
-        const skipNavLander = document.querySelector('#dlor-homepage-list a:first-child');
-        !!skipNavLander && skipNavLander.focus();
+        const skipNavLander = document.querySelector('#first-panel-button');
+        !!skipNavLander && skipNavLander.focus({ focusVisible: true });
     }
 
     React.useEffect(() => {
@@ -553,7 +562,11 @@ export const DLOList = ({
             ? dlorFilterList.filter(f => f.facet_type_slug === facetTypeSlug).pop().facet_type_help_public
             : '';
 
-    function displayItemPanel(object) {
+    function navigateToDetailPage(uuid) {
+        window.location.href = `${getHomepageLink()}dlor/view/${uuid}`;
+    }
+
+    function displayItemPanel(object, index) {
         const getConcatenatedFilterLabels = facetTypeSlug => {
             const f = object.object_filters?.filter(o => o.filter_key === facetTypeSlug);
             if (!f || f.length === 0) {
@@ -578,9 +591,11 @@ export const DLOList = ({
                 key={object.object_id}
                 data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
             >
-                <a
+                <button
                     className={classes.navigateToDetail}
-                    href={`${getHomepageLink()}dlor/view/${object.object_public_uuid}`}
+                    onClick={() => navigateToDetailPage(object.object_public_uuid)}
+                    aria-label={`Click to view details of ${object.object_title}`}
+                    id={index === 0 ? 'first-panel-button' : null}
                 >
                     <StandardCard noHeader fullHeight className={classes.dlorCard}>
                         <article className={classes.article}>
@@ -620,7 +635,7 @@ export const DLOList = ({
                             </footer>
                         </article>
                     </StandardCard>
-                </a>
+                </button>
             </Grid>
         );
     }
@@ -736,7 +751,7 @@ export const DLOList = ({
                                             </div>
                                             {!!dlorData &&
                                                 dlorData.length > 0 &&
-                                                dlorData.map(o => displayItemPanel(o))}
+                                                dlorData.map((o, index) => displayItemPanel(o, index))}
                                         </Grid>
                                     </>
                                 );
