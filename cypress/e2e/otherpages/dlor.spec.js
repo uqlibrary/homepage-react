@@ -30,11 +30,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('have.length', 8 + 1);
 
             // first panel
-            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] a').should(
-                'have.attr',
-                'href',
-                'http://localhost:2020/dlor/view/987y_isjgt_9866',
-            );
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] button').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article header h2').should(
                 'contain',
                 'Accessibility - Digital Essentials',
@@ -49,11 +45,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('have.length', 3);
 
             // second panel
-            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] a').should(
-                'have.attr',
-                'href',
-                'http://localhost:2020/dlor/view/98s0_dy5k3_98h4',
-            );
+            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] button').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article header h2').should(
                 'contain',
                 'Advanced literature searching',
@@ -71,11 +63,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-licence"]').should('contain', 'CC BY-NC');
 
             // fourth panel
-            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] a').should(
-                'have.attr',
-                'href',
-                'http://localhost:2020/dlor/view/938h_4986_654f',
-            );
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] button').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article header h2').should(
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
@@ -345,8 +333,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.viewport(1300, 1000);
 
             cy.waitUntil(() => cy.get('h1').should('exist'));
-            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] a')
-                .should('have.attr', 'href', 'http://localhost:2020/dlor/view/987y_isjgt_9866')
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] button')
+                .should('exist')
                 .click();
             // the first detail page loads
             cy.url().should('include', 'http://localhost:2020/dlor/view/987y_isjgt_9866');
@@ -361,8 +349,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.url().should('include', 'http://localhost:2020/dlor');
 
             // check the second panel
-            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] a')
-                .should('have.attr', 'href', 'http://localhost:2020/dlor/view/98s0_dy5k3_98h4')
+            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] button')
+                .should('exist')
                 .click();
 
             // the second detail page loads
@@ -379,8 +367,8 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.url().should('include', 'http://localhost:2020/dlor');
 
             // check the fourth panel
-            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] a')
-                .should('have.attr', 'href', 'http://localhost:2020/dlor/view/938h_4986_654f')
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] button')
+                .should('exist')
                 .click();
 
             // the third detail page loads
