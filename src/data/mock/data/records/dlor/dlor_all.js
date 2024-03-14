@@ -325,18 +325,6 @@ export default {
             "obj_link_url": null,
             "object_filters": [
                 {
-                    "filter_key": "topic",
-                    "filter_values": [
-                        "Digital skills"
-                    ]
-                },
-                {
-                    "filter_key": "item_type",
-                    "filter_values": [
-                        "Module"
-                    ]
-                },
-                {
                     "filter_key": "media_format",
                     "filter_values": [
                         "Pressbook"

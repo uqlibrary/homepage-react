@@ -113,6 +113,15 @@ describe('Digital Object learning Repository (DLOR)', () => {
 
             cy.get('[data-testid="dlor-homepage-loginprompt"]').should('not.exist');
 
+            // when the object doesn't have a particular facet type, it just doesn't appear in the panel footer item
+            // (in practice, I think every object should have each of these)
+            cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34-footer-type"]').should('not.exist'); // MISSING FROM API RESULT
+            cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34-footer-media"]').should('contain', 'Pressbook');
+            cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34-footer-licence"]').should(
+                'contain',
+                'CC BY Attribution',
+            );
+
             cy.visit('dlor?user=public');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
@@ -175,7 +184,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 7 + 1);
+                .should('have.length', 6 + 1);
 
             // UNcheck the "Media format, Module" checkbox
             cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')

@@ -596,21 +596,18 @@ export const DLOList = ({
     }
 
     function displayItemPanel(object, index) {
+        function hasTopicFacet(facetTypeSlug) {
+            const f = object.object_filters?.filter(o => o.filter_key === facetTypeSlug);
+            return !(!f || f.length === 0);
+        }
+
         const getConcatenatedFilterLabels = facetTypeSlug => {
             const f = object.object_filters?.filter(o => o.filter_key === facetTypeSlug);
-            if (!f || f.length === 0) {
-                return false;
-            }
             const output = f.pop();
             return output?.filter_values?.length > 0
                 ? output.filter_values.join(', ')
                 : /* istanbul ignore next */ false;
         };
-        const footerElementType = getConcatenatedFilterLabels('item_type');
-        const footerElementMedia = getConcatenatedFilterLabels('media_format');
-        const footerElementLicence = getConcatenatedFilterLabels('licence');
-        const headerElementTopic = getConcatenatedFilterLabels('topic');
-
         return (
             <Grid
                 item
@@ -632,8 +629,11 @@ export const DLOList = ({
                                 <Typography component={'h2'} variant={'h6'}>
                                     {object.object_title}
                                 </Typography>
-                                {!!headerElementTopic && (
-                                    <Typography className={classes.highlighted}>{headerElementTopic}</Typography>
+                                {!!hasTopicFacet('topic') && (
+                                    // use flex to show this above the title
+                                    <Typography className={classes.highlighted}>
+                                        {getConcatenatedFilterLabels('topic')}
+                                    </Typography>
                                 )}
                             </header>
                             <div className={classes.articleContents}>
@@ -641,24 +641,24 @@ export const DLOList = ({
                             </div>
 
                             <footer>
-                                {!!footerElementType && (
+                                {!!hasTopicFacet('item_type') && (
                                     <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
                                         {getFacetTypeIcon('item_type')}
-                                        {footerElementType}
+                                        {getConcatenatedFilterLabels('item_type')}
                                     </div>
                                 )}
-                                {!!footerElementMedia && (
+                                {!!hasTopicFacet('media_format') && (
                                     <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}>
                                         {getFacetTypeIcon('media_format')}
-                                        {footerElementMedia}
+                                        {getConcatenatedFilterLabels('media_format')}
                                     </div>
                                 )}
-                                {!!footerElementLicence && (
+                                {!!hasTopicFacet('licence') && (
                                     <div
                                         data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
                                     >
                                         {getFacetTypeIcon('licence')}
-                                        {footerElementLicence}
+                                        {getConcatenatedFilterLabels('licence')}
                                     </div>
                                 )}
                             </footer>
