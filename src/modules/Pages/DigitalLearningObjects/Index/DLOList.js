@@ -732,7 +732,7 @@ export const DLOList = ({
                         }
                     })()}
                 </Grid>
-                <Grid item xs={12} md={9} className={classes.panelBody}>
+                <Grid item xs={12} md={9}>
                     <TextField
                         className={classes.keywordSearchPanel}
                         data-testid="dlor-homepage-keyword"
@@ -789,7 +789,7 @@ export const DLOList = ({
                                     window.location.href,
                                 )}`;
                                 return (
-                                    <>
+                                    <div className={classes.panelBody}>
                                         {!account?.id && (
                                             <div data-testid="dlor-homepage-loginprompt" className={classes.loginAlert}>
                                                 <InfoIcon />
@@ -821,7 +821,7 @@ export const DLOList = ({
                                                 dlorData.length > 0 &&
                                                 dlorData.map((o, index) => displayItemPanel(o, index))}
                                         </Grid>
-                                    </>
+                                    </div>
                                 );
                             }
                         }
