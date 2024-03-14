@@ -247,6 +247,26 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-empty"]')
                 .should('exist')
                 .contains('No records satisfied this filter selection.');
+
+            // use the clear button
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+            cy.get('[data-testid="keyword-clear"]')
+                .should('exist')
+                .click();
+            // all panels showing again & keyword search field empty
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 8 + 1);
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('co');
+            // gets 4 panels
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 4 + 1);
         });
         it('can handle an error', () => {
             cy.visit('dlor?user=errorUser');

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Grid } from '@mui/material';
@@ -262,7 +262,8 @@ export const DLOList = ({
 
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [keywordSearch, setKeywordSearch] = useState('');
-    const checkBoxArrayRef = React.useRef([]);
+    const checkBoxArrayRef = useRef([]);
+    const keyWordSearchRef = useRef('');
 
     function skipToElement() {
         const skipNavLander = document.querySelector('#first-panel-button');
@@ -384,11 +385,18 @@ export const DLOList = ({
 
     const handleKeywordSearch = e => {
         const keyword = e?.target?.value;
+        keyWordSearchRef.current.value = keyword;
+
         if (keywordIsSearchable(keyword)) {
             setKeywordSearch(keyword);
         } else if (keyword.length === 0) {
-            setKeywordSearch('');
+            clearKeywordField();
         }
+    };
+
+    const clearKeywordField = () => {
+        setKeywordSearch('');
+        keyWordSearchRef.current.value = '';
     };
 
     const handleCheckboxAction = prop => e => {
@@ -744,12 +752,17 @@ export const DLOList = ({
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <IconButton>
-                                        <SearchIcon />
+                                    <IconButton onClick={clearKeywordField}>
+                                        {keyWordSearchRef.current.value === '' ? (
+                                            <SearchIcon />
+                                        ) : (
+                                            <CloseIcon data-testid="keyword-clear" />
+                                        )}
                                     </IconButton>
                                 </InputAdornment>
                             ),
                         }}
+                        inputRef={keyWordSearchRef}
                     />
                     {(() => {
                         if (!!dlorListError) {
