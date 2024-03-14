@@ -53,6 +53,9 @@ export default {
                     ]
                 }
             ],
+            "keywords": [
+                "accessible content", "study hacks", "universal design",
+            ],
             "owner": {
                 "publishing_user_username": "uqldegro",
                 "team_id": 1,
@@ -115,6 +118,7 @@ export default {
                     ]
                 }
             ],
+            "keywords": ["search", "evaluate", "literature", "strategy"],
             "owner": {
                 "publishing_user_username": "uqtestusr",
                 "team_id": 2,
@@ -176,6 +180,7 @@ export default {
                     ]
                 }
             ],
+            "keywords": ["Country", "culture", "Blaktivism", "Indigenous", "referencing", "history"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
@@ -239,6 +244,7 @@ export default {
                     ]
                 }
             ],
+            "keywords": ["generative AI", "referencing", "copyright", "machine learning", "deep learning", "neural networks", "AI tools", "ethics"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
@@ -301,6 +307,7 @@ export default {
                     ]
                 }
             ],
+            "keywords": ["software", "data analysis", "image", "video", "audio", "3d model", "coding"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
@@ -349,6 +356,7 @@ export default {
                     ]
                 }
             ],
+            "keywords": ["cyber security", "scam", "hacked", "password", "privacy", "accounts"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
@@ -411,6 +419,7 @@ export default {
                     ]
                 }
             ],
+            "keywords": ["group work", "collaboration", "formal emails", "meetings", "discussion forum", "conflict"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 2,
@@ -473,6 +482,7 @@ export default {
                     ]
                 }
             ],
+            "keywords": ["referencing", "citations", "cite"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 2,

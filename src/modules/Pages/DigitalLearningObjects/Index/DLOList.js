@@ -1,8 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Grid } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -19,6 +21,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/Info';
 import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -251,8 +254,9 @@ export const DLOList = ({
 }) => {
     const classes = useStyles();
 
-    const [selectedFilters, setSelectedFilters] = React.useState([]);
-    const checkBoxArrayRef = useRef([]);
+    const [selectedFilters, setSelectedFilters] = useState([]);
+    const [keywordSearch, setKeywordSearch] = useState('');
+    const checkBoxArrayRef = React.useRef([]);
 
     function skipToElement() {
         const skipNavLander = document.querySelector('#first-panel-button');
@@ -359,6 +363,25 @@ export const DLOList = ({
 
         return null; // Return null if no matching facet_name is found
     }
+
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword.length > 1;
+    }
+
+    const keywordStartsWith = (keywordList, enteredKeyword) => {
+        // do any of the keywords in the list start with the entered text? case insensitive
+        return !!keywordList.some(k => {
+            return k.toLowerCase().startsWith(enteredKeyword.toLowerCase());
+        });
+    };
+
+    const handleKeywordSearch = e => {
+        const keyword = e?.target?.value;
+        if (keywordIsSearchable(keyword)) {
+            setKeywordSearch(keyword);
+        }
+    };
 
     const handleCheckboxAction = prop => e => {
         const facetTypeSlug = prop.replace('checkbox-', '');
@@ -495,7 +518,7 @@ export const DLOList = ({
                                     id={sidebarElementId(index)}
                                     data-testid={sidebarElementId(index)}
                                     style={
-                                        index > 0
+                                        isFirstFilterPanel(index)
                                             ? {
                                                   display: 'none',
                                                   visibility: 'hidden',
@@ -555,27 +578,27 @@ export const DLOList = ({
 
     const filterDlorList = () => {
         const testvar = [];
-        if (!selectedFilters || selectedFilters.length === 0) {
+        if (
+            (!selectedFilters || selectedFilters.length === 0) &&
+            (!keywordSearch || !keywordIsSearchable(keywordSearch))
+        ) {
             return dlorList;
         }
 
         return dlorList.filter(d => {
-            return (
+            const passesCheckboxFilter =
                 !!d?.constructedFilters &&
                 !!selectedFilters &&
-                selectedFilters.every(el => d?.constructedFilters.includes(el))
-            );
+                !!selectedFilters.every(el => d?.constructedFilters.includes(el));
+            const passesKeyWordFilter =
+                !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordStartsWith(d.keywords, keywordSearch);
+            return passesCheckboxFilter && passesKeyWordFilter;
         });
     };
 
     const getPublicHelp = facetTypeSlug => {
         return !!dlorFilterList
-            ? dlorFilterList
-                  .filter(f => {
-                      console.log('getPublicHelp comapre ', f.facet_type_slug, ' vs ', facetTypeSlug);
-                      return f.facet_type_slug === facetTypeSlug;
-                  })
-                  .pop().facet_type_help_public
+            ? dlorFilterList.filter(f => f.facet_type_slug === facetTypeSlug).pop().facet_type_help_public
             : '';
     };
 
@@ -709,6 +732,21 @@ export const DLOList = ({
                     })()}
                 </Grid>
                 <Grid item xs={12} md={9} className={classes.panelBody}>
+                    <TextField
+                        className={classes.keywordSearch}
+                        data-testid="dlor-homepage-keyword"
+                        label="Search by keyword"
+                        onChange={handleKeywordSearch}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton>
+                                        <SearchIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                     {(() => {
                         if (!!dlorListError) {
                             return (
@@ -720,7 +758,7 @@ export const DLOList = ({
                             return (
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>
-                                        <Typography variant="body1" data-testid="dlor-homepage-empty">
+                                        <Typography variant="body1" data-testid="dlor-homepage-noresult">
                                             We did not find any entries in the system - please try again later.
                                         </Typography>
                                     </Grid>
@@ -739,7 +777,7 @@ export const DLOList = ({
                                 return (
                                     <Grid container spacing={3}>
                                         <Grid item xs={12}>
-                                            <Typography variant="body1">
+                                            <Typography variant="body1" data-testid="dlor-homepage-empty">
                                                 No records satisfied this filter selection.
                                             </Typography>
                                         </Grid>

@@ -128,7 +128,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .contains('Login for a better experience');
         });
-        it('has a working sidebar filter', () => {
+        it('can filter panels', () => {
             cy.visit('dlor');
             cy.viewport(1300, 1000);
 
@@ -221,6 +221,32 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .children()
                 .should('have.length', 8 + 1);
+
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('a');
+            // does nothing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 8 + 1);
+
+            // one more char
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('c');
+            // now only two panels
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + 1);
+
+            // check the "ATSIC" checkbox
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+
+            // wipes all the panels
+            cy.get('[data-testid="dlor-homepage-empty"]')
+                .should('exist')
+                .contains('No records satisfied this filter selection.');
         });
         it('can handle an error', () => {
             cy.visit('dlor?user=errorUser');
@@ -236,7 +262,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             // this should never happen. Maybe immediately after intial upload
             cy.visit('dlor?user=emptyResult');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="dlor-homepage-empty"]')
+            cy.get('[data-testid="dlor-homepage-noresult"]')
                 .should('exist')
                 .contains('We did not find any entries in the system - please try again later.');
         });
