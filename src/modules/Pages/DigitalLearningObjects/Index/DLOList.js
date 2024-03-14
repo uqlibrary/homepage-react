@@ -10,12 +10,15 @@ import IconButton from '@mui/material/IconButton';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
+import LocalLibrarySharpIcon from '@mui/icons-material/LocalLibrarySharp';
 import CopyrightIcon from '@mui/icons-material/Copyright';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import TopicIcon from '@mui/icons-material/Topic';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/Info';
+import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -434,7 +437,15 @@ export const DLOList = ({
                             <Grid item key={facetType.facet_type_slug} className={classes.filterSidebarType}>
                                 <Grid container className={classes.filterSidebarTypeHeading}>
                                     <Grid item md={11}>
-                                        <Typography component={'h3'} variant="subtitle1">
+                                        <Typography
+                                            component={'h3'}
+                                            variant="subtitle1"
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                            }}
+                                        >
+                                            {getFacetTypeIcon(facetType.facet_type_slug)} &nbsp;{' '}
                                             {facetType.facet_type_name}
                                         </Typography>
                                     </Grid>
@@ -557,10 +568,28 @@ export const DLOList = ({
         });
     };
 
-    const getPublicHelp = facetTypeSlug =>
-        !!dlorFilterList
-            ? dlorFilterList.filter(f => f.facet_type_slug === facetTypeSlug).pop().facet_type_help_public
+    const getPublicHelp = facetTypeSlug => {
+        return !!dlorFilterList
+            ? dlorFilterList
+                  .filter(f => {
+                      console.log('getPublicHelp comapre ', f.facet_type_slug, ' vs ', facetTypeSlug);
+                      return f.facet_type_slug === facetTypeSlug;
+                  })
+                  .pop().facet_type_help_public
             : '';
+    };
+
+    const getFacetTypeIcon = facetTypeSlug => {
+        const iconList = {
+            item_type: <LaptopIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            media_format: <DescriptionIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            licence: <CopyrightIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            topic: <TopicIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            graduate_attributes: <SchoolSharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            subject: <LocalLibrarySharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+        };
+        return iconList[facetTypeSlug];
+    };
 
     function navigateToDetailPage(uuid) {
         window.location.href = `${getHomepageLink()}dlor/view/${uuid}`;
@@ -614,13 +643,13 @@ export const DLOList = ({
                             <footer>
                                 {!!footerElementType && (
                                     <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
-                                        <LaptopIcon aria-label={getPublicHelp('item_type')} />
+                                        {getFacetTypeIcon('item_type')}
                                         {footerElementType}
                                     </div>
                                 )}
                                 {!!footerElementMedia && (
                                     <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}>
-                                        <DescriptionIcon aria-label={getPublicHelp('media_format')} />
+                                        {getFacetTypeIcon('media_format')}
                                         {footerElementMedia}
                                     </div>
                                 )}
@@ -628,7 +657,7 @@ export const DLOList = ({
                                     <div
                                         data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
                                     >
-                                        <CopyrightIcon aria-label={getPublicHelp('licence')} />
+                                        {getFacetTypeIcon('licence')}
                                         {footerElementLicence}
                                     </div>
                                 )}
