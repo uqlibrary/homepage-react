@@ -240,6 +240,12 @@ const useStyles = makeStyles(theme => ({
             textDecoration: 'none',
         },
     },
+    keywordSearchPanel: {
+        width: 'calc(100% - 24px)',
+        marginBottom: 18,
+        marginLeft: 12,
+        marginRight: 12,
+    },
 }));
 
 export const DLOList = ({
@@ -728,7 +734,7 @@ export const DLOList = ({
                 </Grid>
                 <Grid item xs={12} md={9} className={classes.panelBody}>
                     <TextField
-                        className={classes.keywordSearch}
+                        className={classes.keywordSearchPanel}
                         data-testid="dlor-homepage-keyword"
                         label="Search by keyword"
                         onChange={handleKeywordSearch}
