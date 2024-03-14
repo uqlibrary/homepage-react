@@ -386,6 +386,8 @@ export const DLOList = ({
         const keyword = e?.target?.value;
         if (keywordIsSearchable(keyword)) {
             setKeywordSearch(keyword);
+        } else if (keyword.length === 0) {
+            setKeywordSearch('');
         }
     };
 
@@ -685,6 +687,7 @@ export const DLOList = ({
                                         {getConcatenatedFilterLabels('licence')}
                                     </div>
                                 )}
+                                {object.keywords.join(', ')}
                             </footer>
                         </article>
                     </StandardCard>
