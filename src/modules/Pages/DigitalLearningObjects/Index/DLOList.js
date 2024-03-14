@@ -519,13 +519,8 @@ export const DLOList = ({
                                     data-testid={sidebarElementId(index)}
                                     style={
                                         isFirstFilterPanel(index)
-                                            ? {
-                                                  display: 'none',
-                                                  visibility: 'hidden',
-                                                  opacity: 0,
-                                                  height: 0,
-                                              }
-                                            : {}
+                                            ? {}
+                                            : { display: 'none', visibility: 'hidden', opacity: 0, height: 0 }
                                     }
                                 >
                                     {!!facetType.facet_list &&
