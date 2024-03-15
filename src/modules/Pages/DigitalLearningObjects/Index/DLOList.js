@@ -280,19 +280,25 @@ export const DLOList = ({
     }, [dlorList, dlorFilterList]);
 
     function hideElement(element, displayproperty = null) {
-        !!element && (element.style.display = 'none');
-        !!element && (element.style.visibility = 'hidden');
-        !!element && (element.style.opacity = 0);
-        !!element && (element.style.height = 0);
-        !!displayproperty && !!element && (element.style.display = displayproperty);
+        if (!element) {
+            return;
+        }
+        element.style.display = 'none';
+        element.style.visibility = 'hidden';
+        element.style.opacity = 0;
+        element.style.height = 0;
+        !!displayproperty && (element.style.display = displayproperty);
     }
 
     function showElement(element, displayproperty = null) {
-        !!element && (element.style.display = 'inline-block');
-        !!element && (element.style.visibility = 'visible');
-        !!element && (element.style.opacity = 1);
-        !!element && (element.style.height = 'auto');
-        !!displayproperty && !!element && (element.style.display = displayproperty);
+        if (!element) {
+            return;
+        }
+        element.style.display = 'inline-block';
+        element.style.visibility = 'visible';
+        element.style.opacity = 1;
+        element.style.height = 'auto';
+        !!displayproperty && (element.style.display = displayproperty);
     }
 
     const sidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
@@ -301,7 +307,7 @@ export const DLOList = ({
     const UpArrowId = index => sidebarElementId(index, 'panel-uparrow');
     const DownArrowId = index => sidebarElementId(index, 'panel-downarrow');
 
-    const filterButtonLabel = actionLabel => actionLabel + ' this filter section';
+    const filterButtonLabel = actionLabel => `${actionLabel} this filter section`;
     const filterMaximiseButtonLabel = filterButtonLabel('Open');
     const filterMinimiseButtonLabel = filterButtonLabel('Close');
     function hidePanel(index) {
@@ -310,7 +316,7 @@ export const DLOList = ({
         const downArrowIcon = document.getElementById(DownArrowId(index));
         hideElement(facetPanel);
         showElement(downArrowIcon, 'inline-block');
-        !!downArrowIcon && downArrowIcon.parentElement.setAttribute('aria-label', filterMaximiseButtonLabel);
+        !!downArrowIcon && downArrowIcon.parentElement?.setAttribute('aria-label', filterMaximiseButtonLabel);
         hideElement(upArrowIcon, 'none');
     }
 
@@ -321,7 +327,7 @@ export const DLOList = ({
         showElement(facetPanel);
         hideElement(downArrowIcon, 'none');
         showElement(upArrowIcon, 'inline-block');
-        !!upArrowIcon && upArrowIcon.parentElement.setAttribute('aria-label', filterMinimiseButtonLabel);
+        !!upArrowIcon && upArrowIcon.parentElement?.setAttribute('aria-label', filterMinimiseButtonLabel);
     }
 
     function showHidePanel(index) {
@@ -329,12 +335,12 @@ export const DLOList = ({
         const downArrowIcon = document.getElementById(DownArrowId(index));
         if (
             (!!downArrowIcon && downArrowIcon.style.display === 'none') ||
-            (!!downArrowIcon && upArrowIcon.style.display !== 'none')
+            (!!upArrowIcon && upArrowIcon.style.display !== 'none')
         ) {
             hidePanel(index);
         } else if (
             (!!downArrowIcon && downArrowIcon.style.display !== 'none') ||
-            (!!downArrowIcon && upArrowIcon.style.display === 'none')
+            (!!upArrowIcon && upArrowIcon.style.display === 'none')
         ) {
             showPanel(index);
         }
@@ -361,9 +367,9 @@ export const DLOList = ({
 
     function findFacetSlugByName(facetName) {
         for (const facetType of dlorFilterList) {
-            for (const facet of facetType.facet_list) {
-                if (facet.facet_name === facetName) {
-                    return facet.facet_slug;
+            for (const facet of facetType?.facet_list) {
+                if (facet?.facet_name === facetName) {
+                    return facet?.facet_slug;
                 }
             }
         }
@@ -373,12 +379,12 @@ export const DLOList = ({
 
     function keywordIsSearchable(keyword) {
         // don't filter on something terribly short
-        return keyword.length > 1;
+        return keyword?.length > 1;
     }
 
     const keywordStartsWith = (keywordList, enteredKeyword) => {
         // do any of the keywords in the list start with the entered text? case insensitive
-        return !!keywordList.some(k => {
+        return !!keywordList?.some(k => {
             return k.toLowerCase().startsWith(enteredKeyword.toLowerCase());
         });
     };
@@ -400,15 +406,15 @@ export const DLOList = ({
     };
 
     const handleCheckboxAction = prop => e => {
-        const facetTypeSlug = prop.replace('checkbox-', '');
+        const facetTypeSlug = prop?.replace('checkbox-', '');
 
-        const facetName = e.target.value;
+        const facetName = e?.target?.value;
         const facetSlug = findFacetSlugByName(facetName);
 
         const checkboxId = `${facetTypeSlug}-${facetSlug}`;
         const individualFilterSlug = `${facetTypeSlug}-${facetSlug}`;
 
-        if (e.target.checked) {
+        if (e?.target?.checked) {
             setSelectedFilters([...selectedFilters, individualFilterSlug]);
 
             checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
@@ -432,7 +438,7 @@ export const DLOList = ({
         checkBoxArrayRef.current = [];
 
         // reset panel open-close to initial position
-        dlorFilterList.map((facetType, index) => {
+        dlorFilterList?.map((facetType, index) => {
             if (isFirstFilterPanel(index)) {
                 showPanel(index);
             } else {
@@ -471,9 +477,9 @@ export const DLOList = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} className={classes.filterSidebarBody}>
-                    {dlorFilterList.map((facetType, index) => {
+                    {dlorFilterList?.map((facetType, index) => {
                         return (
-                            <Grid item key={facetType.facet_type_slug} className={classes.filterSidebarType}>
+                            <Grid item key={facetType?.facet_type_slug} className={classes.filterSidebarType}>
                                 <Grid container className={classes.filterSidebarTypeHeading}>
                                     <Grid item md={11}>
                                         <Typography
@@ -484,8 +490,8 @@ export const DLOList = ({
                                                 alignItems: 'flex-start',
                                             }}
                                         >
-                                            {getFacetTypeIcon(facetType.facet_type_slug)} &nbsp;{' '}
-                                            {facetType.facet_type_name}
+                                            {getFacetTypeIcon(facetType?.facet_type_slug)} &nbsp;{' '}
+                                            {facetType?.facet_type_name}
                                         </Typography>
                                     </Grid>
                                     <Grid item md={1} className={classes.facetPanelControl}>
@@ -539,29 +545,29 @@ export const DLOList = ({
                                             : { display: 'none', visibility: 'hidden', opacity: 0, height: 0 }
                                     }
                                 >
-                                    {!!facetType.facet_list &&
-                                        facetType.facet_list.length > 0 &&
-                                        facetType.facet_list.map(facet => {
-                                            const checkBoxid = `checkbox-${facetType.facet_type_slug}`;
-                                            const checkBoxidShort = `${facetType.facet_type_slug}-${facet.facet_slug}`;
+                                    {!!facetType?.facet_list &&
+                                        facetType?.facet_list?.length > 0 &&
+                                        facetType?.facet_list?.map(facet => {
+                                            const checkBoxid = `checkbox-${facetType?.facet_type_slug}`;
+                                            const checkBoxidShort = `${facetType?.facet_type_slug}-${facet?.facet_slug}`;
                                             return (
                                                 <FormControlLabel
-                                                    key={`${facetType.facet_type_slug}-${facet.facet_slug}`}
+                                                    key={`${facetType?.facet_type_slug}-${facet?.facet_slug}`}
                                                     className={classes.filterSidebarCheckboxControl}
                                                     control={
                                                         <Checkbox
                                                             className={classes.filterSidebarCheckbox}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
-                                                            value={facet.facet_name}
-                                                            data-testid={`checkbox-${facetType.facet_type_slug}-${facet.facet_slug}`}
+                                                            value={facet?.facet_name}
+                                                            data-testid={`checkbox-${facetType?.facet_type_slug}-${facet?.facet_slug}`}
                                                             ref={checkBoxArrayRef.current[checkBoxidShort]}
                                                             checked={
-                                                                !!checkBoxArrayRef.current.includes(checkBoxidShort)
+                                                                !!checkBoxArrayRef.current?.includes(checkBoxidShort)
                                                             }
                                                         />
                                                     }
-                                                    label={facet.facet_name}
+                                                    label={facet?.facet_name}
                                                 />
                                             );
                                         })}
@@ -596,20 +602,22 @@ export const DLOList = ({
             return dlorList;
         }
 
-        return dlorList.filter(d => {
+        return dlorList?.filter(d => {
             const passesCheckboxFilter =
                 !!d?.constructedFilters &&
                 !!selectedFilters &&
                 !!selectedFilters.every(el => d?.constructedFilters.includes(el));
             const passesKeyWordFilter =
-                !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordStartsWith(d.keywords, keywordSearch);
+                !keywordSearch ||
+                !keywordIsSearchable(keywordSearch) ||
+                !!keywordStartsWith(d?.keywords, keywordSearch);
             return passesCheckboxFilter && passesKeyWordFilter;
         });
     };
 
     const getPublicHelp = facetTypeSlug => {
         return !!dlorFilterList
-            ? dlorFilterList.filter(f => f.facet_type_slug === facetTypeSlug).pop().facet_type_help_public
+            ? dlorFilterList.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()?.facet_type_help_public
             : '';
     };
 
@@ -631,15 +639,15 @@ export const DLOList = ({
 
     function displayItemPanel(object, index) {
         function hasTopicFacet(facetTypeSlug) {
-            const f = object.object_filters?.filter(o => o.filter_key === facetTypeSlug);
+            const f = object?.object_filters?.filter(o => o.filter_key === facetTypeSlug);
             return !(!f || f.length === 0);
         }
 
         const getConcatenatedFilterLabels = facetTypeSlug => {
-            const f = object.object_filters?.filter(o => o.filter_key === facetTypeSlug);
-            const output = f.pop();
+            const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
+            const output = f?.pop();
             return output?.filter_values?.length > 0
-                ? output.filter_values.join(', ')
+                ? output?.filter_values?.join(', ')
                 : /* istanbul ignore next */ false;
         };
         return (
@@ -648,20 +656,20 @@ export const DLOList = ({
                 xs={12}
                 md={4}
                 className={classes.panelGap}
-                key={object.object_id}
-                data-testid={`dlor-homepage-panel-${object.object_public_uuid}`}
+                key={object?.object_id}
+                data-testid={`dlor-homepage-panel-${object?.object_public_uuid}`}
             >
                 <button
                     className={classes.navigateToDetail}
-                    onClick={() => navigateToDetailPage(object.object_public_uuid)}
-                    aria-label={`Click to view details of ${object.object_title}`}
+                    onClick={() => navigateToDetailPage(object?.object_public_uuid)}
+                    aria-label={`Click to view details of ${object?.object_title}`}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <StandardCard noHeader fullHeight className={classes.dlorCard}>
                         <article className={classes.article}>
                             <header>
                                 <Typography component={'h2'} variant={'h6'}>
-                                    {object.object_title}
+                                    {object?.object_title}
                                 </Typography>
                                 {!!hasTopicFacet('topic') && (
                                     // use flex to show this above the title
@@ -671,25 +679,25 @@ export const DLOList = ({
                                 )}
                             </header>
                             <div className={classes.articleContents}>
-                                <p>{object.object_summary}</p>
+                                <p>{object?.object_summary}</p>
                             </div>
 
                             <footer>
                                 {!!hasTopicFacet('item_type') && (
-                                    <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
+                                    <div data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-type`}>
                                         {getFacetTypeIcon('item_type')}
                                         {getConcatenatedFilterLabels('item_type')}
                                     </div>
                                 )}
                                 {!!hasTopicFacet('media_format') && (
-                                    <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}>
+                                    <div data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-media`}>
                                         {getFacetTypeIcon('media_format')}
                                         {getConcatenatedFilterLabels('media_format')}
                                     </div>
                                 )}
                                 {!!hasTopicFacet('licence') && (
                                     <div
-                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
+                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-licence`}
                                     >
                                         {getFacetTypeIcon('licence')}
                                         {getConcatenatedFilterLabels('licence')}
@@ -752,7 +760,7 @@ export const DLOList = ({
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton onClick={clearKeywordField}>
-                                        {keyWordSearchRef.current.value === '' ? (
+                                        {keyWordSearchRef.current?.value === '' ? (
                                             <SearchIcon />
                                         ) : (
                                             <CloseIcon data-testid="keyword-clear" />
@@ -781,10 +789,10 @@ export const DLOList = ({
                                 </Grid>
                             );
                         } else {
-                            dlorList.forEach(d => {
+                            dlorList?.forEach(d => {
                                 // add a constructed array of facet-parent_facet-child
-                                d.constructedFilters = d.object_filters.flatMap(filter =>
-                                    filter.filter_values.map(value => `${filter.filter_key}-${slugifyName(value)}`),
+                                d.constructedFilters = d?.object_filters?.flatMap(filter =>
+                                    filter?.filter_values?.map(value => `${filter?.filter_key}-${slugifyName(value)}`),
                                 );
                             });
 
