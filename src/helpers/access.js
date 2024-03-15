@@ -160,6 +160,10 @@ export const isAlertsAdminUser = account =>
 export const isPromoPanelAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
+// TODO: use new AD group!!!!!!
+export const isDlorAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
+
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
 

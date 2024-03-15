@@ -20,6 +20,7 @@ export const SpotlightsClone = lazy(() => lazyRetry(() => import('modules/Pages/
 
 export const DLOList = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Index/DLOListContainer')));
 export const DLOView = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/View/DLOViewContainer')));
+export const DLOAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Add/DLOAddContainer')));
 
 export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));

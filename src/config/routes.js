@@ -2,6 +2,7 @@ import { locale } from 'locale';
 import {
     canSeeLearningResources,
     isAlertsAdminUser,
+    isDlorAdminUser,
     isPromoPanelAdminUser,
     isSpotlightsAdminUser,
     isTestTagAdminUser,
@@ -19,6 +20,7 @@ export const flattedPathConfigExact = [
     '/payment-receipt',
     '/admin/alerts/add',
     '/admin/alerts',
+    '/admin/dlor/add',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/spotlights/add',
@@ -212,6 +214,15 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const dlorAdminDisplay = [
+        {
+            path: pathConfig.admin.dloradd,
+            component: components.DLOAdd,
+            exact: true,
+            pageTitle: locale.pages.admin.alerts.form.add.title,
+        },
+    ];
+
     const testntagDisplay = [
         {
             path: pathConfig.admin.testntagdashboard,
@@ -291,6 +302,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...publicPages,
         ...(account && canSeeLearningResources(account) ? courseResourcesDisplay : []),
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
+        ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
