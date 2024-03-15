@@ -747,7 +747,7 @@ export const DLOList = ({
                     <TextField
                         className={classes.keywordSearchPanel}
                         data-testid="dlor-homepage-keyword"
-                        label="Search by keyword"
+                        label="Search our Digital objects by keyword"
                         onChange={handleKeywordSearch}
                         InputProps={{
                             endAdornment: (
