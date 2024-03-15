@@ -695,7 +695,6 @@ export const DLOList = ({
                                         {getConcatenatedFilterLabels('licence')}
                                     </div>
                                 )}
-                                {object.keywords.join(', ')}
                             </footer>
                         </article>
                     </StandardCard>
