@@ -1,10 +1,10 @@
 import { locale } from 'locale';
 import {
-    isAlertsAdminUser,
     canSeeLearningResources,
+    isAlertsAdminUser,
+    isPromoPanelAdminUser,
     isSpotlightsAdminUser,
     isTestTagAdminUser,
-    isPromoPanelAdminUser,
 } from 'helpers/access';
 import { pathConfig } from './pathConfig';
 

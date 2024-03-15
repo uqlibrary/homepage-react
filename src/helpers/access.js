@@ -145,22 +145,20 @@ export const canSeeLibraryServices = account => {
     return !!userServices && userServices.length > 0;
 };
 
-const canSeeWebContentAdminPages = account => {
-    return (
-        !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'))
-    );
-};
-const canSeeTestTagAdminPages = account => {
-    return !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_TestTagUsers'));
-};
+const userHasAdGroup = (ADGroupName, account) =>
+    !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
-export const isSpotlightsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isSpotlightsAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
-export const isTestTagAdminUser = account => isLoggedInUser(account) && canSeeTestTagAdminPages(account);
+export const isTestTagAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
-export const isAlertsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isAlertsAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
-export const isPromoPanelAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isPromoPanelAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
