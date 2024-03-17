@@ -65,19 +65,19 @@ export function clearDlor() {
     };
 }
 
-export function createDLor(request, dispatch) {
-    return dispatch => {
-        dispatch({ type: actions.DLOR_DETAIL_CREATING });
+export function createDLor(request) {
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_CREATING });
         return post(DLOR_CREATE_API(), request)
             .then(data => {
                 dispatch({
-                    type: actions.DLOR_DETAIL_CREATED,
+                    type: actions.DLOR_CREATED,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.DLOR_FAILED,
+                    type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,
                 });
             });

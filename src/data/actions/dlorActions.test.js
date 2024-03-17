@@ -1,6 +1,7 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
 import { loadAllDLORs, loadADLOR, clearDlor, createDLor } from './dlorActions';
+import { DLOR_DETAIL_FAILED } from './actionTypes';
 
 jest.mock('@sentry/browser');
 
@@ -112,7 +113,7 @@ describe('DLOR actions', () => {
         it('dispatches expected actions when dlor create call fails', async () => {
             mockApi.onAny(repositories.routes.DLOR_CREATE_API().apiUrl).reply(500);
 
-            const expectedActions = [actions.DLOR_CREATING, actions.APP_ALERT_SHOW, actions.DLOR_FAILED];
+            const expectedActions = [actions.DLOR_CREATING, actions.APP_ALERT_SHOW, actions.DLOR_CREATE_FAILED];
 
             await mockActionsStore.dispatch(createDLor(dlorCreationRequest));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);

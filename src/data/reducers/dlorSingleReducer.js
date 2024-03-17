@@ -30,18 +30,24 @@ const handlers = {
     [actions.DLOR_DETAIL_CLEAR]: () => ({
         ...initialState,
     }),
-    [actions.DLOR_DETAIL_CREATING]: state => ({
+    [actions.DLOR_CREATING]: state => ({
         ...initialState,
         ...state,
         dlorItemCreating: true,
         dlorItemError: false,
     }),
-    [actions.DLOR_DETAIL_CREATED]: (state, action) => ({
+    [actions.DLOR_CREATED]: (state, action) => ({
         ...initialState,
         ...state,
         dlorItemCreating: false,
         dlorItemError: false,
         dlorItem: action.payload,
+    }),
+    [actions.DLOR_CREATE_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        dlorItemCreating: false,
+        dlorItemError: action.payload,
     }),
 };
 

@@ -22,7 +22,7 @@ describe('dlor single reducer', () => {
         });
     });
 
-    it('should handle a failing Dlor API call', () => {
+    it('should handle a failing Dlor load API call', () => {
         const test = dlorSingleReducer(emptyState, {
             type: actions.DLOR_DETAIL_FAILED,
             payload: 'failed!',
@@ -41,6 +41,28 @@ describe('dlor single reducer', () => {
             dlorItem: null,
             dlorItemLoading: true,
             dlorItemError: false,
+        });
+    });
+
+    it('should set dlor values when successfully created', () => {
+        const test = dlorSingleReducer(emptyState, { type: actions.DLOR_CREATED, payload: mockDlorEntry });
+        expect(test).toEqual({
+            ...emptyState,
+            dlorItem: mockDlorEntry,
+            dlorItemCreating: false,
+            dlorItemError: false,
+        });
+    });
+
+    it('should handle a failing Dlor load API call', () => {
+        const test = dlorSingleReducer(emptyState, {
+            type: actions.DLOR_CREATE_FAILED,
+            payload: 'failed!',
+        });
+        expect(test).toEqual({
+            ...emptyState,
+            dlorItemCreating: false,
+            dlorItemError: 'failed!',
         });
     });
 });
