@@ -1,10 +1,17 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadAllDLORs, loadADLOR, clearDlor } from './dlorActions';
+import { loadAllDLORs, loadADLOR, clearDlor, createDLor } from './dlorActions';
 
 jest.mock('@sentry/browser');
 
-describe('Alert actions', () => {
+const dlorCreationRequest = {
+    contents: 'tba',
+};
+const dlorCreationResponse = {
+    contents: 'tba',
+};
+
+describe('DLOR actions', () => {
     const MockDate = require('mockdate');
     beforeEach(() => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
@@ -97,6 +104,26 @@ describe('Alert actions', () => {
             const expectedActions = [actions.DLOR_DETAIL_CLEAR];
 
             await mockActionsStore.dispatch(clearDlor());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+    });
+
+    describe('DLOR Creation', () => {
+        it('dispatches expected actions when dlor create call fails', async () => {
+            mockApi.onAny(repositories.routes.DLOR_CREATE_API().apiUrl).reply(500);
+
+            const expectedActions = [actions.DLOR_CREATING, actions.APP_ALERT_SHOW, actions.DLOR_FAILED];
+
+            await mockActionsStore.dispatch(createDLor(dlorCreationRequest));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('handles an spotlight creation request', async () => {
+            mockApi.onAny(repositories.routes.DLOR_CREATE_API().apiUrl).reply(200, dlorCreationResponse);
+
+            const expectedActions = [actions.DLOR_CREATING, actions.DLOR_CREATED];
+
+            await mockActionsStore.dispatch(createDLor(dlorCreationRequest));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

@@ -4,6 +4,7 @@ export const initialState = {
     dlorItem: null,
     dlorItemLoading: null,
     dlorItemError: null,
+    dlorItemCreating: null,
 };
 
 const handlers = {
@@ -28,6 +29,19 @@ const handlers = {
     }),
     [actions.DLOR_DETAIL_CLEAR]: () => ({
         ...initialState,
+    }),
+    [actions.DLOR_DETAIL_CREATING]: state => ({
+        ...initialState,
+        ...state,
+        dlorItemCreating: true,
+        dlorItemError: false,
+    }),
+    [actions.DLOR_DETAIL_CREATED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        dlorItemCreating: false,
+        dlorItemError: false,
+        dlorItem: action.payload,
     }),
 };
 

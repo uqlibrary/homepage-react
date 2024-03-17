@@ -29,14 +29,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 //     },
 // }));
 
-export const DLOAdd = (
-    {
-        // actions,
-        // dlorItemCreating,
-        // dlorItemError,
-        // dlorItem
-    },
-) => {
+export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) => {
     // const classes = useStyles();
     return (
         <StandardPage title="DLOR Management">

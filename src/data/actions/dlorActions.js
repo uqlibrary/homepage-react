@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
-import { get } from 'repositories/generic';
-import { DLOR_ALL_API, DLOR_GET_BY_ID_API, DLOR_GET_FILTER_LIST } from 'repositories/routes';
+import { get, post } from 'repositories/generic';
+import { DLOR_ALL_API, DLOR_GET_BY_ID_API, DLOR_GET_FILTER_LIST, DLOR_CREATE_API } from 'repositories/routes';
 
 export function loadAllDLORs() {
     return dispatch => {
@@ -62,5 +62,24 @@ export function loadAllFilters() {
 export function clearDlor() {
     return dispatch => {
         dispatch({ type: actions.DLOR_DETAIL_CLEAR });
+    };
+}
+
+export function createDLor(request, dispatch) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DETAIL_CREATING });
+        return post(DLOR_CREATE_API(), request)
+            .then(data => {
+                dispatch({
+                    type: actions.DLOR_DETAIL_CREATED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FAILED,
+                    payload: error.message,
+                });
+            });
     };
 }
