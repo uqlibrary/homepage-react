@@ -654,7 +654,7 @@ export const DLOList = ({
                 <button
                     className={classes.navigateToDetail}
                     onClick={() => navigateToDetailPage(object.object_public_uuid)}
-                    aria-label={`Click to view details of ${object.object_title}`}
+                    aria-label={`Click for more details on ${object.object_title}`}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <StandardCard noHeader fullHeight className={classes.dlorCard}>
