@@ -78,6 +78,10 @@ let user = !!queryString
     ? queryString.get('user')
     : window.location.hash.substring(window.location.hash.indexOf('?')).user;
 user = user || 'vanilla';
+let responseType = !!queryString
+    ? queryString.get('responseType')
+    : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
+responseType = responseType || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -574,6 +578,11 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
     },
 ]);
 
+function getaDlorRecordFromDlorAll(dlorId) {
+    const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
+    return arrayOfOneRecord.length > 0 ? [200, { data: arrayOfOneRecord.pop() }] : [404, {}];
+}
+
 mock.onGet(/dlor\/find\/.*/)
     .reply(config => {
         if (user === 'errorUser') {
@@ -583,8 +592,7 @@ mock.onGet(/dlor\/find\/.*/)
         } else {
             const urlparts = config.url.split('/').pop();
             const dlorId = urlparts.split('?')[0];
-            const record = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
-            return record.length > 0 ? [200, { data: record.pop() }] : [404, {}];
+            return getaDlorRecordFromDlorAll(dlorId);
         }
     })
     .onGet('dlor/list/full')
@@ -603,6 +611,14 @@ mock.onGet(/dlor\/find\/.*/)
             return [500, {}];
         } else {
             return [200, dlor_filter_list];
+        }
+    })
+    .onPost('dlor')
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else {
+            return getaDlorRecordFromDlorAll('98j3-fgf95-8j34'); //any old id
         }
     });
 

@@ -821,7 +821,7 @@ export const DLOList = ({
                                                 data-testid="filterIconShowId"
                                                 className={classes.showFilterSidebarIcon}
                                             >
-                                                <IconButton aria-label="show the filters" onClick={() => showFilters()}>
+                                                <IconButton aria-label="Show the filters" onClick={() => showFilters()}>
                                                     <FilterAltIcon />
                                                 </IconButton>
                                             </div>

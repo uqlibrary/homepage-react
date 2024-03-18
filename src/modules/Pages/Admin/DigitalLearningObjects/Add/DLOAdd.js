@@ -11,8 +11,11 @@ import InputLabel from '@mui/material/InputLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 
+import { useConfirmationState } from 'hooks';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 // const useStyles = makeStyles(theme => ({
 //     typingArea: {
@@ -30,11 +33,58 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 // }));
 
 export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) => {
+    console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
     // const classes = useStyles();
+
+    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+
+    const [saveStatus, setSaveStatus] = React.useState(null);
+
+    React.useEffect(() => {
+        console.log('useEffect dlorItem=', dlorItem, ';dlorItemError', dlorItemError);
+        if ((!!dlorItem && !!dlorItem.data?.object_id) || !!dlorItemError) {
+            console.log('useEffect showing conf');
+            setSaveStatus('complete');
+            showConfirmation();
+        }
+    }, [showConfirmation, dlorItem, dlorItemError]);
+
+    const saveNewAlert = () => {
+        return actions.createDLor();
+    };
+
+    const locale = {
+        successMessage: {
+            confirmationTitle: 'The object has been created',
+            confirmationMessage: '',
+            confirmButtonLabel: 'Return to list page',
+        },
+        errorMessage: {
+            confirmationTitle: dlorItemError,
+            confirmationMessage: '',
+            confirmButtonLabel: 'Return to list page',
+        },
+    };
+
+    const closeConfirmationBox = () => {
+        window.alert('what do we do here?');
+    };
     return (
         <StandardPage title="DLOR Management">
             <StandardCard title="Create Dlor">
-                <form>
+                <form id="dlor-add-form">
+                    {saveStatus === 'complete' && (
+                        <ConfirmationBox
+                            actionButtonColor="primary"
+                            actionButtonVariant="contained"
+                            confirmationBoxId="dlor-creation-outcome"
+                            onAction={() => closeConfirmationBox()}
+                            onClose={hideConfirmation}
+                            hideCancelButton
+                            isOpen={isOpen}
+                            locale={!dlorItemError ? locale.successMessage : locale.errorMessage}
+                        />
+                    )}
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <FormControl
@@ -45,21 +95,18 @@ export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) =
                                 <InputLabel htmlFor="object_title">Dlor title</InputLabel>
                                 <Input
                                     id="object_title"
+                                    data-testid="object_title"
                                     // onChange={handleChange('object_title')}
                                     // value={values.object_title}
                                 />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                // className={classes.typingArea}
-                                fullWidth
-                                // title={locale.form.tooltips.adminNotesField}
-                            >
+                            <FormControl variant="standard" fullWidth>
                                 <InputLabel htmlFor="object_description">Description of Object</InputLabel>
                                 <Input
                                     id="object_description"
+                                    data-testid="object_description"
                                     multiline
                                     // onChange={handleChange('admin_notes')}
                                     rows={6}
@@ -77,6 +124,7 @@ export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) =
                                 <InputLabel htmlFor="object_summary">Summary of Object</InputLabel>
                                 <Input
                                     id="object_summary"
+                                    data-testid="object_summary"
                                     multiline
                                     // onChange={handleChange('admin_notes')}
                                     rows={2}
@@ -106,19 +154,19 @@ export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) =
                             <Button
                                 color="secondary"
                                 children="Cancel"
-                                data-testid="admin-alerts-form-button-cancel"
-                                onClick={() => navigateToListPage()}
+                                data-testid="admin-dlor-add-button-cancel"
+                                onClick={() => closeConfirmationBox()}
                                 variant="contained"
                             />
                         </Grid>
                         <Grid item xs={9} align="right">
                             <Button
                                 color="primary"
-                                data-testid="admin-alerts-form-button-save"
+                                data-testid="admin-dlor-add-button-submit"
                                 variant="contained"
                                 children="Save"
                                 // disabled={!isFormValid}
-                                // onClick={saveAlerts}
+                                onClick={saveNewAlert}
                                 // className={classes.saveButton}
                             />
                         </Grid>
