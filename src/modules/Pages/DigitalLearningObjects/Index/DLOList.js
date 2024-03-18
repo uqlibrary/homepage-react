@@ -88,6 +88,9 @@ const useStyles = makeStyles(theme => ({
         borderWidth: 0,
         paddingInline: 0,
         fontFamily: 'Roboto, sans-serif',
+        [theme.breakpoints.down('md')]: {
+            width: '100%',
+        },
         '& *:not(h2)': {
             textAlign: 'left',
             fontSize: '1rem',
