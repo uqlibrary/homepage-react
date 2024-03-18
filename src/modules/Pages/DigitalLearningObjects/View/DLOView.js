@@ -103,7 +103,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         return (
             <div className={classes.titleBlock}>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                    <a href={`${getHomepageLink()}dlor`}>Digital learning objects</a>
+                    <a href={`${getHomepageLink()}digital-learning-objects`}>Find a digital learning object</a>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>
@@ -161,14 +161,14 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         {dlorItem.object_embed_type === 'link' && !!dlorItem.obj_link_url && (
                             <div className={classes.uqActionButton}>
                                 <a aria-label="Click to visit the Learning Resource" href={dlorItem.obj_link_url}>
-                                    Access the module
+                                    Access the object
                                 </a>
                             </div>
                         )}
                         {!!dlorItem.obj_download_instructions && (
                             <>
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
-                                    How to use this module
+                                    How to use this object
                                 </Typography>
                                 {!!dlorItem.obj_download_instructions &&
                                     dlorItem.obj_download_instructions

@@ -183,7 +183,7 @@ export function getHomepageLink(hostname = null, protocol = null, port = null, p
         const _pathname = pathname === null ? window.location.pathname : pathname;
         homepagelink = `${_protocol}//${_hostname}${_pathname}#/`;
     } else if (_hostname === 'dev-homepage.library.uq.edu.au') {
-        // local dev against staging api eg http://dev-homepage.library.uq.edu.au:2020/#/dlor with npm run start:url
+        // local dev against staging api eg http://dev-homepage.library.uq.edu.au:2020/#/digital-learning-objects with npm run start:url
         const _port = port === null ? window.location.port : port;
         homepagelink = `${_protocol}//${_hostname}:${_port}/#/`;
     } else if (_hostname.endsWith('.library.uq.edu.au')) {

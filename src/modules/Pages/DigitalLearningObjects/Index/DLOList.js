@@ -626,7 +626,7 @@ export const DLOList = ({
     };
 
     function navigateToDetailPage(uuid) {
-        window.location.href = `${getHomepageLink()}dlor/view/${uuid}`;
+        window.location.href = `${getHomepageLink()}digital-learning-objects/view/${uuid}`;
     }
 
     function displayItemPanel(object, index) {
@@ -707,7 +707,7 @@ export const DLOList = ({
         return (
             <StandardPage>
                 <Typography component={'h1'} variant={'h6'}>
-                    Digital learning objects
+                    Find a digital learning object
                 </Typography>
                 <Grid container spacing={2}>
                     <Grid item md={12}>
@@ -723,7 +723,7 @@ export const DLOList = ({
     return (
         <StandardPage>
             <Typography component={'h1'} variant={'h6'}>
-                Digital learning objects
+                Find a digital learning object
                 <button className={classes.skipLink} id="skip-filters" onClick={() => skipToElement()}>
                     Skip facet selection to view DLOR entries
                 </button>
