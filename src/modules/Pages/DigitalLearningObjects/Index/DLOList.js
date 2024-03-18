@@ -143,8 +143,9 @@ const useStyles = makeStyles(theme => ({
         },
     },
     filterSidebarHeading: {
-        alignItems: 'center',
-        paddingBottom: 4,
+        [theme.breakpoints.up('md')]: {
+            paddingRight: 20,
+        },
     },
     filterSidebarType: {
         width: '100%',
@@ -448,8 +449,13 @@ export const DLOList = ({
         return (
             <>
                 <Grid container className={classes.filterSidebarHeading} data-testid="sidebar-panel-heading">
-                    <Grid item md={9}>
-                        <div
+                    <Grid item xs={10}>
+                        <Typography component={'h2'} variant={'h6'}>
+                            Filters
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <span
                             id="filterIconHideId"
                             data-testid="filterIconHideId"
                             className={classes.hideFilterSidebarIcon}
@@ -457,12 +463,9 @@ export const DLOList = ({
                             <IconButton aria-label="hide the filters" onClick={() => hideFilters()}>
                                 <CloseIcon />
                             </IconButton>
-                        </div>
-                        <Typography component={'h2'} variant={'h6'}>
-                            Filters
-                        </Typography>
+                        </span>
                     </Grid>
-                    <Grid item md={3}>
+                    <Grid item xs={1}>
                         <button
                             data-testid="sidebar-filter-reset-button"
                             className={classes.filterResetButton}
@@ -732,7 +735,14 @@ export const DLOList = ({
                 </button>
             </Typography>
             <Grid container spacing={2}>
-                <Grid item md={3} className={classes.filterSidebar} id="filterSidebar" data-testid="filterSidebar">
+                <Grid
+                    item
+                    xs={12}
+                    md={3}
+                    className={classes.filterSidebar}
+                    id="filterSidebar"
+                    data-testid="filterSidebar"
+                >
                     {(() => {
                         if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
                             return (
