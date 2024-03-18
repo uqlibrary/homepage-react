@@ -111,7 +111,7 @@ const useStyles = makeStyles(theme => ({
     filterSidebar: {
         fontSize: 10,
         paddingTop: 0,
-        marginTop: 24,
+        marginTop: 12,
         [theme.breakpoints.down('md')]: {
             display: 'none',
         },
@@ -742,7 +742,7 @@ export const DLOList = ({
                         }
                     })()}
                 </Grid>
-                <Grid item xs={12} md={9}>
+                <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                     <TextField
                         className={classes.keywordSearchPanel}
                         data-testid="dlor-homepage-keyword"
