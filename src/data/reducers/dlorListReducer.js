@@ -4,6 +4,9 @@ export const initialState = {
     dlorList: null,
     dlorListLoading: null,
     dlorListError: null,
+    dlorTeamLoading: null,
+    dlorTeamError: null,
+    dlorTeam: null,
 };
 
 const handlers = {
@@ -26,6 +29,25 @@ const handlers = {
         dlorListLoading: false,
         dlorListError: action.payload,
     }),
+    [actions.DLOR_TEAM_LOADING]: state => ({
+        ...initialState,
+        ...state,
+        dlorTeamLoading: true,
+        dlorTeamError: false,
+    }),
+    [actions.DLOR_TEAM_LOADED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        dlorTeamLoading: false,
+        dlorTeamError: false,
+        dlorTeam: action.payload,
+    }),
+    [actions.DLOR_TEAM_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        dlorTeamLoading: false,
+        dlorTeamError: action.payload,
+    }),
 };
 
 export default function dlorListReducer(state = initialState, action) {
@@ -33,5 +55,7 @@ export default function dlorListReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    return handler(state, action);
+    const handler2 = handler(state, action);
+    console.log('dlorListReducer:', action.type, handler2);
+    return handler2;
 }

@@ -8,8 +8,10 @@ import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 // import { makeStyles } from '@mui/styles';
+import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import Select from '@mui/material/Select';
 
 import { useConfirmationState } from 'hooks';
 
@@ -32,8 +34,17 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 //     },
 // }));
 
-export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) => {
+export const DLOAdd = ({
+    actions,
+    dlorItemCreating,
+    dlorItemError,
+    dlorItem,
+    dlorTeam,
+    dlorTeamLoading,
+    dlorTeamError,
+}) => {
     console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
+    console.log('DLOAdd creating team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
     // const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -93,25 +104,13 @@ export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) =
                                 // className={classes.typingArea}
                             >
                                 <InputLabel htmlFor="object_title">Dlor title</InputLabel>
-                                <Input
-                                    id="object_title"
-                                    data-testid="object_title"
-                                    // onChange={handleChange('object_title')}
-                                    // value={values.object_title}
-                                />
+                                <Input id="object_title" data-testid="object_title" />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl variant="standard" fullWidth>
                                 <InputLabel htmlFor="object_description">Description of Object</InputLabel>
-                                <Input
-                                    id="object_description"
-                                    data-testid="object_description"
-                                    multiline
-                                    // onChange={handleChange('admin_notes')}
-                                    rows={6}
-                                    // value={values.admin_notes}
-                                />
+                                <Input id="object_description" data-testid="object_description" multiline rows={6} />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
@@ -119,17 +118,9 @@ export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) =
                                 variant="standard"
                                 // className={classes.typingArea}
                                 fullWidth
-                                // title={locale.form.tooltips.adminNotesField}
                             >
                                 <InputLabel htmlFor="object_summary">Summary of Object</InputLabel>
-                                <Input
-                                    id="object_summary"
-                                    data-testid="object_summary"
-                                    multiline
-                                    // onChange={handleChange('admin_notes')}
-                                    rows={2}
-                                    // value={values.admin_notes}
-                                />
+                                <Input id="object_summary" data-testid="object_summary" multiline rows={2} />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
@@ -137,7 +128,6 @@ export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) =
                                 variant="standard"
                                 // className={classes.typingArea}
                                 fullWidth
-                                // title={locale.form.tooltips.adminNotesField}
                             >
                                 <FormLabel id="object_embed_type_label">Object inclusion type</FormLabel>
                                 <RadioGroup
@@ -148,6 +138,25 @@ export const DLOAdd = ({ actions, dlorItemCreating, dlorItemError, dlorItem }) =
                                     <FormControlLabel value="link" control={<Radio />} label="Link" />
                                     <FormControlLabel value="embed" control={<Radio />} label="Embedded" disabled />
                                 </RadioGroup>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl variant="standard" fullWidth>
+                                <h4>dlorTeam</h4>
+                                {dlorTeam}
+                                {/* <FormLabel id="object_owning_team_label">Owning Team</FormLabel>*/}
+                                {/* <Select*/}
+                                {/*    aria-labelledby="demo-object_owning_team_label-select-label"*/}
+                                {/*    id="demo-simple-select"*/}
+                                {/*    // value={age}*/}
+                                {/*    label="Owning Team xx"*/}
+                                {/*    // onChange={handleChange}*/}
+                                {/* >*/}
+                                {/*    {!!dlorTeam && dlorTeam.map(t => <MenuItem value={t.id}>t.team_name</MenuItem>)}*/}
+                                {/*    <MenuItem disabled value="0">*/}
+                                {/*        Coming soon: create a team here*/}
+                                {/*    </MenuItem>*/}
+                                {/* </Select>*/}
                             </FormControl>
                         </Grid>
                         <Grid item xs={3} align="left">

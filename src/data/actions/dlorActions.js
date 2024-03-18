@@ -1,6 +1,12 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
-import { DLOR_ALL_API, DLOR_GET_BY_ID_API, DLOR_GET_FILTER_LIST, DLOR_CREATE_API } from 'repositories/routes';
+import {
+    DLOR_ALL_API,
+    DLOR_CREATE_API,
+    DLOR_GET_BY_ID_API,
+    DLOR_GET_FILTER_LIST,
+    DLOR_TEAM_LIST_API,
+} from 'repositories/routes';
 
 export function loadAllDLORs() {
     return dispatch => {
@@ -66,6 +72,7 @@ export function clearDlor() {
 }
 
 export function createDLor(request) {
+    console.log('createDLor request=', request);
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
         return post(DLOR_CREATE_API(), request)
@@ -78,6 +85,29 @@ export function createDLor(request) {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_CREATE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function loadOwningTeams() {
+    console.log('loadOwningTeams');
+    return dispatch => {
+        dispatch({ type: actions.DLOR_TEAM_LOADING });
+        console.log('loadOwningTeams DLOR_TEAM_LIST_API()=', DLOR_TEAM_LIST_API());
+        return get(DLOR_TEAM_LIST_API())
+            .then(response => {
+                console.log('loadOwningTeams response=', response);
+                dispatch({
+                    type: actions.DLOR_TEAM_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                console.log('loadOwningTeams error=', error);
+                dispatch({
+                    type: actions.DLOR_TEAM_FAILED,
                     payload: error.message,
                 });
             });

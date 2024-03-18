@@ -65,6 +65,7 @@ import {
 } from './data/promoPanelsLong';
 import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
+import dlor_team_list from './data/records/dlor/dlor_team_list';
 
 const moment = require('moment');
 
@@ -613,12 +614,23 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, dlor_filter_list];
         }
     })
-    .onPost('dlor')
+    .onPost('dlor/admin/add_object')
     .reply(() => {
         if (responseType === 'error') {
             return [500, {}];
         } else {
             return getaDlorRecordFromDlorAll('98j3-fgf95-8j34'); //any old id
+        }
+    })
+    .onGet('dlor/teams/list')
+    .reply(() => {
+        console.log('get mock dlor/teams/list', dlor_team_list);
+        if (user === 'errorUser') {
+            return [500, {}];
+        } else if (user === 'emptyResult') {
+            return [200, { data: [] }]; // this should really be a 404, but lets
+        } else {
+            return [200, dlor_team_list];
         }
     });
 

@@ -44,3 +44,47 @@ describe('dlor list reducer', () => {
         });
     });
 });
+
+describe('dlor team list reducer', () => {
+    let emptyState;
+    let mockDlorTeamList;
+
+    beforeEach(() => {
+        mockDlorTeamList = [{}];
+        emptyState = {
+            ...initialState,
+        };
+    });
+
+    it('should set dlor values when successfully loaded', () => {
+        const test = dlorListReducer(emptyState, { type: actions.DLOR_TEAM_LOADED, payload: mockDlorTeamList });
+        expect(test).toEqual({
+            ...emptyState,
+            dlorTeam: mockDlorTeamList,
+            dlorTeamLoading: false,
+            dlorTeamError: false,
+        });
+    });
+
+    it('should handle a failing Dlor API call', () => {
+        const test = dlorListReducer(emptyState, {
+            type: actions.DLOR_TEAM_FAILED,
+            payload: 'failed!',
+        });
+        expect(test).toEqual({
+            ...emptyState,
+            dlorTeamLoading: false,
+            dlorTeamError: 'failed!',
+        });
+    });
+
+    it('should set dlor Status flags to loading when loading dlor', () => {
+        const test = dlorListReducer(emptyState, { type: actions.DLOR_TEAM_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            dlorTeam: null,
+            dlorTeamLoading: true,
+            dlorTeamError: false,
+        });
+    });
+});
