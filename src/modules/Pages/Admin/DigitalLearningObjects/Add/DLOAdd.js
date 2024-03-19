@@ -141,7 +141,7 @@ export const DLOAdd = ({
                                 fullWidth
                                 // className={classes.typingArea}
                             >
-                                <InputLabel htmlFor="object_title">Object title</InputLabel>
+                                <InputLabel htmlFor="object_title">Object title *</InputLabel>
                                 <Input
                                     id="object_title"
                                     data-testid="object_title"
@@ -149,54 +149,6 @@ export const DLOAdd = ({
                                     required
                                     value={formValues?.object_title}
                                 />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="object_description">Description of Object</InputLabel>
-                                <Input
-                                    id="object_description"
-                                    data-testid="object_description"
-                                    multiline
-                                    required
-                                    rows={6}
-                                    value={formValues?.object_description}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                // className={classes.typingArea}
-                                fullWidth
-                            >
-                                <InputLabel htmlFor="object_summary">Summary of Object</InputLabel>
-                                <Input
-                                    id="object_summary"
-                                    data-testid="object_summary"
-                                    multiline
-                                    required
-                                    rows={2}
-                                    value={formValues?.object_summary}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                // className={classes.typingArea}
-                                fullWidth
-                            >
-                                <FormLabel id="object_embed_type_label">Object inclusion type</FormLabel>
-                                <RadioGroup
-                                    aria-labelledby="demo-radio-object_embed_type_label-group-label"
-                                    defaultValue="link"
-                                    name="radio-buttons-group"
-                                    value={formValues?.object_embed_type}
-                                >
-                                    <FormControlLabel value="link" control={<Radio />} label="Link" />
-                                    <FormControlLabel value="embed" control={<Radio />} label="Embedded" disabled />
-                                </RadioGroup>
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} style={{ minHeight: 95 }}>
@@ -225,6 +177,66 @@ export const DLOAdd = ({
                                     </MenuItem>
                                 </Select>
                             )}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
+                                <Input
+                                    id="object_description"
+                                    data-testid="object_description"
+                                    multiline
+                                    required
+                                    rows={6}
+                                    value={formValues?.object_description}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl
+                                variant="standard"
+                                // className={classes.typingArea}
+                                fullWidth
+                            >
+                                <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
+                                <Input
+                                    id="object_summary"
+                                    data-testid="object_summary"
+                                    multiline
+                                    required
+                                    rows={2}
+                                    value={formValues?.object_summary}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl variant="standard" fullWidth>
+                                <FormLabel id="object_embed_type_label">Object inclusion type</FormLabel>
+                                <RadioGroup
+                                    aria-labelledby="demo-radio-object_embed_type_label-group-label"
+                                    defaultValue="link"
+                                    name="object_embed_type_radio-buttons-group"
+                                    row
+                                    value={formValues?.object_embed_type}
+                                >
+                                    <FormControlLabel value="link" control={<Radio />} label="Link" />
+                                    <FormControlLabel value="embed" control={<Radio />} label="Embedded" disabled />
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl variant="standard" fullWidth>
+                                <FormLabel id="object_status_label">Object publication status</FormLabel>
+                                <RadioGroup
+                                    aria-labelledby="demo-radio-object_status_label-group-label"
+                                    defaultValue="new"
+                                    name="object_status_radio-buttons-group"
+                                    row
+                                    value={formValues?.object_status}
+                                >
+                                    <FormControlLabel value="current" control={<Radio />} label="Published" />
+                                    <FormControlLabel value="new" control={<Radio />} label="Draft" selected />
+                                </RadioGroup>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={3} align="left">
                             <Button
