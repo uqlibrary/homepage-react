@@ -167,6 +167,9 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'space-between',
         paddingTop: 16,
         '& h3': {
+            color: theme.palette.secondary.dark,
+            display: 'flex',
+            alignItems: 'flex-start',
             fontWeight: 500,
         },
         '& button': {
@@ -477,14 +480,7 @@ export const DLOList = ({
                             <Grid item key={facetType?.facet_type_slug} className={classes.filterSidebarType}>
                                 <Grid container className={classes.filterSidebarTypeHeading}>
                                     <Grid item md={11}>
-                                        <Typography
-                                            component={'h3'}
-                                            variant="subtitle1"
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'flex-start',
-                                            }}
-                                        >
+                                        <Typography component={'h3'} variant="subtitle1">
                                             {getFacetTypeIcon(facetType?.facet_type_slug)} &nbsp;{' '}
                                             {facetType?.facet_type_name}
                                         </Typography>
