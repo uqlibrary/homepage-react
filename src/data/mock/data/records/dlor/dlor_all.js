@@ -36,7 +36,7 @@ export default {
                 {
                     "filter_key": "subject",
                     "filter_values": [
-                        "All (Cross-disciplinary)"
+                        "Cross-disciplinary"
                     ]
                 },
                 {
@@ -101,7 +101,7 @@ export default {
                 {
                     "filter_key": "subject",
                     "filter_values": [
-                        "All (Cross-disciplinary)"
+                        "Cross-disciplinary"
                     ]
                 },
                 {
@@ -163,7 +163,7 @@ export default {
                 {
                     "filter_key": "subject",
                     "filter_values": [
-                        "All (Cross-disciplinary)"
+                        "Cross-disciplinary"
                     ]
                 },
                 {
@@ -290,7 +290,7 @@ export default {
                 {
                     "filter_key": "subject",
                     "filter_values": [
-                        "All (Cross-disciplinary)"
+                        "Cross-disciplinary"
                     ]
                 },
                 {
@@ -340,7 +340,7 @@ export default {
                 {
                     "filter_key": "subject",
                     "filter_values": [
-                        "All (Cross-disciplinary)"
+                        "Cross-disciplinary"
                     ]
                 },
                 {
@@ -402,7 +402,7 @@ export default {
                 {
                     "filter_key": "subject",
                     "filter_values": [
-                        "All (Cross-disciplinary)"
+                        "Cross-disciplinary"
                     ]
                 },
                 {
@@ -465,7 +465,7 @@ export default {
                 {
                     "filter_key": "subject",
                     "filter_values": [
-                        "All (Cross-disciplinary)"
+                        "Cross-disciplinary"
                     ]
                 },
                 {

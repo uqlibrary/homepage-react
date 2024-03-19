@@ -165,7 +165,7 @@ export default {
             "facet_type_help_admin": "sub",
             "facet_list": [
                 {
-                    "facet_name": "All (Cross-disciplinary)",
+                    "facet_name": "Cross-disciplinary",
                     "facet_slug": "all_cross_disciplinary"
                 },
                 {
