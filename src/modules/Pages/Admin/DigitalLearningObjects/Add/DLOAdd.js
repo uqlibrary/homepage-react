@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -12,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
 
 import { useConfirmationState } from 'hooks';
 
@@ -49,9 +50,23 @@ export const DLOAdd = ({
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
-    const [saveStatus, setSaveStatus] = React.useState(null);
+    const [saveStatus, setSaveStatus] = useState(null);
 
-    React.useEffect(() => {
+    const [formValues, setFormValues] = useState({
+        object_title: '',
+        object_description: '',
+        object_summary: '',
+        object_owning_team_id: 1,
+        object_embed_type: 'link',
+    });
+
+    useEffect(() => {
+        if (!dlorTeamError && !dlorTeamLoading && !dlorTeam) {
+            actions.loadOwningTeams();
+        }
+    }, []);
+
+    useEffect(() => {
         console.log('useEffect dlorItem=', dlorItem, ';dlorItemError', dlorItemError);
         if ((!!dlorItem && !!dlorItem.data?.object_id) || !!dlorItemError) {
             console.log('useEffect showing conf');
@@ -59,6 +74,15 @@ export const DLOAdd = ({
             showConfirmation();
         }
     }, [showConfirmation, dlorItem, dlorItemError]);
+
+    // useEffect(() => {
+    //     if (!!dlorTeam && dlorTeam.length > 0) {
+    //         setFormValues({
+    //             ...formValues,
+    //             ['object_owning_team_id']: dlorTeam.filter((t, index) => index === 0),
+    //         });
+    //     }
+    // }, [dlorTeam]);
 
     const saveNewAlert = () => {
         return actions.createDLor();
@@ -77,19 +101,33 @@ export const DLOAdd = ({
         },
     };
 
-    const closeConfirmationBox = () => {
-        window.alert('what do we do here?');
+    const handleLeavePage = () => {
+        window.alert('leave the page: TBA, where do we go on exit?');
     };
+
+    if (!!dlorTeamError) {
+        return (
+            <StandardPage>
+                <StandardCard>
+                    {/* {getTitleBlock()}*/}
+                    <Typography variant="body1" data-testid="dlor-addObject-error">
+                        {dlorTeamError}
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
+    }
+
     return (
         <StandardPage title="DLOR Management">
-            <StandardCard title="Create Dlor">
+            <StandardCard title="Create an Object for Digital learning objects">
                 <form id="dlor-add-form">
                     {saveStatus === 'complete' && (
                         <ConfirmationBox
                             actionButtonColor="primary"
                             actionButtonVariant="contained"
                             confirmationBoxId="dlor-creation-outcome"
-                            onAction={() => closeConfirmationBox()}
+                            onAction={() => handleLeavePage()}
                             onClose={hideConfirmation}
                             hideCancelButton
                             isOpen={isOpen}
@@ -103,14 +141,27 @@ export const DLOAdd = ({
                                 fullWidth
                                 // className={classes.typingArea}
                             >
-                                <InputLabel htmlFor="object_title">Dlor title</InputLabel>
-                                <Input id="object_title" data-testid="object_title" />
+                                <InputLabel htmlFor="object_title">Object title</InputLabel>
+                                <Input
+                                    id="object_title"
+                                    data-testid="object_title"
+                                    // error={}
+                                    required
+                                    value={formValues?.object_title}
+                                />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl variant="standard" fullWidth>
                                 <InputLabel htmlFor="object_description">Description of Object</InputLabel>
-                                <Input id="object_description" data-testid="object_description" multiline rows={6} />
+                                <Input
+                                    id="object_description"
+                                    data-testid="object_description"
+                                    multiline
+                                    required
+                                    rows={6}
+                                    value={formValues?.object_description}
+                                />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
@@ -120,7 +171,14 @@ export const DLOAdd = ({
                                 fullWidth
                             >
                                 <InputLabel htmlFor="object_summary">Summary of Object</InputLabel>
-                                <Input id="object_summary" data-testid="object_summary" multiline rows={2} />
+                                <Input
+                                    id="object_summary"
+                                    data-testid="object_summary"
+                                    multiline
+                                    required
+                                    rows={2}
+                                    value={formValues?.object_summary}
+                                />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
@@ -134,37 +192,46 @@ export const DLOAdd = ({
                                     aria-labelledby="demo-radio-object_embed_type_label-group-label"
                                     defaultValue="link"
                                     name="radio-buttons-group"
+                                    value={formValues?.object_embed_type}
                                 >
                                     <FormControlLabel value="link" control={<Radio />} label="Link" />
                                     <FormControlLabel value="embed" control={<Radio />} label="Embedded" disabled />
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <h4>dlorTeam</h4>
-                                {dlorTeam}
-                                {/* <FormLabel id="object_owning_team_label">Owning Team</FormLabel>*/}
-                                {/* <Select*/}
-                                {/*    aria-labelledby="demo-object_owning_team_label-select-label"*/}
-                                {/*    id="demo-simple-select"*/}
-                                {/*    // value={age}*/}
-                                {/*    label="Owning Team xx"*/}
-                                {/*    // onChange={handleChange}*/}
-                                {/* >*/}
-                                {/*    {!!dlorTeam && dlorTeam.map(t => <MenuItem value={t.id}>t.team_name</MenuItem>)}*/}
-                                {/*    <MenuItem disabled value="0">*/}
-                                {/*        Coming soon: create a team here*/}
-                                {/*    </MenuItem>*/}
-                                {/* </Select>*/}
-                            </FormControl>
+                        <Grid item xs={12} style={{ minHeight: 95 }}>
+                            <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
+                            {!!dlorTeam && (
+                                <Select
+                                    defaultValue={dlorTeam.filter((t, index) => index === 0)}
+                                    value={formValues?.object_owning_team_id}
+                                    aria-labelledby="object_owning_team_label"
+                                    id="object_owning_team"
+                                >
+                                    {dlorTeam.map((t, index) => {
+                                        console.log('index=', index);
+                                        return (
+                                            <MenuItem
+                                                // selected={index === 0}
+                                                key={t.team_id}
+                                                value={t.team_id}
+                                            >
+                                                {t.team_name}
+                                            </MenuItem>
+                                        );
+                                    })}
+                                    <MenuItem disabled value="">
+                                        Coming soon: create a team here
+                                    </MenuItem>
+                                </Select>
+                            )}
                         </Grid>
                         <Grid item xs={3} align="left">
                             <Button
                                 color="secondary"
                                 children="Cancel"
                                 data-testid="admin-dlor-add-button-cancel"
-                                onClick={() => closeConfirmationBox()}
+                                onClick={() => handleLeavePage()}
                                 variant="contained"
                             />
                         </Grid>

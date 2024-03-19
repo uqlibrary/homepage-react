@@ -4,6 +4,62 @@ describe('Digital Object learning Repository (DLOR)', () => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
 
+    const dlorAdminUser = 'uqstaff'; // TODO, change to a dloradmin user
+    context('adding a new object', () => {
+        it('is accessible', () => {
+            cy.visit(`http://localhost:2020/admin/dlor/add?user=${dlorAdminUser}`);
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('h1').should('exist'));
+            cy.get('h1').should('contain', 'DLOR Management');
+
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'add dlor',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        it('admin can save a new object', () => {
+            cy.visit(`http://localhost:2020/admin/dlor/add?user=${dlorAdminUser}`);
+            cy.get('[data-testid="object_title"] input')
+                .should('exist')
+                .type('new title');
+            cy.get('[data-testid="object_description"] textarea:first-child')
+                .should('exist')
+                .type('new description');
+            cy.get('[data-testid="object_summary"] textarea:first-child')
+                .should('exist')
+                .type('new summary');
+            cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                .should('exist')
+                .click();
+            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
+            cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains('The object has been created');
+        });
+        it('admin gets an error when Teams list api doesnt load', () => {
+            cy.visit(`http://localhost:2020/admin/dlor/add?user=${dlorAdminUser}&responseType=teamsLoadError`);
+            cy.get('[data-testid="dlor-addObject-error"]').contains('Error has occurred during request');
+        });
+        it('admin gets an error on a failed save', () => {
+            cy.visit(`http://localhost:2020/admin/dlor/add?user=${dlorAdminUser}&responseType=saveError`);
+            cy.get('[data-testid="object_title"] input')
+                .should('exist')
+                .type('new title');
+            cy.get('[data-testid="object_description"] textarea:first-child')
+                .should('exist')
+                .type('new description');
+            cy.get('[data-testid="object_summary"] textarea:first-child')
+                .should('exist')
+                .type('new summary');
+            cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                .should('exist')
+                .click();
+            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
+            cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains('Error has occurred during request');
+        });
+    });
+
+    context('homepage', () => {
     context('anonymous desktop homepage visits', () => {
         beforeEach(() => {
             cy.visit('digital-learning-objects');
@@ -572,56 +628,6 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-detailpage-empty"]')
                 .should('exist')
                 .contains('We could not find the requested entry - please check the web address.');
-        });
-    });
-
-    context('adding a new object', () => {
-        it('is accessible', () => {
-            cy.visit('http://localhost:2020/admin/dlor/add?user=uqstaff');
-            cy.injectAxe();
-            cy.viewport(1300, 1000);
-            cy.waitUntil(() => cy.get('h1').should('exist'));
-            cy.get('h1').should('contain', 'DLOR Management');
-
-            cy.checkA11y('[data-testid="StandardPage"]', {
-                reportName: 'add dlor',
-                scopeName: 'Content',
-                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-            });
-        });
-        it('admin can save a new object', () => {
-            cy.visit('http://localhost:2020/admin/dlor/add?user=uqstaff');
-            cy.get('[data-testid="object_title"] input')
-                .should('exist')
-                .type('new title');
-            cy.get('[data-testid="object_description"] textarea:first-child')
-                .should('exist')
-                .type('new description');
-            cy.get('[data-testid="object_summary"] textarea:first-child')
-                .should('exist')
-                .type('new summary');
-            cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                .should('exist')
-                .click();
-            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
-            cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains('The object has been created');
-        });
-        it('admin gets an error on a failed save', () => {
-            cy.visit('http://localhost:2020/admin/dlor/add?user=uqstaff&responseType=error');
-            cy.get('[data-testid="object_title"] input')
-                .should('exist')
-                .type('new title');
-            cy.get('[data-testid="object_description"] textarea:first-child')
-                .should('exist')
-                .type('new description');
-            cy.get('[data-testid="object_summary"] textarea:first-child')
-                .should('exist')
-                .type('new summary');
-            cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                .should('exist')
-                .click();
-            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
-            cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains('Error has occurred during request');
         });
     });
 });
