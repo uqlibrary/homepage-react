@@ -97,8 +97,8 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
     }, [dlorId]);
 
     const deslugify = slug => {
-        const words = slug.replace(/_/g, ' ');
-        return words.charAt(0).toUpperCase() + words.slice(1);
+        const words = slug?.replace(/_/g, ' ');
+        return words?.charAt(0).toUpperCase() + words?.slice(1);
     };
 
     function getTitleBlock(detailTitle = 'View an entry') {
@@ -134,7 +134,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
         );
     }
 
-    if (!dlorItem || Object.keys(dlorItem).length === 0) {
+    if (!dlorItem || Object.keys(dlorItem)?.length === 0) {
         return (
             <StandardPage>
                 <StandardCard className={classes.dlorEntry}>
@@ -157,46 +157,48 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                             <LoginPrompt account={account} />
                         </div>
                         <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
-                            {dlorItem.object_title}
+                            {dlorItem?.object_title}
                         </Typography>
                         <div data-testid="dlor-detailpage-description">
-                            {!!dlorItem.object_description &&
-                                dlorItem.object_description.split('\n').map((line, index) => <p key={index}>{line}</p>)}
+                            {!!dlorItem?.object_description &&
+                                dlorItem?.object_description
+                                    ?.split('\n')
+                                    ?.map((line, index) => <p key={index}>{line}</p>)}
                         </div>
-                        {dlorItem.object_embed_type === 'link' && !!dlorItem.obj_link_url && (
+                        {dlorItem?.object_embed_type === 'link' && !!dlorItem?.obj_link_url && (
                             <div className={classes.uqActionButton}>
                                 <a aria-label="Click to visit the Learning Resource" href={dlorItem.obj_link_url}>
                                     Access the object
                                 </a>
                             </div>
                         )}
-                        {!!dlorItem.obj_download_instructions && (
+                        {!!dlorItem?.obj_download_instructions && (
                             <>
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
                                     How to use this object
                                 </Typography>
-                                {!!dlorItem.obj_download_instructions &&
-                                    dlorItem.obj_download_instructions
-                                        .split('\n')
-                                        .map((line, index) => <p key={index}>{line}</p>)}
+                                {!!dlorItem?.obj_download_instructions &&
+                                    dlorItem?.obj_download_instructions
+                                        ?.split('\n')
+                                        ?.map((line, index) => <p key={index}>{line}</p>)}
                             </>
                         )}
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="detaipage-metadata">
-                        {dlorItem.object_filters?.length > 0 && (
+                        {dlorItem?.object_filters?.length > 0 && (
                             <>
                                 <Typography component={'h2'} variant={'h6'} className={classes.metaHeader}>
                                     <BookmarksIcon />
                                     Details
                                 </Typography>
-                                {dlorItem.object_filters.map(filter => {
+                                {dlorItem?.object_filters?.map(filter => {
                                     return (
                                         <div
-                                            key={filter.filter_key}
-                                            data-testid={`detailpage-filter-${filter.filter_key}`}
+                                            key={filter?.filter_key}
+                                            data-testid={`detailpage-filter-${filter?.filter_key}`}
                                         >
                                             <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
-                                                {deslugify(filter.filter_key)}
+                                                {deslugify(filter?.filter_key)}
                                             </Typography>
                                             <ul className={classes.filterDisplayList}>
                                                 {!!filter.filter_values &&
