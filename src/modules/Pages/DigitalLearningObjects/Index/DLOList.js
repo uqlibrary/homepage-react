@@ -41,24 +41,25 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'stretch', // panels fill the screen with equal width
     },
-    // dlorCard: {
-    //     border: '1px solid green',
-    //     '& > div': {
-    //         border: '1px solid blue',
-    //     },
-    // },
-    article: {
-        // border: '1px solid red',
+    dlorCard: {
+        position: 'relative',
+        padding: '16px 16px 120px 16px',
+        height: 300,
         '& header': {
             '& h2': {
                 lineHeight: 1.3,
             },
-            // backgroundColor: '#ffffd1',
             display: 'flex',
             flexDirection: 'column-reverse',
         },
+        '& > div': {
+            maxHeight: 200,
+            overflowY: 'auto',
+            overflowX: 'hidden',
+        },
         '& footer': {
-            marginTop: 24,
+            position: 'absolute',
+            bottom: 16,
             color: theme.palette.primary.light,
             fontWeight: 400,
             '& > div': {
@@ -73,12 +74,8 @@ const useStyles = makeStyles(theme => ({
                     fill: theme.palette.primary.light,
                 },
             },
-            // backgroundColor: '#dbffd6',
         },
     },
-    // articleContents: {
-    //     backgroundColor: '#fbe4ff',
-    // },
     highlighted: {
         color: theme.palette.primary.light,
         fontWeight: 400,
@@ -88,6 +85,7 @@ const useStyles = makeStyles(theme => ({
         borderWidth: 0,
         paddingInline: 0,
         fontFamily: 'Roboto, sans-serif',
+        backgroundColor: '#fff',
         [theme.breakpoints.down('md')]: {
             width: '100%',
         },
@@ -98,7 +96,7 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             cursor: 'pointer',
             textDecoration: 'none',
-            '& > div': {
+            '& > article': {
                 backgroundColor: '#f2f2f2',
             },
         },
@@ -663,47 +661,42 @@ export const DLOList = ({
                     aria-label={`Click for more details on ${object.object_title}`}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
-                    <StandardCard noHeader fullHeight className={classes.dlorCard}>
-                        <article className={classes.article}>
-                            <header>
-                                <Typography component={'h2'} variant={'h6'}>
-                                    {object.object_title}
+                    <article noHeader fullHeight className={classes.dlorCard}>
+                        <header>
+                            <Typography component={'h2'} variant={'h6'}>
+                                {object.object_title}
+                            </Typography>
+                            {!!hasTopicFacet('topic') && (
+                                // use flex to show this above the title
+                                <Typography className={classes.highlighted}>
+                                    {getConcatenatedFilterLabels('topic')}
                                 </Typography>
-                                {!!hasTopicFacet('topic') && (
-                                    // use flex to show this above the title
-                                    <Typography className={classes.highlighted}>
-                                        {getConcatenatedFilterLabels('topic')}
-                                    </Typography>
-                                )}
-                            </header>
-                            <div className={classes.articleContents}>
-                                <p>{object.object_summary}</p>
-                            </div>
-
-                            <footer>
-                                {!!hasTopicFacet('item_type') && (
-                                    <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
-                                        {getFacetTypeIcon('item_type')}
-                                        {getConcatenatedFilterLabels('item_type')}
-                                    </div>
-                                )}
-                                {!!hasTopicFacet('media_format') && (
-                                    <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}>
-                                        {getFacetTypeIcon('media_format')}
-                                        {getConcatenatedFilterLabels('media_format')}
-                                    </div>
-                                )}
-                                {!!hasTopicFacet('licence') && (
-                                    <div
-                                        data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}
-                                    >
-                                        {getFacetTypeIcon('licence')}
-                                        {getConcatenatedFilterLabels('licence')}
-                                    </div>
-                                )}
-                            </footer>
-                        </article>
-                    </StandardCard>
+                            )}
+                        </header>
+                        <div className={classes.articleContents}>
+                            <p>{object.object_summary}</p>
+                        </div>
+                        <footer>
+                            {!!hasTopicFacet('item_type') && (
+                                <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-type`}>
+                                    {getFacetTypeIcon('item_type')}
+                                    {getConcatenatedFilterLabels('item_type')}
+                                </div>
+                            )}
+                            {!!hasTopicFacet('media_format') && (
+                                <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-media`}>
+                                    {getFacetTypeIcon('media_format')}
+                                    {getConcatenatedFilterLabels('media_format')}
+                                </div>
+                            )}
+                            {!!hasTopicFacet('licence') && (
+                                <div data-testid={`dlor-homepage-panel-${object.object_public_uuid}-footer-licence`}>
+                                    {getFacetTypeIcon('licence')}
+                                    {getConcatenatedFilterLabels('licence')}
+                                </div>
+                            )}
+                        </footer>
+                    </article>
                 </button>
             </Grid>
         );

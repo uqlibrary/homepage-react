@@ -132,7 +132,7 @@ export default {
             "object_public_uuid": "kj5t_8yg4_kj4f",
             "object_title": "UQ has a Blak History",
             "object_description": "Explores the history of UQ as it relates to Aboriginal and Torres Strait Islander peoples, cultures and communities and the importance of Country and place to Aboriginal and Torres Strait Islander peoples. Highlights significant events, movements and activities and their importance to Aboriginal and Torres Strait Islander communities. ",
-            "object_summary": "Explores the history of UQ as it relates to Aboriginal and Torres Strait Islander peoples, cultures and communities and the importance of Country and place to Aboriginal and Torres Strait Islander peoples.",
+            "object_summary": "Explores the history of UQ as it relates to Aboriginal and Torres Strait Islander peoples, cultures and communities and the importance of Country and place to Aboriginal and Torres Strait Islander peoples. Explores the history of UQ as it relates to Aboriginal and Torres Strait Islander peoples, cultures and communities and the importance of Country and place to Aboriginal and Torres Strait Islander peoples.",
             "object_review_date_next": "2050-01-01",
             "object_status": "current",
             "object_embed_type": "link",
