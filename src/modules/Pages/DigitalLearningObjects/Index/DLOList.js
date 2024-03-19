@@ -88,7 +88,7 @@ const useStyles = makeStyles(theme => ({
     },
     navigateToDetail: {
         height: '100%',
-        borderWidth: 0,
+        borderColor: 'transparent',
         paddingInline: 0,
         fontFamily: 'Roboto, sans-serif',
         backgroundColor: '#fff',
@@ -173,7 +173,7 @@ const useStyles = makeStyles(theme => ({
             fontWeight: 500,
         },
         '& button': {
-            borderWidth: 0,
+            borderColor: 'transparent',
             backgroundColor: '#f7f7f7',
         },
     },
@@ -199,7 +199,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     filterResetButton: {
-        borderWidth: 0,
+        borderColor: 'transparent',
         backgroundColor: '#f7f7f7',
         color: 'rgb(13, 109, 205)',
         fontSize: 14,
