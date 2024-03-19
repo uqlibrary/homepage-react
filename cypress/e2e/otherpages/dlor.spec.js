@@ -125,7 +125,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
-                .contains('Login for a better experience');
+                .contains('Login for the full experience');
         });
         it('can filter panels', () => {
             // initially, all panels are showing
@@ -551,6 +551,12 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('contain', 'Access the object')
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
+
+            cy.visit('digital-learning-objects/view/987y_isjgt_9866?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-homepage-loginprompt"]')
+                .should('exist')
+                .contains('Login for the full experience');
         });
         it('can handle an error', () => {
             cy.visit('digital-learning-objects/view/98s0_dy5k3_98h4?user=errorUser');

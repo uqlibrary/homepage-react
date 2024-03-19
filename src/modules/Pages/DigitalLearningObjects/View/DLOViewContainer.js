@@ -7,6 +7,7 @@ import DLOView from './DLOView';
 
 const mapStateToProps = state => {
     return {
+        ...state.get('accountReducer'),
         ...state.get('dlorSingleReducer'),
     };
 };

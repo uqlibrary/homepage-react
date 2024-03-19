@@ -19,7 +19,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TopicIcon from '@mui/icons-material/Topic';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseIcon from '@mui/icons-material/Close';
-import InfoIcon from '@mui/icons-material/Info';
 import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -27,6 +26,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getHomepageLink } from 'helpers/access';
+
+import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -107,7 +108,7 @@ const useStyles = makeStyles(theme => ({
         overflowY: 'auto',
         overflowX: 'hidden',
         paddingTop: 0,
-        marginTop: 24,
+        // marginTop: 24,
     },
     filterSidebar: {
         fontSize: 10,
@@ -200,21 +201,6 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             textDecoration: 'underline',
             textDecorationColor: 'rgb(13, 109, 205)',
-        },
-    },
-    loginAlert: {
-        backgroundColor: '#dcedfd',
-        color: 'rgba(0, 0, 0, 0.87)',
-        fontWeight: 400,
-        lineHeight: 1.5,
-        marginRight: 12,
-        marginLeft: 12,
-        marginBottom: 12,
-        padding: 12,
-        display: 'flex',
-        alignItems: 'center',
-        '& span': {
-            marginLeft: 10,
         },
     },
     skipLink: {
@@ -661,7 +647,7 @@ export const DLOList = ({
                     aria-label={`Click for more details on ${object.object_title}`}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
-                    <article noHeader fullHeight className={classes.dlorCard}>
+                    <article className={classes.dlorCard}>
                         <header>
                             <Typography component={'h2'} variant={'h6'}>
                                 {object.object_title}
@@ -719,6 +705,7 @@ export const DLOList = ({
         );
     }
 
+    console.log('DLOList account=', account);
     return (
         <StandardPage>
             <Typography component={'h1'} variant={'h6'}>
@@ -806,22 +793,9 @@ export const DLOList = ({
                                     </Grid>
                                 );
                             } else {
-                                const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(
-                                    window.location.href,
-                                )}`;
                                 return (
                                     <div className={classes.panelBody}>
-                                        {!account?.id && (
-                                            <div data-testid="dlor-homepage-loginprompt" className={classes.loginAlert}>
-                                                <InfoIcon />
-                                                <span>
-                                                    <a style={{ color: '#1e72c6' }} href={loginLink}>
-                                                        Login
-                                                    </a>{' '}
-                                                    for a better experience
-                                                </span>
-                                            </div>
-                                        )}
+                                        <LoginPrompt account={account} />
                                         <Grid
                                             container
                                             spacing={3}

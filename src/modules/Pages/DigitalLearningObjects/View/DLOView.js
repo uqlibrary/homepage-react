@@ -15,6 +15,8 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getHomepageLink } from 'helpers/access';
 
+import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
+
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
         listStyleType: 'none',
@@ -73,14 +75,14 @@ const useStyles = makeStyles(theme => ({
             padding: 0,
         },
     },
-    dlorEntry: {
-        '& div': {
-            paddingTop: 0,
-        },
-    },
+    // dlorEntry: {
+    //     '& div': {
+    //         paddingTop: 0,
+    //     },
+    // },
 }));
 
-export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) => {
+export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, account }) => {
     const { dlorId } = useParams();
     const classes = useStyles();
 
@@ -151,6 +153,9 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                 {getTitleBlock()}
                 <Grid container spacing={4} data-testid="dlor-detailpage">
                     <Grid item xs={12} md={8}>
+                        <div style={{ marginBottom: 12 }}>
+                            <LoginPrompt account={account} />
+                        </div>
                         <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
                             {dlorItem.object_title}
                         </Typography>
@@ -216,6 +221,7 @@ DLOView.propTypes = {
     dlorItem: PropTypes.any,
     dlorItemLoading: PropTypes.bool,
     dlorItemError: PropTypes.any,
+    account: PropTypes.object,
 };
 
 export default React.memo(DLOView);
