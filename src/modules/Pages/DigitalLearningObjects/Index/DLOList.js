@@ -43,9 +43,12 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'stretch', // panels fill the screen with equal width
     },
     dlorCard: {
-        position: 'relative',
-        padding: '16px 16px 120px 16px',
-        height: 300,
+        padding: '16px',
+        [theme.breakpoints.up('md')]: {
+            position: 'relative',
+            padding: '16px 16px 120px 16px',
+            height: 300,
+        },
         '& header': {
             '& h2': {
                 lineHeight: 1.3,
@@ -59,8 +62,10 @@ const useStyles = makeStyles(theme => ({
             overflowX: 'hidden',
         },
         '& footer': {
-            position: 'absolute',
-            bottom: 16,
+            [theme.breakpoints.up('md')]: {
+                position: 'absolute',
+                bottom: 16,
+            },
             color: theme.palette.primary.light,
             fontWeight: 400,
             '& > div': {
