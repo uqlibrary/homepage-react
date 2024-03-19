@@ -59,7 +59,6 @@ describe('Digital Object learning Repository (DLOR)', () => {
         });
     });
 
-    context('homepage', () => {
     context('anonymous desktop homepage visits', () => {
         beforeEach(() => {
             cy.visit('digital-learning-objects');
