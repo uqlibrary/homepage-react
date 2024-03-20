@@ -601,7 +601,7 @@ export const DLOList = ({
             const passesKeyWordFilter =
                 !keywordSearch ||
                 !keywordIsSearchable(keywordSearch) ||
-                !!keywordStartsWith(d?.keywords, keywordSearch);
+                !!keywordStartsWith(d?.object_keywords, keywordSearch);
             return passesCheckboxFilter && passesKeyWordFilter;
         });
     };
