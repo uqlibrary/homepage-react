@@ -105,9 +105,9 @@ context('Book Exam Booth page', () => {
             .subtract(1, 'days')
             .format('YYYY-MM-DD');
 
-        cy.hash().should(hash => {
-            expect(hash)
-                .contains('#/app/booking-types/f30fe4d2-bb58-4426-9c38-843c40b2cd3c')
+        cy.url().should(url => {
+            expect(url)
+                .contains('app/booking-types/f30fe4d2-bb58-4426-9c38-843c40b2cd3c')
                 .contains(`firstDay=${selectedDate}`)
                 .contains('fromTime=07%3A45')
                 .contains('toTime=09%3A15');
@@ -167,9 +167,9 @@ context('Book Exam Booth page', () => {
 
         cy.get('[data-testid="booth-search-submit-button"]').click();
 
-        cy.hash().should(hash => {
-            expect(hash)
-                .contains('#/app/booking-types/ae12d42e-faae-4553-8c6a-be2fcddb4b26')
+        cy.url().should(url => {
+            expect(url)
+                .contains('app/booking-types/ae12d42e-faae-4553-8c6a-be2fcddb4b26')
                 .contains(`firstDay=${bookingDate.format('YYYY-MM-DD')}`)
                 .contains('fromTime=10%3A00')
                 .contains('toTime=12%3A30');
