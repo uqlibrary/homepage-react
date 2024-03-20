@@ -77,12 +77,14 @@ export function createDLor(request) {
         dispatch({ type: actions.DLOR_CREATING });
         return post(DLOR_CREATE_API(), request)
             .then(data => {
+                console.log('createDLor response=', data);
                 dispatch({
                     type: actions.DLOR_CREATED,
                     payload: data,
                 });
             })
             .catch(error => {
+                console.log('createDLor error=', error);
                 dispatch({
                     type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,
