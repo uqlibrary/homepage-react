@@ -382,7 +382,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
         });
         it('can handle an empty result', () => {
             // this should never happen. Maybe immediately after intial upload
-            cy.visit('digital-learning-objects?user=emptyResult');
+            cy.visit('digital-learning-objects?responseType=emptyResult');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-noresult"]')
                 .should('exist')
@@ -567,7 +567,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
         });
         it('can handle an empty result', () => {
             // this should never happen. Maybe immediately after initial upload
-            cy.visit('digital-learning-objects/view/not-found?user=emptyResult');
+            cy.visit('digital-learning-objects/view/missingRecord');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-detailpage-empty"]')
                 .should('exist')

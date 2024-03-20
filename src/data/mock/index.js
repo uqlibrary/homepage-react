@@ -586,13 +586,15 @@ function getaDlorRecordFromDlorAll(dlorId) {
 
 mock.onGet(/dlor\/find\/.*/)
     .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const dlorId = urlparts.split('?')[0];
+        console.log('dlorId=', dlorId);
         if (user === 'errorUser') {
             return [500, {}];
-        } else if (user === 'emptyResult') {
+        } else if (dlorId === 'missingRecord') {
+            console.log('yes');
             return [200, { data: {} }]; // this would probably be a 404, but let's cover the case anyway...
         } else {
-            const urlparts = config.url.split('/').pop();
-            const dlorId = urlparts.split('?')[0];
             return getaDlorRecordFromDlorAll(dlorId);
         }
     })
@@ -600,7 +602,7 @@ mock.onGet(/dlor\/find\/.*/)
     .reply(() => {
         if (user === 'errorUser') {
             return [500, {}];
-        } else if (user === 'emptyResult') {
+        } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this should really be a 404, but lets
         } else {
             return [200, dlor_all];
@@ -619,7 +621,7 @@ mock.onGet(/dlor\/find\/.*/)
         console.log('get mock dlor/teams/list', dlor_team_list);
         if (responseType === 'teamsLoadError') {
             return [500, { error: 'Teams api did not load' }];
-        } else if (user === 'emptyResult') {
+        } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this should really be a 404, but lets
         } else {
             return [200, dlor_team_list];
