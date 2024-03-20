@@ -109,19 +109,19 @@ describe('Digital Object learning Repository (DLOR)', () => {
                     .type('123');
                 cy.get('[data-testid="input-characters-remaining-object_title"]')
                     .should('exist')
-                    .should('contain', '7 more characters needed');
+                    .should('contain', 'at least 7 more characters needed');
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('new description');
                 cy.get('[data-testid="input-characters-remaining-object_description"]')
                     .should('exist')
-                    .should('contain', '85 more characters needed');
+                    .should('contain', 'at least 85 more characters needed');
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary');
                 cy.get('[data-testid="input-characters-remaining-object_summary"]')
                     .should('exist')
-                    .should('contain', '9 more characters needed');
+                    .should('contain', 'at least 9 more characters needed');
             });
             it('admin can save a new object', () => {
                 cy.get('[data-testid="object_title"] input')

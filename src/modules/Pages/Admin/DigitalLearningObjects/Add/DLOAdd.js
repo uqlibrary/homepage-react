@@ -68,7 +68,9 @@ export const DLOAdd = ({
         const missingCharCount = numCharsMin - numCharsCurrent;
         return (
             <div className={classes.charactersRemaining} data-testid={`input-characters-remaining-${fieldName}`}>
-                {numCharsCurrent > 0 && missingCharCount > 0 ? `${missingCharCount} more characters needed` : ''}
+                {numCharsCurrent > 0 && missingCharCount > 0
+                    ? `at least ${missingCharCount} more characters needed`
+                    : ''}
             </div>
         );
     };
