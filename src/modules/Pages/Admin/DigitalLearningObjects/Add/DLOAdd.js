@@ -119,7 +119,7 @@ export const DLOAdd = ({
         if (formValues.object_owning_team_id === 'new') {
             delete valuesTosSend.object_owning_team_id;
         } else {
-            delete valuesTosSend.team_email;
+            delete valuesTosSend.team_name;
             delete valuesTosSend.team_manager;
             delete valuesTosSend.team_email;
         }

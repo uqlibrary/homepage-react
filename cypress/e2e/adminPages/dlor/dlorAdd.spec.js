@@ -1,7 +1,7 @@
 const REQUIRED_LENGTH_TITLE = 10;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
-describe('Digital Object learning Repository (DLOR)', () => {
+describe('Add an object to the Digital Learning Object Repository (DLOR)', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
