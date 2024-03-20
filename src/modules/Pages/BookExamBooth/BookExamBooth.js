@@ -176,13 +176,13 @@ const BookExamBooth = ({
                                                                 rel="noopener noreferrer"
                                                                 aria-label={`View a map showing the location of exams at ${
                                                                     l.needsDefiniteArticle
-                                                                        ? 'the'
-                                                                        : /* istanbul ignore next */ ''
+                                                                        ? /* istanbul ignore next */ 'the'
+                                                                        : ''
                                                                 } ${l.label}`}
                                                                 title={`View a map showing the location of exams at ${
                                                                     l.needsDefiniteArticle
-                                                                        ? 'the'
-                                                                        : /* istanbul ignore next */ ''
+                                                                        ? /* istanbul ignore next */ 'the'
+                                                                        : ''
                                                                 } ${l.label}`}
                                                             >
                                                                 <MapIcon />
