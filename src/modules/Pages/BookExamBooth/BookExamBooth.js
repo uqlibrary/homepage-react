@@ -12,6 +12,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useTitle } from 'hooks';
 
 import locale from './bookExamBooth.locale';
+import { getMapLabel } from './bookExamBoothHelper';
 
 const BookExamBooth = ({
     getBookingUrl,
@@ -160,33 +161,29 @@ const BookExamBooth = ({
                                         value={chosenLocationCode}
                                         onChange={_handleLocationDeciderChange}
                                     >
-                                        {locale.locationDecider.locations.map(l => {
+                                        {locale.locationDecider.locations.map(location => {
                                             return (
                                                 <FormControlLabel
                                                     control={<Radio color="primary" />}
-                                                    data-testid={`display-location-option-${l.value}`}
-                                                    data-analyticsid={`display-location-option-${l.value}`}
+                                                    data-testid={`display-location-option-${location.value}`}
+                                                    data-analyticsid={`display-location-option-${location.value}`}
                                                     label={
                                                         <React.Fragment>
-                                                            {l.label}
+                                                            {location.label}
                                                             <a
                                                                 style={{ paddingLeft: 5, marginTop: 5 }}
-                                                                href={l.mapLink}
+                                                                href={location.mapLink}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                aria-label={`View a map showing the location of exams at ${
-                                                                    l.needsDefiniteArticle ? 'the' : ''
-                                                                } ${l.label}`}
-                                                                title={`View a map showing the location of exams at ${
-                                                                    l.needsDefiniteArticle ? 'the' : ''
-                                                                } ${l.label}`}
+                                                                aria-label={getMapLabel(location)}
+                                                                title={getMapLabel(location)}
                                                             >
                                                                 <MapIcon />
                                                             </a>
                                                         </React.Fragment>
                                                     }
-                                                    key={`location-selector-${l.mapLink}`}
-                                                    value={l.value}
+                                                    key={`location-selector-${location.mapLink}`}
+                                                    value={location.value}
                                                 />
                                             );
                                         })}
