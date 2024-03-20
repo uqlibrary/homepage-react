@@ -123,6 +123,57 @@ describe('Digital Object learning Repository (DLOR)', () => {
                     .should('exist')
                     .should('contain', 'at least 9 more characters needed');
             });
+            it('admin can create a new object for a new team', () => {
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="object_title"] input')
+                    .should('exist')
+                    .type('new title'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                cy.get('[data-testid="object_description"] textarea:first-child')
+                    .should('exist')
+                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="object_summary"] textarea:first-child')
+                    .should('exist')
+                    .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled');
+                // open teams drop down
+                cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object-add-teamid-new"]')
+                    .should('exist')
+                    .click();
+
+                // now that we have chosen "new team" the submit button is disabled
+                // until we enter all 3 fields
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="team_name"]')
+                    .should('exist')
+                    .type('new team name');
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="team_manager"]')
+                    .should('exist')
+                    .type('john Manager');
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="team_email"]')
+                    .should('exist')
+                    .type('john@example.com');
+
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled');
+            });
             it('admin can save a new object', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')

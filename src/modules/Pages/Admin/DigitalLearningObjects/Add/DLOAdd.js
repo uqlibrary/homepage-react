@@ -60,6 +60,7 @@ export const DLOAdd = ({
 
     const [saveStatus, setSaveStatus] = useState(null);
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
+    const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
 
     const titleMinimumLength = 10;
     const descriptionMinimumLength = 100;
@@ -82,6 +83,9 @@ export const DLOAdd = ({
         object_owning_team_id: 1,
         object_embed_type: 'link',
         object_publishing_user: account?.id,
+        team_name: '',
+        team_manager: '',
+        team_email: '',
     };
     const [formValues, setFormValues] = useState(formDefaults);
 
@@ -111,7 +115,17 @@ export const DLOAdd = ({
     // }, [dlorTeam]);
 
     const saveNewAlert = () => {
-        return actions.createDLor();
+        const valuesTosSend = formValues;
+        if (formValues.object_owning_team_id === 'new') {
+            delete valuesTosSend.object_owning_team_id;
+        } else {
+            delete valuesTosSend.team_email;
+            delete valuesTosSend.team_manager;
+            delete valuesTosSend.team_email;
+        }
+        setFormValues(valuesTosSend);
+
+        return actions.createDLor(valuesTosSend);
     };
 
     const locale = {
@@ -132,8 +146,14 @@ export const DLOAdd = ({
     };
 
     const handleChange = prop => e => {
+        console.log('formValues=', formValues);
         const newValue = e.target.hasOwnProperty('checked') ? e.target.checked : e.target.value; // .trimEnd();
         console.log('handleChange', prop, newValue, e.target);
+        if (prop === 'object_owning_team_id') {
+            setShowTeamCreationForm(newValue === 'new');
+            newValue === 'new' && console.log('user chose new'); // TODO have to remove value before submit
+            // newValue = 0;
+        }
         const newValues = { ...formValues, [prop]: newValue };
         console.log('newValues=', newValues);
         setFormValidity(validateValues(newValues));
@@ -149,8 +169,12 @@ export const DLOAdd = ({
         // currentValues.object_owning_team_id > 0 && (isValid = false);
         !(currentValues.object_embed_type === 'link' || currentValues.object_embed_type === 'embed') &&
             (isValid = false);
+        // valid user id is 8 or 9 char
         (currentValues.object_publishing_user.length < 8 || currentValues.object_publishing_user.length > 10) &&
             (isValid = false);
+        currentValues.object_owning_team_id === 'new' && currentValues.team_name.length < 1 && (isValid = false);
+        currentValues.object_owning_team_id === 'new' && currentValues.team_manager.length < 1 && (isValid = false);
+        currentValues.object_owning_team_id === 'new' && currentValues.team_email.length < 1 && (isValid = false);
 
         return isValid;
     };
@@ -230,18 +254,65 @@ export const DLOAdd = ({
                                     onChange={handleChange('object_owning_team_id')}
                                     aria-labelledby="object_owning_team_label"
                                     id="object_owning_team"
+                                    data-testid="object_owning_team"
                                 >
                                     {dlorTeam.map(t => (
                                         <MenuItem key={t.team_id} value={t.team_id}>
                                             {t.team_name}
                                         </MenuItem>
                                     ))}
-                                    <MenuItem disabled value="">
-                                        Coming soon: create a team here
+                                    <MenuItem value="new" data-testid="object-add-teamid-new">
+                                        Create a team
                                     </MenuItem>
                                 </Select>
                             )}
                         </Grid>
+                        {showTeamCreationForm && (
+                            <Grid item xs={12}>
+                                <FormControl
+                                    variant="standard"
+                                    // className={classes.typingArea}
+                                    fullWidth
+                                >
+                                    <InputLabel htmlFor="team_name">Name of new Team *</InputLabel>
+                                    <Input
+                                        id="team_name"
+                                        data-testid="team_name"
+                                        value={formValues?.team_name}
+                                        onChange={handleChange('team_name')}
+                                    />
+                                </FormControl>
+                                <FormControl
+                                    variant="standard"
+                                    // className={classes.typingArea}
+                                    fullWidth
+                                >
+                                    <InputLabel htmlFor="team_manager">Name of Team manager *</InputLabel>
+                                    <Input
+                                        id="team_manager"
+                                        data-testid="team_manager"
+                                        required
+                                        value={formValues?.team_manager}
+                                        onChange={handleChange('team_manager')}
+                                    />
+                                </FormControl>
+                                <FormControl
+                                    variant="standard"
+                                    // className={classes.typingArea}
+                                    fullWidth
+                                >
+                                    <InputLabel htmlFor="team_email">Team email *</InputLabel>
+                                    <Input
+                                        id="team_email"
+                                        data-testid="team_email"
+                                        required
+                                        value={formValues?.team_email}
+                                        onChange={handleChange('team_email')}
+                                        type="email"
+                                    />
+                                </FormControl>
+                            </Grid>
+                        )}
                         <Grid item xs={12}>
                             <FormControl variant="standard" fullWidth>
                                 <InputLabel htmlFor="object_description">Description of Object *</InputLabel>

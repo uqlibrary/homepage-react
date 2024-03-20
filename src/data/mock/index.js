@@ -588,12 +588,10 @@ mock.onGet(/dlor\/find\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const dlorId = urlparts.split('?')[0];
-        console.log('dlorId=', dlorId);
         if (user === 'errorUser') {
             return [500, {}];
         } else if (dlorId === 'missingRecord') {
-            console.log('yes');
-            return [200, { data: {} }]; // this would probably be a 404, but let's cover the case anyway...
+            return [200, { data: {} }]; // this would more likely be a 404
         } else {
             return getaDlorRecordFromDlorAll(dlorId);
         }
@@ -603,7 +601,7 @@ mock.onGet(/dlor\/find\/.*/)
         if (user === 'errorUser') {
             return [500, {}];
         } else if (responseType === 'emptyResult') {
-            return [200, { data: [] }]; // this should really be a 404, but lets
+            return [200, { data: [] }]; // this would more likely be a 404
         } else {
             return [200, dlor_all];
         }
