@@ -545,6 +545,16 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .should('exist')
                 .should('contain', 'Accomplished scholars');
 
+            cy.get('[data-testid="detaipage-metadata-keywords"]')
+                .should('exist')
+                .within(() => {
+                    cy.get('h3').should('contain', 'Keywords');
+                    cy.get('ul')
+                        .children()
+                        .should('have.length', 8);
+                    cy.get('li:first-child').contains('Generative AI');
+                });
+
             // the link can be clicked
             cy.get('[data-testid="dlor-detailpage"] a')
                 .should('exist')
@@ -552,6 +562,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
 
+            // the non-logged in user is prompted to login
             cy.visit('digital-learning-objects/view/987y_isjgt_9866?user=public');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
