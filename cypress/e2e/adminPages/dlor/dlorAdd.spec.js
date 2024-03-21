@@ -172,7 +172,15 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
 
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
-                    .should('not.be.disabled');
+                    .should('not.be.disabled')
+                    .click();
+
+                // and navigate back to the list page
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
+                cy.get('[data-testid="confirm-dlor-creation-outcome"]')
+                    .should('contain', 'Return to list page')
+                    .click();
+                cy.url().should('eq', 'http://localhost:2020/admin/dlor');
             });
             it('admin can save a new object', () => {
                 cy.get('[data-testid="object_title"] input')
@@ -189,6 +197,14 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .click();
                 cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
                 cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains('The object has been created');
+
+                // now clear the form to create another Object
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
+                cy.get('[data-testid="cancel-dlor-creation-outcome"]')
+                    .should('contain', 'Add another Object')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="object_title"] input').should('exist'));
+                cy.get('[data-testid="object_title"] input').should('have.value', '');
             });
         });
         context('fails correctly', () => {

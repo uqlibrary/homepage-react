@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const moment = require('moment-timezone');
 
@@ -21,6 +22,7 @@ import { useConfirmationState } from 'hooks';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { scrollToTopOfPage } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
     charactersRemaining: {
@@ -53,10 +55,10 @@ export const DLOAdd = ({
     account,
 }) => {
     const classes = useStyles();
+    const history = useHistory();
 
     !!dlorItem && console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
     !!dlorTeam && console.log('DLOAdd team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
-    // const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
@@ -145,6 +147,7 @@ export const DLOAdd = ({
         successMessage: {
             confirmationTitle: 'The object has been created',
             confirmationMessage: '',
+            cancelButtonLabel: 'Add another Object',
             confirmButtonLabel: 'Return to list page',
         },
         errorMessage: {
@@ -158,17 +161,28 @@ export const DLOAdd = ({
         window.alert('leave the page: TBA, where do we go on exit?');
     };
 
+    const navigateToDlorAdminHomePage = () => {
+        // TODO also want to clear form here too before nav, so back button gives clear form?
+
+        // actions.loadAllDLORs(); // force reload of data now we have added a new one. needed?
+        history.push('/admin/dlor');
+        scrollToTopOfPage();
+    };
+
+    const clearForm = actiontype => {
+        setFormValues(formDefaults);
+    };
+
     const handleChange = prop => e => {
-        console.log('formValues=', formValues);
+        // console.log('formValues=', formValues);
         const newValue = e.target.hasOwnProperty('checked') ? e.target.checked : e.target.value; // .trimEnd();
-        console.log('handleChange', prop, newValue, e.target);
+        // console.log('handleChange', prop, newValue, e.target);
         if (prop === 'object_owning_team_id') {
             setShowTeamCreationForm(newValue === 'new');
-            newValue === 'new' && console.log('user chose new'); // TODO have to remove value before submit
-            // newValue = 0;
+            newValue === 'new' && console.log('user chose new');
         }
         const newValues = { ...formValues, [prop]: newValue };
-        console.log('newValues=', newValues);
+        // console.log('newValues=', newValues);
         setFormValidity(validateValues(newValues));
         setFormValues(newValues);
     };
@@ -214,9 +228,11 @@ export const DLOAdd = ({
                             actionButtonColor="primary"
                             actionButtonVariant="contained"
                             confirmationBoxId="dlor-creation-outcome"
-                            onAction={() => handleLeavePage()}
+                            onAction={() => navigateToDlorAdminHomePage()}
+                            hideCancelButton={!locale.successMessage.cancelButtonLabel}
+                            cancelButtonLabel={locale.successMessage.cancelButtonLabel}
+                            onCancelAction={() => clearForm()}
                             onClose={hideConfirmation}
-                            hideCancelButton
                             isOpen={isOpen}
                             locale={!dlorItemError ? locale.successMessage : locale.errorMessage}
                         />
@@ -417,7 +433,7 @@ export const DLOAdd = ({
                                 color="secondary"
                                 children="Cancel"
                                 data-testid="admin-dlor-add-button-cancel"
-                                onClick={() => handleLeavePage()}
+                                onClick={() => navigateToDlorAdminHomePage()}
                                 variant="contained"
                             />
                         </Grid>
