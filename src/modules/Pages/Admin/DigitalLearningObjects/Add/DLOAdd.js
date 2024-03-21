@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+const moment = require('moment-timezone');
+
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
@@ -76,6 +78,15 @@ export const DLOAdd = ({
         );
     };
 
+    function getTodayPlusOneYear(baseDate = null) {
+        const today = baseDate || moment();
+        return today
+            .add(1, 'year')
+            .hour(0)
+            .minute(1) // 1 minute past midnight
+            .format('YYYY-MM-DDTHH:mm');
+    }
+
     const formDefaults = {
         object_title: '',
         object_description: '',
@@ -83,6 +94,8 @@ export const DLOAdd = ({
         object_owning_team_id: 1,
         object_embed_type: 'link',
         object_publishing_user: account?.id,
+        object_status: 'new',
+        object_review_date_next: getTodayPlusOneYear(),
         team_name: '',
         team_manager: '',
         team_email: '',
@@ -384,8 +397,18 @@ export const DLOAdd = ({
                                     value={formValues?.object_status}
                                     onChange={handleChange('object_status')}
                                 >
-                                    <FormControlLabel value="current" control={<Radio />} label="Published" />
-                                    <FormControlLabel value="new" control={<Radio />} label="Draft" selected />
+                                    <FormControlLabel
+                                        value="current"
+                                        control={<Radio />}
+                                        label="Published"
+                                        selected={formValues?.object_status === 'current'}
+                                    />
+                                    <FormControlLabel
+                                        value="new"
+                                        control={<Radio />}
+                                        label="Draft"
+                                        selected={formValues?.object_status === 'new'}
+                                    />
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
