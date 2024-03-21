@@ -170,6 +170,7 @@ export const DLOAdd = ({
     };
 
     const clearForm = actiontype => {
+        hideConfirmation();
         setFormValues(formDefaults);
     };
 
