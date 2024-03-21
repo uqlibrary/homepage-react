@@ -209,21 +209,22 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                         </div>
                                     );
                                 })}
-                                <div data-testid="detaipage-metadata-keywords">
-                                    <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
-                                        Keywords
-                                    </Typography>
-                                    <ul className={classes.filterDisplayList}>
-                                        {!!dlorItem?.keywords &&
-                                            dlorItem.keywords.map((keyword, index) => {
+                                {!!dlorItem?.object_keywords && (
+                                    <div data-testid="detaipage-metadata-keywords">
+                                        <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
+                                            Keywords
+                                        </Typography>
+                                        <ul className={classes.filterDisplayList}>
+                                            {dlorItem.object_keywords.map((keyword, index) => {
                                                 return (
                                                     <li key={index}>
                                                         {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
                                                     </li>
                                                 );
                                             })}
-                                    </ul>
-                                </div>
+                                        </ul>
+                                    </div>
+                                )}
                             </>
                         )}
                     </Grid>

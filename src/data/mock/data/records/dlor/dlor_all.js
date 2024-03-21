@@ -482,7 +482,6 @@ export default {
                     ]
                 }
             ],
-            "object_keywords": ["referencing", "citations", "cite"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 2,

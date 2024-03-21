@@ -568,6 +568,11 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
                 .contains('Login for the full experience');
+
+            // a view page without keywords has a sensible sidebar
+            cy.visit('digital-learning-objects/view/9k45_hgr4_876h');
+            cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'EndNote 20: Getting started');
+            cy.get('[data-testid="detaipage-metadata-keywords"]').should('not.exist');
         });
         it('can handle an error', () => {
             cy.visit('digital-learning-objects/view/98s0_dy5k3_98h4?user=errorUser');
