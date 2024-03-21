@@ -39,6 +39,10 @@ export default {
                 {
                     "facet_name": "Software",
                     "facet_slug": "software"
+                },
+                {
+                    "facet_name": "Other",
+                    "facet_slug": "topic_other"
                 }
             ]
         },
@@ -97,16 +101,16 @@ export default {
                     "facet_slug": "module"
                 },
                 {
-                    "facet_name": "Other",
-                    "facet_slug": "type_other"
-                },
-                {
                     "facet_name": "Presentation",
                     "facet_slug": "type_presentation"
                 },
                 {
                     "facet_name": "Training recording",
                     "facet_slug": "type_training_recording"
+                },
+                {
+                    "facet_name": "Other",
+                    "facet_slug": "type_other"
                 }
             ]
         },
@@ -131,10 +135,6 @@ export default {
                     "facet_slug": "media_interactive_activity"
                 },
                 {
-                    "facet_name": "Other",
-                    "facet_slug": "media_other"
-                },
-                {
                     "facet_name": "Presentation",
                     "facet_slug": "media_presentation"
                 },
@@ -153,6 +153,10 @@ export default {
                 {
                     "facet_name": "Webpage",
                     "facet_slug": "webpage"
+                },
+                {
+                    "facet_name": "Other",
+                    "facet_slug": "media_other"
                 }
             ]
         },
@@ -199,6 +203,10 @@ export default {
                 {
                     "facet_name": "Social Sciences",
                     "facet_slug": "social_sciences"
+                },
+                {
+                    "facet_name": "Other",
+                    "facet_slug": "subject_other"
                 }
             ]
         },
@@ -237,10 +245,6 @@ export default {
                 {
                     "facet_name": "CC0\/Public domain",
                     "facet_slug": "cco_public_domain"
-                },
-                {
-                    "facet_name": "Other",
-                    "facet_slug": "licence_other"
                 }
             ]
         }

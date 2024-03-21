@@ -547,7 +547,7 @@ export const DLOList = ({
                                                     className={classes.filterSidebarCheckboxControl}
                                                     control={
                                                         <Checkbox
-                                                            className={classes.filterSidebarCheckbox}
+                                                            // className={classes.filterSidebarCheckbox}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
                                                             value={facet?.facet_name}

@@ -55,7 +55,5 @@ export default function dlorListReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    const handler2 = handler(state, action);
-    console.log('dlorListReducer:', action.type, handler2);
-    return handler2;
+    return handler(state, action);
 }

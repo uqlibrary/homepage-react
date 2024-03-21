@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 const moment = require('moment-timezone');
 
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -22,6 +23,7 @@ import { useConfirmationState } from 'hooks';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
@@ -29,6 +31,27 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'right',
         color: '#504e4e',
         fontSize: '0.8em',
+    },
+    facetControl: {
+        display: 'flex',
+        alignItems: 'flex-start',
+        width: '100%',
+        '& span:first-child': {
+            paddingBlock: 0,
+        },
+        '& .MuiFormControlLabel-label': {
+            fontSize: '0.9rem',
+        },
+        // '& span:nth-child(2)': {
+        //     color: '#333',
+        //     textOverflow: 'initial',
+        // },
+    },
+    facetRadioControl: {
+        display: 'block',
+        '& span:first-child': {
+            paddingBlock: 0,
+        },
     },
     //     typingArea: {
     //         '& textarea ': {
@@ -52,17 +75,29 @@ export const DLOAdd = ({
     dlorTeam,
     dlorTeamLoading,
     dlorTeamError,
+    dlorFilterList,
+    dlorFilterListLoading,
+    dlorFilterListError,
     account,
 }) => {
     const classes = useStyles();
     const history = useHistory();
 
-    !!dlorItem && console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
-    !!dlorTeam && console.log('DLOAdd team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
+    // !!dlorItem && console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
+    // !!dlorTeam && console.log('DLOAdd team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
+    // !!dlorFilterList &&
+    console.log(
+        'DLOAdd filters=',
+        dlorFilterListLoading,
+        '; error=',
+        dlorFilterListError,
+        '; response=',
+        dlorFilterList,
+    );
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
-    const [saveStatus, setSaveStatus] = useState(null);
+    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
 
@@ -108,6 +143,9 @@ export const DLOAdd = ({
         if (!dlorTeamError && !dlorTeamLoading && !dlorTeam) {
             actions.loadOwningTeams();
         }
+        if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
+            actions.loadAllFilters();
+        }
         setFormValidity(validateValues(formDefaults));
     }, []);
 
@@ -121,6 +159,31 @@ export const DLOAdd = ({
     }, [showConfirmation, dlorItem, dlorItemError]);
 
     // useEffect(() => {
+    //     // this is temporary while we work out how to handle it, then it will be a value on the db so they can set it when they create the facet type
+    //     // decide what _type_ each facet type is
+    //     !!dlorFilterList &&
+    //         dlorFilterList.map(f => {
+    //             if (
+    //                 f.facet_type_slug === 'topic' ||
+    //                 f.facet_type_slug === 'media_format' ||
+    //                 f.facet_type_slug === 'subject'
+    //             ) {
+    //                 // 1:n[O]
+    //                 // an Object will always have one of these, and "other" should be in the list and appear last
+    //                 f.functionType = 'one-or-more-with-other';
+    //             } else if (f.facet_type_slug === 'graduate_attributes') {
+    //                 // 0:n[-]
+    //                 // an Object does not require this, but may have many - no "other" option
+    //                 f.functionType = 'zero-or-more-no-other';
+    //             } else if (f.facet_type_slug === 'item_type' || f.facet_type_slug === 'licence') {
+    //                 // 1:1[O]
+    //                 // an object will have one (and only one) of these, but "Other" is an option
+    //                 f.functionType = 'one-with-other';
+    //             }
+    //         });
+    // }, [dlorFilterList]);
+
+    // useEffect(() => {
     //     if (!!dlorTeam && dlorTeam.length > 0) {
     //         setFormValues({
     //             ...formValues,
@@ -129,7 +192,7 @@ export const DLOAdd = ({
     //     }
     // }, [dlorTeam]);
 
-    const saveNewAlert = () => {
+    const saveNewDlor = () => {
         const valuesTosSend = formValues;
         if (formValues.object_owning_team_id === 'new') {
             delete valuesTosSend.object_owning_team_id;
@@ -138,7 +201,29 @@ export const DLOAdd = ({
             delete valuesTosSend.team_manager;
             delete valuesTosSend.team_email;
         }
-        setFormValues(valuesTosSend);
+
+        for (const [key, value] of Object.entries(valuesTosSend)) {
+            if (!key.startsWith('facet::')) {
+                continue;
+            }
+            const parts = key.split('::');
+            const facetTypeSlug = parts[1];
+            const facetSlug = parts[2];
+
+            if (valuesTosSend.hasOwnProperty('facetType')) {
+                if (valuesTosSend.facetType.hasOwnProperty(facetTypeSlug)) {
+                    valuesTosSend.facetType[facetTypeSlug].push(facetSlug);
+                } else {
+                    valuesTosSend.facetType[facetTypeSlug] = [facetSlug];
+                }
+            } else {
+                valuesTosSend.facetType = { [facetTypeSlug]: [facetSlug] };
+            }
+
+            delete valuesTosSend[key];
+        }
+
+        console.log('saveNewDlor after valuesTosSend=', valuesTosSend);
 
         return actions.createDLor(valuesTosSend);
     };
@@ -176,14 +261,17 @@ export const DLOAdd = ({
 
     const handleChange = prop => e => {
         // console.log('formValues=', formValues);
-        const newValue = e.target.hasOwnProperty('checked') ? e.target.checked : e.target.value; // .trimEnd();
-        // console.log('handleChange', prop, newValue, e.target);
+        console.log('e.target.type=', e.target.type);
+        const newValue =
+            e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value; // .trimEnd();
+        console.log('handleChange', prop, newValue, e.target);
         if (prop === 'object_owning_team_id') {
             setShowTeamCreationForm(newValue === 'new');
             newValue === 'new' && console.log('user chose new');
         }
+
         const newValues = { ...formValues, [prop]: newValue };
-        // console.log('newValues=', newValues);
+        console.log('newValues=', newValues);
         setFormValidity(validateValues(newValues));
         setFormValues(newValues);
     };
@@ -204,6 +292,22 @@ export const DLOAdd = ({
         currentValues.object_owning_team_id === 'new' && currentValues.team_manager.length < 1 && (isValid = false);
         currentValues.object_owning_team_id === 'new' && currentValues.team_email.length < 1 && (isValid = false);
 
+        // // check the required facets are checked
+        // !!dlorFilterList &&
+        //     dlorFilterList.forEach(f => {
+        //         const controlType = getFacetControlType(f);
+        //         if (controlType.startsWith('one')) {
+        //             // console.log('validateValues check facet ', f.facet_type_slug);
+        //             const hasKeyStartingWithFacet = Object.keys(currentValues).some(key =>
+        //                 key.startsWith(`facet::${f.facet_type_slug}`),
+        //             );
+        //             !hasKeyStartingWithFacet && (isValid = false);
+        //
+        //             // console.log('validateValues hasKeyStartingWithFacet ', f.facet_type_slug, hasKeyStartingWithFacet);
+        //         }
+        //     });
+        console.log('validateValues currentValues=', isValid, currentValues);
+
         return isValid;
     };
 
@@ -218,6 +322,106 @@ export const DLOAdd = ({
                 </StandardCard>
             </StandardPage>
         );
+    }
+
+    function getFacetControlType(filterItem) {
+        /*
+
+        one-or-more-with-other   required=true   count=1+
+        zero-or-more-no-other                    count=0+
+        one-with-other           required=true   count=1
+
+         */
+        const facetTypeSlug = filterItem.facet_type_slug;
+        let displayType = '';
+        if (facetTypeSlug === 'topic' || facetTypeSlug === 'media_format' || facetTypeSlug === 'subject') {
+            // 1:n[O]
+            // an Object will always have one of these, and "other" should be in the list and appear last
+            displayType = 'one-or-more-with-other';
+        } else if (facetTypeSlug === 'graduate_attributes') {
+            // 0:n[-]
+            // an Object does not require this, but may have many - no "other" option
+            displayType = 'zero-or-more-no-other';
+        } else if (facetTypeSlug === 'item_type' || facetTypeSlug === 'licence') {
+            // 1:1[O]
+            // an object will have one (and only one) of these, but "Other" is an option
+            displayType = 'one-with-other';
+        }
+        return displayType;
+    }
+
+    function displayControlByFacetType(filterItem) {
+        const controlType = getFacetControlType(filterItem);
+        let result = <></>;
+        if (controlType === 'one-or-more-with-other') {
+            result =
+                !!filterItem.facet_list &&
+                filterItem.facet_list.map(thisfacet => (
+                    <FormControlLabel
+                        key={`${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
+                        className={classes.facetControl}
+                        control={
+                            <Checkbox
+                                onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                            />
+                        }
+                        label={thisfacet.facet_name}
+                        // value="link"
+                    />
+                ));
+        } else if (controlType === 'zero-or-more-no-other') {
+            result =
+                !!filterItem.facet_list &&
+                filterItem.facet_list.map(thisfacet => (
+                    <FormControlLabel
+                        key={`${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
+                        className={classes.facetControl}
+                        control={
+                            <Checkbox
+                                onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                            />
+                        }
+                        label={thisfacet.facet_name}
+                    />
+                ));
+            // return <>zero-or-more-no-other</>;
+        } else if (controlType === 'one-with-other') {
+            console.log('filterItem=', filterItem);
+            const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
+            console.log('radioGroupName=', radioGroupName);
+            console.log('filterItem.facet_list=', filterItem.facet_list);
+            console.log(
+                'default value=',
+                !!filterItem.facet_list && filterItem.facet_list.length > 0 && !filterItem.facet_list.slice(0, 1),
+            );
+            result = (
+                <RadioGroup
+                    aria-labelledby="demo-radio-object_embed_type_label-group-label"
+                    defaultValue={
+                        !!filterItem.facet_list &&
+                        filterItem.facet_list.length > 0 &&
+                        !filterItem.facet_list.slice(0, 1)[0] // .facet_slug
+                    }
+                    name={radioGroupName}
+                    value={filterItem.facet_slug}
+                    // onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                >
+                    {!!filterItem.facet_list &&
+                        filterItem.facet_list.map(thisfacet => (
+                            <FormControlLabel
+                                key={`${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
+                                className={classes.facetControl}
+                                control={<Radio value={thisfacet.facet_slug} />}
+                                label={thisfacet.facet_name}
+                                onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                            />
+                        ))}
+                </RadioGroup>
+            );
+        } else {
+            result = <>unknown facet type</>;
+        }
+        return result;
     }
 
     return (
@@ -403,6 +607,69 @@ export const DLOAdd = ({
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
+                        {(() => {
+                            if (!!dlorFilterListLoading) {
+                                // console.log('filterlistloading');
+                                return (
+                                    <Typography variant="body1" data-testid="dlor-homepage-error">
+                                        <InlineLoader message="Loading" />
+                                    </Typography>
+                                );
+                            } else if (!!dlorFilterListError) {
+                                // console.log('dlorFilterListError');
+                                return (
+                                    <Typography variant="body1" data-testid="dlor-homepage-error">
+                                        <div>An Error</div>
+                                        {dlorFilterListError}
+                                    </Typography>
+                                );
+                            } else if (!dlorFilterList || dlorFilterList.length === 0) {
+                                return (
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}>
+                                            <Typography variant="body1" data-testid="dlor-homepage-noresult">
+                                                Missing filters: We did not find any entries in the system - please try
+                                                again later.
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                );
+                            } else {
+                                console.log('dlorFilterList AAA=', dlorFilterList);
+                                return (
+                                    <>
+                                        <Grid item xs={12}>
+                                            <Typography component={'h2'} variant={'h6'}>
+                                                Filters
+                                            </Typography>
+                                        </Grid>
+                                        {!!dlorFilterList &&
+                                            dlorFilterList.map(filterItem => {
+                                                const controlType = getFacetControlType(filterItem);
+                                                return (
+                                                    <Grid item xs={4} key={filterItem.facet_type_slug}>
+                                                        <Typography component={'h3'} variant={'h7'}>
+                                                            {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
+                                                            {controlType.endsWith('with-other') && (
+                                                                <span className={classes.required}>*</span>
+                                                            )}
+                                                        </Typography>
+                                                        {displayControlByFacetType(filterItem)}
+
+                                                        {/* {getFacetControlType(facetTypeSlug) !== 'one-or-more-with-other' &&*/}
+                                                        {/*    getFacetControlType(facetTypeSlug) !== 'zero-or-more-no-other' &&*/}
+                                                        {/*    getFacetControlType(facetTypeSlug) !== 'one-with-other' && (*/}
+                                                        {/*        <p>*/}
+                                                        {/*            unknown facet type {filterItem.facet_type_name} : {functionType}*/}
+                                                        {/*        </p>*/}
+                                                        {/*    )}*/}
+                                                    </Grid>
+                                                );
+                                            })}
+                                    </>
+                                );
+                            }
+                        })()}
                         <Grid item xs={12}>
                             <FormControl variant="standard" fullWidth>
                                 <FormLabel id="object_status_label">Object publication status</FormLabel>
@@ -445,7 +712,7 @@ export const DLOAdd = ({
                                 variant="contained"
                                 children="Save"
                                 disabled={!isFormValid}
-                                onClick={saveNewAlert}
+                                onClick={saveNewDlor}
                                 // className={classes.saveButton}
                             />
                         </Grid>
