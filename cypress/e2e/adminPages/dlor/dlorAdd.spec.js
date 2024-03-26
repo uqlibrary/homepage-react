@@ -259,13 +259,6 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
-                const expectedFacetTypes = {
-                    item_type: ['type_interactive_activity'],
-                    licence: ['cc_by_nc_attribution_noncommercial'],
-                    media_format: ['media_audio', 'media_h5p'],
-                    subject: ['all_cross_disciplinary', 'business_economics'],
-                    topic: ['aboriginal_and_torres_strait_islander', 'assignments'],
-                };
                 const expectedValues = {
                     object_title: 'new titlex',
                     object_description:
@@ -274,29 +267,43 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     object_download_instructions: '',
                     object_embed_type: 'link',
                     object_publishing_user: 'dloradmin',
-                    // object_review_date_next: '2025-03-26T00:01', // doesn't seem valid to figure out the date
+                    object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
                     team_email: teamEmail,
                     team_manager: teamManager,
                     team_name: teamName,
-                    // object_keywords: ['cat', 'dog'],
-                    // facetType: expectedFacetTypes,
+                    object_keywords: ['cat', 'dog'],
+                    facetType: {
+                        item_type: ['type_interactive_activity'],
+                        licence: ['cc_by_nc_attribution_noncommercial'],
+                        media_format: ['media_audio', 'media_h5p'],
+                        subject: ['all_cross_disciplinary', 'business_economics'],
+                        topic: ['aboriginal_and_torres_strait_islander', 'assignments'],
+                    },
                 };
+                console.log('document.cookies', document.cookie);
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    expect(cookie).to.exist;
+                    console.log('cookie=', cookie);
                     console.log('cookie.value=', cookie.value);
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
 
                     // had trouble comparing the entire structure
                     const sentFacetType = sentValues.facetType;
-                    const objectKeywords = sentValues.object_keywords;
+                    const expectedFacetTypes = expectedValues.facetType;
+                    const sentKeywords = sentValues.object_keywords;
+                    const expectedKeywords = expectedValues.object_keywords;
                     delete sentValues.facetType;
+                    delete expectedValues.facetType;
                     delete sentValues.object_keywords;
-                    delete sentValues.object_review_date_next;
+                    delete expectedValues.object_keywords;
+                    delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
+                    delete expectedValues.object_review_date_next;
 
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacetType).to.deep.equal(expectedFacetTypes);
-                    expect(objectKeywords).to.deep.equal(['cat', 'dog']);
+                    expect(sentKeywords).to.deep.equal(expectedKeywords);
 
                     cy.clearCookie('CYPRESS_DATA_SAVED');
                     cy.clearCookie('CYPRESS_TEST_DATA');
@@ -343,14 +350,6 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
-                const expectedFacetTypes = {
-                    graduate_attributes: ['connected_citizens'],
-                    item_type: ['module'],
-                    licence: ['cco_public_domain'],
-                    media_format: ['media_dataset'],
-                    subject: ['engineering_architecture_information_technology'],
-                    topic: ['digital_skills'],
-                };
                 const expectedValues = {
                     object_title: 'new titlex',
                     object_description:
@@ -359,24 +358,39 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     object_download_instructions: downloadInstructionText,
                     object_embed_type: 'link',
                     object_publishing_user: 'dloradmin',
-                    // object_review_date_next: '2025-03-26T00:01',
+                    object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
                     object_owning_team_id: 1,
+                    facetType: {
+                        graduate_attributes: ['connected_citizens'],
+                        item_type: ['module'],
+                        licence: ['cco_public_domain'],
+                        media_format: ['media_dataset'],
+                        subject: ['engineering_architecture_information_technology'],
+                        topic: ['digital_skills'],
+                    },
+                    object_keywords: ['cat', 'dog'],
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    expect(cookie).to.exist;
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
 
                     // had trouble comparing the entire structure
                     const sentFacetType = sentValues.facetType;
-                    const objectKeywords = sentValues.object_keywords;
+                    const expectedFacetType = expectedValues.facetType;
+                    const sentKeywords = sentValues.object_keywords;
+                    const expectedKeywords = sentValues.object_keywords;
                     delete sentValues.facetType;
                     delete sentValues.object_keywords;
+                    delete expectedValues.facetType;
+                    delete expectedValues.object_keywords;
                     delete sentValues.object_review_date_next;
+                    delete expectedValues.object_review_date_next;
 
                     expect(sentValues).to.deep.equal(expectedValues);
-                    expect(sentFacetType).to.deep.equal(expectedFacetTypes);
-                    expect(objectKeywords).to.deep.equal(['cat', 'dog']);
+                    expect(sentFacetType).to.deep.equal(expectedFacetType);
+                    expect(sentKeywords).to.deep.equal(expectedKeywords);
                     cy.clearCookie('CYPRESS_DATA_SAVED');
                     cy.clearCookie('CYPRESS_TEST_DATA');
                 });
