@@ -6,9 +6,9 @@ set -e
 printf "Node "; node -v;
 printf "npm v"; npm -v
 
-printf "\n\n--- GET LATEST VERSION OF NPM 10.2.5 ---\n"
-echo "$ npm install -g npm@10.2.5"
-npm install -g npm@10.2.5
+printf "\n\n--- GET LATEST VERSION OF NPM 10.5.0 ---\n"
+echo "$ npm install -g npm@10.5.0"
+npm install -g npm@10.5.0
 
 printf "\nNow running npm v"; npm -v
 
