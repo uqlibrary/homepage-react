@@ -175,6 +175,11 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('contain', 'at least 9 more characters needed');
             });
             it('admin can create a new object for a new team and return to list', () => {
+                cy.setCookie('CYPRESS_TEST_DATA', 'active');
+                const teamEmail = 'john@example.com';
+                const teamManager = 'john Manager';
+                const teamName = 'new team name';
+
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
@@ -215,19 +220,19 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('be.disabled');
                 cy.get('[data-testid="team_name"]')
                     .should('exist')
-                    .type('new team name');
+                    .type(teamName);
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="team_manager"]')
                     .should('exist')
-                    .type('john Manager');
+                    .type(teamManager);
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="team_email"]')
                     .should('exist')
-                    .type('john@example.com');
+                    .type(teamEmail);
 
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
@@ -236,12 +241,49 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
 
                 // and navigate back to the list page
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
+
+                // check the data we pretended to send to the server matches what we expect
+                // acts as check of what we sent to api
+                const expectedFacetTypes = {
+                    item_type: ['type_interactive_activity'],
+                    licence: ['cc_by_nc_attribution_noncommercial'],
+                    media_format: ['media_audio', 'media_h5p'],
+                    subject: ['all_cross_disciplinary', 'business_economics'],
+                    topic: ['aboriginal_and_torres_strait_islander', 'assignments'],
+                };
+                const expectedValues = {
+                    object_title: 'new titlex',
+                    object_description:
+                        'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                    object_summary: 'new summary xxxxxxxx',
+                    object_download_instructions: '',
+                    object_embed_type: 'link',
+                    object_publishing_user: 'dloradmin',
+                    // object_review_date_next: '2025-03-26T00:01',
+                    object_status: 'new',
+                    team_email: teamEmail,
+                    team_manager: teamManager,
+                    team_name: teamName,
+                    // facetType: expectedFacetTypes,
+                };
+                cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    const decodedValue = decodeURIComponent(cookie.value);
+                    const sentValues = JSON.parse(decodedValue);
+                    expect(sentValues).to.contains(expectedValues);
+                    expect(sentValues.facetType).to.deep.equal(expectedFacetTypes);
+                    cy.clearCookie('CYPRESS_DATA_SAVED');
+                    cy.clearCookie('CYPRESS_TEST_DATA');
+                });
+
                 cy.get('[data-testid="confirm-dlor-creation-outcome"]')
                     .should('contain', 'Return to list page')
                     .click();
                 cy.url().should('eq', 'http://localhost:2020/admin/dlor');
             });
             it('admin can create a new object for an existing team and start a fresh form', () => {
+                cy.setCookie('CYPRESS_TEST_DATA', 'active');
+
+                const downloadInstructionText = 'some download instructions';
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('new title'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
@@ -253,7 +295,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
                 cy.get('[data-testid="object_download_instructions"] textarea:first-child')
                     .should('exist')
-                    .type('some download instructions');
+                    .type(downloadInstructionText);
                 cy.get('[data-testid="filter-digital_skills"] input').check();
                 cy.get('[data-testid="filter-media_dataset"] input').check();
                 cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
@@ -268,6 +310,40 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
 
                 // now clear the form to create another Object
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
+
+                // check the data we pretended to send to the server matches what we expect
+                // acts as check of what we sent to api
+                const expectedFacetTypes = {
+                    graduate_attributes: ['connected_citizens'],
+                    item_type: ['module'],
+                    licence: ['cco_public_domain'],
+                    media_format: ['media_dataset'],
+                    subject: ['engineering_architecture_information_technology'],
+                    topic: ['digital_skills'],
+                };
+                const expectedValues = {
+                    object_title: 'new titlex',
+                    object_description:
+                        'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                    object_summary: 'new summary xxxxxxxx',
+                    object_download_instructions: downloadInstructionText,
+                    object_embed_type: 'link',
+                    object_publishing_user: 'dloradmin',
+                    // object_review_date_next: '2025-03-26T00:01',
+                    object_status: 'new',
+                    object_owning_team_id: 1,
+                };
+                cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    const decodedValue = decodeURIComponent(cookie.value);
+                    const sentValues = JSON.parse(decodedValue);
+                    expect(sentValues).to.contains(expectedValues);
+                    console.log('sentValues.facetType=', sentValues.facetType);
+                    console.log('expectedFacetTypes=', expectedFacetTypes);
+                    expect(sentValues.facetType).to.deep.equal(expectedFacetTypes);
+                    cy.clearCookie('CYPRESS_DATA_SAVED');
+                    cy.clearCookie('CYPRESS_TEST_DATA');
+                });
+
                 cy.get('[data-testid="cancel-dlor-creation-outcome"]')
                     .should('contain', 'Add another Object')
                     .click();

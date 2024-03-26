@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
@@ -81,6 +83,7 @@ export const DLOAdd = ({
 }) => {
     const classes = useStyles();
     const history = useHistory();
+    const [cookies, setCookie] = useCookies();
 
     // !!dlorItem && console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
     // !!dlorTeam && console.log('DLOAdd team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
@@ -193,16 +196,16 @@ export const DLOAdd = ({
     // }, [dlorTeam]);
 
     const saveNewDlor = () => {
-        const valuesTosSend = { ...formValues };
+        const valuesToSend = { ...formValues };
         if (formValues.object_owning_team_id === 'new') {
-            delete valuesTosSend.object_owning_team_id;
+            delete valuesToSend.object_owning_team_id;
         } else {
-            delete valuesTosSend.team_name;
-            delete valuesTosSend.team_manager;
-            delete valuesTosSend.team_email;
+            delete valuesToSend.team_name;
+            delete valuesToSend.team_manager;
+            delete valuesToSend.team_email;
         }
 
-        for (const [key, value] of Object.entries(valuesTosSend)) {
+        for (const [key, value] of Object.entries(valuesToSend)) {
             if (!key.startsWith('facet::')) {
                 continue;
             }
@@ -210,22 +213,27 @@ export const DLOAdd = ({
             const facetTypeSlug = parts[1];
             const facetSlug = parts[2];
 
-            if (valuesTosSend.hasOwnProperty('facetType')) {
-                if (valuesTosSend.facetType.hasOwnProperty(facetTypeSlug)) {
-                    valuesTosSend.facetType[facetTypeSlug].push(facetSlug);
+            if (valuesToSend.hasOwnProperty('facetType')) {
+                if (valuesToSend.facetType.hasOwnProperty(facetTypeSlug)) {
+                    valuesToSend.facetType[facetTypeSlug].push(facetSlug);
                 } else {
-                    valuesTosSend.facetType[facetTypeSlug] = [facetSlug];
+                    valuesToSend.facetType[facetTypeSlug] = [facetSlug];
                 }
             } else {
-                valuesTosSend.facetType = { [facetTypeSlug]: [facetSlug] };
+                valuesToSend.facetType = { [facetTypeSlug]: [facetSlug] };
             }
 
-            delete valuesTosSend[key];
+            delete valuesToSend[key];
         }
 
-        console.log('saveNewDlor after valuesTosSend=', valuesTosSend);
+        console.log('saveNewDlor after valuesToSend=', valuesToSend);
 
-        return actions.createDLor(valuesTosSend);
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        return actions.createDLor(valuesToSend);
     };
 
     const locale = {
@@ -263,17 +271,14 @@ export const DLOAdd = ({
         // handle radio & checkbox filter field changes
         const newValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value; // .trimEnd();
-        console.log('handleChange', prop, newValue, e.target);
 
         // handle teams dropdown changes
         if (prop === 'object_owning_team_id') {
             setShowTeamCreationForm(newValue === 'new');
-            newValue === 'new' && console.log('user chose new');
         }
 
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: newValue };
-        console.log('newValues=', newValues);
         setFormValidity(validateValues(newValues, newValue));
         setFormValues(newValues);
     };
@@ -285,12 +290,12 @@ export const DLOAdd = ({
         currentValues.object_description.length < descriptionMinimumLength && (isValid = false);
         currentValues.object_summary.length < summaryMinimumLength && (isValid = false);
         // object_download_instructions optional
-        // currentValues.object_owning_team_id > 0 && (isValid = false);
         !(currentValues.object_embed_type === 'link' || currentValues.object_embed_type === 'embed') &&
             (isValid = false);
         // valid user id is 8 or 9 char
         (currentValues.object_publishing_user.length < 8 || currentValues.object_publishing_user.length > 10) &&
             (isValid = false);
+        // currentValues.object_owning_team_id > 0 && (isValid = false);
         currentValues.object_owning_team_id === 'new' && currentValues.team_name.length < 1 && (isValid = false);
         currentValues.object_owning_team_id === 'new' && currentValues.team_manager.length < 1 && (isValid = false);
         currentValues.object_owning_team_id === 'new' && currentValues.team_email.length < 1 && (isValid = false);
@@ -306,7 +311,6 @@ export const DLOAdd = ({
                 if (isRequiredFacet(f)) {
                     console.log('f=', f);
                     const hasKeyStartingWithFacet = Object.keys(currentValues).some((key, value) => {
-                        console.log('facet', key, value);
                         return key.startsWith(`facet::${f.facet_type_slug}`);
                     });
                     // any one of the "required" facets lacking a value will make validity false
