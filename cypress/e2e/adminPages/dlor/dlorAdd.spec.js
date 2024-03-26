@@ -1,6 +1,8 @@
+// these constants must match the constants, eg titleMinimumLength in Dlor Admin components
 const REQUIRED_LENGTH_TITLE = 10;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
+const REQUIRED_LENGTH_KEYWORDS = 4;
 describe('Add an object to the Digital Learning Object Repository (DLOR)', () => {
     beforeEach(() => {
         cy.clearCookies();
@@ -45,11 +47,18 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
-
-                // filters
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
+
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('a '.padEnd(REQUIRED_LENGTH_KEYWORDS, 'x'));
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+
+                // filters
                 cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
@@ -173,6 +182,12 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="input-characters-remaining-object_summary"]')
                     .should('exist')
                     .should('contain', 'at least 9 more characters needed');
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('abc');
+                cy.get('[data-testid="input-characters-remaining-object_keywords_string"]')
+                    .should('exist')
+                    .should('contain', 'at least 1 more character needed');
             });
             it('admin can create a new object for a new team and return to list', () => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active');
@@ -189,12 +204,12 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                    .should('exist')
-                    .should('be.disabled');
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('cat, dog');
                 cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
                 cy.get('[data-testid="filter-assignments"] input').check();
                 cy.get('[data-testid="filter-media_audio"] input').check();
@@ -259,18 +274,30 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     object_download_instructions: '',
                     object_embed_type: 'link',
                     object_publishing_user: 'dloradmin',
-                    // object_review_date_next: '2025-03-26T00:01',
+                    // object_review_date_next: '2025-03-26T00:01', // doesn't seem valid to figure out the date
                     object_status: 'new',
                     team_email: teamEmail,
                     team_manager: teamManager,
                     team_name: teamName,
+                    // object_keywords: ['cat', 'dog'],
                     // facetType: expectedFacetTypes,
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    console.log('cookie.value=', cookie.value);
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
-                    expect(sentValues).to.contains(expectedValues);
-                    expect(sentValues.facetType).to.deep.equal(expectedFacetTypes);
+
+                    // had trouble comparing the entire structure
+                    const sentFacetType = sentValues.facetType;
+                    const objectKeywords = sentValues.object_keywords;
+                    delete sentValues.facetType;
+                    delete sentValues.object_keywords;
+                    delete sentValues.object_review_date_next;
+
+                    expect(sentValues).to.deep.equal(expectedValues);
+                    expect(sentFacetType).to.deep.equal(expectedFacetTypes);
+                    expect(objectKeywords).to.deep.equal(['cat', 'dog']);
+
                     cy.clearCookie('CYPRESS_DATA_SAVED');
                     cy.clearCookie('CYPRESS_TEST_DATA');
                 });
@@ -293,6 +320,9 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('cat, dog');
                 cy.get('[data-testid="object_download_instructions"] textarea:first-child')
                     .should('exist')
                     .type(downloadInstructionText);
@@ -336,10 +366,17 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
-                    expect(sentValues).to.contains(expectedValues);
-                    console.log('sentValues.facetType=', sentValues.facetType);
-                    console.log('expectedFacetTypes=', expectedFacetTypes);
-                    expect(sentValues.facetType).to.deep.equal(expectedFacetTypes);
+
+                    // had trouble comparing the entire structure
+                    const sentFacetType = sentValues.facetType;
+                    const objectKeywords = sentValues.object_keywords;
+                    delete sentValues.facetType;
+                    delete sentValues.object_keywords;
+                    delete sentValues.object_review_date_next;
+
+                    expect(sentValues).to.deep.equal(expectedValues);
+                    expect(sentFacetType).to.deep.equal(expectedFacetTypes);
+                    expect(objectKeywords).to.deep.equal(['cat', 'dog']);
                     cy.clearCookie('CYPRESS_DATA_SAVED');
                     cy.clearCookie('CYPRESS_TEST_DATA');
                 });
@@ -368,6 +405,9 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('cat, dog');
                 cy.get('[data-testid="filter-digital_skills"] input').check();
                 cy.get('[data-testid="filter-media_dataset"] input').check();
                 cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();

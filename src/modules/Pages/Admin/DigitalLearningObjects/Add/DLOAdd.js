@@ -27,10 +27,15 @@ import { scrollToTopOfPage } from 'helpers/general';
 
 const moment = require('moment-timezone');
 
+import { splitStringToArrayOnComma } from '../dlorHelpers';
+
 const useStyles = makeStyles(theme => ({
     charactersRemaining: {
         textAlign: 'right',
         color: '#504e4e',
+        fontSize: '0.8em',
+    },
+    fieldNote: {
         fontSize: '0.8em',
     },
     facetControl: {
@@ -106,12 +111,13 @@ export const DLOAdd = ({
     const titleMinimumLength = 10;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
+    const keywordMinimumLength = 4;
     const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
         const missingCharCount = numCharsMin - numCharsCurrent;
         return (
             <div className={classes.charactersRemaining} data-testid={`input-characters-remaining-${fieldName}`}>
                 {numCharsCurrent > 0 && missingCharCount > 0
-                    ? `at least ${missingCharCount} more characters needed`
+                    ? `at least ${missingCharCount} more character${missingCharCount > 1 ? 's' : ''} needed`
                     : ''}
             </div>
         );
@@ -139,6 +145,7 @@ export const DLOAdd = ({
         team_name: '',
         team_manager: '',
         team_email: '',
+        object_keywords_string: '',
     };
     const [formValues, setFormValues] = useState(formDefaults);
 
@@ -204,6 +211,9 @@ export const DLOAdd = ({
             delete valuesToSend.team_manager;
             delete valuesToSend.team_email;
         }
+
+        valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
+        delete valuesToSend.object_keywords_string;
 
         for (const [key, value] of Object.entries(valuesToSend)) {
             if (!key.startsWith('facet::')) {
@@ -290,6 +300,7 @@ export const DLOAdd = ({
         currentValues.object_description.length < descriptionMinimumLength && (isValid = false);
         currentValues.object_summary.length < summaryMinimumLength && (isValid = false);
         // object_download_instructions optional
+        currentValues.object_keywords_string.length < keywordMinimumLength && (isValid = false);
         !(currentValues.object_embed_type === 'link' || currentValues.object_embed_type === 'embed') &&
             (isValid = false);
         // valid user id is 8 or 9 char
@@ -709,6 +720,36 @@ export const DLOAdd = ({
                                 );
                             }
                         })()}
+                        <Grid item xs={12}>
+                            <FormControl
+                                variant="standard"
+                                // className={classes.typingArea}
+                                fullWidth
+                            >
+                                <InputLabel htmlFor="object_keywords">
+                                    Keywords - enter a comma separated list of keywords *
+                                </InputLabel>
+                                <Input
+                                    id="object_keywords"
+                                    data-testid="object_keywords"
+                                    multiline
+                                    required
+                                    rows={2}
+                                    value={formValues?.object_keywords_string}
+                                    onChange={handleChange('object_keywords_string')}
+                                />
+                                {!!formValues.object_keywords_string &&
+                                    characterCount(
+                                        formValues.object_keywords_string.length,
+                                        keywordMinimumLength,
+                                        'object_keywords_string',
+                                    )}
+                                <p className={classes.fieldNote}>
+                                    If you need a keyword with a comma within it, surround the keyword with double
+                                    quotes, like: cat, "dog, dog", mouse
+                                </p>
+                            </FormControl>
+                        </Grid>
                         <Grid item xs={12}>
                             <FormControl variant="standard" fullWidth>
                                 <FormLabel id="object_status_label">Object publication status</FormLabel>
