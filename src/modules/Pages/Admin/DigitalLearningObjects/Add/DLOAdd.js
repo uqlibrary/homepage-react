@@ -127,6 +127,7 @@ export const DLOAdd = ({
         object_title: '',
         object_description: '',
         object_summary: '',
+        object_download_instructions: '',
         object_owning_team_id: 1,
         object_embed_type: 'link',
         object_publishing_user: account?.id,
@@ -283,6 +284,7 @@ export const DLOAdd = ({
         currentValues.object_title.length < titleMinimumLength && (isValid = false);
         currentValues.object_description.length < descriptionMinimumLength && (isValid = false);
         currentValues.object_summary.length < summaryMinimumLength && (isValid = false);
+        // object_download_instructions optional
         // currentValues.object_owning_team_id > 0 && (isValid = false);
         !(currentValues.object_embed_type === 'link' || currentValues.object_embed_type === 'embed') &&
             (isValid = false);
@@ -425,7 +427,7 @@ export const DLOAdd = ({
                                     <Radio
                                         value={thisfacet.facet_slug}
                                         // id={`filter-${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
-                                        // data-testid={`filter-${thisfacet.facet_slug}`}
+                                        data-testid={`filter-${thisfacet.facet_slug}`}
                                     />
                                 }
                                 label={thisfacet.facet_name}
@@ -621,6 +623,23 @@ export const DLOAdd = ({
                                     <FormControlLabel value="link" control={<Radio />} label="Link" />
                                     <FormControlLabel value="embed" control={<Radio />} label="Embedded" disabled />
                                 </RadioGroup>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl
+                                variant="standard"
+                                // className={classes.typingArea}
+                                fullWidth
+                            >
+                                <InputLabel htmlFor="object_download_instructions">Download Instructions</InputLabel>
+                                <Input
+                                    id="object_download_instructions"
+                                    data-testid="object_download_instructions"
+                                    multiline
+                                    rows={6}
+                                    value={formValues?.object_download_instructions}
+                                    onChange={handleChange('object_download_instructions')}
+                                />
                             </FormControl>
                         </Grid>
                         {(() => {

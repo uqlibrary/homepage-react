@@ -12,7 +12,7 @@ export default {
             "object_owning_team_id": 1,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "obj_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard.\nand a second line of detail in the description",
+            "object_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard.\nand a second line of detail in the description",
             "obj_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-accessibility\/chapter\/module-overview\/",
             "object_filters": [
                 {
@@ -76,7 +76,7 @@ export default {
             "object_owning_team_id": 2,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "obj_download_instructions": null,
+            "object_download_instructions": null,
             "obj_link_url": "https:\/\/uq.h5p.com\/content\/1291624605868350759",
             "object_filters": [
                 {
@@ -139,7 +139,7 @@ export default {
             "object_owning_team_id": 1,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "obj_download_instructions": "Email us to request to reuse or adapt the module",
+            "object_download_instructions": "Email us to request to reuse or adapt the module",
             "obj_link_url": "https:\/\/uq.h5p.com\/content\/1291877706129541819",
             "object_filters": [
                 {
@@ -201,7 +201,7 @@ export default {
             "object_owning_team_id": 1,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "obj_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
+            "object_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
             "obj_link_url": "https://uq.h5p.com/content/1291624610498497569",
             "object_filters": [
                 {
@@ -265,7 +265,7 @@ export default {
             "object_owning_team_id": 1,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "obj_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
+            "object_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
             "obj_link_url": null,
             "object_filters": [
                 {
@@ -328,7 +328,7 @@ export default {
             "object_owning_team_id": 1,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "obj_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
+            "object_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
             "obj_link_url": null,
             "object_filters": [
                 {
@@ -377,7 +377,7 @@ export default {
             "object_owning_team_id": 2,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "obj_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
+            "object_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard",
             "obj_link_url": null,
             "object_filters": [
                 {
@@ -440,7 +440,7 @@ export default {
             "object_owning_team_id": 2,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "obj_download_instructions": null,
+            "object_download_instructions": null,
             "obj_link_url": null,
             "object_filters": [
                 {

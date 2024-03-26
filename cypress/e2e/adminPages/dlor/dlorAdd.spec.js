@@ -251,6 +251,9 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                    .should('exist')
+                    .type('some download instructions');
                 cy.get('[data-testid="filter-digital_skills"] input').check();
                 cy.get('[data-testid="filter-media_dataset"] input').check();
                 cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
