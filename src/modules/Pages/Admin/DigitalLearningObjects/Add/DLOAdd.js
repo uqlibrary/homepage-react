@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-
-const moment = require('moment-timezone');
-
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
@@ -25,6 +22,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
+
+const moment = require('moment-timezone');
 
 const useStyles = makeStyles(theme => ({
     charactersRemaining: {
@@ -193,7 +192,7 @@ export const DLOAdd = ({
     // }, [dlorTeam]);
 
     const saveNewDlor = () => {
-        const valuesTosSend = formValues;
+        const valuesTosSend = { ...formValues };
         if (formValues.object_owning_team_id === 'new') {
             delete valuesTosSend.object_owning_team_id;
         } else {
@@ -256,27 +255,29 @@ export const DLOAdd = ({
 
     const clearForm = actiontype => {
         hideConfirmation();
-        setFormValues(formDefaults);
+        window.location.reload(false);
     };
 
     const handleChange = prop => e => {
-        // console.log('formValues=', formValues);
-        console.log('e.target.type=', e.target.type);
+        // handle radio & checkbox filter field changes
         const newValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value; // .trimEnd();
         console.log('handleChange', prop, newValue, e.target);
+
+        // handle teams dropdown changes
         if (prop === 'object_owning_team_id') {
             setShowTeamCreationForm(newValue === 'new');
             newValue === 'new' && console.log('user chose new');
         }
 
+        // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: newValue };
         console.log('newValues=', newValues);
-        setFormValidity(validateValues(newValues));
+        setFormValidity(validateValues(newValues, newValue));
         setFormValues(newValues);
     };
 
-    const validateValues = currentValues => {
+    const validateValues = (currentValues, newValue) => {
         let isValid = true;
 
         currentValues.object_title.length < titleMinimumLength && (isValid = false);
@@ -292,20 +293,25 @@ export const DLOAdd = ({
         currentValues.object_owning_team_id === 'new' && currentValues.team_manager.length < 1 && (isValid = false);
         currentValues.object_owning_team_id === 'new' && currentValues.team_email.length < 1 && (isValid = false);
 
-        // // check the required facets are checked
-        // !!dlorFilterList &&
-        //     dlorFilterList.forEach(f => {
-        //         const controlType = getFacetControlType(f);
-        //         if (controlType.startsWith('one')) {
-        //             // console.log('validateValues check facet ', f.facet_type_slug);
-        //             const hasKeyStartingWithFacet = Object.keys(currentValues).some(key =>
-        //                 key.startsWith(`facet::${f.facet_type_slug}`),
-        //             );
-        //             !hasKeyStartingWithFacet && (isValid = false);
-        //
-        //             // console.log('validateValues hasKeyStartingWithFacet ', f.facet_type_slug, hasKeyStartingWithFacet);
-        //         }
-        //     });
+        const isRequiredFacet = facet => {
+            const controlType = getFacetControlType(facet);
+            return controlType.startsWith('one');
+        };
+
+        // check the required facets are checked
+        !!dlorFilterList &&
+            dlorFilterList.forEach(f => {
+                if (isRequiredFacet(f)) {
+                    console.log('f=', f);
+                    const hasKeyStartingWithFacet = Object.keys(currentValues).some((key, value) => {
+                        console.log('facet', key, value);
+                        return key.startsWith(`facet::${f.facet_type_slug}`);
+                    });
+                    // any one of the "required" facets lacking a value will make validity false
+                    // "!newValue" is needed when user unchecks a checkbox
+                    (!hasKeyStartingWithFacet || !newValue) && (isValid = false);
+                }
+            });
         console.log('validateValues currentValues=', isValid, currentValues);
 
         return isValid;
@@ -351,8 +357,8 @@ export const DLOAdd = ({
     }
 
     function displayControlByFacetType(filterItem) {
-        const controlType = getFacetControlType(filterItem);
         let result = <></>;
+        const controlType = getFacetControlType(filterItem);
         if (controlType === 'one-or-more-with-other') {
             result =
                 !!filterItem.facet_list &&
@@ -363,6 +369,8 @@ export const DLOAdd = ({
                         control={
                             <Checkbox
                                 onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                                id={`filter-${thisfacet.facet_slug}`}
+                                data-testid={`filter-${thisfacet.facet_slug}`}
                             />
                         }
                         label={thisfacet.facet_name}
@@ -379,12 +387,13 @@ export const DLOAdd = ({
                         control={
                             <Checkbox
                                 onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                                id={`filter-${thisfacet.facet_slug}`}
+                                data-testid={`filter-${thisfacet.facet_slug}`}
                             />
                         }
                         label={thisfacet.facet_name}
                     />
                 ));
-            // return <>zero-or-more-no-other</>;
         } else if (controlType === 'one-with-other') {
             console.log('filterItem=', filterItem);
             const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
@@ -397,13 +406,14 @@ export const DLOAdd = ({
             result = (
                 <RadioGroup
                     aria-labelledby="demo-radio-object_embed_type_label-group-label"
-                    defaultValue={
-                        !!filterItem.facet_list &&
-                        filterItem.facet_list.length > 0 &&
-                        !filterItem.facet_list.slice(0, 1)[0] // .facet_slug
-                    }
+                    // defaultValue={
+                    //     !!filterItem.facet_list &&
+                    //     filterItem.facet_list.length > 0 &&
+                    //     !filterItem.facet_list.slice(0, 1)[0]
+                    // }
                     name={radioGroupName}
                     value={filterItem.facet_slug}
+                    // id={`radio-filter-${filterItem.facet_type_slug}`}
                     // onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
                 >
                     {!!filterItem.facet_list &&
@@ -411,7 +421,13 @@ export const DLOAdd = ({
                             <FormControlLabel
                                 key={`${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
                                 className={classes.facetControl}
-                                control={<Radio value={thisfacet.facet_slug} />}
+                                control={
+                                    <Radio
+                                        value={thisfacet.facet_slug}
+                                        // id={`filter-${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
+                                        // data-testid={`filter-${thisfacet.facet_slug}`}
+                                    />
+                                }
                                 label={thisfacet.facet_name}
                                 onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
                             />
@@ -611,15 +627,15 @@ export const DLOAdd = ({
                             if (!!dlorFilterListLoading) {
                                 // console.log('filterlistloading');
                                 return (
-                                    <Typography variant="body1" data-testid="dlor-homepage-error">
-                                        <InlineLoader message="Loading" />
-                                    </Typography>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}>
+                                            <InlineLoader message="Loading" />
+                                        </Grid>
+                                    </Grid>
                                 );
                             } else if (!!dlorFilterListError) {
-                                // console.log('dlorFilterListError');
                                 return (
                                     <Typography variant="body1" data-testid="dlor-homepage-error">
-                                        <div>An Error</div>
                                         {dlorFilterListError}
                                     </Typography>
                                 );
@@ -647,7 +663,7 @@ export const DLOAdd = ({
                                             dlorFilterList.map(filterItem => {
                                                 const controlType = getFacetControlType(filterItem);
                                                 return (
-                                                    <Grid item xs={4} key={filterItem.facet_type_slug}>
+                                                    <Grid item xs={12} md={4} key={filterItem.facet_type_slug}>
                                                         <Typography component={'h3'} variant={'h7'}>
                                                             {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
                                                             {controlType.endsWith('with-other') && (

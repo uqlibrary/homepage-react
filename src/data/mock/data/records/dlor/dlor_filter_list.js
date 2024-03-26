@@ -123,38 +123,39 @@ export default {
             "facet_type_help_admin": "MF",
             "facet_list": [
                 {
-                    "facet_name": "Guide",
-                    "facet_slug": "media_guide"
-                },
-                {
+                    "facet_name": "Audio",
+                    "facet_slug": "media_audio",
+                }, {
+                    "facet_name": "Dataset",
+                    "facet_slug": "media_dataset",
+                }, {
                     "facet_name": "H5P",
-                    "facet_slug": "h5p"
-                },
-                {
-                    "facet_name": "Interactive activity",
-                    "facet_slug": "media_interactive_activity"
-                },
-                {
-                    "facet_name": "Presentation",
-                    "facet_slug": "media_presentation"
-                },
-                {
+                    "facet_slug": "media_h5p",
+                }, {
+                    "facet_name": "Image",
+                    "facet_slug": "media_image",
+                }, {
+                    "facet_name": "PowerPoint",
+                    "facet_slug": "media_powerPoint",
+                }, {
                     "facet_name": "Pressbook",
-                    "facet_slug": "pressbook"
-                },
-                {
-                    "facet_name": "Training recording",
-                    "facet_slug": "media_training_recording"
-                },
-                {
+                    "facet_slug": "media_pressbook",
+                }, {
+                    "facet_name": "PDF",
+                    "facet_slug": "media_pdf",
+                }, {
+                    "facet_name": "Spreadsheet",
+                    "facet_slug": "media_spreadsheet",
+                }, {
                     "facet_name": "Video",
-                    "facet_slug": "video"
-                },
-                {
+                    "facet_slug": "media_video",
+                }, {
                     "facet_name": "Webpage",
-                    "facet_slug": "webpage"
-                },
-                {
+                    "facet_slug": "media_webpage",
+                }, {
+                    "facet_name": "Word document",
+                    "facet_slug": "media_word",
+                }, {
                     "facet_name": "Other",
                     "facet_slug": "media_other"
                 }

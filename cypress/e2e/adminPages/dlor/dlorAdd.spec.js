@@ -45,6 +45,33 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+
+                // filters
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-media_audio"] input').check();
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-all_cross_disciplinary"] input').check();
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-media_audio"] input').check();
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-type_guide"] input').check();
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-cc_by_attribution"] input').check();
+
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled');
@@ -102,6 +129,30 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled');
+
+                cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').uncheck();
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
+
+                cy.get('[data-testid="filter-all_cross_disciplinary"] input').uncheck();
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-all_cross_disciplinary"] input').check();
+
+                cy.get('[data-testid="filter-media_audio"] input').uncheck();
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="filter-media_audio"] input').check();
+
+                // (cant uncheck a radio button)
+
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled');
             });
             it('shows character minimums', () => {
                 cy.get('[data-testid="object_title"] input')
@@ -123,7 +174,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('exist')
                     .should('contain', 'at least 9 more characters needed');
             });
-            it('admin can create a new object for a new team', () => {
+            it('admin can create a new object for a new team and return to list', () => {
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
@@ -139,6 +190,14 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
+                cy.get('[data-testid="filter-assignments"] input').check();
+                cy.get('[data-testid="filter-media_audio"] input').check();
+                cy.get('[data-testid="filter-media_h5p"] input').check();
+                cy.get('[data-testid="filter-all_cross_disciplinary"] input').check();
+                cy.get('[data-testid="filter-business_economics"] input').check();
+                cy.get('[data-testid="filter-type_interactive_activity"] input').check();
+                cy.get('[data-testid="filter-cc_by_nc_attribution_noncommercial"] input').check();
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled');
@@ -182,7 +241,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .click();
                 cy.url().should('eq', 'http://localhost:2020/admin/dlor');
             });
-            it('admin can save a new object', () => {
+            it('admin can create a new object for an existing team and start a fresh form', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('new title'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
@@ -192,6 +251,12 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="filter-digital_skills"] input').check();
+                cy.get('[data-testid="filter-media_dataset"] input').check();
+                cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
+                cy.get('[data-testid="filter-module"] input').check();
+                cy.get('[data-testid="filter-cco_public_domain"] input').check();
+                cy.get('[data-testid="filter-connected_citizens"] input').check();
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .click();
@@ -224,8 +289,14 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="filter-digital_skills"] input').check();
+                cy.get('[data-testid="filter-media_dataset"] input').check();
+                cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
+                cy.get('[data-testid="filter-module"] input').check();
+                cy.get('[data-testid="filter-cco_public_domain"] input').check();
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
+                    .should('not.be.disabled')
                     .click();
                 // "responseType=saveError" on the url forces an error from mock api
                 cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
