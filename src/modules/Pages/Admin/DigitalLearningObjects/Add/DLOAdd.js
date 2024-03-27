@@ -24,10 +24,9 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
+import { splitStringToArrayOnComma } from '../dlorHelpers';
 
 const moment = require('moment-timezone');
-
-import { splitStringToArrayOnComma } from '../dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     charactersRemaining: {
@@ -136,9 +135,10 @@ export const DLOAdd = ({
         object_title: '',
         object_description: '',
         object_summary: '',
-        object_download_instructions: '',
         object_owning_team_id: 1,
         object_embed_type: 'link',
+        object_link_url: '',
+        object_download_instructions: '',
         object_publishing_user: account?.id,
         object_status: 'new',
         object_review_date_next: getTodayPlusOneYear(),
@@ -238,9 +238,14 @@ export const DLOAdd = ({
 
         console.log('saveNewDlor after valuesToSend=', valuesToSend);
 
+        console.log('cookies=', document.cookie);
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        console.log('cypressTestCookie=', cypressTestCookie);
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            console.log('writing cookie CYPRESS_DATA_SAVED');
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        } else {
+            console.log('NOT writing cookie CYPRESS_DATA_SAVED');
         }
 
         return actions.createDLor(valuesToSend);
@@ -268,6 +273,7 @@ export const DLOAdd = ({
         // TODO also want to clear form here too before nav, so back button gives clear form?
 
         // actions.loadAllDLORs(); // force reload of data now we have added a new one. needed?
+        hideConfirmation();
         history.push('/admin/dlor');
         scrollToTopOfPage();
     };
@@ -293,6 +299,22 @@ export const DLOAdd = ({
         setFormValues(newValues);
     };
 
+    const isValidUrl = testUrl => {
+        let url;
+
+        try {
+            url = new URL(testUrl);
+        } catch (_) {
+            return false;
+        }
+
+        return (
+            (url.protocol === 'http:' || url.protocol === 'https:') &&
+            !!url.hostname &&
+            url.hostname.length >= '12.co'.length
+        );
+    };
+
     const validateValues = (currentValues, newValue) => {
         let isValid = true;
 
@@ -303,10 +325,11 @@ export const DLOAdd = ({
         currentValues.object_keywords_string.length < keywordMinimumLength && (isValid = false);
         !(currentValues.object_embed_type === 'link' || currentValues.object_embed_type === 'embed') &&
             (isValid = false);
+        currentValues.object_embed_type === 'link' && !isValidUrl(currentValues.object_link_url) && (isValid = false);
+
         // valid user id is 8 or 9 char
         (currentValues.object_publishing_user.length < 8 || currentValues.object_publishing_user.length > 10) &&
             (isValid = false);
-        // currentValues.object_owning_team_id > 0 && (isValid = false);
         currentValues.object_owning_team_id === 'new' && currentValues.team_name.length < 1 && (isValid = false);
         currentValues.object_owning_team_id === 'new' && currentValues.team_manager.length < 1 && (isValid = false);
         currentValues.object_owning_team_id === 'new' && currentValues.team_email.length < 1 && (isValid = false);
@@ -320,13 +343,14 @@ export const DLOAdd = ({
         !!dlorFilterList &&
             dlorFilterList.forEach(f => {
                 if (isRequiredFacet(f)) {
-                    console.log('f=', f);
                     const hasKeyStartingWithFacet = Object.keys(currentValues).some((key, value) => {
                         return key.startsWith(`facet::${f.facet_type_slug}`);
                     });
                     // any one of the "required" facets lacking a value will make validity false
                     // "!newValue" is needed when user unchecks a checkbox
                     (!hasKeyStartingWithFacet || !newValue) && (isValid = false);
+                    console.log('facet isValid=', isValid);
+                    !isValid && console.log('xxx', f.facet_type_slug, ' isValid', isValid);
                 }
             });
         console.log('validateValues currentValues=', isValid, currentValues);
@@ -422,7 +446,7 @@ export const DLOAdd = ({
             );
             result = (
                 <RadioGroup
-                    aria-labelledby="demo-radio-object_embed_type_label-group-label"
+                    aria-labelledby={`demo-radio-object_${filterItem.facet_slug}_label-group-label`}
                     // defaultValue={
                     //     !!filterItem.facet_list &&
                     //     filterItem.facet_list.length > 0 &&
@@ -640,6 +664,24 @@ export const DLOAdd = ({
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
+                        {formValues.object_embed_type === 'link' && (
+                            <Grid item xs={12}>
+                                <FormControl
+                                    variant="standard"
+                                    // className={classes.typingArea}
+                                    fullWidth
+                                >
+                                    <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
+                                    <Input
+                                        id="object_link_url"
+                                        data-testid="object_link_url"
+                                        required
+                                        value={formValues?.object_link_url}
+                                        onChange={handleChange('object_link_url')}
+                                    />
+                                </FormControl>
+                            </Grid>
+                        )}
                         <Grid item xs={12}>
                             <FormControl
                                 variant="standard"

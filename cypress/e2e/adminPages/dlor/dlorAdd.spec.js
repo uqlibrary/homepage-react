@@ -13,6 +13,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
     context('adding a new object', () => {
         context('successfully', () => {
             beforeEach(() => {
+                cy.setCookie('CYPRESS_TEST_DATA', 'active');
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
                 cy.viewport(1300, 1000);
             });
@@ -29,6 +30,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 });
             });
             it('validates fields correctly', () => {
+                // first enter all the fields and show the save button doesnt enable until all the fields are entered
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
@@ -47,6 +49,12 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .type('http://example.com');
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
@@ -85,7 +93,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('exist')
                     .should('not.be.disabled');
 
-                // and it validates on each field
+                //  now go back and invalidate each field one at a time and show the button disables on each field
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('{backspace}');
@@ -121,6 +129,26 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('p');
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled');
+
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .clear()
+                    .type('http://');
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .type('ex.c');
+                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('exist')
+                    .should('be.disabled');
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .type('o');
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled');
@@ -190,15 +218,10 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('contain', 'at least 1 more character needed');
             });
             it('admin can create a new object for a new team and return to list', () => {
-                cy.setCookie('CYPRESS_TEST_DATA', 'active');
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
                 });
-                const teamEmail = 'john@example.com';
-                const teamManager = 'john Manager';
-                const teamName = 'new team name';
-
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
@@ -211,9 +234,9 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
-                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
-                    .type('cat, dog');
+                    .type('http://example.com');
                 cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
                 cy.get('[data-testid="filter-assignments"] input').check();
                 cy.get('[data-testid="filter-media_audio"] input').check();
@@ -222,9 +245,13 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="filter-business_economics"] input').check();
                 cy.get('[data-testid="filter-type_interactive_activity"] input').check();
                 cy.get('[data-testid="filter-cc_by_nc_attribution_noncommercial"] input').check();
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('cat, dog');
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled');
+
                 // open teams drop down
                 cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
                 cy.get('[data-testid="object_owning_team"]').click();
@@ -239,26 +266,25 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('be.disabled');
                 cy.get('[data-testid="team_name"]')
                     .should('exist')
-                    .type(teamName);
+                    .type('new team name');
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="team_manager"]')
                     .should('exist')
-                    .type(teamManager);
+                    .type('john Manager');
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="team_email"]')
                     .should('exist')
-                    .type(teamEmail);
+                    .type('john@example.com');
 
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
 
-                // and navigate back to the list page
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
 
                 // check the data we pretended to send to the server matches what we expect
@@ -268,14 +294,15 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     object_description:
                         'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
                     object_summary: 'new summary xxxxxxxx',
+                    object_link_url: 'http://example.com',
                     object_download_instructions: '',
                     object_embed_type: 'link',
                     object_publishing_user: 'dloradmin',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
-                    team_email: teamEmail,
-                    team_manager: teamManager,
-                    team_name: teamName,
+                    team_email: 'john@example.com',
+                    team_manager: 'john Manager',
+                    team_name: 'new team name',
                     object_keywords: ['cat', 'dog'],
                     facetType: {
                         item_type: ['type_interactive_activity'],
@@ -292,6 +319,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     console.log('cookie.value=', cookie.value);
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
+                    console.log('sentValues=', sentValues);
 
                     // had trouble comparing the entire structure
                     const sentFacetType = sentValues.facetType;
@@ -313,13 +341,13 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     cy.clearCookie('CYPRESS_TEST_DATA');
                 });
 
+                // and navigate back to the list page
                 cy.get('[data-testid="confirm-dlor-creation-outcome"]')
                     .should('contain', 'Return to list page')
                     .click();
                 cy.url().should('eq', 'http://localhost:2020/admin/dlor');
             });
             it('admin can create a new object for an existing team and start a fresh form', () => {
-                cy.setCookie('CYPRESS_TEST_DATA', 'active');
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
@@ -335,9 +363,9 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
-                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
-                    .type('cat, dog');
+                    .type('http://example.com');
                 cy.get('[data-testid="object_download_instructions"] textarea:first-child')
                     .should('exist')
                     .type(downloadInstructionText);
@@ -347,6 +375,9 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="filter-module"] input').check();
                 cy.get('[data-testid="filter-cco_public_domain"] input').check();
                 cy.get('[data-testid="filter-connected_citizens"] input').check();
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('cat, dog');
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .click();
@@ -363,6 +394,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     object_description:
                         'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
                     object_summary: 'new summary xxxxxxxx',
+                    object_link_url: 'http://example.com',
                     object_download_instructions: downloadInstructionText,
                     object_embed_type: 'link',
                     object_publishing_user: 'dloradmin',
@@ -427,14 +459,17 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
-                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
-                    .type('cat, dog');
+                    .type('http://example.com');
                 cy.get('[data-testid="filter-digital_skills"] input').check();
                 cy.get('[data-testid="filter-media_dataset"] input').check();
                 cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
                 cy.get('[data-testid="filter-module"] input').check();
                 cy.get('[data-testid="filter-cco_public_domain"] input').check();
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('cat, dog');
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
