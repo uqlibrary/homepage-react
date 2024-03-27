@@ -191,6 +191,10 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
             });
             it('admin can create a new object for a new team and return to list', () => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active');
+                cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
+                    expect(cookie).to.exist;
+                    expect(cookie.value).to.equal('active');
+                });
                 const teamEmail = 'john@example.com';
                 const teamManager = 'john Manager';
                 const teamName = 'new team name';
@@ -316,6 +320,10 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
             });
             it('admin can create a new object for an existing team and start a fresh form', () => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active');
+                cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
+                    expect(cookie).to.exist;
+                    expect(cookie.value).to.equal('active');
+                });
 
                 const downloadInstructionText = 'some download instructions';
                 cy.get('[data-testid="object_title"] input')
