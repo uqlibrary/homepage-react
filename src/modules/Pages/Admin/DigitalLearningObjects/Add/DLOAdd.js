@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -15,7 +16,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+
+import DoneIcon from '@mui/icons-material/Done';
 
 import { useConfirmationState } from 'hooks';
 
@@ -33,6 +40,11 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'right',
         color: '#504e4e',
         fontSize: '0.8em',
+    },
+    errorMessage: {
+        color: theme.palette.error.light,
+        fontSize: '0.8em',
+        marginTop: 2,
     },
     fieldNote: {
         fontSize: '0.8em',
@@ -88,6 +100,7 @@ export const DLOAdd = ({
     const classes = useStyles();
     const history = useHistory();
     const [cookies, setCookie] = useCookies();
+    const theme = useTheme();
 
     // !!dlorItem && console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
     // !!dlorTeam && console.log('DLOAdd team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
@@ -100,36 +113,6 @@ export const DLOAdd = ({
         '; response=',
         dlorFilterList,
     );
-
-    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
-
-    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
-    const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
-    const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
-
-    const titleMinimumLength = 10;
-    const descriptionMinimumLength = 100;
-    const summaryMinimumLength = 20;
-    const keywordMinimumLength = 4;
-    const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
-        const missingCharCount = numCharsMin - numCharsCurrent;
-        return (
-            <div className={classes.charactersRemaining} data-testid={`input-characters-remaining-${fieldName}`}>
-                {numCharsCurrent > 0 && missingCharCount > 0
-                    ? `at least ${missingCharCount} more character${missingCharCount > 1 ? 's' : ''} needed`
-                    : ''}
-            </div>
-        );
-    };
-
-    function getTodayPlusOneYear(baseDate = null) {
-        const today = baseDate || moment();
-        return today
-            .add(1, 'year')
-            .hour(0)
-            .minute(1) // 1 minute past midnight
-            .format('YYYY-MM-DDTHH:mm');
-    }
 
     const formDefaults = {
         object_title: '',
@@ -147,7 +130,419 @@ export const DLOAdd = ({
         team_email: '',
         object_keywords_string: '',
     };
+
+    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+
+    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
+    const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
+    const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
     const [formValues, setFormValues] = useState(formDefaults);
+    // const [newValue, setNewValue] = useState(null); // the value just entered
+
+    const titleMinimumLength = 10;
+    const descriptionMinimumLength = 100;
+    const summaryMinimumLength = 20;
+    const keywordMinimumLength = 4;
+    const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
+        const missingCharCount = numCharsMin - numCharsCurrent;
+        return (
+            <div className={classes.charactersRemaining} data-testid={`input-characters-remaining-${fieldName}`}>
+                {numCharsCurrent > 0 && missingCharCount > 0
+                    ? `at least ${missingCharCount} more character${missingCharCount > 1 ? 's' : ''} needed`
+                    : ''}
+            </div>
+        );
+    };
+
+    const handleChange = prop => e => {
+        // handle radio & checkbox filter field changes
+        const theNewValue =
+            e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value; // .trimEnd();
+        // setNewValue(theNewValue);
+
+        // handle teams dropdown changes
+        if (prop === 'object_owning_team_id') {
+            setShowTeamCreationForm(theNewValue === 'new');
+        }
+
+        // amalgamate new value into data set
+        const newValues = { ...formValues, [prop]: theNewValue };
+
+        setFormValidity(validateValues(newValues, theNewValue));
+        setFormValues(newValues);
+    };
+
+    const isValidUrl = testUrl => {
+        let url;
+
+        try {
+            url = new URL(testUrl);
+        } catch (_) {
+            return false;
+        }
+
+        return (
+            (url.protocol === 'http:' || url.protocol === 'https:') &&
+            !!url.hostname &&
+            url.hostname.length >= '12.co'.length
+        );
+    };
+
+    const isValidEmail = testEmail => {
+        return testEmail?.length >= 'ab@ab'.length && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(testEmail);
+    };
+
+    const isValidUsername = testUserName => {
+        return testUserName?.length === 8 || testUserName?.length === 9;
+    };
+
+    const stepPanelContentOne = (
+        <>
+            <Grid item xs={12}>
+                <FormControl
+                    variant="standard"
+                    // className={classes.typingArea}
+                    fullWidth
+                >
+                    <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
+                    <Input
+                        id="object_publishing_user"
+                        data-testid="object_publishing_user"
+                        required
+                        value={formValues?.object_publishing_user}
+                        onChange={handleChange('object_publishing_user')}
+                        style={{ width: '20em' }}
+                        error={!isValidUsername(formValues?.object_publishing_user)}
+                    />
+                    {!isValidUsername(formValues?.object_publishing_user) && (
+                        <div className={classes.errorMessage} data-testid={'error-message-object_publishing_user'}>
+                            This username is not valid.
+                        </div>
+                    )}
+                </FormControl>
+            </Grid>
+            <Grid item xs={12} style={{ minHeight: 95 }}>
+                <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
+                {!!dlorTeam && (
+                    <Select
+                        defaultValue={dlorTeam.filter((t, index) => index === 0)}
+                        value={formValues?.object_owning_team_id}
+                        onChange={handleChange('object_owning_team_id')}
+                        aria-labelledby="object_owning_team_label"
+                        id="object_owning_team"
+                        data-testid="object_owning_team"
+                    >
+                        {dlorTeam.map(t => (
+                            <MenuItem key={t.team_id} value={t.team_id}>
+                                {t.team_name}
+                            </MenuItem>
+                        ))}
+                        <MenuItem value="new" data-testid="object-add-teamid-new">
+                            Create a team
+                        </MenuItem>
+                    </Select>
+                )}
+            </Grid>
+            {showTeamCreationForm && (
+                <Grid item xs={12}>
+                    <FormControl
+                        variant="standard"
+                        // className={classes.typingArea}
+                        fullWidth
+                    >
+                        <InputLabel htmlFor="team_name">Name of new Team *</InputLabel>
+                        <Input
+                            id="team_name"
+                            data-testid="team_name"
+                            value={formValues?.team_name}
+                            onChange={handleChange('team_name')}
+                        />
+                    </FormControl>
+                    <FormControl
+                        variant="standard"
+                        // className={classes.typingArea}
+                        fullWidth
+                    >
+                        <InputLabel htmlFor="team_manager">Name of Team manager *</InputLabel>
+                        <Input
+                            id="team_manager"
+                            data-testid="team_manager"
+                            required
+                            value={formValues?.team_manager}
+                            onChange={handleChange('team_manager')}
+                        />
+                    </FormControl>
+                    <FormControl
+                        variant="standard"
+                        // className={classes.typingArea}
+                        fullWidth
+                    >
+                        <InputLabel htmlFor="team_email">Team email *</InputLabel>
+                        <Input
+                            id="team_email"
+                            data-testid="team_email"
+                            required
+                            value={formValues?.team_email}
+                            onChange={handleChange('team_email')}
+                            type="email"
+                            error={!isValidEmail(formValues?.team_email)}
+                        />
+                        {!isValidEmail(formValues?.team_email) && (
+                            <div
+                                className={classes.errorMessage}
+                                // data-testid={`error-message-team_email`}
+                            >
+                                This email address is not valid.
+                            </div>
+                        )}
+                    </FormControl>
+                </Grid>
+            )}
+        </>
+    );
+    const stepPanelContentTwo = (
+        <>
+            <Grid item xs={12}>
+                <FormControl
+                    variant="standard"
+                    fullWidth
+                    // className={classes.typingArea}
+                >
+                    <InputLabel htmlFor="object_title">Object title *</InputLabel>
+                    <Input
+                        id="object_title"
+                        data-testid="object_title"
+                        // error={}
+                        required
+                        value={formValues?.object_title}
+                        onChange={handleChange('object_title')}
+                    />
+                    {!!formValues?.object_title &&
+                        characterCount(formValues?.object_title.length, titleMinimumLength, 'object_title')}
+                </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+                <FormControl variant="standard" fullWidth>
+                    <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
+                    <Input
+                        id="object_description"
+                        data-testid="object_description"
+                        multiline
+                        required
+                        rows={6}
+                        value={formValues?.object_description}
+                        onChange={handleChange('object_description')}
+                    />
+                    {!!formValues?.object_description &&
+                        characterCount(
+                            formValues?.object_description.length,
+                            descriptionMinimumLength,
+                            'object_description',
+                        )}
+                </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+                <FormControl
+                    variant="standard"
+                    // className={classes.typingArea}
+                    fullWidth
+                >
+                    <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
+                    <Input
+                        id="object_summary"
+                        data-testid="object_summary"
+                        multiline
+                        required
+                        rows={2}
+                        value={formValues?.object_summary}
+                        onChange={handleChange('object_summary')}
+                    />
+                    {!!formValues?.object_summary &&
+                        characterCount(formValues?.object_summary?.length, summaryMinimumLength, 'object_summary')}
+                </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+                <FormControl variant="standard" fullWidth>
+                    <FormLabel id="object_status_label">Object publication status</FormLabel>
+                    <RadioGroup
+                        aria-labelledby="demo-radio-object_status_label-group-label"
+                        defaultValue="new"
+                        name="object_status_radio-buttons-group"
+                        row
+                        value={formValues?.object_status}
+                        onChange={handleChange('object_status')}
+                    >
+                        <FormControlLabel
+                            value="current"
+                            control={<Radio />}
+                            label="Published"
+                            selected={formValues?.object_status === 'current'}
+                        />
+                        <FormControlLabel
+                            value="new"
+                            control={<Radio />}
+                            label="Draft"
+                            selected={formValues?.object_status === 'new'}
+                        />
+                    </RadioGroup>
+                </FormControl>
+            </Grid>
+        </>
+    );
+    const stepPanelContentThree = (
+        <>
+            <Grid item xs={12}>
+                <FormControl variant="standard" fullWidth>
+                    <FormLabel id="object_embed_type_label">Object inclusion type</FormLabel>
+                    <RadioGroup
+                        aria-labelledby="demo-radio-object_embed_type_label-group-label"
+                        defaultValue="link"
+                        name="object_embed_type_radio-buttons-group"
+                        row
+                        value={formValues?.object_embed_type}
+                        onChange={handleChange('object_embed_type')}
+                    >
+                        <FormControlLabel value="link" control={<Radio />} label="Link" />
+                        <FormControlLabel value="embed" control={<Radio />} label="Embedded" disabled />
+                    </RadioGroup>
+                </FormControl>
+            </Grid>
+            {formValues?.object_embed_type === 'link' && (
+                <Grid item xs={12}>
+                    <FormControl
+                        variant="standard"
+                        // className={classes.typingArea}
+                        fullWidth
+                    >
+                        <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
+                        <Input
+                            id="object_link_url"
+                            data-testid="object_link_url"
+                            required
+                            value={formValues?.object_link_url}
+                            onChange={handleChange('object_link_url')}
+                            error={!!formValues?.object_link_url && !isValidUrl(formValues?.object_link_url)}
+                        />
+                        {formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                            !isValidUrl(formValues?.object_link_url) && (
+                                <div className={classes.errorMessage} data-testid={'error-message-object_link_url'}>
+                                    This web address is not valid.
+                                </div>
+                            )}
+                    </FormControl>
+                </Grid>
+            )}
+            <Grid item xs={12}>
+                <FormControl
+                    variant="standard"
+                    // className={classes.typingArea}
+                    fullWidth
+                >
+                    <InputLabel htmlFor="object_download_instructions">Download Instructions</InputLabel>
+                    <Input
+                        id="object_download_instructions"
+                        data-testid="object_download_instructions"
+                        multiline
+                        rows={6}
+                        value={formValues?.object_download_instructions}
+                        onChange={handleChange('object_download_instructions')}
+                    />
+                </FormControl>
+            </Grid>
+        </>
+    );
+    const stepPanelContentFour = (
+        <>
+            <Grid item xs={12}>
+                <Typography component={'h2'} variant={'h6'}>
+                    Filters
+                </Typography>
+            </Grid>
+            {!!dlorFilterList &&
+                dlorFilterList.map(filterItem => {
+                    const controlType = getFacetControlType(filterItem);
+                    return (
+                        <Grid item xs={4} key={filterItem.facet_type_slug}>
+                            <Typography component={'h3'} variant={'h7'}>
+                                {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
+                                {controlType.endsWith('with-other') && <span className={classes.required}>*</span>}
+                            </Typography>
+                            {displayControlByFacetType(filterItem)}
+
+                            {/* {getFacetControlType(facetTypeSlug) !== 'one-or-more-with-other' &&*/}
+                            {/*    getFacetControlType(facetTypeSlug) !== 'zero-or-more-no-other' &&*/}
+                            {/*    getFacetControlType(facetTypeSlug) !== 'one-with-other' && (*/}
+                            {/*        <p>*/}
+                            {/*            unknown facet type {filterItem.facet_type_name} : {functionType}*/}
+                            {/*        </p>*/}
+                            {/*    )}*/}
+                        </Grid>
+                    );
+                })}
+            <Grid item xs={12}>
+                <FormControl
+                    variant="standard"
+                    // className={classes.typingArea}
+                    fullWidth
+                >
+                    <InputLabel htmlFor="object_keywords">
+                        Keywords - enter a comma separated list of keywords *
+                    </InputLabel>
+                    <Input
+                        id="object_keywords"
+                        data-testid="object_keywords"
+                        multiline
+                        required
+                        rows={2}
+                        value={formValues?.object_keywords_string}
+                        onChange={handleChange('object_keywords_string')}
+                    />
+                    {!!formValues?.object_keywords_string &&
+                        characterCount(
+                            formValues?.object_keywords_string?.length,
+                            keywordMinimumLength,
+                            'object_keywords_string',
+                        )}
+                    <p className={classes.fieldNote}>
+                        If you need a keyword with a comma within it, surround the keyword with double quotes, like:
+                        cat, "dog, dog", mouse
+                    </p>
+                </FormControl>
+            </Grid>
+        </>
+    );
+    const steps = [
+        {
+            label: 'Ownership',
+            stepPanelContent: stepPanelContentOne,
+        },
+        {
+            label: 'Description',
+            stepPanelContent: stepPanelContentTwo,
+        },
+        {
+            label: 'Link',
+            stepPanelContent: stepPanelContentThree,
+        },
+        {
+            label: 'Filtering',
+            stepPanelContent: stepPanelContentFour,
+        },
+    ];
+    const [activeStep, setActiveStep] = useState(0);
+
+    const initiallyValid = new Array(steps?.length).fill(true);
+    console.log('PanelValidity initiallyValid=', initiallyValid);
+    const [panelValidity, setPanelValidity] = useState(initiallyValid);
+
+    function getTodayPlusOneYear(baseDate = null) {
+        const today = baseDate || moment();
+        return today
+            .add(1, 'year')
+            .hour(0)
+            .minute(1) // 1 minute past midnight
+            .format('YYYY-MM-DDTHH:mm');
+    }
 
     useEffect(() => {
         if (!dlorTeamError && !dlorTeamLoading && !dlorTeam) {
@@ -168,43 +563,9 @@ export const DLOAdd = ({
         }
     }, [showConfirmation, dlorItem, dlorItemError]);
 
-    // useEffect(() => {
-    //     // this is temporary while we work out how to handle it, then it will be a value on the db so they can set it when they create the facet type
-    //     // decide what _type_ each facet type is
-    //     !!dlorFilterList &&
-    //         dlorFilterList.map(f => {
-    //             if (
-    //                 f.facet_type_slug === 'topic' ||
-    //                 f.facet_type_slug === 'media_format' ||
-    //                 f.facet_type_slug === 'subject'
-    //             ) {
-    //                 // 1:n[O]
-    //                 // an Object will always have one of these, and "other" should be in the list and appear last
-    //                 f.functionType = 'one-or-more-with-other';
-    //             } else if (f.facet_type_slug === 'graduate_attributes') {
-    //                 // 0:n[-]
-    //                 // an Object does not require this, but may have many - no "other" option
-    //                 f.functionType = 'zero-or-more-no-other';
-    //             } else if (f.facet_type_slug === 'item_type' || f.facet_type_slug === 'licence') {
-    //                 // 1:1[O]
-    //                 // an object will have one (and only one) of these, but "Other" is an option
-    //                 f.functionType = 'one-with-other';
-    //             }
-    //         });
-    // }, [dlorFilterList]);
-
-    // useEffect(() => {
-    //     if (!!dlorTeam && dlorTeam.length > 0) {
-    //         setFormValues({
-    //             ...formValues,
-    //             ['object_owning_team_id']: dlorTeam.filter((t, index) => index === 0),
-    //         });
-    //     }
-    // }, [dlorTeam]);
-
     const saveNewDlor = () => {
         const valuesToSend = { ...formValues };
-        if (formValues.object_owning_team_id === 'new') {
+        if (formValues?.object_owning_team_id === 'new') {
             delete valuesToSend.object_owning_team_id;
         } else {
             delete valuesToSend.team_name;
@@ -283,62 +644,40 @@ export const DLOAdd = ({
         window.location.reload(false);
     };
 
-    const handleChange = prop => e => {
-        // handle radio & checkbox filter field changes
-        const newValue =
-            e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value; // .trimEnd();
-
-        // handle teams dropdown changes
-        if (prop === 'object_owning_team_id') {
-            setShowTeamCreationForm(newValue === 'new');
-        }
-
-        // amalgamate new value into data set
-        const newValues = { ...formValues, [prop]: newValue };
-        setFormValidity(validateValues(newValues, newValue));
-        setFormValues(newValues);
-    };
-
-    const isValidUrl = testUrl => {
-        let url;
-
-        try {
-            url = new URL(testUrl);
-        } catch (_) {
-            return false;
-        }
-
-        return (
-            (url.protocol === 'http:' || url.protocol === 'https:') &&
-            !!url.hostname &&
-            url.hostname.length >= '12.co'.length
-        );
-    };
-
     const validateValues = (currentValues, newValue) => {
-        let isValid = true;
-
-        currentValues.object_title.length < titleMinimumLength && (isValid = false);
-        currentValues.object_description.length < descriptionMinimumLength && (isValid = false);
-        currentValues.object_summary.length < summaryMinimumLength && (isValid = false);
-        // object_download_instructions optional
-        currentValues.object_keywords_string.length < keywordMinimumLength && (isValid = false);
-        !(currentValues.object_embed_type === 'link' || currentValues.object_embed_type === 'embed') &&
-            (isValid = false);
-        currentValues.object_embed_type === 'link' && !isValidUrl(currentValues.object_link_url) && (isValid = false);
-
+        let firstPanelValid = true;
         // valid user id is 8 or 9 char
-        (currentValues.object_publishing_user.length < 8 || currentValues.object_publishing_user.length > 10) &&
-            (isValid = false);
-        currentValues.object_owning_team_id === 'new' && currentValues.team_name.length < 1 && (isValid = false);
-        currentValues.object_owning_team_id === 'new' && currentValues.team_manager.length < 1 && (isValid = false);
-        currentValues.object_owning_team_id === 'new' && currentValues.team_email.length < 1 && (isValid = false);
+        !isValidUsername(currentValues?.object_publishing_user) && (firstPanelValid = false);
+        currentValues?.object_owning_team_id === 'new' &&
+            currentValues?.team_name?.length < 1 &&
+            (firstPanelValid = false);
+        currentValues?.object_owning_team_id === 'new' &&
+            currentValues?.team_manager?.length < 1 &&
+            (firstPanelValid = false);
+        currentValues?.object_owning_team_id === 'new' &&
+            (currentValues?.team_email?.length < 1 || !isValidEmail(currentValues?.team_email)) &&
+            (firstPanelValid = false);
 
+        let secondPanelValid = true;
+        currentValues?.object_title?.length < titleMinimumLength && (secondPanelValid = false);
+        currentValues?.object_description?.length < descriptionMinimumLength && (secondPanelValid = false);
+        currentValues?.object_summary?.length < summaryMinimumLength && (secondPanelValid = false);
+
+        let thirdPanelValid = true;
+        // object_download_instructions optional
+        !(currentValues?.object_embed_type === 'link' || currentValues?.object_embed_type === 'embed') &&
+            (thirdPanelValid = false);
+        currentValues?.object_embed_type === 'link' &&
+            !isValidUrl(currentValues?.object_link_url) &&
+            (thirdPanelValid = false);
+
+        let fourthPanelValid = true;
         const isRequiredFacet = facet => {
             const controlType = getFacetControlType(facet);
             return controlType.startsWith('one');
         };
 
+        currentValues?.object_keywords_string.length < keywordMinimumLength && (fourthPanelValid = false);
         // check the required facets are checked
         !!dlorFilterList &&
             dlorFilterList.forEach(f => {
@@ -348,28 +687,17 @@ export const DLOAdd = ({
                     });
                     // any one of the "required" facets lacking a value will make validity false
                     // "!newValue" is needed when user unchecks a checkbox
-                    (!hasKeyStartingWithFacet || !newValue) && (isValid = false);
-                    console.log('facet isValid=', isValid);
-                    !isValid && console.log('xxx', f.facet_type_slug, ' isValid', isValid);
+                    (!hasKeyStartingWithFacet || !newValue) && (fourthPanelValid = false);
+                    console.log('facet fourthPanelValid=', fourthPanelValid);
+                    !fourthPanelValid && console.log('xxx', f.facet_type_slug, ' fourthPanelValid', fourthPanelValid);
                 }
             });
-        console.log('validateValues currentValues=', isValid, currentValues);
+        setPanelValidity([firstPanelValid, secondPanelValid, thirdPanelValid, fourthPanelValid]);
 
+        const isValid = firstPanelValid && secondPanelValid && thirdPanelValid && fourthPanelValid;
+        console.log('validateValues currentValues=', isValid, currentValues);
         return isValid;
     };
-
-    if (!!dlorTeamError) {
-        return (
-            <StandardPage>
-                <StandardCard>
-                    {/* {getTitleBlock()}*/}
-                    <Typography variant="body1" data-testid="dlor-addObject-error">
-                        {dlorTeamError}
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
-        );
-    }
 
     function getFacetControlType(filterItem) {
         /*
@@ -481,365 +809,142 @@ export const DLOAdd = ({
         return result;
     }
 
+    const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
+    const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
+
+    if (!!dlorTeamLoading || dlorFilterListLoading) {
+        return (
+            <StandardPage title="DLOR Management">
+                <StandardCard title="Create an Object for Digital learning objects">
+                    <Grid item xs={12}>
+                        <InlineLoader message="Loading" />
+                    </Grid>
+                </StandardCard>
+            </StandardPage>
+        );
+    }
+    if (!!dlorTeamError) {
+        return (
+            <StandardPage title="DLOR Management">
+                <StandardCard title="Create an Object for Digital learning objects">
+                    <Typography variant="body1" data-testid="dlor-addObject-error">
+                        {dlorTeamError}
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
+    }
+    if (!!dlorFilterListError) {
+        return (
+            <StandardPage title="DLOR Management">
+                <StandardCard title="Create an Object for Digital learning objects">
+                    <Typography variant="body1" data-testid="dlor-homepage-error">
+                        {dlorFilterListError}
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
+    }
+    if (!dlorFilterListLoading && !dlorFilterListError && (!dlorFilterList || dlorFilterList.length === 0)) {
+        return (
+            <StandardPage title="DLOR Management">
+                <StandardCard title="Create an Object for Digital learning objects">
+                    <Typography variant="body1" data-testid="dlor-homepage-noresult">
+                        Missing filters: We did not find any entries in the system - please try again later.
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
+    }
+
     return (
         <StandardPage title="DLOR Management">
             <StandardCard title="Create an Object for Digital learning objects">
+                {saveStatus === 'complete' && (
+                    <ConfirmationBox
+                        actionButtonColor="primary"
+                        actionButtonVariant="contained"
+                        confirmationBoxId="dlor-creation-outcome"
+                        onAction={() => navigateToDlorAdminHomePage()}
+                        hideCancelButton={!locale.successMessage.cancelButtonLabel}
+                        cancelButtonLabel={locale.successMessage.cancelButtonLabel}
+                        onCancelAction={() => clearForm()}
+                        onClose={hideConfirmation}
+                        isOpen={isOpen}
+                        locale={!dlorItemError ? locale.successMessage : locale.errorMessage}
+                    />
+                )}
                 <form id="dlor-add-form">
-                    {saveStatus === 'complete' && (
-                        <ConfirmationBox
-                            actionButtonColor="primary"
-                            actionButtonVariant="contained"
-                            confirmationBoxId="dlor-creation-outcome"
-                            onAction={() => navigateToDlorAdminHomePage()}
-                            hideCancelButton={!locale.successMessage.cancelButtonLabel}
-                            cancelButtonLabel={locale.successMessage.cancelButtonLabel}
-                            onCancelAction={() => clearForm()}
-                            onClose={hideConfirmation}
-                            isOpen={isOpen}
-                            locale={!dlorItemError ? locale.successMessage : locale.errorMessage}
-                        />
-                    )}
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                fullWidth
-                                // className={classes.typingArea}
-                            >
-                                <InputLabel htmlFor="object_title">Object title *</InputLabel>
-                                <Input
-                                    id="object_title"
-                                    data-testid="object_title"
-                                    // error={}
-                                    required
-                                    value={formValues?.object_title}
-                                    onChange={handleChange('object_title')}
-                                />
-                                {!!formValues.object_title &&
-                                    characterCount(formValues.object_title.length, titleMinimumLength, 'object_title')}
-                            </FormControl>
+                            <Stepper activeStep={activeStep} className="THESTEPPER">
+                                {steps.map((step, index) => {
+                                    const stepProps = { completed: null };
+                                    const labelProps = {
+                                        optional: null,
+                                    };
+                                    return (
+                                        <Step key={step.label} {...stepProps}>
+                                            <StepLabel {...labelProps}>
+                                                {step.label}
+                                                {panelValidity[index] ? (
+                                                    <DoneIcon
+                                                        color="success"
+                                                        data-testid={`dlor-panel-validity-indicator-${index}`}
+                                                    />
+                                                ) : (
+                                                    <span style={{ width: 24, height: 24 }}>&nbsp;</span>
+                                                )}
+                                            </StepLabel>
+                                        </Step>
+                                    );
+                                })}
+                            </Stepper>
                         </Grid>
+                        {steps[activeStep].stepPanelContent} {/* a large amount of html here!! */}
                         <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                // className={classes.typingArea}
-                                fullWidth
-                            >
-                                <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
-                                <Input
-                                    id="object_publishing_user"
-                                    data-testid="object_publishing_user"
-                                    required
-                                    value={formValues?.object_publishing_user}
-                                    onChange={handleChange('object_publishing_user')}
-                                    style={{ width: '20em' }}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} style={{ minHeight: 95 }}>
-                            <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
-                            {!!dlorTeam && (
-                                <Select
-                                    defaultValue={dlorTeam.filter((t, index) => index === 0)}
-                                    value={formValues?.object_owning_team_id}
-                                    onChange={handleChange('object_owning_team_id')}
-                                    aria-labelledby="object_owning_team_label"
-                                    id="object_owning_team"
-                                    data-testid="object_owning_team"
+                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                <Button
+                                    color="inherit"
+                                    disabled={activeStep === 0}
+                                    onClick={handleBack}
+                                    sx={{ mr: 1 }}
+                                    data-testid="dlor-add-back-button"
                                 >
-                                    {dlorTeam.map(t => (
-                                        <MenuItem key={t.team_id} value={t.team_id}>
-                                            {t.team_name}
-                                        </MenuItem>
-                                    ))}
-                                    <MenuItem value="new" data-testid="object-add-teamid-new">
-                                        Create a team
-                                    </MenuItem>
-                                </Select>
-                            )}
-                        </Grid>
-                        {showTeamCreationForm && (
-                            <Grid item xs={12}>
-                                <FormControl
-                                    variant="standard"
-                                    // className={classes.typingArea}
-                                    fullWidth
-                                >
-                                    <InputLabel htmlFor="team_name">Name of new Team *</InputLabel>
-                                    <Input
-                                        id="team_name"
-                                        data-testid="team_name"
-                                        value={formValues?.team_name}
-                                        onChange={handleChange('team_name')}
+                                    Back
+                                </Button>
+                                <Box sx={{ flex: '1 1 auto' }} />
+                                {activeStep === steps.length - 1 ? (
+                                    <Button
+                                        color="primary"
+                                        data-testid="admin-dlor-add-button-submit"
+                                        variant="contained"
+                                        children="Save"
+                                        disabled={!isFormValid}
+                                        onClick={saveNewDlor}
+                                        // className={classes.saveButton}
                                     />
-                                </FormControl>
-                                <FormControl
-                                    variant="standard"
-                                    // className={classes.typingArea}
-                                    fullWidth
-                                >
-                                    <InputLabel htmlFor="team_manager">Name of Team manager *</InputLabel>
-                                    <Input
-                                        id="team_manager"
-                                        data-testid="team_manager"
-                                        required
-                                        value={formValues?.team_manager}
-                                        onChange={handleChange('team_manager')}
-                                    />
-                                </FormControl>
-                                <FormControl
-                                    variant="standard"
-                                    // className={classes.typingArea}
-                                    fullWidth
-                                >
-                                    <InputLabel htmlFor="team_email">Team email *</InputLabel>
-                                    <Input
-                                        id="team_email"
-                                        data-testid="team_email"
-                                        required
-                                        value={formValues?.team_email}
-                                        onChange={handleChange('team_email')}
-                                        type="email"
-                                    />
-                                </FormControl>
-                            </Grid>
-                        )}
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
-                                <Input
-                                    id="object_description"
-                                    data-testid="object_description"
-                                    multiline
-                                    required
-                                    rows={6}
-                                    value={formValues?.object_description}
-                                    onChange={handleChange('object_description')}
-                                />
-                                {!!formValues.object_description &&
-                                    characterCount(
-                                        formValues.object_description.length,
-                                        descriptionMinimumLength,
-                                        'object_description',
-                                    )}
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                // className={classes.typingArea}
-                                fullWidth
-                            >
-                                <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
-                                <Input
-                                    id="object_summary"
-                                    data-testid="object_summary"
-                                    multiline
-                                    required
-                                    rows={2}
-                                    value={formValues?.object_summary}
-                                    onChange={handleChange('object_summary')}
-                                />
-                                {!!formValues.object_summary &&
-                                    characterCount(
-                                        formValues.object_summary.length,
-                                        summaryMinimumLength,
-                                        'object_summary',
-                                    )}
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <FormLabel id="object_embed_type_label">Object inclusion type</FormLabel>
-                                <RadioGroup
-                                    aria-labelledby="demo-radio-object_embed_type_label-group-label"
-                                    defaultValue="link"
-                                    name="object_embed_type_radio-buttons-group"
-                                    row
-                                    value={formValues?.object_embed_type}
-                                    onChange={handleChange('object_embed_type')}
-                                >
-                                    <FormControlLabel value="link" control={<Radio />} label="Link" />
-                                    <FormControlLabel value="embed" control={<Radio />} label="Embedded" disabled />
-                                </RadioGroup>
-                            </FormControl>
-                        </Grid>
-                        {formValues.object_embed_type === 'link' && (
-                            <Grid item xs={12}>
-                                <FormControl
-                                    variant="standard"
-                                    // className={classes.typingArea}
-                                    fullWidth
-                                >
-                                    <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
-                                    <Input
-                                        id="object_link_url"
-                                        data-testid="object_link_url"
-                                        required
-                                        value={formValues?.object_link_url}
-                                        onChange={handleChange('object_link_url')}
-                                    />
-                                </FormControl>
-                            </Grid>
-                        )}
-                        <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                // className={classes.typingArea}
-                                fullWidth
-                            >
-                                <InputLabel htmlFor="object_download_instructions">Download Instructions</InputLabel>
-                                <Input
-                                    id="object_download_instructions"
-                                    data-testid="object_download_instructions"
-                                    multiline
-                                    rows={6}
-                                    value={formValues?.object_download_instructions}
-                                    onChange={handleChange('object_download_instructions')}
-                                />
-                            </FormControl>
-                        </Grid>
-                        {(() => {
-                            if (!!dlorFilterListLoading) {
-                                // console.log('filterlistloading');
-                                return (
-                                    <Grid container spacing={3}>
-                                        <Grid item xs={12}>
-                                            <InlineLoader message="Loading" />
-                                        </Grid>
-                                    </Grid>
-                                );
-                            } else if (!!dlorFilterListError) {
-                                return (
-                                    <Typography variant="body1" data-testid="dlor-homepage-error">
-                                        {dlorFilterListError}
-                                    </Typography>
-                                );
-                            } else if (!dlorFilterList || dlorFilterList.length === 0) {
-                                return (
-                                    <Grid container spacing={3}>
-                                        <Grid item xs={12}>
-                                            <Typography variant="body1" data-testid="dlor-homepage-noresult">
-                                                Missing filters: We did not find any entries in the system - please try
-                                                again later.
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                );
-                            } else {
-                                console.log('dlorFilterList AAA=', dlorFilterList);
-                                return (
-                                    <>
-                                        <Grid item xs={12}>
-                                            <Typography component={'h2'} variant={'h6'}>
-                                                Filters
-                                            </Typography>
-                                        </Grid>
-                                        {!!dlorFilterList &&
-                                            dlorFilterList.map(filterItem => {
-                                                const controlType = getFacetControlType(filterItem);
-                                                return (
-                                                    <Grid item xs={12} md={4} key={filterItem.facet_type_slug}>
-                                                        <Typography component={'h3'} variant={'h7'}>
-                                                            {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
-                                                            {controlType.endsWith('with-other') && (
-                                                                <span className={classes.required}>*</span>
-                                                            )}
-                                                        </Typography>
-                                                        {displayControlByFacetType(filterItem)}
-
-                                                        {/* {getFacetControlType(facetTypeSlug) !== 'one-or-more-with-other' &&*/}
-                                                        {/*    getFacetControlType(facetTypeSlug) !== 'zero-or-more-no-other' &&*/}
-                                                        {/*    getFacetControlType(facetTypeSlug) !== 'one-with-other' && (*/}
-                                                        {/*        <p>*/}
-                                                        {/*            unknown facet type {filterItem.facet_type_name} : {functionType}*/}
-                                                        {/*        </p>*/}
-                                                        {/*    )}*/}
-                                                    </Grid>
-                                                );
-                                            })}
-                                    </>
-                                );
-                            }
-                        })()}
-                        <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                // className={classes.typingArea}
-                                fullWidth
-                            >
-                                <InputLabel htmlFor="object_keywords">
-                                    Keywords - enter a comma separated list of keywords *
-                                </InputLabel>
-                                <Input
-                                    id="object_keywords"
-                                    data-testid="object_keywords"
-                                    multiline
-                                    required
-                                    rows={2}
-                                    value={formValues?.object_keywords_string}
-                                    onChange={handleChange('object_keywords_string')}
-                                />
-                                {!!formValues.object_keywords_string &&
-                                    characterCount(
-                                        formValues.object_keywords_string.length,
-                                        keywordMinimumLength,
-                                        'object_keywords_string',
-                                    )}
-                                <p className={classes.fieldNote}>
-                                    If you need a keyword with a comma within it, surround the keyword with double
-                                    quotes, like: cat, "dog, dog", mouse
-                                </p>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <FormLabel id="object_status_label">Object publication status</FormLabel>
-                                <RadioGroup
-                                    aria-labelledby="demo-radio-object_status_label-group-label"
-                                    defaultValue="new"
-                                    name="object_status_radio-buttons-group"
-                                    row
-                                    value={formValues?.object_status}
-                                    onChange={handleChange('object_status')}
-                                >
-                                    <FormControlLabel
-                                        value="current"
-                                        control={<Radio />}
-                                        label="Published"
-                                        selected={formValues?.object_status === 'current'}
-                                    />
-                                    <FormControlLabel
-                                        value="new"
-                                        control={<Radio />}
-                                        label="Draft"
-                                        selected={formValues?.object_status === 'new'}
-                                    />
-                                </RadioGroup>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={3} align="left">
-                            <Button
-                                color="secondary"
-                                children="Cancel"
-                                data-testid="admin-dlor-add-button-cancel"
-                                onClick={() => navigateToDlorAdminHomePage()}
-                                variant="contained"
-                            />
-                        </Grid>
-                        <Grid item xs={9} align="right">
-                            <Button
-                                color="primary"
-                                data-testid="admin-dlor-add-button-submit"
-                                variant="contained"
-                                children="Save"
-                                disabled={!isFormValid}
-                                onClick={saveNewDlor}
-                                // className={classes.saveButton}
-                            />
+                                ) : (
+                                    <Button onClick={handleNext} data-testid="dlor-add-next-button">
+                                        Next
+                                    </Button>
+                                )}
+                            </Box>
                         </Grid>
                     </Grid>
                 </form>
+                <Grid container spacing={2} style={{ marginTop: 32 }}>
+                    <Grid item xs={3} align="left">
+                        <Button
+                            color="secondary"
+                            children="Cancel"
+                            data-testid="admin-dlor-add-button-cancel"
+                            onClick={() => navigateToDlorAdminHomePage()}
+                            variant="contained"
+                        />
+                    </Grid>
+                    <Grid item xs={9} align="right" />
+                </Grid>
             </StandardCard>
         </StandardPage>
     );
