@@ -625,7 +625,7 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, dlor_team_list];
         }
     })
-    .onPost('dlor/admin/add_object')
+    .onPost('dlor/admin/object')
     .reply(() => {
         if (responseType === 'saveError') {
             return [500, {}];
