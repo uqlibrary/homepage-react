@@ -139,7 +139,7 @@ export const DLOAdd = ({
     const [formValues, setFormValues] = useState(formDefaults);
     // const [newValue, setNewValue] = useState(null); // the value just entered
 
-    const titleMinimumLength = 10;
+    const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
     const keywordMinimumLength = 4;

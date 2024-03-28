@@ -1,5 +1,5 @@
 // these constants must match the constants, eg titleMinimumLength in Dlor Admin components
-const REQUIRED_LENGTH_TITLE = 10;
+const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
 const REQUIRED_LENGTH_KEYWORDS = 4;
@@ -40,7 +40,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel validity tick not present
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
-                    .type('new title'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                    .type('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel validity tick not present
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
@@ -257,7 +257,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .type('123');
                 cy.get('[data-testid="input-characters-remaining-object_title"]')
                     .should('exist')
-                    .should('contain', 'at least 7 more characters needed');
+                    .should('contain', 'at least 5 more characters needed');
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('new description');
@@ -315,7 +315,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
 
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
-                    .type('new title'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                    .type('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
@@ -362,7 +362,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
                 const expectedValues = {
-                    object_title: 'new titlex',
+                    object_title: 'xxxxxxxx',
                     object_description:
                         'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
                     object_summary: 'new summary xxxxxxxx',
@@ -434,7 +434,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
 
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
-                    .type('new title'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                    .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
@@ -482,7 +482,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
                 const expectedValues = {
-                    object_title: 'new titlex',
+                    object_title: 'xxxxxxxx',
                     object_description:
                         'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
                     object_summary: 'new summary xxxxxxxx',
@@ -557,7 +557,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
 
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
-                    .type('new title'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                    .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
