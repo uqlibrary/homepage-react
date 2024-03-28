@@ -588,7 +588,7 @@ mock.onGet(/dlor\/find\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const dlorId = urlparts.split('?')[0];
-        if (user === 'errorUser') {
+        if (responseType === 'error') {
             return [500, {}];
         } else if (dlorId === 'missingRecord') {
             return [200, { data: {} }]; // this would more likely be a 404
@@ -598,7 +598,7 @@ mock.onGet(/dlor\/find\/.*/)
     })
     .onGet('dlor/list/full')
     .reply(() => {
-        if (user === 'errorUser') {
+        if (responseType === 'error') {
             return [500, {}];
         } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this would more likely be a 404
@@ -608,8 +608,12 @@ mock.onGet(/dlor\/find\/.*/)
     })
     .onGet('dlor/facet/list')
     .reply(() => {
-        if (user === 'errorUser') {
+        if (responseType === 'error') {
             return [500, {}];
+        } else if (responseType === 'filterLoadError') {
+            return [500, { error: 'Filter api did not load' }];
+        } else if (responseType === 'filterLoadEmpty') {
+            return [200, []];
         } else {
             return [200, dlor_filter_list];
         }

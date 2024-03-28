@@ -13,7 +13,6 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
     context('adding a new object', () => {
         context('successfully', () => {
             beforeEach(() => {
-                cy.setCookie('CYPRESS_TEST_DATA', 'active');
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
                 cy.viewport(1300, 1000);
             });
@@ -284,6 +283,13 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('exist')
                     .should('contain', 'at least 1 more character needed');
             });
+        });
+        context('successfully mock to db', () => {
+            beforeEach(() => {
+                cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
+                cy.viewport(1300, 1000);
+            });
             it('admin can create a new object for a new team and return to list', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
@@ -547,6 +553,18 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=teamsLoadError`);
                 // "responseType=teamsLoadError" on the url forces an error from mock api
                 cy.get('[data-testid="dlor-addObject-error"]').contains('Error has occurred during request');
+            });
+            it('admin gets an error when Filter list api doesnt load', () => {
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=filterLoadError`);
+                // "responseType=filterLoadError" on the url forces an error from mock api
+                cy.get('[data-testid="dlor-homepage-error"]').contains('Error has occurred during request');
+            });
+            it('admin gets an error when Filter list is empty', () => {
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=filterLoadEmpty`);
+                // "responseType=filterLoadEmpty" on the url forces an error from mock api
+                cy.get('[data-testid="dlor-homepage-noresult"]').contains(
+                    'Missing filters: We did not find any entries in the system - please try again later.',
+                );
             });
             it('admin gets an error on a failed save', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=saveError`);

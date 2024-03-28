@@ -371,7 +371,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
     });
     context('other homepage visits', () => {
         it('can handle an error', () => {
-            cy.visit('digital-learning-objects?user=errorUser');
+            cy.visit('digital-learning-objects?responseType=error');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-error"]')
                 .should('exist')
@@ -381,7 +381,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 .contains('Filters currently unavailable - please try again later.');
         });
         it('can handle an empty result', () => {
-            // this should never happen. Maybe immediately after intial upload
+            // this should never happen. Maybe immediately after initial upload
             cy.visit('digital-learning-objects?responseType=emptyResult');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-noresult"]')
@@ -575,7 +575,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             cy.get('[data-testid="detaipage-metadata-keywords"]').should('not.exist');
         });
         it('can handle an error', () => {
-            cy.visit('digital-learning-objects/view/98s0_dy5k3_98h4?user=errorUser');
+            cy.visit('digital-learning-objects/view/98s0_dy5k3_98h4?responseType=error');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-detailpage-error"]')
                 .should('exist')
