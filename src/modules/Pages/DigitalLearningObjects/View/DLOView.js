@@ -177,10 +177,12 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
                                     How to use this object
                                 </Typography>
-                                {!!dlorItem?.object_download_instructions &&
-                                    dlorItem?.object_download_instructions
-                                        ?.split('\n')
-                                        ?.map((line, index) => <p key={index}>{line}</p>)}
+                                <div data-testid="dlor-detailpage-instructions">
+                                    {!!dlorItem?.object_download_instructions &&
+                                        dlorItem?.object_download_instructions
+                                            ?.split('\n')
+                                            ?.map((line, index) => <p key={index}>{line}</p>)}
+                                </div>
                             </>
                         )}
                     </Grid>

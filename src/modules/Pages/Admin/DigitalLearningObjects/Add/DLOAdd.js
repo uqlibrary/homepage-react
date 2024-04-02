@@ -727,7 +727,7 @@ export const DLOAdd = ({
 
     function displayControlByFacetType(filterItem) {
         let result = <></>;
-        if (filterItem?.facet_type_number === 'one-or-more-with-other') {
+        if (filterItem?.facet_type_number === 'one-or-more') {
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => (
@@ -747,7 +747,7 @@ export const DLOAdd = ({
                         label={thisfacet.facet_name}
                     />
                 ));
-        } else if (filterItem?.facet_type_number === 'zero-or-more-no-other') {
+        } else if (filterItem?.facet_type_number === 'zero-or-more') {
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => (
@@ -767,7 +767,7 @@ export const DLOAdd = ({
                         label={thisfacet.facet_name}
                     />
                 ));
-        } else if (filterItem?.facet_type_number === 'select-exactly-one') {
+        } else if (filterItem?.facet_type_number === 'exactly-one') {
             console.log('filterItem=', filterItem);
             const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
             console.log('radioGroupName=', radioGroupName);

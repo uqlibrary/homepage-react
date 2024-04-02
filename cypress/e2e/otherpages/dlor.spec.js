@@ -454,7 +454,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
             });
 
             cy.visit('digital-learning-objects/view/938h_4986_654f');
-            // body contewnt is as expected
+            // body content is as expected
             cy.get('[data-testid="dlor-detailpage"] h1').should(
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
@@ -464,7 +464,7 @@ describe('Digital Object learning Repository (DLOR)', () => {
                 'Types of AI, implications for society, using AI in your studies and how UQ is involved. (longer lines)',
             );
             cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'How to use this object');
-            cy.get('[data-testid="dlor-detailpage"] div:first-child > p').should(
+            cy.get('[data-testid="dlor-detailpage-instructions"]').should(
                 'contain',
                 'Download the Common Cartridge file and H5P quiz to embed in Blackboard',
             );

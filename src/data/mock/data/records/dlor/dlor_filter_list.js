@@ -8,7 +8,7 @@ export default {
             "facet_type_help_public": "Public help for Topic",
             "facet_type_help_admin": "Admin help for Topic",
             "facet_type_required": true,
-            "facet_type_number": 'one-or-more-with-other',
+            "facet_type_number": 'one-or-more',
             "facet_list": [
                 {
                     "facet_name": "Aboriginal and Torres Strait Islander",
@@ -65,7 +65,7 @@ export default {
             "facet_type_help_public": "Graduate attributes identify specific skills, attributes and understandings students should seek to develop.",
             "facet_type_help_admin": "Graduate attributes can be used by teaching staff to identify specific skills, attributes and understandings they would like to develop.",
             "facet_type_required": false,
-            "facet_type_number": 'zero-or-more-no-other',
+            "facet_type_number": 'zero-or-more',
             "facet_list": [
                 {
                     "facet_name": "Accomplished scholars",
@@ -107,7 +107,7 @@ export default {
             "facet_type_help_public": "Public help for Item Type",
             "facet_type_help_admin": "it",
             "facet_type_required": true,
-            "facet_type_number": 'select-exactly-one',
+            "facet_type_number": 'exactly-one',
             "facet_list": [
                 {
                     "facet_name": "Guide",
@@ -149,7 +149,7 @@ export default {
             "facet_type_help_public": "Public help for Media format",
             "facet_type_help_admin": "MF",
             "facet_type_required": true,
-            "facet_type_number": 'one-or-more-with-other',
+            "facet_type_number": 'one-or-more',
             "facet_list": [
                 {
                     "facet_name": "Audio",
@@ -198,7 +198,7 @@ export default {
             "facet_type_help_public": "Public help for Subject",
             "facet_type_help_admin": "sub",
             "facet_type_required": true,
-            "facet_type_number": 'one-or-more-with-other',
+            "facet_type_number": 'one-or-more',
             "facet_list": [
                 {
                     "facet_name": "Cross-disciplinary",
@@ -260,7 +260,7 @@ export default {
             "facet_type_help_public": "Public help for Licence",
             "facet_type_help_admin": "lic",
             "facet_type_required": true,
-            "facet_type_number": 'select-exactly-one',
+            "facet_type_number": 'exactly-one',
             "facet_list": [
                 {
                     "facet_name": "CC BY Attribution",
