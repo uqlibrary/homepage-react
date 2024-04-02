@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
+import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -22,8 +23,6 @@ import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
-import DoneIcon from '@mui/icons-material/Done';
-
 import { useConfirmationState } from 'hooks';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -40,6 +39,11 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'right',
         color: '#504e4e',
         fontSize: '0.8em',
+    },
+    errorCount: {
+        '& span': {
+            right: -12,
+        },
     },
     errorMessage: {
         color: theme.palette.error.light,
@@ -129,6 +133,7 @@ export const DLOAdd = ({
         team_manager: '',
         team_email: '',
         object_keywords_string: '',
+        rawFacets: {},
     };
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -137,7 +142,6 @@ export const DLOAdd = ({
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
     const [formValues, setFormValues] = useState(formDefaults);
-    // const [newValue, setNewValue] = useState(null); // the value just entered
 
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
@@ -154,6 +158,33 @@ export const DLOAdd = ({
         );
     };
 
+    // export const ManageAuthorsList = ({ onBulkRowDelete, onRowAdd, onRowDelete, onRowUpdate, onScopusIngest }) => {
+    const handleFacetChange = ({ facetTypeSlug, facetSlug }) => e => {
+        let newValues;
+        if (!!e.target.checked) {
+            newValues = {
+                ...formValues,
+                rawFacets: {
+                    ...formValues.rawFacets,
+                    [facetTypeSlug]: {
+                        ...formValues.rawFacets[facetTypeSlug],
+                        [facetSlug]: true,
+                    },
+                },
+            };
+        } else {
+            newValues = { ...formValues };
+            delete newValues.rawFacets[facetTypeSlug][facetSlug];
+
+            if (Object.keys(newValues.rawFacets[facetTypeSlug]).length === 0) {
+                delete newValues.rawFacets[facetTypeSlug];
+            }
+        }
+
+        setFormValidity(validateValues(newValues));
+        setFormValues(newValues);
+    };
+
     const handleChange = prop => e => {
         // handle radio & checkbox filter field changes
         const theNewValue =
@@ -168,7 +199,7 @@ export const DLOAdd = ({
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
-        setFormValidity(validateValues(newValues, theNewValue));
+        setFormValidity(validateValues(newValues));
         setFormValues(newValues);
     };
 
@@ -288,10 +319,7 @@ export const DLOAdd = ({
                             error={!isValidEmail(formValues?.team_email)}
                         />
                         {!isValidEmail(formValues?.team_email) && (
-                            <div
-                                className={classes.errorMessage}
-                                // data-testid={`error-message-team_email`}
-                            >
+                            <div className={classes.errorMessage} data-testid="error-message-team_email">
                                 This email address is not valid.
                             </div>
                         )}
@@ -460,22 +488,13 @@ export const DLOAdd = ({
             </Grid>
             {!!dlorFilterList &&
                 dlorFilterList.map(filterItem => {
-                    const controlType = getFacetControlType(filterItem);
                     return (
                         <Grid item xs={4} key={filterItem.facet_type_slug}>
                             <Typography component={'h3'} variant={'h7'}>
                                 {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
-                                {controlType.endsWith('with-other') && <span className={classes.required}>*</span>}
+                                {filterItem?.facet_type_required && <span className={classes.required}>*</span>}
                             </Typography>
                             {displayControlByFacetType(filterItem)}
-
-                            {/* {getFacetControlType(facetTypeSlug) !== 'one-or-more-with-other' &&*/}
-                            {/*    getFacetControlType(facetTypeSlug) !== 'zero-or-more-no-other' &&*/}
-                            {/*    getFacetControlType(facetTypeSlug) !== 'one-with-other' && (*/}
-                            {/*        <p>*/}
-                            {/*            unknown facet type {filterItem.facet_type_name} : {functionType}*/}
-                            {/*        </p>*/}
-                            {/*    )}*/}
                         </Grid>
                     );
                 })}
@@ -555,6 +574,14 @@ export const DLOAdd = ({
     }, []);
 
     useEffect(() => {
+        // this is needed to get the validation badges after the filter list loads
+        if (!!dlorFilterList && dlorFilterList.length > 0) {
+            console.log('useEffect filter val');
+            setFormValidity(validateValues(formDefaults));
+        }
+    }, [dlorFilterList]);
+
+    useEffect(() => {
         console.log('useEffect dlorItem=', dlorItem, ';dlorItemError', dlorItemError);
         if ((!!dlorItem && !!dlorItem.data?.object_id) || !!dlorItemError) {
             console.log('useEffect showing conf');
@@ -576,25 +603,26 @@ export const DLOAdd = ({
         valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
 
-        for (const [key, value] of Object.entries(valuesToSend)) {
-            if (!key.startsWith('facet::')) {
-                continue;
-            }
-            const parts = key.split('::');
-            const facetTypeSlug = parts[1];
-            const facetSlug = parts[2];
-
-            if (valuesToSend.hasOwnProperty('facetType')) {
-                if (valuesToSend.facetType.hasOwnProperty(facetTypeSlug)) {
-                    valuesToSend.facetType[facetTypeSlug].push(facetSlug);
-                } else {
-                    valuesToSend.facetType[facetTypeSlug] = [facetSlug];
+        if (!!valuesToSend?.rawFacets) {
+            for (const [facetTypeSlug, value] of Object.entries(valuesToSend.rawFacets)) {
+                for (const [facetSlug, facetValue] of Object.entries(value)) {
+                    if (facetValue === false) {
+                        console.log('!!!!!!!!!!!!!!!!!! FALSE FOUND!');
+                        continue; // I dont think this ever happens
+                    }
+                    if (valuesToSend.hasOwnProperty('facets')) {
+                        if (valuesToSend.facets.hasOwnProperty(facetTypeSlug)) {
+                            valuesToSend.facets[facetTypeSlug].push(facetSlug);
+                        } else {
+                            valuesToSend.facets[facetTypeSlug] = [facetSlug];
+                        }
+                    } else {
+                        valuesToSend.facets = { [facetTypeSlug]: [facetSlug] };
+                    }
                 }
-            } else {
-                valuesToSend.facetType = { [facetTypeSlug]: [facetSlug] };
             }
 
-            delete valuesToSend[key];
+            delete valuesToSend.rawFacets;
         }
 
         console.log('saveNewDlor after valuesToSend=', valuesToSend);
@@ -644,91 +672,62 @@ export const DLOAdd = ({
         window.location.reload(false);
     };
 
-    const validateValues = (currentValues, newValue) => {
-        let firstPanelValid = true;
+    const validateValues = currentValues => {
+        let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
-        !isValidUsername(currentValues?.object_publishing_user) && (firstPanelValid = false);
+        !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
         currentValues?.object_owning_team_id === 'new' &&
             currentValues?.team_name?.length < 1 &&
-            (firstPanelValid = false);
+            firstPanelErrorCount++;
         currentValues?.object_owning_team_id === 'new' &&
             currentValues?.team_manager?.length < 1 &&
-            (firstPanelValid = false);
+            firstPanelErrorCount++;
         currentValues?.object_owning_team_id === 'new' &&
             (currentValues?.team_email?.length < 1 || !isValidEmail(currentValues?.team_email)) &&
-            (firstPanelValid = false);
+            firstPanelErrorCount++;
 
-        let secondPanelValid = true;
-        currentValues?.object_title?.length < titleMinimumLength && (secondPanelValid = false);
-        currentValues?.object_description?.length < descriptionMinimumLength && (secondPanelValid = false);
-        currentValues?.object_summary?.length < summaryMinimumLength && (secondPanelValid = false);
+        let secondPanelErrorCount = 0;
+        currentValues?.object_title?.length < titleMinimumLength && secondPanelErrorCount++;
+        currentValues?.object_description?.length < descriptionMinimumLength && secondPanelErrorCount++;
+        currentValues?.object_summary?.length < summaryMinimumLength && secondPanelErrorCount++;
 
-        let thirdPanelValid = true;
+        let thirdPanelErrorCount = 0;
         // object_download_instructions optional
         !(currentValues?.object_embed_type === 'link' || currentValues?.object_embed_type === 'embed') &&
-            (thirdPanelValid = false);
+            thirdPanelErrorCount++;
         currentValues?.object_embed_type === 'link' &&
             !isValidUrl(currentValues?.object_link_url) &&
-            (thirdPanelValid = false);
+            thirdPanelErrorCount++;
 
-        let fourthPanelValid = true;
-        const isRequiredFacet = facet => {
-            const controlType = getFacetControlType(facet);
-            return controlType.startsWith('one');
-        };
-
-        currentValues?.object_keywords_string.length < keywordMinimumLength && (fourthPanelValid = false);
+        let fourthPanelErrorCount = 0;
+        currentValues?.object_keywords_string.length < keywordMinimumLength && fourthPanelErrorCount++;
         // check the required facets are checked
+        console.log('dlorFilterList=', dlorFilterList);
+        !!dlorFilterList && console.log('validateValues currentValues=', currentValues);
         !!dlorFilterList &&
             dlorFilterList.forEach(f => {
-                if (isRequiredFacet(f)) {
-                    const hasKeyStartingWithFacet = Object.keys(currentValues).some((key, value) => {
-                        return key.startsWith(`facet::${f.facet_type_slug}`);
-                    });
-                    // any one of the "required" facets lacking a value will make validity false
-                    // "!newValue" is needed when user unchecks a checkbox
-                    (!hasKeyStartingWithFacet || !newValue) && (fourthPanelValid = false);
-                    console.log('facet fourthPanelValid=', fourthPanelValid);
-                    !fourthPanelValid && console.log('xxx', f.facet_type_slug, ' fourthPanelValid', fourthPanelValid);
+                if (f.facet_type_required) {
+                    !!currentValues?.rawFacets &&
+                        (!currentValues.rawFacets[f.facet_type_slug] ||
+                            Object.keys(currentValues.rawFacets[f.facet_type_slug]).length === 0) &&
+                        fourthPanelErrorCount++;
                 }
             });
-        setPanelValidity([firstPanelValid, secondPanelValid, thirdPanelValid, fourthPanelValid]);
 
-        const isValid = firstPanelValid && secondPanelValid && thirdPanelValid && fourthPanelValid;
+        setPanelValidity([firstPanelErrorCount, secondPanelErrorCount, thirdPanelErrorCount, fourthPanelErrorCount]);
+
+        const isValid =
+            firstPanelErrorCount === 0 &&
+            secondPanelErrorCount === 0 &&
+            thirdPanelErrorCount === 0 &&
+            fourthPanelErrorCount === 0;
         console.log('validateValues currentValues=', isValid, currentValues);
         return isValid;
     };
 
-    function getFacetControlType(filterItem) {
-        /*
-
-        one-or-more-with-other   required=true   count=1+
-        zero-or-more-no-other                    count=0+
-        one-with-other           required=true   count=1
-
-         */
-        const facetTypeSlug = filterItem.facet_type_slug;
-        let displayType = '';
-        if (facetTypeSlug === 'topic' || facetTypeSlug === 'media_format' || facetTypeSlug === 'subject') {
-            // 1:n[O]
-            // an Object will always have one of these, and "other" should be in the list and appear last
-            displayType = 'one-or-more-with-other';
-        } else if (facetTypeSlug === 'graduate_attributes') {
-            // 0:n[-]
-            // an Object does not require this, but may have many - no "other" option
-            displayType = 'zero-or-more-no-other';
-        } else if (facetTypeSlug === 'item_type' || facetTypeSlug === 'licence') {
-            // 1:1[O]
-            // an object will have one (and only one) of these, but "Other" is an option
-            displayType = 'one-with-other';
-        }
-        return displayType;
-    }
-
     function displayControlByFacetType(filterItem) {
         let result = <></>;
-        const controlType = getFacetControlType(filterItem);
-        if (controlType === 'one-or-more-with-other') {
+        if (filterItem?.facet_type_number === 'one-or-more-with-other') {
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => (
@@ -737,16 +736,18 @@ export const DLOAdd = ({
                         className={classes.facetControl}
                         control={
                             <Checkbox
-                                onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                                onChange={handleFacetChange({
+                                    facetTypeSlug: filterItem.facet_type_slug,
+                                    facetSlug: thisfacet.facet_slug,
+                                })}
                                 id={`filter-${thisfacet.facet_slug}`}
                                 data-testid={`filter-${thisfacet.facet_slug}`}
                             />
                         }
                         label={thisfacet.facet_name}
-                        // value="link"
                     />
                 ));
-        } else if (controlType === 'zero-or-more-no-other') {
+        } else if (filterItem?.facet_type_number === 'zero-or-more-no-other') {
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => (
@@ -755,7 +756,10 @@ export const DLOAdd = ({
                         className={classes.facetControl}
                         control={
                             <Checkbox
-                                onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                                onChange={handleFacetChange({
+                                    facetTypeSlug: filterItem.facet_type_slug,
+                                    facetSlug: thisfacet.facet_slug,
+                                })}
                                 id={`filter-${thisfacet.facet_slug}`}
                                 data-testid={`filter-${thisfacet.facet_slug}`}
                             />
@@ -763,7 +767,7 @@ export const DLOAdd = ({
                         label={thisfacet.facet_name}
                     />
                 ));
-        } else if (controlType === 'one-with-other') {
+        } else if (filterItem?.facet_type_number === 'select-exactly-one') {
             console.log('filterItem=', filterItem);
             const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
             console.log('radioGroupName=', radioGroupName);
@@ -798,7 +802,10 @@ export const DLOAdd = ({
                                     />
                                 }
                                 label={thisfacet.facet_name}
-                                onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                                onChange={handleFacetChange({
+                                    facetTypeSlug: filterItem.facet_type_slug,
+                                    facetSlug: thisfacet.facet_slug,
+                                })}
                             />
                         ))}
                 </RadioGroup>
@@ -877,23 +884,26 @@ export const DLOAdd = ({
                 <form id="dlor-add-form">
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Stepper activeStep={activeStep} className="THESTEPPER">
+                            <Stepper activeStep={activeStep}>
                                 {steps.map((step, index) => {
                                     const stepProps = { completed: null };
                                     const labelProps = {
                                         optional: null,
                                     };
                                     return (
-                                        <Step key={step.label} {...stepProps}>
+                                        <Step key={step.label} {...stepProps} style={{ paddingRight: 25 }}>
                                             <StepLabel {...labelProps}>
-                                                {step.label}
-                                                {panelValidity[index] ? (
-                                                    <DoneIcon
-                                                        color="success"
-                                                        data-testid={`dlor-panel-validity-indicator-${index}`}
-                                                    />
+                                                {panelValidity[index] === 0 ? (
+                                                    <span>{step.label}</span>
                                                 ) : (
-                                                    <span style={{ width: 24, height: 24 }}>&nbsp;</span>
+                                                    <Badge
+                                                        color="error"
+                                                        badgeContent={panelValidity[index]}
+                                                        className={classes.errorCount}
+                                                        data-testid={`dlor-panel-validity-indicator-${index}`}
+                                                    >
+                                                        {step.label}
+                                                    </Badge>
                                                 )}
                                             </StepLabel>
                                         </Step>

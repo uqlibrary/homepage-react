@@ -7,42 +7,53 @@ export default {
             "facet_type_slug": "topic",
             "facet_type_help_public": "Public help for Topic",
             "facet_type_help_admin": "Admin help for Topic",
+            "facet_type_required": true,
+            "facet_type_number": 'one-or-more-with-other',
             "facet_list": [
                 {
                     "facet_name": "Aboriginal and Torres Strait Islander",
-                    "facet_slug": "aboriginal_and_torres_strait_islander"
+                    "facet_slug": "aboriginal_and_torres_strait_islander",
+                    "facet_order": 1,
                 },
                 {
                     "facet_name": "Assignments",
-                    "facet_slug": "assignments"
+                    "facet_slug": "assignments",
+                    "facet_order": 2,
                 },
                 {
                     "facet_name": "Digital skills",
-                    "facet_slug": "digital_skills"
+                    "facet_slug": "digital_skills",
+                    "facet_order": 3,
                 },
                 {
                     "facet_name": "Employability",
-                    "facet_slug": "employability"
+                    "facet_slug": "employability",
+                    "facet_order": 4,
                 },
                 {
                     "facet_name": "Information literacy",
-                    "facet_slug": "information_literacy"
+                    "facet_slug": "information_literacy",
+                    "facet_order": 5,
                 },
                 {
                     "facet_name": "Referencing",
-                    "facet_slug": "referencing"
+                    "facet_slug": "referencing",
+                    "facet_order": 6,
                 },
                 {
                     "facet_name": "Research",
-                    "facet_slug": "research"
+                    "facet_slug": "research",
+                    "facet_order": 7,
                 },
                 {
                     "facet_name": "Software",
-                    "facet_slug": "software"
+                    "facet_slug": "software",
+                    "facet_order": 8,
                 },
                 {
                     "facet_name": "Other",
-                    "facet_slug": "topic_other"
+                    "facet_slug": "topic_other",
+                    "facet_order": 9,
                 }
             ]
         },
@@ -53,30 +64,38 @@ export default {
             "facet_type_slug": "graduate_attributes",
             "facet_type_help_public": "Graduate attributes identify specific skills, attributes and understandings students should seek to develop.",
             "facet_type_help_admin": "Graduate attributes can be used by teaching staff to identify specific skills, attributes and understandings they would like to develop.",
+            "facet_type_required": false,
+            "facet_type_number": 'zero-or-more-no-other',
             "facet_list": [
                 {
                     "facet_name": "Accomplished scholars",
-                    "facet_slug": "accomplished_scholars"
+                    "facet_slug": "accomplished_scholars",
+                    "facet_order": 1,
                 },
                 {
                     "facet_name": "Connected citizens",
-                    "facet_slug": "connected_citizens"
+                    "facet_slug": "connected_citizens",
+                    "facet_order": 2,
                 },
                 {
                     "facet_name": "Courageous thinkers",
-                    "facet_slug": "courageous_thinkers"
+                    "facet_slug": "courageous_thinkers",
+                    "facet_order": 3,
                 },
                 {
                     "facet_name": "Culturally capable",
-                    "facet_slug": "culturally_capable"
+                    "facet_slug": "culturally_capable",
+                    "facet_order": 4,
                 },
                 {
                     "facet_name": "Influential communicators",
-                    "facet_slug": "influential_communicators"
+                    "facet_slug": "influential_communicators",
+                    "facet_order": 5,
                 },
                 {
                     "facet_name": "Respectful leaders",
-                    "facet_slug": "respectful_leaders"
+                    "facet_slug": "respectful_leaders",
+                    "facet_order": 6,
                 }
             ]
         },
@@ -87,30 +106,38 @@ export default {
             "facet_type_slug": "item_type",
             "facet_type_help_public": "Public help for Item Type",
             "facet_type_help_admin": "it",
+            "facet_type_required": true,
+            "facet_type_number": 'select-exactly-one',
             "facet_list": [
                 {
                     "facet_name": "Guide",
-                    "facet_slug": "type_guide"
+                    "facet_slug": "type_guide",
+                    "facet_order": 1,
                 },
                 {
                     "facet_name": "Interactive activity",
-                    "facet_slug": "type_interactive_activity"
+                    "facet_slug": "type_interactive_activity",
+                    "facet_order": 2,
                 },
                 {
                     "facet_name": "Module",
-                    "facet_slug": "module"
+                    "facet_slug": "module",
+                    "facet_order": 3,
                 },
                 {
                     "facet_name": "Presentation",
-                    "facet_slug": "type_presentation"
+                    "facet_slug": "type_presentation",
+                    "facet_order": 4,
                 },
                 {
                     "facet_name": "Training recording",
-                    "facet_slug": "type_training_recording"
+                    "facet_slug": "type_training_recording",
+                    "facet_order": 5,
                 },
                 {
                     "facet_name": "Other",
-                    "facet_slug": "type_other"
+                    "facet_slug": "type_other",
+                    "facet_order": 6,
                 }
             ]
         },
@@ -121,6 +148,8 @@ export default {
             "facet_type_slug": "media_format",
             "facet_type_help_public": "Public help for Media format",
             "facet_type_help_admin": "MF",
+            "facet_type_required": true,
+            "facet_type_number": 'one-or-more-with-other',
             "facet_list": [
                 {
                     "facet_name": "Audio",
@@ -168,46 +197,58 @@ export default {
             "facet_type_slug": "subject",
             "facet_type_help_public": "Public help for Subject",
             "facet_type_help_admin": "sub",
+            "facet_type_required": true,
+            "facet_type_number": 'one-or-more-with-other',
             "facet_list": [
                 {
                     "facet_name": "Cross-disciplinary",
-                    "facet_slug": "all_cross_disciplinary"
+                    "facet_slug": "all_cross_disciplinary",
+                    "facet_order": 1,
                 },
                 {
                     "facet_name": "Business; Economics",
-                    "facet_slug": "business_economics"
+                    "facet_slug": "business_economics",
+                    "facet_order": 2,
                 },
                 {
                     "facet_name": "Engineering: Architecture; Information Technology",
-                    "facet_slug": "engineering_architecture_information_technology"
+                    "facet_slug": "engineering_architecture_information_technology",
+                    "facet_order": 3,
                 },
                 {
                     "facet_name": "Health; Behavioural Sciences",
-                    "facet_slug": "health_behavioural_sciences"
+                    "facet_slug": "health_behavioural_sciences",
+                    "facet_order": 4,
                 },
                 {
                     "facet_name": "Humanities; Arts",
-                    "facet_slug": "humanities_arts"
+                    "facet_slug": "humanities_arts",
+                    "facet_order": 5,
                 },
                 {
                     "facet_name": "Law",
-                    "facet_slug": "law"
+                    "facet_slug": "law",
+                    "facet_order": 6,
                 },
                 {
                     "facet_name": "Medicine; Biomedical Sciences",
-                    "facet_slug": "medicine_biomedical_sciences"
+                    "facet_slug": "medicine_biomedical_sciences",
+                    "facet_order": 7,
                 },
                 {
                     "facet_name": "Science",
-                    "facet_slug": "science"
+                    "facet_slug": "science",
+                    "facet_order": 8,
                 },
                 {
                     "facet_name": "Social Sciences",
-                    "facet_slug": "social_sciences"
+                    "facet_slug": "social_sciences",
+                    "facet_order": 9,
                 },
                 {
                     "facet_name": "Other",
-                    "facet_slug": "subject_other"
+                    "facet_slug": "subject_other",
+                    "facet_order": 10,
                 }
             ]
         },
@@ -218,34 +259,43 @@ export default {
             "facet_type_slug": "licence",
             "facet_type_help_public": "Public help for Licence",
             "facet_type_help_admin": "lic",
+            "facet_type_required": true,
+            "facet_type_number": 'select-exactly-one',
             "facet_list": [
                 {
                     "facet_name": "CC BY Attribution",
-                    "facet_slug": "cc_by_attribution"
+                    "facet_slug": "cc_by_attribution",
+                    "facet_order": 1,
                 },
                 {
                     "facet_name": "CC BY-NC Attribution NonCommercial",
-                    "facet_slug": "cc_by_nc_attribution_noncommercial"
+                    "facet_slug": "cc_by_nc_attribution_noncommercial",
+                    "facet_order": 2,
                 },
                 {
                     "facet_name": "CC BY-NC-ND Attribution NonCommercial No-Derivatives",
-                    "facet_slug": "cc_by_nc_no_attribution_noncommercial_no_derivatives"
+                    "facet_slug": "cc_by_nc_no_attribution_noncommercial_no_derivatives",
+                    "facet_order": 3,
                 },
                 {
                     "facet_name": "CC BY-NC-SA Attribution NonCommercial Share Alike",
-                    "facet_slug": "cc_by_nc_SsaA_attribution_noncommercial_share_alike"
+                    "facet_slug": "cc_by_nc_SsaA_attribution_noncommercial_share_alike",
+                    "facet_order": 4,
                 },
                 {
                     "facet_name": "CC BY-ND Attribution No-Derivatives",
-                    "facet_slug": "cc_by_no_attribution_no_derivatives"
+                    "facet_slug": "cc_by_no_attribution_no_derivatives",
+                    "facet_order": 5,
                 },
                 {
                     "facet_name": "CC BY-SA Attribution Share Alike",
-                    "facet_slug": "cc_by_sa_attribution_share_alike"
+                    "facet_slug": "cc_by_sa_attribution_share_alike",
+                    "facet_order": 6,
                 },
                 {
                     "facet_name": "CC0\/Public domain",
-                    "facet_slug": "cco_public_domain"
+                    "facet_slug": "cco_public_domain",
+                    "facet_order": 7,
                 }
             ]
         }

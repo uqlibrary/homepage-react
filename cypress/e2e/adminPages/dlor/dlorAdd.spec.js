@@ -36,27 +36,34 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
+                    .should('exist')
+                    .should('contain', 3); // panel invalidity count present
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
+                    .should('exist')
+                    .should('contain', 2); // panel invalidity count present
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count not present
 
                 // click 'next' button to view panel 3, Link
                 cy.get('[data-testid="dlor-add-next-button"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
+
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .type('asdasdasdsadd');
@@ -68,9 +75,8 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_link_url"] input')
                     .clear()
                     .type('http://example.com');
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                // cy.waitUntil(() => cy.get('[data-testid="error-message-object_link_url"]').should('not.exist'));
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count not present
 
                 // click 'next' button to view panel 4, Filters
                 cy.get('[data-testid="dlor-add-next-button"]')
@@ -78,33 +84,42 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .click();
                 // filters
                 cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
+                    .should('exist')
+                    .should('contain', 5); // panel invalidity count present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
-                cy.get('[data-testid="filter-media_audio"] input').check();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+
+                cy.get('[data-testid="filter-media_audio"] input').check(); // choose a "media format" checkbox
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
+                    .should('exist')
+                    .should('contain', 4);
+                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
                     .should('exist')
                     .should('be.disabled');
+
                 cy.get('[data-testid="filter-all_cross_disciplinary"] input').check();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
+                    .should('exist')
+                    .should('contain', 3); // panel invalidity count present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
-                cy.get('[data-testid="filter-media_audio"] input').check();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+
+                cy.get('[data-testid="filter-type_guide"] input').check(); // choose an "item type" radio button
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
+                    .should('exist')
+                    .should('contain', 2);
+                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
                     .should('exist')
                     .should('be.disabled');
-                cy.get('[data-testid="filter-type_guide"] input').check();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+
+                cy.get('[data-testid="filter-cc_by_attribution"] input').check(); // choose a "licence" radio button
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
                     .should('exist')
-                    .should('be.disabled');
-                cy.get('[data-testid="filter-cc_by_attribution"] input').check();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                    .should('contain', 1);
+                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
                     .should('exist')
                     .should('be.disabled');
 
@@ -112,30 +127,34 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('exist')
                     .type('a'.padEnd(REQUIRED_LENGTH_KEYWORDS, 'x'));
 
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel invalidity count no longer present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled');
 
                 //  now go back and invalidate each field one at a time and show the button disables on each field
                 cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').uncheck();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
 
                 cy.get('[data-testid="filter-all_cross_disciplinary"] input').uncheck();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="filter-all_cross_disciplinary"] input').check();
 
                 cy.get('[data-testid="filter-media_audio"] input').uncheck();
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
@@ -150,76 +169,83 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .clear();
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_link_url"] input').type('http://');
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .type('ex.c');
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .type('o');
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
                 // click the back button to go back to panel 2, Description
                 cy.get('[data-testid="dlor-add-back-button"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('{backspace}');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('p');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('{backspace}');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type('p');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('{backspace}');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('p');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
                 // click the back button to go back to panel 1, Ownership
                 cy.get('[data-testid="dlor-add-back-button"]')
                     .should('exist')
                     .click();
 
+                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel invalidity count not present
                 cy.get('[data-testid="object_publishing_user"] input')
                     .should('exist')
                     .type('{backspace}')
-                    .type('{backspace}');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel validity tick not present
+                    .type('{backspace}'); // username no longer long enough
+                cy.get('[data-testid="error-message-object_publishing_user"]')
+                    .should('exist')
+                    .should('contain', 'This username is not valid.');
+                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_publishing_user"] input')
                     .should('exist')
                     .type('p');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel invalidity count not present
+                cy.get('[data-testid="error-message-object_publishing_user"]').should('not.exist');
 
                 cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
                 cy.get('[data-testid="object_owning_team"]').click();
@@ -227,23 +253,29 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .should('exist')
                     .click();
 
-                // now that we have chosen "new team" the submit button is disabled
-                // until we enter all 3 fields
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel validity tick not present
+                // now that we have chosen "new team" the form is invalid until we enter all 3 fields
+                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
+                    .should('exist')
+                    .should('contain', 3); // panel invalidity count present
                 cy.get('[data-testid="team_name"]')
                     .should('exist')
                     .type('new team name');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
+                    .should('exist')
+                    .should('contain', 2); // panel invalidity count present
                 cy.get('[data-testid="team_manager"]')
                     .should('exist')
                     .type('john Manager');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel validity tick not present
+                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
+                cy.get('[data-testid="error-message-team_email"]')
+                    .should('exist')
+                    .should('contain', 'This email address is not valid.');
                 cy.get('[data-testid="team_email"]')
                     .should('exist')
                     .type('john@example.com');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
-                    .should('exist')
-                    .should('have.css', 'color', 'rgb(0, 114, 0)'); // panel validity tick now present
+                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel invalidity count not present
             });
             it('shows character minimums', () => {
                 // go to the second panel, description
@@ -382,7 +414,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     team_manager: 'john Manager',
                     team_name: 'new team name',
                     object_keywords: ['cat', 'dog'],
-                    facetType: {
+                    facets: {
                         item_type: ['type_interactive_activity'],
                         licence: ['cc_by_nc_attribution_noncommercial'],
                         media_format: ['media_audio', 'media_h5p'],
@@ -400,19 +432,19 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     console.log('sentValues=', sentValues);
 
                     // had trouble comparing the entire structure
-                    const sentFacetType = sentValues.facetType;
-                    const expectedFacetTypes = expectedValues.facetType;
+                    const sentFacets = sentValues.facets;
+                    const expectedFacets = expectedValues.facets;
                     const sentKeywords = sentValues.object_keywords;
                     const expectedKeywords = expectedValues.object_keywords;
-                    delete sentValues.facetType;
-                    delete expectedValues.facetType;
+                    delete sentValues.facets;
+                    delete expectedValues.facets;
                     delete sentValues.object_keywords;
                     delete expectedValues.object_keywords;
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
 
                     expect(sentValues).to.deep.equal(expectedValues);
-                    expect(sentFacetType).to.deep.equal(expectedFacetTypes);
+                    expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);
 
                     cy.clearCookie('CYPRESS_DATA_SAVED');
@@ -466,6 +498,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     .click();
 
                 cy.get('[data-testid="filter-digital_skills"] input').check();
+                cy.get('[data-testid="filter-employability"] input').check();
                 cy.get('[data-testid="filter-media_dataset"] input').check();
                 cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
                 cy.get('[data-testid="filter-module"] input').check();
@@ -499,13 +532,13 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
                     object_owning_team_id: 1,
-                    facetType: {
+                    facets: {
                         graduate_attributes: ['connected_citizens'],
                         item_type: ['module'],
                         licence: ['cco_public_domain'],
                         media_format: ['media_dataset'],
                         subject: ['engineering_architecture_information_technology'],
-                        topic: ['digital_skills'],
+                        topic: ['digital_skills', 'employability'],
                     },
                     object_keywords: ['cat', 'dog'],
                 };
@@ -520,17 +553,19 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     delete expectedValues.object_review_date_next;
 
                     // had trouble comparing the entire structure
-                    const sentFacetType = sentValues.facetType;
-                    const expectedFacetType = expectedValues.facetType;
+                    const sentFacets = sentValues.facets;
+                    const expectedFacets = expectedValues.facets;
                     const sentKeywords = sentValues.object_keywords;
                     const expectedKeywords = sentValues.object_keywords;
-                    delete sentValues.facetType;
+                    delete sentValues.facets;
                     delete sentValues.object_keywords;
-                    delete expectedValues.facetType;
+                    delete expectedValues.facets;
                     delete expectedValues.object_keywords;
 
+                    console.log('sentFacets=', sentFacets);
+                    console.log('expectedFacets=', expectedFacets);
                     expect(sentValues).to.deep.equal(expectedValues);
-                    expect(sentFacetType).to.deep.equal(expectedFacetType);
+                    expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);
                     cy.clearCookie('CYPRESS_DATA_SAVED');
                     cy.clearCookie('CYPRESS_TEST_DATA');
