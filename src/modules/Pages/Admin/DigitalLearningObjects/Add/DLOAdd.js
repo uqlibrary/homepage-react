@@ -133,7 +133,7 @@ export const DLOAdd = ({
         team_manager: '',
         team_email: '',
         object_keywords_string: '',
-        rawFacets: {},
+        facets: [],
     };
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -159,26 +159,18 @@ export const DLOAdd = ({
     };
 
     // export const ManageAuthorsList = ({ onBulkRowDelete, onRowAdd, onRowDelete, onRowUpdate, onScopusIngest }) => {
-    const handleFacetChange = ({ facetTypeSlug, facetSlug }) => e => {
+    const handleFacetChange = facetId => e => {
         let newValues;
         if (!!e.target.checked) {
             newValues = {
                 ...formValues,
-                rawFacets: {
-                    ...formValues.rawFacets,
-                    [facetTypeSlug]: {
-                        ...formValues.rawFacets[facetTypeSlug],
-                        [facetSlug]: true,
-                    },
-                },
+                facets: [...formValues.facets, facetId],
             };
         } else {
-            newValues = { ...formValues };
-            delete newValues.rawFacets[facetTypeSlug][facetSlug];
-
-            if (Object.keys(newValues.rawFacets[facetTypeSlug]).length === 0) {
-                delete newValues.rawFacets[facetTypeSlug];
-            }
+            newValues = {
+                ...formValues,
+                facets: [...formValues.facets.filter(id => id !== facetId)],
+            };
         }
 
         setFormValidity(validateValues(newValues));
@@ -603,28 +595,6 @@ export const DLOAdd = ({
         valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
 
-        if (!!valuesToSend?.rawFacets) {
-            for (const [facetTypeSlug, value] of Object.entries(valuesToSend.rawFacets)) {
-                for (const [facetSlug, facetValue] of Object.entries(value)) {
-                    if (facetValue === false) {
-                        console.log('!!!!!!!!!!!!!!!!!! FALSE FOUND!');
-                        continue; // I dont think this ever happens
-                    }
-                    if (valuesToSend.hasOwnProperty('facets')) {
-                        if (valuesToSend.facets.hasOwnProperty(facetTypeSlug)) {
-                            valuesToSend.facets[facetTypeSlug].push(facetSlug);
-                        } else {
-                            valuesToSend.facets[facetTypeSlug] = [facetSlug];
-                        }
-                    } else {
-                        valuesToSend.facets = { [facetTypeSlug]: [facetSlug] };
-                    }
-                }
-            }
-
-            delete valuesToSend.rawFacets;
-        }
-
         console.log('saveNewDlor after valuesToSend=', valuesToSend);
 
         console.log('cookies=', document.cookie);
@@ -701,16 +671,15 @@ export const DLOAdd = ({
 
         let fourthPanelErrorCount = 0;
         currentValues?.object_keywords_string.length < keywordMinimumLength && fourthPanelErrorCount++;
+
         // check the required facets are checked
-        console.log('dlorFilterList=', dlorFilterList);
-        !!dlorFilterList && console.log('validateValues currentValues=', currentValues);
         !!dlorFilterList &&
-            dlorFilterList.forEach(f => {
-                if (f.facet_type_required) {
-                    !!currentValues?.rawFacets &&
-                        (!currentValues.rawFacets[f.facet_type_slug] ||
-                            Object.keys(currentValues.rawFacets[f.facet_type_slug]).length === 0) &&
+            dlorFilterList.forEach(filterType => {
+                if (!!filterType.facet_type_required) {
+                    const facetIds = filterType.facet_list.map(facet => facet.facet_id);
+                    if (!currentValues?.facets?.some(value => facetIds.includes(value))) {
                         fourthPanelErrorCount++;
+                    }
                 }
             });
 
@@ -736,10 +705,7 @@ export const DLOAdd = ({
                         className={classes.facetControl}
                         control={
                             <Checkbox
-                                onChange={handleFacetChange({
-                                    facetTypeSlug: filterItem.facet_type_slug,
-                                    facetSlug: thisfacet.facet_slug,
-                                })}
+                                onChange={handleFacetChange(thisfacet.facet_id)}
                                 id={`filter-${thisfacet.facet_slug}`}
                                 data-testid={`filter-${thisfacet.facet_slug}`}
                             />
@@ -756,10 +722,7 @@ export const DLOAdd = ({
                         className={classes.facetControl}
                         control={
                             <Checkbox
-                                onChange={handleFacetChange({
-                                    facetTypeSlug: filterItem.facet_type_slug,
-                                    facetSlug: thisfacet.facet_slug,
-                                })}
+                                onChange={handleFacetChange(thisfacet.facet_id)}
                                 id={`filter-${thisfacet.facet_slug}`}
                                 data-testid={`filter-${thisfacet.facet_slug}`}
                             />
@@ -802,10 +765,7 @@ export const DLOAdd = ({
                                     />
                                 }
                                 label={thisfacet.facet_name}
-                                onChange={handleFacetChange({
-                                    facetTypeSlug: filterItem.facet_type_slug,
-                                    facetSlug: thisfacet.facet_slug,
-                                })}
+                                onChange={handleFacetChange(thisfacet.facet_id)}
                             />
                         ))}
                 </RadioGroup>

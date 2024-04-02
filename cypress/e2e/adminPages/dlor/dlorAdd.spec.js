@@ -414,13 +414,16 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     team_manager: 'john Manager',
                     team_name: 'new team name',
                     object_keywords: ['cat', 'dog'],
-                    facets: {
-                        item_type: ['type_interactive_activity'],
-                        licence: ['cc_by_nc_attribution_noncommercial'],
-                        media_format: ['media_audio', 'media_h5p'],
-                        subject: ['all_cross_disciplinary', 'business_economics'],
-                        topic: ['aboriginal_and_torres_strait_islander', 'assignments'],
-                    },
+                    facets: [
+                        1, // aboriginal_and_torres_strait_islander
+                        2, // assignments
+                        22, // media_audio
+                        24, // media_h5p
+                        34, // all_cross_disciplinary
+                        35, // business_economics
+                        17, // type_interactive_activity
+                        45, // cc_by_nc_attribution_noncommercial
+                    ],
                 };
                 console.log('document.cookies', document.cookie);
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
@@ -501,9 +504,15 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.get('[data-testid="filter-employability"] input').check();
                 cy.get('[data-testid="filter-media_dataset"] input').check();
                 cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
+
+                cy.get('[data-testid="filter-medicine_biomedical_sciences"] input').check();
+
                 cy.get('[data-testid="filter-module"] input').check();
                 cy.get('[data-testid="filter-cco_public_domain"] input').check();
                 cy.get('[data-testid="filter-connected_citizens"] input').check();
+
+                cy.get('[data-testid="filter-medicine_biomedical_sciences"] input').uncheck(); // coverage and confirm it doesnt end up in the "sent to server"
+
                 cy.get('[data-testid="object_keywords"] textarea:first-child')
                     .should('exist')
                     .type('cat, dog');
@@ -532,14 +541,15 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
                     object_owning_team_id: 1,
-                    facets: {
-                        graduate_attributes: ['connected_citizens'],
-                        item_type: ['module'],
-                        licence: ['cco_public_domain'],
-                        media_format: ['media_dataset'],
-                        subject: ['engineering_architecture_information_technology'],
-                        topic: ['digital_skills', 'employability'],
-                    },
+                    facets: [
+                        3, // digital_skills
+                        4, // employability
+                        23, // media_dataset
+                        36, // engineering_architecture_information_technology
+                        18, // module
+                        50, // cco_public_domain
+                        11, // connected_citizens
+                    ],
                     object_keywords: ['cat', 'dog'],
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
