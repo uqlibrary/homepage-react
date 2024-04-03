@@ -46,8 +46,15 @@ const useStyles = makeStyles(theme => ({
         padding: '16px',
         [theme.breakpoints.up('md')]: {
             position: 'relative',
-            padding: '16px 16px 120px 16px',
+            padding: 16,
+            paddingBottom: 110,
             height: 300,
+        },
+        [theme.breakpoints.up('lg')]: {
+            paddingBottom: 110,
+        },
+        [theme.breakpoints.up('xl')]: {
+            paddingBottom: 65,
         },
         '& header': {
             '& h2': {
@@ -57,7 +64,7 @@ const useStyles = makeStyles(theme => ({
             flexDirection: 'column-reverse',
         },
         '& > div': {
-            maxHeight: 200,
+            maxHeight: 180,
             overflowY: 'auto',
             overflowX: 'hidden',
         },
