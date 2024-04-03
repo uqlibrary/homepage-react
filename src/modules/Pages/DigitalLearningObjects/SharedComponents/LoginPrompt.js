@@ -25,8 +25,6 @@ const useStyles = makeStyles(theme => ({
 const LoginPrompt = ({ account }) => {
     const classes = useStyles();
     const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(window.location.href)}`;
-    console.log('LoginPrompt account=', account);
-    console.log('LoginPrompt account=', account?.id);
     return (
         <>
             {!account?.id && (
