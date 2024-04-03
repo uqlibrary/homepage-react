@@ -465,7 +465,7 @@ describe('Digital learning hub', () => {
                 'Types of AI, implications for society, using AI in your studies and how UQ is involved. (longer lines)',
             );
             cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'How to use this object');
-            cy.get('[data-testid="dlor-detailpage-instructions"]').should(
+            cy.get('[data-testid="dlor-massaged-download-instructions"]').should(
                 'contain',
                 'Download the Common Cartridge file and H5P quiz to embed in Blackboard',
             );
@@ -574,6 +574,14 @@ describe('Digital learning hub', () => {
             cy.visit('digital-learning-hub/view/9k45_hgr4_876h');
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'EndNote 20: Getting started');
             cy.get('[data-testid="detaipage-metadata-keywords"]').should('not.exist');
+        });
+        it('markdown translation works', () => {
+            cy.visit('digital-learning-hub/view/987y_isjgt_9866');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-massaged-download-instructions"] a')
+                .should('exist')
+                .contains('example link')
+                .should('have.attr', 'href', 'http://example.com');
         });
         it('can handle an error', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?responseType=error');

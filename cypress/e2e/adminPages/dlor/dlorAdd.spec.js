@@ -369,6 +369,19 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .type('http://example.com');
+                const typeableDownloadInstructions =
+                    'Lorem ipsum dolor sit amet, [consectetur adipiscing elit](http://example.com). In at sapien vel nisi congue fringilla. Maecenas non lacus dolor. Phasellus ornare condimentum est in cursus. Quisque laoreet dui non ante efficitur, sed euismod elit ornare. Mauris ac nibh dictum, viverra ligula ultricies, consequat neque. Duis eu lacinia sapien. Nullam rhoncus gravida est. Donec varius urna a eros vehicula, eget tempor eros maximus. Sed sed vestibulum libero.' +
+                    '\nNam ac felis neque. Nulla at neque a mauris tristique ultrices ac ultrices ex. Suspendisse iaculis fermentum mi, non cursus augue eleifend in. Maecenas ut faucibus est. Phasellus a diam eget mauris feugiat vestibulum. Maecenas consequat turpis eu enim varius, in elementum mi lacinia. Donec egestas, nulla eget tincidunt placerat, arcu libero sollicitudin sapien, sit amet euismod sem libero efficitur ipsum. Nulla vitae dui urna. Proin id diam vitae risus vestibulum interdum eu iaculis ipsum. Praesent justo quam, scelerisque cursus lobortis sed, euismod quis orci.';
+                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                    .should('exist')
+                    .type(typeableDownloadInstructions);
+                cy.get('[data-testid="dlor-massaged-download-instructions"]')
+                    .should('exist')
+                    .should('contain', 'Lorem ipsum dolor sit amet');
+                cy.get('[data-testid="dlor-massaged-download-instructions"] a')
+                    .should('exist')
+                    .contains('consectetur adipiscing elit')
+                    .should('have.attr', 'href', 'http://example.com');
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-add-next-button"]')
@@ -405,7 +418,7 @@ describe('Add an object to the Digital learning hub', () => {
                         'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
                     object_summary: 'new summary xxxxxxxx',
                     object_link_url: 'http://example.com',
-                    object_download_instructions: '',
+                    object_download_instructions: typeableDownloadInstructions,
                     object_embed_type: 'link',
                     object_publishing_user: 'dloradmin',
                     object_review_date_next: '2025-03-26T00:01',

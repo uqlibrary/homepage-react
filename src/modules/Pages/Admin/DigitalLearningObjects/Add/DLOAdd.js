@@ -31,6 +31,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
 import { splitStringToArrayOnComma } from '../dlorHelpers';
+import { displayDownloadInstructions } from '../../../DigitalLearningObjects/dlorHelpers';
 
 const moment = require('moment-timezone');
 
@@ -44,6 +45,10 @@ const useStyles = makeStyles(theme => ({
         '& span': {
             right: -12,
         },
+    },
+    fieldUseTip: {
+        fontSize: '0.9em',
+        marginTop: 4,
     },
     errorMessage: {
         color: theme.palette.error.light,
@@ -467,6 +472,24 @@ export const DLOAdd = ({
                         value={formValues?.object_download_instructions}
                         onChange={handleChange('object_download_instructions')}
                     />
+                    <div className={classes.fieldUseTip}>
+                        Links can use Markdown formatting, like so:{' '}
+                        <span title="Square brackets around the clickable words; round braces around the web address">
+                            [Link text](linkUrl)
+                        </span>
+                    </div>
+                    {!!formValues?.object_download_instructions && (
+                        <>
+                            <Typography component={'h2'} variant={'h6'}>
+                                Preview:
+                            </Typography>
+                            {!!formValues?.object_download_instructions &&
+                                displayDownloadInstructions(
+                                    formValues.object_download_instructions,
+                                    classes.downloadInstructions,
+                                )}
+                        </>
+                    )}
                 </FormControl>
             </Grid>
         </>

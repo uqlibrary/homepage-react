@@ -12,7 +12,7 @@ export default {
             "object_owning_team_id": 1,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "object_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard.\nand a second line of detail in the description",
+            "object_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard.\nand a second line of detail in the description, looking at an [example link](http://example.com)",
             "obj_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-accessibility\/chapter\/module-overview\/",
             "object_filters": [
                 {

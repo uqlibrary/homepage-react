@@ -16,6 +16,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getHomepageLink } from 'helpers/access';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
+import { displayDownloadInstructions } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
@@ -80,6 +81,9 @@ const useStyles = makeStyles(theme => ({
     //         paddingTop: 0,
     //     },
     // },
+    downloadInstructions: {
+        lineHeight: 1.5,
+    },
 }));
 
 export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, account }) => {
@@ -177,12 +181,12 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
                                     How to use this object
                                 </Typography>
-                                <div data-testid="dlor-detailpage-instructions">
-                                    {!!dlorItem?.object_download_instructions &&
-                                        dlorItem?.object_download_instructions
-                                            ?.split('\n')
-                                            ?.map((line, index) => <p key={index}>{line}</p>)}
-                                </div>
+                                {/* <div className={classes.downloadInstructions}></div>*/}
+                                {!!dlorItem?.object_download_instructions &&
+                                    displayDownloadInstructions(
+                                        dlorItem.object_download_instructions,
+                                        classes.downloadInstructions,
+                                    )}
                             </>
                         )}
                     </Grid>
