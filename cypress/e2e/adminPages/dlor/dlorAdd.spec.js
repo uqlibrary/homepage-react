@@ -83,7 +83,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .click();
                 // filters
-                cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
+                cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 5); // panel invalidity count present
@@ -91,7 +91,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('be.disabled');
 
-                cy.get('[data-testid="filter-media_audio"] input').check(); // choose a "media format" checkbox
+                cy.get('[data-testid="filter-22"] input').check(); // choose a "media format" checkbox
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
                     .should('exist')
                     .should('contain', 4);
@@ -99,7 +99,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('be.disabled');
 
-                cy.get('[data-testid="filter-all_cross_disciplinary"] input').check();
+                cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 3); // panel invalidity count present
@@ -107,7 +107,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('be.disabled');
 
-                cy.get('[data-testid="filter-type_guide"] input').check(); // choose an "item type" radio button
+                cy.get('[data-testid="filter-16"] input').check(); // choose an "item type" radio button (type guide)
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
                     .should('exist')
                     .should('contain', 2);
@@ -115,7 +115,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('be.disabled');
 
-                cy.get('[data-testid="filter-cc_by_attribution"] input').check(); // choose a "licence" radio button
+                cy.get('[data-testid="filter-44"] input').check(); // choose a "licence" radio button (choose cc_by_attribution)
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
                     .should('exist')
                     .should('contain', 1);
@@ -133,32 +133,32 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('not.be.disabled');
 
                 //  now go back and invalidate each field one at a time and show the button disables on each field
-                cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').uncheck();
+                cy.get('[data-testid="filter-1"] input').uncheck(); // aboriginal_and_torres_strait_islander
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
-                cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
+                cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
 
-                cy.get('[data-testid="filter-all_cross_disciplinary"] input').uncheck();
+                cy.get('[data-testid="filter-34"] input').uncheck(); // all_cross_disciplinary
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
-                cy.get('[data-testid="filter-all_cross_disciplinary"] input').check();
+                cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
 
-                cy.get('[data-testid="filter-media_audio"] input').uncheck();
+                cy.get('[data-testid="filter-22"] input').uncheck(); // media_audio
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="admin-dlor-add-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
-                cy.get('[data-testid="filter-media_audio"] input').check();
+                cy.get('[data-testid="filter-22"] input').check(); // media_audio
 
                 // (cant uncheck a radio button)
 
@@ -375,14 +375,14 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="filter-aboriginal_and_torres_strait_islander"] input').check();
-                cy.get('[data-testid="filter-assignments"] input').check();
-                cy.get('[data-testid="filter-media_audio"] input').check();
-                cy.get('[data-testid="filter-media_h5p"] input').check();
-                cy.get('[data-testid="filter-all_cross_disciplinary"] input').check();
-                cy.get('[data-testid="filter-business_economics"] input').check();
-                cy.get('[data-testid="filter-type_interactive_activity"] input').check();
-                cy.get('[data-testid="filter-cc_by_nc_attribution_noncommercial"] input').check();
+                cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
+                cy.get('[data-testid="filter-2"] input').check(); // assignments
+                cy.get('[data-testid="filter-22"] input').check(); // media_audio
+                cy.get('[data-testid="filter-24"] input').check(); // media_h5p
+                cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
+                cy.get('[data-testid="filter-35"] input').check(); // business_economics
+                cy.get('[data-testid="filter-17"] input').check(); // type_interactive_activity
+                cy.get('[data-testid="filter-45"] input').check();
                 cy.get('[data-testid="object_keywords"] textarea:first-child')
                     .should('exist')
                     .type('cat, dog');
@@ -500,18 +500,18 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="filter-digital_skills"] input').check();
-                cy.get('[data-testid="filter-employability"] input').check();
-                cy.get('[data-testid="filter-media_dataset"] input').check();
-                cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
+                cy.get('[data-testid="filter-3"] input').check(); // digital_skills
+                cy.get('[data-testid="filter-4"] input').check(); // employability
+                cy.get('[data-testid="filter-23"] input').check(); // media_dataset
+                cy.get('[data-testid="filter-36"] input').check(); // engineering_architecture_information_technology
 
-                cy.get('[data-testid="filter-medicine_biomedical_sciences"] input').check();
+                cy.get('[data-testid="filter-40"] input').check(); // medicine_biomedical_sciences
 
-                cy.get('[data-testid="filter-module"] input').check();
-                cy.get('[data-testid="filter-cco_public_domain"] input').check();
-                cy.get('[data-testid="filter-connected_citizens"] input').check();
+                cy.get('[data-testid="filter-18"] input').check(); // module
+                cy.get('[data-testid="filter-50"] input').check(); // cco_public_domain
+                cy.get('[data-testid="filter-11"] input').check(); // connected_citizens
 
-                cy.get('[data-testid="filter-medicine_biomedical_sciences"] input').uncheck(); // coverage and confirm it doesnt end up in the "sent to server"
+                cy.get('[data-testid="filter-40"] input').uncheck(); // medicine_biomedical_sciences - coverage and confirm it doesnt end up in the "sent to server"
 
                 cy.get('[data-testid="object_keywords"] textarea:first-child')
                     .should('exist')
@@ -640,11 +640,11 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-add-next-button"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="filter-digital_skills"] input').check();
-                cy.get('[data-testid="filter-media_dataset"] input').check();
-                cy.get('[data-testid="filter-engineering_architecture_information_technology"] input').check();
-                cy.get('[data-testid="filter-module"] input').check();
-                cy.get('[data-testid="filter-cco_public_domain"] input').check();
+                cy.get('[data-testid="filter-3"] input').check(); // digital_skills
+                cy.get('[data-testid="filter-23"] input').check(); // media_dataset
+                cy.get('[data-testid="filter-36"] input').check(); // engineering_architecture_information_technology
+                cy.get('[data-testid="filter-18"] input').check(); // module
+                cy.get('[data-testid="filter-50"] input').check(); // cco_public_domain
                 cy.get('[data-testid="object_keywords"] textarea:first-child')
                     .should('exist')
                     .type('cat, dog');

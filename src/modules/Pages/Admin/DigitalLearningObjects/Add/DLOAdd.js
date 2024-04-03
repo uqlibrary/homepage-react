@@ -701,13 +701,13 @@ export const DLOAdd = ({
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => (
                     <FormControlLabel
-                        key={`${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
+                        key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
                         className={classes.facetControl}
                         control={
                             <Checkbox
                                 onChange={handleFacetChange(thisfacet.facet_id)}
-                                id={`filter-${thisfacet.facet_slug}`}
-                                data-testid={`filter-${thisfacet.facet_slug}`}
+                                id={`filter-${thisfacet.facet_id}`}
+                                data-testid={`filter-${thisfacet.facet_id}`}
                             />
                         }
                         label={thisfacet.facet_name}
@@ -718,13 +718,13 @@ export const DLOAdd = ({
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => (
                     <FormControlLabel
-                        key={`${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
+                        key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
                         className={classes.facetControl}
                         control={
                             <Checkbox
                                 onChange={handleFacetChange(thisfacet.facet_id)}
-                                id={`filter-${thisfacet.facet_slug}`}
-                                data-testid={`filter-${thisfacet.facet_slug}`}
+                                id={`filter-${thisfacet.facet_id}`}
+                                data-testid={`filter-${thisfacet.facet_id}`}
                             />
                         }
                         label={thisfacet.facet_name}
@@ -741,28 +741,17 @@ export const DLOAdd = ({
             );
             result = (
                 <RadioGroup
-                    aria-labelledby={`demo-radio-object_${filterItem.facet_slug}_label-group-label`}
-                    // defaultValue={
-                    //     !!filterItem.facet_list &&
-                    //     filterItem.facet_list.length > 0 &&
-                    //     !filterItem.facet_list.slice(0, 1)[0]
-                    // }
+                    aria-labelledby={`demo-radio-object_${filterItem.facet_id}_label-group-label`}
                     name={radioGroupName}
-                    value={filterItem.facet_slug}
-                    // id={`radio-filter-${filterItem.facet_type_slug}`}
-                    // onChange={handleChange(`facet::${filterItem.facet_type_slug}::${thisfacet.facet_slug}`)}
+                    value={filterItem.facet_id}
                 >
                     {!!filterItem.facet_list &&
                         filterItem.facet_list.map(thisfacet => (
                             <FormControlLabel
-                                key={`${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
+                                key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
                                 className={classes.facetControl}
                                 control={
-                                    <Radio
-                                        value={thisfacet.facet_slug}
-                                        // id={`filter-${filterItem.facet_type_slug}-${thisfacet.facet_slug}`}
-                                        data-testid={`filter-${thisfacet.facet_slug}`}
-                                    />
+                                    <Radio value={thisfacet.facet_id} data-testid={`filter-${thisfacet.facet_id}`} />
                                 }
                                 label={thisfacet.facet_name}
                                 onChange={handleFacetChange(thisfacet.facet_id)}
