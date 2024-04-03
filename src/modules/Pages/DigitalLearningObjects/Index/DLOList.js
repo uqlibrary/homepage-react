@@ -639,26 +639,26 @@ export const DLOList = ({
 
         const getConcatenatedFilterLabels = facetTypeSlug => {
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
-            console.log('getConcatenatedFilterLabels facetTypeSlug=', facetTypeSlug);
-            console.log('getConcatenatedFilterLabels f=', f);
+            // console.log('getConcatenatedFilterLabels facetTypeSlug=', facetTypeSlug);
+            // console.log('getConcatenatedFilterLabels f=', f);
             const output = f?.pop();
-            console.log('getConcatenatedFilterLabels output=', output);
+            // console.log('getConcatenatedFilterLabels output=', output);
 
             const filterType =
                 !!dlorFilterList && dlorFilterList.filter(type => type.facet_type_slug === facetTypeSlug);
-            console.log('getConcatenatedFilterLabels filterType=', filterType);
+            // console.log('getConcatenatedFilterLabels filterType=', filterType);
             const filterTypeFacets =
                 !!filterType &&
                 filterType.length > 0 &&
                 filterType.pop().facet_list?.filter(facet => output.filter_values.includes(facet.facet_id));
-            console.log('getConcatenatedFilterLabels filterTypeFacets=', filterTypeFacets);
+            // console.log('getConcatenatedFilterLabels filterTypeFacets=', filterTypeFacets);
 
             const facetNames =
                 !!filterTypeFacets && filterTypeFacets.length > 0
                     ? filterTypeFacets.map(item => item.facet_name)?.join(', ')
                     : false;
-            console.log('getConcatenatedFilterLabels facetNames=', facetNames);
-            console.log('================================');
+            // console.log('getConcatenatedFilterLabels facetNames=', facetNames);
+            // console.log('================================');
             return facetNames;
         };
 
