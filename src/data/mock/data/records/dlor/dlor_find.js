@@ -18,38 +18,33 @@ export default {
                 {
                     "filter_key": "item_type",
                     "filter_values": [
-                        18, // Module
+                        "Module"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "topic",
                     "filter_values": [
-                        3, // Digital skills
+                        "Digital skills"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "media_format",
                     "filter_values": [
-                        27, // Pressbook
+                        "Pressbook"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "subject",
                     "filter_values": [
-                        34, // Cross-disciplinary
+                        "Cross-disciplinary"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "licence",
                     "filter_values": [
-                        45 // CC BY-NC Attribution NonCommercial
+                        "CC BY-NC Attribution NonCommercial"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [
-                        11, // Connected citizens
-                        14, // Influential communicators
+                        "Connected citizens",
+                        "Influential communicators"
                     ]
                 }
             ],
@@ -82,39 +77,34 @@ export default {
                 {
                     "filter_key": "topic",
                     "filter_values": [
-                        7, // Research
-                        2, // Assignments
+                        "Research",
+                        "Assignments"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "item_type",
                     "filter_values": [
-                        16 // Guide
+                        "Guide"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "media_format",
                     "filter_values": [
-                        27, // Pressbook
+                        "Pressbook"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "subject",
                     "filter_values": [
-                        34, // Cross-disciplinary
+                        "Cross-disciplinary"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "licence",
                     "filter_values": [
-                        46, // CC BY-NC-ND Attribution NonCommercial No-Derivatives
+                        "CC BY-NC"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [
-                        14, // Influential communicators
-                        10, // Accomplished scholars
+                        "Influential communicators",
+                        "Accomplished scholars"
                     ]
                 }
             ],
@@ -145,38 +135,33 @@ export default {
                 {
                     "filter_key": "topic",
                     "filter_values": [
-                        1 // Aboriginal and Torres Strait Islander
+                        "Aboriginal and Torres Strait Islander"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "item_type",
                     "filter_values": [
-                        18, // Module
+                        "Module"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "media_format",
                     "filter_values": [
-                        24, // H5P
+                        "H5P"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "subject",
                     "filter_values": [
-                        34, // Cross-disciplinary
+                        "Cross-disciplinary"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "licence",
                     "filter_values": [
-                        44, // CC BY Attribution
+                        "CC BY Attribution"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [
-                        11, // Connected citizens
-                        13 // Culturally capable
+                        "Connected citizens",
+                        "Culturally capable"
                     ]
                 }
             ],
@@ -207,40 +192,35 @@ export default {
                 {
                     "filter_key": "topic",
                     "filter_values": [
-                        8, // Software
-                        2, // Assignments
+                        "Software",
+                        "Assignments"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "item_type",
                     "filter_values": [
-                        18, // Module
+                        "Module"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "media_format",
                     "filter_values": [
-                        24, // H5P
+                        "H5P"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "subject",
                     "filter_values": [
-                        37, // Health; Behavioural Sciences
-                        40, // Medicine; Biomedical Sciences
+                        "Health; Behavioural Sciences",
+                        "Medicine; Biomedical Sciences",
                     ]
-                },
-                {
+                }, {
                     "filter_key": "licence",
                     "filter_values": [
-                        51, // UQ copyright
+                        "UQ copyright"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [
-                        14, // Influential communicators
-                        10, // Accomplished scholars
+                        "Influential communicators",
+                        "Accomplished scholars"
                     ]
                 }
             ],
@@ -271,39 +251,34 @@ export default {
                 {
                     "filter_key": "topic",
                     "filter_values": [
-                        3, // Digital skills
-                        2, // Assignments
+                        "Digital skills",
+                        "Assignments"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "item_type",
                     "filter_values": [
-                        18, // Module
+                        "Module"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "media_format",
                     "filter_values": [
-                        27, // Pressbook
+                        "Pressbook"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "subject",
                     "filter_values": [
-                        34, // Cross-disciplinary
+                        "Cross-disciplinary"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "licence",
                     "filter_values": [
-                        45 // CC BY-NC Attribution NonCommercial
+                        "CC BY-NC Attribution NonCommercial"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [
-                        10, // Accomplished scholars,
-                        12, // Courageous thinkers
+                        "Accomplished scholars",
+                        "Courageous thinkers"
                     ]
                 }
             ],
@@ -334,25 +309,22 @@ export default {
                 {
                     "filter_key": "media_format",
                     "filter_values": [
-                        27, // Pressbook
+                        "Pressbook"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "subject",
                     "filter_values": [
-                        34, // Cross-disciplinary
+                        "Cross-disciplinary"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "licence",
                     "filter_values": [
-                        44, // CC BY Attribution
+                        "CC BY Attribution"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [
-                        11, // Connected citizens
+                        "Connected citizens"
                     ]
                 }
             ],
@@ -383,39 +355,34 @@ export default {
                 {
                     "filter_key": "topic",
                     "filter_values": [
-                        3, // Digital skills
-                        2, // Assignments
+                        "Digital skills",
+                        "Assignments"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "item_type",
                     "filter_values": [
-                        18, // Module
+                        "Module"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "media_format",
                     "filter_values": [
-                        27, // Pressbook
+                        "Pressbook"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "subject",
                     "filter_values": [
-                        34, // Cross-disciplinary
+                        "Cross-disciplinary"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "licence",
                     "filter_values": [
-                        45 // CC BY-NC Attribution NonCommercial
+                        "CC BY-NC Attribution NonCommercial"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [
-                        11, // Connected citizens
-                        14, // Influential communicators
+                        "Connected citizens",
+                        "Influential communicators"
                     ]
                 }
             ],
@@ -446,39 +413,34 @@ export default {
                 {
                     "filter_key": "topic",
                     "filter_values": [
-                        6, // Referencing
-                        8, // Software
+                        "Referencing",
+                        "Software"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "item_type",
                     "filter_values": [
-                        18, // Module
+                        "Module"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "media_format",
                     "filter_values": [
-                        24, // H5P
+                        "H5P"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "subject",
                     "filter_values": [
-                        34, // Cross-disciplinary
+                        "Cross-disciplinary"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "licence",
                     "filter_values": [
-                        45 // CC BY-NC Attribution NonCommercial
+                        "CC BY-NC Attribution NonCommercial"
                     ]
-                },
-                {
+                }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [
-                        10, // Accomplished scholars,
-                        14, // Influential communicators"
+                        "Accomplished scholars",
+                        "Influential communicators"
                     ]
                 }
             ],

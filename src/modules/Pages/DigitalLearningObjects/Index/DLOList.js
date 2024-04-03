@@ -361,18 +361,6 @@ export const DLOList = ({
         !!block && (block.style.display = 'none');
     }
 
-    function findFacetSlugByName(facetName) {
-        for (const facetType of dlorFilterList) {
-            for (const facet of facetType?.facet_list) {
-                if (facet?.facet_name === facetName) {
-                    return facet?.facet_slug;
-                }
-            }
-        }
-
-        return null; // Return null if no matching facet_name is found
-    }
-
     function keywordIsSearchable(keyword) {
         // don't filter on something terribly short
         return keyword?.length > 1;
@@ -404,22 +392,33 @@ export const DLOList = ({
     const handleCheckboxAction = prop => e => {
         const facetTypeSlug = prop?.replace('checkbox-', '');
 
-        const facetName = e?.target?.value;
-        const facetSlug = findFacetSlugByName(facetName);
+        const facetId = e.target.value;
 
-        const checkboxId = `${facetTypeSlug}-${facetSlug}`;
-        const individualFilterSlug = `${facetTypeSlug}-${facetSlug}`;
+        const checkboxId = `${facetTypeSlug}-${facetId}`;
+        const individualFilterId = `${facetTypeSlug}-${facetId}`;
 
         if (e?.target?.checked) {
-            setSelectedFilters([...selectedFilters, individualFilterSlug]);
-
-            checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
-        } else {
-            const updateFilters = selectedFilters.filter(f2 => f2 !== individualFilterSlug);
+            console.log('22222 check');
+            const updateFilters = [...selectedFilters, individualFilterId];
+            console.log('selectedFilters::updateFilters=', updateFilters);
             setSelectedFilters(updateFilters);
 
-            checkBoxArrayRef.current = checkBoxArrayRef.current.filter(item => item !== checkboxId);
+            console.log('55555 CHECK then', [...checkBoxArrayRef.current, checkboxId]);
+            checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
+        } else {
+            console.log('22222 UNcheck', facetId);
+            // unchecking a filter checkbox
+            const updateFilters = selectedFilters.filter(f2 => f2 !== individualFilterId);
+            console.log('selectedFilters::updateFilters=', updateFilters);
+            setSelectedFilters(updateFilters);
+
+            console.log(
+                '55555 uncheck then',
+                checkBoxArrayRef.current.filter(id => id !== checkboxId),
+            );
+            checkBoxArrayRef.current = checkBoxArrayRef.current.filter(id => id !== checkboxId);
         }
+        console.log('end of handleCheckboxAction', checkBoxArrayRef.current);
     };
 
     function isFirstFilterPanel(index) {
@@ -540,18 +539,19 @@ export const DLOList = ({
                                         facetType?.facet_list?.length > 0 &&
                                         facetType?.facet_list?.map(facet => {
                                             const checkBoxid = `checkbox-${facetType?.facet_type_slug}`;
-                                            const checkBoxidShort = `${facetType?.facet_type_slug}-${facet?.facet_slug}`;
+                                            const checkBoxidShort = `${facetType?.facet_type_slug}-${facet?.facet_id}`;
                                             return (
                                                 <FormControlLabel
-                                                    key={`${facetType?.facet_type_slug}-${facet?.facet_slug}`}
+                                                    key={`${facetType?.facet_type_slug}-${facet?.facet_id}`}
                                                     className={classes.filterSidebarCheckboxControl}
                                                     control={
                                                         <Checkbox
                                                             // className={classes.filterSidebarCheckbox}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
-                                                            value={facet?.facet_name}
-                                                            data-testid={`checkbox-${facetType?.facet_type_slug}-${facet?.facet_slug}`}
+                                                            // value={facet?.facet_name}
+                                                            value={facet?.facet_id}
+                                                            data-testid={`checkbox-${facetType?.facet_type_slug}-${facet?.facet_id}`}
                                                             ref={checkBoxArrayRef.current[checkBoxidShort]}
                                                             checked={
                                                                 !!checkBoxArrayRef.current?.includes(checkBoxidShort)
@@ -585,7 +585,6 @@ export const DLOList = ({
     };
 
     const filterDlorList = () => {
-        const testvar = [];
         if (
             (!selectedFilters || selectedFilters.length === 0) &&
             (!keywordSearch || !keywordIsSearchable(keywordSearch))
@@ -593,7 +592,9 @@ export const DLOList = ({
             return dlorList;
         }
 
-        return dlorList?.filter(d => {
+        console.log('filterDlorList dlorList=', dlorList);
+        console.log('filterDlorList selectedFilters=', selectedFilters);
+        const after = dlorList?.filter(d => {
             const passesCheckboxFilter =
                 !!d?.constructedFilters &&
                 !!selectedFilters &&
@@ -604,6 +605,8 @@ export const DLOList = ({
                 !!keywordStartsWith(d?.object_keywords, keywordSearch);
             return passesCheckboxFilter && passesKeyWordFilter;
         });
+        console.log('filterDlorList after=', after);
+        return after;
     };
 
     const getPublicHelp = facetTypeSlug => {
@@ -636,11 +639,28 @@ export const DLOList = ({
 
         const getConcatenatedFilterLabels = facetTypeSlug => {
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
+            // console.log('f=', f);
             const output = f?.pop();
-            return output?.filter_values?.length > 0
-                ? output?.filter_values?.join(', ')
-                : /* istanbul ignore next */ false;
+            // console.log('output=', output);
+
+            const filterType =
+                !!dlorFilterList && dlorFilterList.filter(type => type.facet_type_slug === facetTypeSlug);
+            // console.log('filterType=', filterType);
+            const filterTypeFacets =
+                !!filterType &&
+                filterType.length > 0 &&
+                filterType.pop().facet_list?.filter(facet => output.filter_values.includes(facet.facet_id));
+            // console.log('filterTypeFacets=', filterTypeFacets);
+            // output.filter_values.includes(facet.facet_id) ? facet.facet_name : '';
+
+            const facetNames =
+                !!filterTypeFacets && filterTypeFacets.length > 0
+                    ? filterTypeFacets.map(item => item.facet_name)?.join(', ')
+                    : false;
+            // console.log('facetNames=', facetNames);
+            return facetNames;
         };
+
         return (
             <Grid
                 item
@@ -795,6 +815,7 @@ export const DLOList = ({
                             });
 
                             const dlorData = filterDlorList();
+                            console.log('22222 dlorData=', dlorData);
                             if (!dlorData || dlorData.length === 0) {
                                 return (
                                     <Grid container spacing={3}>

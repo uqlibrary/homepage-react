@@ -135,7 +135,7 @@ describe('Digital learning hub', () => {
                 .should('have.length', 8 + 1);
 
             // select the "Assignments" checkbox
-            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
                 .should('exist')
                 // .should('be.visible')
                 .should('not.be.checked')
@@ -158,32 +158,33 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="panel-minimisation-icon-2"]')
                 .should('exist')
                 .should('have.attr', 'aria-label', 'Close this filter section');
+
             // check the "Item type, Module" checkbox
-            cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-item_type-18"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
 
-            // some panels showing
+            // 3 panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
                 .should('have.length', 3 + 1);
 
             // UNcheck the "assignments" checkbox
-            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
 
-            // many panels showing
+            // 6 panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
                 .should('have.length', 6 + 1);
 
             // UNcheck the "Media format, Module" checkbox
-            cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-item_type-18"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -195,7 +196,7 @@ describe('Digital learning hub', () => {
                 .should('have.length', 8 + 1);
 
             // check the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -207,7 +208,7 @@ describe('Digital learning hub', () => {
                 .should('have.length', 1 + 1);
 
             // UNcheck the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -234,7 +235,7 @@ describe('Digital learning hub', () => {
                 .should('have.length', 2 + 1);
 
             // check the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -245,7 +246,7 @@ describe('Digital learning hub', () => {
                 .contains('No records satisfied this filter selection.');
 
             // use the clear button
-            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -274,7 +275,7 @@ describe('Digital learning hub', () => {
                 .should('have.length', 8 + 1);
 
             // check the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -286,13 +287,13 @@ describe('Digital learning hub', () => {
                 .should('have.length', 1 + 1);
 
             // interactive activity not visible
-            cy.get('[data-testid="checkbox-item_type-type_interactive_activity"]')
+            cy.get('[data-testid="checkbox-item_type-17"]')
                 .should('exist')
                 .should('not.be.visible');
             // expand a filter panel
             cy.get('[data-testid="panel-downarrow-2"]').click();
             // now the element appears
-            cy.get('[data-testid="checkbox-item_type-type_interactive_activity"]')
+            cy.get('[data-testid="checkbox-item_type-17"]')
                 .should('exist')
                 .should('be.visible');
 
@@ -303,10 +304,10 @@ describe('Digital learning hub', () => {
                 .click({ force: true });
 
             // interactive activity not visible
-            cy.get('[data-testid="checkbox-item_type-type_interactive_activity"]')
+            cy.get('[data-testid="checkbox-item_type-17"]')
                 .should('exist')
                 .should('not.be.visible');
-            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked');
             // all panels showing
@@ -411,7 +412,7 @@ describe('Digital learning hub', () => {
                 .children()
                 .should('have.length', 8 + 1); // all panels plus filter button
 
-            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
