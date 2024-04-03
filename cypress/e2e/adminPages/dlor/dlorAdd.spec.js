@@ -3,7 +3,7 @@ const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
 const REQUIRED_LENGTH_KEYWORDS = 4;
-describe('Add an object to the Digital Learning Object Repository (DLOR)', () => {
+describe('Add an object to the Digital learning hub', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
@@ -20,7 +20,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
                 cy.injectAxe();
                 cy.viewport(1300, 1000);
                 cy.waitUntil(() => cy.get('h1').should('exist'));
-                cy.get('h1').should('contain', 'DLOR Management');
+                cy.get('h1').should('contain', 'Digital learning hub Management');
 
                 cy.checkA11y('[data-testid="StandardPage"]', {
                     reportName: 'add dlor',
@@ -679,7 +679,7 @@ describe('Add an object to the Digital Learning Object Repository (DLOR)', () =>
             cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').should('contain', 'DLOR Management');
+            cy.get('h1').should('contain', 'Digital learning hub Management');
         });
     });
 });

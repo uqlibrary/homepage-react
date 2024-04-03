@@ -1,4 +1,4 @@
-describe('Digital Object learning Repository (DLOR)', () => {
+describe('Digital learning hub', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');

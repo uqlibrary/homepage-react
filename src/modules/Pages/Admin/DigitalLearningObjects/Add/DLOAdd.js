@@ -781,8 +781,8 @@ export const DLOAdd = ({
 
     if (!!dlorTeamLoading || dlorFilterListLoading) {
         return (
-            <StandardPage title="DLOR Management">
-                <StandardCard title="Create an Object for Digital learning objects">
+            <StandardPage title="Digital learning hub Management">
+                <StandardCard title="Create an Object for the Digital learning hub">
                     <Grid item xs={12}>
                         <InlineLoader message="Loading" />
                     </Grid>
@@ -792,8 +792,8 @@ export const DLOAdd = ({
     }
     if (!!dlorTeamError) {
         return (
-            <StandardPage title="DLOR Management">
-                <StandardCard title="Create an Object for Digital learning objects">
+            <StandardPage title="Digital learning hub Management">
+                <StandardCard title="Create an Object for the Digital learning hub">
                     <Typography variant="body1" data-testid="dlor-addObject-error">
                         {dlorTeamError}
                     </Typography>
@@ -803,8 +803,8 @@ export const DLOAdd = ({
     }
     if (!!dlorFilterListError) {
         return (
-            <StandardPage title="DLOR Management">
-                <StandardCard title="Create an Object for Digital learning objects">
+            <StandardPage title="Digital learning hub Management">
+                <StandardCard title="Create an Object for the Digital learning hub">
                     <Typography variant="body1" data-testid="dlor-homepage-error">
                         {dlorFilterListError}
                     </Typography>
@@ -814,8 +814,8 @@ export const DLOAdd = ({
     }
     if (!dlorFilterListLoading && !dlorFilterListError && (!dlorFilterList || dlorFilterList.length === 0)) {
         return (
-            <StandardPage title="DLOR Management">
-                <StandardCard title="Create an Object for Digital learning objects">
+            <StandardPage title="Digital learning hub Management">
+                <StandardCard title="Create an Object for the Digital learning hub">
                     <Typography variant="body1" data-testid="dlor-homepage-noresult">
                         Missing filters: We did not find any entries in the system - please try again later.
                     </Typography>
@@ -825,8 +825,8 @@ export const DLOAdd = ({
     }
 
     return (
-        <StandardPage title="DLOR Management">
-            <StandardCard title="Create an Object for Digital learning objects">
+        <StandardPage title="Digital learning hub Management">
+            <StandardCard title="Create an Object for the Digital learning hub">
                 {saveStatus === 'complete' && (
                     <ConfirmationBox
                         actionButtonColor="primary"

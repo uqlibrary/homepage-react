@@ -720,7 +720,7 @@ export const DLOList = ({
             <Typography component={'h1'} variant={'h6'}>
                 Find a digital learning object
                 <button className={classes.skipLink} id="skip-filters" onClick={() => skipToElement()}>
-                    Skip facet selection to view DLOR entries
+                    Skip facet selection to view Digital learning hub entries
                 </button>
             </Typography>
             <Typography component={'p'}>
