@@ -628,7 +628,7 @@ export const DLOList = ({
     };
 
     function navigateToDetailPage(uuid) {
-        window.location.href = `${getHomepageLink()}digital-learning-objects/view/${uuid}`;
+        window.location.href = `${getHomepageLink()}digital-learning-hub/view/${uuid}`;
     }
 
     function displayItemPanel(object, index) {

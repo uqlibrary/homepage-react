@@ -41,7 +41,7 @@ export const flattedPathConfigExact = [
     '/book-exam-booth',
     '/exams',
     '/exams/',
-    '/digital-learning-objects',
+    '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
 ];
 export const flattedPathConfig = [
@@ -54,7 +54,7 @@ export const flattedPathConfig = [
     '/admin/promopanel/edit',
     '/admin/promopanel/view',
     '/admin/promopanel/clone',
-    '/digital-learning-objects/view',
+    '/digital-learning-hub/view',
     '/exams/course',
 ];
 

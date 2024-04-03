@@ -105,7 +105,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
         return (
             <div className={classes.titleBlock}>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                    <a href={`${getHomepageLink()}digital-learning-objects`}>Find a digital learning object</a>
+                    <a href={`${getHomepageLink()}digital-learning-hub`}>Find a digital learning object</a>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>

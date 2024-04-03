@@ -6,7 +6,7 @@ describe('Digital learning hub', () => {
 
     context('anonymous desktop homepage visits', () => {
         beforeEach(() => {
-            cy.visit('digital-learning-objects');
+            cy.visit('digital-learning-hub');
             cy.viewport(1300, 1000);
         });
         it('is accessible', () => {
@@ -121,7 +121,7 @@ describe('Digital learning hub', () => {
                 'CC BY Attribution',
             );
 
-            cy.visit('digital-learning-objects?user=public');
+            cy.visit('digital-learning-hub?user=public');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
@@ -266,7 +266,7 @@ describe('Digital learning hub', () => {
                 .should('have.length', 4 + 1);
         });
         it('reset button works', () => {
-            cy.visit('digital-learning-objects');
+            cy.visit('digital-learning-hub');
             cy.viewport(1300, 1000);
             // all panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
@@ -322,16 +322,16 @@ describe('Digital learning hub', () => {
                 .should('exist')
                 .click();
             // the first detail page loads
-            cy.url().should('include', 'http://localhost:2020/digital-learning-objects/view/987y_isjgt_9866');
+            cy.url().should('include', 'http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866');
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'Accessibility - Digital Essentials');
             cy.get('[data-testid="dlor-detailpage-sitelabel"] a')
                 .should('exist')
-                .should('have.attr', 'href', 'http://localhost:2020/digital-learning-objects')
+                .should('have.attr', 'href', 'http://localhost:2020/digital-learning-hub')
                 .click();
             // back to homepage
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Find a digital learning object');
-            cy.url().should('include', 'http://localhost:2020/digital-learning-objects');
+            cy.url().should('include', 'http://localhost:2020/digital-learning-hub');
 
             // check the second panel
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] button')
@@ -339,17 +339,17 @@ describe('Digital learning hub', () => {
                 .click();
 
             // the second detail page loads
-            cy.url().should('include', 'http://localhost:2020/digital-learning-objects/view/98s0_dy5k3_98h4');
+            cy.url().should('include', 'http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4');
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'Advanced literature searching');
 
             // back to homepage
             cy.get('[data-testid="dlor-detailpage-sitelabel"] a')
                 .should('exist')
-                .should('have.attr', 'href', 'http://localhost:2020/digital-learning-objects')
+                .should('have.attr', 'href', 'http://localhost:2020/digital-learning-hub')
                 .click();
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Find a digital learning object');
-            cy.url().should('include', 'http://localhost:2020/digital-learning-objects');
+            cy.url().should('include', 'http://localhost:2020/digital-learning-hub');
 
             // check the fourth panel
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] button')
@@ -357,7 +357,7 @@ describe('Digital learning hub', () => {
                 .click();
 
             // the third detail page loads
-            cy.url().should('include', 'http://localhost:2020/digital-learning-objects/view/938h_4986_654f');
+            cy.url().should('include', 'http://localhost:2020/digital-learning-hub/view/938h_4986_654f');
             cy.get('[data-testid="dlor-detailpage"] h1').should(
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
@@ -367,12 +367,12 @@ describe('Digital learning hub', () => {
             cy.go('back');
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Find a digital learning object');
-            cy.url().should('include', 'http://localhost:2020/digital-learning-objects');
+            cy.url().should('include', 'http://localhost:2020/digital-learning-hub');
         });
     });
     context('other homepage visits', () => {
         it('can handle an error', () => {
-            cy.visit('digital-learning-objects?responseType=error');
+            cy.visit('digital-learning-hub?responseType=error');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-error"]')
                 .should('exist')
@@ -383,14 +383,14 @@ describe('Digital learning hub', () => {
         });
         it('can handle an empty result', () => {
             // this should never happen. Maybe immediately after initial upload
-            cy.visit('digital-learning-objects?responseType=emptyResult');
+            cy.visit('digital-learning-hub?responseType=emptyResult');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-noresult"]')
                 .should('exist')
                 .contains('We did not find any entries in the system - please try again later.');
         });
         it('still filters on mobile page', () => {
-            cy.visit('digital-learning-objects');
+            cy.visit('digital-learning-hub');
             cy.viewport(800, 900);
 
             cy.get('[data-testid="filterSidebar"]')
@@ -436,7 +436,7 @@ describe('Digital learning hub', () => {
 
     context('details page', () => {
         it('is accessible', () => {
-            cy.visit('digital-learning-objects/view/98s0_dy5k3_98h4');
+            cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
             cy.injectAxe();
             cy.viewport(1300, 1000);
 
@@ -454,7 +454,7 @@ describe('Digital learning hub', () => {
                 body: 'user has navigated to pressbook link',
             });
 
-            cy.visit('digital-learning-objects/view/938h_4986_654f');
+            cy.visit('digital-learning-hub/view/938h_4986_654f');
             // body content is as expected
             cy.get('[data-testid="dlor-detailpage"] h1').should(
                 'contain',
@@ -564,19 +564,19 @@ describe('Digital learning hub', () => {
             cy.get('body').contains('user has navigated to pressbook link');
 
             // the non-logged in user is prompted to login
-            cy.visit('digital-learning-objects/view/987y_isjgt_9866?user=public');
+            cy.visit('digital-learning-hub/view/987y_isjgt_9866?user=public');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
                 .contains('Login for the full experience');
 
             // a view page without keywords has a sensible sidebar
-            cy.visit('digital-learning-objects/view/9k45_hgr4_876h');
+            cy.visit('digital-learning-hub/view/9k45_hgr4_876h');
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'EndNote 20: Getting started');
             cy.get('[data-testid="detaipage-metadata-keywords"]').should('not.exist');
         });
         it('can handle an error', () => {
-            cy.visit('digital-learning-objects/view/98s0_dy5k3_98h4?responseType=error');
+            cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?responseType=error');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-detailpage-error"]')
                 .should('exist')
@@ -584,7 +584,7 @@ describe('Digital learning hub', () => {
         });
         it('can handle an empty result', () => {
             // this should never happen. Maybe immediately after initial upload
-            cy.visit('digital-learning-objects/view/missingRecord');
+            cy.visit('digital-learning-hub/view/missingRecord');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-detailpage-empty"]')
                 .should('exist')
