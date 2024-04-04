@@ -373,8 +373,8 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .type('http://example.com');
                 const typeableDownloadInstructions =
-                    'Lorem ipsum dolor sit amet, [consectetur adipiscing elit](http://example.com). In at sapien vel nisi congue fringilla. Maecenas non lacus dolor. Phasellus ornare condimentum est in cursus. Quisque laoreet dui non ante efficitur, sed euismod elit ornare. Mauris ac nibh dictum, viverra ligula ultricies, consequat neque. Duis eu lacinia sapien. Nullam rhoncus gravida est. Donec varius urna a eros vehicula, eget tempor eros maximus. Sed sed vestibulum libero.' +
-                    '\nNam ac felis neque. Nulla at neque a mauris tristique ultrices ac ultrices ex. Suspendisse iaculis fermentum mi, non cursus augue eleifend in. Maecenas ut faucibus est. Phasellus a diam eget mauris feugiat vestibulum. Maecenas consequat turpis eu enim varius, in elementum mi lacinia. Donec egestas, nulla eget tincidunt placerat, arcu libero sollicitudin sapien, sit amet euismod sem libero efficitur ipsum. Nulla vitae dui urna. Proin id diam vitae risus vestibulum interdum eu iaculis ipsum. Praesent justo quam, scelerisque cursus lobortis sed, euismod quis orci.';
+                    'Lorem ipsum dolor sit amet, [consectetur adipiscing elit](http://example.com). In at sapien vel nisi congue fringilla. Maecenas non lacus dolor. Phasellus ornare condimentum est in cursus.' +
+                    '\nNam ac felis neque. Nulla at neque a mauris tristique ultrices ac ultrices ex. Suspendisse iaculis fermentum mi, non cursus augue eleifend in. Maecenas ut faucibus est. Phasellus a diam eget mauris feugiat vestibulum. ';
                 cy.get('[data-testid="object_download_instructions"] textarea:first-child')
                     .should('exist')
                     .type(typeableDownloadInstructions);
