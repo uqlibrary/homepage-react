@@ -1,9 +1,12 @@
 import React from 'react';
 
 export const displayDownloadInstructions = (downloadInstructions, theClass) => {
-    const content = downloadInstructions
-        .replace(/\[([^\]]+)\]\(([^\)]+)\)/, '<a rel="noreferrer noopener" href="$2">$1</a>')
-        .split('\n');
+    const replaceMarkdownLinks = (match, linkText, url) => {
+        return `<a rel="noreferrer noopener" href="${url}">${linkText}</a>`;
+    };
+
+    const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g;
+    const content = downloadInstructions.replace(markdownLinkRegex, replaceMarkdownLinks).split('\n');
 
     return (
         <div data-testid="dlor-massaged-download-instructions" className={theClass}>

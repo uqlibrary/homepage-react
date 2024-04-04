@@ -181,7 +181,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
                                     How to use this object
                                 </Typography>
-                                {/* <div className={classes.downloadInstructions}></div>*/}
                                 {!!dlorItem?.object_download_instructions &&
                                     displayDownloadInstructions(
                                         dlorItem.object_download_instructions,
