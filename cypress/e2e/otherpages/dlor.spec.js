@@ -503,11 +503,6 @@ describe('Digital learning hub', () => {
             });
         });
         it('appears as expected', () => {
-            cy.intercept('GET', 'https://uq.h5p.com/content/1291624610498497569', {
-                statusCode: 200,
-                body: 'user has navigated to pressbook link',
-            });
-
             cy.visit('digital-learning-hub/view/938h_4986_654f');
             // body content is as expected
             cy.get('[data-testid="dlor-detailpage"] h1').should(
@@ -611,20 +606,24 @@ describe('Digital learning hub', () => {
                 });
 
             // the link can be clicked
+            cy.intercept('GET', 'https://uq.h5p.com/content/1291624610498497569', {
+                statusCode: 200,
+                body: 'user has navigated to pressbook link',
+            });
             cy.get('[data-testid="dlor-detailpage"] a')
                 .should('exist')
                 .should('contain', 'Access the object')
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
-
-            // the non-logged in user is prompted to login
+        });
+        it('the non-logged in user is prompted to login', () => {
             cy.visit('digital-learning-hub/view/987y_isjgt_9866?user=public');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
                 .contains('Login for the full experience');
-
-            // a view page without keywords has a sensible sidebar
+        });
+        it('a view page without keywords has a sensible sidebar', () => {
             cy.visit('digital-learning-hub/view/9k45_hgr4_876h');
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'EndNote 20: Getting started');
             cy.get('[data-testid="detaipage-metadata-keywords"]').should('not.exist');

@@ -847,7 +847,7 @@ export const DLOList = ({
                             } else {
                                 return (
                                     <div className={classes.panelBody}>
-                                        <LoginPrompt account={account} />
+                                        <LoginPrompt account={account} narrower />
                                         <Grid
                                             container
                                             spacing={3}
