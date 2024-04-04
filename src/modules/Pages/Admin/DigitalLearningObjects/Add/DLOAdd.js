@@ -475,7 +475,10 @@ export const DLOAdd = ({
                     />
                     <div className={classes.fieldUseTip}>
                         Links can use Markdown formatting, like so:{' '}
-                        <span title="Square brackets around the clickable words; round braces around the web address">
+                        <span
+                            title="Square brackets around the clickable words; round braces around the web address"
+                            style={{ borderBottom: 'thin dashed black' }}
+                        >
                             [Link text](linkUrl)
                         </span>
                     </div>
