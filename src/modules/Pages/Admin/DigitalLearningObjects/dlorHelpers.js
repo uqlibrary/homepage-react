@@ -3,7 +3,11 @@ export function splitStringToArrayOnComma(keywordString) {
     if (!!keywordString) {
         // split 'abc, "def, def", "hij"'
         // to ['abc', 'def, def', 'hij']
-        splitStringToArrayOnComma = keywordString.trim().split(/, (?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        splitStringToArrayOnComma = keywordString
+            .replace(/,/g, ', ') // if they didnt put a space after the comma, add one
+            .replace(/,  /g, ', ') // (then correct any doubles)
+            .trim()
+            .split(/, (?=(?:(?:[^"]*"){2})*[^"]*$)/);
         if (!!splitStringToArrayOnComma && splitStringToArrayOnComma.length > 0) {
             splitStringToArrayOnComma = splitStringToArrayOnComma.map(keyword => keyword.replace(/^"|"$/g, '').trim());
         }
