@@ -257,7 +257,7 @@ export default {
             "object_id": 4,
             "object_public_uuid": "0h4y_87f3_6js7",
             "object_title": "Choose the right tool - Digital Essentials",
-            "object_description": "Find UQ, open source and freeware tools for data analysis, images, video, audio, infographics, 3D modelling, coding, study\u00a0and writing and referencing.",
+            "object_description": "Find UQ, open source tools for data analysis, images, video, audio, infographics, 3D modelling, coding, study\u00a0and writing and referencing.",
             "object_summary": "Find UQ, open source and freeware tools for data analysis, images, video, audio, infographics, 3D modelling, coding, study\u00a0and writing and referencing.",
             "object_review_date_next": "2050-01-01T00:01",
             "object_status": "current",

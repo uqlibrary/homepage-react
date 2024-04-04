@@ -220,7 +220,7 @@ describe('Digital learning hub', () => {
                 .should('have.length', 8 + 1);
 
             cy.get('[data-testid="dlor-homepage-keyword"]').type('a');
-            // does nothing
+            // a single character does nothing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
@@ -232,10 +232,10 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 2 + 1);
+                .should('have.length', 3 + 1);
 
-            // check the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
+            // check the "Assignments" checkbox
+            cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -246,7 +246,7 @@ describe('Digital learning hub', () => {
                 .contains('No records satisfied this filter selection.');
 
             // use the clear button
-            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -263,11 +263,65 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4 + 1);
+                .should('have.length', 7 + 1);
+        });
+        it('keyword filters on each of the different options', () => {
+            // "Implications" is found in the description of "Artificial Intelligence - Digital Essentials"
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('Implications');
+            // now only one panel
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + 1);
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Artificial Intelligence - Digital Essentials');
+
+            // use the clear button to clear the keyword
+            cy.get('[data-testid="keyword-clear"]')
+                .should('exist')
+                .click();
+            // all panels showing again & keyword search field empty
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 8 + 1);
+            cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
+
+            // "security" is found in the title of "Digital security  - Digital Essentials"
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('security');
+            // now only one panel
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + 1);
+            cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Digital security  - Digital Essentials');
+
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('{selectall}{backspace}');
+            // all panels showing again & keyword search field empty
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 8 + 1);
+            cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
+
+            // "freeware" is found in the summary of "Choose the right tool - Digital Essentials"
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('freeware');
+            // now only one panels
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + 1);
+            cy.get('[data-testid="dlor-homepage-panel-0h4y_87f3_6js7"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Choose the right tool - Digital Essentials');
         });
         it('reset button works', () => {
-            cy.visit('digital-learning-hub');
-            cy.viewport(1300, 1000);
             // all panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')

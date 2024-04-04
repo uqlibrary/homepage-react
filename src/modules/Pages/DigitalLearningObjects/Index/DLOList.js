@@ -373,11 +373,23 @@ export const DLOList = ({
         return keyword?.length > 1;
     }
 
-    const keywordStartsWith = (keywordList, enteredKeyword) => {
-        // do any of the keywords in the list start with the entered text? case insensitive
-        return !!keywordList?.some(k => {
-            return k.toLowerCase().startsWith(enteredKeyword.toLowerCase());
-        });
+    const keywordFoundIn = (object, enteredKeyword) => {
+        const enteredKeywordLower = enteredKeyword.toLowerCase();
+        if (
+            object.object_title.toLowerCase().includes(enteredKeywordLower) ||
+            object.object_description.toLowerCase().includes(enteredKeywordLower) ||
+            object.object_summary.toLowerCase().includes(enteredKeywordLower)
+        ) {
+            return true;
+        }
+        if (
+            !!object?.object_keywords?.some(k => {
+                return k.toLowerCase().startsWith(enteredKeywordLower);
+            })
+        ) {
+            return true;
+        }
+        return false;
     };
 
     const handleKeywordSearch = e => {
@@ -607,9 +619,7 @@ export const DLOList = ({
                 !!selectedFilters &&
                 !!selectedFilters.every(el => d?.constructedFilters.includes(el));
             const passesKeyWordFilter =
-                !keywordSearch ||
-                !keywordIsSearchable(keywordSearch) ||
-                !!keywordStartsWith(d?.object_keywords, keywordSearch);
+                !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
             return passesCheckboxFilter && passesKeyWordFilter;
         });
         console.log('filterDlorList after=', after);
