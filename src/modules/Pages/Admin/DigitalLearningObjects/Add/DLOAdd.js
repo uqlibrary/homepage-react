@@ -221,7 +221,7 @@ export const DLOAdd = ({
     };
 
     const isValidUsername = testUserName => {
-        return testUserName?.length === 8 || testUserName?.length === 9;
+        return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
 
     const stepPanelContentOne = (
@@ -242,6 +242,7 @@ export const DLOAdd = ({
                         style={{ width: '20em' }}
                         error={!isValidUsername(formValues?.object_publishing_user)}
                     />
+                    <div className={classes.fieldUseTip}>This must be the person's UQ username</div>
                     {!isValidUsername(formValues?.object_publishing_user) && (
                         <div className={classes.errorMessage} data-testid={'error-message-object_publishing_user'}>
                             This username is not valid.

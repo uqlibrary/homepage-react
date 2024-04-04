@@ -9,7 +9,7 @@ describe('Add an object to the Digital learning hub', () => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
 
-    const mockDlorAdminUser = 'dloradmin';
+    const mockDlorAdminUser = 'dloradmn';
     context('adding a new object', () => {
         context('successfully', () => {
             beforeEach(() => {
@@ -234,6 +234,9 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_publishing_user"] input')
                     .should('exist')
                     .type('{backspace}')
+                    .type('{backspace}')
+                    .type('{backspace}')
+                    .type('{backspace}')
                     .type('{backspace}'); // username no longer long enough
                 cy.get('[data-testid="error-message-object_publishing_user"]')
                     .should('exist')
@@ -420,7 +423,7 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: typeableDownloadInstructions,
                     object_embed_type: 'link',
-                    object_publishing_user: 'dloradmin',
+                    object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
                     team_email: 'john@example.com',
@@ -550,7 +553,7 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: downloadInstructionText,
                     object_embed_type: 'link',
-                    object_publishing_user: 'dloradmin',
+                    object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
                     object_owning_team_id: 1,
