@@ -10,6 +10,7 @@ import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
@@ -23,6 +24,8 @@ import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
+import CloseIcon from '@mui/icons-material/Close';
+
 import { useConfirmationState } from 'hooks';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -30,8 +33,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
+import { displayDownloadInstructions } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { splitStringToArrayOnComma } from '../dlorHelpers';
-import { displayDownloadInstructions } from '../../../DigitalLearningObjects/dlorHelpers';
 
 const moment = require('moment-timezone');
 
@@ -447,9 +450,20 @@ export const DLOAdd = ({
                     {/* {formValues?.object_description?.length > 0 && (*/}
                     {!!summarySuggestionOpen && (
                         <div data-testid="admin-dlor-suggest-summary">
-                            <Typography component={'h2'} variant={'p'}>
-                                Suggestion for summary:
-                            </Typography>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography component={'h2'} variant={'p'}>
+                                    Suggestion for summary:
+                                </Typography>
+                                <IconButton
+                                    data-testid="admin-dlor-suggest-summary-close-button"
+                                    data-analyticsid="admin-dlor-suggest-summary-close-button"
+                                    onClick={() => setSummarySuggestionOpen(false)}
+                                    aria-label="Click to close Summary suggestion"
+                                    size="large"
+                                >
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                            </div>
                             <Typography
                                 component={'p'}
                                 style={{ marginBlock: 10 }}

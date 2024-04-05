@@ -319,7 +319,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('contain', 'at least 1 more character needed');
             });
             it('supplies a summary suggestion', () => {
-                // go to the second panel, Description
+                // go to the second step, Description
                 cy.get('[data-testid="dlor-add-next-button"]')
                     .should('exist')
                     .click();
@@ -341,6 +341,12 @@ describe('Add an object to the Digital learning hub', () => {
                     'The quick brown fox jumped over the lazy yellow dog and ran into the woods.',
                 );
 
+                cy.get('[data-testid="admin-dlor-suggest-summary-close-button"]')
+                    .should('exist')
+                    .click();
+                // suggestion panel is hidden
+                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
+
                 // suggestion panel picks up first paragraph on carriage return after minimum char count
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .clear()
@@ -353,6 +359,8 @@ describe('Add an object to the Digital learning hub', () => {
                     'have.text',
                     'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
                 );
+                // suggestion panel is open again because they changed the description
+                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('exist');
 
                 // summary currently blank
                 cy.get('[data-testid="object_summary"]')
