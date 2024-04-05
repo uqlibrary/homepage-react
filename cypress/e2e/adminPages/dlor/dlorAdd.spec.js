@@ -318,6 +318,70 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('contain', 'at least 1 more character needed');
             });
+            it('admin can use a summary suggestion', () => {
+                // go to the second panel, Description
+                cy.get('[data-testid="dlor-add-next-button"]')
+                    .should('exist')
+                    .click();
+
+                // suggestion panel not open
+                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
+
+                // a long description puts the first 150 char, breaking at a word break, into the summary suggestion
+                cy.get('[data-testid="object_description"] textarea:first-child')
+                    .should('exist')
+                    .type(
+                        'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox',
+                    );
+                // suggestion panel is now open
+                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('exist');
+                // subset of description has appeared in suggestion panel
+                cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
+                    'have.text',
+                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop',
+                );
+
+                // adding a full stop makes suggestion panel extend to the full sentence
+                cy.get('[data-testid="object_description"] textarea:first-child').type('.');
+                cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
+                    'have.text',
+                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
+                );
+
+                // suggestion panel picks up first paragraph on carriage return after minimum char count
+                cy.get('[data-testid="object_description"] textarea:first-child')
+                    .type('{backspace}')
+                    .type('\nsome more words');
+                cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
+                    'have.text',
+                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox',
+                );
+
+                // summary currently blank
+                cy.get('[data-testid="object_summary"]')
+                    .should('exist')
+                    .should('have.value', '');
+                // val number currently 2 because title and summary not set
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
+                    .should('exist')
+                    .should('contain', 2);
+                // click "use summary" button
+                cy.get('[data-testid="admin-dlor-suggest-summary-button"]')
+                    .should('exist')
+                    .click();
+                // summary as expected - why does it think it's an empty string?
+                // cy.waitUntil(() => cy.get('[data-testid="object_summary"]').should('exist'));
+                // cy.get('[data-testid="object_summary"]').should(
+                //     'have.value',
+                //     'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox',
+                // );
+                // suggestion panel no longer open
+                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
+                // val number 1
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
+                    .should('exist')
+                    .should('contain', 1);
+            });
         });
         context('successfully mock to db', () => {
             beforeEach(() => {

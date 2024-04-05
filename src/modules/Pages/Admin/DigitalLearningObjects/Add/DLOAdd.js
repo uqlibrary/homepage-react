@@ -146,7 +146,9 @@ export const DLOAdd = ({
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
+    const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
+    const [summaryContent, setSummaryContent] = useState('');
 
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
@@ -186,18 +188,19 @@ export const DLOAdd = ({
         // handle radio & checkbox filter field changes
         const theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value; // .trimEnd();
-        // setNewValue(theNewValue);
 
         // handle teams dropdown changes
         if (prop === 'object_owning_team_id') {
             setShowTeamCreationForm(theNewValue === 'new');
         }
+        if (prop === 'object_summary') {
+            setSummaryContent(e.target.value);
+        }
+        if (prop === 'object_description') {
+            setSummarySuggestionOpen(true);
+        }
 
-        // amalgamate new value into data set
-        const newValues = { ...formValues, [prop]: theNewValue };
-
-        setFormValidity(validateValues(newValues));
-        setFormValues(newValues);
+        resetForm(prop, theNewValue);
     };
 
     const isValidUrl = testUrl => {
@@ -326,6 +329,71 @@ export const DLOAdd = ({
             )}
         </>
     );
+
+    const suggestSummary = (enteredDescription, requiredLength = 150) => {
+        // while its short, return the shortness
+        console.log('suggestSummary length=', enteredDescription.length);
+        if (enteredDescription.length <= requiredLength) {
+            return enteredDescription;
+        }
+
+        // if the user starts a new paragraph, use just the first paragraph
+        const lastCarriageReturnIndex = enteredDescription.indexOf('\n', requiredLength);
+        console.log('suggestSummary lastCarriageReturnIndex=', lastCarriageReturnIndex);
+        if (lastCarriageReturnIndex !== -1) {
+            console.log('suggestSummary use carriage return');
+            return enteredDescription.substring(0, lastCarriageReturnIndex + 1).trim(); // remove carriage return from end
+        }
+
+        // if they enter a complete sentence, use just that sentences up to the requiredlength point
+        const fullStopLocation = enteredDescription.indexOf('.', requiredLength);
+        console.log('suggestSummary fullStopLocation=', fullStopLocation);
+        if (fullStopLocation !== -1) {
+            console.log('suggestSummary use full stop');
+            return enteredDescription.substring(0, fullStopLocation + 1);
+        }
+
+        // return the first n characters, breaking at a word break
+        const trimmedString = enteredDescription.slice(0, requiredLength + 1);
+        const slice = trimmedString.slice(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
+        console.log('suggestSummary last ');
+        return slice;
+    };
+
+    function resetForm(prop, theNewValue) {
+        console.log('resetForm', prop, theNewValue);
+        // amalgamate new value into data set
+        const newValues = { ...formValues, [prop]: theNewValue };
+
+        setFormValidity(validateValues(newValues));
+        setFormValues(newValues);
+    }
+
+    const useSuggestion = e => {
+        // Assuming you want to insert the text "Inserted Text" into the input field
+        console.log('useSuggestion target=', e.target);
+        const newSummary = suggestSummary(formValues?.object_description);
+        setSummaryContent(newSummary);
+        // handleChange('object_summary', e);
+        resetForm('object_summary', newSummary);
+        setSummarySuggestionOpen(false);
+    };
+
+    const SummaryCharCountPrompt = () => {
+        console.log('SummaryCharCountPrompt start');
+        let newVar = '';
+        if (!!formValues?.object_summary) {
+            console.log('SummaryCharCountPrompt is formval');
+            newVar = characterCount(formValues?.object_summary?.length, summaryMinimumLength, 'object_summary');
+        } else if (!!summaryContent) {
+            console.log('SummaryCharCountPrompt is typee');
+            newVar = characterCount(summaryContent?.length, summaryMinimumLength, 'object_summary');
+        } else {
+            console.log('SummaryCharCountPrompt is else');
+        }
+        return newVar;
+    };
+
     const stepPanelContentTwo = (
         <>
             <Grid item xs={12}>
@@ -380,11 +448,34 @@ export const DLOAdd = ({
                         multiline
                         required
                         rows={2}
-                        value={formValues?.object_summary}
+                        value={summaryContent}
                         onChange={handleChange('object_summary')}
                     />
-                    {!!formValues?.object_summary &&
-                        characterCount(formValues?.object_summary?.length, summaryMinimumLength, 'object_summary')}
+                    <SummaryCharCountPrompt />
+                    {/* {formValues?.object_description?.length > 0 && (*/}
+                    {!!summarySuggestionOpen && (
+                        <div data-testid="admin-dlor-suggest-summary">
+                            <Typography component={'h2'} variant={'p'}>
+                                Suggestion for summary:
+                            </Typography>
+                            <Typography
+                                component={'p'}
+                                style={{ marginBlock: 10 }}
+                                data-testid="admin-dlor-suggest-summary-content"
+                            >
+                                {suggestSummary(formValues?.object_description)}
+                            </Typography>
+                            <Button
+                                color="primary"
+                                data-testid="admin-dlor-suggest-summary-button"
+                                data-analyticsid="admin-dlor-suggest-summary-button"
+                                style={{ display: 'block' }}
+                                variant="contained"
+                                children="Use Suggestion"
+                                onClick={useSuggestion}
+                            />
+                        </div>
+                    )}
                 </FormControl>
             </Grid>
             <Grid item xs={12}>
@@ -569,9 +660,7 @@ export const DLOAdd = ({
     ];
     const [activeStep, setActiveStep] = useState(0);
 
-    const initiallyValid = new Array(steps?.length).fill(true);
-    console.log('PanelValidity initiallyValid=', initiallyValid);
-    const [panelValidity, setPanelValidity] = useState(initiallyValid);
+    const [panelValidity, setPanelValidity] = useState(new Array(steps?.length).fill(true));
 
     function getTodayPlusOneYear(baseDate = null) {
         const today = baseDate || moment();
@@ -595,15 +684,15 @@ export const DLOAdd = ({
     useEffect(() => {
         // this is needed to get the validation badges after the filter list loads
         if (!!dlorFilterList && dlorFilterList.length > 0) {
-            console.log('useEffect filter val');
+            // console.log('useEffect filter val');
             setFormValidity(validateValues(formDefaults));
         }
     }, [dlorFilterList]);
 
     useEffect(() => {
-        console.log('useEffect dlorItem=', dlorItem, ';dlorItemError', dlorItemError);
+        // console.log('useEffect dlorItem=', dlorItem, ';dlorItemError', dlorItemError);
         if ((!!dlorItem && !!dlorItem.data?.object_id) || !!dlorItemError) {
-            console.log('useEffect showing conf');
+            // console.log('useEffect showing conf');
             setSaveStatus('complete');
             showConfirmation();
         }
@@ -717,7 +806,7 @@ export const DLOAdd = ({
             secondPanelErrorCount === 0 &&
             thirdPanelErrorCount === 0 &&
             fourthPanelErrorCount === 0;
-        console.log('validateValues currentValues=', isValid, currentValues);
+        // console.log('validateValues currentValues=', isValid, currentValues);
         return isValid;
     };
 
@@ -758,14 +847,14 @@ export const DLOAdd = ({
                     />
                 ));
         } else if (filterItem?.facet_type_number === 'exactly-one') {
-            console.log('filterItem=', filterItem);
+            // console.log('filterItem=', filterItem);
             const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
-            console.log('radioGroupName=', radioGroupName);
-            console.log('filterItem.facet_list=', filterItem.facet_list);
-            console.log(
-                'default value=',
-                !!filterItem.facet_list && filterItem.facet_list.length > 0 && !filterItem.facet_list.slice(0, 1),
-            );
+            // console.log('radioGroupName=', radioGroupName);
+            // console.log('filterItem.facet_list=', filterItem.facet_list);
+            // console.log(
+            //     'default value=',
+            //     !!filterItem.facet_list && filterItem.facet_list.length > 0 && !filterItem.facet_list.slice(0, 1),
+            // );
             result = (
                 <RadioGroup
                     aria-labelledby={`demo-radio-object_${filterItem.facet_id}_label-group-label`}
