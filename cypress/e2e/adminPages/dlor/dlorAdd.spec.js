@@ -318,7 +318,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('contain', 'at least 1 more character needed');
             });
-            it('admin can use a summary suggestion', () => {
+            it('supplies a summary suggestion', () => {
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-add-next-button"]')
                     .should('exist')
@@ -331,37 +331,34 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
                     .type(
-                        'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox',
+                        'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
                     );
                 // suggestion panel is now open
                 cy.get('[data-testid="admin-dlor-suggest-summary"]').should('exist');
                 // subset of description has appeared in suggestion panel
                 cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
                     'have.text',
-                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop',
-                );
-
-                // adding a full stop makes suggestion panel extend to the full sentence
-                cy.get('[data-testid="object_description"] textarea:first-child').type('.');
-                cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
-                    'have.text',
-                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
+                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods.',
                 );
 
                 // suggestion panel picks up first paragraph on carriage return after minimum char count
                 cy.get('[data-testid="object_description"] textarea:first-child')
-                    .type('{backspace}')
-                    .type('\nsome more words');
+                    .clear()
+                    .type(
+                        'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.' +
+                            '\n' +
+                            'a second paragraph',
+                    );
                 cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
                     'have.text',
-                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox',
+                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
                 );
 
                 // summary currently blank
                 cy.get('[data-testid="object_summary"]')
                     .should('exist')
                     .should('have.value', '');
-                // val number currently 2 because title and summary not set
+                // step 2 validation number = 2 because title and summary not set
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
                     .should('exist')
                     .should('contain', 2);
@@ -369,7 +366,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="admin-dlor-suggest-summary-button"]')
                     .should('exist')
                     .click();
-                // summary as expected - why does it think it's an empty string?
+                // // summary field as expected - why does it think it's an empty string? rely on val number chaning
                 // cy.waitUntil(() => cy.get('[data-testid="object_summary"]').should('exist'));
                 // cy.get('[data-testid="object_summary"]').should(
                 //     'have.value',
@@ -377,7 +374,7 @@ describe('Add an object to the Digital learning hub', () => {
                 // );
                 // suggestion panel no longer open
                 cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
-                // val number 1
+                // step 2 validation number = 1, only title not set
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
                     .should('exist')
                     .should('contain', 1);

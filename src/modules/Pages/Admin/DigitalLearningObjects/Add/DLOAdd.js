@@ -331,32 +331,26 @@ export const DLOAdd = ({
     );
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
-        // while its short, return the shortness
-        console.log('suggestSummary length=', enteredDescription.length);
-        if (enteredDescription.length <= requiredLength) {
-            return enteredDescription;
-        }
-
         // if the user starts a new paragraph, use just the first paragraph
-        const lastCarriageReturnIndex = enteredDescription.indexOf('\n', requiredLength);
-        console.log('suggestSummary lastCarriageReturnIndex=', lastCarriageReturnIndex);
+        const lastCarriageReturnIndex = enteredDescription.indexOf('\n');
         if (lastCarriageReturnIndex !== -1) {
-            console.log('suggestSummary use carriage return');
             return enteredDescription.substring(0, lastCarriageReturnIndex + 1).trim(); // remove carriage return from end
         }
 
         // if they enter a complete sentence, use just that sentences up to the requiredlength point
-        const fullStopLocation = enteredDescription.indexOf('.', requiredLength);
-        console.log('suggestSummary fullStopLocation=', fullStopLocation);
+        const fullStopLocation = enteredDescription.indexOf('.');
         if (fullStopLocation !== -1) {
-            console.log('suggestSummary use full stop');
             return enteredDescription.substring(0, fullStopLocation + 1);
+        }
+
+        // while its short, return the shortness
+        if (enteredDescription.length <= requiredLength) {
+            return enteredDescription;
         }
 
         // return the first n characters, breaking at a word break
         const trimmedString = enteredDescription.slice(0, requiredLength + 1);
         const slice = trimmedString.slice(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
-        console.log('suggestSummary last ');
         return slice;
     };
 
@@ -370,8 +364,6 @@ export const DLOAdd = ({
     }
 
     const useSuggestion = e => {
-        // Assuming you want to insert the text "Inserted Text" into the input field
-        console.log('useSuggestion target=', e.target);
         const newSummary = suggestSummary(formValues?.object_description);
         setSummaryContent(newSummary);
         // handleChange('object_summary', e);
