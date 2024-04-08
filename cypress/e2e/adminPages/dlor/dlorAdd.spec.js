@@ -544,6 +544,9 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('contain', 'Return to list page')
                     .click();
                 cy.url().should('eq', 'http://localhost:2020/admin/dlor');
+                cy.get('[data-testid="StandardPage-title"]')
+                    .should('exist')
+                    .should('contain', 'Digital learning hub Management');
             });
             it('admin can create a new object for an existing team and start a fresh form', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {

@@ -19,3 +19,23 @@ export function splitStringToArrayOnComma(keywordString) {
     }
     return splitStringToArrayOnComma;
 }
+
+/**
+ * extract the username from the url
+ * return prefixed by the correct character, which should be either '?' or '&'
+ * @param appendType
+ * @returns {string}
+ */
+export function getUserPostfix(appendType = '?') {
+    let userString = '';
+    if (window.location.hostname === 'localhost') {
+        const queryString = new URLSearchParams(
+            window.location.search || window.location.hash.substring(location.hash.indexOf('?')),
+        );
+
+        // Get user from query string
+        const user = queryString.get('user');
+        userString = !!user ? `${appendType}user=${user}` : '';
+    }
+    return userString;
+}

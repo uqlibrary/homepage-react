@@ -20,6 +20,7 @@ export const flattedPathConfigExact = [
     '/payment-receipt',
     '/admin/alerts/add',
     '/admin/alerts',
+    '/admin/dlor',
     '/admin/dlor/add',
     '/admin/masquerade',
     '/admin/masquerade/',
@@ -216,10 +217,16 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     const dlorAdminDisplay = [
         {
+            path: pathConfig.admin.dloradmin,
+            component: components.DLOAdminHomepage,
+            exact: true,
+            pageTitle: 'Manage the Digital learning hub',
+        },
+        {
             path: pathConfig.admin.dloradd,
             component: components.DLOAdd,
             exact: true,
-            pageTitle: locale.pages.admin.alerts.form.add.title,
+            pageTitle: 'Create a new Object',
         },
     ];
 

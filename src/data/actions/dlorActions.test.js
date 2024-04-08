@@ -1,8 +1,6 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadAllDLORs, loadADLOR, clearDlor, createDLor, loadOwningTeams } from './dlorActions';
-import { DLOR_DETAIL_FAILED, DLOR_TEAM_LOADING } from './actionTypes';
-import { DLOR_TEAM_LIST_API } from '../../repositories/routes';
+import { loadAllDLORs, loadADLOR, clearADlor, createDLor, loadOwningTeams } from './dlorActions';
 
 jest.mock('@sentry/browser');
 
@@ -105,7 +103,7 @@ describe('Digital learning hub actions', () => {
         it('should dispatch clear a dlor action', async () => {
             const expectedActions = [actions.DLOR_DETAIL_CLEAR];
 
-            await mockActionsStore.dispatch(clearDlor());
+            await mockActionsStore.dispatch(clearADlor());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

@@ -26,6 +26,7 @@ import { useTheme } from '@mui/material/styles';
 
 import CloseIcon from '@mui/icons-material/Close';
 
+import { useAccountContext } from 'context';
 import { useConfirmationState } from 'hooks';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -107,8 +108,9 @@ export const DLOAdd = ({
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
-    account,
+    // account,
 }) => {
+    const { account } = useAccountContext();
     const classes = useStyles();
     const history = useHistory();
     const [cookies, setCookie] = useCookies();

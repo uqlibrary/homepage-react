@@ -68,7 +68,7 @@ export function loadAllFilters() {
     };
 }
 
-export function clearDlor() {
+export function clearADlor() {
     return dispatch => {
         dispatch({ type: actions.DLOR_DETAIL_CLEAR });
     };

@@ -8,6 +8,7 @@ export const pathConfig = {
         alertsclone: alertid => `/admin/alerts/clone/${alertid}`,
         alertsview: alertid => `/admin/alerts/view/${alertid}`,
         alerts: '/admin/alerts',
+        dloradmin: '/admin/dlor',
         dloradd: '/admin/dlor/add',
         masquerade: '/admin/masquerade',
         promopaneladd: '/admin/promopanel/add',
