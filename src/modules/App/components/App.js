@@ -140,7 +140,7 @@ export const App = ({ account, actions }) => {
                 <div id="full-footer-block">
                     <connect-footer />
                     <uq-footer />
-                    {!hideForAdmin() && <proactive-chat />}
+                    {!hideForAdmin() && <proactive-chat secondsTilProactiveChatAppears={10} />}
                 </div>
             </div>
         </Grid>
