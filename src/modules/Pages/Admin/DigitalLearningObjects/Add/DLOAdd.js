@@ -232,7 +232,7 @@ export const DLOAdd = ({
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
 
-    const stepPanelContentOne = (
+    const stepPanelContentOwnership = (
         <>
             <Grid item xs={12}>
                 <FormControl
@@ -391,7 +391,7 @@ export const DLOAdd = ({
         return newVar;
     };
 
-    const stepPanelContentTwo = (
+    const stepPanelContentDescription = (
         <>
             <Grid item xs={12}>
                 <FormControl
@@ -514,7 +514,7 @@ export const DLOAdd = ({
             </Grid>
         </>
     );
-    const stepPanelContentThree = (
+    const stepPanelContentLinks = (
         <>
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth>
@@ -597,7 +597,7 @@ export const DLOAdd = ({
             </Grid>
         </>
     );
-    const stepPanelContentFour = (
+    const stepPanelContentFilters = (
         <>
             <Grid item xs={12}>
                 <Typography component={'h2'} variant={'h6'}>
@@ -651,19 +651,19 @@ export const DLOAdd = ({
     const steps = [
         {
             label: 'Ownership',
-            stepPanelContent: stepPanelContentOne,
+            stepPanelContent: stepPanelContentOwnership,
         },
         {
             label: 'Description',
-            stepPanelContent: stepPanelContentTwo,
+            stepPanelContent: stepPanelContentDescription,
         },
         {
             label: 'Link',
-            stepPanelContent: stepPanelContentThree,
+            stepPanelContent: stepPanelContentLinks,
         },
         {
             label: 'Filtering',
-            stepPanelContent: stepPanelContentFour,
+            stepPanelContent: stepPanelContentFilters,
         },
     ];
     const [activeStep, setActiveStep] = useState(0);
