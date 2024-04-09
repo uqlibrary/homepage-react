@@ -3,7 +3,7 @@ export default {
         {
             "object_id": 1,
             "object_public_uuid": "987y_isjgt_9866",
-            "object_title": "Accessibility - Digital Essentials",
+            "object_title": "Accessibility - Digital Essentials (has Youtube link)",
             "object_description": "Understanding the importance of accessibility online and creating accessible content.\nand a second line of detail in the description",
             "object_summary": "Understanding the importance of accessibility online and creating accessible content.",
             "object_review_date_next": "2050-01-01",
@@ -13,7 +13,7 @@ export default {
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
             "object_download_instructions": "Download the Common Cartridge file and H5P quiz to embed in Blackboard.\nand a second line of detail in the description, looking at an [example link](http://example.com)",
-            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-accessibility\/chapter\/module-overview\/",
+            "object_link_url": "https://www.youtube.com/watch?v=jwKH6X3cGMg",
             "object_filters": [
                 {
                     "filter_key": "item_type",

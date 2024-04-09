@@ -423,6 +423,17 @@ describe('Digital learning hub', () => {
             cy.get('h1').should('contain', 'Find a digital learning object');
             cy.url().should('include', 'http://localhost:2020/digital-learning-hub');
         });
+        it('shows a youtube video appropriately', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866');
+            cy.get('[data-testid="detaipage-oreview"]')
+                .should('exist')
+                .contains('Preview');
+            cy.get('[data-testid="detaipage-oreview"] iframe').should('exist');
+
+            cy.visit('http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4');
+            cy.get('[data-testid="detaipage-oreview"]').should('not.exist');
+            cy.get('[data-testid="detaipage-oreview"] iframe').should('not.exist');
+        });
     });
     context('other homepage visits', () => {
         it('can handle an error', () => {

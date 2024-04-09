@@ -16,7 +16,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getHomepageLink } from 'helpers/access';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
-import { displayDownloadInstructions } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { displayDownloadInstructions, getYoutubeViewableUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
@@ -83,6 +83,19 @@ const useStyles = makeStyles(theme => ({
     // },
     downloadInstructions: {
         lineHeight: 1.5,
+    },
+    videoResponsive: {
+        overflow: 'hidden',
+        paddingBottom: '56.25%',
+        position: 'relative',
+        height: 0,
+        '& iframe': {
+            left: 0,
+            top: 0,
+            height: '100%',
+            width: '100%',
+            position: 'absolute',
+        },
     },
 }));
 
@@ -151,6 +164,13 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
         );
     }
 
+    const getYoutubeEmbeddableUrl = url => {
+        const youtubeUrl = getYoutubeViewableUrl(url); // assumes is return in ?v= format
+        if (youtubeUrl === false) {
+            return false;
+        }
+        return youtubeUrl.replace('?v=', 'embed/');
+    };
     return (
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
@@ -176,6 +196,26 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                 </a>
                             </div>
                         )}
+
+                        {getYoutubeEmbeddableUrl(dlorItem.object_link_url) !== false && (
+                            <div data-testid="detaipage-oreview">
+                                <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
+                                    Preview
+                                </Typography>
+                                <div className={classes.videoResponsive}>
+                                    <iframe
+                                        width="853"
+                                        height="480"
+                                        src={getYoutubeEmbeddableUrl(dlorItem.object_link_url)}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        title="Embedded youtube"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
                         {!!dlorItem?.object_download_instructions && (
                             <>
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>

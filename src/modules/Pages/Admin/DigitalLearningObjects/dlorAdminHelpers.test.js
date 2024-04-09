@@ -1,4 +1,4 @@
-import { splitStringToArrayOnComma } from './dlorHelpers';
+import { splitStringToArrayOnComma } from './dlorAdminHelpers';
 
 describe('helpers', () => {
     it('splits keywords correctly', () => {
