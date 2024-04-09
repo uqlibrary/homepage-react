@@ -25,6 +25,7 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
 import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
 
 import { useAccountContext } from 'context';
 import { useConfirmationState } from 'hooks';
@@ -208,6 +209,55 @@ export const DLOAdd = ({
         resetForm(prop, theNewValue);
     };
 
+    const getYoutubeViewableUrl = testUrlIn => {
+        if (!isPrevieweableUrl(testUrlIn)) {
+            return false;
+        }
+
+        let oldUrl;
+        try {
+            oldUrl = new URL(testUrlIn);
+        } catch (_) {
+            return false;
+        }
+
+        let youtubeId;
+        if (oldUrl.protocol !== 'https:' && oldUrl.protocol !== 'http:') {
+            return false;
+        }
+        const params = new URLSearchParams(oldUrl.search);
+        if (params.size === 0) {
+            if (oldUrl.pathname.length <= '/1234'.length) {
+                // they've only entered the domain name
+                return false;
+            } else {
+                /* testUrlIn was short form, like https://youtu.be/MwHA9G72-wU */
+                youtubeId = oldUrl.pathname.substring(1); // strip the '/' from the front
+            }
+        } else {
+            youtubeId = params.get('v');
+        }
+        if (!youtubeId) {
+            return false;
+        }
+
+        const url = new URL('https://www.youtube.com/');
+        url.search = '?v=' + youtubeId;
+        return url.toString();
+    };
+
+    const isPrevieweableUrl = testUrl => {
+        console.log('testUrl=', testUrl);
+        try {
+            const url = new URL(testUrl);
+            const isPrevieweable = url.hostname === 'www.youtube.com' || url.hostname === 'youtube.com';
+            // eventually we may have multiple item type that can have a preview box...
+            return !!isPrevieweable;
+        } catch (_) {
+            return false;
+        }
+    };
+
     const isValidUrl = testUrl => {
         let url;
 
@@ -220,6 +270,7 @@ export const DLOAdd = ({
         return (
             (url.protocol === 'http:' || url.protocol === 'https:') &&
             !!url.hostname &&
+            !!url.hostname.includes('.') && // tld only domain names really dont happen, must be a dot!
             url.hostname.length >= '12.co'.length
         );
     };
@@ -554,6 +605,17 @@ export const DLOAdd = ({
                                     This web address is not valid.
                                 </div>
                             )}
+                        {formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                            isValidUrl(formValues?.object_link_url) &&
+                            getYoutubeViewableUrl(formValues?.object_link_url) !== false && (
+                                <p
+                                    style={{ display: 'flex', alignItems: 'center' }}
+                                    data-testid="object_link_url_preview"
+                                >
+                                    <DoneIcon color="success" />
+                                    <span>This video will show a preview on the View page.</span>
+                                </p>
+                            )}
                     </FormControl>
                 </Grid>
             )}
@@ -597,6 +659,7 @@ export const DLOAdd = ({
             </Grid>
         </>
     );
+
     const stepPanelContentFilters = (
         <>
             <Grid item xs={12}>

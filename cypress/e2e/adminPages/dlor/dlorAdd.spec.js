@@ -387,6 +387,42 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('contain', 1);
             });
+
+            it('shows a "will preview" notice correctly', () => {
+                // go to the third step, links
+                cy.get('[data-testid="dlor-add-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="dlor-add-next-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .type('http://www.youtube.com/rew');
+                cy.get('[data-testid="object_link_url_preview"]').should('not.exist');
+
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .type('df'); // type some more to make a valid youtube shorthand url
+                cy.get('[data-testid="object_link_url_preview"]')
+                    .should('exist')
+                    .contains('This video will show a preview on the View page.');
+
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .clear()
+                    .type('http://www.youtube.com/?g=123456'); // 'g' is not a valid parameter name
+                cy.get('[data-testid="object_link_url_preview"]').should('not.exist');
+
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .clear()
+                    .type('http://www.youtube.com/?v=123456');
+                cy.get('[data-testid="object_link_url_preview"]')
+                    .should('exist')
+                    .contains('This video will show a preview on the View page.');
+            });
         });
         context('successfully mock to db', () => {
             beforeEach(() => {
