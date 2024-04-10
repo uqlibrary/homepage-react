@@ -18,8 +18,8 @@ import { getHomepageLink } from 'helpers/access';
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
     displayDownloadInstructions,
-    getVimeoViewableUrl,
-    getYoutubeViewableUrl,
+    getVimeoUrlForPreviewEmbed,
+    getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
@@ -170,14 +170,14 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
     }
 
     const getYoutubeEmbeddableUrl = urlIn => {
-        const url = getYoutubeViewableUrl(urlIn); // assumes is return in ?v= format
+        const url = getYoutubeUrlForPreviewEmbed(urlIn); // assumes is return in ?v= format
         if (url === false) {
             return false;
         }
         return url.replace('?v=', 'embed/');
     };
     const getVimeoEmbeddableUrl = urlIn => {
-        const url = getVimeoViewableUrl(urlIn); // assumes is return in ?v= format
+        const url = getVimeoUrlForPreviewEmbed(urlIn); // assumes is return in ?v= format
         if (url === false) {
             return false;
         }

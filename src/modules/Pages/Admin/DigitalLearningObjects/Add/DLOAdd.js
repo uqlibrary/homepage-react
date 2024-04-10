@@ -37,8 +37,8 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
 import {
     displayDownloadInstructions,
-    getVimeoViewableUrl,
-    getYoutubeViewableUrl,
+    getVimeoUrlForPreviewEmbed,
+    getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
