@@ -61,7 +61,9 @@ export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
 
     const urlForPreview = new URL('https://www.youtube.com/');
     urlForPreview.search = '?v=' + videoId;
-    return urlForPreview.toString();
+    const response = urlForPreview.toString();
+    console.log('getYoutubeUrlForPreviewEmbed response=', response);
+    return response;
 };
 export const getVimeoUrlForPreviewEmbed = testUrlIn => {
     let testUrl;
@@ -92,7 +94,9 @@ export const getVimeoUrlForPreviewEmbed = testUrlIn => {
 
     const urlForPreview = new URL('https://vimeo.com');
     urlForPreview.pathname = `/${videoId}`;
-    return urlForPreview.toString();
+    const response = urlForPreview.toString();
+    console.log('getVimeoUrlForPreviewEmbed response=', response);
+    return response;
 };
 
 export const isPreviewableUrl = testUrlIn => {
