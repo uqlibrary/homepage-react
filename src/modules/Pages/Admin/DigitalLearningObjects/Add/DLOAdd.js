@@ -968,7 +968,7 @@ export const DLOAdd = ({
                         actionButtonVariant="contained"
                         confirmationBoxId="dlor-creation-outcome"
                         onAction={() => navigateToDlorAdminHomePage()}
-                        hideCancelButton={!locale.successMessage.cancelButtonLabel}
+                        hideCancelButton={!!dlorItemError || !locale.successMessage.cancelButtonLabel}
                         cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                         onCancelAction={() => clearForm()}
                         onClose={hideConfirmation}

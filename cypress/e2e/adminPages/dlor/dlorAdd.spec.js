@@ -746,12 +746,16 @@ describe('Add an object to the Digital learning hub', () => {
             it('admin gets an error when Teams list api doesnt load', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=teamsLoadError`);
                 // "responseType=teamsLoadError" on the url forces an error from mock api
-                cy.get('[data-testid="dlor-addObject-error"]').contains('Error has occurred during request');
+                cy.get('[data-testid="dlor-addObject-error"]').contains(
+                    'An error has occurred during the request and this request cannot be processed',
+                );
             });
             it('admin gets an error when Filter list api doesnt load', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=filterLoadError`);
                 // "responseType=filterLoadError" on the url forces an error from mock api
-                cy.get('[data-testid="dlor-homepage-error"]').contains('Error has occurred during request');
+                cy.get('[data-testid="dlor-homepage-error"]').contains(
+                    'An error has occurred during the request and this request cannot be processed',
+                );
             });
             it('admin gets an error when Filter list is empty', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=filterLoadEmpty`);
@@ -806,7 +810,7 @@ describe('Add an object to the Digital learning hub', () => {
                 // "responseType=saveError" on the url forces an error from mock api
                 cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
                 cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains(
-                    'Error has occurred during request',
+                    'An error has occurred during the request and this request cannot be processed',
                 );
             });
         });

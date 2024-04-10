@@ -450,7 +450,7 @@ describe('Digital learning hub', () => {
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-error"]')
                 .should('exist')
-                .contains('Error has occurred during request');
+                .contains('An error has occurred during the request and this request cannot be processed');
             cy.get('[data-testid="dlor-homepage-filter-error"]')
                 .should('exist')
                 .contains('Filters currently unavailable - please try again later.');
@@ -661,7 +661,7 @@ describe('Digital learning hub', () => {
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-detailpage-error"]')
                 .should('exist')
-                .contains('Error has occurred during request');
+                .contains('An error has occurred during the request and this request cannot be processed');
         });
         it('can handle an empty result', () => {
             // this should never happen. Maybe immediately after initial upload
