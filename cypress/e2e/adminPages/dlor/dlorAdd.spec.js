@@ -397,31 +397,56 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .click();
 
+                // youtube link in shorthand format
+                // a youtube link that they havent yet typed completely doesnt give a message
+                // (although hopefully they will paste and wont see this - pasting is more accurate)
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .type('http://www.youtube.com/rew');
                 cy.get('[data-testid="object_link_url_preview"]').should('not.exist');
 
+                // finish typing to make a valid youtube shorthand url
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
-                    .type('df'); // type some more to make a valid youtube shorthand url
+                    .type('df');
+                // once the youtube link is long enough to maybe be a valid youtube link, show a "will preview" message
                 cy.get('[data-testid="object_link_url_preview"]')
                     .should('exist')
-                    .contains('This video will show a preview on the View page.');
+                    .contains('A preview will show on the View page.');
 
+                // youtube link that is missing the v= paramater (and isnt a shorthand link)
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .clear()
                     .type('http://www.youtube.com/?g=123456'); // 'g' is not a valid parameter name
                 cy.get('[data-testid="object_link_url_preview"]').should('not.exist');
 
+                // youtube link that is a valid link with v= parameter
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .clear()
                     .type('http://www.youtube.com/?v=123456');
                 cy.get('[data-testid="object_link_url_preview"]')
                     .should('exist')
-                    .contains('This video will show a preview on the View page.');
+                    .contains('A preview will show on the View page.');
+
+                // vimeo link that is a valid link\, format 1
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .clear()
+                    .type('https://vimeo.com/7504df');
+                cy.get('[data-testid="object_link_url_preview"]')
+                    .should('exist')
+                    .contains('A preview will show on the View page.');
+
+                // vimeo link that is a valid link\, format 2
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .clear()
+                    .type('https://player.vimeo.com/video/750432905');
+                cy.get('[data-testid="object_link_url_preview"]')
+                    .should('exist')
+                    .contains('A preview will show on the View page.');
             });
         });
         context('successfully mock to db', () => {

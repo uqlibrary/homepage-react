@@ -16,7 +16,12 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getHomepageLink } from 'helpers/access';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
-import { displayDownloadInstructions, getYoutubeViewableUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import {
+    displayDownloadInstructions,
+    getVimeoViewableUrl,
+    getYoutubeViewableUrl,
+    isPreviewableUrl,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
@@ -164,12 +169,19 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
         );
     }
 
-    const getYoutubeEmbeddableUrl = url => {
-        const youtubeUrl = getYoutubeViewableUrl(url); // assumes is return in ?v= format
-        if (youtubeUrl === false) {
+    const getYoutubeEmbeddableUrl = urlIn => {
+        const url = getYoutubeViewableUrl(urlIn); // assumes is return in ?v= format
+        if (url === false) {
             return false;
         }
-        return youtubeUrl.replace('?v=', 'embed/');
+        return url.replace('?v=', 'embed/');
+    };
+    const getVimeoEmbeddableUrl = urlIn => {
+        const url = getVimeoViewableUrl(urlIn); // assumes is return in ?v= format
+        if (url === false) {
+            return false;
+        }
+        return url.replace('?v=', 'embed/');
     };
     return (
         <StandardPage>
@@ -197,21 +209,34 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                             </div>
                         )}
 
-                        {getYoutubeEmbeddableUrl(dlorItem.object_link_url) !== false && (
-                            <div data-testid="detaipage-oreview">
+                        {isPreviewableUrl(dlorItem.object_link_url) !== false && (
+                            <div data-testid="detailpage-preview">
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
                                     Preview
                                 </Typography>
                                 <div className={classes.videoResponsive}>
-                                    <iframe
-                                        width="853"
-                                        height="480"
-                                        src={getYoutubeEmbeddableUrl(dlorItem.object_link_url)}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        title="Embedded youtube"
-                                    />
+                                    {!!getYoutubeEmbeddableUrl(dlorItem.object_link_url) !== false && (
+                                        <iframe
+                                            width="853"
+                                            height="480"
+                                            src={getYoutubeEmbeddableUrl(dlorItem.object_link_url)}
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                            title="Embedded youtube"
+                                        />
+                                    )}
+                                    {!!getVimeoEmbeddableUrl(dlorItem.object_link_url) !== false && (
+                                        <iframe
+                                            title="vimeo-player"
+                                            src={getVimeoEmbeddableUrl(dlorItem.object_link_url)}
+                                            src="https://player.vimeo.com/video/750432905"
+                                            width="640"
+                                            height="360"
+                                            frameBorder="0"
+                                            allowFullScreen
+                                        />
+                                    )}
                                 </div>
                             </div>
                         )}

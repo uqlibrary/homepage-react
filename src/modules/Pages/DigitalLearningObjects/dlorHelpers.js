@@ -22,51 +22,75 @@ export const displayDownloadInstructions = (downloadInstructions, theClass) => {
     );
 };
 
-const isPrevieweableUrl = testUrl => {
-    console.log('testUrl=', testUrl);
-    try {
-        const url = new URL(testUrl);
-        const isPrevieweable = url.hostname === 'www.youtube.com' || url.hostname === 'youtube.com';
-        // eventually we may have multiple item type that can have a preview box...
-        return !!isPrevieweable;
-    } catch (_) {
-        return false;
-    }
-};
-
 export const getYoutubeViewableUrl = testUrlIn => {
-    if (!isPrevieweableUrl(testUrlIn)) {
-        return false;
-    }
-
-    let oldUrl;
+    let testUrl;
     try {
-        oldUrl = new URL(testUrlIn);
+        testUrl = new URL(testUrlIn);
     } catch (_) {
         return false;
     }
 
-    let youtubeId;
-    if (oldUrl.protocol !== 'https:' && oldUrl.protocol !== 'http:') {
+    let videoId;
+    if (testUrl.protocol !== 'https:' && testUrl.protocol !== 'http:') {
         return false;
     }
-    const params = new URLSearchParams(oldUrl.search);
+    if (!testUrl.hostname.endsWith('youtube.com')) {
+        return false;
+    }
+    const params = new URLSearchParams(testUrl.search);
     if (params.size === 0) {
-        if (oldUrl.pathname.length <= '/1234'.length) {
-            // they've only entered the domain name
+        if (testUrl.pathname.length <= '/1234'.length) {
+            // they've only entered the domain name, or the path isnt yet long enough to be a shorthand link
             return false;
         } else {
-            /* testUrlIn was short form, like https://youtu.be/MwHA9G72-wU */
-            youtubeId = oldUrl.pathname.substring(1); // strip the '/' from the front
+            /* testUrlIn was short form, like https://youtube.com/MwHA9G72-wU */
+            videoId = testUrl.pathname.substring(1); // strip the '/' from the front
         }
     } else {
-        youtubeId = params.get('v');
+        videoId = params.get('v');
     }
-    if (!youtubeId) {
+    if (!videoId) {
         return false;
     }
 
     const url = new URL('https://www.youtube.com/');
-    url.search = '?v=' + youtubeId;
+    url.search = '?v=' + videoId;
     return url.toString();
+};
+export const getVimeoViewableUrl = testUrlIn => {
+    let testUrl;
+    try {
+        testUrl = new URL(testUrlIn);
+    } catch (_) {
+        console.log('vimeo, caught false', testUrlIn);
+        return false;
+    }
+
+    if (testUrl.protocol !== 'https:' && testUrl.protocol !== 'http:') {
+        return false;
+    }
+    if (!testUrl.hostname.endsWith('vimeo.com')) {
+        return false;
+    }
+    if (testUrl.pathname.startsWith('/video') && testUrl.pathname.length <= '/video/1234'.length) {
+        // they've only entered the domain name, or the path isnt yet long enough to be a link
+        return false;
+    }
+    if (testUrl.pathname.length <= '/1234'.length) {
+        // they've only entered the domain name, or the path isn't yet long enough to be a link
+        return false;
+    }
+    const videoId = testUrl.pathname.substring(1); // strip the '/' from the front
+    if (!videoId) {
+        console.log('vimeo, videoId=', videoId);
+        return false;
+    }
+
+    const finalUrl = new URL('https://vimeo.com');
+    finalUrl.pathname = `/${videoId}`;
+    return finalUrl.toString();
+};
+
+export const isPreviewableUrl = testUrlIn => {
+    return !!(getYoutubeViewableUrl(testUrlIn) || getVimeoViewableUrl(testUrlIn));
 };

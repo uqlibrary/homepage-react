@@ -120,7 +120,7 @@ export default {
         {
             "object_id": 8,
             "object_public_uuid": "kj5t_8yg4_kj4f",
-            "object_title": "UQ has a Blak History",
+            "object_title": "UQ has a Blak History (has Vimeo preview)",
             "object_description": "Explores the history of UQ as it relates to Aboriginal and Torres Strait Islander peoples, cultures and communities and the importance of Country and place to Aboriginal and Torres Strait Islander peoples. Highlights significant events, movements and activities and their importance to Aboriginal and Torres Strait Islander communities. ",
             "object_summary": "Explores the history of UQ as it relates to Aboriginal and Torres Strait Islander peoples, cultures and communities and the importance of Country and place to Aboriginal and Torres Strait Islander peoples. Explores the history of UQ as it relates to Aboriginal and Torres Strait Islander peoples, cultures and communities and the importance of Country and place to Aboriginal and Torres Strait Islander peoples.",
             "object_review_date_next": "2050-01-01",
@@ -130,7 +130,7 @@ export default {
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
             "object_download_instructions": "Email us to request to reuse or adapt the module",
-            "object_link_url": "https:\/\/uq.h5p.com\/content\/1291877706129541819",
+            "object_link_url": "https://player.vimeo.com/video/750432905",
             "object_filters": [
                 {
                     "filter_key": "topic",

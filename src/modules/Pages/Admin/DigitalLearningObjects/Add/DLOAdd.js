@@ -35,7 +35,12 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
-import { displayDownloadInstructions, getYoutubeViewableUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import {
+    displayDownloadInstructions,
+    getVimeoViewableUrl,
+    getYoutubeViewableUrl,
+    isPreviewableUrl,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 const moment = require('moment-timezone');
@@ -548,7 +553,11 @@ export const DLOAdd = ({
                             required
                             value={formValues?.object_link_url}
                             onChange={handleChange('object_link_url')}
-                            error={!!formValues?.object_link_url && !isValidUrl(formValues?.object_link_url)}
+                            error={
+                                !!formValues?.object_link_url &&
+                                formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                                !isValidUrl(formValues?.object_link_url)
+                            }
                         />
                         {formValues?.object_link_url?.length > 'http://ab.co'.length &&
                             !isValidUrl(formValues?.object_link_url) && (
@@ -557,14 +566,13 @@ export const DLOAdd = ({
                                 </div>
                             )}
                         {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                            isValidUrl(formValues?.object_link_url) &&
-                            getYoutubeViewableUrl(formValues?.object_link_url) !== false && (
+                            isPreviewableUrl(formValues?.object_link_url) !== false && (
                                 <p
                                     style={{ display: 'flex', alignItems: 'center' }}
                                     data-testid="object_link_url_preview"
                                 >
                                     <DoneIcon color="success" />
-                                    <span>This video will show a preview on the View page.</span>
+                                    <span>A preview will show on the View page.</span>
                                 </p>
                             )}
                     </FormControl>
