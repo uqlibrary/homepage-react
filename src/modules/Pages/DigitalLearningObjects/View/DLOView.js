@@ -18,7 +18,6 @@ import { getHomepageLink } from 'helpers/access';
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
     displayDownloadInstructions,
-    getVimeoUrlForPreviewEmbed,
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
@@ -176,13 +175,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
         }
         return url.replace('?v=', 'embed/');
     };
-    const getVimeoEmbeddableUrl = urlIn => {
-        const url = getVimeoUrlForPreviewEmbed(urlIn); // assumes is return in ?v= format
-        if (url === false) {
-            return false;
-        }
-        return url.replace('?v=', 'embed/');
-    };
     return (
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
@@ -224,17 +216,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                             allowFullScreen
                                             title="Embedded youtube"
-                                        />
-                                    )}
-                                    {!!getVimeoEmbeddableUrl(dlorItem.object_link_url) !== false && (
-                                        <iframe
-                                            title="vimeo-player"
-                                            src={getVimeoEmbeddableUrl(dlorItem.object_link_url)}
-                                            src="https://player.vimeo.com/video/750432905"
-                                            width="640"
-                                            height="360"
-                                            frameBorder="0"
-                                            allowFullScreen
                                         />
                                     )}
                                 </div>

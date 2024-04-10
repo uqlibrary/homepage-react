@@ -65,40 +65,8 @@ export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
     console.log('getYoutubeUrlForPreviewEmbed response=', response);
     return response;
 };
-export const getVimeoUrlForPreviewEmbed = testUrlIn => {
-    let testUrl;
-    try {
-        testUrl = new URL(testUrlIn.replace(/\\\//g, '/'));
-    } catch (_) {
-        return false;
-    }
-
-    if (testUrl.protocol !== 'https:' && testUrl.protocol !== 'http:') {
-        return false;
-    }
-    if (!testUrl.hostname.endsWith('vimeo.com')) {
-        return false;
-    }
-    if (testUrl.pathname.startsWith('/video') && testUrl.pathname.length <= '/video/1234'.length) {
-        // they've only entered the domain name, or the path isnt yet long enough to be a link
-        return false;
-    }
-    if (testUrl.pathname.length <= '/1234'.length) {
-        // they've only entered the domain name, or the path isn't yet long enough to be a link
-        return false;
-    }
-    const videoId = testUrl.pathname.substring(1); // strip the '/' from the front
-    if (!videoId) {
-        return false;
-    }
-
-    const urlForPreview = new URL('https://vimeo.com');
-    urlForPreview.pathname = `/${videoId}`;
-    const response = urlForPreview.toString();
-    console.log('getVimeoUrlForPreviewEmbed response=', response);
-    return response;
-};
 
 export const isPreviewableUrl = testUrlIn => {
-    return !!(getYoutubeUrlForPreviewEmbed(testUrlIn) || getVimeoUrlForPreviewEmbed(testUrlIn));
+    return !!getYoutubeUrlForPreviewEmbed(testUrlIn);
+    // || !!getOTHERTYPEUrlForPreviewEmbed(testUrlIn)
 };

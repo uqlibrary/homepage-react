@@ -430,23 +430,12 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .contains('A preview will show on the View page.');
 
-                // vimeo link that is a valid link\, format 1
+                // a link that won't preview doesn't show the "will preview" message
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .clear()
-                    .type('https://vimeo.com/7504df');
-                cy.get('[data-testid="object_link_url_preview"]')
-                    .should('exist')
-                    .contains('A preview will show on the View page.');
-
-                // vimeo link that is a valid link\, format 2
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .clear()
-                    .type('https://player.vimeo.com/video/750432905');
-                cy.get('[data-testid="object_link_url_preview"]')
-                    .should('exist')
-                    .contains('A preview will show on the View page.');
+                    .type('http://www.example.com/something');
+                cy.get('[data-testid="object_link_url_preview"]').should('not.exist');
             });
         });
         context('successfully mock to db', () => {

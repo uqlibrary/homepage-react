@@ -431,13 +431,6 @@ describe('Digital learning hub', () => {
                 .contains('Preview');
             cy.get('[data-testid="detailpage-preview"] iframe').should('exist');
 
-            // shows a preview when a vimeo video is linked
-            cy.visit('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
-            cy.get('[data-testid="detailpage-preview"]')
-                .should('exist')
-                .contains('Preview');
-            cy.get('[data-testid="detailpage-preview"] iframe').should('exist');
-
             // does not show a preview for other links
             cy.visit('http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4');
             cy.get('[data-testid="detailpage-preview"]').should('not.exist');

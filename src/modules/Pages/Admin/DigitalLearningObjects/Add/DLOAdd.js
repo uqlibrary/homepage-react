@@ -37,7 +37,6 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
 import {
     displayDownloadInstructions,
-    getVimeoUrlForPreviewEmbed,
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
