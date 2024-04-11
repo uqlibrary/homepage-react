@@ -32,7 +32,7 @@ import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/L
 const useStyles = makeStyles(theme => ({
     panelGap: {
         paddingLeft: 16,
-        paddingBottom: 24,
+        paddingBottom: 16,
         paddingTop: '0 !important',
     },
     panelGrid: {
@@ -43,19 +43,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'stretch', // panels fill the screen with equal width
     },
     dlorCard: {
-        padding: '16px',
-        [theme.breakpoints.up('md')]: {
-            position: 'relative',
-            padding: 16,
-            paddingBottom: 110,
-            height: 300,
-        },
-        [theme.breakpoints.up('lg')]: {
-            paddingBottom: 110,
-        },
-        [theme.breakpoints.up('xl')]: {
-            paddingBottom: 65,
-        },
+        padding: '12px',
         '& header': {
             '& h2': {
                 lineHeight: 1.3,
@@ -67,22 +55,26 @@ const useStyles = makeStyles(theme => ({
             maxHeight: 180,
             overflowY: 'auto',
             overflowX: 'hidden',
+            fontWeight: 300,
+        },
+        '& > div p': {
+            marginBottom: '0.2em',
+            marginTop: '0.2em',
+        },
+        '& > div p:first-child': {
+            marginTop: 0,
         },
         '& footer': {
-            [theme.breakpoints.up('md')]: {
-                position: 'absolute',
-                bottom: 16,
-            },
             color: theme.palette.primary.light,
             fontWeight: 400,
-            '& > div': {
-                display: 'flex',
-                alignItems: 'center', // center align icon and label horizontally
-                paddingBlock: 3,
+            marginTop: 6,
+            display: 'flex',
+            alignItems: 'center', // center align icon and label horizontally
+            '& > svg:not(:first-child)': {
+                paddingLeft: 6,
             },
             '& svg': {
                 width: 20,
-                paddingRight: 4,
                 '& > path': {
                     fill: theme.palette.primary.light,
                 },
@@ -99,9 +91,7 @@ const useStyles = makeStyles(theme => ({
         paddingInline: 0,
         fontFamily: 'Roboto, sans-serif',
         backgroundColor: '#fff',
-        [theme.breakpoints.down('md')]: {
-            width: '100%',
-        },
+        width: '100%',
         '& *:not(h2)': {
             textAlign: 'left',
             fontSize: '1rem',
@@ -683,7 +673,6 @@ export const DLOList = ({
             <Grid
                 item
                 xs={12}
-                md={4}
                 className={classes.panelGap}
                 key={object?.object_id}
                 data-testid={`dlor-homepage-panel-${object?.object_public_uuid}`}
@@ -711,22 +700,32 @@ export const DLOList = ({
                         </div>
                         <footer>
                             {!!hasTopicFacet('item_type') && (
-                                <div data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-type`}>
+                                <>
                                     {getFacetTypeIcon('item_type')}
-                                    {getConcatenatedFilterLabels('item_type')}
-                                </div>
+                                    <span data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-type`}>
+                                        {getConcatenatedFilterLabels('item_type')}
+                                    </span>
+                                </>
                             )}
                             {!!hasTopicFacet('media_format') && (
-                                <div data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-media`}>
+                                <>
                                     {getFacetTypeIcon('media_format')}
-                                    {getConcatenatedFilterLabels('media_format')}
-                                </div>
+                                    <span
+                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-media`}
+                                    >
+                                        {getConcatenatedFilterLabels('media_format')}
+                                    </span>
+                                </>
                             )}
                             {!!hasTopicFacet('licence') && (
-                                <div data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-licence`}>
+                                <>
                                     {getFacetTypeIcon('licence')}
-                                    {getConcatenatedFilterLabels('licence')}
-                                </div>
+                                    <span
+                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-licence`}
+                                    >
+                                        {getConcatenatedFilterLabels('licence')}
+                                    </span>
+                                </>
                             )}
                         </footer>
                     </article>

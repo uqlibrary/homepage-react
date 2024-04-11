@@ -41,7 +41,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 6); // 3 svg, 3 spans-with-text
 
             // second panel
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] button').should('exist');
@@ -56,7 +56,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article footer')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 6); // 3 svg, 3 spans-with-text
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-type"]').should('contain', 'Guide');
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-media"]').should('contain', 'Pressbook');
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-licence"]').should('contain', 'CC BY-NC');
@@ -74,7 +74,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article footer')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 6); // 3 svg, 3 spans-with-text
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-type"]').should('contain', 'Module');
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-media"]').should('contain', 'H5P');
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-licence"]').should(
