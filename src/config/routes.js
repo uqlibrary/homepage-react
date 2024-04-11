@@ -50,6 +50,7 @@ export const flattedPathConfig = [
     '/admin/alerts/clone',
     '/admin/alerts/view',
     '/admin/dlor/edit',
+    '/admin/spotlights/edit',
     '/admin/spotlights/view',
     '/admin/spotlights/clone',
     '/admin/promopanel/edit',
