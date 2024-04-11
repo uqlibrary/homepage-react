@@ -1,8 +1,9 @@
 import * as actions from './actionTypes';
-import { get, post } from 'repositories/generic';
+import { destroy, get, post } from 'repositories/generic';
 import {
     DLOR_ALL_API,
     DLOR_CREATE_API,
+    DLOR_DESTROY_API,
     DLOR_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
     DLOR_TEAM_LIST_API,
@@ -95,6 +96,29 @@ export function createDLor(request) {
             });
     };
 }
+
+export const deleteDlor = dlorID => {
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_DELETING });
+
+        try {
+            const response = await destroy(DLOR_DESTROY_API({ id: dlorID }));
+            dispatch({
+                type: actions.DLOR_DELETED,
+                payload: [],
+            });
+
+            return Promise.resolve(response.data);
+        } catch (e) {
+            dispatch({
+                type: actions.DLOR_DELETE_FAILED,
+                payload: e,
+            });
+
+            return Promise.reject(e);
+        }
+    };
+};
 
 export function loadOwningTeams() {
     return dispatch => {

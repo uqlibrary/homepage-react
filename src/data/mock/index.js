@@ -637,6 +637,14 @@ mock.onGet(/dlor\/find\/.*/)
         } else {
             return getaDlorRecordFromDlorAll('98j3-fgf95-8j34'); //any old id
         }
+    })
+    .onDelete(/dlor\/admin\/object\/.*/)
+    .reply(config => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, {}];
+        }
     });
 
 mock.onGet('exams/course/FREN1010/summary')

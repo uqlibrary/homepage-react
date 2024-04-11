@@ -49,6 +49,25 @@ const handlers = {
         dlorItemCreating: false,
         dlorItemError: action.payload,
     }),
+    [actions.DLOR_DELETING]: state => ({
+        ...initialState,
+        ...state,
+        dlorItemDeleting: true,
+        dlorItemDeleteError: false,
+    }),
+    [actions.DLOR_DELETED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        dlorItemDeleting: false,
+        dlorItemDeleteError: false,
+        dlorItem: action.payload,
+    }),
+    [actions.DLOR_DELETE_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        dlorItemDeleting: false,
+        dlorItemDeleteError: action.payload,
+    }),
 };
 
 export default function dlorSingleReducer(state = initialState, action) {
@@ -57,6 +76,6 @@ export default function dlorSingleReducer(state = initialState, action) {
         return state;
     }
     const handler1 = handler(state, action);
-    console.log('dlorSingleReducer:', action.type, handler1);
+    console.log('reducer dlorSingleReducer:', action.type, handler1);
     return handler1;
 }
