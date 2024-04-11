@@ -49,7 +49,7 @@ export const flattedPathConfig = [
     '/admin/alerts/edit',
     '/admin/alerts/clone',
     '/admin/alerts/view',
-    '/admin/spotlights/edit',
+    '/admin/dlor/edit',
     '/admin/spotlights/view',
     '/admin/spotlights/clone',
     '/admin/promopanel/edit',
@@ -227,6 +227,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.DLOAdd,
             exact: true,
             pageTitle: 'Create a new Object',
+        },
+        {
+            path: pathConfig.admin.dloredit(dlorId),
+            component: components.DLOEdit,
+            exact: true,
+            pageTitle: 'Edit an Object',
         },
     ];
 
