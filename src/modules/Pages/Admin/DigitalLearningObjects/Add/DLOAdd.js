@@ -776,7 +776,7 @@ export const DLOAdd = ({
     const navigateToDlorAdminHomePage = () => {
         // TODO also want to clear form here too before nav, so back button gives clear form?
 
-        // actions.loadCurrentDLORs(); // force reload of data now we have added a new one. needed?
+        // actions.loadAllDLORs(); // force reload of data now we have added a new one. needed?
         hideConfirmation();
         history.push('/admin/dlor');
         scrollToTopOfPage();

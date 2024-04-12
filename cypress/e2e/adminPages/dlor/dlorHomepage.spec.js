@@ -33,7 +33,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8);
+                .should('have.length', 8 + 1); // all current objects show, plus the div with the checkbox list
         });
         it('can cancel deletion of an Object', () => {
             // click delete icon on first Object
@@ -71,7 +71,100 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8);
+                .should('have.length', 8 + 1); // all current objects show, plus the div with the checkbox list
+        });
+        it('can filter objects', () => {
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 8 + 1); // all current objects show, plus the div with the checkbox list
+
+            // label counts are correct
+            cy.get('[data-testid="checkbox-status-new"]')
+                .parent()
+                .parent()
+                .find('span:nth-child(2)')
+                .contains('New/ Draft (1)');
+            cy.get('[data-testid="checkbox-status-current"]')
+                .parent()
+                .parent()
+                .find('span:nth-child(2)')
+                .contains('Published (8)');
+            cy.get('[data-testid="checkbox-status-rejected"]')
+                .parent()
+                .parent()
+                .find('span:nth-child(2)')
+                .contains('Published (8)');
+            cy.get('[data-testid="checkbox-status-deprecated"]')
+                .parent()
+                .parent()
+                .find('span:nth-child(2)')
+                .contains('Deprecated (unpublished) (1)');
+            cy.get('[data-testid="checkbox-status-deleted"]')
+                .parent()
+                .parent()
+                .find('span:nth-child(2)')
+                .contains('Deleted (1)');
+
+            // check "new"
+            cy.get('[data-testid="checkbox-status-new"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 9 + 1);
+
+            // check "rejected"
+            cy.get('[data-testid="checkbox-status-rejected"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 9 + 1); // no rejected entries, nothing changed
+
+            // check "deleted"
+            cy.get('[data-testid="checkbox-status-deleted"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 10 + 1);
+
+            // check "deprecated"
+            cy.get('[data-testid="checkbox-status-deprecated"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 11 + 1);
+
+            // UNcheck "published"
+            cy.get('[data-testid="checkbox-status-current"] input[type=checkbox]')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 3 + 1);
+
+            // UNcheck "deleted"
+            cy.get('[data-testid="checkbox-status-deleted"] input[type=checkbox]')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + 1);
         });
     });
     context('error handling', () => {
@@ -108,7 +201,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8);
+                .should('have.length', 8 + 1); // all current objects show, plus the div with the checkbox list
         });
     });
 });

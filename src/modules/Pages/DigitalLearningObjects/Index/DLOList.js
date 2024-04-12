@@ -28,6 +28,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getHomepageLink } from 'helpers/access';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
+import { loadCurrentDLORs } from '../../../../data/actions';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -242,6 +243,14 @@ export const DLOList = ({
     dlorFilterListError,
     account,
 }) => {
+    console.log(
+        'DLOList dlorListError=',
+        dlorListError,
+        '; dlorListLoading=',
+        dlorListLoading,
+        '; dlorList=',
+        dlorList,
+    );
     const classes = useStyles();
 
     const [selectedFilters, setSelectedFilters] = useState([]);

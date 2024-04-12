@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import { makeStyles } from '@mui/styles';
@@ -42,7 +44,42 @@ export const DLOAdminHomepage = ({
     console.log('DLOAdminHomepage dlorItemDeleteError=', dlorItemDeleteError);
     const classes = useStyles();
 
-    const [objectToDelete, setObjectToDelete] = React.useState(null);
+    const statusTypes = [
+        {
+            type: 'new',
+            label: 'New/ Draft',
+            isChecked: false,
+        },
+        {
+            type: 'current',
+            label: 'Published',
+            isChecked: true,
+        },
+        {
+            type: 'rejected',
+            label: 'Rejected',
+            isChecked: false,
+        },
+        {
+            type: 'deprecated',
+            label: 'Deprecated (unpublished)',
+            isChecked: false,
+        },
+        {
+            type: 'deleted',
+            label: 'Deleted',
+            isChecked: false,
+        },
+    ];
+    console.log('statusTypes=', statusTypes);
+    // const checkBoxArrayRef = React.useRef([
+    //     statusTypes.filter(t => {
+    //         t.type, t.isChecked;
+    //     }),
+    // ]);
+    const [checkedStatusType, setCheckedStatusType] = useState(statusTypes.map(status => status.isChecked));
+
+    const [objectToDelete, setObjectToDelete] = useState(null);
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -58,7 +95,7 @@ export const DLOAdminHomepage = ({
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
-            actions.loadCurrentDLORs();
+            actions.loadAllDLORs();
         }
     }, [dlorList]);
 
@@ -92,6 +129,24 @@ export const DLOAdminHomepage = ({
     const deleteADlor = dlorId => {
         return actions.deleteDlor(dlorId);
     };
+
+    const handleStatusTypeChange = checkedType => e => {
+        const checkedTypeId = statusTypes.findIndex(object => object.type === checkedType);
+
+        const newStatusTypeSet = checkedStatusType.map((itemCurrentCheckedness, index) =>
+            index === checkedTypeId ? !itemCurrentCheckedness : itemCurrentCheckedness,
+        );
+        setCheckedStatusType(newStatusTypeSet);
+    };
+
+    const mapOverRequestedTypes = dlorlistToFilter => {
+        const requestedStatuses = statusTypes
+            .filter((type, index) => checkedStatusType[index] === true)
+            .map(t => t.type);
+        return dlorlistToFilter.filter(d => requestedStatuses.includes(d.object_status));
+    };
+
+    const numberOfListItemsOfType = (list, statusType) => list.filter(d => d.object_status === statusType)?.length;
 
     return (
         <StandardPage title="Digital learning hub Management">
@@ -166,9 +221,32 @@ export const DLOAdminHomepage = ({
                     } else {
                         return (
                             <>
-                                {!!dlorList &&
-                                    dlorList.length > 0 &&
-                                    dlorList.map((o, index) => {
+                                <Grid item xs={12}>
+                                    {statusTypes?.length > 0 &&
+                                        statusTypes.map((objectStatus, index) => {
+                                            const checkBoxid = `checkbox-status-${objectStatus.type}`;
+                                            return (
+                                                <FormControlLabel
+                                                    key={`${objectStatus.type}`}
+                                                    // className={classes.filterSidebarCheckboxControl}
+                                                    control={
+                                                        <Checkbox
+                                                            onChange={handleStatusTypeChange(objectStatus.type)}
+                                                            value={objectStatus.type}
+                                                            data-testid={`${checkBoxid}`}
+                                                            checked={checkedStatusType[index]}
+                                                        />
+                                                    }
+                                                    label={`${objectStatus.label} (${numberOfListItemsOfType(
+                                                        dlorList,
+                                                        objectStatus.type,
+                                                    )})`}
+                                                />
+                                            );
+                                        })}
+                                </Grid>
+                                {dlorList?.length > 0 &&
+                                    mapOverRequestedTypes(dlorList).map((o, index) => {
                                         return (
                                             <Grid
                                                 item

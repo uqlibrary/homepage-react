@@ -1,6 +1,7 @@
 import * as actions from './actionTypes';
 import { destroy, get, post } from 'repositories/generic';
 import {
+    DLOR_ALL_API,
     DLOR_ALL_CURRENT_API,
     DLOR_CREATE_API,
     DLOR_DESTROY_API,
@@ -10,16 +11,41 @@ import {
 } from 'repositories/routes';
 
 export function loadCurrentDLORs() {
+    console.log('loadCurrentDLORs start');
     return dispatch => {
         dispatch({ type: actions.DLOR_LIST_LOADING });
         return get(DLOR_ALL_CURRENT_API())
             .then(response => {
+                console.log('loadCurrentDLORs response=', response);
                 dispatch({
                     type: actions.DLOR_LIST_LOADED,
                     payload: response.data,
                 });
             })
             .catch(error => {
+                console.log('loadCurrentDLORs response=', error);
+                dispatch({
+                    type: actions.DLOR_LIST_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function loadAllDLORs() {
+    console.log('loadAllDLORs start');
+    return dispatch => {
+        dispatch({ type: actions.DLOR_LIST_LOADING });
+        return get(DLOR_ALL_API())
+            .then(response => {
+                console.log('loadAllDLORs response=', response);
+                dispatch({
+                    type: actions.DLOR_LIST_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                console.log('loadAllDLORs error=', error);
                 dispatch({
                     type: actions.DLOR_LIST_FAILED,
                     payload: error.message,

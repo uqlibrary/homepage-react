@@ -489,6 +489,219 @@ export default {
                 "team_email": "team2@uq.edu.au",
                 "team_manager_username": "Test McTester"
             }
+        }, {
+            "object_id": 24,
+            "object_public_uuid": "9bc174f7-5326-4a8b-bfab-d5081c688597",
+            "object_title": "Health information and research essentials",
+            "object_description": "This module provides an overview of health information and access health and medical resources for your study, research or clinical practice. You will get an introduction to health, discover why health literacy is important, learn how to find the best evidence to benefit patients, how to get reliable health information, locate health information resources, evaluate the quality of health information, learn about advanced health research techniques, explore health research methods and find health statistics.",
+            "object_summary": "Get an overview of health information and access health and medical resources for your study, research or clinical practice.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "new",
+            "object_embed_type": "link",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "[Embed or link a module](https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1) in your Learn.UQ course.",
+            "object_link_url_id": 9,
+            "object_link_url_parent": 24,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/health-information-research-essentials\/",
+            "object_keywords": [
+                "health literacy",
+                "evidence-based practice",
+                "quality",
+                "reliability",
+                "health research"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [
+                        2,
+                        1
+                    ]
+                },
+                {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [
+                        5,
+                        4
+                    ]
+                },
+                {
+                    "filter_key": "item_type",
+                    "filter_values": [
+                        17
+                    ]
+                },
+                {
+                    "filter_key": "media_format",
+                    "filter_values": [
+                        45
+                    ]
+                },
+                {
+                    "filter_key": "subject",
+                    "filter_values": [
+                        26
+                    ]
+                },
+                {
+                    "filter_key": "licence",
+                    "filter_values": [
+                        35
+                    ]
+                }
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager_username": "Steve Lancaster"
+            }
+        }, {
+            "object_id": 28,
+            "object_public_uuid": "9bc1894a-8b0d-46da-a25e-02d26e2e056c",
+            "object_title": "Advanced literature searching for science",
+            "object_description": "Learn how to conduct advanced literature searching for science. This module includes discipline-specific instruction on preparing searches in particular databases.\nWe recommend you do the Advanced literature searching module first, to become familiar with the common advanced literature searching techniques. ",
+            "object_summary": "Learn how to conduct advanced literature searching for science.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "deprecated",
+            "object_embed_type": "link",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "[Link a H5P](https:\/\/elearning.uq.edu.au\/guides\/h5p-interactive-learning-objects\/link-h5p-object-learnuq-course) in a Learn.UQ course \u2014 linking a H5P object in your Learn.UQ course will automatically create a Grade Centre column.\n[Embed a H5P](https:\/\/elearning.uq.edu.au\/guides\/h5p-interactive-learning-objects\/embed-h5p-object-learnuq-course) in a Learn.UQ course \u2014 the results of the activity cannot be transferred to Grade Centre, however they are available through Reports in H5P.",
+            "object_link_url_id": 13,
+            "object_link_url_parent": 28,
+            "object_link_url": "https:\/\/uq.h5p.com\/content\/1291624614669619959",
+            "object_keywords": [
+                "databases",
+                "journal article",
+                "search strategy",
+                "Reaxys"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [
+                        2,
+                        1
+                    ]
+                },
+                {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [
+                        5,
+                        4
+                    ]
+                },
+                {
+                    "filter_key": "item_type",
+                    "filter_values": [
+                        17
+                    ]
+                },
+                {
+                    "filter_key": "media_format",
+                    "filter_values": [
+                        3
+                    ]
+                },
+                {
+                    "filter_key": "subject",
+                    "filter_values": [
+                        30
+                    ]
+                },
+                {
+                    "filter_key": "licence",
+                    "filter_values": [
+                        35
+                    ]
+                }
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager_username": "Steve Lancaster"
+            }
+        }, {
+            "object_id": 31,
+            "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df240",
+            "object_title": "Choose the right tool",
+            "object_description": "This Digital Essentials module is designed to help you find the right UQ, open source or freeware tool for your specific task.\nTools covered include data analysis and spreadsheets tools, writing and referencing tools, presentations and infographic tools and tools for working with images, video and audio. \nThe module also covers tools for 3D modelling and coding.",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "deleted",
+            "object_embed_type": "link",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "[Embed or link a module](https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1) in your Learn.UQ course.\nBlackboard - download the Common Cartridge (Web Links) file from the homepage.\nBlackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [
+                        2,
+                        11
+                    ]
+                },
+                {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [
+                        5,
+                        6
+                    ]
+                },
+                {
+                    "filter_key": "item_type",
+                    "filter_values": [
+                        17
+                    ]
+                },
+                {
+                    "filter_key": "media_format",
+                    "filter_values": [
+                        45
+                    ]
+                },
+                {
+                    "filter_key": "subject",
+                    "filter_values": [
+                        23
+                    ]
+                },
+                {
+                    "filter_key": "licence",
+                    "filter_values": [
+                        35
+                    ]
+                }
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager_username": "Steve Lancaster"
+            }
         }
     ]
 };

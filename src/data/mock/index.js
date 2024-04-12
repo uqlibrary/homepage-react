@@ -607,6 +607,17 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, dlor_all];
         }
     })
+    .onGet('dlor/list/current')
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'emptyResult') {
+            return [200, { data: [] }]; // this would more likely be a 404
+        } else {
+            const currentRecords = dlor_all.data.filter(o => o.object_status === 'current');
+            return [200, { data: currentRecords }];
+        }
+    })
     .onGet('dlor/facet/list')
     .reply(() => {
         if (responseType === 'error') {
