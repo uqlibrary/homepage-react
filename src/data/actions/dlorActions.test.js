@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadAllDLORs, loadADLOR, clearADlor, createDLor, loadOwningTeams } from './dlorActions';
+import { loadCurrentDLORs, loadADLOR, clearADlor, createDLor, loadOwningTeams } from './dlorActions';
 
 jest.mock('@sentry/browser');
 
@@ -28,29 +28,29 @@ describe('Digital learning hub actions', () => {
 
     describe('Dlor list Actions', () => {
         it('dispatches expected actions when all dlors call fails', async () => {
-            mockApi.onGet(repositories.routes.DLOR_ALL_API()).reply(500);
+            mockApi.onGet(repositories.routes.DLOR_ALL_CURRENT_API()).reply(500);
 
             const expectedActions = [actions.DLOR_LIST_LOADING, actions.DLOR_LIST_FAILED];
 
-            await mockActionsStore.dispatch(loadAllDLORs());
+            await mockActionsStore.dispatch(loadCurrentDLORs());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
         it('handles dlor list', async () => {
-            mockApi.onGet(repositories.routes.DLOR_ALL_API().apiUrl).reply(200, []);
+            mockApi.onGet(repositories.routes.DLOR_ALL_CURRENT_API().apiUrl).reply(200, []);
 
             const expectedActions = [actions.DLOR_LIST_LOADING, actions.DLOR_LIST_LOADED];
 
-            await mockActionsStore.dispatch(loadAllDLORs());
+            await mockActionsStore.dispatch(loadCurrentDLORs());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
         it('dispatches expected actions when dlor list call fails', async () => {
-            mockApi.onGet(repositories.routes.DLOR_ALL_API().apiUrl).reply(500);
+            mockApi.onGet(repositories.routes.DLOR_ALL_CURRENT_API().apiUrl).reply(500);
 
             const expectedActions = [actions.DLOR_LIST_LOADING, actions.APP_ALERT_SHOW, actions.DLOR_LIST_FAILED];
 
-            await mockActionsStore.dispatch(loadAllDLORs());
+            await mockActionsStore.dispatch(loadCurrentDLORs());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

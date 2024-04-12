@@ -1,7 +1,7 @@
 import * as actions from './actionTypes';
 import { destroy, get, post } from 'repositories/generic';
 import {
-    DLOR_ALL_API,
+    DLOR_ALL_CURRENT_API,
     DLOR_CREATE_API,
     DLOR_DESTROY_API,
     DLOR_GET_BY_ID_API,
@@ -9,10 +9,10 @@ import {
     DLOR_TEAM_LIST_API,
 } from 'repositories/routes';
 
-export function loadAllDLORs() {
+export function loadCurrentDLORs() {
     return dispatch => {
         dispatch({ type: actions.DLOR_LIST_LOADING });
-        return get(DLOR_ALL_API())
+        return get(DLOR_ALL_CURRENT_API())
             .then(response => {
                 dispatch({
                     type: actions.DLOR_LIST_LOADED,

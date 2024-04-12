@@ -256,7 +256,7 @@ export const DLOList = ({
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
-            actions.loadAllDLORs();
+            actions.loadCurrentDLORs();
         }
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();

@@ -58,7 +58,7 @@ export const DLOAdminHomepage = ({
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
-            actions.loadAllDLORs();
+            actions.loadCurrentDLORs();
         }
     }, [dlorList]);
 
@@ -80,7 +80,7 @@ export const DLOAdminHomepage = ({
                     console.log('deleteSelectedObject delete success', objectToDelete);
                     setObjectToDelete('');
                     // setAlertNotice(''); // needed?
-                    actions.loadAllDLORs();
+                    actions.loadCurrentDLORs();
                 })
                 .catch(() => {
                     console.log('deleteSelectedObject delete fail', objectToDelete);
