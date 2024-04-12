@@ -105,12 +105,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     panelBody: {
-        maxHeight: 900,
-        scrollbarGutter: 'stable',
-        overflowY: 'auto',
-        overflowX: 'hidden',
         paddingTop: 0,
-        // marginTop: 24,
     },
     filterSidebar: {
         fontSize: 10,
@@ -121,10 +116,6 @@ const useStyles = makeStyles(theme => ({
         },
     },
     filterSidebarBody: {
-        maxHeight: 856, // 900 - 44,
-        scrollbarGutter: 'stable',
-        overflowY: 'auto',
-        overflowX: 'hidden',
         marginTop: 0,
     },
     showFilterSidebarIcon: {
