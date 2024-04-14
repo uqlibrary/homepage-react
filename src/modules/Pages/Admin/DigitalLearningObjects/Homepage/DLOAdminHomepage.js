@@ -25,6 +25,8 @@ const useStyles = makeStyles(theme => ({
     sidebyside: {
         display: 'flex',
         justifyContent: 'space-between',
+    },
+    hoverEffect: {
         '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
         },
@@ -104,6 +106,11 @@ export const DLOAdminHomepage = ({
         window.location.href = `${fullPath}/admin/dlor/add${userString}`;
     };
 
+    const navigateToEditPage = uuid => {
+        const userString = getUserPostfix();
+        window.location.href = `${fullPath}/admin/dlor/edit/${uuid}${userString}`;
+    };
+
     const confirmDelete = objectUuid => {
         setObjectToDelete(objectUuid);
         showDeleteConfirmation();
@@ -181,8 +188,7 @@ export const DLOAdminHomepage = ({
                 }}
             />
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={10} />
-                <Grid item xs={2}>
+                <Grid item xs={12} style={{ textAlign: 'right' }}>
                     <Button
                         children="Add object"
                         color="primary"
@@ -248,31 +254,40 @@ export const DLOAdminHomepage = ({
                                 {dlorList?.length > 0 &&
                                     mapOverRequestedTypes(dlorList).map((o, index) => {
                                         return (
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                className={classes.sidebyside}
-                                                key={o?.object_id}
-                                                data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
-                                            >
-                                                <div>
-                                                    <Typography component={'h2'} variant={'h6'}>
-                                                        {o?.object_title}
-                                                    </Typography>
-                                                    <Typography variant={'p'}>
-                                                        <p>{o?.object_summary}</p>
-                                                    </Typography>
-                                                </div>
-                                                {/* <IconButton onClick={() => navigateToEditPage(o?.object_public_uuid)}>*/}
-                                                {/*    <EditIcon />*/}
-                                                {/* </IconButton>*/}
-                                                <IconButton
-                                                    style={{ height: 40 }}
-                                                    onClick={() => confirmDelete(o?.object_public_uuid)}
+                                            <>
+                                                <Grid
+                                                    item
+                                                    xs={10}
+                                                    className={`${classes.sidebyside} + ${classes.hoverEffect}`}
+                                                    key={o?.object_id}
+                                                    data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
                                                 >
-                                                    <DeleteForeverIcon />
-                                                </IconButton>
-                                            </Grid>
+                                                    <div>
+                                                        <Typography component={'h2'} variant={'h6'}>
+                                                            {o?.object_title}
+                                                        </Typography>
+                                                        <Typography variant={'p'}>
+                                                            <p>{o?.object_summary}</p>
+                                                        </Typography>
+                                                    </div>
+                                                </Grid>
+                                                <Grid item xs={1} className={classes.hoverEffect}>
+                                                    <IconButton
+                                                        onClick={() => navigateToEditPage(o?.object_public_uuid)}
+                                                    >
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                                <Grid item xs={1} className={classes.hoverEffect}>
+                                                    <IconButton
+                                                        data-testid={`dlor-homepage-delete-${o?.object_public_uuid}`}
+                                                        style={{ height: 40 }}
+                                                        onClick={() => confirmDelete(o?.object_public_uuid)}
+                                                    >
+                                                        <DeleteForeverIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                            </>
                                         );
                                     })}
                             </>

@@ -1,3 +1,5 @@
+const gridFromExpectedRowCount = expected => expected * 3 + 1;
+
 describe('Digital learning hub admin homepage', () => {
     beforeEach(() => {
         cy.clearCookies();
@@ -33,14 +35,12 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1); // all current objects show, plus the div with the checkbox list
+                .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
         });
         it('can cancel deletion of an Object', () => {
             // click delete icon on first Object
-            cy.get('[data-testid="dlor-homepage-list"]')
+            cy.get('[data-testid="dlor-homepage-delete-987y_isjgt_9866"]')
                 .should('exist')
-                .find('button')
-                .first()
                 .click();
             // confirm delete box is open
             cy.get('[data-testid="dialogbox-dlor-item-delete-confirm"]')
@@ -54,10 +54,8 @@ describe('Digital learning hub admin homepage', () => {
         });
         it('can delete an object', () => {
             // click delete icon on first Object
-            cy.get('[data-testid="dlor-homepage-list"]')
+            cy.get('[data-testid="dlor-homepage-delete-98s0_dy5k3_98h4"]')
                 .should('exist')
-                .find('button')
-                .first()
                 .click();
             // confirm delete box is open
             cy.get('[data-testid="dialogbox-dlor-item-delete-confirm"]')
@@ -71,13 +69,13 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1); // all current objects show, plus the div with the checkbox list
+                .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
         });
         it('can filter objects', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1); // all current objects show, plus the div with the checkbox list
+                .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
 
             // label counts are correct
             cy.get('[data-testid="checkbox-status-new"]')
@@ -114,7 +112,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 9 + 1);
+                .should('have.length', gridFromExpectedRowCount(9));
 
             // check "rejected"
             cy.get('[data-testid="checkbox-status-rejected"] input[type=checkbox]')
@@ -124,7 +122,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 9 + 1); // no rejected entries, nothing changed
+                .should('have.length', gridFromExpectedRowCount(9)); // no rejected entries, nothing changed
 
             // check "deleted"
             cy.get('[data-testid="checkbox-status-deleted"] input[type=checkbox]')
@@ -134,7 +132,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 10 + 1);
+                .should('have.length', gridFromExpectedRowCount(10));
 
             // check "deprecated"
             cy.get('[data-testid="checkbox-status-deprecated"] input[type=checkbox]')
@@ -144,7 +142,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 11 + 1);
+                .should('have.length', gridFromExpectedRowCount(11));
 
             // UNcheck "published"
             cy.get('[data-testid="checkbox-status-current"] input[type=checkbox]')
@@ -154,7 +152,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3 + 1);
+                .should('have.length', gridFromExpectedRowCount(3));
 
             // UNcheck "deleted"
             cy.get('[data-testid="checkbox-status-deleted"] input[type=checkbox]')
@@ -164,7 +162,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 2 + 1);
+                .should('have.length', gridFromExpectedRowCount(2));
         });
     });
     context('error handling', () => {
@@ -173,10 +171,8 @@ describe('Digital learning hub admin homepage', () => {
             cy.viewport(1300, 1000);
 
             // click delete icon on first Object
-            cy.get('[data-testid="dlor-homepage-list"]')
+            cy.get('[data-testid="dlor-homepage-delete-kj5t_8yg4_kj4f"]')
                 .should('exist')
-                .find('button')
-                .first()
                 .click();
             // confirm delete box is open
             cy.get('[data-testid="dialogbox-dlor-item-delete-confirm"]')
@@ -201,7 +197,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1); // all current objects show, plus the div with the checkbox list
+                .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
         });
     });
 });
