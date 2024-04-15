@@ -109,6 +109,8 @@ export const DlorForm = ({
     dlorCreatedItemError,
     dlorCreatedItem,
     dlorItemLoading,
+    dlorItem,
+    dlorItemError,
     dlorTeam,
     dlorTeamLoading,
     dlorTeamError,
@@ -152,8 +154,16 @@ export const DlorForm = ({
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
+    console.log('DlorForm formDefaults=', formDefaults);
     const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
+
+    React.useEffect(() => {
+        if (!!dlorItem) {
+            setFormValues(formDefaults);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dlorItem]);
 
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;

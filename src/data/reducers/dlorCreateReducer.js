@@ -34,6 +34,6 @@ export default function dlorCreateReducer(state = initialState, action) {
         return state;
     }
     const handler1 = handler(state, action);
-    console.log('reducer dlorGetSingleReducer:', action.type, handler1);
+    console.log('reducer dlorCreateReducer:', action.type, handler1);
     return handler1;
 }
