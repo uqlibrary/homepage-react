@@ -10,7 +10,7 @@ export const pathConfig = {
         alerts: '/admin/alerts',
         dloradmin: '/admin/dlor',
         dloradd: '/admin/dlor/add',
-        dloredit: dlorId => `/admin/dlor/edit${dlorId}`,
+        dloredit: dlorId => `/admin/dlor/edit/${dlorId}`,
         masquerade: '/admin/masquerade',
         promopaneladd: '/admin/promopanel/add',
         promopaneledit: promopanelid => `/admin/promopanel/edit/${promopanelid}`,

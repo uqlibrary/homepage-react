@@ -106,8 +106,8 @@ const useStyles = makeStyles(theme => ({
 export const DlorForm = ({
     actions,
     dlorItemCreating,
-    dlorItemError,
-    dlorItem,
+    dlorCreatedItemError,
+    dlorCreatedItem,
     dlorItemLoading,
     dlorTeam,
     dlorTeamLoading,
@@ -124,18 +124,27 @@ export const DlorForm = ({
     const [cookies, setCookie] = useCookies();
     const theme = useTheme();
 
-    !!dlorItem &&
-        console.log('DlorForm creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
+    // !!dlorCreatedItem &&
+    console.log(
+        'DlorForm dlorItemLoading=',
+        dlorItemLoading,
+        '; dlorItemCreating=',
+        dlorItemCreating,
+        '; error=',
+        dlorCreatedItemError,
+        '; response=',
+        dlorCreatedItem,
+    );
     // !!dlorTeam && console.log('DlorForm team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
     // !!dlorFilterList &&
-    console.log(
-        'DlorForm filters=',
-        dlorFilterListLoading,
-        '; error=',
-        dlorFilterListError,
-        '; response=',
-        dlorFilterList,
-    );
+    // console.log(
+    //     'DlorForm filters=',
+    //     dlorFilterListLoading,
+    //     '; error=',
+    //     dlorFilterListError,
+    //     '; response=',
+    //     dlorFilterList,
+    // );
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
@@ -209,10 +218,10 @@ export const DlorForm = ({
         }
 
         return (
-            (url.protocol === 'http:' || url.protocol === 'https:') &&
-            !!url.hostname &&
-            !!url.hostname.includes('.') && // tld only domain names really dont happen, must be a dot!
-            url.hostname.length >= '12.co'.length
+            (url?.protocol === 'http:' || url?.protocol === 'https:') &&
+            !!url?.hostname &&
+            !!url?.hostname.includes('.') && // tld only domain names really dont happen, must be a dot!
+            url?.hostname.length >= '12.co'.length
         );
     };
 
@@ -341,13 +350,13 @@ export const DlorForm = ({
         }
 
         // while its short, return the shortness
-        if (enteredDescription.length <= requiredLength) {
+        if (enteredDescription?.length <= requiredLength) {
             return enteredDescription;
         }
 
         // return the first n characters, breaking at a word break
-        const trimmedString = enteredDescription.slice(0, requiredLength + 1);
-        const slice = trimmedString.slice(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
+        const trimmedString = enteredDescription?.slice(0, requiredLength + 1);
+        const slice = trimmedString.slice(0, Math.min(trimmedString?.length, trimmedString?.lastIndexOf(' ')));
         return slice;
     };
 
@@ -401,7 +410,7 @@ export const DlorForm = ({
                         onChange={handleChange('object_title')}
                     />
                     {!!formValues?.object_title &&
-                        characterCount(formValues?.object_title.length, titleMinimumLength, 'object_title')}
+                        characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
             <Grid item xs={12}>
@@ -418,7 +427,7 @@ export const DlorForm = ({
                     />
                     {!!formValues?.object_description &&
                         characterCount(
-                            formValues?.object_description.length,
+                            formValues?.object_description?.length,
                             descriptionMinimumLength,
                             'object_description',
                         )}
@@ -441,7 +450,6 @@ export const DlorForm = ({
                         onChange={handleChange('object_summary')}
                     />
                     <SummaryCharCountPrompt />
-                    {/* {formValues?.object_description?.length > 0 && (*/}
                     {!!summarySuggestionOpen && (
                         <div data-testid="admin-dlor-suggest-summary">
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -705,13 +713,13 @@ export const DlorForm = ({
     }, [dlorFilterList]);
 
     useEffect(() => {
-        // console.log('useEffect dlorItem=', dlorItem, ';dlorItemError', dlorItemError);
-        if ((!!dlorItem && !!dlorItem.data?.object_id) || !!dlorItemError) {
+        // console.log('useEffect dlorCreatedItem=', dlorCreatedItem, ';dlorCreatedItemError', dlorCreatedItemError);
+        if ((!!dlorCreatedItem && !!dlorCreatedItem.data?.object_id) || !!dlorCreatedItemError) {
             // console.log('useEffect showing conf');
             setSaveStatus('complete');
             showConfirmation();
         }
-    }, [showConfirmation, dlorItem, dlorItemError]);
+    }, [showConfirmation, dlorCreatedItem, dlorCreatedItemError]);
 
     const saveNewDlor = () => {
         const valuesToSend = { ...formValues };
@@ -749,7 +757,7 @@ export const DlorForm = ({
             confirmButtonLabel: 'Return to list page',
         },
         errorMessage: {
-            confirmationTitle: dlorItemError,
+            confirmationTitle: dlorCreatedItemError,
             confirmationMessage: '',
             confirmButtonLabel: 'Return to list page',
         },
@@ -798,7 +806,7 @@ export const DlorForm = ({
             thirdPanelErrorCount++;
 
         let fourthPanelErrorCount = 0;
-        currentValues?.object_keywords_string.length < keywordMinimumLength && fourthPanelErrorCount++;
+        currentValues?.object_keywords_string?.length < keywordMinimumLength && fourthPanelErrorCount++;
 
         // check the required facets are checked
         !!dlorFilterList &&
@@ -933,12 +941,12 @@ export const DlorForm = ({
                     actionButtonVariant="contained"
                     confirmationBoxId="dlor-creation-outcome"
                     onAction={() => navigateToDlorAdminHomePage()}
-                    hideCancelButton={!!dlorItemError || !locale.successMessage.cancelButtonLabel}
+                    hideCancelButton={!!dlorCreatedItemError || !locale.successMessage.cancelButtonLabel}
                     cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                     onCancelAction={() => clearForm()}
                     onClose={hideConfirmation}
                     isOpen={isOpen}
-                    locale={!dlorItemError ? locale.successMessage : locale.errorMessage}
+                    locale={!dlorCreatedItemError ? locale.successMessage : locale.errorMessage}
                 />
             )}
             <form id="dlor-add-form">
@@ -984,7 +992,7 @@ export const DlorForm = ({
                                 Back
                             </Button>
                             <Box sx={{ flex: '1 1 auto' }} />
-                            {activeStep === steps.length - 1 ? (
+                            {activeStep === steps?.length - 1 ? (
                                 <Button
                                     color="primary"
                                     data-testid="admin-dlor-add-button-submit"

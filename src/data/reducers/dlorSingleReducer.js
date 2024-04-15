@@ -5,6 +5,11 @@ export const initialState = {
     dlorItemLoading: null,
     dlorItemError: null,
     dlorItemCreating: null,
+    dlorCreatedItem: null,
+    dlorCreatedItemError: null,
+    dlorItemDeleting: null,
+    dlorItemDeleted: null,
+    dlorItemDeleteError: null,
 };
 
 const handlers = {
@@ -34,20 +39,20 @@ const handlers = {
         ...initialState,
         ...state,
         dlorItemCreating: true,
-        dlorItemError: false,
+        dlorCreatedItemError: false,
     }),
     [actions.DLOR_CREATED]: (state, action) => ({
         ...initialState,
         ...state,
         dlorItemCreating: false,
-        dlorItemError: false,
-        dlorItem: action.payload,
+        dlorCreatedItemError: false,
+        dlorCreatedItem: action.payload,
     }),
     [actions.DLOR_CREATE_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         dlorItemCreating: false,
-        dlorItemError: action.payload,
+        dlorCreatedItemError: action.payload,
     }),
     [actions.DLOR_DELETING]: state => ({
         ...initialState,
@@ -60,7 +65,7 @@ const handlers = {
         ...state,
         dlorItemDeleting: false,
         dlorItemDeleteError: false,
-        dlorItem: action.payload,
+        dlorItemDeleted: action.payload,
     }),
     [actions.DLOR_DELETE_FAILED]: (state, action) => ({
         ...initialState,

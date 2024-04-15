@@ -13,8 +13,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 export const DLOAdd = ({
     actions,
     dlorItemCreating,
-    dlorItemError,
-    dlorItem,
+    dlorCreatedItemError,
+    dlorCreatedItem,
     dlorTeam,
     dlorTeamLoading,
     dlorTeamError,
@@ -22,7 +22,7 @@ export const DLOAdd = ({
     dlorFilterListLoading,
     dlorFilterListError,
 }) => {
-    // !!dlorItem && console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorItemError, '; response=', dlorItem);
+    // !!dlorCreatedItem && console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorCreatedItemError, '; response=', dlorCreatedItem);
     const { account } = useAccountContext();
 
     function getTodayPlusOneYear(baseDate = null) {
@@ -60,8 +60,8 @@ export const DLOAdd = ({
                         <DlorForm
                             actions={actions}
                             dlorItemCreating={dlorItemCreating}
-                            dlorItemError={dlorItemError}
-                            dlorItem={dlorItem}
+                            dlorCreatedItemError={dlorCreatedItemError}
+                            dlorCreatedItem={dlorCreatedItem}
                             dlorTeam={dlorTeam}
                             dlorTeamLoading={dlorTeamLoading}
                             dlorTeamError={dlorTeamError}
@@ -80,8 +80,8 @@ export const DLOAdd = ({
 DLOAdd.propTypes = {
     actions: PropTypes.any,
     dlorItemCreating: PropTypes.object,
-    dlorItemError: PropTypes.any,
-    dlorItem: PropTypes.object,
+    dlorCreatedItemError: PropTypes.any,
+    dlorCreatedItem: PropTypes.object,
     dlorTeam: PropTypes.array,
     dlorTeamLoading: PropTypes.bool,
     dlorTeamError: PropTypes.any,
