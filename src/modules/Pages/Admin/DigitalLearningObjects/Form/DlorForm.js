@@ -40,7 +40,8 @@ import {
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { getUserPostfix, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { fullPath } from 'config/routes';
 
 const moment = require('moment-timezone');
 
@@ -107,6 +108,7 @@ export const DlorForm = ({
     dlorItemCreating,
     dlorItemError,
     dlorItem,
+    dlorItemLoading,
     dlorTeam,
     dlorTeamLoading,
     dlorTeamError,
@@ -753,16 +755,13 @@ export const DlorForm = ({
         },
     };
 
-    const handleLeavePage = () => {
-        window.alert('leave the page: TBA, where do we go on exit?');
-    };
-
     const navigateToDlorAdminHomePage = () => {
         // TODO also want to clear form here too before nav, so back button gives clear form?
 
         // actions.loadAllDLORs(); // force reload of data now we have added a new one. needed?
         hideConfirmation();
-        history.push('/admin/dlor');
+        const userString = getUserPostfix();
+        window.location.href = `${fullPath}/admin/dlor${userString}`;
         scrollToTopOfPage();
     };
 
@@ -897,7 +896,7 @@ export const DlorForm = ({
     const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
     const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
 
-    if (!!dlorTeamLoading || dlorFilterListLoading || !!dlorItemCreating) {
+    if (!!dlorTeamLoading || dlorFilterListLoading || !!dlorItemCreating || !!dlorItemLoading) {
         return (
             <StandardPage title="Digital learning hub Management">
                 <StandardCard title="Create an Object for the Digital learning hub">

@@ -593,7 +593,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="confirm-dlor-creation-outcome"]')
                     .should('contain', 'Return to list page')
                     .click();
-                cy.url().should('eq', 'http://localhost:2020/admin/dlor');
+                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
                 cy.get('[data-testid="StandardPage-title"]')
                     .should('exist')
                     .should('contain', 'Digital learning hub Management');
