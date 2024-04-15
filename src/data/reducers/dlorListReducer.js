@@ -4,9 +4,6 @@ export const initialState = {
     dlorList: null,
     dlorListLoading: null,
     dlorListError: null,
-    dlorTeamLoading: null,
-    dlorTeamError: null,
-    dlorTeam: null,
 };
 
 const handlers = {
@@ -28,25 +25,6 @@ const handlers = {
         ...state,
         dlorListLoading: false,
         dlorListError: action.payload,
-    }),
-    [actions.DLOR_TEAM_LOADING]: state => ({
-        ...initialState,
-        ...state,
-        dlorTeamLoading: true,
-        dlorTeamError: false,
-    }),
-    [actions.DLOR_TEAM_LOADED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        dlorTeamLoading: false,
-        dlorTeamError: false,
-        dlorTeam: action.payload,
-    }),
-    [actions.DLOR_TEAM_FAILED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        dlorTeamLoading: false,
-        dlorTeamError: action.payload,
     }),
 };
 
