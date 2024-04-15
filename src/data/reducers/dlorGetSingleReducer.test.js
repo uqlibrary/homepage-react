@@ -1,4 +1,4 @@
-import dlorSingleReducer, { initialState } from './dlorSingleReducer';
+import dlorGetSingleReducer, { initialState } from './dlorGetSingleReducer';
 import * as actions from '../actions/actionTypes';
 
 describe('dlor single reducer', () => {
@@ -13,7 +13,7 @@ describe('dlor single reducer', () => {
     });
 
     it('should set dlor values when successfully loaded', () => {
-        const test = dlorSingleReducer(emptyState, { type: actions.DLOR_DETAIL_LOADED, payload: mockDlorEntry });
+        const test = dlorGetSingleReducer(emptyState, { type: actions.DLOR_DETAIL_LOADED, payload: mockDlorEntry });
         expect(test).toEqual({
             ...emptyState,
             dlorItem: mockDlorEntry,
@@ -23,7 +23,7 @@ describe('dlor single reducer', () => {
     });
 
     it('should handle a failing Dlor load API call', () => {
-        const test = dlorSingleReducer(emptyState, {
+        const test = dlorGetSingleReducer(emptyState, {
             type: actions.DLOR_DETAIL_FAILED,
             payload: 'failed!',
         });
@@ -35,7 +35,7 @@ describe('dlor single reducer', () => {
     });
 
     it('should set dlor Status flags to loading when loading dlor', () => {
-        const test = dlorSingleReducer(emptyState, { type: actions.DLOR_DETAIL_LOADING });
+        const test = dlorGetSingleReducer(emptyState, { type: actions.DLOR_DETAIL_LOADING });
         expect(test).toEqual({
             ...emptyState,
             dlorItem: null,
@@ -45,7 +45,7 @@ describe('dlor single reducer', () => {
     });
 
     it('should set dlor values when successfully created', () => {
-        const test = dlorSingleReducer(emptyState, { type: actions.DLOR_CREATED, payload: mockDlorEntry });
+        const test = dlorGetSingleReducer(emptyState, { type: actions.DLOR_CREATED, payload: mockDlorEntry });
         expect(test).toEqual({
             ...emptyState,
             dlorItem: mockDlorEntry,
@@ -55,7 +55,7 @@ describe('dlor single reducer', () => {
     });
 
     it('should handle a failing Dlor load API call', () => {
-        const test = dlorSingleReducer(emptyState, {
+        const test = dlorGetSingleReducer(emptyState, {
             type: actions.DLOR_CREATE_FAILED,
             payload: 'failed!',
         });

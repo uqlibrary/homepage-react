@@ -30,5 +30,6 @@ export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspe
 export { default as testTagUserListReducer } from './testTagUserListReducer';
 export { default as dlorListReducer } from './dlorListReducer';
 export { default as dlorFilterListReducer } from './dlorFilterListReducer';
-export { default as dlorSingleReducer } from './dlorSingleReducer';
+export { default as dlorGetSingleReducer } from './dlorGetSingleReducer';
 export { default as dlorTeamReducer } from './dlorTeamReducer';
+export { default as dlorCreateReducer } from './dlorCreateReducer';

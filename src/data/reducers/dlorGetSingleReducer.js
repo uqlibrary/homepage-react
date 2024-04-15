@@ -4,9 +4,6 @@ export const initialState = {
     dlorItem: null,
     dlorItemLoading: null,
     dlorItemError: null,
-    dlorItemCreating: null,
-    dlorCreatedItem: null,
-    dlorCreatedItemError: null,
     dlorItemDeleting: null,
     dlorItemDeleted: null,
     dlorItemDeleteError: null,
@@ -35,25 +32,6 @@ const handlers = {
     [actions.DLOR_DETAIL_CLEAR]: () => ({
         ...initialState,
     }),
-    [actions.DLOR_CREATING]: state => ({
-        ...initialState,
-        ...state,
-        dlorItemCreating: true,
-        dlorCreatedItemError: false,
-    }),
-    [actions.DLOR_CREATED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        dlorItemCreating: false,
-        dlorCreatedItemError: false,
-        dlorCreatedItem: action.payload,
-    }),
-    [actions.DLOR_CREATE_FAILED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        dlorItemCreating: false,
-        dlorCreatedItemError: action.payload,
-    }),
     [actions.DLOR_DELETING]: state => ({
         ...initialState,
         ...state,
@@ -75,12 +53,12 @@ const handlers = {
     }),
 };
 
-export default function dlorSingleReducer(state = initialState, action) {
+export default function dlorGetSingleReducer(state = initialState, action) {
     const handler = handlers[action.type];
     if (!handler) {
         return state;
     }
     const handler1 = handler(state, action);
-    console.log('reducer dlorSingleReducer:', action.type, handler1);
+    console.log('reducer dlorGetSingleReducer:', action.type, handler1);
     return handler1;
 }

@@ -10,8 +10,8 @@ const mapStateToProps = state => {
         ...state.get('accountReducer'),
         ...state.get('dlorListReducer'),
         ...state.get('dlorFilterListReducer'),
-        ...state.get('dlorSingleReducer'),
         ...state.get('dlorTeamReducer'),
+        ...state.get('dlorCreateReducer'),
     };
     console.log('mapStateToProps', newVar);
     return newVar;

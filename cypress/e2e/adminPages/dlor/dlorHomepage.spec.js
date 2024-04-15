@@ -186,9 +186,9 @@ describe('Digital learning hub admin homepage', () => {
             cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-item-delete-failure-notice"]').should('exist'));
             cy.get('[data-testid="dialogbox-dlor-item-delete-failure-notice"]').should('be.visible');
             // has correct error message
-            cy.get('[data-testid="dialogbox-dlor-item-delete-failure-notice"] [data-testid="message-content"]')
+            cy.get('[data-testid="dialogbox-dlor-item-delete-failure-notice"] [data-testid="message-title"]')
                 .should('exist')
-                .contains('An error has occurred during the request and this request cannot be processed');
+                .contains('An error occurred deleting the Object');
             // close the dialog
             cy.get('button[data-testid="confirm-dlor-item-delete-failure-notice"]').click();
             // dialog closed
