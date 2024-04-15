@@ -43,65 +43,67 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'stretch', // panels fill the screen with equal width
     },
-    dlorCard: {
-        padding: '12px',
-        '& header': {
-            '& h2': {
-                lineHeight: 1.3,
-            },
-            display: 'flex',
-            flexDirection: 'column-reverse',
-        },
-        '& > div': {
-            maxHeight: 180,
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            fontWeight: 300,
-        },
-        '& > div p': {
-            marginBottom: '0.2em',
-            marginTop: '0.2em',
-        },
-        '& > div p:first-child': {
-            marginTop: 0,
-        },
-        '& footer': {
-            color: theme.palette.primary.light,
-            fontWeight: 400,
-            marginTop: 6,
-            display: 'flex',
-            alignItems: 'center', // center align icon and label horizontally
-            '& > svg:not(:first-child)': {
-                paddingLeft: 6,
-            },
-            '& svg': {
-                width: 20,
-                '& > path': {
-                    fill: theme.palette.primary.light,
-                },
-            },
-        },
-    },
     highlighted: {
         color: theme.palette.primary.light,
         fontWeight: 400,
     },
-    navigateToDetail: {
-        height: '100%',
-        borderColor: 'transparent',
-        paddingInline: 0,
-        fontFamily: 'Roboto, sans-serif',
+    dlorCard: {
         backgroundColor: '#fff',
+        borderColor: 'transparent',
+        fontFamily: 'Roboto, sans-serif',
+        // height: '100%',
+        paddingInline: 0,
+        textAlign: 'left',
         width: '100%',
-        '& *:not(h2)': {
-            textAlign: 'left',
-            fontSize: '1rem',
-        },
         '&:hover': {
             cursor: 'pointer',
             textDecoration: 'none',
             '& > article': {
                 backgroundColor: '#f2f2f2',
+            },
+        },
+        '& article': {
+            padding: '12px',
+            '& header': {
+                '& h2': {
+                    lineHeight: 1,
+                    marginBlock: 7,
+                },
+                '& h2 span': {
+                    fontSize: '0.9rem',
+                },
+                display: 'flex',
+                flexDirection: 'column-reverse',
+            },
+            '& > div': {
+                maxHeight: 180,
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                fontWeight: 300,
+            },
+            '& > div p': {
+                marginBottom: '0.2em',
+                marginTop: '0.2em',
+                fontSize: 16,
+            },
+            '& > div p:first-child': {
+                marginTop: 0,
+            },
+            '& footer': {
+                color: theme.palette.primary.light,
+                fontWeight: 400,
+                marginTop: 6,
+                display: 'flex',
+                alignItems: 'center', // horizontally, align icon and label at the center
+                '& > svg:not(:first-child)': {
+                    paddingLeft: 6,
+                },
+                '& svg': {
+                    width: 20,
+                    '& > path': {
+                        fill: theme.palette.primary.light,
+                    },
+                },
             },
         },
     },
@@ -644,7 +646,7 @@ export const DLOList = ({
             return !(!f || f.length === 0);
         }
 
-        const getConcatenatedFilterLabels = facetTypeSlug => {
+        const getConcatenatedFilterLabels = (facetTypeSlug, wrapInParam = false) => {
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
             // console.log('getConcatenatedFilterLabels facetTypeSlug=', facetTypeSlug);
             // console.log('getConcatenatedFilterLabels f=', f);
@@ -666,7 +668,7 @@ export const DLOList = ({
                     : false;
             // console.log('getConcatenatedFilterLabels facetNames=', facetNames);
             // console.log('================================');
-            return facetNames;
+            return !!wrapInParam ? `(${facetNames})` : facetNames;
         };
 
         return (
@@ -678,22 +680,22 @@ export const DLOList = ({
                 data-testid={`dlor-homepage-panel-${object?.object_public_uuid}`}
             >
                 <button
-                    className={classes.navigateToDetail}
+                    className={classes.dlorCard}
                     onClick={() => navigateToDetailPage(object?.object_public_uuid)}
                     aria-label={`Click for more details on ${object.object_title}`}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
-                    <article className={classes.dlorCard}>
+                    <article>
                         <header>
                             <Typography component={'h2'} variant={'h6'}>
-                                {object?.object_title}
+                                {object?.object_title}{' '}
+                                {!!hasTopicFacet('topic') && (
+                                    // use flex to show this above the title
+                                    <span className={classes.highlighted}>
+                                        {getConcatenatedFilterLabels('topic', true)}
+                                    </span>
+                                )}
                             </Typography>
-                            {!!hasTopicFacet('topic') && (
-                                // use flex to show this above the title
-                                <Typography className={classes.highlighted}>
-                                    {getConcatenatedFilterLabels('topic')}
-                                </Typography>
-                            )}
                         </header>
                         <div className={classes.articleContents}>
                             <p>{object?.object_summary}</p>
