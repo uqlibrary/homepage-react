@@ -4,9 +4,6 @@ export const initialState = {
     dlorItem: null,
     dlorItemLoading: null,
     dlorItemError: null,
-    dlorItemDeleting: null,
-    dlorItemDeleted: null,
-    dlorItemDeleteError: null,
 };
 
 const handlers = {
@@ -31,25 +28,6 @@ const handlers = {
     }),
     [actions.DLOR_DETAIL_CLEAR]: () => ({
         ...initialState,
-    }),
-    [actions.DLOR_DELETING]: state => ({
-        ...initialState,
-        ...state,
-        dlorItemDeleting: true,
-        dlorItemDeleteError: false,
-    }),
-    [actions.DLOR_DELETED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        dlorItemDeleting: false,
-        dlorItemDeleteError: false,
-        dlorItemDeleted: action.payload,
-    }),
-    [actions.DLOR_DELETE_FAILED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        dlorItemDeleting: false,
-        dlorItemDeleteError: action.payload,
     }),
 };
 
