@@ -272,11 +272,11 @@ export const DLOAdminHomepage = ({
                                                     </div>
                                                 </Grid>
                                                 <Grid item xs={1} className={classes.hoverEffect}>
-                                                    <IconButton
-                                                        onClick={() => navigateToEditPage(o?.object_public_uuid)}
-                                                    >
-                                                        <EditIcon />
-                                                    </IconButton>
+                                                    {/* <IconButton*/}
+                                                    {/*    onClick={() => navigateToEditPage(o?.object_public_uuid)}*/}
+                                                    {/* >*/}
+                                                    {/*    <EditIcon />*/}
+                                                    {/* </IconButton>*/}
                                                 </Grid>
                                                 <Grid item xs={1} className={classes.hoverEffect}>
                                                     <IconButton
