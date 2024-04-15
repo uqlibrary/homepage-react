@@ -124,7 +124,7 @@ export const DLOAdminHomepage = ({
                     console.log('deleteSelectedObject delete success', objectToDelete);
                     setObjectToDelete('');
                     // setAlertNotice(''); // needed?
-                    actions.loadCurrentDLORs();
+                    actions.loadAllDLORs();
                 })
                 .catch(() => {
                     console.log('deleteSelectedObject delete fail', objectToDelete);

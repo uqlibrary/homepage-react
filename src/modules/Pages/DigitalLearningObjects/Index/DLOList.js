@@ -28,7 +28,6 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getHomepageLink } from 'helpers/access';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
-import { loadCurrentDLORs } from '../../../../data/actions';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
