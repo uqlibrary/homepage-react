@@ -898,142 +898,124 @@ export const DlorForm = ({
 
     if (!!dlorTeamLoading || dlorFilterListLoading || !!dlorItemCreating || !!dlorItemLoading) {
         return (
-            <StandardPage title="Digital learning hub Management">
-                <StandardCard title="Create an Object for the Digital learning hub">
-                    <Grid item xs={12}>
-                        <InlineLoader message="Loading" />
-                    </Grid>
-                </StandardCard>
-            </StandardPage>
+            <Grid item xs={12}>
+                <InlineLoader message="Loading" />
+            </Grid>
         );
     }
     if (!!dlorTeamError) {
         return (
-            <StandardPage title="Digital learning hub Management">
-                <StandardCard title="Create an Object for the Digital learning hub">
-                    <Typography variant="body1" data-testid="dlor-addObject-error">
-                        {dlorTeamError}
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
+            <Typography variant="body1" data-testid="dlor-addObject-error">
+                {dlorTeamError}
+            </Typography>
         );
     }
     if (!!dlorFilterListError) {
         return (
-            <StandardPage title="Digital learning hub Management">
-                <StandardCard title="Create an Object for the Digital learning hub">
-                    <Typography variant="body1" data-testid="dlor-homepage-error">
-                        {dlorFilterListError}
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
+            <Typography variant="body1" data-testid="dlor-homepage-error">
+                {dlorFilterListError}
+            </Typography>
         );
     }
     if (!dlorFilterListLoading && !dlorFilterListError && (!dlorFilterList || dlorFilterList.length === 0)) {
         return (
-            <StandardPage title="Digital learning hub Management">
-                <StandardCard title="Create an Object for the Digital learning hub">
-                    <Typography variant="body1" data-testid="dlor-homepage-noresult">
-                        Missing filters: We did not find any entries in the system - please try again later.
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
+            <Typography variant="body1" data-testid="dlor-homepage-noresult">
+                Missing filters: We did not find any entries in the system - please try again later.
+            </Typography>
         );
     }
 
     return (
-        <StandardPage title="Digital learning hub Management">
-            <StandardCard title="Create an Object for the Digital learning hub">
-                {saveStatus === 'complete' && (
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="dlor-creation-outcome"
-                        onAction={() => navigateToDlorAdminHomePage()}
-                        hideCancelButton={!!dlorItemError || !locale.successMessage.cancelButtonLabel}
-                        cancelButtonLabel={locale.successMessage.cancelButtonLabel}
-                        onCancelAction={() => clearForm()}
-                        onClose={hideConfirmation}
-                        isOpen={isOpen}
-                        locale={!dlorItemError ? locale.successMessage : locale.errorMessage}
-                    />
-                )}
-                <form id="dlor-add-form">
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <Stepper activeStep={activeStep}>
-                                {steps.map((step, index) => {
-                                    const stepProps = { completed: null };
-                                    const labelProps = {
-                                        optional: null,
-                                    };
-                                    return (
-                                        <Step key={step.label} {...stepProps} style={{ paddingRight: 25 }}>
-                                            <StepLabel {...labelProps}>
-                                                {panelValidity[index] === 0 ? (
-                                                    <span>{step.label}</span>
-                                                ) : (
-                                                    <Badge
-                                                        color="error"
-                                                        badgeContent={panelValidity[index]}
-                                                        className={classes.errorCount}
-                                                        data-testid={`dlor-panel-validity-indicator-${index}`}
-                                                    >
-                                                        {step.label}
-                                                    </Badge>
-                                                )}
-                                            </StepLabel>
-                                        </Step>
-                                    );
-                                })}
-                            </Stepper>
-                        </Grid>
-                        {steps[activeStep].stepPanelContent} {/* a large amount of html here!! */}
-                        <Grid item xs={12}>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+        <>
+            {saveStatus === 'complete' && (
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="dlor-creation-outcome"
+                    onAction={() => navigateToDlorAdminHomePage()}
+                    hideCancelButton={!!dlorItemError || !locale.successMessage.cancelButtonLabel}
+                    cancelButtonLabel={locale.successMessage.cancelButtonLabel}
+                    onCancelAction={() => clearForm()}
+                    onClose={hideConfirmation}
+                    isOpen={isOpen}
+                    locale={!dlorItemError ? locale.successMessage : locale.errorMessage}
+                />
+            )}
+            <form id="dlor-add-form">
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Stepper activeStep={activeStep}>
+                            {steps.map((step, index) => {
+                                const stepProps = { completed: null };
+                                const labelProps = {
+                                    optional: null,
+                                };
+                                return (
+                                    <Step key={step.label} {...stepProps} style={{ paddingRight: 25 }}>
+                                        <StepLabel {...labelProps}>
+                                            {panelValidity[index] === 0 ? (
+                                                <span>{step.label}</span>
+                                            ) : (
+                                                <Badge
+                                                    color="error"
+                                                    badgeContent={panelValidity[index]}
+                                                    className={classes.errorCount}
+                                                    data-testid={`dlor-panel-validity-indicator-${index}`}
+                                                >
+                                                    {step.label}
+                                                </Badge>
+                                            )}
+                                        </StepLabel>
+                                    </Step>
+                                );
+                            })}
+                        </Stepper>
+                    </Grid>
+                    {steps[activeStep].stepPanelContent} {/* a large amount of html here!! */}
+                    <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                            <Button
+                                color="inherit"
+                                disabled={activeStep === 0}
+                                onClick={handleBack}
+                                sx={{ mr: 1 }}
+                                data-testid="dlor-add-back-button"
+                            >
+                                Back
+                            </Button>
+                            <Box sx={{ flex: '1 1 auto' }} />
+                            {activeStep === steps.length - 1 ? (
                                 <Button
-                                    color="inherit"
-                                    disabled={activeStep === 0}
-                                    onClick={handleBack}
-                                    sx={{ mr: 1 }}
-                                    data-testid="dlor-add-back-button"
-                                >
-                                    Back
+                                    color="primary"
+                                    data-testid="admin-dlor-add-button-submit"
+                                    variant="contained"
+                                    children="Save"
+                                    disabled={!isFormValid}
+                                    onClick={saveNewDlor}
+                                    // className={classes.saveButton}
+                                />
+                            ) : (
+                                <Button onClick={handleNext} data-testid="dlor-add-next-button">
+                                    Next
                                 </Button>
-                                <Box sx={{ flex: '1 1 auto' }} />
-                                {activeStep === steps.length - 1 ? (
-                                    <Button
-                                        color="primary"
-                                        data-testid="admin-dlor-add-button-submit"
-                                        variant="contained"
-                                        children="Save"
-                                        disabled={!isFormValid}
-                                        onClick={saveNewDlor}
-                                        // className={classes.saveButton}
-                                    />
-                                ) : (
-                                    <Button onClick={handleNext} data-testid="dlor-add-next-button">
-                                        Next
-                                    </Button>
-                                )}
-                            </Box>
-                        </Grid>
+                            )}
+                        </Box>
                     </Grid>
-                </form>
-                <Grid container spacing={2} style={{ marginTop: 32 }}>
-                    <Grid item xs={3} align="left">
-                        <Button
-                            color="secondary"
-                            children="Cancel"
-                            data-testid="admin-dlor-add-button-cancel"
-                            onClick={() => navigateToDlorAdminHomePage()}
-                            variant="contained"
-                        />
-                    </Grid>
-                    <Grid item xs={9} align="right" />
                 </Grid>
-            </StandardCard>
-        </StandardPage>
+            </form>
+            <Grid container spacing={2} style={{ marginTop: 32 }}>
+                <Grid item xs={3} align="left">
+                    <Button
+                        color="secondary"
+                        children="Cancel"
+                        data-testid="admin-dlor-add-button-cancel"
+                        onClick={() => navigateToDlorAdminHomePage()}
+                        variant="contained"
+                    />
+                </Grid>
+                <Grid item xs={9} align="right" />
+            </Grid>
+        </>
     );
 };
 

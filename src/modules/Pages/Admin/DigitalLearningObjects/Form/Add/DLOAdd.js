@@ -54,9 +54,9 @@ export const DLOAdd = ({
 
     return (
         <Fragment>
-            <StandardPage title="Alerts Management">
+            <StandardPage title="Digital learning hub Management">
                 <section aria-live="assertive">
-                    <StandardCard title="Create alert">
+                    <StandardCard title="Create an Object for the Digital learning hub">
                         <DlorForm
                             actions={actions}
                             dlorItemCreating={dlorItemCreating}
