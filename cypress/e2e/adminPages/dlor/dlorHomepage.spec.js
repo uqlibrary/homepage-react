@@ -1,4 +1,4 @@
-const gridFromExpectedRowCount = expected => expected * 3 + 1;
+const gridFromExpectedRowCount = expected => expected * 3;
 
 describe('Digital learning hub admin homepage', () => {
     beforeEach(() => {
