@@ -841,6 +841,8 @@ export const DlorForm = ({
     };
 
     function displayControlByFacetType(filterItem) {
+        const matchFacet = (findId, facets) => facets?.some(ff => ff.filter_values.some(value => value.id === findId));
+
         let result = <></>;
         if (filterItem?.facet_type_number === 'one-or-more') {
             result =
@@ -854,6 +856,7 @@ export const DlorForm = ({
                                 onChange={handleFacetChange(thisfacet.facet_id)}
                                 id={`filter-${thisfacet.facet_id}`}
                                 data-testid={`filter-${thisfacet.facet_id}`}
+                                checked={matchFacet(thisfacet?.facet_id, formValues?.facets)}
                             />
                         }
                         label={thisfacet.facet_name}
@@ -871,6 +874,7 @@ export const DlorForm = ({
                                 onChange={handleFacetChange(thisfacet.facet_id)}
                                 id={`filter-${thisfacet.facet_id}`}
                                 data-testid={`filter-${thisfacet.facet_id}`}
+                                checked={matchFacet(thisfacet?.facet_id, formValues?.facets)}
                             />
                         }
                         label={thisfacet.facet_name}
@@ -897,7 +901,11 @@ export const DlorForm = ({
                                 key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
                                 className={classes.facetControl}
                                 control={
-                                    <Radio value={thisfacet.facet_id} data-testid={`filter-${thisfacet.facet_id}`} />
+                                    <Radio
+                                        value={thisfacet.facet_id}
+                                        data-testid={`filter-${thisfacet.facet_id}`}
+                                        checked={matchFacet(thisfacet?.facet_id, formValues?.facets)}
+                                    />
                                 }
                                 label={thisfacet.facet_name}
                                 onChange={handleFacetChange(thisfacet.facet_id)}
