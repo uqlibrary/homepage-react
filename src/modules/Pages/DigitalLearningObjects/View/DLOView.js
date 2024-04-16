@@ -254,7 +254,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                             <ul className={classes.filterDisplayList}>
                                                 {!!filter.filter_values &&
                                                     filter.filter_values.map((value, subIndex) => {
-                                                        return <li key={subIndex}>{value}</li>;
+                                                        return <li key={subIndex}>{value.name}</li>;
                                                     })}
                                             </ul>
                                         </div>

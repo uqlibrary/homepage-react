@@ -602,8 +602,8 @@ export const DLOList = ({
             return dlorList;
         }
 
-        console.log('filterDlorList dlorList=', dlorList);
-        console.log('filterDlorList selectedFilters=', selectedFilters);
+        // console.log('filterDlorList dlorList=', dlorList);
+        // console.log('filterDlorList selectedFilters=', selectedFilters);
         const after = dlorList?.filter(d => {
             const passesCheckboxFilter =
                 !!d?.constructedFilters &&
@@ -613,7 +613,7 @@ export const DLOList = ({
                 !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
             return passesCheckboxFilter && passesKeyWordFilter;
         });
-        console.log('filterDlorList after=', after);
+        // console.log('filterDlorList after=', after);
         return after;
     };
 
@@ -647,26 +647,12 @@ export const DLOList = ({
 
         const getConcatenatedFilterLabels = (facetTypeSlug, wrapInParam = false) => {
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
+            // console.log('getConcatenatedFilterLabels object?.object_filters=', object?.object_filters);
             // console.log('getConcatenatedFilterLabels facetTypeSlug=', facetTypeSlug);
             // console.log('getConcatenatedFilterLabels f=', f);
             const output = f?.pop();
             // console.log('getConcatenatedFilterLabels output=', output);
-
-            const filterType =
-                !!dlorFilterList && dlorFilterList.filter(type => type.facet_type_slug === facetTypeSlug);
-            // console.log('getConcatenatedFilterLabels filterType=', filterType);
-            const filterTypeFacets =
-                !!filterType &&
-                filterType.length > 0 &&
-                filterType.pop().facet_list?.filter(facet => output.filter_values.includes(facet.facet_id));
-            // console.log('getConcatenatedFilterLabels filterTypeFacets=', filterTypeFacets);
-
-            const facetNames =
-                !!filterTypeFacets && filterTypeFacets.length > 0
-                    ? filterTypeFacets.map(item => item.facet_name)?.join(', ')
-                    : false;
-            // console.log('getConcatenatedFilterLabels facetNames=', facetNames);
-            // console.log('================================');
+            const facetNames = output?.filter_values?.map(item => item.name)?.join(', ');
             return !!wrapInParam ? `(${facetNames})` : facetNames;
         };
 
@@ -828,12 +814,14 @@ export const DLOList = ({
                             dlorList?.forEach(d => {
                                 // add a constructed array of facet-parent_facet-child
                                 d.constructedFilters = d?.object_filters?.flatMap(filter =>
-                                    filter?.filter_values?.map(value => `${filter?.filter_key}-${slugifyName(value)}`),
+                                    filter?.filter_values?.map(
+                                        value => `${filter?.filter_key}-${slugifyName(value.id)}`,
+                                    ),
                                 );
                             });
 
                             const dlorData = filterDlorList();
-                            console.log('22222 dlorData=', dlorData);
+                            // console.log('22222 dlorData=', dlorData);
                             if (!dlorData || dlorData.length === 0) {
                                 return (
                                     <Grid container spacing={3}>

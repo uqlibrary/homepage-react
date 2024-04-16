@@ -270,13 +270,13 @@ export const DLOAdminHomepage = ({
                                                         </Typography>
                                                     </div>
                                                 </Grid>
-                                                <Grid item xs={1} className={classes.hoverEffect}>
-                                                    <IconButton
-                                                        onClick={() => navigateToEditPage(o?.object_public_uuid)}
-                                                    >
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                </Grid>
+                                                {/* <Grid item xs={1} className={classes.hoverEffect}>*/}
+                                                {/*    <IconButton*/}
+                                                {/*        onClick={() => navigateToEditPage(o?.object_public_uuid)}*/}
+                                                {/*    >*/}
+                                                {/*        <EditIcon />*/}
+                                                {/*    </IconButton>*/}
+                                                {/* </Grid>*/}
                                                 <Grid item xs={1} className={classes.hoverEffect}>
                                                     <IconButton
                                                         data-testid={`dlor-homepage-delete-${o?.object_public_uuid}`}

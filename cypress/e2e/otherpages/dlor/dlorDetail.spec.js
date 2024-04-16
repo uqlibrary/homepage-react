@@ -45,10 +45,10 @@ describe('Digital learning hub', () => {
                 .should('have.length', 2);
             cy.get('[data-testid="detailpage-filter-topic"] ul li:first-child')
                 .should('exist')
-                .should('contain', 'Software');
+                .should('contain', 'Assignments');
             cy.get('[data-testid="detailpage-filter-topic"] ul li:nth-child(2)')
                 .should('exist')
-                .should('contain', 'Assignments');
+                .should('contain', 'Software');
 
             cy.get('[data-testid="detailpage-filter-item_type"] h3')
                 .should('exist')
@@ -106,10 +106,10 @@ describe('Digital learning hub', () => {
                 .should('have.length', 2);
             cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul li:first-child')
                 .should('exist')
-                .should('contain', 'Influential communicators');
+                .should('contain', 'Accomplished scholars');
             cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul li:nth-child(2)')
                 .should('exist')
-                .should('contain', 'Accomplished scholars');
+                .should('contain', 'Influential communicators');
 
             cy.get('[data-testid="detaipage-metadata-keywords"]')
                 .should('exist')

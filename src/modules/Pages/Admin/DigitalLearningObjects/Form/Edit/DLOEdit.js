@@ -51,7 +51,7 @@ export const DLOEdit = ({
         team_name: dlorItem?.team_name,
         team_manager: dlorItem?.team_manager,
         team_email: dlorItem?.team_email,
-        object_keywords_string: dlorItem?.object_keywords_string,
+        object_keywords_string: dlorItem?.object_keywords?.join(', '),
         facets: dlorItem?.object_filters,
     };
     console.log('DLOEdit formDefaults=', formDefaults);

@@ -64,7 +64,6 @@ import {
     userListPanels,
 } from './data/promoPanelsLong';
 import dlor_all from './data/records/dlor/dlor_all';
-import dlor_find from './data/records/dlor/dlor_find';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 import dlor_team_list from './data/records/dlor/dlor_team_list';
 
@@ -581,7 +580,7 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
 ]);
 
 function getaDlorRecordFromDlorAll(dlorId) {
-    const arrayOfOneRecord = dlor_find.data.filter(o => o.object_public_uuid === dlorId);
+    const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
     return arrayOfOneRecord.length > 0 ? [200, { data: arrayOfOneRecord.pop() }] : [404, {}];
 }
 
