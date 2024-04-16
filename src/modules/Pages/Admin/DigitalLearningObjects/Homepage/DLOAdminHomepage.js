@@ -253,7 +253,7 @@ export const DLOAdminHomepage = ({
                                             );
                                         })}
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{ width: '100%' }}>
                                     {dlorList?.length > 0 &&
                                         mapOverRequestedTypes(dlorList).map(o => {
                                             return (
@@ -281,6 +281,7 @@ export const DLOAdminHomepage = ({
                                                     <Grid item xs={1}>
                                                         <IconButton
                                                             onClick={() => navigateToEditPage(o?.object_public_uuid)}
+                                                            disabled={o?.object_status === 'deleted'}
                                                         >
                                                             <EditIcon />
                                                         </IconButton>
@@ -290,6 +291,7 @@ export const DLOAdminHomepage = ({
                                                             data-testid={`dlor-homepage-delete-${o?.object_public_uuid}`}
                                                             style={{ height: 40 }}
                                                             onClick={() => confirmDelete(o?.object_public_uuid)}
+                                                            disabled={o?.object_status === 'deleted'}
                                                         >
                                                             <DeleteForeverIcon />
                                                         </IconButton>

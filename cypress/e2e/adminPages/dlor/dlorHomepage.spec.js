@@ -164,6 +164,28 @@ describe('Digital learning hub admin homepage', () => {
                 .children()
                 .should('have.length', gridFromExpectedRowCount(2));
         });
+        it.skip('deleted objects are immutable', () => {
+            // the history should work though
+            cy.get('[data-testid="checkbox-status-current"] input')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+            cy.get('[data-testid="checkbox-status-deleted"] input')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount(1));
+            // buttons are disabled
+            cy.get('[data-testid="dlor-homepage-list"] button:first-child')
+                .should('exist')
+                .should('be.disabled');
+            cy.get('[data-testid="dlor-homepage-list"] button:nth-child(2)')
+                .should('exist')
+                .should('be.disabled');
+        });
     });
     context('error handling', () => {
         it('deletion failure pops up an error', () => {
