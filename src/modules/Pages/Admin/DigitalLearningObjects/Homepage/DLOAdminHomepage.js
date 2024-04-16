@@ -233,7 +233,7 @@ export const DLOAdminHomepage = ({
                                             const checkBoxid = `checkbox-status-${objectStatus.type}`;
                                             return (
                                                 <FormControlLabel
-                                                    key={`${objectStatus.type}`}
+                                                    key={`statustype-checkox-${objectStatus.type}`}
                                                     // className={classes.filterSidebarCheckboxControl}
                                                     control={
                                                         <Checkbox
@@ -252,14 +252,13 @@ export const DLOAdminHomepage = ({
                                         })}
                                 </Grid>
                                 {dlorList?.length > 0 &&
-                                    mapOverRequestedTypes(dlorList).map((o, index) => {
+                                    mapOverRequestedTypes(dlorList).map(o => {
                                         return (
-                                            <>
+                                            <React.Fragment key={`list-dlor-${o?.object_id}`}>
                                                 <Grid
                                                     item
                                                     xs={10}
                                                     className={`${classes.sidebyside} + ${classes.hoverEffect}`}
-                                                    key={o?.object_id}
                                                     data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
                                                 >
                                                     <div>
@@ -287,7 +286,7 @@ export const DLOAdminHomepage = ({
                                                         <DeleteForeverIcon />
                                                     </IconButton>
                                                 </Grid>
-                                            </>
+                                            </React.Fragment>
                                         );
                                     })}
                             </>
