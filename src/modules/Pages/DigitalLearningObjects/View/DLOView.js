@@ -61,10 +61,15 @@ const useStyles = makeStyles(theme => ({
     highlighted: {
         color: theme.palette.primary.light,
     },
+    viewContent: {
+        marginTop: 6,
+        '& > div.MuiGrid-item': {
+            paddingTop: 6,
+        },
+    },
     titleBlock: {
         display: 'flex',
         alignItems: 'center',
-        marginBottom: 20,
         '& p:first-child': {
             padding: 0,
             fontSize: 16,
@@ -179,7 +184,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
                 {getTitleBlock()}
-                <Grid container spacing={4} data-testid="dlor-detailpage">
+                <Grid container spacing={4} data-testid="dlor-detailpage" className={classes.viewContent}>
                     <Grid item xs={12} md={8}>
                         <div style={{ marginBottom: 12 }}>
                             <LoginPrompt account={account} />
