@@ -76,6 +76,7 @@ export const DLOEdit = ({
                             dlorFilterListLoading={dlorFilterListLoading}
                             dlorFilterListError={dlorFilterListError}
                             formDefaults={formDefaults}
+                            mode="edit"
                         />
                     </StandardCard>
                 </section>

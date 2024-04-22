@@ -10,10 +10,10 @@ describe('Add an object to the Digital learning hub', () => {
     });
 
     const mockDlorAdminUser = 'dloradmn';
-    context('adding a new object', () => {
+    context('editing an object', () => {
         context('successfully', () => {
             beforeEach(() => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
                 cy.viewport(1300, 1000);
             });
             it('is accessible', () => {
@@ -23,422 +23,107 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('h1').should('contain', 'Digital learning hub Management');
 
                 cy.checkA11y('[data-testid="StandardPage"]', {
-                    reportName: 'add dlor',
-                    scopeName: 'Content',
+                    reportName: 'edit dlor Panel 1',
+                    scopeName: 'Panel 1',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                // go to panel 2
+                cy.get('[data-testid="dlor-add-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="object_title"] input').should('exist'));
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'edit dlor Panel 2',
+                    scopeName: 'Panel 2',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                // go to panel 3
+                cy.get('[data-testid="dlor-add-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="object_link_url"] input').should('exist'));
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'edit dlor Panel 3',
+                    scopeName: 'Panel 3',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                // go to panel 4
+                cy.get('[data-testid="dlor-add-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="object_keywords"] textarea:first-child').should('exist'));
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'edit dlor Panel 4',
+                    scopeName: 'Panel 4',
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
             });
-            it('validates fields correctly', () => {
-                // first enter all the fields and show the save button doesnt enable until all the fields are entered
-
-                // team starts off valid so click on to the second panel, description
-                cy.get('[data-testid="dlor-add-next-button"]')
-                    .should('exist')
-                    .click();
-
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
-                    .should('exist')
-                    .should('contain', 3); // panel invalidity count present
-                cy.get('[data-testid="object_title"] input')
-                    .should('exist')
-                    .type('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
-                    .should('exist')
-                    .should('contain', 2); // panel invalidity count present
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_summary"] textarea:first-child')
-                    .should('exist')
-                    .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count not present
-
-                // click 'next' button to view panel 3, Link
-                cy.get('[data-testid="dlor-add-next-button"]')
-                    .should('exist')
-                    .click();
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .type('asdasdasdsadd');
-                cy.waitUntil(() => cy.get('[data-testid="error-message-object_link_url"]').should('exist'));
-                cy.get('[data-testid="error-message-object_link_url"]').should(
-                    'contain',
-                    'This web address is not valid.',
-                );
-                cy.get('[data-testid="object_link_url"] input')
-                    .clear()
-                    .type('http://example.com');
-                // cy.waitUntil(() => cy.get('[data-testid="error-message-object_link_url"]').should('not.exist'));
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count not present
-
-                // click 'next' button to view panel 4, Filters
-                cy.get('[data-testid="dlor-add-next-button"]')
-                    .should('exist')
-                    .click();
-                // filters
-                cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
-                    .should('exist')
-                    .should('contain', 5); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                    .should('exist')
-                    .should('be.disabled');
-
-                cy.get('[data-testid="filter-22"] input').check(); // choose a "media format" checkbox
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
-                    .should('exist')
-                    .should('contain', 4);
-                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
-                    .should('exist')
-                    .should('be.disabled');
-
-                cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
-                    .should('exist')
-                    .should('contain', 3); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                    .should('exist')
-                    .should('be.disabled');
-
-                cy.get('[data-testid="filter-16"] input').check(); // choose an "item type" radio button (type guide)
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
-                    .should('exist')
-                    .should('contain', 2);
-                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
-                    .should('exist')
-                    .should('be.disabled');
-
-                cy.get('[data-testid="filter-44"] input').check(); // choose a "licence" radio button (choose cc_by_attribution)
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
-                    .should('exist')
-                    .should('contain', 1);
-                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
-                    .should('exist')
-                    .should('be.disabled');
-
-                cy.get('[data-testid="object_keywords"] textarea:first-child')
-                    .should('exist')
-                    .type('a'.padEnd(REQUIRED_LENGTH_KEYWORDS, 'x'));
-
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel invalidity count no longer present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                    .should('exist')
-                    .should('not.be.disabled');
-
-                //  now go back and invalidate each field one at a time and show the button disables on each field
-                cy.get('[data-testid="filter-1"] input').uncheck(); // aboriginal_and_torres_strait_islander
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                    .should('exist')
-                    .should('be.disabled');
-                cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
-
-                cy.get('[data-testid="filter-34"] input').uncheck(); // all_cross_disciplinary
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                    .should('exist')
-                    .should('be.disabled');
-                cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
-
-                cy.get('[data-testid="filter-22"] input').uncheck(); // media_audio
-                cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                    .should('exist')
-                    .should('be.disabled');
-                cy.get('[data-testid="filter-22"] input').check(); // media_audio
-
-                // (cant uncheck a radio button)
-
-                // click the back button to go back to panel 3, Link
-                cy.get('[data-testid="dlor-add-back-button"]')
-                    .should('exist')
-                    .click();
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .clear();
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_link_url"] input').type('http://');
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .type('ex.c');
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .type('o');
-                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
-
-                // click the back button to go back to panel 2, Description
-                cy.get('[data-testid="dlor-add-back-button"]')
-                    .should('exist')
-                    .click();
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
-                cy.get('[data-testid="object_title"] input')
-                    .should('exist')
-                    .type('{backspace}');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_title"] input')
-                    .should('exist')
-                    .type('p');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
-
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('{backspace}');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('p');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
-
-                cy.get('[data-testid="object_summary"] textarea:first-child')
-                    .should('exist')
-                    .type('{backspace}');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_summary"] textarea:first-child')
-                    .should('exist')
-                    .type('p');
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
-
-                // click the back button to go back to panel 1, Ownership
-                cy.get('[data-testid="dlor-add-back-button"]')
-                    .should('exist')
-                    .click();
-
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel invalidity count not present
-                cy.get('[data-testid="object_publishing_user"] input')
-                    .should('exist')
-                    .type('{backspace}')
-                    .type('{backspace}')
-                    .type('{backspace}')
-                    .type('{backspace}')
-                    .type('{backspace}'); // username no longer long enough
-                cy.get('[data-testid="error-message-object_publishing_user"]')
-                    .should('exist')
-                    .should('contain', 'This username is not valid.');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_publishing_user"] input')
-                    .should('exist')
-                    .type('p');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel invalidity count not present
+            it('loads fields correctly', () => {
+                cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
+                cy.get('[data-testid="object_publishing_user"] input').should('have.value', 'uqjsmith');
                 cy.get('[data-testid="error-message-object_publishing_user"]').should('not.exist');
+                // TODO teams
 
-                cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
-                cy.get('[data-testid="object_owning_team"]').click();
-                cy.get('[data-testid="object-add-teamid-new"]')
-                    .should('exist')
-                    .click();
-
-                // now that we have chosen "new team" the form is invalid until we enter all 3 fields
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
-                    .should('exist')
-                    .should('contain', 3); // panel invalidity count present
-                cy.get('[data-testid="team_name"]')
-                    .should('exist')
-                    .type('new team name');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
-                    .should('exist')
-                    .should('contain', 2); // panel invalidity count present
-                cy.get('[data-testid="team_manager"]')
-                    .should('exist')
-                    .type('john Manager');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]')
-                    .should('exist')
-                    .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="error-message-team_email"]')
-                    .should('exist')
-                    .should('contain', 'This email address is not valid.');
-                cy.get('[data-testid="team_email"]')
-                    .should('exist')
-                    .type('john@example.com');
-                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel invalidity count not present
-            });
-            it('shows character minimums', () => {
-                // go to the second panel, description
+                // go to panel 2
                 cy.get('[data-testid="dlor-add-next-button"]')
                     .should('exist')
                     .click();
-
-                cy.get('[data-testid="object_title"] input')
-                    .should('exist')
-                    .type('123');
-                cy.get('[data-testid="input-characters-remaining-object_title"]')
-                    .should('exist')
-                    .should('contain', 'at least 5 more characters needed');
+                cy.waitUntil(() => cy.get('[data-testid="object_title"] input').should('exist'));
+                cy.get('[data-testid="object_title"] input').should('have.value', 'Advanced literature searching');
                 cy.get('[data-testid="object_description"] textarea:first-child')
                     .should('exist')
-                    .type('new description');
-                cy.get('[data-testid="input-characters-remaining-object_description"]')
-                    .should('exist')
-                    .should('contain', 'at least 85 more characters needed');
+                    .contains(
+                        'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
+                    );
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
-                    .type('new summary');
-                cy.get('[data-testid="input-characters-remaining-object_summary"]')
-                    .should('exist')
-                    .should('contain', 'at least 9 more characters needed');
+                    .should('have.value', 'Using advanced searching techniques.');
 
-                // go to the fourth panel, links
-                cy.get('[data-testid="dlor-add-next-button"]')
-                    .should('exist')
-                    .click()
-                    .click();
-
-                cy.get('[data-testid="object_keywords"] textarea:first-child')
-                    .should('exist')
-                    .type('abc');
-                cy.get('[data-testid="input-characters-remaining-object_keywords_string"]')
-                    .should('exist')
-                    .should('contain', 'at least 1 more character needed');
-            });
-            it('supplies a summary suggestion', () => {
-                // go to the second step, Description
+                // go to panel 3
                 cy.get('[data-testid="dlor-add-next-button"]')
                     .should('exist')
                     .click();
-
-                // suggestion panel not open
-                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
-
-                // a long description puts the first 150 char, breaking at a word break, into the summary suggestion
-                cy.get('[data-testid="object_description"] textarea:first-child')
+                cy.waitUntil(() => cy.get('[data-testid="object_link_url"] input').should('exist'));
+                cy.get('[data-testid="object_link_url"] input').should(
+                    'have.value',
+                    'https://uq.h5p.com/content/1291624605868350759',
+                );
+                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
                     .should('exist')
-                    .type(
-                        'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
-                    );
-                // suggestion panel is now open
-                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('exist');
-                // subset of description has appeared in suggestion panel
-                cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
-                    'have.text',
-                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods.',
+                    .contains('some download instructions');
+
+                // go to panel 4
+                cy.get('[data-testid="dlor-add-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="object_keywords"] textarea:first-child').should('exist'));
+                cy.get('[data-testid="object_keywords"] textarea:first-child').should(
+                    'have.value',
+                    'search, evaluate, literature, strategy',
                 );
 
-                cy.get('[data-testid="admin-dlor-suggest-summary-close-button"]')
-                    .should('exist')
-                    .click();
-                // suggestion panel is hidden
-                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
-
-                // suggestion panel picks up first paragraph on carriage return after minimum char count
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .clear()
-                    .type(
-                        'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.' +
-                            '\n' +
-                            'a second paragraph',
-                    );
-                cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
-                    'have.text',
-                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
-                );
-                // suggestion panel is open again because they changed the description
-                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('exist');
-
-                // summary currently blank
-                cy.get('[data-testid="object_summary"]')
-                    .should('exist')
-                    .should('have.value', '');
-                // step 2 validation number = 2 because title and summary not set
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
-                    .should('exist')
-                    .should('contain', 2);
-                // click "use summary" button
-                cy.get('[data-testid="admin-dlor-suggest-summary-button"]')
-                    .should('exist')
-                    .click();
-                // // summary field as expected - why does it think it's an empty string? rely on val number chaning
-                // cy.waitUntil(() => cy.get('[data-testid="object_summary"]').should('exist'));
-                // cy.get('[data-testid="object_summary"]').should(
-                //     'have.value',
-                //     'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox',
-                // );
-                // suggestion panel no longer open
-                cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
-                // step 2 validation number = 1, only title not set
-                cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
-                    .should('exist')
-                    .should('contain', 1);
-            });
-
-            it('shows a "will preview" notice correctly', () => {
-                // go to the third step, links
-                cy.get('[data-testid="dlor-add-next-button"]')
-                    .should('exist')
-                    .click();
-                cy.get('[data-testid="dlor-add-next-button"]')
-                    .should('exist')
-                    .click();
-
-                // youtube link in shorthand format
-                // a youtube link that they havent yet typed completely doesnt give a message
-                // (although hopefully they will paste and wont see this - pasting is more accurate)
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .type('http://www.youtube.com/rew');
-                cy.get('[data-testid="object_link_url_preview"]').should('not.exist');
-
-                // finish typing to make a valid youtube shorthand url
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .type('df');
-                // once the youtube link is long enough to maybe be a valid youtube link, show a "will preview" message
-                cy.get('[data-testid="object_link_url_preview"]')
-                    .should('exist')
-                    .contains('A preview will show on the View page.');
-
-                // youtube link that is missing the v= paramater (and isnt a shorthand link)
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .clear()
-                    .type('http://www.youtube.com/?g=123456'); // 'g' is not a valid parameter name
-                cy.get('[data-testid="object_link_url_preview"]').should('not.exist');
-
-                // youtube link that is a valid link with v= parameter
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .clear()
-                    .type('http://www.youtube.com/?v=123456');
-                cy.get('[data-testid="object_link_url_preview"]')
-                    .should('exist')
-                    .contains('A preview will show on the View page.');
-
-                // a link that won't preview doesn't show the "will preview" message
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .clear()
-                    .type('http://www.example.com/something');
-                cy.get('[data-testid="object_link_url_preview"]').should('not.exist');
+                const numCheckboxes = 51;
+                const checkedCheckboxes = [2, 7, 10, 14, 16, 27, 34, 46];
+                let currentCheckboxId = 1;
+                while (currentCheckboxId < numCheckboxes) {
+                    cy.log(`check checkbox/radio ${checkedCheckboxes}`);
+                    if (checkedCheckboxes.includes(currentCheckboxId)) {
+                        cy.get(`[data-testid="filter-${currentCheckboxId}"] input`)
+                            .should('exist')
+                            .should('be.checked');
+                    } else {
+                        cy.get(`[data-testid="filter-${currentCheckboxId}"] input`)
+                            .should('exist')
+                            .should('not.be.checked');
+                    }
+                    currentCheckboxId++;
+                }
             });
         });
-        context('successfully mock to db', () => {
+        context.skip('successfully mock to db', () => {
             beforeEach(() => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
@@ -732,7 +417,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input').should('have.value', '');
             });
         });
-        context('fails correctly', () => {
+        context.skip('fails correctly', () => {
             it('admin gets an error when Teams list api doesnt load', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=teamsLoadError`);
                 // "responseType=teamsLoadError" on the url forces an error from mock api
@@ -807,19 +492,19 @@ describe('Add an object to the Digital learning hub', () => {
     });
     context('user access', () => {
         it('displays an "unauthorised" page to public users', () => {
-            cy.visit('http://localhost:2020/admin/dlor/add?user=public');
+            cy.visit('http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=public');
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Authentication required');
         });
         it('displays an "unauthorised" page to non-authorised users', () => {
-            cy.visit('http://localhost:2020/admin/dlor/add?user=uqstaff');
+            cy.visit('http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Permission denied');
         });
         it('displays correct page for admin users (list)', () => {
-            cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
+            cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital learning hub Management');

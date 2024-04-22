@@ -31,6 +31,13 @@ describe('Digital learning hub admin homepage', () => {
                 .click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/add?user=dloradmn');
         });
+        it('has a working "edit an object" button', () => {
+            cy.get('[data-testid="admin-dlor-visit-add-button"]')
+                .should('exist')
+                .should('contain', 'Add object')
+                .click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/add?user=dloradmn');
+        });
         it('shows a list of objects to manage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')

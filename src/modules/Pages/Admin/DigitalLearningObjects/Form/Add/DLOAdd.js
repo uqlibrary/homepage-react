@@ -69,6 +69,7 @@ export const DLOAdd = ({
                             dlorFilterListLoading={dlorFilterListLoading}
                             dlorFilterListError={dlorFilterListError}
                             formDefaults={formDefaults}
+                            mode="add"
                         />
                     </StandardCard>
                 </section>

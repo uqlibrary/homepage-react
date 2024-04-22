@@ -79,7 +79,7 @@ export default {
             "object_owning_team_id": 2,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
-            "object_download_instructions": null,
+            "object_download_instructions": 'some download instructions',
             "object_link_url": "https:\/\/uq.h5p.com\/content\/1291624605868350759",
             "object_filters": [{
                     "filter_key": "topic",
@@ -117,17 +117,17 @@ export default {
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
-                        id: 14,
-                        name: 'Influential communicators',
-                    }, {
                         id: 10,
                         name: 'Accomplished scholars',
+                    }, {
+                        id: 14,
+                        name: 'Influential communicators',
                     }]
                 },
             ],
             "object_keywords": ["search", "evaluate", "literature", "strategy"],
             "owner": {
-                "publishing_user_username": "uqtestusr",
+                "publishing_user_username": "uqjsmith",
                 "team_id": 2,
                 "team_name": "Team Two",
                 "team_email": "team2@uq.edu.au",
