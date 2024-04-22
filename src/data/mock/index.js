@@ -596,6 +596,18 @@ mock.onGet(/dlor\/find\/.*/)
             return getaDlorRecordFromDlorAll(dlorId);
         }
     })
+    .onPut(/dlor\/admin\/object\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const dlorId = urlparts.split('?')[0];
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else if (dlorId === 'missingRecord') {
+            return [200, { data: {} }]; // this would more likely be a 404
+        } else {
+            return getaDlorRecordFromDlorAll(dlorId);
+        }
+    })
     .onGet('dlor/list/full')
     .reply(() => {
         if (responseType === 'error') {

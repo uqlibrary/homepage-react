@@ -98,9 +98,9 @@ const useStyles = makeStyles(theme => ({
 
 export const DlorForm = ({
     actions,
-    dlorItemCreating,
-    dlorCreatedItemError,
-    dlorCreatedItem,
+    dlorItemSaving,
+    dlorSavedItemError,
+    dlorSavedItem,
     dlorItemLoading,
     dlorItem,
     // dlorItemError,
@@ -119,16 +119,16 @@ export const DlorForm = ({
     const [cookies, setCookie] = useCookies();
     const theme = useTheme();
 
-    // !!dlorCreatedItem &&
+    // !!dlorSavedItem &&
     // console.log(
     //     'DlorForm dlorItemLoading=',
     //     dlorItemLoading,
-    //     '; dlorItemCreating=',
-    //     dlorItemCreating,
+    //     '; dlorItemSaving=',
+    //     dlorItemSaving,
     //     '; error=',
-    //     dlorCreatedItemError,
+    //     dlorSavedItemError,
     //     '; response=',
-    //     dlorCreatedItem,
+    //     dlorSavedItem,
     // );
     !!dlorTeam && console.log('DlorForm team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
     // !!dlorFilterList &&
@@ -303,27 +303,25 @@ export const DlorForm = ({
             </Grid>
             <Grid item xs={12} style={{ minHeight: 95 }}>
                 <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
-                {!!dlorTeam && (
-                    <Select
-                        variant="standard"
-                        data-testid="object_owning_team"
-                        defaultValue={formValues?.object_owning_team_id}
-                        value={formValues?.object_owning_team_id}
-                        onChange={handleChange('object_owning_team_id')}
-                        aria-labelledby="object_owning_team_label"
-                        style={{ minWidth: '20em' }}
-                        id="object_owning_team"
-                    >
-                        {dlorTeam.map(t => (
-                            <MenuItem key={t.team_id} value={t.team_id}>
-                                {t.team_name}
-                            </MenuItem>
-                        ))}
-                        <MenuItem value="new" data-testid="object-add-teamid-new">
-                            Create a team
+                <Select
+                    variant="standard"
+                    data-testid="object_owning_team"
+                    defaultValue={formValues?.object_owning_team_id}
+                    value={formValues?.object_owning_team_id}
+                    onChange={handleChange('object_owning_team_id')}
+                    aria-labelledby="object_owning_team_label"
+                    style={{ minWidth: '20em' }}
+                    id="object_owning_team"
+                >
+                    {dlorTeam?.map(t => (
+                        <MenuItem key={t.team_id} value={t.team_id}>
+                            {t.team_name}
                         </MenuItem>
-                    </Select>
-                )}
+                    ))}
+                    <MenuItem value="new" data-testid="object-add-teamid-new">
+                        Create a team
+                    </MenuItem>
+                </Select>
             </Grid>
             {showTeamCreationForm && (
                 <Grid item xs={12}>
@@ -753,11 +751,11 @@ export const DlorForm = ({
     }, [dlorFilterList]);
 
     useEffect(() => {
-        if ((!!dlorCreatedItem && !!dlorCreatedItem.data?.object_id) || !!dlorCreatedItemError) {
+        if ((!!dlorSavedItem && !!dlorSavedItem.data?.object_id) || !!dlorSavedItemError) {
             setSaveStatus('complete');
             showConfirmation();
         }
-    }, [showConfirmation, dlorCreatedItem, dlorCreatedItemError]);
+    }, [showConfirmation, dlorSavedItem, dlorSavedItemError]);
 
     const saveNewDlor = () => {
         const valuesToSend = { ...formValues };
@@ -777,7 +775,7 @@ export const DlorForm = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        return actions.createDLor(valuesToSend);
+        return mode === 'add' ? actions.createDLor(valuesToSend) : actions.updateDLor(valuesToSend);
     };
 
     const locale = {
@@ -788,7 +786,7 @@ export const DlorForm = ({
             confirmButtonLabel: 'Return to list page',
         },
         errorMessage: {
-            confirmationTitle: dlorCreatedItemError,
+            confirmationTitle: dlorSavedItemError,
             confirmationMessage: '',
             confirmButtonLabel: 'Return to list page',
         },
@@ -962,7 +960,7 @@ export const DlorForm = ({
     const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
     const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
 
-    if (!!dlorTeamLoading || dlorFilterListLoading || !!dlorItemCreating || !!dlorItemLoading) {
+    if (!!dlorTeamLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
             <Grid item xs={12}>
                 <InlineLoader message="Loading" />
@@ -1004,12 +1002,12 @@ export const DlorForm = ({
                     actionButtonVariant="contained"
                     confirmationBoxId="dlor-creation-outcome"
                     onAction={() => navigateToDlorAdminHomePage()}
-                    hideCancelButton={!!dlorCreatedItemError || !locale.successMessage.cancelButtonLabel}
+                    hideCancelButton={!!dlorSavedItemError || !locale.successMessage.cancelButtonLabel}
                     cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                     onCancelAction={() => clearForm()}
                     onClose={hideConfirmation}
                     isOpen={isOpen}
-                    locale={!dlorCreatedItemError ? locale.successMessage : locale.errorMessage}
+                    locale={!dlorSavedItemError ? locale.successMessage : locale.errorMessage}
                 />
             )}
             <form id="dlor-add-form">

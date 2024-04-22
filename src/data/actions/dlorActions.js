@@ -1,9 +1,10 @@
 import * as actions from './actionTypes';
-import { destroy, get, post } from 'repositories/generic';
+import { destroy, get, post, put } from 'repositories/generic';
 import {
     DLOR_ALL_API,
     DLOR_ALL_CURRENT_API,
     DLOR_CREATE_API,
+    DLOR_UPDATE_API,
     DLOR_DESTROY_API,
     DLOR_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
@@ -117,6 +118,28 @@ export function createDLor(request) {
                 console.log('createDLor error=', error);
                 dispatch({
                     type: actions.DLOR_CREATE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function updateDLor(id, request) {
+    console.log('updateDLor request=', request);
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_UPDATING });
+        return put(DLOR_UPDATE_API(), request)
+            .then(data => {
+                console.log('updateDLor response=', data);
+                dispatch({
+                    type: actions.DLOR_UPDATED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                console.log('updateDLor error=', error);
+                dispatch({
+                    type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
                 });
             });

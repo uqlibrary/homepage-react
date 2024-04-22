@@ -59,9 +59,9 @@ export const DLOAdd = ({
                     <StandardCard title="Create an Object for the Digital learning hub">
                         <DlorForm
                             actions={actions}
-                            dlorItemCreating={dlorItemCreating}
-                            dlorCreatedItemError={dlorCreatedItemError}
-                            dlorCreatedItem={dlorCreatedItem}
+                            dlorItemSaving={dlorItemCreating}
+                            dlorSavedItemError={dlorCreatedItemError}
+                            dlorSavedItem={dlorCreatedItem}
                             dlorTeam={dlorTeam}
                             dlorTeamLoading={dlorTeamLoading}
                             dlorTeamError={dlorTeamError}

@@ -12,6 +12,9 @@ export const DLOEdit = ({
     dlorItemLoading,
     dlorItemError,
     dlorItem,
+    dlorItemUpdating,
+    dlorUpdatedItemError,
+    dlorUpdatedItem,
     dlorTeam,
     dlorTeamLoading,
     dlorTeamError,
@@ -63,9 +66,9 @@ export const DLOEdit = ({
                     <StandardCard title="Edit an Object for the Digital learning hub">
                         <DlorForm
                             actions={actions}
-                            // dlorItemCreating={dlorItemCreating}
-                            // dlorCreatedItemError={dlorCreatedItemError}
-                            // dlorCreatedItem={dlorCreatedItem}
+                            dlorItemSaving={dlorItemUpdating}
+                            dlorSavedItemError={dlorUpdatedItemError}
+                            dlorSavedItem={dlorUpdatedItem}
                             dlorItemLoading={dlorItemLoading}
                             dlorItem={dlorItem}
                             dlorItemError={dlorItemError}
@@ -90,6 +93,9 @@ DLOEdit.propTypes = {
     dlorItemLoading: PropTypes.bool,
     dlorItemError: PropTypes.any,
     dlorItem: PropTypes.object,
+    dlorItemUpdating: PropTypes.bool,
+    dlorUpdatedItemError: PropTypes.any,
+    dlorUpdatedItem: PropTypes.object,
     dlorTeam: PropTypes.array,
     dlorTeamLoading: PropTypes.bool,
     dlorTeamError: PropTypes.any,

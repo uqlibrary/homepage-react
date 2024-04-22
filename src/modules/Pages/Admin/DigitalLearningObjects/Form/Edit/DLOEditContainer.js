@@ -10,6 +10,7 @@ const mapStateToProps = state => {
         ...state.get('dlorFilterListReducer'),
         ...state.get('dlorGetSingleReducer'),
         ...state.get('dlorTeamReducer'),
+        ...state.get('dlorUpdateReducer'),
     };
     console.log('DLOEditContainer mapStateToProps', newVar);
     return newVar;
