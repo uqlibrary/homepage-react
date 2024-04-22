@@ -29,17 +29,10 @@ import DoneIcon from '@mui/icons-material/Done';
 
 import { useAccountContext } from 'context';
 import { useConfirmationState } from 'hooks';
-
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
-import {
-    displayDownloadInstructions,
-    getYoutubeUrlForPreviewEmbed,
-    isPreviewableUrl,
-} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { displayDownloadInstructions, isPreviewableUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { getUserPostfix, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 
@@ -125,20 +118,19 @@ export const DlorForm = ({
     const history = useHistory();
     const [cookies, setCookie] = useCookies();
     const theme = useTheme();
-    console.log('top formDefaults=', formDefaults);
 
     // !!dlorCreatedItem &&
-    console.log(
-        'DlorForm dlorItemLoading=',
-        dlorItemLoading,
-        '; dlorItemCreating=',
-        dlorItemCreating,
-        '; error=',
-        dlorCreatedItemError,
-        '; response=',
-        dlorCreatedItem,
-    );
-    // !!dlorTeam && console.log('DlorForm team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
+    // console.log(
+    //     'DlorForm dlorItemLoading=',
+    //     dlorItemLoading,
+    //     '; dlorItemCreating=',
+    //     dlorItemCreating,
+    //     '; error=',
+    //     dlorCreatedItemError,
+    //     '; response=',
+    //     dlorCreatedItem,
+    // );
+    !!dlorTeam && console.log('DlorForm team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
     // !!dlorFilterList &&
     // console.log(
     //     'DlorForm filters=',
@@ -177,14 +169,10 @@ export const DlorForm = ({
 
     React.useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
-            console.log('dlorItem useffect formDefaults=', formDefaults);
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
-            const flatMapFacetList = flatMapFacets(formDefaults.facets);
-            console.log('flatMap facets = ', flatMapFacetList);
-            checkBoxArrayRef.current = flatMapFacetList;
+            checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
         }
-        console.log('mode=', mode);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, mode]);
 
@@ -205,59 +193,39 @@ export const DlorForm = ({
 
     // export const ManageAuthorsList = ({ onBulkRowDelete, onRowAdd, onRowDelete, onRowUpdate, onScopusIngest }) => {
     const handleFacetChange = unused => e => {
-        console.log('handleFacetChange ', 'e', e);
-        console.log('handleFacetChange ', 'e.target', e.target);
         let newValues;
 
-        let facetId2 = Number(e.target.id.replace('filter-', ''));
-        console.log('handleFacetChange aaa facetId2=', facetId2, e.target.value, e.target, e);
+        let facetId = Number(e.target.id.replace('filter-', ''));
 
         let radioType;
         if (e.target.type === 'radio') {
-            console.log('is radio');
-            facetId2 = Number(e.target.value);
-            console.log('we have radio', e.target.name);
+            facetId = Number(e.target.value);
 
-            console.log('checkboxes before:', checkBoxArrayRef.current);
             // turn off the current entries for radio
+            // (this surprised me - I would have thought it would do it natively!
             radioType = e.target.name.replace('object_facet_', '').replace('_radio-buttons-group', '');
-            console.log('radioType=', radioType);
             const radioFilterIds = getFacetIds(radioType);
-            console.log('radioFilterIds=', radioFilterIds);
-            let filter1 = checkBoxArrayRef.current;
+            let checkboxlatest = checkBoxArrayRef.current;
             radioFilterIds?.map(rid => {
-                console.log('remove from checkBoxArrayRef', rid);
-                filter1 = filter1.filter(id => id !== rid);
-                console.log('filtered = ', filter1);
-                return filter1;
+                checkboxlatest = checkboxlatest.filter(id => id !== rid);
             });
-            console.log('will update filter to ', filter1);
-            checkBoxArrayRef.current = filter1;
+            checkBoxArrayRef.current = checkboxlatest;
         }
 
         let current;
         if (!!e.target.checked) {
-            console.log('checked');
-            // if this is a radio entry, "turn off" all the current ones, so we can turn on a single one
-            current = [...checkBoxArrayRef.current, facetId2];
+            current = [...checkBoxArrayRef.current, facetId];
             newValues = {
                 ...formValues,
                 facets: current,
             };
-            console.log('ccc check checkbox, now=', current);
         } else {
-            console.log('UNcheck');
-            current = checkBoxArrayRef.current.filter(id => id !== facetId2);
-            // flatMapFacets(facets)
+            current = checkBoxArrayRef.current.filter(id => id !== facetId);
             newValues = {
                 ...formValues,
                 facets: current,
             };
-            console.log('ccc uncheck checkbox, now=', current);
         }
-        console.log('handleFacetChange aaa newValues=', newValues);
-        console.log('handleFacetChange aaa checkBoxArrayRef.current is=', checkBoxArrayRef.current);
-        console.log('handleFacetChange aaa checkBoxArrayRef.current will be=', current);
         checkBoxArrayRef.current = current;
         setFormValidity(validateValues(newValues));
         setFormValues(newValues);
@@ -337,12 +305,14 @@ export const DlorForm = ({
                 <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
                 {!!dlorTeam && (
                     <Select
-                        defaultValue={dlorTeam.filter((t, index) => index === 0)}
+                        variant="standard"
+                        data-testid="object_owning_team"
+                        defaultValue={formValues?.object_owning_team_id}
                         value={formValues?.object_owning_team_id}
                         onChange={handleChange('object_owning_team_id')}
                         aria-labelledby="object_owning_team_label"
+                        style={{ minWidth: '20em' }}
                         id="object_owning_team"
-                        data-testid="object_owning_team"
                     >
                         {dlorTeam.map(t => (
                             <MenuItem key={t.team_id} value={t.team_id}>
@@ -435,7 +405,6 @@ export const DlorForm = ({
     };
 
     function resetForm(prop, theNewValue) {
-        console.log('resetForm', prop, theNewValue);
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
@@ -452,16 +421,11 @@ export const DlorForm = ({
     };
 
     const SummaryCharCountPrompt = () => {
-        console.log('SummaryCharCountPrompt start');
         let newVar = '';
         if (!!formValues?.object_summary) {
-            console.log('SummaryCharCountPrompt is formval');
             newVar = characterCount(formValues?.object_summary?.length, summaryMinimumLength, 'object_summary');
         } else if (!!summaryContent) {
-            console.log('SummaryCharCountPrompt is typee');
             newVar = characterCount(summaryContent?.length, summaryMinimumLength, 'object_summary');
-        } else {
-            console.log('SummaryCharCountPrompt is else');
         }
         return newVar;
     };
@@ -775,28 +739,21 @@ export const DlorForm = ({
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
-        // console.log('first useffect formDefaults=', formDefaults);
-        // setFormValidity(validateValues(formDefaults));
     }, []);
 
     useEffect(() => {
-        console.log('formDefaults useffect formDefaults=', formDefaults);
         setFormValidity(validateValues(formDefaults));
     }, [formDefaults]);
 
     useEffect(() => {
         // this is needed to get the validation badges after the filter list loads
         if (!!dlorFilterList && dlorFilterList.length > 0) {
-            // console.log('useEffect filter val');
-            console.log('filter list useffect formDefaults=', formDefaults);
             setFormValidity(validateValues(formDefaults));
         }
     }, [dlorFilterList]);
 
     useEffect(() => {
-        // console.log('useEffect dlorCreatedItem=', dlorCreatedItem, ';dlorCreatedItemError', dlorCreatedItemError);
         if ((!!dlorCreatedItem && !!dlorCreatedItem.data?.object_id) || !!dlorCreatedItemError) {
-            // console.log('useEffect showing conf');
             setSaveStatus('complete');
             showConfirmation();
         }
@@ -815,16 +772,9 @@ export const DlorForm = ({
         valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
 
-        console.log('saveNewDlor after valuesToSend=', valuesToSend);
-
-        console.log('cookies=', document.cookie);
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        console.log('cypressTestCookie=', cypressTestCookie);
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            console.log('writing cookie CYPRESS_DATA_SAVED');
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
-        } else {
-            console.log('NOT writing cookie CYPRESS_DATA_SAVED');
         }
 
         return actions.createDLor(valuesToSend);
@@ -890,75 +840,34 @@ export const DlorForm = ({
         let fourthPanelErrorCount = 0;
         currentValues?.object_keywords_string?.length < keywordMinimumLength && fourthPanelErrorCount++;
 
-        // check the required facets are checked
-        console.log('check the required facets are checked currentValues=', currentValues);
-
         function isDeepStructure(variable) {
-            // Check if the variable is an array
-            if (Array.isArray(variable)) {
-                // Check if the first element is an object
-                return typeof variable[0] === 'object' && variable[0] !== null;
-            }
-            // If the variable is not an array, return false
-            return false;
+            return Array.isArray(variable) ? typeof variable[0] === 'object' && variable[0] !== null : false;
         }
 
+        // check the required facets are checked
         !!dlorFilterList &&
             dlorFilterList.forEach(filterType => {
                 if (!!filterType.facet_type_required) {
                     const possibleFacetIds = filterType.facet_list.map(facet => facet.facet_id);
-                    console.log('vvv filterType=', filterType);
-                    console.log('vvv possibleFacetIds=', possibleFacetIds);
-                    console.log('vvv currentValues=', currentValues);
-                    console.log('vvv currentValues?.facets=', currentValues?.facets);
                     let hasMatch;
                     if (mode === 'add') {
                         hasMatch = currentValues?.facets?.some(selectedFacet => {
-                            console.log('vvv selectedFacet=', selectedFacet);
                             return possibleFacetIds.includes(selectedFacet);
                         });
                     } else {
                         // edit
-                        console.log('vvv ', mode, filterType.facet_type_slug);
-
-                        console.log('vvv 1 possibleFacetIds=', possibleFacetIds);
-                        // console.log('vvv 1 filterType=', filterType);
-                        // console.log('vvv 1 filterType?.facet_list=', filterType?.facet_list);
-                        // console.log('vvv 1 currentValues=', currentValues);
-                        // console.log('vvv 1 currentValues?.facets=', currentValues?.facets);
-
                         if (isDeepStructure(currentValues?.facets)) {
                             const justFacetIds = !!currentValues?.facets && flatMapFacets(currentValues?.facets);
                             hasMatch = justFacetIds?.some(id => {
-                                console.log(
-                                    'yyyy 111 check for above ',
-                                    id,
-                                    'in',
-                                    possibleFacetIds,
-                                    '=',
-                                    possibleFacetIds?.includes(id),
-                                );
                                 return possibleFacetIds?.includes(id);
                             });
                         } else {
                             hasMatch = currentValues?.facets?.some(id => {
-                                console.log(
-                                    'yyyy 222 check for above ',
-                                    id,
-                                    'in',
-                                    possibleFacetIds,
-                                    '=',
-                                    possibleFacetIds?.includes(id),
-                                );
                                 return possibleFacetIds?.includes(id);
                             });
                         }
-                        console.log('vvv 1 hasMatch=', hasMatch);
                     }
-                    if (!!hasMatch) {
-                        console.log('vvv unchanged error count', fourthPanelErrorCount);
-                    } else {
-                        console.log('vvv increment error count', fourthPanelErrorCount + 1);
+                    if (!hasMatch) {
                         fourthPanelErrorCount++;
                     }
                 }
@@ -966,12 +875,12 @@ export const DlorForm = ({
 
         setPanelValidity([firstPanelErrorCount, secondPanelErrorCount, thirdPanelErrorCount, fourthPanelErrorCount]);
 
-        const isValid =
+        return (
             firstPanelErrorCount === 0 &&
             secondPanelErrorCount === 0 &&
             thirdPanelErrorCount === 0 &&
-            fourthPanelErrorCount === 0;
-        return isValid;
+            fourthPanelErrorCount === 0
+        );
     };
 
     function displayControlByFacetType(filterItem) {
@@ -985,7 +894,6 @@ export const DlorForm = ({
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => {
-                    // console.log('one-or-more ', '; thisfacet.facet_id=', thisfacet.facet_id, '; thisfacet=', thisfacet);
                     return (
                         <FormControlLabel
                             key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
@@ -1006,13 +914,6 @@ export const DlorForm = ({
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => {
-                    // console.log(
-                    //     'zero-or-more ',
-                    //     '; thisfacet.facet_id=',
-                    //     thisfacet.facet_id,
-                    //     '; thisfacet=',
-                    //     thisfacet,
-                    // );
                     return (
                         <FormControlLabel
                             key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
@@ -1030,16 +931,7 @@ export const DlorForm = ({
                     );
                 });
         } else if (filterItem?.facet_type_number === 'exactly-one') {
-            // console.log('filterItem=', filterItem);
             const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
-            // console.log('radioGroupName=', radioGroupName);
-            // console.log('filterItem.facet_list=', filterItem.facet_list);
-            // console.log(
-            //     'default value=',
-            //     !!filterItem.facet_list && filterItem.facet_list.length > 0 && !filterItem.facet_list.slice(0, 1),
-            // );
-            console.log('qqqq facet values for radio: ', filterItem);
-            console.log('qqqq checkBoxArrayRef=', checkBoxArrayRef.current);
             result = (
                 <RadioGroup
                     aria-labelledby={`demo-radio-object_${filterItem.facet_id}_label-group-label`}
@@ -1048,15 +940,6 @@ export const DlorForm = ({
                     onChange={handleFacetChange(filterItem.id)}
                 >
                     {filterItem?.facet_list?.map(thisfacet => {
-                        console.log(
-                            'exactly-one ',
-                            '; thisfacet.facet_id=',
-                            thisfacet.facet_id,
-                            '; set?=',
-                            facetIsSet(thisfacet?.facet_id, formValues?.facets),
-                            '; thisfacet=',
-                            thisfacet,
-                        );
                         return (
                             <FormControlLabel
                                 key={thisfacet.facet_id}
@@ -1108,6 +991,11 @@ export const DlorForm = ({
         );
     }
 
+    console.log('formValues=', formValues);
+    console.log(
+        'default value=',
+        mode === 'add' ? dlorTeam?.filter((t, index) => index === 0) : formValues?.object_owning_team_id,
+    );
     return (
         <>
             {saveStatus === 'complete' && (

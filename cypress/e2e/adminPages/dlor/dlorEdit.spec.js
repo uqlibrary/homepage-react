@@ -126,10 +126,10 @@ describe('Add an object to the Digital learning hub', () => {
         context.skip('successfully mock to db', () => {
             beforeEach(() => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
                 cy.viewport(1300, 1000);
             });
-            it('admin can create a new object for a new team and return to list', () => {
+            it.only('admin can edit an object for a new team and return to list', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
