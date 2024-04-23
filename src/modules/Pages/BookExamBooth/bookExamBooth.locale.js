@@ -13,13 +13,13 @@ export default {
         heading: 'Where would you like to sit your exam?',
         locations: [
             {
-                value: 'bsl',
-                label: 'Biological Sciences Library',
-                mapLink: 'https://maps.uq.edu.au/?zoom=18&campusId=406&poiId=1000013772&zLevel=4',
+                value: 'central',
+                label: 'Central Library',
+                mapLink: 'https://maps.uq.edu.au/?campusId=406&zLevel=-1&zoom=18&identifier=archibus_0100121N115',
                 needsComputerBookitLink:
-                    'f30fe4d2-bb58-4426-9c38-843c40b2cd3c?group=2f31b1ff-c71c-4b90-a7ac-ad7973e732eb',
-                BYODBookitLink: 'ae12d42e-faae-4553-8c6a-be2fcddb4b26?group=8d38373a-ba28-4763-9758-7f93dc2211c6',
-                needsDefiniteArticle: true, // does it need a 'the' in front to make a sensible sentence? (for help)
+                    'f30fe4d2-bb58-4426-9c38-843c40b2cd3c?group=9fe30583-ab0a-468a-9108-d9c873e93a58',
+                BYODBookitLink: 'ae12d42e-faae-4553-8c6a-be2fcddb4b26?group=2adb60f6-ef8e-4862-90ef-23912e496995',
+                needsDefiniteArticle: false, // does it need a 'the' in front to make a sensible sentence? (for help)
             },
             {
                 value: 'gatton',
@@ -32,6 +32,10 @@ export default {
             },
         ],
     },
+    /*
+    byod: https://uqbookit.uq.edu.au/#/app/booking-types/ae12d42e-faae-4553-8c6a-be2fcddb4b26?group=2adb60f6-ef8e-4862-90ef-23912e496995&firstDay=2024-03-19&fromTime=07%3A45&toTime=09%3A15
+    needs computer: https://uqbookit.uq.edu.au/#/app/booking-types/f30fe4d2-bb58-4426-9c38-843c40b2cd3c?group=9fe30583-ab0a-468a-9108-d9c873e93a58&firstDay=2024-03-19&fromTime=07%3A45&toTime=09%3A15
+     */
     displayDecider: {
         heading: 'Booking options',
         label: 'Are you booking this booth to sit a scheduled online invigilated exam?',
@@ -42,7 +46,7 @@ export default {
         title: 'Find or book a quiet space',
         message: (
             <React.Fragment>
-                <a href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb">
+                <a href="https://uqbookit.uq.edu.au/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb">
                     Book a library room (UQ login required)
                 </a>{' '}
                 or find a quiet location on-campus to sit your exam.
@@ -75,7 +79,7 @@ export default {
             <p>
                 Submit this form to proceed to UQ Book It. Log in with your student ID and password. You will see a list
                 of available exam booths based on your choices above, for example{' '}
-                <strong>A01 - Exam Computer Booth - Building 94</strong>.
+                <strong>Central Library - Exam Booth - 12-N115-99</strong>.
             </p>
             <ol>
                 <li>
