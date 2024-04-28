@@ -155,6 +155,7 @@ export const DlorForm = ({
     };
     const [summaryContent, setSummaryContent] = useState('');
     const checkBoxArrayRef = React.useRef([]);
+    const teamSelectRef = React.useRef(1);
 
     const flatMapFacets = facetList => {
         console.log('flatMapFacets facetList=', facetList);
@@ -167,12 +168,16 @@ export const DlorForm = ({
         return facetType?.facet_list?.map(facet => facet.facet_id) || [];
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
         }
+
+        const owningTeamIdDefault =
+            mode === 'add' ? dlorTeam?.filter((t, index) => index === 0) : dlorItem?.object_owning_team_id;
+        teamSelectRef.current = owningTeamIdDefault;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, mode]);
 
@@ -239,6 +244,7 @@ export const DlorForm = ({
         // handle teams dropdown changes
         if (prop === 'object_owning_team_id') {
             setShowTeamCreationForm(theNewValue === 'new');
+            teamSelectRef.current = theNewValue !== 'new' ? e.target.value : 'new';
         }
         if (prop === 'object_summary') {
             setSummaryContent(e.target.value);
@@ -305,20 +311,33 @@ export const DlorForm = ({
                 <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
                 <Select
                     variant="standard"
-                    data-testid="object_owning_team"
-                    defaultValue={formValues?.object_owning_team_id}
-                    value={formValues?.object_owning_team_id}
-                    onChange={handleChange('object_owning_team_id')}
-                    aria-labelledby="object_owning_team_label"
-                    style={{ minWidth: '20em' }}
+                    labelId="object_owning_team_label"
                     id="object_owning_team"
+                    data-testid="object_owning_team"
+                    value={teamSelectRef.current ?? 1}
+                    // defaultValue={formValues?.object_owning_team_id}
+                    // value={teamSelectRef.current}
+                    onChange={handleChange('object_owning_team_id')}
+                    // aria-labelledby="object_owning_team_label"
+                    style={{ minWidth: '20em' }}
                 >
-                    {dlorTeam?.map(t => (
-                        <MenuItem key={t.team_id} value={t.team_id}>
-                            {t.team_name}
-                        </MenuItem>
-                    ))}
-                    <MenuItem value="new" data-testid="object-add-teamid-new">
+                    {dlorTeam?.map((t, index) => {
+                        return (
+                            <MenuItem
+                                key={t.team_id}
+                                value={t.team_id}
+                                selected={t.team_id === teamSelectRef.current}
+                                divider={index === dlorTeam.length - 1}
+                            >
+                                {t.team_name}
+                            </MenuItem>
+                        );
+                    })}
+                    <MenuItem
+                        value="new"
+                        data-testid="object-add-teamid-new"
+                        selected={teamSelectRef.current === 'new'}
+                    >
                         Create a team
                     </MenuItem>
                 </Select>
@@ -757,8 +776,12 @@ export const DlorForm = ({
         }
     }, [showConfirmation, dlorSavedItem, dlorSavedItemError]);
 
-    const saveNewDlor = () => {
+    const saveDlor = () => {
         const valuesToSend = { ...formValues };
+        // if (mode === 'edit') {
+        //     valuesToSend.facets = flatMapFacets(formValues?.facets);
+        // }
+        console.log('saveDlor valuesToSend=', valuesToSend);
         if (formValues?.object_owning_team_id === 'new') {
             delete valuesToSend.object_owning_team_id;
         } else {
@@ -775,7 +798,9 @@ export const DlorForm = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        return mode === 'add' ? actions.createDLor(valuesToSend) : actions.updateDLor(valuesToSend);
+        return mode === 'add'
+            ? actions.createDlor(valuesToSend)
+            : actions.updateDlor(dlorItem.object_public_uuid, valuesToSend);
     };
 
     const locale = {
@@ -990,17 +1015,13 @@ export const DlorForm = ({
     }
 
     console.log('formValues=', formValues);
-    console.log(
-        'default value=',
-        mode === 'add' ? dlorTeam?.filter((t, index) => index === 0) : formValues?.object_owning_team_id,
-    );
     return (
         <>
             {saveStatus === 'complete' && (
                 <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
-                    confirmationBoxId="dlor-creation-outcome"
+                    confirmationBoxId="dlor-save-outcome"
                     onAction={() => navigateToDlorAdminHomePage()}
                     hideCancelButton={!!dlorSavedItemError || !locale.successMessage.cancelButtonLabel}
                     cancelButtonLabel={locale.successMessage.cancelButtonLabel}
@@ -1056,11 +1077,11 @@ export const DlorForm = ({
                             {activeStep === steps?.length - 1 ? (
                                 <Button
                                     color="primary"
-                                    data-testid="admin-dlor-add-button-submit"
+                                    data-testid="admin-dlor-save-button-submit"
                                     variant="contained"
                                     children="Save"
                                     disabled={!isFormValid}
-                                    onClick={saveNewDlor}
+                                    onClick={saveDlor}
                                     // className={classes.saveButton}
                                 />
                             ) : (
@@ -1077,7 +1098,7 @@ export const DlorForm = ({
                     <Button
                         color="secondary"
                         children="Cancel"
-                        data-testid="admin-dlor-add-button-cancel"
+                        data-testid="admin-dlor-form-button-cancel"
                         onClick={() => navigateToDlorAdminHomePage()}
                         variant="contained"
                     />

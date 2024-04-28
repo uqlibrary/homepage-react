@@ -87,7 +87,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 5); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
 
@@ -95,7 +95,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
                     .should('exist')
                     .should('contain', 4);
-                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
+                cy.get('[data-testid="admin-dlor-save-button-submit"]') // submit button still disabled
                     .should('exist')
                     .should('be.disabled');
 
@@ -103,7 +103,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 3); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
 
@@ -111,7 +111,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
                     .should('exist')
                     .should('contain', 2);
-                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
+                cy.get('[data-testid="admin-dlor-save-button-submit"]') // submit button still disabled
                     .should('exist')
                     .should('be.disabled');
 
@@ -119,7 +119,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span') // panel invalidity count present
                     .should('exist')
                     .should('contain', 1);
-                cy.get('[data-testid="admin-dlor-add-button-submit"]') // submit button still disabled
+                cy.get('[data-testid="admin-dlor-save-button-submit"]') // submit button still disabled
                     .should('exist')
                     .should('be.disabled');
 
@@ -128,7 +128,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('a'.padEnd(REQUIRED_LENGTH_KEYWORDS, 'x'));
 
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"]').should('not.exist'); // panel invalidity count no longer present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled');
 
@@ -137,7 +137,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
@@ -146,7 +146,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
@@ -155,7 +155,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-3"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('be.disabled');
                 cy.get('[data-testid="filter-22"] input').check(); // media_audio
@@ -521,16 +521,17 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_keywords"] textarea:first-child')
                     .should('exist')
                     .type('cat, dog');
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled');
 
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                // save new dlor
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
 
-                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -590,7 +591,7 @@ describe('Add an object to the Digital learning hub', () => {
                 });
 
                 // and navigate back to the list page
-                cy.get('[data-testid="confirm-dlor-creation-outcome"]')
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('contain', 'Return to list page')
                     .click();
                 cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
@@ -656,15 +657,15 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('cat, dog');
 
                 // save record
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
-                cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains('The object has been created');
+                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
 
                 // wait for the save to complete
-                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -721,7 +722,7 @@ describe('Add an object to the Digital learning hub', () => {
                 });
 
                 // now clear the form to create another Object
-                cy.get('[data-testid="cancel-dlor-creation-outcome"]')
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('contain', 'Add another Object')
                     .click();
                 cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
@@ -793,13 +794,13 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('cat, dog');
 
                 // form filled out. now save
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
                 // "responseType=saveError" on the url forces an error from mock api
-                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
-                cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains(
+                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains(
                     'An error has occurred during the request and this request cannot be processed',
                 );
             });

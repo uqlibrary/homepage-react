@@ -123,13 +123,13 @@ describe('Add an object to the Digital learning hub', () => {
                 }
             });
         });
-        context.skip('successfully mock to db', () => {
+        context('successfully mock to db', () => {
             beforeEach(() => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
-                cy.visit(`http://localhost:2020/admin/dlor/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
                 cy.viewport(1300, 1000);
             });
-            it.only('admin can edit an object for a new team and return to list', () => {
+            it('admin can edit an object for a new team and return to list', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
@@ -158,92 +158,108 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="object_title"] input')
-                    .should('exist')
-                    .type('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                cy.get('[data-testid="object_summary"] textarea:first-child')
-                    .should('exist')
-                    .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+                // cy.get('[data-testid="object_title"] input')
+                //     .should('exist')
+                //     .type('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('[data-testid="object_summary"] textarea:first-child')
+                //     .should('exist')
+                //     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
 
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-add-next-button"]')
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .type('http://example.com');
-                const typeableDownloadInstructions =
-                    'Lorem ipsum dolor sit amet, [consectetur adipiscing elit](http://example.com). In at sapien vel nisi congue fringilla. Maecenas non lacus dolor. Phasellus ornare condimentum est in cursus.' +
-                    '\nNam ac felis neque. Nulla at neque a mauris tristique ultrices ac ultrices ex. Suspendisse iaculis fermentum mi, non cursus augue eleifend in. Maecenas ut faucibus est. Phasellus a diam eget mauris feugiat vestibulum. ';
-                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                    .should('exist')
-                    .type(typeableDownloadInstructions);
-                cy.get('[data-testid="dlor-massaged-download-instructions"]')
-                    .should('exist')
-                    .should('contain', 'Lorem ipsum dolor sit amet');
-                cy.get('[data-testid="dlor-massaged-download-instructions"] a')
-                    .should('exist')
-                    .contains('consectetur adipiscing elit')
-                    .should('have.attr', 'href', 'http://example.com');
+                // cy.get('[data-testid="object_link_url"] input')
+                //     .should('exist')
+                //     .type('http://example.com');
+                // const typeableDownloadInstructions =
+                //     'Lorem ipsum dolor sit amet, [consectetur adipiscing elit](http://example.com). In at sapien vel nisi congue fringilla. Maecenas non lacus dolor. Phasellus ornare condimentum est in cursus.' +
+                //     '\nNam ac felis neque. Nulla at neque a mauris tristique ultrices ac ultrices ex. Suspendisse iaculis fermentum mi, non cursus augue eleifend in. Maecenas ut faucibus est. Phasellus a diam eget mauris feugiat vestibulum. ';
+                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                //     .should('exist')
+                //     .type(typeableDownloadInstructions);
+                // cy.get('[data-testid="dlor-massaged-download-instructions"]')
+                //     .should('exist')
+                //     .should('contain', 'Lorem ipsum dolor sit amet');
+                // cy.get('[data-testid="dlor-massaged-download-instructions"] a')
+                //     .should('exist')
+                //     .contains('consectetur adipiscing elit')
+                //     .should('have.attr', 'href', 'http://example.com');
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-add-next-button"]')
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
-                cy.get('[data-testid="filter-2"] input').check(); // assignments
-                cy.get('[data-testid="filter-22"] input').check(); // media_audio
-                cy.get('[data-testid="filter-24"] input').check(); // media_h5p
-                cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
-                cy.get('[data-testid="filter-35"] input').check(); // business_economics
-                cy.get('[data-testid="filter-17"] input').check(); // type_interactive_activity
-                cy.get('[data-testid="filter-45"] input').check();
+                cy.get('[data-testid="filter-2"] input').uncheck(); // Topic : Assignments
+                cy.get('[data-testid="filter-7"] input').uncheck(); // Topic : Research
+                cy.get('[data-testid="filter-1"] input').check(); // Topic : aboriginal_and_torres_strait_islander
+
+                cy.get('[data-testid="filter-22"] input').check(); // Media format : audio
+                cy.get('[data-testid="filter-24"] input').check(); // Media format : h5p
+                cy.get('[data-testid="filter-27"] input').uncheck(); // Media format : Pressbook
+
+                // cy.get('[data-testid="filter-34"] input').check(); // Subject: all_cross_disciplinary
+                cy.get('[data-testid="filter-35"] input').check(); // Subject: business_economics
+                cy.get('[data-testid="filter-34"] input').uncheck(); // Subject: all_cross_disciplinary
+
+                cy.get('[data-testid="filter-17"] input').check(); // Item type : interactive_activity #radio, no uncheck
+
+                cy.get('[data-testid="filter-45"] input').check(); // Licence : cc_by_nc_attribution_noncommercial #radio, no uncheck
+
                 cy.get('[data-testid="object_keywords"] textarea:first-child')
                     .should('exist')
+                    .clear()
                     .type('cat, dog');
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
-                    .should('exist')
-                    .should('not.be.disabled');
 
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
 
-                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
+
                 const expectedValues = {
-                    object_title: 'xxxxxxxx',
+                    object_title: 'Advanced literature searching',
                     object_description:
-                        'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-                    object_summary: 'new summary xxxxxxxx',
-                    object_link_url: 'http://example.com',
-                    object_download_instructions: typeableDownloadInstructions,
+                        'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping, systematic or literature review. Start with the Advanced literature searching tutorial before undertaking the discipline specific ones.',
+                    object_summary: 'Using advanced searching techniques.',
+                    object_link_url: 'https://uq.h5p.com/content/1291624605868350759',
+                    object_download_instructions: 'some download instructions',
                     object_embed_type: 'link',
-                    object_publishing_user: 'dloradmn',
+                    object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
-                    object_status: 'new',
+                    object_status: 'current',
                     team_email: 'john@example.com',
                     team_manager: 'john Manager',
                     team_name: 'new team name',
                     object_keywords: ['cat', 'dog'],
                     facets: [
+                        10, // Graduate attributes : Accomplished scholars
+                        14, // Graduate attributes : Influential communicator
                         1, // aboriginal_and_torres_strait_islander
-                        2, // assignments
                         22, // media_audio
                         24, // media_h5p
-                        34, // all_cross_disciplinary
                         35, // business_economics
                         17, // type_interactive_activity
                         45, // cc_by_nc_attribution_noncommercial
                     ],
+                    /*
+                                            2, // Topic : Assignments
+                        7, // Item type : Interactive activity
+                        16, // Item type : Guide
+                        27, // Media format : Pressbook
+                        34, // Subject: all_cross_disciplinary
+                        46, // Licence : CC BY-NC-ND Attribution NonCommercial No-Derivatives
+
+                     */
                 };
                 console.log('document.cookies', document.cookie);
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
@@ -266,6 +282,8 @@ describe('Add an object to the Digital learning hub', () => {
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
 
+                    console.log('sentFacets=', sentFacets);
+                    console.log('expectedFacets=', expectedFacets);
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);
@@ -275,7 +293,7 @@ describe('Add an object to the Digital learning hub', () => {
                 });
 
                 // and navigate back to the list page
-                cy.get('[data-testid="confirm-dlor-creation-outcome"]')
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('contain', 'Return to list page')
                     .click();
                 cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
@@ -341,15 +359,15 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('cat, dog');
 
                 // save record
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
-                cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains('The object has been created');
+                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
 
                 // wait for the save to complete
-                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-creation-outcome"]').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -406,7 +424,7 @@ describe('Add an object to the Digital learning hub', () => {
                 });
 
                 // now clear the form to create another Object
-                cy.get('[data-testid="cancel-dlor-creation-outcome"]')
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('contain', 'Add another Object')
                     .click();
                 cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
@@ -478,13 +496,13 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('cat, dog');
 
                 // form filled out. now save
-                cy.get('[data-testid="admin-dlor-add-button-submit"]')
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
                 // "responseType=saveError" on the url forces an error from mock api
-                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-creation-outcome"]').should('exist'));
-                cy.get('[data-testid="dialogbox-dlor-creation-outcome"] h2').contains(
+                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains(
                     'An error has occurred during the request and this request cannot be processed',
                 );
             });

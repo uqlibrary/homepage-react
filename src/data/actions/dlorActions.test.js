@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadCurrentDLORs, loadADLOR, clearADlor, createDLor, loadOwningTeams } from './dlorActions';
+import { loadCurrentDLORs, loadADLOR, clearADlor, createDlor, loadOwningTeams } from './dlorActions';
 
 jest.mock('@sentry/browser');
 
@@ -114,7 +114,7 @@ describe('Digital learning hub actions', () => {
 
             const expectedActions = [actions.DLOR_CREATING, actions.APP_ALERT_SHOW, actions.DLOR_CREATE_FAILED];
 
-            await mockActionsStore.dispatch(createDLor(dlorCreationRequest));
+            await mockActionsStore.dispatch(createDlor(dlorCreationRequest));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -123,7 +123,7 @@ describe('Digital learning hub actions', () => {
 
             const expectedActions = [actions.DLOR_CREATING, actions.DLOR_CREATED];
 
-            await mockActionsStore.dispatch(createDLor(dlorCreationRequest));
+            await mockActionsStore.dispatch(createDlor(dlorCreationRequest));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

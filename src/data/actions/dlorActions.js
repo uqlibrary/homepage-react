@@ -4,11 +4,11 @@ import {
     DLOR_ALL_API,
     DLOR_ALL_CURRENT_API,
     DLOR_CREATE_API,
-    DLOR_UPDATE_API,
     DLOR_DESTROY_API,
     DLOR_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
     DLOR_TEAM_LIST_API,
+    DLOR_UPDATE_API,
 } from 'repositories/routes';
 
 export function loadCurrentDLORs() {
@@ -102,20 +102,20 @@ export function clearADlor() {
     };
 }
 
-export function createDLor(request) {
-    console.log('createDLor request=', request);
+export function createDlor(request) {
+    console.log('createDlor request=', request);
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
         return post(DLOR_CREATE_API(), request)
             .then(data => {
-                console.log('createDLor response=', data);
+                console.log('createDlor response=', data);
                 dispatch({
                     type: actions.DLOR_CREATED,
                     payload: data,
                 });
             })
             .catch(error => {
-                console.log('createDLor error=', error);
+                console.log('createDlor error=', error);
                 dispatch({
                     type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,
@@ -124,20 +124,23 @@ export function createDLor(request) {
     };
 }
 
-export function updateDLor(id, request) {
-    console.log('updateDLor request=', request);
+export function updateDlor(dlorId, request) {
+    console.log('updateDlor uuid=', dlorId);
+    console.log('updateDlor request=', request);
     return async dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
-        return put(DLOR_UPDATE_API(), request)
+        const route = DLOR_UPDATE_API({ id: dlorId });
+        console.log('updateDlor dlorId=', dlorId, '; route=', route);
+        return put(route)
             .then(data => {
-                console.log('updateDLor response=', data);
+                console.log('updateDlor response=', data);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: data,
                 });
             })
             .catch(error => {
-                console.log('updateDLor error=', error);
+                console.log('updateDlor error=', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
@@ -146,12 +149,12 @@ export function updateDLor(id, request) {
     };
 }
 
-export const deleteDlor = dlorID => {
+export const deleteDlor = dlorId => {
     return async dispatch => {
         dispatch({ type: actions.DLOR_DELETING });
 
         try {
-            const response = await destroy(DLOR_DESTROY_API({ id: dlorID }));
+            const response = await destroy(DLOR_DESTROY_API({ id: dlorId }));
             dispatch({
                 type: actions.DLOR_DELETED,
                 payload: [],
