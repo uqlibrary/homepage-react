@@ -592,6 +592,8 @@ mock.onGet(/dlor\/find\/.*/)
             return [500, {}];
         } else if (dlorId === 'missingRecord') {
             return [200, { data: {} }]; // this would more likely be a 404
+        } else if (dlorId === 'object_404') {
+            return [404, { status: 'error', message: 'No records found for that UUID' }]; // this would more likely be a 404
         } else {
             return getaDlorRecordFromDlorAll(dlorId);
         }

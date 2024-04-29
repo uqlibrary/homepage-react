@@ -448,65 +448,32 @@ describe('Edit an object on the Digital learning hub', () => {
                     .should('contain', 'Edit an Object for the Digital learning hub');
             });
         });
-        context.skip('fails correctly', () => {
-            it('admin gets an error when Teams list api doesnt load', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=teamsLoadError`);
-                // "responseType=teamsLoadError" on the url forces an error from mock api
-                cy.get('[data-testid="dlor-form-addedit-error"]').contains(
-                    'An error has occurred during the request and this request cannot be processed',
-                );
-            });
-            it('admin gets an error when Filter list api doesnt load', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=filterLoadError`);
-                // "responseType=filterLoadError" on the url forces an error from mock api
-                cy.get('[data-testid="dlor-homepage-error"]').contains(
-                    'An error has occurred during the request and this request cannot be processed',
-                );
-            });
-            it('admin gets an error when Filter list is empty', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=filterLoadEmpty`);
-                // "responseType=filterLoadEmpty" on the url forces an error from mock api
-                cy.get('[data-testid="dlor-homepage-noresult"]').contains(
-                    'Missing filters: We did not find any entries in the system - please try again later.',
-                );
+        context('fails correctly', () => {
+            it('404 page return correctly', () => {
+                cy.visit('http://localhost:2020/admin/dlor/edit/object_404?user=dloradmn');
+                cy.waitUntil(() => cy.get('[data-testid="dlor-form-error"]').should('exist'));
+                cy.get('[data-testid="dlor-form-error"]').contains('The requested page could not be found.');
             });
             it('admin gets an error on a failed save', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=saveError`);
+                cy.visit(
+                    `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}&responseType=saveError`,
+                );
 
                 // team is valid as is, so go to the second panel, Description
                 cy.waitUntil(() => cy.get('[data-testid="dlor-form-next-button"]').should('exist'));
                 cy.get('[data-testid="dlor-form-next-button"]').click();
 
-                cy.get('[data-testid="object_title"] input')
-                    .should('exist')
-                    .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                cy.get('[data-testid="object_summary"] textarea:first-child')
-                    .should('exist')
-                    .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
-
                 // go to the third panel, Link
+                cy.waitUntil(() => cy.get('[data-testid="dlor-form-next-button"]').should('exist'));
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="object_link_url"] input')
-                    .should('exist')
-                    .type('http://example.com');
 
                 // go to the fourth panel, Filtering
+                cy.waitUntil(() => cy.get('[data-testid="dlor-form-next-button"]').should('exist'));
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="filter-3"] input').check(); // digital_skills
-                cy.get('[data-testid="filter-23"] input').check(); // media_dataset
-                cy.get('[data-testid="filter-36"] input').check(); // engineering_architecture_information_technology
-                cy.get('[data-testid="filter-18"] input').check(); // module
-                cy.get('[data-testid="filter-50"] input').check(); // cco_public_domain
-                cy.get('[data-testid="object_keywords"] textarea:first-child')
-                    .should('exist')
-                    .type('cat, dog');
 
                 // form filled out. now save
                 cy.get('[data-testid="admin-dlor-save-button-submit"]')

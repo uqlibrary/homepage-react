@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
+import Typography from '@mui/material/Typography';
+
 import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -23,7 +25,7 @@ export const DLOEdit = ({
     dlorFilterListError,
 }) => {
     const { dlorId } = useParams();
-    console.log('DLOEdit dlorItemCreating=', dlorItemLoading, '; error=', dlorItemError, '; response=', dlorItem);
+    console.log('DLOEdit dlorItemLoading=', dlorItemLoading, '; error=', dlorItemError, '; response=', dlorItem);
 
     React.useEffect(() => {
         if (!dlorTeamLoading && !dlorTeamError && !dlorTeam) {
@@ -39,6 +41,20 @@ export const DLOEdit = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorId]);
+
+    if (!!dlorItemError) {
+        return (
+            <StandardPage title="Digital learning hub Management">
+                <section aria-live="assertive">
+                    <StandardCard title="Edit an Object for the Digital learning hub">
+                        <Typography variant="body1" data-testid="dlor-form-error">
+                            {dlorItemError}
+                        </Typography>
+                    </StandardCard>
+                </section>
+            </StandardPage>
+        );
+    }
 
     const formDefaults = {
         object_title: dlorItem?.object_title,
