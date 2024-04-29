@@ -23,7 +23,55 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('h1').should('contain', 'Digital learning hub Management');
 
                 cy.checkA11y('[data-testid="StandardPage"]', {
-                    reportName: 'add dlor',
+                    reportName: 'dlor form panel 1',
+                    scopeName: 'Content',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                // go to the second panel, Description
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="object_title"]')
+                        .should('exist')
+                        .should('be.visible'),
+                );
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'dlor form panel 2',
+                    scopeName: 'Content',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                // go to the third panel, Link
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="object_link_url"]')
+                        .should('exist')
+                        .should('be.visible'),
+                );
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'dlor form panel 3',
+                    scopeName: 'Content',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                // go to the fourth panel, Filtering
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="filter-1"]')
+                        .should('exist')
+                        .should('be.visible'),
+                );
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'dlor form panel 4',
                     scopeName: 'Content',
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
@@ -32,7 +80,7 @@ describe('Add an object to the Digital learning hub', () => {
                 // first enter all the fields and show the save button doesnt enable until all the fields are entered
 
                 // team starts off valid so click on to the second panel, description
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -57,7 +105,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count not present
 
                 // click 'next' button to view panel 3, Link
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
@@ -79,7 +127,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count not present
 
                 // click 'next' button to view panel 4, Filters
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
                 // filters
@@ -163,7 +211,7 @@ describe('Add an object to the Digital learning hub', () => {
                 // (cant uncheck a radio button)
 
                 // click the back button to go back to panel 3, Link
-                cy.get('[data-testid="dlor-add-back-button"]')
+                cy.get('[data-testid="dlor-form-back-button"]')
                     .should('exist')
                     .click();
                 cy.get('[data-testid="object_link_url"] input')
@@ -188,7 +236,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
                 // click the back button to go back to panel 2, Description
-                cy.get('[data-testid="dlor-add-back-button"]')
+                cy.get('[data-testid="dlor-form-back-button"]')
                     .should('exist')
                     .click();
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
@@ -226,7 +274,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
                 // click the back button to go back to panel 1, Ownership
-                cy.get('[data-testid="dlor-add-back-button"]')
+                cy.get('[data-testid="dlor-form-back-button"]')
                     .should('exist')
                     .click();
 
@@ -252,7 +300,7 @@ describe('Add an object to the Digital learning hub', () => {
 
                 cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
                 cy.get('[data-testid="object_owning_team"]').click();
-                cy.get('[data-testid="object-add-teamid-new"]')
+                cy.get('[data-testid="object-form-teamid-new"]')
                     .should('exist')
                     .click();
 
@@ -282,7 +330,7 @@ describe('Add an object to the Digital learning hub', () => {
             });
             it('shows character minimums', () => {
                 // go to the second panel, description
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -306,7 +354,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('contain', 'at least 9 more characters needed');
 
                 // go to the fourth panel, links
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click()
                     .click();
@@ -320,7 +368,7 @@ describe('Add an object to the Digital learning hub', () => {
             });
             it('supplies a summary suggestion', () => {
                 // go to the second step, Description
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -390,10 +438,10 @@ describe('Add an object to the Digital learning hub', () => {
 
             it('shows a "will preview" notice correctly', () => {
                 // go to the third step, links
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -453,7 +501,7 @@ describe('Add an object to the Digital learning hub', () => {
                 // open teams drop down
                 cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
                 cy.get('[data-testid="object_owning_team"]').click();
-                cy.get('[data-testid="object-add-teamid-new"]')
+                cy.get('[data-testid="object-form-teamid-new"]')
                     .should('exist')
                     .click();
 
@@ -469,7 +517,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('john@example.com');
 
                 // go to the second panel, Description
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -484,7 +532,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
 
                 // go to the third panel, Link
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -506,7 +554,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('have.attr', 'href', 'http://example.com');
 
                 // go to the fourth panel, Filtering
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -608,7 +656,7 @@ describe('Add an object to the Digital learning hub', () => {
                 const downloadInstructionText = 'some download instructions';
 
                 // team is valid as is, so go to the second panel, Description
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -623,7 +671,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
 
                 // go to the third panel, Link
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -635,7 +683,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .type(downloadInstructionText);
 
                 // go to the fourth panel, Filtering
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -726,7 +774,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('contain', 'Add another Object')
                     .click();
                 cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
@@ -737,7 +785,7 @@ describe('Add an object to the Digital learning hub', () => {
             it('admin gets an error when Teams list api doesnt load', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=teamsLoadError`);
                 // "responseType=teamsLoadError" on the url forces an error from mock api
-                cy.get('[data-testid="dlor-addObject-error"]').contains(
+                cy.get('[data-testid="dlor-form-addedit-error"]').contains(
                     'An error has occurred during the request and this request cannot be processed',
                 );
             });
@@ -759,8 +807,8 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=saveError`);
 
                 // team is valid as is, so go to the second panel, Description
-                cy.waitUntil(() => cy.get('[data-testid="dlor-add-next-button"]').should('exist'));
-                cy.get('[data-testid="dlor-add-next-button"]').click();
+                cy.waitUntil(() => cy.get('[data-testid="dlor-form-next-button"]').should('exist'));
+                cy.get('[data-testid="dlor-form-next-button"]').click();
 
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
@@ -773,7 +821,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
 
                 // go to the third panel, Link
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
                 cy.get('[data-testid="object_link_url"] input')
@@ -781,7 +829,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('http://example.com');
 
                 // go to the fourth panel, Filtering
-                cy.get('[data-testid="dlor-add-next-button"]')
+                cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
                 cy.get('[data-testid="filter-3"] input').check(); // digital_skills

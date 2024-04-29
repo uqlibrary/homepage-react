@@ -335,7 +335,7 @@ export const DlorForm = ({
                     })}
                     <MenuItem
                         value="new"
-                        data-testid="object-add-teamid-new"
+                        data-testid="object-form-teamid-new"
                         selected={teamSelectRef.current === 'new'}
                     >
                         Create a team
@@ -805,9 +805,9 @@ export const DlorForm = ({
 
     const locale = {
         successMessage: {
-            confirmationTitle: 'The object has been created',
+            confirmationTitle: mode === 'add' ? 'The object has been created' : 'Changes have been saved',
             confirmationMessage: '',
-            cancelButtonLabel: 'Add another Object',
+            cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
             confirmButtonLabel: 'Return to list page',
         },
         errorMessage: {
@@ -994,7 +994,7 @@ export const DlorForm = ({
     }
     if (!!dlorTeamError) {
         return (
-            <Typography variant="body1" data-testid="dlor-addObject-error">
+            <Typography variant="body1" data-testid="dlor-form-addedit-error">
                 {dlorTeamError}
             </Typography>
         );
@@ -1031,7 +1031,7 @@ export const DlorForm = ({
                     locale={!dlorSavedItemError ? locale.successMessage : locale.errorMessage}
                 />
             )}
-            <form id="dlor-add-form">
+            <form id="dlor-addedit-form">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <Stepper activeStep={activeStep}>
@@ -1069,7 +1069,7 @@ export const DlorForm = ({
                                 disabled={activeStep === 0}
                                 onClick={handleBack}
                                 sx={{ mr: 1 }}
-                                data-testid="dlor-add-back-button"
+                                data-testid="dlor-form-back-button"
                             >
                                 Back
                             </Button>
@@ -1085,7 +1085,7 @@ export const DlorForm = ({
                                     // className={classes.saveButton}
                                 />
                             ) : (
-                                <Button onClick={handleNext} data-testid="dlor-add-next-button">
+                                <Button onClick={handleNext} data-testid="dlor-form-next-button">
                                     Next
                                 </Button>
                             )}
