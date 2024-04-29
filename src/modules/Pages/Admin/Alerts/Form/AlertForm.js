@@ -668,13 +668,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             {locale.form.labels.priority.title}
                             <Select
                                 variant="standard"
-                                data-testid="admin-alerts-form-select-prioritytype1"
+                                data-testid="admin-alerts-form-select-prioritytype"
                                 defaultValue={values.priorityType}
                                 value={values.priorityType}
                                 onChange={handleChange('priorityType')}
                                 classes={{ root: classes.selectPriorityType }}
                                 inputProps={{
-                                    // 'data-testid': 'admin-alerts-form-prioritytype-input2',
+                                    'data-testid': 'admin-alerts-form-prioritytype-input',
                                     'aria-label': locale.form.labels.priority.aria,
                                 }}
                             >
