@@ -129,9 +129,7 @@ export function updateDlor(dlorId, request) {
     console.log('updateDlor request=', request);
     return async dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
-        const route = DLOR_UPDATE_API({ id: dlorId });
-        console.log('updateDlor dlorId=', dlorId, '; route=', route);
-        return put(route)
+        return put(DLOR_UPDATE_API({ id: dlorId }, request))
             .then(data => {
                 console.log('updateDlor response=', data);
                 dispatch({
