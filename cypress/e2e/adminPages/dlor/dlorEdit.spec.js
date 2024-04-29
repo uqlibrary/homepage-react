@@ -1,7 +1,6 @@
 // these constants must match the constants, eg titleMinimumLength in Dlor Admin components
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
-const REQUIRED_LENGTH_SUMMARY = 20;
 describe('Edit an object on the Digital learning hub', () => {
     beforeEach(() => {
         cy.clearCookies();
@@ -245,24 +244,11 @@ describe('Edit an object on the Digital learning hub', () => {
                         17, // type_interactive_activity
                         45, // cc_by_nc_attribution_noncommercial
                     ],
-                    /*
-                                            2, // Topic : Assignments
-                        7, // Item type : Interactive activity
-                        16, // Item type : Guide
-                        27, // Media format : Pressbook
-                        34, // Subject: all_cross_disciplinary
-                        46, // Licence : CC BY-NC-ND Attribution NonCommercial No-Derivatives
-
-                     */
                 };
-                console.log('document.cookies', document.cookie);
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
-                    console.log('cookie=', cookie);
-                    console.log('cookie.value=', cookie.value);
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
-                    console.log('sentValues=', sentValues);
 
                     // had trouble comparing the entire structure
                     const sentFacets = sentValues.facets;
@@ -276,8 +262,6 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
 
-                    console.log('sentValues=', sentValues);
-                    console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);

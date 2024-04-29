@@ -12,6 +12,16 @@ describe('dlor list reducer', () => {
         };
     });
 
+    it('should set dlor values when loading', () => {
+        const test = dlorListReducer(emptyState, { type: actions.DLOR_LIST_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            dlorList: null,
+            dlorListLoading: true,
+            dlorListError: false,
+        });
+    });
+
     it('should set dlor values when successfully loaded', () => {
         const test = dlorListReducer(emptyState, { type: actions.DLOR_LIST_LOADED, payload: mockDlorList });
         expect(test).toEqual({
@@ -22,7 +32,7 @@ describe('dlor list reducer', () => {
         });
     });
 
-    it('should handle a failing Dlor API call', () => {
+    it('should handle a failing Dlor list API call', () => {
         const test = dlorListReducer(emptyState, {
             type: actions.DLOR_LIST_FAILED,
             payload: 'failed!',
@@ -34,57 +44,13 @@ describe('dlor list reducer', () => {
         });
     });
 
-    it('should set dlor Status flags to loading when loading dlor', () => {
+    it('should set dlor Status flags to loading when loading dlor list', () => {
         const test = dlorListReducer(emptyState, { type: actions.DLOR_LIST_LOADING });
         expect(test).toEqual({
             ...emptyState,
             dlorList: null,
             dlorListLoading: true,
             dlorListError: false,
-        });
-    });
-});
-
-describe('dlor team list reducer', () => {
-    let emptyState;
-    let mockDlorTeamList;
-
-    beforeEach(() => {
-        mockDlorTeamList = [{}];
-        emptyState = {
-            ...initialState,
-        };
-    });
-
-    it('should set dlor values when successfully loaded', () => {
-        const test = dlorListReducer(emptyState, { type: actions.DLOR_TEAM_LOADED, payload: mockDlorTeamList });
-        expect(test).toEqual({
-            ...emptyState,
-            dlorTeam: mockDlorTeamList,
-            dlorTeamLoading: false,
-            dlorTeamError: false,
-        });
-    });
-
-    it('should handle a failing Dlor API call', () => {
-        const test = dlorListReducer(emptyState, {
-            type: actions.DLOR_TEAM_FAILED,
-            payload: 'failed!',
-        });
-        expect(test).toEqual({
-            ...emptyState,
-            dlorTeamLoading: false,
-            dlorTeamError: 'failed!',
-        });
-    });
-
-    it('should set dlor Status flags to loading when loading dlor', () => {
-        const test = dlorListReducer(emptyState, { type: actions.DLOR_TEAM_LOADING });
-        expect(test).toEqual({
-            ...emptyState,
-            dlorTeam: null,
-            dlorTeamLoading: true,
-            dlorTeamError: false,
         });
     });
 });

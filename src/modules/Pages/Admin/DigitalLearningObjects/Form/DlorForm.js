@@ -181,6 +181,7 @@ export const DlorForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, mode]);
 
+    // these match the values in dlor cypress admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
