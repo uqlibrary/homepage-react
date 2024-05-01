@@ -11,6 +11,14 @@ import {
     DLOR_UPDATE_API,
 } from 'repositories/routes';
 
+const checkExpireSession = (dispatch, error) => {
+    const triggerLogoutStatus = [401];
+    if (!!error?.status && triggerLogoutStatus.includes(error.status)) {
+        // They are no longer allowed. Log them out
+        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+    }
+};
+
 export function loadCurrentDLORs() {
     console.log('loadCurrentDLORs start');
     return dispatch => {
@@ -29,6 +37,7 @@ export function loadCurrentDLORs() {
                     type: actions.DLOR_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -51,6 +60,7 @@ export function loadAllDLORs() {
                     type: actions.DLOR_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -70,6 +80,7 @@ export function loadADLOR(dlorId) {
                     type: actions.DLOR_DETAIL_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -92,6 +103,7 @@ export function loadAllFilters() {
                     type: actions.DLOR_FILTER_LIST_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -120,6 +132,7 @@ export function createDlor(request) {
                     type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -127,14 +140,14 @@ export function createDlor(request) {
 export function updateDlor(dlorId, request) {
     console.log('updateDlor uuid=', dlorId);
     console.log('updateDlor request=', request);
-    return async dispatch => {
+    return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
-        return put(DLOR_UPDATE_API({ id: dlorId }, request))
-            .then(data => {
-                console.log('updateDlor response=', data);
+        return put(DLOR_UPDATE_API(dlorId), request)
+            .then(response => {
+                console.log('updateDlor response=', response);
                 dispatch({
                     type: actions.DLOR_UPDATED,
-                    payload: data,
+                    payload: response,
                 });
             })
             .catch(error => {
@@ -143,6 +156,7 @@ export function updateDlor(dlorId, request) {
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
@@ -185,6 +199,7 @@ export function loadOwningTeams() {
                     type: actions.DLOR_TEAM_FAILED,
                     payload: error.message,
                 });
+                checkExpireSession(dispatch, error);
             });
     };
 }
