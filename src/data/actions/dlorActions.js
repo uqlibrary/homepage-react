@@ -126,7 +126,7 @@ export function createDlor(request) {
                     payload: data,
                 });
                 // refresh the list after change
-                loadAllDLORs();
+                dispatch(loadAllDLORs());
             })
             .catch(error => {
                 console.log('createDlor error=', error);
@@ -152,7 +152,7 @@ export function updateDlor(dlorId, request) {
                     payload: response,
                 });
                 // refresh the list after change
-                loadAllDLORs();
+                dispatch(loadAllDLORs());
             })
             .catch(error => {
                 // console.log('updateDlor error=', error);
