@@ -12,7 +12,7 @@ const mapStateToProps = state => {
         ...state.get('dlorTeamReducer'),
         ...state.get('dlorUpdateReducer'),
     };
-    console.log('DLOEditContainer mapStateToProps', newVar);
+    // console.log('DLOEditContainer mapStateToProps', newVar);
     return newVar;
 };
 

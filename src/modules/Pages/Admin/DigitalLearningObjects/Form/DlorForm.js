@@ -130,7 +130,7 @@ export const DlorForm = ({
     //     '; response=',
     //     dlorSavedItem,
     // );
-    !!dlorTeam && console.log('DlorForm team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
+    // !!dlorTeam && console.log('DlorForm team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
     // !!dlorFilterList &&
     // console.log(
     //     'DlorForm filters=',
@@ -147,10 +147,10 @@ export const DlorForm = ({
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
-    console.log('DlorForm formDefaults=', formDefaults);
+    // console.log('DlorForm formDefaults=', formDefaults);
     const [formValues, setFormValues2] = useState(formDefaults);
     const setFormValues = val => {
-        console.log('set formValues=', val);
+        // console.log('set formValues=', val);
         setFormValues2(val);
     };
     const [summaryContent, setSummaryContent] = useState('');
@@ -158,7 +158,7 @@ export const DlorForm = ({
     const teamSelectRef = React.useRef(1);
 
     const flatMapFacets = facetList => {
-        console.log('flatMapFacets facetList=', facetList);
+        // console.log('flatMapFacets facetList=', facetList);
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
     };
 
@@ -175,9 +175,9 @@ export const DlorForm = ({
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
         }
 
-        const owningTeamIdDefault =
+        // TODO is dlorTeam loaded?
+        teamSelectRef.current =
             mode === 'add' ? dlorTeam?.filter((t, index) => index === 0) : dlorItem?.object_owning_team_id;
-        teamSelectRef.current = owningTeamIdDefault;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, mode]);
 
@@ -779,10 +779,12 @@ export const DlorForm = ({
 
     const saveDlor = () => {
         const valuesToSend = { ...formValues };
-        // if (mode === 'edit') {
-        //     valuesToSend.facets = flatMapFacets(formValues?.facets);
-        // }
-        console.log('saveDlor valuesToSend=', valuesToSend);
+        // somehow in localhost this is already an array of ids, but on feature branch its the original facets
+        if (valuesToSend.facets.length > 0 && valuesToSend.facets[0].hasOwnProperty('filter_key')) {
+            console.log('rewrite ', valuesToSend.facets);
+            valuesToSend.facets = flatMapFacets(formValues?.facets);
+        }
+        console.log('saveDlor ', mode, ' valuesToSend=', valuesToSend);
         if (formValues?.object_owning_team_id === 'new') {
             delete valuesToSend.object_owning_team_id;
         } else {
@@ -834,7 +836,7 @@ export const DlorForm = ({
     };
 
     const validateValues = currentValues => {
-        console.log('validateValues currentValues=', currentValues);
+        // console.log('validateValues currentValues=', currentValues);
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
@@ -1015,7 +1017,7 @@ export const DlorForm = ({
         );
     }
 
-    console.log('formValues=', formValues);
+    // console.log('formValues=', formValues);
     return (
         <>
             {saveStatus === 'complete' && (

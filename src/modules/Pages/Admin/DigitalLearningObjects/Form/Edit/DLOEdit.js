@@ -25,7 +25,7 @@ export const DLOEdit = ({
     dlorFilterListError,
 }) => {
     const { dlorId } = useParams();
-    console.log('DLOEdit dlorItemLoading=', dlorItemLoading, '; error=', dlorItemError, '; response=', dlorItem);
+    // console.log('DLOEdit dlorItemLoading=', dlorItemLoading, '; error=', dlorItemError, '; response=', dlorItem);
 
     React.useEffect(() => {
         if (!dlorTeamLoading && !dlorTeamError && !dlorTeam) {
@@ -73,7 +73,7 @@ export const DLOEdit = ({
         object_keywords_string: dlorItem?.object_keywords?.join(', '),
         facets: dlorItem?.object_filters,
     };
-    console.log('DLOEdit formDefaults=', formDefaults);
+    // console.log('DLOEdit formDefaults=', formDefaults);
 
     return (
         <Fragment>

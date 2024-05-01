@@ -138,20 +138,20 @@ export function createDlor(request) {
 }
 
 export function updateDlor(dlorId, request) {
-    console.log('updateDlor uuid=', dlorId);
-    console.log('updateDlor request=', request);
+    // console.log('updateDlor uuid=', dlorId);
+    // console.log('updateDlor request=', request);
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
         return put(DLOR_UPDATE_API(dlorId), request)
             .then(response => {
-                console.log('updateDlor response=', response);
+                // console.log('updateDlor response=', response);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response,
                 });
             })
             .catch(error => {
-                console.log('updateDlor error=', error);
+                // console.log('updateDlor error=', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
