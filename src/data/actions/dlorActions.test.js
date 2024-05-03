@@ -121,7 +121,7 @@ describe('Digital learning hub actions', () => {
         it('handles an spotlight creation request', async () => {
             mockApi.onAny(repositories.routes.DLOR_CREATE_API().apiUrl).reply(200, dlorCreationResponse);
 
-            const expectedActions = [actions.DLOR_CREATING, actions.DLOR_CREATED];
+            const expectedActions = [actions.DLOR_CREATING, actions.DLOR_CREATED, actions.DLOR_LIST_LOADING];
 
             await mockActionsStore.dispatch(createDlor(dlorCreationRequest));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
