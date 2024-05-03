@@ -62,7 +62,6 @@ export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
     const urlForPreview = new URL('https://www.youtube.com/');
     urlForPreview.search = '?v=' + videoId;
     const response = urlForPreview.toString();
-    console.log('getYoutubeUrlForPreviewEmbed response=', response);
     return response;
 };
 

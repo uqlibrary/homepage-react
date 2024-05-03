@@ -140,8 +140,6 @@ export function createDlor(request) {
 }
 
 export function updateDlor(dlorId, request) {
-    // console.log('updateDlor uuid=', dlorId);
-    // console.log('updateDlor request=', request);
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
         return put(DLOR_UPDATE_API(dlorId), request)

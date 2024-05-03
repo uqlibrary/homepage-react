@@ -170,6 +170,7 @@ export const DlorForm = ({
 
     useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
+            hideConfirmation();
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
@@ -823,7 +824,6 @@ export const DlorForm = ({
     const navigateToDlorAdminHomePage = () => {
         // TODO also want to clear form here too before nav, so back button gives clear form?
 
-        // actions.loadAllDLORs(); // force reload of data now we have added a new one. needed?
         hideConfirmation();
         const userString = getUserPostfix();
         window.location.href = `${fullPath}/admin/dlor${userString}`;
