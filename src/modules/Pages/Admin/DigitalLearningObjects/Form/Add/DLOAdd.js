@@ -80,7 +80,7 @@ export const DLOAdd = ({
 
 DLOAdd.propTypes = {
     actions: PropTypes.any,
-    dlorItemCreating: PropTypes.object,
+    dlorItemCreating: PropTypes.bool,
     dlorCreatedItemError: PropTypes.any,
     dlorCreatedItem: PropTypes.object,
     dlorTeam: PropTypes.array,

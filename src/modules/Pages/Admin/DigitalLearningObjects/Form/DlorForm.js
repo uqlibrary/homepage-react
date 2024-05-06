@@ -170,7 +170,6 @@ export const DlorForm = ({
 
     useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
-            hideConfirmation();
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
@@ -752,6 +751,7 @@ export const DlorForm = ({
     }
 
     useEffect(() => {
+        hideConfirmation();
         if (!dlorTeamError && !dlorTeamLoading && !dlorTeam) {
             actions.loadOwningTeams();
         }
