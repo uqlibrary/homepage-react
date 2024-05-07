@@ -67,8 +67,8 @@ export default {
                 "team_manager_username": "Steve Lancaster"
             },
             "object_link_interaction_type": "view",
-            "object_link_file_type": "Video",
-            "object_link_size": "47m44s",
+            "object_link_file_type": "video",
+            "object_link_size": "2864", // 47m44s
         },
         {
             "object_id": 2,

@@ -32,7 +32,12 @@ import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
-import { displayDownloadInstructions, isPreviewableUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import {
+    displayDownloadInstructions,
+    formatFileSize,
+    getDurationString,
+    isPreviewableUrl,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { getUserPostfix, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 
@@ -146,6 +151,13 @@ export const DlorForm = ({
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
+
+    const linkInteractionType_download = 'download';
+    const linkInteractionType_view = 'view';
+    const linkInteractionType_none = 'none';
+    const [showLinkTimeForm, setShowLinkTimeForm] = useState(false);
+    const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
+
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     // console.log('DlorForm formDefaults=', formDefaults);
     const [formValues, setFormValues2] = useState(formDefaults);
@@ -156,6 +168,8 @@ export const DlorForm = ({
     const [summaryContent, setSummaryContent] = useState('');
     const checkBoxArrayRef = React.useRef([]);
     const teamSelectRef = React.useRef(1);
+    const linkInteractionTypeSelectRef = React.useRef(formValues?.object_link_interaction_type || 'none');
+    const linkFileTypeSelectRef = React.useRef('new');
 
     const flatMapFacets = facetList => {
         // console.log('flatMapFacets facetList=', facetList);
@@ -173,6 +187,9 @@ export const DlorForm = ({
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
+
+            setInteractionTypeDisplays(dlorItem?.object_link_interaction_type);
+            linkFileTypeSelectRef.current = dlorItem?.object_link_file_type;
         }
 
         // TODO is dlorTeam loaded?
@@ -237,6 +254,12 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
+    function setInteractionTypeDisplays(value) {
+        linkInteractionTypeSelectRef.current = value;
+        setShowLinkTimeForm(value === linkInteractionType_view);
+        setShowLinkSizeForm(value === linkInteractionType_download);
+    }
+
     const handleChange = prop => e => {
         // handle radio & checkbox filter field changes
         const theNewValue =
@@ -246,6 +269,9 @@ export const DlorForm = ({
         if (prop === 'object_owning_team_id') {
             setShowTeamCreationForm(theNewValue === 'new');
             teamSelectRef.current = theNewValue !== 'new' ? e.target.value : 'new';
+        }
+        if (prop === 'interaction_type') {
+            setInteractionTypeDisplays(theNewValue);
         }
         if (prop === 'object_summary') {
             setSummaryContent(e.target.value);
@@ -589,43 +615,179 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             {formValues?.object_embed_type === 'link' && (
-                <Grid item xs={12}>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
-                        <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
-                        <Input
-                            id="object_link_url"
-                            data-testid="object_link_url"
-                            required
-                            value={formValues?.object_link_url}
-                            onChange={handleChange('object_link_url')}
-                            error={
-                                !!formValues?.object_link_url &&
-                                formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                                !isValidUrl(formValues?.object_link_url)
-                            }
-                        />
-                        {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                            !isValidUrl(formValues?.object_link_url) && (
-                                <div className={classes.errorMessage} data-testid={'error-message-object_link_url'}>
-                                    This web address is not valid.
-                                </div>
-                            )}
-                        {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                            isPreviewableUrl(formValues?.object_link_url) !== false && (
-                                <p
-                                    style={{ display: 'flex', alignItems: 'center' }}
-                                    data-testid="object_link_url_preview"
-                                >
-                                    <DoneIcon color="success" />
-                                    <span>A preview will show on the View page.</span>
-                                </p>
-                            )}
-                    </FormControl>
-                </Grid>
+                <>
+                    <Grid item xs={12}>
+                        <FormControl
+                            variant="standard"
+                            // className={classes.typingArea}
+                            fullWidth
+                        >
+                            <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
+                            <Input
+                                id="object_link_url"
+                                data-testid="object_link_url"
+                                required
+                                value={formValues?.object_link_url}
+                                onChange={handleChange('object_link_url')}
+                                error={
+                                    !!formValues?.object_link_url &&
+                                    formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                                    !isValidUrl(formValues?.object_link_url)
+                                }
+                            />
+                            {formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                                !isValidUrl(formValues?.object_link_url) && (
+                                    <div className={classes.errorMessage} data-testid={'error-message-object_link_url'}>
+                                        This web address is not valid.
+                                    </div>
+                                )}
+                            {formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                                isPreviewableUrl(formValues?.object_link_url) !== false && (
+                                    <p
+                                        style={{ display: 'flex', alignItems: 'center' }}
+                                        data-testid="object_link_url_preview"
+                                    >
+                                        <DoneIcon color="success" />
+                                        <span>A preview will show on the View page.</span>
+                                    </p>
+                                )}
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Grid container>
+                            <Grid item xs={4}>
+                                <InputLabel htmlFor="interaction_type">Accessible link message</InputLabel>
+                                <FormControl>
+                                    <Select
+                                        variant="standard"
+                                        labelId="interaction_type"
+                                        id="interaction_type"
+                                        data-testid="interaction_type"
+                                        value={linkInteractionTypeSelectRef.current}
+                                        onChange={handleChange('interaction_type')}
+                                        style={{ width: '100%' }}
+                                    >
+                                        <MenuItem
+                                            value={linkInteractionType_download}
+                                            selected={
+                                                linkInteractionTypeSelectRef.current === linkInteractionType_download
+                                            }
+                                        >
+                                            can Download
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={linkInteractionType_view}
+                                            selected={linkInteractionTypeSelectRef.current === linkInteractionType_view}
+                                        >
+                                            can View
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={linkInteractionType_none}
+                                            selected={
+                                                ![linkInteractionType_download, linkInteractionType_view].includes(
+                                                    linkInteractionTypeSelectRef.current,
+                                                )
+                                            }
+                                        >
+                                            No message
+                                        </MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl style={{ minWidth: '10em' }}>
+                                    {[linkInteractionType_download, linkInteractionType_view].includes(
+                                        linkInteractionTypeSelectRef.current,
+                                    ) && (
+                                        <>
+                                            <InputLabel htmlFor="object_link_file_type">File type</InputLabel>
+                                            <Select
+                                                variant="standard"
+                                                labelId="object_link_file_type"
+                                                id="object_link_file_type"
+                                                data-testid="object_link_file_type"
+                                                value={linkFileTypeSelectRef.current}
+                                                onChange={handleChange('object_link_file_type')}
+                                                style={{ width: '100%' }}
+                                            >
+                                                {!!formValues?.object_link_types &&
+                                                    formValues?.object_link_types
+                                                        .filter(
+                                                            type =>
+                                                                type.object_link_interaction_type ===
+                                                                linkInteractionTypeSelectRef.current,
+                                                        )
+                                                        .map((type, index) => {
+                                                            console.log('type=', type);
+                                                            console.log(
+                                                                'linkFileTypeSelectRef.current=',
+                                                                linkFileTypeSelectRef.current,
+                                                            );
+                                                            return (
+                                                                <MenuItem
+                                                                    key={type.object_link_file_type}
+                                                                    value={type.object_link_file_type}
+                                                                    selected={
+                                                                        type.object_link_file_type ===
+                                                                        linkFileTypeSelectRef.current
+                                                                    }
+                                                                    // divider={index === dlorTeam.length - 1}
+                                                                >
+                                                                    {type.object_link_file_type}
+                                                                </MenuItem>
+                                                            );
+                                                        })}
+                                                <MenuItem
+                                                    value="new"
+                                                    selected={linkFileTypeSelectRef.current === 'new'}
+                                                >
+                                                    New type (TODO)
+                                                </MenuItem>
+                                            </Select>
+                                        </>
+                                    )}
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl>
+                                    {!!showLinkTimeForm && (
+                                        <>
+                                            <InputLabel htmlFor="object_link_duration">Run time</InputLabel>
+                                            <Input
+                                                id="object_link_duration"
+                                                data-testid="object_link_duration"
+                                                required
+                                                value={getDurationString(
+                                                    formValues?.object_link_size ? formValues?.object_link_size : 0,
+                                                    'MMMmSSSs',
+                                                )}
+                                                onChange={handleChange('object_link_duration')}
+                                                placeholder="eg 47m44s"
+                                                title="How long it runs for eg 3min 12sec"
+                                            />
+                                        </>
+                                    )}
+                                    {!!showLinkSizeForm && (
+                                        <>
+                                            <InputLabel htmlFor="object_link_file_size">File Size</InputLabel>
+                                            <Input
+                                                id="object_link_file_size"
+                                                data-testid="object_link_file_size"
+                                                required
+                                                value={formatFileSize(
+                                                    formValues?.object_link_size ? formValues?.object_link_size : 0,
+                                                )}
+                                                onChange={handleChange('object_link_file_size')}
+                                                placeholder="eg 3 KB"
+                                                title="How long it runs for eg 3min 12sec"
+                                            />
+                                        </>
+                                    )}
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </>
             )}
             <Grid item xs={12}>
                 <FormControl

@@ -81,3 +81,54 @@ export function formatFileSize(fileSize) {
     }
     return `${size} ${units[unitIndex]}`;
 }
+
+export function convertFileSizeStringToKb(fileSizeString) {
+    const sizeRegex = /^(\d+(?:\.\d+)?)\s*([KMGT]B)$/i;
+    const match = fileSizeString.match(sizeRegex);
+
+    if (!match) {
+        throw new Error(`convertFileSizeStringToKb:Invalid size string "${fileSizeString}"`);
+    }
+
+    const size = parseFloat(match[1]);
+    const unit = match[2].toUpperCase();
+
+    let sizeInKb;
+    switch (unit) {
+        case 'TB':
+            sizeInKb = size * 1000 * 1000 * 1000;
+            break;
+        case 'GB':
+            sizeInKb = size * 1000 * 1000;
+            break;
+        case 'MB':
+            sizeInKb = size * 1000;
+            break;
+        case 'KB':
+            sizeInKb = size;
+            break;
+        default:
+            throw new Error('Unsupported unit');
+    }
+
+    return sizeInKb.toString();
+}
+
+export function getDurationString(totalSeconds, format = 'MMMm SSSs') {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return format.replace('MMM', minutes).replace('SSS', seconds);
+}
+
+export function convertDurationStringToSeconds(timeString, regexpFormat = /(\d+)\s*m\s*(\d+)\s*s/) {
+    const match = timeString.match(regexpFormat);
+
+    if (!match) {
+        throw new Error('Invalid time string format ', timeString);
+    }
+
+    const minutes = Number(match[1]);
+    const seconds = Number(match[2]);
+
+    return minutes * 60 + seconds;
+}

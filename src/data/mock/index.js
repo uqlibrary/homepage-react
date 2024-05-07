@@ -581,7 +581,32 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
 
 function getaDlorRecordFromDlorAll(dlorId) {
     const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
-    return arrayOfOneRecord.length > 0 ? [200, { data: arrayOfOneRecord.pop() }] : [404, {}];
+    const popone = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
+    popone.object_link_types = [
+        {
+            // we ought to remove this empty one, but its what the api supplies atm
+            object_link_interaction_type: 'none',
+            object_link_file_type: null,
+        },
+        {
+            object_link_interaction_type: 'view',
+            object_link_file_type: 'video',
+        },
+        {
+            object_link_interaction_type: 'download',
+            object_link_file_type: 'XLS',
+        },
+        {
+            object_link_interaction_type: 'download',
+            object_link_file_type: 'PPT',
+        },
+        {
+            object_link_interaction_type: 'download',
+            object_link_file_type: 'PDF',
+        },
+    ];
+    console.log('popone=', popone);
+    return popone === null ? [404, {}] : [200, { data: popone }];
 }
 
 mock.onGet(/dlor\/find\/.*/)

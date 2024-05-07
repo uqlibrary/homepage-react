@@ -72,6 +72,10 @@ export const DLOEdit = ({
         team_email: dlorItem?.team_email,
         object_keywords_string: dlorItem?.object_keywords?.join(', '),
         facets: dlorItem?.object_filters,
+        object_link_types: dlorItem?.object_link_types,
+        object_link_interaction_type: dlorItem?.object_link_interaction_type,
+        object_link_file_type: dlorItem?.object_link_file_type,
+        object_link_size: dlorItem?.object_link_size,
     };
     // console.log('DLOEdit formDefaults=', formDefaults);
 

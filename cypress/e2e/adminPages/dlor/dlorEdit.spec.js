@@ -89,6 +89,15 @@ describe('Edit an object on the Digital learning hub', () => {
                     'have.value',
                     'https://uq.h5p.com/content/1291624605868350759',
                 );
+
+                // accessible link message is "no message"
+                cy.get('[data-testid="interaction_type"]')
+                    .should('exist')
+                    .contains('No message');
+                cy.get('[data-testid="object_link_file_type"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration"]').should('not.exist');
+                cy.get('[data-testid="object_link_file_size"]').should('not.exist');
+
                 cy.get('[data-testid="object_download_instructions"] textarea:first-child')
                     .should('exist')
                     .contains('some download instructions');
@@ -120,6 +129,52 @@ describe('Edit an object on the Digital learning hub', () => {
                     currentCheckboxId++;
                 }
             });
+        });
+        it('loads "download" url type correctly', () => {
+            cy.visit('http://localhost:2020/admin/dlor/edit/9bc192a8-324c-4f6b-ac50-07e7ff2df240?user=dloradmn');
+            // go to panel 2
+            cy.get('[data-testid="dlor-form-next-button"]')
+                .should('exist')
+                .click();
+            // go to panel 3
+            cy.get('[data-testid="dlor-form-next-button"]')
+                .should('exist')
+                .click();
+
+            // accessible link message is "no message"
+            cy.get('[data-testid="interaction_type"]')
+                .should('exist')
+                .contains('can Download');
+            cy.get('[data-testid="object_link_file_type"]')
+                .should('exist')
+                .contains('XLS');
+            cy.get('[data-testid="object_link_file_size"] input')
+                .should('exist')
+                .should('have.value', '3.4 GB');
+            cy.get('[data-testid="object_link_duration"]').should('not.exist');
+        });
+        it('loads "view" url type correctly', () => {
+            cy.visit('http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=dloradmn');
+            // go to panel 2
+            cy.get('[data-testid="dlor-form-next-button"]')
+                .should('exist')
+                .click();
+            // go to panel 3
+            cy.get('[data-testid="dlor-form-next-button"]')
+                .should('exist')
+                .click();
+
+            // accessible link message is "no message"
+            cy.get('[data-testid="interaction_type"]')
+                .should('exist')
+                .contains('can View');
+            cy.get('[data-testid="object_link_file_type"]')
+                .should('exist')
+                .contains('video');
+            cy.get('[data-testid="object_link_duration"] input')
+                .should('exist')
+                .should('have.value', '47m44s');
+            cy.get('[data-testid="object_link_file_size"]').should('not.exist');
         });
         context('successfully mock to db', () => {
             beforeEach(() => {
