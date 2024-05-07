@@ -168,4 +168,30 @@ describe('Digital learning hub', () => {
                 .contains('We could not find the requested entry - please check the web address.');
         });
     });
+    context('"Access it" units show properly', () => {
+        it('A watchable object shows the correct units on the Get It button', () => {
+            cy.visit('digital-learning-hub/view/987y_isjgt_9866');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="detailpage-getit-button"] a')
+                .should('exist')
+                .should('have.text', 'Access the object (Video 47m44s)');
+        });
+
+        it('A downloadable object shows the correct units on the Get It button', () => {
+            cy.visit('digital-learning-hub/view/9bc192a8-324c-4f6b-ac50-07e7ff2df240');
+
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="detailpage-getit-button"] a')
+                .should('exist')
+                .should('have.text', 'Access the object (XLS 3.4 GB)');
+        });
+
+        it('A neither watchable nor downloadable object shows just "Accesss the object" on the Get It button', () => {
+            cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="detailpage-getit-button"] a')
+                .should('exist')
+                .should('have.text', 'Access the object');
+        });
+    });
 });

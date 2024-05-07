@@ -18,6 +18,7 @@ import { getHomepageLink } from 'helpers/access';
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
     displayDownloadInstructions,
+    formatFileSize,
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
@@ -180,6 +181,27 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
         }
         return url.replace('?v=', 'embed/');
     };
+
+    function getItButtonLabel(dlorItem) {
+        const interactionType = dlorItem?.object_link_interaction_type || null;
+        console.log('getIt interactionType=', interactionType);
+        const fileType = dlorItem?.object_link_file_type || null;
+        console.log('getIt fileType=', fileType);
+
+        let label = 'Access the object';
+        if (interactionType === 'view') {
+            const viewingTime = dlorItem?.object_link_size ? dlorItem?.object_link_size : null;
+            console.log('getIt ', interactionType, ' viewingTime=', viewingTime);
+            label = `Access the object (${fileType} ${viewingTime})`;
+        } else if (interactionType === 'download') {
+            const fileSize = !!dlorItem?.object_link_size ? formatFileSize(dlorItem?.object_link_size) : null;
+            console.log('getIt ', interactionType, ' fileSize=', fileSize);
+            label = `Access the object (${fileType} ${fileSize})`;
+        }
+        console.log('getIt label=', label);
+        return label;
+    }
+
     return (
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
@@ -199,9 +221,9 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                     ?.map((line, index) => <p key={index}>{line}</p>)}
                         </div>
                         {dlorItem?.object_embed_type === 'link' && !!dlorItem?.object_link_url && (
-                            <div className={classes.uqActionButton}>
+                            <div className={classes.uqActionButton} data-testid="detailpage-getit-button">
                                 <a aria-label="Click to visit the Learning Resource" href={dlorItem.object_link_url}>
-                                    Access the object
+                                    {getItButtonLabel(dlorItem)}
                                 </a>
                             </div>
                         )}

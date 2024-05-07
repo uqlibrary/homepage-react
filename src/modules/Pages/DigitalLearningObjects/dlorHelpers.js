@@ -69,3 +69,15 @@ export const isPreviewableUrl = testUrlIn => {
     return !!getYoutubeUrlForPreviewEmbed(testUrlIn);
     // || !!getOTHERTYPEUrlForPreviewEmbed(testUrlIn)
 };
+
+export function formatFileSize(fileSize) {
+    const units = ['KB', 'MB', 'GB', 'TB', 'PB'];
+    let unitIndex = 0;
+    let size = fileSize;
+
+    while (size >= 1000 && unitIndex < units.length - 1) {
+        size = (size / 1000).toFixed(1);
+        unitIndex++;
+    }
+    return `${size} ${units[unitIndex]}`;
+}
