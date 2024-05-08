@@ -229,4 +229,24 @@ describe('Digital learning hub admin homepage', () => {
                 .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
         });
     });
+    context('user access', () => {
+        it('displays an "unauthorised" page to public users', () => {
+            cy.visit('http://localhost:2020/admin/dlor?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Authentication required');
+        });
+        it('displays an "unauthorised" page to non-authorised users', () => {
+            cy.visit('http://localhost:2020/admin/dlor?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Permission denied');
+        });
+        it('displays correct page for admin users (list)', () => {
+            cy.visit(`http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').should('contain', 'Digital learning hub Management');
+        });
+    });
 });
