@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
+import { Pagination } from '@mui/material';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -258,6 +259,8 @@ export const DLOList = ({
     const [keywordSearch, setKeywordSearch] = useState('');
     const checkBoxArrayRef = useRef([]);
     const keyWordSearchRef = useRef('');
+
+    const [paginationPage, setPaginationPage] = React.useState(1);
 
     function skipToElement() {
         const skipNavLander = document.querySelector('#first-panel-button');
@@ -594,27 +597,33 @@ export const DLOList = ({
             .replace(/-+$/, '');
     };
 
-    const filterDlorList = () => {
+    const numberItemsPerPage = 10;
+
+    const filterDlorList = pageloadShown => {
+        let filteredDlorList;
         if (
             (!selectedFilters || selectedFilters.length === 0) &&
             (!keywordSearch || !keywordIsSearchable(keywordSearch))
         ) {
-            return dlorList;
+            filteredDlorList = dlorList;
+        } else {
+            filteredDlorList = dlorList?.filter(d => {
+                const passesCheckboxFilter =
+                    !!d?.constructedFilters &&
+                    !!selectedFilters &&
+                    !!selectedFilters.every(el => d?.constructedFilters.includes(el));
+                const passesKeyWordFilter =
+                    !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
+                return passesCheckboxFilter && passesKeyWordFilter;
+            });
         }
 
-        // console.log('filterDlorList dlorList=', dlorList);
-        // console.log('filterDlorList selectedFilters=', selectedFilters);
-        const after = dlorList?.filter(d => {
-            const passesCheckboxFilter =
-                !!d?.constructedFilters &&
-                !!selectedFilters &&
-                !!selectedFilters.every(el => d?.constructedFilters.includes(el));
-            const passesKeyWordFilter =
-                !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
-            return passesCheckboxFilter && passesKeyWordFilter;
+        const paginatedFilteredDlorList = filteredDlorList.filter((_, index) => {
+            const startIndex = (pageloadShown - 1) * numberItemsPerPage;
+            const endIndex = startIndex + numberItemsPerPage;
+            return index >= startIndex && index < endIndex;
         });
-        // console.log('filterDlorList after=', after);
-        return after;
+        return paginatedFilteredDlorList;
     };
 
     const getPublicHelp = facetTypeSlug => {
@@ -738,7 +747,10 @@ export const DLOList = ({
         );
     }
 
-    console.log('DLOList account=', account);
+    const handlePaginationChange = (e, value) => {
+        setPaginationPage(value);
+    };
+
     return (
         <StandardPage>
             <Typography component={'h1'} variant={'h6'}>
@@ -820,8 +832,8 @@ export const DLOList = ({
                                 );
                             });
 
-                            const dlorData = filterDlorList();
-                            // console.log('22222 dlorData=', dlorData);
+                            const dlorData = filterDlorList(paginationPage);
+                            const paginationCount = Math.ceil(dlorList?.length / numberItemsPerPage);
                             if (!dlorData || dlorData.length === 0) {
                                 return (
                                     <Grid container spacing={3}>
@@ -855,6 +867,15 @@ export const DLOList = ({
                                             {!!dlorData &&
                                                 dlorData.length > 0 &&
                                                 dlorData.map((o, index) => displayItemPanel(o, index))}
+                                            {!!dlorData && dlorData.length > 0 && (
+                                                <Pagination
+                                                    count={paginationCount}
+                                                    showFirstButton
+                                                    showLastButton
+                                                    onChange={handlePaginationChange}
+                                                    page={paginationPage}
+                                                />
+                                            )}
                                         </Grid>
                                     </div>
                                 );

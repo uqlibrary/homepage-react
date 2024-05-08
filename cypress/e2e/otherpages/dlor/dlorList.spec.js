@@ -4,6 +4,8 @@ describe('Digital learning hub', () => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
 
+    const itemsPerPage = 10; // matches value in DLOList
+    const extraRowCount = 2; // pagination row + hidden mobile filter icon
     context('desktop homepage visits', () => {
         beforeEach(() => {
             cy.visit('digital-learning-hub');
@@ -26,9 +28,9 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
 
-            // first panel
+            // first article
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] button').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article header h2').should(
                 'contain',
@@ -150,7 +152,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
 
             // select the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
@@ -163,7 +165,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 4 + 1);
+                .should('have.length', 4 + extraRowCount);
 
             // unhide the Item type panel
             cy.get('[data-testid="panel-minimisation-icon-2"]')
@@ -187,7 +189,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3 + 1);
+                .should('have.length', 3 + extraRowCount);
 
             // UNcheck the "assignments" checkbox
             cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
@@ -199,7 +201,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 6 + 1);
+                .should('have.length', 6 + extraRowCount);
 
             // UNcheck the "Media format, Module" checkbox
             cy.get('[data-testid="checkbox-item_type-18"] input[type=checkbox]')
@@ -211,7 +213,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
 
             // check the "ATSIC" checkbox
             cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
@@ -223,7 +225,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 1 + 1);
+                .should('have.length', 1 + extraRowCount);
 
             // UNcheck the "ATSIC" checkbox
             cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
@@ -235,22 +237,21 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
 
             cy.get('[data-testid="dlor-homepage-keyword"]').type('a');
             // a single character does nothing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
 
             // one more char
             cy.get('[data-testid="dlor-homepage-keyword"]').type('c');
-            // now only two panels
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3 + 1);
+                .should('have.length', 3 + extraRowCount);
 
             // check the "Assignments" checkbox
             cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
@@ -275,13 +276,12 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('co');
-            // gets 4 panels
+                .should('have.length', itemsPerPage + extraRowCount);
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('digital');
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 7 + 1);
+                .should('have.length', 5 + extraRowCount);
         });
         it('keyword filters on each of the different options', () => {
             // "Implications" is found in the description of "Artificial Intelligence - Digital Essentials"
@@ -290,7 +290,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 1 + 1);
+                .should('have.length', 1 + extraRowCount);
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"]')
                 .should('exist')
                 .should('be.visible')
@@ -304,7 +304,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
             cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
 
             // "security" is found in the title of "Digital security  - Digital Essentials"
@@ -313,7 +313,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 1 + 1);
+                .should('have.length', 1 + extraRowCount);
             cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34"]')
                 .should('exist')
                 .should('be.visible')
@@ -324,7 +324,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
             cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
 
             // "freeware" is found in the summary of "Choose the right tool - Digital Essentials"
@@ -333,7 +333,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 1 + 1);
+                .should('have.length', 1 + extraRowCount);
             cy.get('[data-testid="dlor-homepage-panel-0h4y_87f3_6js7"]')
                 .should('exist')
                 .should('be.visible')
@@ -344,7 +344,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
 
             // check the "ATSIC" checkbox
             cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
@@ -356,7 +356,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 1 + 1);
+                .should('have.length', 1 + extraRowCount);
 
             // interactive activity not visible
             cy.get('[data-testid="checkbox-item_type-17"]')
@@ -386,7 +386,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1);
+                .should('have.length', itemsPerPage + extraRowCount);
         });
         it('has working site navigation - can move around the pages', () => {
             cy.waitUntil(() => cy.get('h1').should('exist'));
@@ -454,6 +454,47 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="detailpage-preview"]').should('not.exist');
             cy.get('[data-testid="detailpage-preview"] iframe').should('not.exist');
         });
+        it('pagination works', () => {
+            // no data-testids in pagination :(
+
+            const numPages = 3;
+            const numExtraButtons = 4; // first, prev, next, last
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', numPages + numExtraButtons);
+
+            // button 1 has focus
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button')
+                .should('exist')
+                // .should('have.value', '1')
+                .should('have.class', 'Mui-selected');
+
+            // the displayed entries are what is expected
+            cy.get('[data-testid="dlor-homepage-list"] button:first-child')
+                .should('exist')
+                .should('be.visible');
+            cy.get('[data-testid="dlor-homepage-list"] button:first-child article header h2').should(
+                'contain',
+                'Accessibility - Digital Essentials',
+            );
+
+            // click pagination for next page
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button')
+                .should('exist')
+                // .should('have.value', '2')
+                .click();
+
+            // the displayed entries have updated
+            cy.get('[data-testid="dlor-homepage-list"] button:first-child')
+                .should('exist')
+                .should('be.visible');
+            cy.get('[data-testid="dlor-homepage-list"] button:first-child article header h2').should(
+                'contain',
+                'Dummy entry to increase list size 3',
+            );
+        });
     });
     context('other homepage visits', () => {
         it('can handle an error', () => {
@@ -495,7 +536,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 8 + 1); // all panels plus filter button
+                .should('have.length', itemsPerPage + extraRowCount);
 
             cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
                 .should('exist')
@@ -505,7 +546,7 @@ describe('Digital learning hub', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 1 + 1); // one panel plus filter button
+                .should('have.length', 1 + extraRowCount);
 
             // hide the filter section
             cy.get('[data-testid="filterIconHideId"]')
