@@ -758,13 +758,14 @@ export const DlorForm = ({
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
+        hideConfirmation(); // hide any conf left over from earlier add/edit efforts
+        setSaveStatus(null);
         console.log('useEffect: main');
     }, []);
 
     useEffect(() => {
         setFormValidity(validateValues(formDefaults));
-        hideConfirmation(); // hide any conf left over from earlier add/edit efforts
-        console.log('useEffect: setFormValidity');
+        console.log('useEffect: formDefaults');
     }, [formDefaults]);
 
     useEffect(() => {
