@@ -752,7 +752,6 @@ export const DlorForm = ({
     }
 
     useEffect(() => {
-        hideConfirmation();
         if (!dlorTeamError && !dlorTeamLoading && !dlorTeam) {
             actions.loadOwningTeams();
         }
@@ -764,6 +763,7 @@ export const DlorForm = ({
 
     useEffect(() => {
         setFormValidity(validateValues(formDefaults));
+        hideConfirmation(); // hide any conf left over from earlier add/edit efforts
         console.log('useEffect: setFormValidity');
     }, [formDefaults]);
 
