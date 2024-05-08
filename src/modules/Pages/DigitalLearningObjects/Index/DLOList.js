@@ -233,6 +233,12 @@ const useStyles = makeStyles(theme => ({
         marginLeft: 12,
         marginRight: 12,
     },
+    dlorPagination: {
+        width: '100%',
+        '& ul': {
+            justifyContent: 'center',
+        },
+    },
 }));
 
 export const DLOList = ({
@@ -874,6 +880,7 @@ export const DLOList = ({
                                                     showLastButton
                                                     onChange={handlePaginationChange}
                                                     page={paginationPage}
+                                                    className={classes.dlorPagination}
                                                 />
                                             )}
                                         </Grid>
