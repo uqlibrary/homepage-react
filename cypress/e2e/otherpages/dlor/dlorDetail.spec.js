@@ -174,7 +174,7 @@ describe('Digital learning hub', () => {
             cy.viewport(1300, 1000);
             cy.get('[data-testid="detailpage-getit-button"] a')
                 .should('exist')
-                .should('have.text', 'Access the object (Video 47m44s)');
+                .should('have.text', 'Access the object (video 47m 44s)');
         });
 
         it('A downloadable object shows the correct units on the Get It button', () => {

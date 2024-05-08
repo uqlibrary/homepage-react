@@ -18,7 +18,8 @@ import { getHomepageLink } from 'helpers/access';
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
     displayDownloadInstructions,
-    formatFileSize,
+    getDurationString,
+    getFileSizeString,
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
@@ -184,21 +185,16 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
 
     function getItButtonLabel(dlorItem) {
         const interactionType = dlorItem?.object_link_interaction_type || null;
-        console.log('getIt interactionType=', interactionType);
         const fileType = dlorItem?.object_link_file_type || null;
-        console.log('getIt fileType=', fileType);
 
         let label = 'Access the object';
         if (interactionType === 'view') {
-            const viewingTime = dlorItem?.object_link_size ? dlorItem?.object_link_size : null;
-            console.log('getIt ', interactionType, ' viewingTime=', viewingTime);
+            const viewingTime = dlorItem?.object_link_size ? getDurationString(dlorItem?.object_link_size) : '';
             label = `Access the object (${fileType} ${viewingTime})`;
         } else if (interactionType === 'download') {
-            const fileSize = !!dlorItem?.object_link_size ? formatFileSize(dlorItem?.object_link_size) : null;
-            console.log('getIt ', interactionType, ' fileSize=', fileSize);
+            const fileSize = !!dlorItem?.object_link_size ? getFileSizeString(dlorItem?.object_link_size) : null;
             label = `Access the object (${fileType} ${fileSize})`;
         }
-        console.log('getIt label=', label);
         return label;
     }
 

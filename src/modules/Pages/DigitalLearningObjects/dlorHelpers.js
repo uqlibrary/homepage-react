@@ -70,19 +70,91 @@ export const isPreviewableUrl = testUrlIn => {
     // || !!getOTHERTYPEUrlForPreviewEmbed(testUrlIn)
 };
 
-export function formatFileSize(fileSize) {
-    const units = ['KB', 'MB', 'GB', 'TB', 'PB'];
+export const validFileSizeUnits = ['KB', 'MB', 'GB', 'TB', 'PB'];
+
+export function convertFileSizeToKb(fileSize, units) {
+    const size = parseFloat(fileSize);
+    const unit = units.toUpperCase();
+
+    let sizeInKb;
+    switch (unit) {
+        case 'TB': // would be better to use array validFileSizeUnits
+            sizeInKb = size * 1000 * 1000 * 1000;
+            break;
+        case 'GB':
+            sizeInKb = size * 1000 * 1000;
+            break;
+        case 'MB':
+            sizeInKb = size * 1000;
+            break;
+        case 'KB':
+            sizeInKb = size;
+            break;
+        default:
+            throw new Error(`Unsupported unit, ${unit}`);
+    }
+
+    return sizeInKb.toString();
+}
+export function getFileSizeString(fileSize, type) {
+    if (fileSize === 0) {
+        if (type === 'unit') {
+            return validFileSizeUnits[0];
+        } else if (type === 'amount') {
+            return 0;
+        } else {
+            return '';
+        }
+    }
     let unitIndex = 0;
     let size = fileSize;
 
-    while (size >= 1000 && unitIndex < units.length - 1) {
+    while (size >= 1000 && unitIndex < validFileSizeUnits.length - 1) {
         size = (size / 1000).toFixed(1);
         unitIndex++;
     }
-    return `${size} ${units[unitIndex]}`;
+    if (type === 'unit') {
+        return validFileSizeUnits[unitIndex];
+    } else if (type === 'amount') {
+        return size;
+    } else {
+        return `${size} ${validFileSizeUnits[unitIndex]}`;
+    }
 }
 
-export function convertFileSizeStringToKb(fileSizeString) {
+// export function convertFileSizeStringToKb(fileSizeString) {
+//     const sizeRegex = /^(\d+(?:\.\d+)?)\s*([KMGT]B)$/i;
+//     const match = fileSizeString.match(sizeRegex);
+//
+//     if (!match) {
+//         throw new Error(`convertFileSizeStringToKb:Invalid size string "${fileSizeString}"`);
+//     }
+//
+//     const size = parseFloat(match[1]);
+//     const unit = match[2].toUpperCase();
+//
+//     let sizeInKb;
+//     switch (unit) {
+//         case 'TB':
+//             sizeInKb = size * 1000 * 1000 * 1000;
+//             break;
+//         case 'GB':
+//             sizeInKb = size * 1000 * 1000;
+//             break;
+//         case 'MB':
+//             sizeInKb = size * 1000;
+//             break;
+//         case 'KB':
+//             sizeInKb = size;
+//             break;
+//         default:
+//             throw new Error('Unsupported unit');
+//     }
+//
+//     return sizeInKb.toString();
+// }
+
+export function convertFileSizeValuesToKb(fileSizeString) {
     const sizeRegex = /^(\d+(?:\.\d+)?)\s*([KMGT]B)$/i;
     const match = fileSizeString.match(sizeRegex);
 
@@ -115,20 +187,73 @@ export function convertFileSizeStringToKb(fileSizeString) {
 }
 
 export function getDurationString(totalSeconds, format = 'MMMm SSSs') {
+    console.log('totalSeconds=', totalSeconds);
+    if (totalSeconds === 0) {
+        return '';
+    }
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     return format.replace('MMM', minutes).replace('SSS', seconds);
 }
 
-export function convertDurationStringToSeconds(timeString, regexpFormat = /(\d+)\s*m\s*(\d+)\s*s/) {
-    const match = timeString.match(regexpFormat);
-
-    if (!match) {
-        throw new Error('Invalid time string format ', timeString);
+export function getMinutesAndSecondFromTotalSeconds(totalSeconds) {
+    console.log('totalSeconds=', totalSeconds);
+    if (totalSeconds === 0) {
+        return { minutes: 0, seconds: 0 };
     }
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    console.log('getMinutesAndSecondFromTotalSeconds from ', totalSeconds, 'get', minutes, seconds);
+    return { minutes: minutes, seconds: seconds };
+}
 
-    const minutes = Number(match[1]);
-    const seconds = Number(match[2]);
+export function getMinutesFromTotalSeconds(totalSeconds) {
+    console.log('totalSeconds=', totalSeconds);
+    if (totalSeconds === 0) {
+        return { minutes: 0, seconds: 0 };
+    }
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    console.log('getMinutesFromTotalSeconds from ', totalSeconds, 'get', minutes, seconds);
+    return minutes;
+}
 
-    return minutes * 60 + seconds;
+export function getSecondsFromTotalSeconds(totalSeconds) {
+    console.log('totalSeconds=', totalSeconds);
+    if (totalSeconds === 0) {
+        return { minutes: 0, seconds: 0 };
+    }
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    console.log('getSecondsFromTotalSeconds from ', totalSeconds, 'get', minutes, seconds);
+    return seconds;
+}
+
+export function getTotalSecondsFromMinutesAndSecond(minutes, seconds) {
+    if (!minutes && !seconds) {
+        return 0;
+    }
+    const totalSeconds = (minutes || 0) * 1 * 60 + (seconds || 0) * 1;
+    console.log('getTotalSecondsFromMinutesAndSecond from ', minutes, seconds, 'get', totalSeconds);
+    return totalSeconds;
+}
+
+// export function convertDurationStringToSeconds(timeString, regexpFormat = /(\d+)\s*m\s*(\d+)\s*s/) {
+//     const match = timeString.match(regexpFormat);
+//
+//     if (!match) {
+//         throw new Error('Invalid time string format ', timeString);
+//     }
+//
+//     const minutes = Number(match[1]);
+//     const seconds = Number(match[2]);
+//
+//     return minutes * 60 + seconds;
+// }
+
+export function isValidNumber(value) {
+    const numberValue = Number(value);
+
+    // Check if the value is a number and greater than zero
+    return !isNaN(numberValue) && numberValue > 0;
 }
