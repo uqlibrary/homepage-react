@@ -296,7 +296,7 @@ export const DlorForm = ({
                         id="object_publishing_user"
                         data-testid="object_publishing_user"
                         required
-                        value={formValues?.object_publishing_user}
+                        value={formValues?.object_publishing_user || ''}
                         onChange={handleChange('object_publishing_user')}
                         style={{ width: '20em' }}
                         error={!isValidUsername(formValues?.object_publishing_user)}
@@ -355,7 +355,7 @@ export const DlorForm = ({
                         <Input
                             id="team_name"
                             data-testid="team_name"
-                            value={formValues?.team_name}
+                            value={formValues?.team_name || ''}
                             onChange={handleChange('team_name')}
                         />
                     </FormControl>
@@ -369,7 +369,7 @@ export const DlorForm = ({
                             id="team_manager"
                             data-testid="team_manager"
                             required
-                            value={formValues?.team_manager}
+                            value={formValues?.team_manager || ''}
                             onChange={handleChange('team_manager')}
                         />
                     </FormControl>
@@ -383,7 +383,7 @@ export const DlorForm = ({
                             id="team_email"
                             data-testid="team_email"
                             required
-                            value={formValues?.team_email}
+                            value={formValues?.team_email || ''}
                             onChange={handleChange('team_email')}
                             type="email"
                             error={!isValidEmail(formValues?.team_email)}
@@ -463,7 +463,7 @@ export const DlorForm = ({
                         data-testid="object_title"
                         // error={}
                         required
-                        value={formValues?.object_title}
+                        value={formValues?.object_title || ''}
                         onChange={handleChange('object_title')}
                     />
                     {!!formValues?.object_title &&
@@ -479,7 +479,7 @@ export const DlorForm = ({
                         multiline
                         required
                         rows={6}
-                        value={formValues?.object_description}
+                        value={formValues?.object_description || ''}
                         onChange={handleChange('object_description')}
                     />
                     {!!formValues?.object_description &&
@@ -551,7 +551,7 @@ export const DlorForm = ({
                         defaultValue="new"
                         name="object_status_radio-buttons-group"
                         row
-                        value={formValues?.object_status}
+                        value={formValues?.object_status || 'new'}
                         onChange={handleChange('object_status')}
                     >
                         <FormControlLabel
@@ -581,7 +581,7 @@ export const DlorForm = ({
                         defaultValue="link"
                         name="object_embed_type_radio-buttons-group"
                         row
-                        value={formValues?.object_embed_type}
+                        value={formValues?.object_embed_type || 'link'}
                         onChange={handleChange('object_embed_type')}
                     >
                         <FormControlLabel value="link" control={<Radio />} label="Link" />
@@ -601,7 +601,7 @@ export const DlorForm = ({
                             id="object_link_url"
                             data-testid="object_link_url"
                             required
-                            value={formValues?.object_link_url}
+                            value={formValues?.object_link_url || ''}
                             onChange={handleChange('object_link_url')}
                             error={
                                 !!formValues?.object_link_url &&
@@ -640,7 +640,7 @@ export const DlorForm = ({
                         data-testid="object_download_instructions"
                         multiline
                         rows={6}
-                        value={formValues?.object_download_instructions}
+                        value={formValues?.object_download_instructions || ''}
                         onChange={handleChange('object_download_instructions')}
                     />
                     <div className={classes.fieldUseTip}>
@@ -703,7 +703,7 @@ export const DlorForm = ({
                         multiline
                         required
                         rows={2}
-                        value={formValues?.object_keywords_string}
+                        value={formValues?.object_keywords_string || ''}
                         onChange={handleChange('object_keywords_string')}
                     />
                     {!!formValues?.object_keywords_string &&
@@ -1036,7 +1036,7 @@ export const DlorForm = ({
                     actionButtonVariant="contained"
                     confirmationBoxId="dlor-save-outcome"
                     onAction={() => navigateToDlorAdminHomePage()}
-                    hideCancelButton={!!dlorSavedItemError || !locale.successMessage.cancelButtonLabel}
+                    hideCancelButton={!locale.successMessage.cancelButtonLabel}
                     cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                     onCancelAction={() => clearForm()}
                     onClose={closeConfirmationBox}
