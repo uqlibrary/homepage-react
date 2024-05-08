@@ -22,7 +22,6 @@ export const DLOAdd = ({
     dlorFilterListLoading,
     dlorFilterListError,
 }) => {
-    // !!dlorCreatedItem && console.log('DLOAdd creating=', dlorItemCreating, '; error=', dlorCreatedItemError, '; response=', dlorCreatedItem);
     const { account } = useAccountContext();
 
     function getTodayPlusOneYear(baseDate = null) {

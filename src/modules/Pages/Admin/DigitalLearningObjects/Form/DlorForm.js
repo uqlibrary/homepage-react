@@ -170,7 +170,7 @@ export const DlorForm = ({
 
     useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
-            hideConfirmation();
+            closeConfirmationBox();
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
@@ -758,8 +758,7 @@ export const DlorForm = ({
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
-        hideConfirmation(); // hide any conf left over from earlier add/edit efforts
-        setSaveStatus(null);
+        closeConfirmationBox(); // hide any conf left over from earlier add/edit efforts
         console.log('useEffect: main');
     }, []);
 
@@ -830,14 +829,19 @@ export const DlorForm = ({
     const navigateToDlorAdminHomePage = () => {
         // TODO also want to clear form here too before nav, so back button gives clear form?
 
-        hideConfirmation();
+        closeConfirmationBox();
         const userString = getUserPostfix();
         window.location.href = `${fullPath}/admin/dlor${userString}`;
         scrollToTopOfPage();
     };
 
-    const clearForm = actiontype => {
+    function closeConfirmationBox() {
+        setSaveStatus(null);
         hideConfirmation();
+    }
+
+    const clearForm = actiontype => {
+        closeConfirmationBox();
         window.location.reload(false);
     };
 
@@ -1035,7 +1039,7 @@ export const DlorForm = ({
                     hideCancelButton={!!dlorSavedItemError || !locale.successMessage.cancelButtonLabel}
                     cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                     onCancelAction={() => clearForm()}
-                    onClose={hideConfirmation}
+                    onClose={closeConfirmationBox}
                     isOpen={isOpen}
                     locale={!dlorSavedItemError ? locale.successMessage : locale.errorMessage}
                 />
