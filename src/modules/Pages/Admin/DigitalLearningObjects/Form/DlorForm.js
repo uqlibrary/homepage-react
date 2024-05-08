@@ -170,6 +170,7 @@ export const DlorForm = ({
 
     useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
+            hideConfirmation();
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
@@ -758,10 +759,12 @@ export const DlorForm = ({
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
+        console.log('useEffect: main');
     }, []);
 
     useEffect(() => {
         setFormValidity(validateValues(formDefaults));
+        console.log('useEffect: setFormValidity');
     }, [formDefaults]);
 
     useEffect(() => {
@@ -769,6 +772,7 @@ export const DlorForm = ({
         if (!!dlorFilterList && dlorFilterList.length > 0) {
             setFormValidity(validateValues(formDefaults));
         }
+        console.log('useEffect: dlorFilterList');
     }, [dlorFilterList]);
 
     useEffect(() => {
@@ -776,6 +780,7 @@ export const DlorForm = ({
             setSaveStatus('complete');
             showConfirmation();
         }
+        console.log('useEffect: dlorSavedItem');
     }, [showConfirmation, dlorSavedItem, dlorSavedItemError]);
 
     const saveDlor = () => {
