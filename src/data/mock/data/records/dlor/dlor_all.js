@@ -30,8 +30,8 @@ export default {
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
-                        id: 27,
-                        name: 'Pressbook',
+                        id: 30,
+                        name: 'Video',
                     }]
                 }, {
                     "filter_key": "subject",
@@ -65,7 +65,10 @@ export default {
                 "team_name": "Team One",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "view",
+            "object_link_file_type": "video",
+            "object_link_size": "2864", // 47m44s
         },
         {
             "object_id": 2,
@@ -132,7 +135,8 @@ export default {
                 "team_name": "Team Two",
                 "team_email": "team2@uq.edu.au",
                 "team_manager_username": "Test McTester"
-            }
+            },
+            "object_link_interaction_type": "none",
         },
         {
             "object_id": 8,
@@ -197,7 +201,8 @@ export default {
                 "team_name": "Team One",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         },
         {
             "object_id": 3,
@@ -268,7 +273,8 @@ export default {
                 "team_name": "Team One",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         },
         {
             "object_id": 4,
@@ -336,7 +342,8 @@ export default {
                 "team_name": "Team One",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         },
         {
             "object_id": 6,
@@ -386,7 +393,8 @@ export default {
                 "team_name": "Team One",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         },
         {
             "object_id": 5,
@@ -454,7 +462,8 @@ export default {
                 "team_name": "Team Two",
                 "team_email": "team2@uq.edu.au",
                 "team_manager_username": "Test McTester"
-            }
+            },
+            "object_link_interaction_type": "none",
         },
         {
             "object_id": 7,
@@ -523,7 +532,8 @@ export default {
                 "team_name": "Team Two",
                 "team_email": "team2@uq.edu.au",
                 "team_manager_username": "Test McTester"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 24,
             "object_public_uuid": "9bc174f7-5326-4a8b-bfab-d5081c688597",
@@ -598,7 +608,10 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "view",
+            "object_link_file_type": "PPT",
+            "object_link_size": "6542130",
         }, {
             "object_id": 28,
             "object_public_uuid": "9bc1894a-8b0d-46da-a25e-02d26e2e056c",
@@ -674,7 +687,10 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "view",
+            "object_link_file_type": "PDF",
+            "object_link_size": "500000",
         }, {
             "object_id": 31,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df240",
@@ -750,7 +766,10 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "download",
+            "object_link_file_type": "XLS",
+            "object_link_size": "3424874",
         }, {
             "object_id": 980,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-01",
@@ -823,7 +842,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 981,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-02",
@@ -896,7 +916,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 982,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-03",
@@ -969,7 +990,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 983,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-04",
@@ -1042,7 +1064,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 984,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-05",
@@ -1115,7 +1138,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 985,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-06",
@@ -1188,7 +1212,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 986,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07",
@@ -1261,7 +1286,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 987,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-08",
@@ -1334,7 +1360,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 988,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-09",
@@ -1407,7 +1434,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 989,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-10",
@@ -1480,7 +1508,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 990,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-11",
@@ -1553,7 +1582,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 991,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-12",
@@ -1626,7 +1656,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 992,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-13",
@@ -1699,7 +1730,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 993,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-14",
@@ -1772,7 +1804,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }, {
             "object_id": 994,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df2415",
@@ -1845,7 +1878,8 @@ export default {
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager_username": "Steve Lancaster"
-            }
+            },
+            "object_link_interaction_type": "none",
         }
     ]
 };

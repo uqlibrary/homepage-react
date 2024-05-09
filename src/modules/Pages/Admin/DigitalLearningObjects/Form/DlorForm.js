@@ -32,7 +32,14 @@ import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
-import { displayDownloadInstructions, isPreviewableUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import {
+    convertFileSizeToKb,
+    displayDownloadInstructions,
+    getTotalSecondsFromMinutesAndSecond,
+    isPreviewableUrl,
+    isValidNumber,
+    validFileSizeUnits,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { getUserPostfix, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 
@@ -94,6 +101,15 @@ const useStyles = makeStyles(theme => ({
     //             paddingTop: 10,
     //         },
     //     },
+    viewDuration: {
+        '& > div': {
+            display: 'flex',
+            alignItems: 'center',
+        },
+        '& input': {
+            maxWidth: '3em',
+        },
+    },
 }));
 
 export const DlorForm = ({
@@ -119,46 +135,29 @@ export const DlorForm = ({
     const [cookies, setCookie] = useCookies();
     const theme = useTheme();
 
-    // !!dlorSavedItem &&
-    // console.log(
-    //     'DlorForm dlorItemLoading=',
-    //     dlorItemLoading,
-    //     '; dlorItemSaving=',
-    //     dlorItemSaving,
-    //     '; error=',
-    //     dlorSavedItemError,
-    //     '; response=',
-    //     dlorSavedItem,
-    // );
-    // !!dlorTeam && console.log('DlorForm team=', dlorTeamLoading, '; error=', dlorTeamError, '; response=', dlorTeam);
-    // !!dlorFilterList &&
-    // console.log(
-    //     'DlorForm filters=',
-    //     dlorFilterListLoading,
-    //     '; error=',
-    //     dlorFilterListError,
-    //     '; response=',
-    //     dlorFilterList,
-    // );
-
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
+
+    const [isLinkFileTypeError, setIsLinkFileTypeError] = useState(false);
+
+    const linkInteractionType_download = 'download';
+    const linkInteractionType_view = 'view';
+    const linkInteractionType_none = 'none';
+    const [showLinkTimeForm, setShowLinkTimeForm] = useState(false);
+    const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
+
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
-    // console.log('DlorForm formDefaults=', formDefaults);
-    const [formValues, setFormValues2] = useState(formDefaults);
-    const setFormValues = val => {
-        // console.log('set formValues=', val);
-        setFormValues2(val);
-    };
+    const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
     const checkBoxArrayRef = React.useRef([]);
     const teamSelectRef = React.useRef(1);
+    const linkInteractionTypeSelectRef = React.useRef(formValues?.object_link_interaction_type || 'none');
+    const linkFileTypeSelectRef = React.useRef('new');
 
     const flatMapFacets = facetList => {
-        // console.log('flatMapFacets facetList=', facetList);
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
     };
 
@@ -174,6 +173,9 @@ export const DlorForm = ({
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
+
+            setInteractionTypeDisplays(dlorItem?.object_link_interaction_type);
+            linkFileTypeSelectRef.current = dlorItem?.object_link_file_type;
         }
 
         // TODO is dlorTeam loaded?
@@ -238,6 +240,12 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
+    function setInteractionTypeDisplays(value) {
+        linkInteractionTypeSelectRef.current = value;
+        setShowLinkTimeForm(value === linkInteractionType_view);
+        setShowLinkSizeForm(value === linkInteractionType_download);
+    }
+
     const handleChange = prop => e => {
         // handle radio & checkbox filter field changes
         const theNewValue =
@@ -248,6 +256,13 @@ export const DlorForm = ({
             setShowTeamCreationForm(theNewValue === 'new');
             teamSelectRef.current = theNewValue !== 'new' ? e.target.value : 'new';
         }
+        if (prop === 'object_link_interaction_type') {
+            setInteractionTypeDisplays(theNewValue);
+        }
+        if (prop === 'object_link_size_amount') {
+            setIsLinkFileTypeError(isValidNumber(theNewValue));
+        }
+
         if (prop === 'object_summary') {
             setSummaryContent(e.target.value);
         }
@@ -590,43 +605,221 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             {formValues?.object_embed_type === 'link' && (
-                <Grid item xs={12}>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
-                        <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
-                        <Input
-                            id="object_link_url"
-                            data-testid="object_link_url"
-                            required
-                            value={formValues?.object_link_url || ''}
-                            onChange={handleChange('object_link_url')}
-                            error={
-                                !!formValues?.object_link_url &&
-                                formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                                !isValidUrl(formValues?.object_link_url)
-                            }
-                        />
-                        {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                            !isValidUrl(formValues?.object_link_url) && (
-                                <div className={classes.errorMessage} data-testid={'error-message-object_link_url'}>
-                                    This web address is not valid.
+                <>
+                    <Grid item xs={12}>
+                        <FormControl
+                            variant="standard"
+                            // className={classes.typingArea}
+                            fullWidth
+                        >
+                            <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
+                            <Input
+                                id="object_link_url"
+                                data-testid="object_link_url"
+                                required
+                                value={formValues?.object_link_url || ''}
+                                onChange={handleChange('object_link_url')}
+                                error={
+                                    !!formValues?.object_link_url &&
+                                    formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                                    !isValidUrl(formValues?.object_link_url)
+                                }
+                            />
+                            {formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                                !isValidUrl(formValues?.object_link_url) && (
+                                    <div className={classes.errorMessage} data-testid={'error-message-object_link_url'}>
+                                        This web address is not valid.
+                                    </div>
+                                )}
+                            {formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                                isPreviewableUrl(formValues?.object_link_url) !== false && (
+                                    <p
+                                        style={{ display: 'flex', alignItems: 'center' }}
+                                        data-testid="object_link_url_preview"
+                                    >
+                                        <DoneIcon color="success" />
+                                        <span>A preview will show on the View page.</span>
+                                    </p>
+                                )}
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
+                            Message advising about link
+                        </InputLabel>
+                        <Grid container>
+                            <Grid item xs={4}>
+                                <FormControl>
+                                    <span>&nbsp;</span>
+                                    <Select
+                                        variant="standard"
+                                        labelId="object_link_interaction_type-label"
+                                        id="object_link_interaction_type"
+                                        data-testid="object_link_interaction_type"
+                                        value={linkInteractionTypeSelectRef.current}
+                                        onChange={handleChange('object_link_interaction_type')}
+                                        style={{ width: '100%' }}
+                                    >
+                                        <MenuItem
+                                            value={linkInteractionType_download}
+                                            data-testid="object_link_interaction_type-download"
+                                            selected={
+                                                linkInteractionTypeSelectRef.current === linkInteractionType_download
+                                            }
+                                        >
+                                            can Download
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={linkInteractionType_view}
+                                            data-testid="object_link_interaction_type-view"
+                                            selected={linkInteractionTypeSelectRef.current === linkInteractionType_view}
+                                        >
+                                            can View
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={linkInteractionType_none}
+                                            data-testid="object_link_interaction_type-none"
+                                            selected={
+                                                ![linkInteractionType_download, linkInteractionType_view].includes(
+                                                    linkInteractionTypeSelectRef.current,
+                                                )
+                                            }
+                                        >
+                                            No message
+                                        </MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl style={{ minWidth: '10em' }}>
+                                    {[linkInteractionType_download, linkInteractionType_view].includes(
+                                        linkInteractionTypeSelectRef.current,
+                                    ) && (
+                                        <>
+                                            <InputLabel htmlFor="object_link_file_type">File type *</InputLabel>
+                                            <Select
+                                                variant="standard"
+                                                labelId="object_link_file_type"
+                                                id="object_link_file_type"
+                                                data-testid="object_link_file_type"
+                                                value={linkFileTypeSelectRef.current}
+                                                onChange={handleChange('object_link_file_type')}
+                                                style={{ width: '100%', marginTop: 20 }}
+                                            >
+                                                {!!formValues?.object_link_types &&
+                                                    formValues?.object_link_types
+                                                        .filter(
+                                                            type =>
+                                                                type.object_link_interaction_type ===
+                                                                linkInteractionTypeSelectRef.current,
+                                                        )
+                                                        .map((type, index) => (
+                                                            <MenuItem
+                                                                key={type.object_link_file_type}
+                                                                data-testid={`object_link_file_type-${type.object_link_file_type}`}
+                                                                value={type.object_link_file_type}
+                                                                selected={
+                                                                    type.object_link_file_type ===
+                                                                    linkFileTypeSelectRef.current
+                                                                }
+                                                                // divider={index === dlorTeam.length - 1}
+                                                            >
+                                                                {type.object_link_file_type}
+                                                            </MenuItem>
+                                                        ))}
+                                                <MenuItem
+                                                    value="new"
+                                                    selected={linkFileTypeSelectRef.current === 'new'}
+                                                >
+                                                    New type (TODO)
+                                                </MenuItem>
+                                            </Select>
+                                        </>
+                                    )}
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <div className={classes.viewDuration}>
+                                    {!!showLinkTimeForm && (
+                                        <>
+                                            <InputLabel id="object_link_duration-label">Run time *</InputLabel>
+                                            <div>
+                                                <FormControl>
+                                                    <Input
+                                                        id="object_link_duration_minutes"
+                                                        aria-labelledby="object_link_duration-label object_link_duration_minutes"
+                                                        data-testid="object_link_duration_minutes"
+                                                        required
+                                                        value={formValues?.object_link_duration_minutes || ''}
+                                                        onChange={handleChange('object_link_duration_minutes')}
+                                                    />
+                                                </FormControl>
+                                                <span
+                                                    id="object_link_duration_minutes-label"
+                                                    style={{ paddingRight: 6 }}
+                                                >
+                                                    minutes{' '}
+                                                </span>
+                                                <span style={{ paddingRight: 6 }}>and </span>
+                                                <FormControl>
+                                                    <Input
+                                                        id="object_link_duration_seconds"
+                                                        aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
+                                                        data-testid="object_link_duration_seconds"
+                                                        required
+                                                        value={formValues?.object_link_duration_seconds || ''}
+                                                        onChange={handleChange('object_link_duration_seconds')}
+                                                    />
+                                                </FormControl>
+                                                <span id="object_link_duration_seconds-label">seconds</span>
+                                            </div>
+                                        </>
+                                    )}
+                                    {!!showLinkSizeForm && (
+                                        <>
+                                            <InputLabel id="object_link_file_size-label">File Size *</InputLabel>
+                                            <div>
+                                                <FormControl>
+                                                    <Input
+                                                        id="object_link_size_amount"
+                                                        aria-labelledby="object_link_file_size-label"
+                                                        data-testid="object_link_size_amount"
+                                                        required
+                                                        value={formValues?.object_link_size_amount || 0}
+                                                        onChange={handleChange('object_link_size_amount')}
+                                                    />
+                                                </FormControl>
+                                                <FormControl>
+                                                    <Select
+                                                        variant="standard"
+                                                        labelId="object_link_size_units"
+                                                        id="object_link_size_units"
+                                                        data-testid="object_link_size_units"
+                                                        value={formValues?.object_link_size_units}
+                                                        // value={linkFileTypeSelectRef.current}
+                                                        onChange={handleChange('object_link_size_units')} // needs ref?
+                                                    >
+                                                        {validFileSizeUnits.map(unit => (
+                                                            <MenuItem
+                                                                key={unit}
+                                                                id={`object_link_size_units-${unit}`}
+                                                                data-testid={`object_link_size_units-${unit}`}
+                                                                value={unit}
+                                                                selected={unit === formValues?.object_link_size_units}
+                                                            >
+                                                                {unit}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
-                            )}
-                        {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                            isPreviewableUrl(formValues?.object_link_url) !== false && (
-                                <p
-                                    style={{ display: 'flex', alignItems: 'center' }}
-                                    data-testid="object_link_url_preview"
-                                >
-                                    <DoneIcon color="success" />
-                                    <span>A preview will show on the View page.</span>
-                                </p>
-                            )}
-                    </FormControl>
-                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </>
             )}
             <Grid item xs={12}>
                 <FormControl
@@ -787,10 +980,8 @@ export const DlorForm = ({
         const valuesToSend = { ...formValues };
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
         if (valuesToSend.facets.length > 0 && valuesToSend.facets[0].hasOwnProperty('filter_key')) {
-            console.log('rewrite ', valuesToSend.facets);
             valuesToSend.facets = flatMapFacets(formValues?.facets);
         }
-        console.log('saveDlor ', mode, ' valuesToSend=', valuesToSend);
         if (formValues?.object_owning_team_id === 'new') {
             delete valuesToSend.object_owning_team_id;
         } else {
@@ -801,6 +992,25 @@ export const DlorForm = ({
 
         valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
+
+        if (valuesToSend?.object_link_interaction_type === linkInteractionType_download) {
+            valuesToSend.object_link_size = convertFileSizeToKb(
+                valuesToSend?.object_link_size_amount,
+                valuesToSend?.object_link_size_units,
+            );
+        } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_view) {
+            valuesToSend.object_link_size = getTotalSecondsFromMinutesAndSecond(
+                valuesToSend?.object_link_duration_minutes,
+                valuesToSend?.object_link_duration_seconds,
+            );
+        }
+        delete valuesToSend?.object_link_size_units;
+        delete valuesToSend?.object_link_size_amount;
+        delete valuesToSend?.object_link_duration_minutes;
+        delete valuesToSend?.object_link_duration_seconds;
+
+        // don't send back the array of types
+        !!valuesToSend?.object_link_types && delete valuesToSend.object_link_types;
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
@@ -846,7 +1056,6 @@ export const DlorForm = ({
     };
 
     const validateValues = currentValues => {
-        // console.log('validateValues currentValues=', currentValues);
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
@@ -866,11 +1075,26 @@ export const DlorForm = ({
         currentValues?.object_summary?.length < summaryMinimumLength && secondPanelErrorCount++;
 
         let thirdPanelErrorCount = 0;
-        // object_download_instructions optional
         !(currentValues?.object_embed_type === 'link' || currentValues?.object_embed_type === 'embed') &&
             thirdPanelErrorCount++;
         currentValues?.object_embed_type === 'link' &&
             !isValidUrl(currentValues?.object_link_url) &&
+            thirdPanelErrorCount++;
+
+        [linkInteractionType_download, linkInteractionType_view].includes(
+            currentValues?.object_link_interaction_type,
+        ) &&
+            !currentValues?.object_link_file_type &&
+            thirdPanelErrorCount++;
+
+        currentValues.object_link_interaction_type === linkInteractionType_view &&
+            (!isValidNumber(currentValues?.object_link_duration_minutes) ||
+                !isValidNumber(currentValues?.object_link_duration_seconds)) &&
+            thirdPanelErrorCount++;
+
+        currentValues.object_link_interaction_type === linkInteractionType_download &&
+        !isValidNumber(currentValues?.object_link_size_amount) &&
+        !currentValues?.object_link_size_unit && // needs valid check here?
             thirdPanelErrorCount++;
 
         let fourthPanelErrorCount = 0;
@@ -1027,7 +1251,6 @@ export const DlorForm = ({
         );
     }
 
-    // console.log('formValues=', formValues);
     return (
         <>
             {saveStatus === 'complete' && (

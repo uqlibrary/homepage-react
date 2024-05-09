@@ -8,6 +8,11 @@ import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import {
+    getFileSizeString,
+    getMinutesFromTotalSeconds,
+    getSecondsFromTotalSeconds,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 export const DLOEdit = ({
     actions,
@@ -25,7 +30,6 @@ export const DLOEdit = ({
     dlorFilterListError,
 }) => {
     const { dlorId } = useParams();
-    // console.log('DLOEdit dlorItemLoading=', dlorItemLoading, '; error=', dlorItemError, '; response=', dlorItem);
 
     React.useEffect(() => {
         if (!dlorTeamLoading && !dlorTeamError && !dlorTeam) {
@@ -56,6 +60,27 @@ export const DLOEdit = ({
         );
     }
 
+    function getLinkSize(type) {
+        if (dlorItem?.object_link_interaction_type === 'download') {
+            if (type === 'unit' || type === 'amount') {
+                return getFileSizeString(dlorItem?.object_link_size || '', type);
+            } else {
+                return null;
+            }
+            return getFileSizeString(dlorItem?.object_link_size || '');
+        } else if (dlorItem?.object_link_interaction_type === 'view') {
+            if (type === 'minutes') {
+                return getMinutesFromTotalSeconds(dlorItem?.object_link_size || '');
+            } else if (type === 'seconds') {
+                return getSecondsFromTotalSeconds(dlorItem?.object_link_size || '');
+            } else {
+                return null;
+            }
+        } else {
+            return '';
+        }
+    }
+
     const formDefaults = {
         object_title: dlorItem?.object_title,
         object_description: dlorItem?.object_description,
@@ -72,8 +97,14 @@ export const DLOEdit = ({
         team_email: dlorItem?.team_email,
         object_keywords_string: dlorItem?.object_keywords?.join(', '),
         facets: dlorItem?.object_filters,
+        object_link_types: dlorItem?.object_link_types,
+        object_link_interaction_type: dlorItem?.object_link_interaction_type,
+        object_link_file_type: dlorItem?.object_link_file_type,
+        object_link_size_units: getLinkSize('unit'),
+        object_link_size_amount: getLinkSize('amount'),
+        object_link_duration_minutes: getLinkSize('minutes'),
+        object_link_duration_seconds: getLinkSize('seconds'),
     };
-    // console.log('DLOEdit formDefaults=', formDefaults);
 
     return (
         <Fragment>

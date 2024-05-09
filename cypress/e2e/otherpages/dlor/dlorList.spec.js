@@ -49,7 +49,7 @@ describe('Digital learning hub', () => {
                 .children()
                 .should('have.length', 6); // 3 svg, 3 spans-with-text
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').should('contain', 'Module');
-            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').should('contain', 'Pressbook');
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').should('contain', 'Video');
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').should(
                 'contain',
                 'CC BY-NC Attribution NonCommercial',
