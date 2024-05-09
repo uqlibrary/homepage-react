@@ -494,6 +494,23 @@ describe('Digital learning hub', () => {
                 'contain',
                 'Dummy entry to increase list size 3',
             );
+
+            // click pagination to go to first page
+            cy.get('nav[aria-label="pagination navigation"] li:first-child button')
+                .should('exist')
+                .click();
+
+            // when we filter the content the number of pagination page buttons changes
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('digital');
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 5 + extraRowCount);
+            // the number of available pages in pagination widget changes from 3 to 1
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + numExtraButtons);
         });
     });
     context('other homepage visits', () => {

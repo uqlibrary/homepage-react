@@ -605,24 +605,27 @@ export const DLOList = ({
 
     const numberItemsPerPage = 10;
 
-    const filterDlorList = pageloadShown => {
+    function filterDlorList() {
         let filteredDlorList;
         if (
             (!selectedFilters || selectedFilters.length === 0) &&
             (!keywordSearch || !keywordIsSearchable(keywordSearch))
         ) {
-            filteredDlorList = dlorList;
-        } else {
-            filteredDlorList = dlorList?.filter(d => {
-                const passesCheckboxFilter =
-                    !!d?.constructedFilters &&
-                    !!selectedFilters &&
-                    !!selectedFilters.every(el => d?.constructedFilters.includes(el));
-                const passesKeyWordFilter =
-                    !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
-                return passesCheckboxFilter && passesKeyWordFilter;
-            });
+            return dlorList;
         }
+        return dlorList?.filter(d => {
+            const passesCheckboxFilter =
+                !!d?.constructedFilters &&
+                !!selectedFilters &&
+                !!selectedFilters.every(el => d?.constructedFilters.includes(el));
+            const passesKeyWordFilter =
+                !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
+            return passesCheckboxFilter && passesKeyWordFilter;
+        });
+    }
+
+    const paginateDlorList = pageloadShown => {
+        const filteredDlorList = filterDlorList();
 
         const paginatedFilteredDlorList = filteredDlorList.filter((_, index) => {
             const startIndex = (pageloadShown - 1) * numberItemsPerPage;
@@ -838,8 +841,8 @@ export const DLOList = ({
                                 );
                             });
 
-                            const dlorData = filterDlorList(paginationPage);
-                            const paginationCount = Math.ceil(dlorList?.length / numberItemsPerPage);
+                            const dlorData = paginateDlorList(paginationPage);
+                            const paginationCount = Math.ceil(filterDlorList()?.length / numberItemsPerPage);
                             if (!dlorData || dlorData.length === 0) {
                                 return (
                                     <Grid container spacing={3}>
