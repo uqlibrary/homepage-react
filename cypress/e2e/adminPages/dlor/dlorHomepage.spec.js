@@ -1,4 +1,4 @@
-const gridFromExpectedRowCount = expected => expected * 3;
+const gridFromExpectedRowCount = (expected = 23) => expected * 3;
 
 describe('Digital learning hub admin homepage', () => {
     beforeEach(() => {
@@ -42,7 +42,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
+                .should('have.length', gridFromExpectedRowCount());
         });
         it('can cancel deletion of an Object', () => {
             // click delete icon on first Object
@@ -76,40 +76,44 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
+                .should('have.length', gridFromExpectedRowCount());
         });
         it('can filter objects', () => {
+            const numDraft = 1;
+            const numPublished = 23;
+            const numRejected = 0;
+            const numDeprecated = 1;
+            const numDeleted = 1;
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
+                .should('have.length', gridFromExpectedRowCount());
 
             // label counts are correct
             cy.get('[data-testid="checkbox-status-new"]')
                 .parent()
                 .parent()
                 .find('span:nth-child(2)')
-                .contains('New/ Draft (1)');
+                .contains(`New/ Draft (${numDraft})`);
             cy.get('[data-testid="checkbox-status-current"]')
                 .parent()
                 .parent()
                 .find('span:nth-child(2)')
-                .contains('Published (8)');
+                .contains(`Published (${numPublished})`);
             cy.get('[data-testid="checkbox-status-rejected"]')
                 .parent()
-                .parent()
                 .find('span:nth-child(2)')
-                .contains('Published (8)');
+                .contains(`Rejected (${numRejected})`);
             cy.get('[data-testid="checkbox-status-deprecated"]')
                 .parent()
                 .parent()
                 .find('span:nth-child(2)')
-                .contains('Deprecated (unpublished) (1)');
+                .contains(`Deprecated (unpublished) (${numDeprecated})`);
             cy.get('[data-testid="checkbox-status-deleted"]')
                 .parent()
                 .parent()
                 .find('span:nth-child(2)')
-                .contains('Deleted (1)');
+                .contains(`Deleted (${numDeleted})`);
 
             // check "new"
             cy.get('[data-testid="checkbox-status-new"] input[type=checkbox]')
@@ -119,7 +123,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(9));
+                .should('have.length', gridFromExpectedRowCount(numPublished + numDraft));
 
             // check "rejected"
             cy.get('[data-testid="checkbox-status-rejected"] input[type=checkbox]')
@@ -129,7 +133,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(9)); // no rejected entries, nothing changed
+                .should('have.length', gridFromExpectedRowCount(numPublished + numDraft + numRejected)); // no rejected entries, nothing changed
 
             // check "deleted"
             cy.get('[data-testid="checkbox-status-deleted"] input[type=checkbox]')
@@ -139,7 +143,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(10));
+                .should('have.length', gridFromExpectedRowCount(numPublished + numDraft + numRejected + numDeleted));
 
             // check "deprecated"
             cy.get('[data-testid="checkbox-status-deprecated"] input[type=checkbox]')
@@ -149,7 +153,10 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(11));
+                .should(
+                    'have.length',
+                    gridFromExpectedRowCount(numPublished + numDraft + numRejected + numDeleted + numDeprecated),
+                );
 
             // UNcheck "published"
             cy.get('[data-testid="checkbox-status-current"] input[type=checkbox]')
@@ -159,7 +166,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(3));
+                .should('have.length', gridFromExpectedRowCount(numDraft + numRejected + numDeleted + numDeprecated));
 
             // UNcheck "deleted"
             cy.get('[data-testid="checkbox-status-deleted"] input[type=checkbox]')
@@ -169,7 +176,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(2));
+                .should('have.length', gridFromExpectedRowCount(numDraft + numRejected + numDeprecated));
         });
         it.skip('deleted objects are immutable', () => {
             // the history should work though
@@ -226,7 +233,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', gridFromExpectedRowCount(8)); // all current objects show, plus the div with the checkbox list
+                .should('have.length', gridFromExpectedRowCount());
         });
     });
     context('user access', () => {
