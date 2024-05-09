@@ -5,6 +5,7 @@ import {
     DLOR_ALL_CURRENT_API,
     DLOR_CREATE_API,
     DLOR_DESTROY_API,
+    DLOR_FILE_TYPE_LIST_API,
     DLOR_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
     DLOR_TEAM_LIST_API,
@@ -199,6 +200,26 @@ export function loadOwningTeams() {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_TEAM_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadFileTypeList() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FILETYPE_LOADING });
+        return get(DLOR_FILE_TYPE_LIST_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FILETYPE_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FILETYPE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

@@ -1,7 +1,7 @@
-import dlorTeamReducer, { initialState } from './dlorListReducer';
+import dlorTeamReducer, { initialState } from './dlorTeamReducer';
 import * as actions from '../actions/actionTypes';
 
-describe.skip('dlor team list reducer', () => {
+describe('dlor team list reducer', () => {
     let emptyState;
     let mockDlorTeamList;
 
@@ -18,7 +18,7 @@ describe.skip('dlor team list reducer', () => {
             // ...emptyState,
             dlorTeam: null,
             dlorTeamLoading: true,
-            dlorTeamError: null,
+            dlorTeamError: false,
         });
     });
 
