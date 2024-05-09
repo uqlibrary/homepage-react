@@ -66,6 +66,7 @@ import {
 import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 import dlor_team_list from './data/records/dlor/dlor_team_list';
+import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 
 const moment = require('moment');
 
@@ -579,38 +580,12 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
     },
 ]);
 
-function getaDlorRecordFromDlorAll(dlorId) {
+function getaDlorResponseFromDlorAll(dlorId) {
     const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
-    const popone = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
-    popone.object_link_types = [
-        {
-            // we ought to remove this empty one, but its what the api supplies atm
-            object_link_interaction_type: 'none',
-            object_link_file_type: null,
-        },
-        {
-            object_link_interaction_type: 'view',
-            object_link_file_type: 'video',
-        },
-        {
-            object_link_interaction_type: 'view',
-            object_link_file_type: 'something',
-        },
-        {
-            object_link_interaction_type: 'download',
-            object_link_file_type: 'XLS',
-        },
-        {
-            object_link_interaction_type: 'download',
-            object_link_file_type: 'PPT',
-        },
-        {
-            object_link_interaction_type: 'download',
-            object_link_file_type: 'PDF',
-        },
-    ];
-    console.log('popone=', popone);
-    return popone === null ? [404, {}] : [200, { data: popone }];
+    const single = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
+    single.object_link_types = dlor_file_type_list;
+    console.log('single=', single);
+    return single === null ? [404, {}] : [200, { data: single }];
 }
 
 mock.onGet(/dlor\/find\/.*/)
@@ -622,9 +597,9 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (dlorId === 'missingRecord') {
             return [200, { data: {} }]; // this would more likely be a 404
         } else if (dlorId === 'object_404') {
-            return [404, { status: 'error', message: 'No records found for that UUID' }]; // this would more likely be a 404
+            return [404, { status: 'error', message: 'No records found for that UUID' }];
         } else {
-            return getaDlorRecordFromDlorAll(dlorId);
+            return getaDlorResponseFromDlorAll(dlorId);
         }
     })
     .onPut(/dlor\/admin\/object\/.*/)
@@ -636,7 +611,7 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (dlorId === 'missingRecord') {
             return [200, { data: {} }]; // this would more likely be a 404
         } else {
-            return getaDlorRecordFromDlorAll(dlorId);
+            return getaDlorResponseFromDlorAll(dlorId);
         }
     })
     .onGet('dlor/list/full')
@@ -688,7 +663,7 @@ mock.onGet(/dlor\/find\/.*/)
         if (responseType === 'saveError') {
             return [500, {}];
         } else {
-            return getaDlorRecordFromDlorAll('98j3-fgf95-8j34'); //any old id
+            return getaDlorResponseFromDlorAll('98j3-fgf95-8j34'); //any old id
         }
     })
     .onDelete(/dlor\/admin\/object\/.*/)
@@ -697,6 +672,19 @@ mock.onGet(/dlor\/find\/.*/)
             return [500, {}];
         } else {
             return [200, {}];
+        }
+    })
+    .onGet(/dlor\/admin\/file_types\/list/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+            // } else if (responseType === 'missingRecord') {
+            //     return [200, { data: {} }]; // this would more likely be a 404
+            // } else if (responseType === 'object_404') {
+            //     return [404, { status: 'error', message: 'No records found' }];
+        } else {
+            console.log('mock: dlorFileTypeList=', dlor_file_type_list);
+            return [200, { data: dlor_file_type_list }];
         }
     });
 
