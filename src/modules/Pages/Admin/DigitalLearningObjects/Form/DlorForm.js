@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
@@ -143,6 +143,7 @@ export const DlorForm = ({
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
+    const [showFileTypeCreationForm, setShowFileTypeCreationForm] = useState(false); // enable-disable the File Type creation fields
 
     const [isLinkFileTypeError, setIsLinkFileTypeError] = useState(false);
 
@@ -155,10 +156,10 @@ export const DlorForm = ({
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
-    const checkBoxArrayRef = React.useRef([]);
-    const teamSelectRef = React.useRef(1);
-    const linkInteractionTypeSelectRef = React.useRef(formValues?.object_link_interaction_type || 'none');
-    const linkFileTypeSelectRef = React.useRef('new');
+    const checkBoxArrayRef = useRef([]);
+    const teamSelectRef = useRef(1);
+    const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
+    const linkFileTypeSelectRef = useRef('new');
 
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
@@ -187,9 +188,10 @@ export const DlorForm = ({
     }, [dlorItem, mode]);
 
     useEffect(() => {
-        if (!dlorTeamError && !dlorTeamLoading && !!dlorTeam) {
+        if (!dlorTeamError && !dlorTeamLoading && !!dlorTeam && dlorTeam.length > 0) {
             if (mode === 'add') {
-                teamSelectRef.current = dlorTeam?.filter((t, index) => index === 0);
+                const firstTeam = dlorTeam?.filter((t, index) => index === 0) || [];
+                teamSelectRef.current = firstTeam?.shift()?.team_id;
             }
         }
     }, [dlorTeam, mode]);
@@ -1038,6 +1040,8 @@ export const DlorForm = ({
                 valuesToSend?.object_link_duration_minutes,
                 valuesToSend?.object_link_duration_seconds,
             );
+        } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_none) {
+            delete valuesToSend?.object_link_file_type;
         }
         delete valuesToSend?.object_link_size_units;
         delete valuesToSend?.object_link_size_amount;
