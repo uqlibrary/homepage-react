@@ -677,6 +677,134 @@ describe('Edit an object on the Digital learning hub', () => {
                     .should('exist')
                     .should('contain', 'Edit an Object for the Digital learning hub');
             });
+            it('with a new interaction type', () => {
+                cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
+                    expect(cookie).to.exist;
+                    expect(cookie.value).to.equal('active');
+                });
+
+                cy.visit(`http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${mockDlorAdminUser}`);
+
+                // go to the second panel, Description
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                // go to the third panel, Link
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                // choose file type
+                cy.waitUntil(() => cy.get('[data-testid="object_link_file_type"]').should('exist'));
+                cy.get('[data-testid="object_link_file_type"]').click();
+                cy.get('[data-testid="object_link_file_type-new"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
+
+                cy.get('[data-testid="new_file_type"]')
+                    .should('exist')
+                    .type('docx');
+
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
+
+                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                    .should('exist')
+                    .clear()
+                    .type('word');
+
+                // go to the fourth panel, Filtering
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                // save record
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
+
+                // wait for the save to complete
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+
+                // check the data we pretended to send to the server matches what we expect
+                // acts as check of what we sent to api
+                const expectedValues = {
+                    object_title: 'Accessibility - Digital Essentials (has Youtube link)',
+                    object_description:
+                        'Understanding the importance of accessibility online and creating accessible content.\n' +
+                        'and a second line of detail in the description',
+                    object_summary:
+                        'Understanding the importance of accessibility online and creating accessible content.',
+                    object_link_interaction_type: 'view',
+                    object_link_file_type: 'docx',
+                    object_link_size: 2864,
+                    object_link_url: 'https://www.youtube.com/watch?v=jwKH6X3cGMg',
+                    object_download_instructions: 'word',
+                    object_embed_type: 'link',
+                    object_publishing_user: 'uqldegro',
+                    object_review_date_next: '2025-03-26T00:01',
+                    object_status: 'current',
+                    object_owning_team_id: 1,
+                    facets: [
+                        3, // Topic : Digital skills
+                        11, // Graduate attributes : Connected citizens
+                        14, // Graduate attributes : Influential communicators
+                        18, // Item type : Module
+                        30, // Media format : Video
+                        34, // Subject : Cross-disciplinary
+                        45, // Licence : CC BY-NC Attribution NonCommercial
+                    ],
+                    object_keywords: ['cat', 'dog'],
+                };
+                cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    expect(cookie).to.exist;
+                    const decodedValue = decodeURIComponent(cookie.value);
+                    const sentValues = JSON.parse(decodedValue);
+
+                    // it doesnt seem valid to recalc the calculated date to test it
+                    expect(sentValues.hasOwnProperty('object_review_date_next')).to.be.true;
+                    delete sentValues.object_review_date_next;
+                    delete expectedValues.object_review_date_next;
+
+                    // had trouble comparing the entire structure
+                    const sentFacets = sentValues.facets;
+                    const expectedFacets = expectedValues.facets;
+                    const sentKeywords = sentValues.object_keywords;
+                    const expectedKeywords = sentValues.object_keywords;
+                    delete sentValues.facets;
+                    delete sentValues.object_keywords;
+                    delete expectedValues.facets;
+                    delete expectedValues.object_keywords;
+
+                    console.log('sentFacets=', sentFacets);
+                    console.log('expectedFacets=', expectedFacets);
+                    expect(sentValues).to.deep.equal(expectedValues);
+                    expect(sentFacets).to.deep.equal(expectedFacets);
+                    expect(sentKeywords).to.deep.equal(expectedKeywords);
+                    cy.clearCookie('CYPRESS_DATA_SAVED');
+                    cy.clearCookie('CYPRESS_TEST_DATA');
+                });
+
+                // now clear the form to create another Object
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('contain', 'Re-edit Object')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="standard-card-edit-an-object-for-the-digital-learning-hub-header"]')
+                    .should('exist')
+                    .should('contain', 'Edit an Object for the Digital learning hub');
+            });
         });
         context('fails correctly', () => {
             it('404 page return correctly', () => {

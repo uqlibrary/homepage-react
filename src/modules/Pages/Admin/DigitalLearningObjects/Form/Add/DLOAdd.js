@@ -52,6 +52,7 @@ export const DLOAdd = ({
         team_email: '',
         object_keywords_string: '',
         facets: [],
+        object_link_interaction_type: 'none',
     };
 
     return (

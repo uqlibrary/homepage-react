@@ -159,7 +159,7 @@ export const DlorForm = ({
     const checkBoxArrayRef = useRef([]);
     const teamSelectRef = useRef(1);
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
-    const linkFileTypeSelectRef = useRef('new');
+    const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
 
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
@@ -179,7 +179,7 @@ export const DlorForm = ({
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
 
             setInteractionTypeDisplays(dlorItem?.object_link_interaction_type);
-            linkFileTypeSelectRef.current = dlorItem?.object_link_file_type;
+            linkFileTypeSelectRef.current = dlorItem?.object_link_file_type || 'new';
 
             teamSelectRef.current = dlorItem?.object_owning_team_id;
         }
@@ -270,6 +270,7 @@ export const DlorForm = ({
         }
         if (prop === 'object_link_interaction_type') {
             setInteractionTypeDisplays(theNewValue);
+            // valid?
             if (mode === 'add') {
                 linkFileTypeSelectRef.current = 'new';
             }
@@ -283,6 +284,10 @@ export const DlorForm = ({
         }
         if (prop === 'object_description') {
             setSummarySuggestionOpen(true);
+        }
+        if (prop === 'object_link_file_type') {
+            linkFileTypeSelectRef.current = theNewValue;
+            setShowFileTypeCreationForm(theNewValue === 'new');
         }
 
         resetForm(prop, theNewValue);
@@ -764,12 +769,28 @@ export const DlorForm = ({
                                                     </MenuItem>
                                                 ))}
                                                 <MenuItem
+                                                    data-testid={'object_link_file_type-new'}
                                                     value="new"
                                                     selected={linkFileTypeSelectRef.current === 'new'}
                                                 >
-                                                    New type (TODO)
+                                                    New type
                                                 </MenuItem>
                                             </Select>
+                                            {showFileTypeCreationForm && (
+                                                <Grid item xs={12}>
+                                                    <FormControl variant="standard" fullWidth>
+                                                        <InputLabel htmlFor="new_file_type">
+                                                            New File Type (abbrev)
+                                                        </InputLabel>
+                                                        <Input
+                                                            id="new_file_type"
+                                                            data-testid="new_file_type"
+                                                            value={formValues?.new_file_type || ''}
+                                                            onChange={handleChange('new_file_type')}
+                                                        />
+                                                    </FormControl>
+                                                </Grid>
+                                            )}{' '}
                                         </>
                                     )}
                                 </FormControl>
@@ -995,7 +1016,17 @@ export const DlorForm = ({
 
     useEffect(() => {
         setFormValidity(validateValues(formDefaults));
-        console.log('useEffect: formDefaults');
+        console.log('useEffect: formDefaults', formDefaults);
+        const isFileTypeSet =
+            [linkInteractionType_download, linkInteractionType_view].includes(
+                formDefaults?.object_link_interaction_type || null,
+            ) && !!formDefaults?.object_link_file_type;
+        if (!!isFileTypeSet) {
+            setShowFileTypeCreationForm(false);
+        } else {
+            setShowFileTypeCreationForm(true);
+            formDefaults.object_link_file_type = 'new';
+        }
     }, [formDefaults]);
 
     useEffect(() => {
@@ -1032,17 +1063,25 @@ export const DlorForm = ({
         delete valuesToSend.object_keywords_string;
 
         if (valuesToSend?.object_link_interaction_type === linkInteractionType_download) {
+            console.log('rrrrrrrr download');
             valuesToSend.object_link_size = convertFileSizeToKb(
                 valuesToSend?.object_link_size_amount,
                 valuesToSend?.object_link_size_units,
             );
         } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_view) {
+            console.log('rrrrrrrr view');
             valuesToSend.object_link_size = getTotalSecondsFromMinutesAndSecond(
                 valuesToSend?.object_link_duration_minutes,
                 valuesToSend?.object_link_duration_seconds,
             );
         } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_none) {
+            console.log('rrrrrrrr other');
             delete valuesToSend?.object_link_file_type;
+        }
+        if (!!valuesToSend.new_file_type) {
+            console.log('rrrrrrrr new file type');
+            valuesToSend.object_link_file_type = valuesToSend.new_file_type;
+            delete valuesToSend.new_file_type;
         }
         delete valuesToSend?.object_link_size_units;
         delete valuesToSend?.object_link_size_amount;
@@ -1096,6 +1135,7 @@ export const DlorForm = ({
     };
 
     const validateValues = currentValues => {
+        console.log('validateValues', currentValues);
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
@@ -1115,16 +1155,13 @@ export const DlorForm = ({
         currentValues?.object_summary?.length < summaryMinimumLength && secondPanelErrorCount++;
 
         let thirdPanelErrorCount = 0;
-        !(currentValues?.object_embed_type === 'link' || currentValues?.object_embed_type === 'embed') &&
-            thirdPanelErrorCount++;
-        currentValues?.object_embed_type === 'link' &&
-            !isValidUrl(currentValues?.object_link_url) &&
-            thirdPanelErrorCount++;
+        !isValidUrl(currentValues?.object_link_url) && thirdPanelErrorCount++;
 
         [linkInteractionType_download, linkInteractionType_view].includes(
             currentValues?.object_link_interaction_type,
         ) &&
-            !currentValues?.object_link_file_type &&
+            (!currentValues?.object_link_file_type ||
+                (currentValues?.object_link_file_type === 'new' && !currentValues?.new_file_type)) &&
             thirdPanelErrorCount++;
 
         currentValues.object_link_interaction_type === linkInteractionType_view &&

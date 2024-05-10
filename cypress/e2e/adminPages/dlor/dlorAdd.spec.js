@@ -540,7 +540,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .type('http://example.com');
 
-                // accessible link message is "no message"
+                // accessible link message: a downloadable file that is an XLS of size 36 meg
                 cy.get('[data-testid="object_link_interaction_type"]')
                     .should('exist')
                     .contains('No message');
@@ -737,7 +737,7 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .type('http://example.com');
 
-                // accessible link message is "no message"
+                // accessible link message: save a Viewable file that is a video that is 3min 47 secs long
                 cy.get('[data-testid="object_link_interaction_type"]')
                     .should('exist')
                     .contains('No message');
@@ -1010,6 +1010,155 @@ describe('Add an object to the Digital learning hub', () => {
                     ],
                 };
                 console.log('document.cookies', document.cookie);
+                cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    expect(cookie).to.exist;
+                    const decodedValue = decodeURIComponent(cookie.value);
+                    const sentValues = JSON.parse(decodedValue);
+                    console.log('sentValues=', sentValues);
+                    console.log('expectedValues=', expectedValues);
+
+                    // had trouble comparing the entire structure
+                    const sentFacets = sentValues.facets;
+                    const expectedFacets = expectedValues.facets;
+                    const sentKeywords = sentValues.object_keywords;
+                    const expectedKeywords = expectedValues.object_keywords;
+                    delete sentValues.facets;
+                    delete expectedValues.facets;
+                    delete sentValues.object_keywords;
+                    delete expectedValues.object_keywords;
+                    delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
+                    delete expectedValues.object_review_date_next;
+
+                    expect(sentValues).to.deep.equal(expectedValues);
+                    expect(sentFacets).to.deep.equal(expectedFacets);
+                    expect(sentKeywords).to.deep.equal(expectedKeywords);
+
+                    cy.clearCookie('CYPRESS_DATA_SAVED');
+                    cy.clearCookie('CYPRESS_TEST_DATA');
+                });
+            });
+            it('with a new interaction type', () => {
+                cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
+                    expect(cookie).to.exist;
+                    expect(cookie.value).to.equal('active');
+                });
+
+                // go to panel 2
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_title"] input')
+                    .should('exist')
+                    .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                cy.get('[data-testid="object_description"] textarea:first-child')
+                    .should('exist')
+                    .type('x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                cy.get('[data-testid="admin-dlor-suggest-summary-button"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count not present
+
+                // go to panel 3
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .type('http://example.com');
+
+                // accessible link message is "no message"
+                cy.get('[data-testid="object_link_file_type"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
+                cy.get('[data-testid="object_link_interaction_type"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_link_interaction_type-view"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_link_file_type"]').should('exist');
+                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_minutes"]').should('exist');
+                cy.get('[data-testid="object_link_duration_seconds"]').should('exist');
+                cy.get('[data-testid="object_link_file_type"]')
+                    .should('exist')
+                    .contains('New type');
+
+                cy.get('[data-testid="new_file_type"]')
+                    .should('exist')
+                    .type('docx');
+                cy.get('[data-testid="object_link_duration_minutes"] input')
+                    .should('exist')
+                    .type('3');
+                cy.get('[data-testid="object_link_duration_seconds"] input')
+                    .should('exist')
+                    .type('47');
+
+                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                    .should('exist')
+                    .type('words');
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count not present
+
+                // next panel
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
+                cy.get('[data-testid="filter-2"] input').check(); // assignments
+                cy.get('[data-testid="filter-22"] input').check(); // media_audio
+                cy.get('[data-testid="filter-24"] input').check(); // media_h5p
+                cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
+                cy.get('[data-testid="filter-35"] input').check(); // business_economics
+                cy.get('[data-testid="filter-17"] input').check(); // type_interactive_activity
+                cy.get('[data-testid="filter-45"] input').check();
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('cat, dog');
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled');
+
+                // save new dlor
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled')
+                    .click();
+
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+
+                // check the data we pretended to send to the server matches what we expect
+                // acts as check of what we sent to api
+                const expectedValues = {
+                    object_description: 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'),
+                    object_download_instructions: 'words',
+                    object_link_interaction_type: 'view',
+                    object_link_file_type: 'docx',
+                    object_link_size: 227,
+                    object_link_url: 'http://example.com',
+                    object_owning_team_id: 1,
+                    object_embed_type: 'link',
+                    object_publishing_user: 'dloradmn',
+                    object_review_date_next: '2025-03-26T00:01',
+                    object_status: 'new',
+                    object_summary: 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'),
+                    object_title: 'x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'),
+                    object_keywords: ['cat', 'dog'],
+                    facets: [
+                        1, // aboriginal_and_torres_strait_islander
+                        2, // assignments
+                        22, // media_audio
+                        24, // media_h5p
+                        34, // all_cross_disciplinary
+                        35, // business_economics
+                        17, // type_interactive_activity
+                        45, // cc_by_nc_attribution_noncommercial
+                    ],
+                };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
                     const decodedValue = decodeURIComponent(cookie.value);
