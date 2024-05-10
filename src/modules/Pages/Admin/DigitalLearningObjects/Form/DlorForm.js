@@ -126,6 +126,9 @@ export const DlorForm = ({
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
+    dlorFileTypeList,
+    dlorFileTypeListLoading,
+    dlorFileTypeListError,
     formDefaults,
     mode,
 }) => {
@@ -176,13 +179,20 @@ export const DlorForm = ({
 
             setInteractionTypeDisplays(dlorItem?.object_link_interaction_type);
             linkFileTypeSelectRef.current = dlorItem?.object_link_file_type;
+
+            teamSelectRef.current = dlorItem?.object_owning_team_id;
         }
 
-        // TODO is dlorTeam loaded?
-        teamSelectRef.current =
-            mode === 'add' ? dlorTeam?.filter((t, index) => index === 0) : dlorItem?.object_owning_team_id;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, mode]);
+
+    useEffect(() => {
+        if (!dlorTeamError && !dlorTeamLoading && !!dlorTeam) {
+            if (mode === 'add') {
+                teamSelectRef.current = dlorTeam?.filter((t, index) => index === 0);
+            }
+        }
+    }, [dlorTeam, mode]);
 
     // these match the values in dlor cypress admin tests
     const titleMinimumLength = 8;
@@ -258,6 +268,9 @@ export const DlorForm = ({
         }
         if (prop === 'object_link_interaction_type') {
             setInteractionTypeDisplays(theNewValue);
+            if (mode === 'add') {
+                linkFileTypeSelectRef.current = 'new';
+            }
         }
         if (prop === 'object_link_size_amount') {
             setIsLinkFileTypeError(isValidNumber(theNewValue));
@@ -586,6 +599,35 @@ export const DlorForm = ({
             </Grid>
         </>
     );
+
+    const getFileTypeListbyMode = () => {
+        if (mode === 'add') {
+            return dlorFileTypeList || [];
+        }
+        // else Edit
+        return formValues?.object_link_types || [];
+    };
+
+    const getFileTypeList = getFileTypeListbyMode().filter(
+        type => type.object_link_interaction_type === linkInteractionTypeSelectRef.current,
+    );
+
+    // const getFileTypeList = (() => {
+    //     let fileTypeList = [];
+    //     if (mode === 'add') {
+    //         fileTypeList = dlorFileTypeList || [];
+    //     } else {
+    //         fileTypeList = formValues.object_link_types || [];
+    //     }
+    //     return (
+    //         !!fileTypeList &&
+    //         fileTypeList.length > 0 &&
+    //         fileTypeList.filter(type => {
+    //             return type.object_link_interaction_type === linkInteractionTypeSelectRef.current;
+    //         })
+    //     );
+    // })();
+
     const stepPanelContentLinks = (
         <>
             <Grid item xs={12}>
@@ -706,27 +748,18 @@ export const DlorForm = ({
                                                 onChange={handleChange('object_link_file_type')}
                                                 style={{ width: '100%', marginTop: 20 }}
                                             >
-                                                {!!formValues?.object_link_types &&
-                                                    formValues?.object_link_types
-                                                        .filter(
-                                                            type =>
-                                                                type.object_link_interaction_type ===
-                                                                linkInteractionTypeSelectRef.current,
-                                                        )
-                                                        .map((type, index) => (
-                                                            <MenuItem
-                                                                key={type.object_link_file_type}
-                                                                data-testid={`object_link_file_type-${type.object_link_file_type}`}
-                                                                value={type.object_link_file_type}
-                                                                selected={
-                                                                    type.object_link_file_type ===
-                                                                    linkFileTypeSelectRef.current
-                                                                }
-                                                                // divider={index === dlorTeam.length - 1}
-                                                            >
-                                                                {type.object_link_file_type}
-                                                            </MenuItem>
-                                                        ))}
+                                                {getFileTypeList.map((type, index) => (
+                                                    <MenuItem
+                                                        key={type.object_link_file_type}
+                                                        data-testid={`object_link_file_type-${type.object_link_file_type}`}
+                                                        value={type.object_link_file_type}
+                                                        selected={
+                                                            type.object_link_file_type === linkFileTypeSelectRef.current
+                                                        }
+                                                    >
+                                                        {type.object_link_file_type}
+                                                    </MenuItem>
+                                                ))}
                                                 <MenuItem
                                                     value="new"
                                                     selected={linkFileTypeSelectRef.current === 'new'}
@@ -785,7 +818,7 @@ export const DlorForm = ({
                                                         aria-labelledby="object_link_file_size-label"
                                                         data-testid="object_link_size_amount"
                                                         required
-                                                        value={formValues?.object_link_size_amount || 0}
+                                                        value={formValues?.object_link_size_amount || ''}
                                                         onChange={handleChange('object_link_size_amount')}
                                                     />
                                                 </FormControl>
@@ -951,8 +984,10 @@ export const DlorForm = ({
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
+        if (mode === 'add' && !dlorFileTypeListError && !dlorFileTypeListLoading && !dlorFileTypeList) {
+            actions.loadFileTypeList();
+        }
         closeConfirmationBox(); // hide any conf left over from earlier add/edit efforts
-        console.log('useEffect: main');
     }, []);
 
     useEffect(() => {

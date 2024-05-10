@@ -539,6 +539,54 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .type('http://example.com');
+
+                // accessible link message is "no message"
+                cy.get('[data-testid="object_link_interaction_type"]')
+                    .should('exist')
+                    .contains('No message');
+
+                cy.get('[data-testid="object_link_file_type"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
+                cy.get('[data-testid="object_link_interaction_type"]').click();
+                cy.get('[data-testid="object_link_interaction_type-download"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_link_file_type"]').should('exist');
+                cy.get('[data-testid="object_link_size_amount"]').should('exist');
+                cy.get('[data-testid="object_link_size_units"]').should('exist');
+                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
+                // shows an error because they havent chosen a file type and a file size
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
+                    .should('exist')
+                    .should('contain', 2); // panel invalidity count present
+
+                // choose file type
+                cy.waitUntil(() => cy.get('[data-testid="object_link_file_type"]').should('exist'));
+                cy.get('[data-testid="object_link_file_type"]').click();
+                cy.get('[data-value="XLS"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
+                    .should('exist')
+                    .should('contain', 1); // panel invalidity count present
+
+                // enter file size
+                cy.get('[data-testid="object_link_size_amount"] input')
+                    .should('exist')
+                    .type('36');
+                cy.waitUntil(() => cy.get('[data-testid="object_link_size_units"]').should('exist'));
+                cy.get('[data-testid="object_link_size_units"]').click();
+                cy.get('[data-value="MB"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
+
                 const typeableDownloadInstructions =
                     'Lorem ipsum dolor sit amet, [consectetur adipiscing elit](http://example.com). In at sapien vel nisi congue fringilla. Maecenas non lacus dolor. Phasellus ornare condimentum est in cursus.' +
                     '\nNam ac felis neque. Nulla at neque a mauris tristique ultrices ac ultrices ex. Suspendisse iaculis fermentum mi, non cursus augue eleifend in. Maecenas ut faucibus est. Phasellus a diam eget mauris feugiat vestibulum. ';
@@ -588,6 +636,9 @@ describe('Add an object to the Digital learning hub', () => {
                     object_description:
                         'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
                     object_summary: 'new summary xxxxxxxx',
+                    object_link_file_type: 'XLS',
+                    object_link_interaction_type: 'download',
+                    object_link_size: '36000',
                     object_link_url: 'http://example.com',
                     object_download_instructions: typeableDownloadInstructions,
                     object_embed_type: 'link',
@@ -612,8 +663,6 @@ describe('Add an object to the Digital learning hub', () => {
                 console.log('document.cookies', document.cookie);
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
-                    console.log('cookie=', cookie);
-                    console.log('cookie.value=', cookie.value);
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
                     console.log('sentValues=', sentValues);
@@ -678,6 +727,41 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_link_url"] input')
                     .should('exist')
                     .type('http://example.com');
+
+                // accessible link message is "no message"
+                cy.get('[data-testid="object_link_interaction_type"]')
+                    .should('exist')
+                    .contains('No message');
+                cy.get('[data-testid="object_link_file_type"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
+                cy.get('[data-testid="object_link_interaction_type"]').click();
+                cy.get('[data-testid="object_link_interaction_type-view"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_link_file_type"]').should('exist');
+                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_minutes"]').should('exist');
+                cy.get('[data-testid="object_link_duration_seconds"]').should('exist');
+                // shows an error because they havent chosen a file type and a file size
+                cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
+                    .should('exist')
+                    .should('contain', 2); // panel invalidity count present
+                cy.waitUntil(() => cy.get('[data-testid="object_link_file_type"]').should('exist'));
+                cy.get('[data-testid="object_link_file_type"]').click();
+                cy.get('[data-value="video"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_link_duration_minutes"] input')
+                    .should('exist')
+                    .type('3');
+                cy.get('[data-testid="object_link_duration_seconds"] input')
+                    .should('exist')
+                    .type('47');
+
                 cy.get('[data-testid="object_download_instructions"] textarea:first-child')
                     .should('exist')
                     .type(downloadInstructionText);
@@ -722,6 +806,9 @@ describe('Add an object to the Digital learning hub', () => {
                     object_description:
                         'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
                     object_summary: 'new summary xxxxxxxx',
+                    object_link_interaction_type: 'view',
+                    object_link_file_type: 'video',
+                    object_link_size: 227,
                     object_link_url: 'http://example.com',
                     object_download_instructions: downloadInstructionText,
                     object_embed_type: 'link',

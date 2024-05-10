@@ -6,15 +6,14 @@ import * as actions from 'data/actions';
 import DLOAdd from './DLOAdd';
 
 const mapStateToProps = state => {
-    const newVar = {
+    return {
         ...state.get('accountReducer'),
         ...state.get('dlorListReducer'),
+        ...state.get('dlorFileTypeListReducer'),
         ...state.get('dlorFilterListReducer'),
         ...state.get('dlorTeamReducer'),
         ...state.get('dlorCreateReducer'),
     };
-    console.log('DLOAddContainer mapStateToProps', newVar);
-    return newVar;
 };
 
 const mapDispatchToProps = dispatch => {

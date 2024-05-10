@@ -18,6 +18,9 @@ export const DLOAdd = ({
     dlorTeam,
     dlorTeamLoading,
     dlorTeamError,
+    dlorFileTypeList,
+    dlorFileTypeListLoading,
+    dlorFileTypeListError,
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
@@ -68,6 +71,9 @@ export const DLOAdd = ({
                             dlorFilterListLoading={dlorFilterListLoading}
                             dlorFilterListError={dlorFilterListError}
                             formDefaults={formDefaults}
+                            dlorFileTypeList={dlorFileTypeList}
+                            dlorFileTypeListLoading={dlorFileTypeListLoading}
+                            dlorFileTypeListError={dlorFileTypeListError}
                             mode="add"
                         />
                     </StandardCard>
@@ -85,6 +91,9 @@ DLOAdd.propTypes = {
     dlorTeam: PropTypes.array,
     dlorTeamLoading: PropTypes.bool,
     dlorTeamError: PropTypes.any,
+    dlorFileTypeList: PropTypes.array,
+    dlorFileTypeListLoading: PropTypes.bool,
+    dlorFileTypeListError: PropTypes.any,
     dlorFilterList: PropTypes.array,
     dlorFilterListLoading: PropTypes.bool,
     dlorFilterListError: PropTypes.any,
