@@ -704,7 +704,16 @@ describe('Add an object to the Digital learning hub', () => {
 
                 const downloadInstructionText = 'some download instructions';
 
-                // team is valid as is, so go to the second panel, Description
+                // confirm team-changer works
+                cy.get('[data-testid="object_owning_team"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_owning_team-2"]')
+                    .should('exist')
+                    .contains('Lib train Library Corporate Services');
+                cy.get('[data-testid="object_owning_team-2"]').click();
+                cy.get('[data-testid="dlor-panel-validity-indicator-0"]').should('not.exist'); // panel invalidity count not present
+
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
@@ -815,7 +824,7 @@ describe('Add an object to the Digital learning hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
-                    object_owning_team_id: 1,
+                    object_owning_team_id: 2,
                     facets: [
                         3, // digital_skills
                         4, // employability

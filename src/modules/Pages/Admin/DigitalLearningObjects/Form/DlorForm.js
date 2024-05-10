@@ -359,6 +359,7 @@ export const DlorForm = ({
                                 key={t.team_id}
                                 value={t.team_id}
                                 selected={t.team_id === teamSelectRef.current}
+                                data-testid={`object_owning_team-${t.team_id}`}
                                 divider={index === dlorTeam.length - 1}
                             >
                                 {t.team_name}
