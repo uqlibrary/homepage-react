@@ -135,9 +135,30 @@ export const Index = ({
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading" />}>
+            <div  style={{backgroundColor: '#51247A'}}>
+                <div className="layout-card">
+                    <Grid container style={{padding: 6, minHeight: 287 }}>
+                        <Grid item xs={12} md={4} style={{justifyContent: 'center', alignItems: 'center'}}>
+                            <p style={{
+                                height: '100%',
+                                textAlign: 'center',
+                                fontSize: 40,
+                                color: '#fff',
+                            }}>Library</p>
+                        </Grid>
+                        <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
+                            <Spotlights
+                                spotlights={spotlightsCurrent}
+                                spotlightsLoading={spotlightsCurrentLoading}
+                                account={account}
+                            />
+                        </Grid>
+                    </Grid>
+                </div>
+            </div>
+
             <StandardPage>
                 <Grid container spacing={4}>
-                    {/* Search */}
                     <Grid item xs={12} style={{ marginTop: 12 }}>
                         <search-portal />
                     </Grid>
@@ -155,13 +176,6 @@ export const Index = ({
                             </Grid>
                         </Hidden>
                     )}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                        <Spotlights
-                            spotlights={spotlightsCurrent}
-                            spotlightsLoading={spotlightsCurrentLoading}
-                            account={account}
-                        />
-                    </Grid>
                     {/* Personalisation panel or hours */}
                     {!!accountLoading && (
                         /* istanbul ignore next */

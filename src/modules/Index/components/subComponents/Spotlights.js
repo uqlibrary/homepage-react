@@ -26,7 +26,7 @@ const MyLoader = props => (
         width={'100%'}
         height={'100%'}
         viewBox="0 0 1500 528"
-        backgroundColor="#f3f3f3"
+        backgroundColor="#51247A"
         foregroundColor="#e2e2e2"
         {...props}
     >

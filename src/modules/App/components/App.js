@@ -108,7 +108,7 @@ export const App = ({ account, actions }) => {
                 <uq-header hidelibrarymenuitem="true" />
                 {!hideForAdmin() && <cultural-advice-popup />}
 
-                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
+                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink}>
                     <span slot="site-utilities">
                         <askus-button />
                     </span>
@@ -119,7 +119,7 @@ export const App = ({ account, actions }) => {
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list system="homepage" />
                 </div>
-                <div style={{ flexGrow: 1, marginTop: 16 }}>
+                <div style={{ flexGrow: 1 }}>
                     <a name="content" />
                     <AccountContext.Provider
                         value={{
