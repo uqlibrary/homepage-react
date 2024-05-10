@@ -10,11 +10,9 @@ describe('Edit an object on the Digital learning hub', () => {
     const mockDlorAdminUser = 'dloradmn';
     context('editing an object', () => {
         context('successfully', () => {
-            beforeEach(() => {
+            it('is accessible', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
                 cy.viewport(1300, 1000);
-            });
-            it('is accessible', () => {
                 cy.injectAxe();
                 cy.viewport(1300, 1000);
                 cy.waitUntil(() => cy.get('h1').should('exist'));
@@ -60,6 +58,8 @@ describe('Edit an object on the Digital learning hub', () => {
                 });
             });
             it('loads fields correctly', () => {
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
+                cy.viewport(1300, 1000);
                 cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
                 cy.get('[data-testid="object_publishing_user"] input').should('have.value', 'uqjsmith');
                 cy.get('[data-testid="error-message-object_publishing_user"]').should('not.exist');
@@ -129,145 +129,145 @@ describe('Edit an object on the Digital learning hub', () => {
                     currentCheckboxId++;
                 }
             });
-        });
-        it('changes "download" url accessibility message correctly', () => {
-            cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
-            cy.visit('http://localhost:2020/admin/dlor/edit/9bc192a8-324c-4f6b-ac50-07e7ff2df240?user=dloradmn');
-            // go to panel 2
-            cy.get('[data-testid="dlor-form-next-button"]')
-                .should('exist')
-                .click();
-            // go to panel 3
-            cy.get('[data-testid="dlor-form-next-button"]')
-                .should('exist')
-                .click();
+            it('changes "download" url accessibility message', () => {
+                cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
+                cy.visit('http://localhost:2020/admin/dlor/edit/9bc192a8-324c-4f6b-ac50-07e7ff2df240?user=dloradmn');
+                // go to panel 2
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+                // go to panel 3
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
 
-            // accessible link message is "no message"
-            cy.get('[data-testid="object_link_interaction_type"]')
-                .should('exist')
-                .contains('can Download');
-            cy.get('[data-testid="object_link_file_type"]')
-                .should('exist')
-                .contains('XLS');
-            cy.get('[data-testid="object_link_size_amount"] input')
-                .should('exist')
-                .should('have.value', '3.4');
-            cy.get('[data-testid="object_link_size_units"]')
-                .should('exist')
-                .contains('GB');
-            cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
-            cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
+                // accessible link message is "no message"
+                cy.get('[data-testid="object_link_interaction_type"]')
+                    .should('exist')
+                    .contains('can Download');
+                cy.get('[data-testid="object_link_file_type"]')
+                    .should('exist')
+                    .contains('XLS');
+                cy.get('[data-testid="object_link_size_amount"] input')
+                    .should('exist')
+                    .should('have.value', '3.4');
+                cy.get('[data-testid="object_link_size_units"]')
+                    .should('exist')
+                    .contains('GB');
+                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
+                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
 
-            cy.get('[data-testid="object_link_file_type"]').click();
-            cy.get('[data-testid="object_link_file_type-PPT"]')
-                .should('exist')
-                .click();
-            cy.get('[data-testid="object_link_size_amount"]')
-                .should('exist')
-                .type('33');
-            cy.get('[data-testid="object_link_size_units"]').click();
-            cy.get('[data-testid="object_link_size_units-MB"]')
-                .should('exist')
-                .click();
+                cy.get('[data-testid="object_link_file_type"]').click();
+                cy.get('[data-testid="object_link_file_type-PPT"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_link_size_amount"]')
+                    .should('exist')
+                    .type('33');
+                cy.get('[data-testid="object_link_size_units"]').click();
+                cy.get('[data-testid="object_link_size_units-MB"]')
+                    .should('exist')
+                    .click();
 
-            // next panel
-            cy.get('[data-testid="dlor-form-next-button"]')
-                .should('exist')
-                .click();
+                // next panel
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
 
-            // and save
-            cy.get('[data-testid="admin-dlor-save-button-submit"]')
-                .should('exist')
-                .should('not.be.disabled')
-                .click();
-            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
-            cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
+                // and save
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
 
-            // wait for the save to complete
-            cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                // wait for the save to complete
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
 
-            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
-                expect(cookie).to.exist;
-                const decodedValue = decodeURIComponent(cookie.value);
-                const sentValues = JSON.parse(decodedValue);
+                cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    expect(cookie).to.exist;
+                    const decodedValue = decodeURIComponent(cookie.value);
+                    const sentValues = JSON.parse(decodedValue);
 
-                expect(sentValues.object_link_interaction_type).to.equal('download');
-                expect(sentValues.object_link_file_type).to.equal('PPT');
-                expect(sentValues.object_link_size).to.equal('3433');
+                    expect(sentValues.object_link_interaction_type).to.equal('download');
+                    expect(sentValues.object_link_file_type).to.equal('PPT');
+                    expect(sentValues.object_link_size).to.equal('3433');
 
-                cy.clearCookie('CYPRESS_DATA_SAVED');
-                cy.clearCookie('CYPRESS_TEST_DATA');
+                    cy.clearCookie('CYPRESS_DATA_SAVED');
+                    cy.clearCookie('CYPRESS_TEST_DATA');
+                });
             });
-        });
-        it('changes "view" url accessibility message correctly', () => {
-            cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
+            it('changes "view" url accessibility message', () => {
+                cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
 
-            cy.visit('http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=dloradmn');
-            // go to panel 2
-            cy.get('[data-testid="dlor-form-next-button"]')
-                .should('exist')
-                .click();
-            // go to panel 3
-            cy.get('[data-testid="dlor-form-next-button"]')
-                .should('exist')
-                .click();
+                cy.visit('http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=dloradmn');
+                // go to panel 2
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+                // go to panel 3
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
 
-            // accessible link message is "no message"
-            cy.get('[data-testid="object_link_interaction_type"]')
-                .should('exist')
-                .contains('can View');
-            cy.get('[data-testid="object_link_file_type"]')
-                .should('exist')
-                .contains('video');
-            cy.get('[data-testid="object_link_duration_minutes"] input')
-                .should('exist')
-                .should('have.value', '47');
-            cy.get('[data-testid="object_link_duration_seconds"] input')
-                .should('exist')
-                .should('have.value', '44');
-            cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
-            cy.get('[data-testid="object_link_size_units"]').should('not.exist');
+                // accessible link message is "no message"
+                cy.get('[data-testid="object_link_interaction_type"]')
+                    .should('exist')
+                    .contains('can View');
+                cy.get('[data-testid="object_link_file_type"]')
+                    .should('exist')
+                    .contains('video');
+                cy.get('[data-testid="object_link_duration_minutes"] input')
+                    .should('exist')
+                    .should('have.value', '47');
+                cy.get('[data-testid="object_link_duration_seconds"] input')
+                    .should('exist')
+                    .should('have.value', '44');
+                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
+                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
 
-            cy.get('[data-testid="object_link_file_type"]').click();
-            cy.get('[data-testid="object_link_file_type-something"]')
-                .should('exist')
-                .click();
+                cy.get('[data-testid="object_link_file_type"]').click();
+                cy.get('[data-testid="object_link_file_type-something"]')
+                    .should('exist')
+                    .click();
 
-            cy.get('[data-testid="object_link_duration_minutes"]')
-                .should('exist')
-                // .clear()
-                .type('3');
-            cy.get('[data-testid="object_link_duration_seconds"]')
-                .should('exist')
-                .type('1');
+                cy.get('[data-testid="object_link_duration_minutes"]')
+                    .should('exist')
+                    // .clear()
+                    .type('3');
+                cy.get('[data-testid="object_link_duration_seconds"]')
+                    .should('exist')
+                    .type('1');
 
-            // next panel
-            cy.get('[data-testid="dlor-form-next-button"]')
-                .should('exist')
-                .click();
+                // next panel
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
 
-            // and save
-            cy.get('[data-testid="admin-dlor-save-button-submit"]')
-                .should('exist')
-                .should('not.be.disabled')
-                .click();
-            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
-            cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
+                // and save
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
 
-            // wait for the save to complete
-            cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                // wait for the save to complete
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
 
-            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
-                expect(cookie).to.exist;
-                const decodedValue = decodeURIComponent(cookie.value);
-                const sentValues = JSON.parse(decodedValue);
+                cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    expect(cookie).to.exist;
+                    const decodedValue = decodeURIComponent(cookie.value);
+                    const sentValues = JSON.parse(decodedValue);
 
-                expect(sentValues.object_link_interaction_type).to.equal('view');
-                expect(sentValues.object_link_file_type).to.equal('something');
-                expect(sentValues.object_link_size).to.equal(28821);
+                    expect(sentValues.object_link_interaction_type).to.equal('view');
+                    expect(sentValues.object_link_file_type).to.equal('something');
+                    expect(sentValues.object_link_size).to.equal(28821);
 
-                cy.clearCookie('CYPRESS_DATA_SAVED');
-                cy.clearCookie('CYPRESS_TEST_DATA');
+                    cy.clearCookie('CYPRESS_DATA_SAVED');
+                    cy.clearCookie('CYPRESS_TEST_DATA');
+                });
             });
         });
         context('successfully mock to db', () => {
