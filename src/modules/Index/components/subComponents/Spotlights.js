@@ -24,7 +24,7 @@ const MyLoader = props => (
         uniqueKey="personalisation-panel-or-hours"
         speed={2}
         width={'100%'}
-        height={'100%'}
+        height={'90%'}
         viewBox="0 0 1500 528"
         backgroundColor="#51247A"
         foregroundColor="#e2e2e2"
@@ -36,7 +36,7 @@ const MyLoader = props => (
 
 const useStyles = makeStyles(() => ({
     loading: {
-        height: '100%',
+        height: '90%',
         position: 'relative',
         flexGrow: 1,
         borderRadius: 4,
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     },
     nextButtonWrapper: {
         width: 36,
-        height: '100%',
+        height: '90%',
         position: 'absolute',
         top: 4,
         right: 0,
@@ -59,13 +59,13 @@ const useStyles = makeStyles(() => ({
     },
     backButtonWrapper: {
         width: 36,
-        height: '100%',
+        height: '90%',
         position: 'absolute',
         top: 4,
         left: 4,
         zIndex: 2,
     },
-    topBlock: { height: '100%', position: 'relative', borderRadius: 4, overflow: 'hidden' },
+    topBlock: { height: '90%', position: 'relative', borderRadius: 4, overflow: 'hidden' },
     chipStyles: {
         width: 200,
         marginLeft: -100,

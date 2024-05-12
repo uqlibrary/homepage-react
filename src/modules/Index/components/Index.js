@@ -135,9 +135,9 @@ export const Index = ({
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading" />}>
-            <div  style={{backgroundColor: '#51247A'}}>
+            <div  style={{backgroundColor: '#51247A', height: 256, minHeight: 256 }}>
                 <div className="layout-card">
-                    <Grid container style={{padding: 6, minHeight: 287 }}>
+                    <Grid container style={{padding: 6 }}>
                         <Grid item xs={12} md={4} style={{justifyContent: 'center', alignItems: 'center'}}>
                             <p style={{
                                 height: '100%',

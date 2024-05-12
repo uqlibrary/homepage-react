@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         height: '100%',
         [theme.breakpoints.down('md')]: {
-            borderLeft: 'none',
+            borderRight: 'none',
             paddingLeft: 0,
         },
     },
@@ -38,8 +38,8 @@ const useStyles = makeStyles(theme => ({
         },
     },
     isNextToSpotlights: {
-        borderLeft: '1px solid' + theme.palette.secondary.light,
-        paddingLeft: 16,
+        borderRight: '1px solid' + theme.palette.secondary.light,
+        paddingRight: 16,
     },
     flexHeader: {
         height: 'auto',
