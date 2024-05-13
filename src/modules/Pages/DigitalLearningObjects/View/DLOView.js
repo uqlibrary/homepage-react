@@ -2,6 +2,7 @@ import React from 'react';
 // import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
+import parse from 'html-react-parser';
 
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
@@ -211,10 +212,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                             {dlorItem?.object_title}
                         </Typography>
                         <div data-testid="dlor-detailpage-description">
-                            {!!dlorItem?.object_description &&
-                                dlorItem?.object_description
-                                    ?.split('\n')
-                                    ?.map((line, index) => <p key={index}>{line}</p>)}
+                            {!!dlorItem?.object_description && parse(dlorItem.object_description)}
                         </div>
                         {dlorItem?.object_embed_type === 'link' && !!dlorItem?.object_link_url && (
                             <div className={classes.uqActionButton} data-testid="detailpage-getit-button">

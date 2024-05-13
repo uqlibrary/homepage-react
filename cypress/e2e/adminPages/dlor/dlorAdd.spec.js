@@ -9,6 +9,13 @@ describe('Add an object to the Digital learning hub', () => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
 
+    function TypeCKEditor(content) {
+        cy.get('.ck-content')
+            .should('exist')
+            // .click()
+            .type(content);
+    }
+
     const mockDlorAdminUser = 'dloradmn';
     context('adding a new object', () => {
         context('successfully', () => {
@@ -93,9 +100,13 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
                     .should('exist')
                     .should('contain', 2); // panel invalidity count present
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                cy.wait(1000);
+                TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('.ck-content')
+                //     .should('exist')
+                //     // .click()
+                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
@@ -251,15 +262,20 @@ describe('Add an object to the Digital learning hub', () => {
                     .type('p');
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('{backspace}');
+                // cy.get('.ck-content')
+                //     .should('exist')
+                //     // .click()
+                //     .type('{backspace}');
+                TypeCKEditor('{backspace}');
+
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('p');
+                // cy.get('.ck-content')
+                //     .should('exist')
+                //     // .click()
+                //     .type('{p}');
+                TypeCKEditor('{p}');
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
                 cy.get('[data-testid="object_summary"] textarea:first-child')
@@ -340,9 +356,10 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="input-characters-remaining-object_title"]')
                     .should('exist')
                     .should('contain', 'at least 5 more characters needed');
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('new description');
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .type('new description');
+                TypeCKEditor('new description');
                 cy.get('[data-testid="input-characters-remaining-object_description"]')
                     .should('exist')
                     .should('contain', 'at least 85 more characters needed');
@@ -376,11 +393,15 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
 
                 // a long description puts the first 150 char, breaking at a word break, into the summary suggestion
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type(
-                        'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
-                    );
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .type(
+                //         'The quick brown fox jumped over the lazy yellow dog and ran into the woods.
+                // The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
+                //     );
+                TypeCKEditor(
+                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
+                );
                 // suggestion panel is now open
                 cy.get('[data-testid="admin-dlor-suggest-summary"]').should('exist');
                 // subset of description has appeared in suggestion panel
@@ -396,16 +417,24 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
 
                 // suggestion panel picks up first paragraph on carriage return after minimum char count
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .clear()
-                    .type(
-                        'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.' +
-                            '\n' +
-                            'a second paragraph',
-                    );
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .clear()
+                //     .type(
+                //         'The quick brown fox jumped over the lazy yellow dog and ran into the woods.
+                // The hunters blew their horns and the hounds bayed and the whole troop followed the fox.' +
+                //             '\n' +
+                //             'a second paragraph',
+                //     );
+                TypeCKEditor(
+                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods.' +
+                        'The hunters blew their horns and the hounds bayed and the whole troop followed the fox.' +
+                        '\n' +
+                        'a second paragraph',
+                );
+
                 cy.get('[data-testid="admin-dlor-suggest-summary-content"]').should(
                     'have.text',
-                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
+                    'The quick brown fox jumped over the lazy yellow dog and ran into the woods.',
                 );
                 // suggestion panel is open again because they changed the description
                 cy.get('[data-testid="admin-dlor-suggest-summary"]').should('exist');
@@ -524,9 +553,10 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                TypeCKEditor('new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
@@ -616,6 +646,8 @@ describe('Add an object to the Digital learning hub', () => {
                     console.log('cookie.value=', cookie.value);
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
+                    expectedValues.object_description =
+                        '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
                     console.log('sentValues=', sentValues);
 
                     // had trouble comparing the entire structure
@@ -625,10 +657,14 @@ describe('Add an object to the Digital learning hub', () => {
                     const expectedKeywords = expectedValues.object_keywords;
                     delete sentValues.facets;
                     delete expectedValues.facets;
+                    // delete sentValues.object_description;
+                    // delete expectedValues.object_description;
                     delete sentValues.object_keywords;
                     delete expectedValues.object_keywords;
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
+
+                    console.log('Comparison', sentValues, expectedValues);
 
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
@@ -637,7 +673,6 @@ describe('Add an object to the Digital learning hub', () => {
                     cy.clearCookie('CYPRESS_DATA_SAVED');
                     cy.clearCookie('CYPRESS_TEST_DATA');
                 });
-
                 // and navigate back to the list page
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('contain', 'Return to list page')
@@ -663,9 +698,10 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                TypeCKEditor('new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
@@ -760,6 +796,9 @@ describe('Add an object to the Digital learning hub', () => {
                     delete expectedValues.facets;
                     delete expectedValues.object_keywords;
 
+                    expectedValues.object_description =
+                        '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
+
                     console.log('sentFacets=', sentFacets);
                     console.log('expectedFacets=', expectedFacets);
                     expect(sentValues).to.deep.equal(expectedValues);
@@ -813,9 +852,10 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                TypeCKEditor('new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));

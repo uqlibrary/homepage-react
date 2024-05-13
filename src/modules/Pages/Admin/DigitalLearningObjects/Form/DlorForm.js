@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
+import html2text from 'html2text';
+
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -42,6 +44,9 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { getUserPostfix, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
+
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const moment = require('moment-timezone');
 
@@ -200,6 +205,39 @@ export const DlorForm = ({
         );
     };
 
+    const editorConfig = {
+        removePlugins: [
+            'Image',
+            'ImageCaption',
+            'ImageStyle',
+            'ImageToolbar',
+            'ImageUpload',
+            'EasyImage',
+            'CKFinder',
+            'BlockQuote',
+            'Table',
+            'MediaEmbed',
+        ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+            ],
+        },
+    };
+
+    const handleEditorChange = (fieldname, newContent) => {
+        // console.log('testing the change fire', fieldname, newContent);
+        // console.log('Form Values:', formValues);
+        // setFormValues({
+        //     ...formValues,
+        //     object_description: newContent,
+        // });
+        setSummarySuggestionOpen(true);
+        resetForm('object_description', newContent);
+    };
+
     // export const ManageAuthorsList = ({ onBulkRowDelete, onRowAdd, onRowDelete, onRowUpdate, onScopusIngest }) => {
     const handleFacetChange = unused => e => {
         let newValues;
@@ -246,7 +284,7 @@ export const DlorForm = ({
         setShowLinkSizeForm(value === linkInteractionType_download);
     }
 
-    const handleChange = prop => e => {
+    const handleChange = (prop, value) => e => {
         // handle radio & checkbox filter field changes
         const theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value; // .trimEnd();
@@ -415,25 +453,25 @@ export const DlorForm = ({
     );
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
-        // if the user starts a new paragraph, use just the first paragraph
-        const lastCarriageReturnIndex = enteredDescription.indexOf('\n');
-        if (lastCarriageReturnIndex !== -1) {
-            return enteredDescription.substring(0, lastCarriageReturnIndex + 1).trim(); // remove carriage return from end
+        const plainSummary = html2text.fromString(enteredDescription);
+        // if they enter a complete sentence, use just that sentences up to the requiredlength point
+        const fullStopLocation = plainSummary.indexOf('.');
+        if (fullStopLocation !== -1) {
+            return plainSummary.substring(0, fullStopLocation + 1);
         }
 
-        // if they enter a complete sentence, use just that sentences up to the requiredlength point
-        const fullStopLocation = enteredDescription.indexOf('.');
-        if (fullStopLocation !== -1) {
-            return enteredDescription.substring(0, fullStopLocation + 1);
+        const lastCarriageReturnIndex = plainSummary.indexOf('\n');
+        if (lastCarriageReturnIndex !== -1) {
+            return plainSummary.substring(0, lastCarriageReturnIndex + 1).trim(); // remove carriage return from end
         }
 
         // while its short, return the shortness
-        if (enteredDescription?.length <= requiredLength) {
-            return enteredDescription;
+        if (plainSummary?.length <= requiredLength) {
+            return plainSummary;
         }
 
         // return the first n characters, breaking at a word break
-        const trimmedString = enteredDescription?.slice(0, requiredLength + 1);
+        const trimmedString = plainSummary?.slice(0, requiredLength + 1);
         const slice = trimmedString.slice(0, Math.min(trimmedString?.length, trimmedString?.lastIndexOf(' ')));
         return slice;
     };
@@ -488,7 +526,7 @@ export const DlorForm = ({
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
-                    <Input
+                    {/* <Input
                         id="object_description"
                         data-testid="object_description"
                         multiline
@@ -496,10 +534,33 @@ export const DlorForm = ({
                         rows={6}
                         value={formValues?.object_description || ''}
                         onChange={handleChange('object_description')}
+                    /> */}
+                    <CKEditor
+                        id="object_description"
+                        data-testid="object_description"
+                        style={{ width: '100%' }}
+                        className={classes.CKEditor}
+                        editor={ClassicEditor}
+                        config={editorConfig}
+                        data={formValues?.object_description || ''}
+                        onReady={editor => {
+                            // You can store the "editor" and use when it is needed.
+                            // console.log("Editor is ready to use!", editor);
+                            editor.editing.view.change(writer => {
+                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                            });
+                        }}
+                        onChange={(event, editor) => {
+                            const htmlData = editor.getData();
+                            // const plainText = html2text.fromString(htmlData);
+                            // console.log('data:', plainText);
+                            // /setTimeout(() => console.log('TEST FIRE'), 0);
+                            handleEditorChange('object_description', htmlData);
+                        }}
                     />
                     {!!formValues?.object_description &&
                         characterCount(
-                            formValues?.object_description?.length,
+                            html2text.fromString(formValues?.object_description).length,
                             descriptionMinimumLength,
                             'object_description',
                         )}
@@ -1071,7 +1132,8 @@ export const DlorForm = ({
 
         let secondPanelErrorCount = 0;
         currentValues?.object_title?.length < titleMinimumLength && secondPanelErrorCount++;
-        currentValues?.object_description?.length < descriptionMinimumLength && secondPanelErrorCount++;
+        html2text.fromString(currentValues?.object_description)?.length < descriptionMinimumLength &&
+            secondPanelErrorCount++;
         currentValues?.object_summary?.length < summaryMinimumLength && secondPanelErrorCount++;
 
         let thirdPanelErrorCount = 0;
