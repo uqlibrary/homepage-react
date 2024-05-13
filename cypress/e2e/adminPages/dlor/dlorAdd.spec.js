@@ -928,9 +928,10 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                TypeCKEditor('x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .type('x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="admin-dlor-suggest-summary-button"]')
                     .should('exist')
                     .click();
@@ -1067,7 +1068,8 @@ describe('Add an object to the Digital learning hub', () => {
                     delete expectedValues.object_keywords;
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
-
+                    expectedValues.object_description =
+                        '<p>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);
@@ -1089,9 +1091,10 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .type('x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .type('x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                TypeCKEditor('x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="admin-dlor-suggest-summary-button"]')
                     .should('exist')
                     .click();
@@ -1216,7 +1219,8 @@ describe('Add an object to the Digital learning hub', () => {
                     delete expectedValues.object_keywords;
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
-
+                    expectedValues.object_description =
+                        '<p>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);
