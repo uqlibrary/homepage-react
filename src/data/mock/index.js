@@ -583,7 +583,7 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
 function getaDlorResponseFromDlorAll(dlorId) {
     const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
     const single = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
-    single.object_link_types = dlor_file_type_list;
+    single.object_link_types = dlor_file_type_list.data;
     console.log('single=', single);
     return single === null ? [404, {}] : [200, { data: single }];
 }
