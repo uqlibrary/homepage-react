@@ -161,6 +161,8 @@ export const DlorForm = ({
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
 
+    console.log('**** ', mode, '; formValues?.object_link_types=', formValues?.object_link_types);
+
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
     };

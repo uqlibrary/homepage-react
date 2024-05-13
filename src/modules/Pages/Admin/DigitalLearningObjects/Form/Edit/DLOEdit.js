@@ -31,8 +31,6 @@ export const DLOEdit = ({
 }) => {
     const { dlorId } = useParams();
 
-    console.log('**** DLOEdit formValues?.object_link_types=', formValues?.object_link_types);
-
     React.useEffect(() => {
         if (!dlorTeamLoading && !dlorTeamError && !dlorTeam) {
             actions.loadOwningTeams();
