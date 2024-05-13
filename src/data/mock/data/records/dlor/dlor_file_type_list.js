@@ -1,5 +1,5 @@
-export default
-    [{
+export default  {
+    "data": [{
         "object_link_interaction_type": 'none',
         "object_link_file_type": null,
     }, {
@@ -17,4 +17,5 @@ export default
     }, {
         "object_link_interaction_type": 'download',
             "object_link_file_type": 'PDF',
-    }];
+    }]
+};

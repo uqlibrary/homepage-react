@@ -625,22 +625,6 @@ export const DlorForm = ({
         type => type.object_link_interaction_type === linkInteractionTypeSelectRef.current,
     );
 
-    // const getFileTypeList = (() => {
-    //     let fileTypeList = [];
-    //     if (mode === 'add') {
-    //         fileTypeList = dlorFileTypeList || [];
-    //     } else {
-    //         fileTypeList = formValues.object_link_types || [];
-    //     }
-    //     return (
-    //         !!fileTypeList &&
-    //         fileTypeList.length > 0 &&
-    //         fileTypeList.filter(type => {
-    //             return type.object_link_interaction_type === linkInteractionTypeSelectRef.current;
-    //         })
-    //     );
-    // })();
-
     const stepPanelContentLinks = (
         <>
             <Grid item xs={12}>

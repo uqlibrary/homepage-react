@@ -684,7 +684,7 @@ mock.onGet(/dlor\/find\/.*/)
             //     return [404, { status: 'error', message: 'No records found' }];
         } else {
             console.log('mock: dlorFileTypeList=', dlor_file_type_list);
-            return [200, { data: dlor_file_type_list }];
+            return [200, dlor_file_type_list];
         }
     });
 
