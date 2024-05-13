@@ -7,6 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import { makeStyles } from '@mui/styles';
+import { Pagination } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -31,6 +32,12 @@ const useStyles = makeStyles(theme => ({
         paddingLeft: 6,
         '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        },
+    },
+    dlorPagination: {
+        width: '100%',
+        '& ul': {
+            justifyContent: 'center',
         },
     },
 }));
@@ -75,15 +82,11 @@ export const DLOAdminHomepage = ({
             isChecked: false,
         },
     ];
-    console.log('statusTypes=', statusTypes);
-    // const checkBoxArrayRef = React.useRef([
-    //     statusTypes.filter(t => {
-    //         t.type, t.isChecked;
-    //     }),
-    // ]);
     const [checkedStatusType, setCheckedStatusType] = useState(statusTypes.map(status => status.isChecked));
 
     const [objectToDelete, setObjectToDelete] = useState(null);
+
+    const [paginationPage, setPaginationPage] = useState(1);
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -148,14 +151,27 @@ export const DLOAdminHomepage = ({
         setCheckedStatusType(newStatusTypeSet);
     };
 
-    const mapOverRequestedTypes = dlorlistToFilter => {
+    const numberItemsPerPage = 10; // value also set in cypress dlorHomepage.spec
+
+    const filterDLorList = (dlorlistToFilter, pageloadShown) => {
         const requestedStatuses = statusTypes
             .filter((type, index) => checkedStatusType[index] === true)
             .map(t => t.type);
-        return dlorlistToFilter.filter(d => requestedStatuses.includes(d.object_status));
+        const filteredDlorList = dlorlistToFilter.filter(d => requestedStatuses.includes(d.object_status));
+
+        const paginatedFilteredDlorList = filteredDlorList.filter((_, index) => {
+            const startIndex = (pageloadShown - 1) * numberItemsPerPage;
+            const endIndex = startIndex + numberItemsPerPage;
+            return index >= startIndex && index < endIndex;
+        });
+        return paginatedFilteredDlorList;
     };
 
     const numberOfListItemsOfType = (list, statusType) => list.filter(d => d.object_status === statusType)?.length;
+
+    const handlePaginationChange = (e, value) => {
+        setPaginationPage(value);
+    };
 
     return (
         <StandardPage title="Digital learning hub Management">
@@ -227,6 +243,7 @@ export const DLOAdminHomepage = ({
                             </Grid>
                         );
                     } else {
+                        const paginationCount = Math.ceil(dlorList?.length / numberItemsPerPage);
                         return (
                             <>
                                 <Grid item xs={12}>
@@ -255,7 +272,7 @@ export const DLOAdminHomepage = ({
                                 </Grid>
                                 <Grid item style={{ width: '100%' }}>
                                     {dlorList?.length > 0 &&
-                                        mapOverRequestedTypes(dlorList).map(o => {
+                                        filterDLorList(dlorList, paginationPage).map(o => {
                                             return (
                                                 <Grid
                                                     container
@@ -299,6 +316,16 @@ export const DLOAdminHomepage = ({
                                                 </Grid>
                                             );
                                         })}
+                                    {!!dlorList && dlorList.length > 0 && (
+                                        <Pagination
+                                            count={paginationCount}
+                                            showFirstButton
+                                            showLastButton
+                                            onChange={handlePaginationChange}
+                                            page={paginationPage}
+                                            className={classes.dlorPagination}
+                                        />
+                                    )}
                                 </Grid>
                             </>
                         );
