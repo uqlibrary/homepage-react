@@ -96,13 +96,16 @@ const useStyles = makeStyles(theme => ({
                 display: 'flex',
                 alignItems: 'center', // horizontally, align icon and label at the center
                 '& > svg:not(:first-child)': {
-                    paddingLeft: 6,
+                    paddingLeft: 12,
                 },
                 '& svg': {
                     width: 20,
                     '& > path': {
                         fill: theme.palette.primary.light,
                     },
+                },
+                '& span': {
+                    paddingLeft: 2,
                 },
             },
         },
@@ -700,7 +703,7 @@ export const DLOList = ({
                                 )}
                             </Typography>
                         </header>
-                        <div className={classes.articleContents}>
+                        <div>
                             <p>{object?.object_summary}</p>
                         </div>
                         <footer>
@@ -769,7 +772,7 @@ export const DLOList = ({
                 </button>
             </Typography>
             <Typography component={'p'}>
-                Use this <span style={{ fontStyle: 'italic' }}>Digital learning hub</span> to find digital learning
+                Use this <span style={{ fontStyle: 'italic' }}>Digital learning hub</span> to find digital learning.
                 objects for study and teaching
             </Typography>
             <Grid container spacing={2}>
@@ -797,7 +800,7 @@ export const DLOList = ({
                     <TextField
                         className={classes.keywordSearchPanel}
                         data-testid="dlor-homepage-keyword"
-                        label="Search our Digital objects by keyword"
+                        label="Search our digital objects by keyword"
                         onChange={handleKeywordSearch}
                         InputProps={{
                             endAdornment: (

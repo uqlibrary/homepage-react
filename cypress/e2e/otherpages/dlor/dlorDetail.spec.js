@@ -137,7 +137,7 @@ describe('Digital learning hub', () => {
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
-                .contains('Login for the full experience');
+                .contains('Log in for the full experience');
         });
         it('a view page without keywords has a sensible sidebar', () => {
             cy.visit('digital-learning-hub/view/9k45_hgr4_876h');

@@ -39,7 +39,7 @@ const LoginPrompt = ({ account, narrower }) => {
                     <InfoIcon />
                     <span>
                         <a style={{ color: '#1e72c6' }} href={loginLink}>
-                            Login
+                            Log in
                         </a>{' '}
                         for the full experience
                     </span>
