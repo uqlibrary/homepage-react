@@ -27,6 +27,8 @@ export const DLOAdd = ({
 }) => {
     const { account } = useAccountContext();
 
+    console.log('**** DLOAdd load=', dlorFileTypeListLoading, '; e=', dlorFileTypeListError, '; ', dlorFileTypeList);
+
     function getTodayPlusOneYear(baseDate = null) {
         const today = baseDate || moment();
         return today

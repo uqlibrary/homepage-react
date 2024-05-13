@@ -253,6 +253,7 @@ export const DlorForm = ({
     };
 
     function setInteractionTypeDisplays(value) {
+        console.log('**** setInteractionTypeDisplays value=', value);
         linkInteractionTypeSelectRef.current = value;
         setShowLinkTimeForm(value === linkInteractionType_view);
         setShowLinkSizeForm(value === linkInteractionType_download);
@@ -610,8 +611,10 @@ export const DlorForm = ({
 
     const getFileTypeListbyMode = () => {
         if (mode === 'add') {
+            console.log('**** getFileTypeListbyMode add dlorFileTypeList=', dlorFileTypeList);
             return dlorFileTypeList || [];
         }
+        console.log('**** getFileTypeListbyMode edit formValues?.object_link_types=', formValues?.object_link_types);
         // else Edit
         return formValues?.object_link_types || [];
     };
