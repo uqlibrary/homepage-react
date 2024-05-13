@@ -406,6 +406,7 @@ export const DLOList = ({
     const clearKeywordField = () => {
         setKeywordSearch('');
         keyWordSearchRef.current.value = '';
+        setPaginationPage(1);
     };
 
     const handleCheckboxAction = prop => e => {

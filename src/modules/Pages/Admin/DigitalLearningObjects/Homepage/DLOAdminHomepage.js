@@ -5,13 +5,17 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import { makeStyles } from '@mui/styles';
 import { Pagination } from '@mui/material';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -39,6 +43,11 @@ const useStyles = makeStyles(theme => ({
         '& ul': {
             justifyContent: 'center',
         },
+    },
+    keywordSearchPanel: {
+        width: 'calc(100%)',
+        marginLeft: 20,
+        marginRight: 30,
     },
 }));
 
@@ -87,6 +96,9 @@ export const DLOAdminHomepage = ({
     const [objectToDelete, setObjectToDelete] = useState(null);
 
     const [paginationPage, setPaginationPage] = useState(1);
+
+    const [keywordSearch, setKeywordSearch] = useState('');
+    const keyWordSearchRef = React.useRef('');
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -153,11 +165,19 @@ export const DLOAdminHomepage = ({
 
     const numberItemsPerPage = 10; // value also set in cypress dlorHomepage.spec
 
+    function filterOnKeyword(filteredDlorList) {
+        if (!!keywordSearch && !!keywordIsSearchable(keywordSearch)) {
+            filteredDlorList = filteredDlorList.filter(t => keywordFoundIn(t, keywordSearch));
+        }
+        return filteredDlorList;
+    }
+
     const filterDLorList = (dlorlistToFilter, pageloadShown) => {
         const requestedStatuses = statusTypes
             .filter((type, index) => checkedStatusType[index] === true)
             .map(t => t.type);
-        const filteredDlorList = dlorlistToFilter.filter(d => requestedStatuses.includes(d.object_status));
+        let filteredDlorList = dlorlistToFilter.filter(d => requestedStatuses.includes(d.object_status));
+        filteredDlorList = filterOnKeyword(filteredDlorList);
 
         const paginatedFilteredDlorList = filteredDlorList.filter((_, index) => {
             const startIndex = (pageloadShown - 1) * numberItemsPerPage;
@@ -171,6 +191,47 @@ export const DLOAdminHomepage = ({
 
     const handlePaginationChange = (e, value) => {
         setPaginationPage(value);
+    };
+
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword?.length > 1;
+    }
+
+    const keywordFoundIn = (object, enteredKeyword) => {
+        const enteredKeywordLower = enteredKeyword.toLowerCase();
+        if (
+            object.object_title.toLowerCase().includes(enteredKeywordLower) ||
+            object.object_description.toLowerCase().includes(enteredKeywordLower) ||
+            object.object_summary.toLowerCase().includes(enteredKeywordLower)
+        ) {
+            return true;
+        }
+        if (
+            !!object?.object_keywords?.some(k => {
+                return k.toLowerCase().startsWith(enteredKeywordLower);
+            })
+        ) {
+            return true;
+        }
+        return false;
+    };
+
+    const handleKeywordSearch = e => {
+        const keyword = e?.target?.value;
+        keyWordSearchRef.current.value = keyword;
+
+        if (keywordIsSearchable(keyword)) {
+            setKeywordSearch(keyword);
+        } else if (keyword.length === 0) {
+            clearKeywordField();
+        }
+    };
+
+    const clearKeywordField = () => {
+        setKeywordSearch('');
+        keyWordSearchRef.current.value = '';
+        setPaginationPage(1);
     };
 
     return (
@@ -243,7 +304,7 @@ export const DLOAdminHomepage = ({
                             </Grid>
                         );
                     } else {
-                        const paginationCount = Math.ceil(dlorList?.length / numberItemsPerPage);
+                        const paginationCount = Math.ceil(filterOnKeyword(dlorList)?.length / numberItemsPerPage);
                         return (
                             <>
                                 <Grid item xs={12}>
@@ -270,6 +331,26 @@ export const DLOAdminHomepage = ({
                                             );
                                         })}
                                 </Grid>
+                                <TextField
+                                    className={classes.keywordSearchPanel}
+                                    data-testid="dlor-homepage-keyword"
+                                    label="Search by keyword"
+                                    onChange={handleKeywordSearch}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton onClick={clearKeywordField}>
+                                                    {keyWordSearchRef.current?.value === '' ? (
+                                                        <SearchIcon />
+                                                    ) : (
+                                                        <CloseIcon data-testid="keyword-clear" />
+                                                    )}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    inputRef={keyWordSearchRef}
+                                />{' '}
                                 <Grid item style={{ width: '100%' }}>
                                     {dlorList?.length > 0 &&
                                         filterDLorList(dlorList, paginationPage).map(o => {

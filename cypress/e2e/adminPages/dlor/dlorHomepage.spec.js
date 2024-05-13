@@ -88,6 +88,46 @@ describe('Digital learning hub admin homepage', () => {
                 .should('exist')
                 .click();
         });
+        it('can filter on keyword', () => {
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount());
+            cy.get('[data-testid="dlor-homepage-list"] > div:first-child h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Accessibility - Digital Essentials');
+            const numExtraButtons = 4; // first, prev, next, last
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', 3 + numExtraButtons);
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .should('exist')
+                .should('be.visible');
+
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('d');
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount()); // no change with one char
+            cy.get('[data-testid="dlor-homepage-list"] > div:first-child h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Accessibility - Digital Essentials');
+
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('ummy');
+            cy.get('[data-testid="dlor-homepage-list"] > div:first-child h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Dummy entry to increase list size A');
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + numExtraButtons); // now only 2 pages
+        });
         it('can cancel deletion of an Object', () => {
             // click delete icon on first Object
             cy.get('[data-testid="dlor-homepage-delete-987y_isjgt_9866"]')
