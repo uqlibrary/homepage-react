@@ -7,6 +7,21 @@ describe('Edit an object on the Digital learning hub', () => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
 
+    function TypeCKEditor(content, clear = false) {
+        cy.get('.ck-content').should('exist');
+        if (clear) {
+            cy.get('.ck-content').clear();
+        }
+        // .click()
+        cy.get('.ck-content').type(content);
+    }
+    function CheckCKEditor(content) {
+        cy.get('.ck-content')
+            .should('exist')
+            // .click()
+            .should('contain', content);
+    }
+
     const mockDlorAdminUser = 'dloradmn';
     context('editing an object', () => {
         context('successfully', () => {
@@ -71,11 +86,15 @@ describe('Edit an object on the Digital learning hub', () => {
                     .click();
                 cy.waitUntil(() => cy.get('[data-testid="object_title"] input').should('exist'));
                 cy.get('[data-testid="object_title"] input').should('have.value', 'Advanced literature searching');
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .contains(
-                        'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
-                    );
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .contains(
+                //         'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
+                //     );
+                CheckCKEditor(
+                    'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
+                );
+                // TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .should('have.value', 'Using advanced searching techniques.');
@@ -308,10 +327,11 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('xx');
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .clear()
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .clear()
+                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'), true);
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('xx');
@@ -459,6 +479,9 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
 
+                    expectedValues.object_description =
+                        '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
+
                     console.log('sentValues=', sentValues);
                     console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
@@ -501,10 +524,11 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                cy.get('[data-testid="object_description"] textarea:first-child')
-                    .should('exist')
-                    .clear()
-                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                // cy.get('[data-testid="object_description"] textarea:first-child')
+                //     .should('exist')
+                //     .clear()
+                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'), true);
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('xxx');
@@ -654,6 +678,8 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete sentValues.object_keywords;
                     delete expectedValues.facets;
                     delete expectedValues.object_keywords;
+                    expectedValues.object_description =
+                        '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
 
                     console.log('sentValues=', sentValues);
                     console.log('expectedValues=', expectedValues);
