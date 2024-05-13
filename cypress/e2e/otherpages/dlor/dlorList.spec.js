@@ -30,7 +30,21 @@ describe('Digital learning hub', () => {
                 .children()
                 .should('have.length', itemsPerPage + extraRowCount);
 
-            // first article
+            // sorts properly
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(2) article h2').should(
+                'contain',
+                'Accessibility - Digital Essentials',
+            );
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(3) article h2').should(
+                'contain',
+                'UQ has a Blak History',
+            );
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
+                'contain',
+                'Advanced literature searching',
+            );
+
+            // article 1 contents correct
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] button').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article header h2').should(
                 'contain',
@@ -55,7 +69,7 @@ describe('Digital learning hub', () => {
                 'CC BY-NC Attribution NonCommercial',
             );
 
-            // second panel
+            // article 3 contents correct
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] button').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article header h2').should(
                 'contain',

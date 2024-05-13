@@ -80,6 +80,10 @@ describe('Edit an object on the Digital learning hub', () => {
                     .should('exist')
                     .should('have.value', 'Using advanced searching techniques.');
 
+                cy.get('[data-testid="object_is_featured"] input')
+                    .should('exist')
+                    .should('not.be.checked');
+
                 // go to panel 3
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -316,6 +320,11 @@ describe('Edit an object on the Digital learning hub', () => {
                     .should('exist')
                     .type('xx');
 
+                cy.get('[data-testid="object_is_featured"] input')
+                    .should('exist')
+                    .should('not.be.checked');
+                cy.get('[data-testid="object_is_featured"] input').check();
+
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -424,6 +433,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     object_link_url: 'https://uq.h5p.com/content/1291624605868350759/page',
                     object_download_instructions: 'some download instructionsxxx',
                     object_embed_type: 'link',
+                    object_is_featured: true,
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',
@@ -614,6 +624,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: downloadInstructionText,
                     object_embed_type: 'link',
+                    object_is_featured: 0,
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',
@@ -677,7 +688,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     .should('exist')
                     .should('contain', 'Edit an Object for the Digital learning hub');
             });
-            it('with a new interaction type', () => {
+            it('with a new interaction type & is featured', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
@@ -689,6 +700,11 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
+
+                cy.get('[data-testid="object_is_featured"] input')
+                    .should('exist')
+                    .should('be.checked');
+                cy.get('[data-testid="object_is_featured"] input').uncheck();
 
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -748,6 +764,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     object_link_url: 'https://www.youtube.com/watch?v=jwKH6X3cGMg',
                     object_download_instructions: 'word',
                     object_embed_type: 'link',
+                    object_is_featured: false,
                     object_publishing_user: 'uqldegro',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',
@@ -783,8 +800,8 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete expectedValues.facets;
                     delete expectedValues.object_keywords;
 
-                    console.log('sentFacets=', sentFacets);
-                    console.log('expectedFacets=', expectedFacets);
+                    console.log('sentValues=', sentValues);
+                    console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);

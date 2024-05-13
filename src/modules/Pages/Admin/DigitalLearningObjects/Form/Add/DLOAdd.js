@@ -55,6 +55,7 @@ export const DLOAdd = ({
         object_keywords_string: '',
         facets: [],
         object_link_interaction_type: 'none',
+        object_is_featured: 0,
     };
 
     return (

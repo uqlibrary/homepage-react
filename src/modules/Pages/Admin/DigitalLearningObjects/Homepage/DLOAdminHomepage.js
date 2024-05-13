@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DoneIcon from '@mui/icons-material/Done';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -30,6 +31,8 @@ const useStyles = makeStyles(theme => ({
     sidebyside: {
         display: 'flex',
         justifyContent: 'space-between',
+        marginLeft: -50,
+        marginRight: 50,
     },
     listItem: {
         paddingTop: 10,
@@ -49,6 +52,13 @@ const useStyles = makeStyles(theme => ({
         marginLeft: 20,
         marginRight: 30,
     },
+    featuredObject: {
+        textTransform: 'uppercase',
+        backgroundColor: theme.palette.success.main,
+        color: theme.palette.white.main,
+        fontSize: '14px',
+        padding: 6,
+    },
 }));
 
 export const DLOAdminHomepage = ({
@@ -56,12 +66,9 @@ export const DLOAdminHomepage = ({
     dlorList,
     dlorListLoading,
     dlorListError,
-    // dlorItemDeleting,
     dlorItemDeleteError,
-    // dlorItem,
     account,
 }) => {
-    console.log('DLOAdminHomepage dlorItemDeleteError=', dlorItemDeleteError);
     const classes = useStyles();
 
     const statusTypes = [
@@ -98,7 +105,7 @@ export const DLOAdminHomepage = ({
     const [paginationPage, setPaginationPage] = useState(1);
 
     const [keywordSearch, setKeywordSearch] = useState('');
-    const keyWordSearchRef = React.useRef('');
+    const keyWordSearchRef = useRef('');
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -178,6 +185,8 @@ export const DLOAdminHomepage = ({
             .map(t => t.type);
         let filteredDlorList = dlorlistToFilter.filter(d => requestedStatuses.includes(d.object_status));
         filteredDlorList = filterOnKeyword(filteredDlorList);
+
+        filteredDlorList.sort((a, b) => b.object_is_featured - a.object_is_featured);
 
         const paginatedFilteredDlorList = filteredDlorList.filter((_, index) => {
             const startIndex = (pageloadShown - 1) * numberItemsPerPage;
@@ -351,7 +360,7 @@ export const DLOAdminHomepage = ({
                                     }}
                                     inputRef={keyWordSearchRef}
                                 />{' '}
-                                <Grid item style={{ width: '100%' }}>
+                                <Grid item style={{ width: '100%' }} data-testid="dlor-homepage-list">
                                     {dlorList?.length > 0 &&
                                         filterDLorList(dlorList, paginationPage).map(o => {
                                             return (
@@ -359,11 +368,19 @@ export const DLOAdminHomepage = ({
                                                     container
                                                     className={classes.listItem}
                                                     key={`list-dlor-${o?.object_id}`}
-                                                    data-testid="dlor-homepage-list"
                                                 >
+                                                    <Grid item xs={1} style={{ marginTop: 4 }}>
+                                                        {o?.object_is_featured === 1 && (
+                                                            <DoneIcon
+                                                                data-testid={`dlor-homepage-featured-${o?.object_public_uuid}`}
+                                                                title="This object is Featured"
+                                                                style={{ color: 'green' }}
+                                                            />
+                                                        )}
+                                                    </Grid>
                                                     <Grid
                                                         item
-                                                        xs={10}
+                                                        xs={9}
                                                         className={classes.sidebyside}
                                                         data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
                                                     >
