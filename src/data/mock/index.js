@@ -55,8 +55,6 @@ import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_as
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 
-import { accounts, currentAuthor } from './data';
-
 import {
     currentPanels,
     userListPanels,
