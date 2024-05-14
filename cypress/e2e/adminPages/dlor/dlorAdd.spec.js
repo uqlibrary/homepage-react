@@ -521,7 +521,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
                 cy.viewport(1300, 1000);
             });
-            it('admin can create a new object for a new team and return to list', () => {
+            it('admin can create a new object for a new team and make it featured and return to list', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
@@ -560,6 +560,11 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+
+                cy.get('[data-testid="object_is_featured"] input')
+                    .should('exist')
+                    .should('not.be.checked');
+                cy.get('[data-testid="object_is_featured"] input').check();
 
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -672,7 +677,7 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: typeableDownloadInstructions,
                     object_embed_type: 'link',
-                    object_is_featured: 0,
+                    object_is_featured: 1,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',

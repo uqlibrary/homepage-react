@@ -301,10 +301,13 @@ export const DlorForm = ({
 
     const handleChange = (prop, value) => e => {
         // handle radio & checkbox filter field changes
-        const theNewValue =
-            e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value; // .trimEnd();
+        let theNewValue =
+            e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
         // handle teams dropdown changes
+        if (prop === 'object_is_featured') {
+            theNewValue = !!e.target.checked ? 1 : 0;
+        }
         if (prop === 'object_owning_team_id') {
             setShowTeamCreationForm(theNewValue === 'new');
             teamSelectRef.current = theNewValue !== 'new' ? e.target.value : 'new';
