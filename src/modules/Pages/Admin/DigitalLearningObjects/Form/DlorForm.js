@@ -147,7 +147,7 @@ export const DlorForm = ({
 
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
-    const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
+    const [showTeamForm, setShowTeamForm] = useState(false); // enable-disable the Team creation fields
     const [showFileTypeCreationForm, setShowFileTypeCreationForm] = useState(false); // enable-disable the File Type creation fields
 
     const [isLinkFileTypeError, setIsLinkFileTypeError] = useState(false);
@@ -162,11 +162,9 @@ export const DlorForm = ({
     const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
     const checkBoxArrayRef = useRef([]);
-    const teamSelectRef = useRef(1);
+    const teamSelectRef = useRef(null);
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
-
-    console.log('**** ', mode, '; formValues?.object_link_types=', formValues?.object_link_types);
 
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
@@ -300,16 +298,16 @@ export const DlorForm = ({
     }
 
     const handleChange = (prop, value) => e => {
-        // handle radio & checkbox filter field changes
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
-        // handle teams dropdown changes
         if (prop === 'object_is_featured') {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
+
+        // handle teams dropdown changes
         if (prop === 'object_owning_team_id') {
-            setShowTeamCreationForm(theNewValue === 'new');
+            setShowTeamForm(theNewValue === 'new' ? 'new' : false);
             teamSelectRef.current = theNewValue !== 'new' ? e.target.value : 'new';
         }
         if (prop === 'object_link_interaction_type') {
@@ -361,6 +359,76 @@ export const DlorForm = ({
     const isValidUsername = testUserName => {
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
+
+    const editTeam = () => {
+        console.log('editTeam - open form on button click');
+        setShowTeamForm(teamSelectRef.current);
+
+        console.log("getTeamFieldValue('team_email')=", getTeamFieldValue('team_email'));
+        // initialise values in form - duplicate code in resetForm for single call
+        const newValues = {
+            ...formValues,
+            team_name: getTeamFieldValue('team_name'),
+            team_manager: getTeamFieldValue('team_manager'),
+            team_email: getTeamFieldValue('team_email'),
+        };
+        console.log('editTeam editTeam resetform', newValues);
+
+        setFormValidity(validateValues(newValues));
+        setFormValues(newValues);
+    };
+
+    function getTeamFieldValue(fieldName) {
+        //
+        // TODO: when "edit" has been clicked and then they swap to a new team, clear the form,
+        //  but if they have previously used new form, don't wipe those values!
+        //
+        if (showTeamForm === 'new') {
+            console.log('getTeamFieldValue NEW for', fieldName, showTeamForm);
+            return !!formValues ? formValues[fieldName] : '';
+        }
+        // // they are editing an existing team
+        // if (!!formValues && !!formValues[fieldName]) {
+        //     console.log('getTeamFieldValue ONE for', fieldName, showTeamForm);
+        //     return formValues[fieldName];
+        // }
+        if (
+            !!dlorItem?.owner?.team_id &&
+            dlorItem?.owner?.team_id === teamSelectRef.current &&
+            !!dlorItem?.owner?.[fieldName]
+        ) {
+            // they havent previously entered anything & we are editing
+            let response = dlorItem?.owner?.[fieldName];
+            if (fieldName === 'team_email') {
+                response = 'dummy';
+            }
+            return response;
+        }
+        if (
+            (mode === 'edit' &&
+                !!dlorItem?.owner?.team_id &&
+                dlorItem?.owner?.team_id !== teamSelectRef.current &&
+                !!dlorItem?.owner?.[fieldName]) ||
+            (mode === 'add' && !!dlorTeam && !!teamSelectRef.current)
+        ) {
+            console.log('getTeamFieldValue THREE-FOUR for', fieldName);
+            const find1 = dlorTeam?.find(team => team.team_id === teamSelectRef.current);
+            let response = find1?.[fieldName];
+            if (fieldName === 'team_email') {
+                // response = find1?.team_email;
+                response = 'dummy';
+            }
+            return response;
+        }
+
+        // adding a new - use the default
+        // if (!!formDefaults && !!formDefaults[fieldName]) {
+        //     console.log('getTeamFieldValue FIVE for', fieldName, showTeamForm);
+        //     return formDefaults[fieldName];
+        // }
+        console.log('getTeamFieldValue FALL for', fieldName, showTeamForm);
+        return '';
+    }
 
     const stepPanelContentOwnership = (
         <>
@@ -423,9 +491,15 @@ export const DlorForm = ({
                         Create a team
                     </MenuItem>
                 </Select>
+                <button onClick={() => editTeam()} style={{ marginLeft: '10px' }}>
+                    Edit
+                </button>
             </Grid>
-            {showTeamCreationForm && (
-                <Grid item xs={12}>
+            {showTeamForm !== false && (
+                <Grid item xs={5}>
+                    {showTeamForm !== 'new' && (
+                        <p style={{ fontStyle: 'italic' }}>A change here will affect all Objects for this team</p>
+                    )}
                     <FormControl
                         variant="standard"
                         // className={classes.typingArea}
@@ -690,10 +764,8 @@ export const DlorForm = ({
 
     const getFileTypeListbyMode = () => {
         if (mode === 'add') {
-            console.log('**** getFileTypeListbyMode add dlorFileTypeList=', dlorFileTypeList);
             return dlorFileTypeList || [];
         }
-        console.log('**** getFileTypeListbyMode edit formValues?.object_link_types=', formValues?.object_link_types);
         // else Edit
         return formValues?.object_link_types || [];
     };
