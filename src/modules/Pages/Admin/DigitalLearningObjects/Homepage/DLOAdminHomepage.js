@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import { makeStyles } from '@mui/styles';
+import { Pagination } from '@mui/material';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DoneIcon from '@mui/icons-material/Done';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -25,6 +31,8 @@ const useStyles = makeStyles(theme => ({
     sidebyside: {
         display: 'flex',
         justifyContent: 'space-between',
+        marginLeft: -50,
+        marginRight: 50,
     },
     listItem: {
         paddingTop: 10,
@@ -33,6 +41,24 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
         },
     },
+    dlorPagination: {
+        width: '100%',
+        '& ul': {
+            justifyContent: 'center',
+        },
+    },
+    keywordSearchPanel: {
+        width: 'calc(100%)',
+        marginLeft: 20,
+        marginRight: 30,
+    },
+    featuredObject: {
+        textTransform: 'uppercase',
+        backgroundColor: theme.palette.success.main,
+        color: theme.palette.white.main,
+        fontSize: '14px',
+        padding: 6,
+    },
 }));
 
 export const DLOAdminHomepage = ({
@@ -40,12 +66,9 @@ export const DLOAdminHomepage = ({
     dlorList,
     dlorListLoading,
     dlorListError,
-    // dlorItemDeleting,
     dlorItemDeleteError,
-    // dlorItem,
     account,
 }) => {
-    console.log('DLOAdminHomepage dlorItemDeleteError=', dlorItemDeleteError);
     const classes = useStyles();
 
     const statusTypes = [
@@ -75,15 +98,14 @@ export const DLOAdminHomepage = ({
             isChecked: false,
         },
     ];
-    console.log('statusTypes=', statusTypes);
-    // const checkBoxArrayRef = React.useRef([
-    //     statusTypes.filter(t => {
-    //         t.type, t.isChecked;
-    //     }),
-    // ]);
     const [checkedStatusType, setCheckedStatusType] = useState(statusTypes.map(status => status.isChecked));
 
     const [objectToDelete, setObjectToDelete] = useState(null);
+
+    const [paginationPage, setPaginationPage] = useState(1);
+
+    const [keywordSearch, setKeywordSearch] = useState('');
+    const keyWordSearchRef = useRef('');
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -148,14 +170,78 @@ export const DLOAdminHomepage = ({
         setCheckedStatusType(newStatusTypeSet);
     };
 
-    const mapOverRequestedTypes = dlorlistToFilter => {
+    const numberItemsPerPage = 10; // value also set in cypress dlorHomepage.spec
+
+    function filterOnKeyword(filteredDlorList) {
+        if (!!keywordSearch && !!keywordIsSearchable(keywordSearch)) {
+            filteredDlorList = filteredDlorList.filter(t => keywordFoundIn(t, keywordSearch));
+        }
+        return filteredDlorList;
+    }
+
+    const filterDLorList = (dlorlistToFilter, pageloadShown) => {
         const requestedStatuses = statusTypes
             .filter((type, index) => checkedStatusType[index] === true)
             .map(t => t.type);
-        return dlorlistToFilter.filter(d => requestedStatuses.includes(d.object_status));
+        let filteredDlorList = dlorlistToFilter.filter(d => requestedStatuses.includes(d.object_status));
+        filteredDlorList = filterOnKeyword(filteredDlorList);
+
+        filteredDlorList.sort((a, b) => b.object_is_featured - a.object_is_featured);
+
+        const paginatedFilteredDlorList = filteredDlorList.filter((_, index) => {
+            const startIndex = (pageloadShown - 1) * numberItemsPerPage;
+            const endIndex = startIndex + numberItemsPerPage;
+            return index >= startIndex && index < endIndex;
+        });
+        return paginatedFilteredDlorList;
     };
 
     const numberOfListItemsOfType = (list, statusType) => list.filter(d => d.object_status === statusType)?.length;
+
+    const handlePaginationChange = (e, value) => {
+        setPaginationPage(value);
+    };
+
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword?.length > 1;
+    }
+
+    const keywordFoundIn = (object, enteredKeyword) => {
+        const enteredKeywordLower = enteredKeyword.toLowerCase();
+        if (
+            object.object_title.toLowerCase().includes(enteredKeywordLower) ||
+            object.object_description.toLowerCase().includes(enteredKeywordLower) ||
+            object.object_summary.toLowerCase().includes(enteredKeywordLower)
+        ) {
+            return true;
+        }
+        if (
+            !!object?.object_keywords?.some(k => {
+                return k.toLowerCase().startsWith(enteredKeywordLower);
+            })
+        ) {
+            return true;
+        }
+        return false;
+    };
+
+    const handleKeywordSearch = e => {
+        const keyword = e?.target?.value;
+        keyWordSearchRef.current.value = keyword;
+
+        if (keywordIsSearchable(keyword)) {
+            setKeywordSearch(keyword);
+        } else if (keyword.length === 0) {
+            clearKeywordField();
+        }
+    };
+
+    const clearKeywordField = () => {
+        setKeywordSearch('');
+        keyWordSearchRef.current.value = '';
+        setPaginationPage(1);
+    };
 
     return (
         <StandardPage title="Digital learning hub Management">
@@ -227,6 +313,7 @@ export const DLOAdminHomepage = ({
                             </Grid>
                         );
                     } else {
+                        const paginationCount = Math.ceil(filterOnKeyword(dlorList)?.length / numberItemsPerPage);
                         return (
                             <>
                                 <Grid item xs={12}>
@@ -253,19 +340,47 @@ export const DLOAdminHomepage = ({
                                             );
                                         })}
                                 </Grid>
-                                <Grid item style={{ width: '100%' }}>
+                                <TextField
+                                    className={classes.keywordSearchPanel}
+                                    data-testid="dlor-homepage-keyword"
+                                    label="Search by keyword"
+                                    onChange={handleKeywordSearch}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton onClick={clearKeywordField}>
+                                                    {keyWordSearchRef.current?.value === '' ? (
+                                                        <SearchIcon />
+                                                    ) : (
+                                                        <CloseIcon data-testid="keyword-clear" />
+                                                    )}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    inputRef={keyWordSearchRef}
+                                />{' '}
+                                <Grid item style={{ width: '100%' }} data-testid="dlor-homepage-list">
                                     {dlorList?.length > 0 &&
-                                        mapOverRequestedTypes(dlorList).map(o => {
+                                        filterDLorList(dlorList, paginationPage).map(o => {
                                             return (
                                                 <Grid
                                                     container
                                                     className={classes.listItem}
                                                     key={`list-dlor-${o?.object_id}`}
-                                                    data-testid="dlor-homepage-list"
                                                 >
+                                                    <Grid item xs={1} style={{ marginTop: 4 }}>
+                                                        {o?.object_is_featured === 1 && (
+                                                            <DoneIcon
+                                                                data-testid={`dlor-homepage-featured-${o?.object_public_uuid}`}
+                                                                title="This object is Featured"
+                                                                style={{ color: 'green' }}
+                                                            />
+                                                        )}
+                                                    </Grid>
                                                     <Grid
                                                         item
-                                                        xs={10}
+                                                        xs={9}
                                                         className={classes.sidebyside}
                                                         data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
                                                     >
@@ -299,6 +414,16 @@ export const DLOAdminHomepage = ({
                                                 </Grid>
                                             );
                                         })}
+                                    {!!dlorList && dlorList.length > 0 && (
+                                        <Pagination
+                                            count={paginationCount}
+                                            showFirstButton
+                                            showLastButton
+                                            onChange={handlePaginationChange}
+                                            page={paginationPage}
+                                            className={classes.dlorPagination}
+                                        />
+                                    )}
                                 </Grid>
                             </>
                         );

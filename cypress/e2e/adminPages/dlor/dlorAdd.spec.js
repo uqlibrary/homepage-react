@@ -672,6 +672,7 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: typeableDownloadInstructions,
                     object_embed_type: 'link',
+                    object_is_featured: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
@@ -698,6 +699,7 @@ describe('Add an object to the Digital learning hub', () => {
                     expectedValues.object_description =
                         '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
                     console.log('sentValues=', sentValues);
+                    console.log('expectedValues=', expectedValues);
 
                     // had trouble comparing the entire structure
                     const sentFacets = sentValues.facets;
@@ -857,6 +859,7 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: downloadInstructionText,
                     object_embed_type: 'link',
+                    object_is_featured: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
@@ -1032,6 +1035,7 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_url: 'http://example.com',
                     object_owning_team_id: 1,
                     object_embed_type: 'link',
+                    object_is_featured: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
@@ -1184,6 +1188,7 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_url: 'http://example.com',
                     object_owning_team_id: 1,
                     object_embed_type: 'link',
+                    object_is_featured: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',

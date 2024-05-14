@@ -1,10 +1,11 @@
-const gridFromExpectedRowCount = (expected = 23) => expected * 3;
-
 describe('Digital learning hub admin homepage', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
+
+    const itemsPerPage = 10; // matches value in DLOAdminHomepage
+    const gridFromExpectedRowCount = (expected = 23) => (expected > itemsPerPage ? itemsPerPage : expected) + 1;
 
     const mockDlorAdminUser = 'dloradmn';
     context('homepage', () => {
@@ -43,6 +44,108 @@ describe('Digital learning hub admin homepage', () => {
                 .should('exist')
                 .children()
                 .should('have.length', gridFromExpectedRowCount());
+
+            // sorts properly ('UQ has a Blak History' moves from position 3 to 2)
+            cy.get('[data-testid="dlor-homepage-list"] > div:first-child h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Accessibility - Digital Essentials');
+            cy.get('[data-testid="dlor-homepage-list"] > div:first-child svg')
+                .should('exist')
+                .should('have.attr', 'style', 'color: green;'); // has green tick
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) h2')
+                .should('exist')
+                .should('contain', 'UQ has a Blak History');
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) svg')
+                .should('exist')
+                .should('have.attr', 'style', 'color: green;'); // has green tick
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) h2')
+                .should('exist')
+                .should('contain', 'Advanced literature searching');
+            cy.get('[data-testid="dlor-homepage-featured-98s0_dy5k3_98h4"]').should('not.exist'); // unfeatured: no green tick
+        });
+        it('pagination works', () => {
+            // no data-testids in pagination :(
+
+            const numPages = 3;
+            const numExtraButtons = 4; // first, prev, next, last
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', numPages + numExtraButtons);
+
+            // button 1 has focus
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button')
+                .should('exist')
+                // .should('have.value', '1')
+                .should('have.class', 'Mui-selected');
+
+            // the displayed entries are what is expected
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Accessibility - Digital Essentials');
+
+            // click pagination for next page
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button')
+                .should('exist')
+                // .should('have.value', '2')
+                .click();
+
+            // the displayed entries have updated
+            cy.get('[data-testid="dlor-homepage-list"] button:first-child')
+                .should('exist')
+                .should('be.visible');
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2').should(
+                'contain',
+                'Dummy entry to increase list size 3',
+            );
+
+            // click pagination to go to first page
+            cy.get('nav[aria-label="pagination navigation"] li:first-child button')
+                .should('exist')
+                .click();
+        });
+        it('can filter on keyword', () => {
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount());
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Accessibility - Digital Essentials');
+            const numExtraButtons = 4; // first, prev, next, last
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', 3 + numExtraButtons);
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .should('exist')
+                .should('be.visible');
+
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('d');
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount()); // no change with one char
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Accessibility - Digital Essentials');
+
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('ummy');
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Dummy entry to increase list size A');
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + numExtraButtons); // now only 2 pages
         });
         it('can cancel deletion of an Object', () => {
             // click delete icon on first Object
@@ -199,6 +302,9 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"] button:nth-child(2)')
                 .should('exist')
                 .should('be.disabled');
+        });
+        it('featured objects go first', () => {
+            //
         });
     });
     context('error handling', () => {

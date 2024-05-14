@@ -58,6 +58,8 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             cursor: 'pointer',
             textDecoration: 'none',
+            borderTopColor: '#f2f2f2',
+            borderLeftColor: '#f2f2f2',
             '& > article': {
                 backgroundColor: '#f2f2f2',
             },
@@ -409,6 +411,7 @@ export const DLOList = ({
     const clearKeywordField = () => {
         setKeywordSearch('');
         keyWordSearchRef.current.value = '';
+        setPaginationPage(1);
     };
 
     const handleCheckboxAction = prop => e => {
@@ -609,14 +612,16 @@ export const DLOList = ({
     const numberItemsPerPage = 10;
 
     function filterDlorList() {
-        let filteredDlorList;
+        const sortedList = dlorList.sort((a, b) => b.object_is_featured - a.object_is_featured);
+
         if (
             (!selectedFilters || selectedFilters.length === 0) &&
             (!keywordSearch || !keywordIsSearchable(keywordSearch))
         ) {
-            return dlorList;
+            return sortedList;
         }
-        return dlorList?.filter(d => {
+
+        return sortedList?.filter(d => {
             const passesCheckboxFilter =
                 !!d?.constructedFilters &&
                 !!selectedFilters &&
