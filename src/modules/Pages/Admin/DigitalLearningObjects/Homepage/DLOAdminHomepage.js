@@ -31,8 +31,10 @@ const useStyles = makeStyles(theme => ({
     sidebyside: {
         display: 'flex',
         justifyContent: 'space-between',
-        marginLeft: -50,
-        marginRight: 50,
+        [theme.breakpoints.up('lg')]: {
+            marginLeft: -50,
+            marginRight: 50,
+        },
     },
     listItem: {
         paddingTop: 10,
