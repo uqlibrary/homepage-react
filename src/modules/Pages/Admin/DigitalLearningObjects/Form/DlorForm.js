@@ -1180,6 +1180,7 @@ export const DlorForm = ({
         errorMessage: {
             confirmationTitle: dlorSavedItemError,
             confirmationMessage: '',
+            cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
             confirmButtonLabel: 'Return to list page',
         },
     };
@@ -1411,7 +1412,7 @@ export const DlorForm = ({
                     onCancelAction={() => clearForm()}
                     onClose={closeConfirmationBox}
                     isOpen={isOpen}
-                    locale={!dlorSavedItemError ? locale.successMessage : locale.errorMessage}
+                    locale={!!dlorSavedItemError ? locale.errorMessage : locale.successMessage}
                 />
             )}
             <form id="dlor-addedit-form">

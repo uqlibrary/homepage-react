@@ -607,7 +607,7 @@ mock.onGet(/dlor\/find\/.*/)
         const urlparts = config.url.split('/').pop();
         const dlorId = urlparts.split('?')[0];
         if (responseType === 'saveError') {
-            return [500, {}];
+            return [400, {}];
         } else if (dlorId === 'missingRecord') {
             return [200, { data: {} }]; // this would more likely be a 404
         } else {

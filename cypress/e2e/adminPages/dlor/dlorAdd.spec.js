@@ -662,7 +662,15 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('not.be.disabled')
                     .click();
 
+                // confirm save happened
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Add another Object');
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -731,10 +739,19 @@ describe('Add an object to the Digital learning hub', () => {
                     cy.clearCookie('CYPRESS_DATA_SAVED');
                     cy.clearCookie('CYPRESS_TEST_DATA');
                 });
-                // and navigate back to the list page
+
+                // confirm save happened
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
-                    .should('contain', 'Return to list page')
-                    .click();
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Add another Object');
+
+                // and navigate back to the list page
+                cy.get('[data-testid="confirm-dlor-save-outcome"]').click();
                 cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
                 cy.get('[data-testid="StandardPage-title"]')
                     .should('exist')
@@ -847,11 +864,16 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
-                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
 
-                // wait for the save to complete
+                // confirm save happened
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Add another Object');
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -915,10 +937,18 @@ describe('Add an object to the Digital learning hub', () => {
                     cy.clearCookie('CYPRESS_TEST_DATA');
                 });
 
-                // now clear the form to create another Object
+                // confirm save happened
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
-                    .should('contain', 'Add another Object')
-                    .click();
+                    .should('exist')
+                    .contains('Add another Object');
+
+                // now clear the form to create another Object
+                cy.get('[data-testid="cancel-dlor-save-outcome"]').click();
                 cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -1033,7 +1063,15 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('not.be.disabled')
                     .click();
 
+                // confirm save happened
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Add another Object');
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -1186,7 +1224,15 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('not.be.disabled')
                     .click();
 
+                // confirm save happened
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Add another Object');
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -1313,11 +1359,18 @@ describe('Add an object to the Digital learning hub', () => {
                     .should('exist')
                     .should('not.be.disabled')
                     .click();
+
                 // "responseType=saveError" on the url forces an error from mock api
                 cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-outcome"]').should('exist'));
                 cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains(
                     'An error has occurred during the request and this request cannot be processed',
                 );
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Add another Object');
             });
         });
     });
