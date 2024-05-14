@@ -303,9 +303,6 @@ describe('Digital learning hub admin homepage', () => {
                 .should('exist')
                 .should('be.disabled');
         });
-        it('featured objects go first', () => {
-            //
-        });
     });
     context('error handling', () => {
         it('deletion failure pops up an error', () => {

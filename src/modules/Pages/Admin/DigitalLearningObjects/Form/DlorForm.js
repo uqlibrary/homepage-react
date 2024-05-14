@@ -670,20 +670,16 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth style={{ paddingBottom: 20 }}>
-                    <FormLabel>Featured object?</FormLabel>
-                    <InputLabel
-                        title="Is this Objected Featured at the top of the list page?"
-                        className={`${classes.scheduleCell}`}
-                    >
-                        <Checkbox
-                            checked={formValues?.object_is_featured === 1}
-                            data-testid="object_is_featured"
-                            onChange={handleChange('object_is_featured')}
-                        />
-                        Is this Objected Featured at the top of the list page?
-                    </InputLabel>
-                </FormControl>
+                <FormLabel>Featured object?</FormLabel>
+                <InputLabel>
+                    <Checkbox
+                        checked={!!formValues?.object_is_featured}
+                        data-testid="object_is_featured"
+                        onChange={handleChange('object_is_featured')}
+                        style={{ paddingLeft: 0 }}
+                    />
+                    Feature this Object at the top of the list page
+                </InputLabel>
             </Grid>
         </>
     );
