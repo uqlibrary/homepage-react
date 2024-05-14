@@ -117,10 +117,10 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="object_link_duration"]').should('not.exist');
                 cy.get('[data-testid="object_link_file_size"]').should('not.exist');
 
-                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                    .should('exist')
-                    .contains('some download instructions');
-
+                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                //     .should('exist')
+                //     .contains('some download instructions');
+                CheckCKEditor('some download instructions');
                 // go to panel 4
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -390,12 +390,13 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
                 const typeableDownloadInstructions = 'xxx';
-                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                    .should('exist')
-                    .type(typeableDownloadInstructions);
-                cy.get('[data-testid="dlor-massaged-download-instructions"]')
-                    .should('exist')
-                    .should('contain', 'xxx');
+                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                //     .should('exist')
+                //     .type(typeableDownloadInstructions);
+                TypeCKEditor(typeableDownloadInstructions, true);
+                // cy.get('[data-testid="dlor-massaged-download-instructions"]')
+                //     .should('exist')
+                //     .should('contain', 'xxx');
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -481,7 +482,7 @@ describe('Edit an object on the Digital learning hub', () => {
 
                     expectedValues.object_description =
                         '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
-
+                    expectedValues.object_download_instructions = '<p>' + typeableDownloadInstructions + '</p>';
                     console.log('sentValues=', sentValues);
                     console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
@@ -587,10 +588,11 @@ describe('Edit an object on the Digital learning hub', () => {
 
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
-                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                    .should('exist')
-                    .clear()
-                    .type(downloadInstructionText);
+                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                //     .should('exist')
+                //     .clear()
+                //     .type(downloadInstructionText);
+                TypeCKEditor(downloadInstructionText, true);
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -680,7 +682,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete expectedValues.object_keywords;
                     expectedValues.object_description =
                         '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
-
+                    expectedValues.object_download_instructions = '<p>' + downloadInstructionText + '</p>';
                     console.log('sentValues=', sentValues);
                     console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
@@ -738,10 +740,11 @@ describe('Edit an object on the Digital learning hub', () => {
 
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
-                cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                    .should('exist')
-                    .clear()
-                    .type('word');
+                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
+                //     .should('exist')
+                //     .clear()
+                //     .type('word');
+                TypeCKEditor('word', true);
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -808,7 +811,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete sentValues.object_keywords;
                     delete expectedValues.facets;
                     delete expectedValues.object_keywords;
-
+                    expectedValues.object_download_instructions = '<p>word</p>';
                     console.log('sentFacets=', sentFacets);
                     console.log('expectedFacets=', expectedFacets);
                     expect(sentValues).to.deep.equal(expectedValues);
