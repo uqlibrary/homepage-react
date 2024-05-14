@@ -249,7 +249,7 @@ export const DlorForm = ({
         //     object_description: newContent,
         // });
         setSummarySuggestionOpen(true);
-        resetForm('object_description', newContent);
+        resetForm(fieldname, newContent);
     };
 
     // export const ManageAuthorsList = ({ onBulkRowDelete, onRowAdd, onRowDelete, onRowUpdate, onScopusIngest }) => {
@@ -501,6 +501,7 @@ export const DlorForm = ({
     };
 
     function resetForm(prop, theNewValue) {
+        console.log('THE NEW VALUE', theNewValue);
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
@@ -947,35 +948,38 @@ export const DlorForm = ({
                     fullWidth
                 >
                     <InputLabel htmlFor="object_download_instructions">Download Instructions</InputLabel>
-                    <Input
+                    {/* <Input
                         id="object_download_instructions"
                         data-testid="object_download_instructions"
                         multiline
                         rows={6}
                         value={formValues?.object_download_instructions || ''}
                         onChange={handleChange('object_download_instructions')}
+                    /> */}
+
+                    <CKEditor
+                        id="download_instructions"
+                        data-testid="download_instructions"
+                        style={{ width: '100%' }}
+                        className={classes.CKEditor}
+                        editor={ClassicEditor}
+                        config={editorConfig}
+                        data={formValues?.object_download_instructions || ''}
+                        onReady={editor => {
+                            // You can store the "editor" and use when it is needed.
+                            // console.log("Editor is ready to use!", editor);
+                            editor.editing.view.change(writer => {
+                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                            });
+                        }}
+                        onChange={(event, editor) => {
+                            const htmlData = editor.getData();
+                            // const plainText = html2text.fromString(htmlData);
+                            // console.log('data:', plainText);
+                            // /setTimeout(() => console.log('TEST FIRE'), 0);
+                            handleEditorChange('object_download_instructions', htmlData);
+                        }}
                     />
-                    <div className={classes.fieldUseTip}>
-                        Links can use Markdown formatting, like so:{' '}
-                        <span
-                            title="Square brackets around the clickable words; round braces around the web address"
-                            style={{ borderBottom: 'thin dashed black' }}
-                        >
-                            [Link text](linkUrl)
-                        </span>
-                    </div>
-                    {!!formValues?.object_download_instructions && (
-                        <>
-                            <Typography component={'h2'} variant={'h6'}>
-                                Preview:
-                            </Typography>
-                            {!!formValues?.object_download_instructions &&
-                                displayDownloadInstructions(
-                                    formValues.object_download_instructions,
-                                    classes.downloadInstructions,
-                                )}
-                        </>
-                    )}
                 </FormControl>
             </Grid>
         </>

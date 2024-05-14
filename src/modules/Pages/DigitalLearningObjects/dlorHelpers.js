@@ -1,23 +1,21 @@
 import React from 'react';
+import parse from 'html-react-parser';
 
 export const displayDownloadInstructions = (downloadInstructions, theClass) => {
-    const replaceMarkdownLinks = (match, linkText, url) => {
-        return `<a rel="noreferrer noopener" href="${url}">${linkText}</a>`;
-    };
+    function addRelnoopenerNoreferrer(htmlString) {
+        // Use regular expression to find all anchor tags (<a>)
+        const regex = /<a([^>]+)>/g;
+        return htmlString.replace(regex, (match, attributes) => {
+            // Add the rel="noopener noreferrer" attribute
+            return `<a ${attributes} rel="noopener noreferrer">`;
+        });
+    }
 
-    const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g;
-    const content = downloadInstructions.replace(markdownLinkRegex, replaceMarkdownLinks).split('\n');
+    const content = addRelnoopenerNoreferrer(downloadInstructions);
 
     return (
         <div data-testid="dlor-massaged-download-instructions" className={theClass}>
-            {content.map((line, index) => (
-                <p
-                    key={index}
-                    dangerouslySetInnerHTML={{
-                        __html: line,
-                    }}
-                />
-            ))}
+            {parse(content)}
         </div>
     );
 };
