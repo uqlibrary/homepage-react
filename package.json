@@ -138,7 +138,7 @@
         "@sentry/tracing": "^7.15.0",
         "@webcomponents/webcomponentsjs": "^2.8.0",
         "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
-        "axios": "^0.28.0",
+        "axios": "^0.28.1",
         "axios-cache-interceptor": "^0.10.2",
         "babel-plugin-add-module-exports": "^1.0.4",
         "classnames": "^2.5.1",
@@ -234,7 +234,7 @@
         "test:debug": "npm-run-all -p test jest-preview"
     },
     "engines": {
-        "npm": "~10.2.5",
+        "npm": "~10.5.0",
         "node": ">=18.19.0"
     },
     "babel": {
