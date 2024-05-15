@@ -552,7 +552,7 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth>
+                <FormControl variant="standard" fullWidth style={{ paddingTop: 50 }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
                     {/* <Input
                         id="object_description"
@@ -917,17 +917,11 @@ export const DlorForm = ({
                     variant="standard"
                     // className={classes.typingArea}
                     fullWidth
+                    style={{ paddingTop: 50 }}
                 >
-                    <InputLabel htmlFor="object_download_instructions">Download Instructions</InputLabel>
-                    {/* <Input
-                        id="object_download_instructions"
-                        data-testid="object_download_instructions"
-                        multiline
-                        rows={6}
-                        value={formValues?.object_download_instructions || ''}
-                        onChange={handleChange('object_download_instructions')}
-                    /> */}
-
+                    <InputLabel htmlFor="object_download_instructions" style={{ fontSize: 16 }}>
+                        Download Instructions
+                    </InputLabel>
                     <CKEditor
                         id="download_instructions"
                         data-testid="download_instructions"
