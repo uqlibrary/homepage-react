@@ -521,6 +521,186 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
                 cy.viewport(1300, 1000);
             });
+            it('when the admin changes their mind about a new team, an old team is saved', () => {
+                cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
+                    expect(cookie).to.exist;
+                    expect(cookie.value).to.equal('active');
+                });
+
+                // open teams drop down
+                cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object-form-teamid-new"]')
+                    .should('exist')
+                    .click();
+
+                // enter a new team
+                cy.get('[data-testid="team_name"]')
+                    .should('exist')
+                    .type('new team name');
+                cy.get('[data-testid="team_manager"]')
+                    .should('exist')
+                    .type('john Manager');
+                cy.get('[data-testid="team_email"]')
+                    .should('exist')
+                    .type('john@example.com');
+
+                // go to the second panel, Description
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="object_title"] input')
+                    .should('exist')
+                    .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                TypeCKEditor('new description'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                cy.get('[data-testid="object_summary"] textarea:first-child')
+                    .should('exist')
+                    .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
+
+                cy.get('[data-testid="object_is_featured"] input')
+                    .should('exist')
+                    .should('not.be.checked');
+                cy.get('[data-testid="object_is_featured"] input').check();
+
+                // go back to the first panel
+                cy.get('[data-testid="dlor-form-back-button"]')
+                    .should('exist')
+                    .click();
+                // change mind about team and select 2nd team
+                cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-value="3"]')
+                    .should('exist')
+                    .click();
+
+                // go to the third panel, Link
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="object_link_url"] input')
+                    .should('exist')
+                    .type('http://example.com');
+
+                // use default object_link_interaction_type
+                // use blank download instructions
+
+                // go to the fourth panel, Filtering
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="filter-1"] input').check(); // aboriginal_and_torres_strait_islander
+                cy.get('[data-testid="filter-2"] input').check(); // assignments
+                cy.get('[data-testid="filter-22"] input').check(); // media_audio
+                cy.get('[data-testid="filter-24"] input').check(); // media_h5p
+                cy.get('[data-testid="filter-34"] input').check(); // all_cross_disciplinary
+                cy.get('[data-testid="filter-35"] input').check(); // business_economics
+                cy.get('[data-testid="filter-17"] input').check(); // type_interactive_activity
+                cy.get('[data-testid="filter-45"] input').check();
+                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                    .should('exist')
+                    .type('cat, dog');
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled');
+
+                // save new dlor
+                cy.get('[data-testid="admin-dlor-save-button-submit"]')
+                    .should('exist')
+                    .should('not.be.disabled')
+                    .click();
+
+                // confirm save happened
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Add another Object');
+
+                // check the data we pretended to send to the server matches what we expect
+                // acts as check of what we sent to api
+                const expectedValues = {
+                    object_title: 'xxxxxxxx',
+                    object_description:
+                        '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>',
+                    object_summary: 'new summary xxxxxxxx',
+                    object_link_interaction_type: 'none',
+                    object_link_url: 'http://example.com',
+                    object_download_instructions: '',
+                    object_is_featured: 1,
+                    object_publishing_user: 'dloradmn',
+                    object_review_date_next: '2025-03-26T00:01',
+                    object_status: 'new',
+                    object_owning_team_id: 3,
+                    object_keywords: ['cat', 'dog'],
+                    facets: [
+                        1, // aboriginal_and_torres_strait_islander
+                        2, // assignments
+                        22, // media_audio
+                        24, // media_h5p
+                        34, // all_cross_disciplinary
+                        35, // business_economics
+                        17, // type_interactive_activity
+                        45, // cc_by_nc_attribution_noncommercial
+                    ],
+                };
+                cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                    expect(cookie).to.exist;
+                    const decodedValue = decodeURIComponent(cookie.value);
+                    const sentValues = JSON.parse(decodedValue);
+
+                    console.log('sentValues=', sentValues);
+                    console.log('expectedValues=', expectedValues);
+
+                    // had trouble comparing the entire structure
+                    const sentFacets = sentValues.facets;
+                    const expectedFacets = expectedValues.facets;
+                    const sentKeywords = sentValues.object_keywords;
+                    const expectedKeywords = expectedValues.object_keywords;
+                    delete sentValues.facets;
+                    delete expectedValues.facets;
+                    // delete sentValues.object_description;
+                    // delete expectedValues.object_description;
+                    delete sentValues.object_keywords;
+                    delete expectedValues.object_keywords;
+                    delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
+                    delete expectedValues.object_review_date_next;
+
+                    console.log('Comparison', sentValues, expectedValues);
+
+                    expect(sentValues).to.deep.equal(expectedValues);
+                    expect(sentFacets).to.deep.equal(expectedFacets);
+                    expect(sentKeywords).to.deep.equal(expectedKeywords);
+
+                    cy.clearCookie('CYPRESS_DATA_SAVED');
+                    cy.clearCookie('CYPRESS_TEST_DATA');
+                });
+
+                // confirm save happened
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('The object has been created');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Add another Object');
+
+                // and navigate back to the list page
+                cy.get('[data-testid="confirm-dlor-save-outcome"]').click();
+                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
+                cy.get('[data-testid="StandardPage-title"]')
+                    .should('exist')
+                    .should('contain', 'Digital learning hub Management');
+            });
             it('admin can create a new object for a new team and make it featured and return to list', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
@@ -684,7 +864,6 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_size: '36000',
                     object_link_url: 'http://example.com',
                     object_download_instructions: typeableDownloadInstructions,
-                    object_embed_type: 'link',
                     object_is_featured: 1,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
@@ -887,7 +1066,6 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_size: 227,
                     object_link_url: 'http://example.com',
                     object_download_instructions: downloadInstructionText,
-                    object_embed_type: 'link',
                     object_is_featured: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
@@ -1081,7 +1259,6 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_interaction_type: 'none',
                     object_link_url: 'http://example.com',
                     object_owning_team_id: 1,
-                    object_embed_type: 'link',
                     object_is_featured: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
@@ -1244,7 +1421,6 @@ describe('Add an object to the Digital learning hub', () => {
                     object_link_size: 227,
                     object_link_url: 'http://example.com',
                     object_owning_team_id: 1,
-                    object_embed_type: 'link',
                     object_is_featured: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
