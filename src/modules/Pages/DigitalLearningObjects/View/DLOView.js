@@ -214,9 +214,9 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                         <div data-testid="dlor-detailpage-description">
                             {!!dlorItem?.object_description && parse(dlorItem.object_description)}
                         </div>
-                        {dlorItem?.object_embed_type === 'link' && !!dlorItem?.object_link_url && (
+                        {!!dlorItem?.object_link_url && (
                             <div className={classes.uqActionButton} data-testid="detailpage-getit-button">
-                                <a aria-label="Click to visit the Learning Resource" href={dlorItem.object_link_url}>
+                                <a aria-label="Click to access the object" href={dlorItem.object_link_url}>
                                     {getItButtonLabel(dlorItem)}
                                 </a>
                             </div>

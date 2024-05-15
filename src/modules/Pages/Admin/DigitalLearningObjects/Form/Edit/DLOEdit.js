@@ -86,7 +86,6 @@ export const DLOEdit = ({
         object_description: dlorItem?.object_description,
         object_summary: dlorItem?.object_summary,
         object_owning_team_id: dlorItem?.object_owning_team_id,
-        object_embed_type: dlorItem?.object_embed_type,
         object_link_url: dlorItem?.object_link_url,
         object_download_instructions: dlorItem?.object_download_instructions,
         object_publishing_user: dlorItem?.owner?.publishing_user_username,

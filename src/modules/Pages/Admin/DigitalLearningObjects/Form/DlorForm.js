@@ -705,245 +705,213 @@ export const DlorForm = ({
     const stepPanelContentLinks = (
         <>
             <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth>
-                    <FormLabel id="object_embed_type_label">Object inclusion type</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="demo-radio-object_embed_type_label-group-label"
-                        defaultValue="link"
-                        name="object_embed_type_radio-buttons-group"
-                        row
-                        value={formValues?.object_embed_type || 'link'}
-                        onChange={handleChange('object_embed_type')}
-                    >
-                        <FormControlLabel value="link" control={<Radio />} label="Link" />
-                        <FormControlLabel value="embed" control={<Radio />} label="Embedded" disabled />
-                    </RadioGroup>
+                <FormControl
+                    variant="standard"
+                    // className={classes.typingArea}
+                    fullWidth
+                >
+                    <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
+                    <Input
+                        id="object_link_url"
+                        data-testid="object_link_url"
+                        required
+                        value={formValues?.object_link_url || ''}
+                        onChange={handleChange('object_link_url')}
+                        error={
+                            !!formValues?.object_link_url &&
+                            formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                            !isValidUrl(formValues?.object_link_url)
+                        }
+                    />
+                    {formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                        !isValidUrl(formValues?.object_link_url) && (
+                            <div className={classes.errorMessage} data-testid={'error-message-object_link_url'}>
+                                This web address is not valid.
+                            </div>
+                        )}
+                    {formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                        isPreviewableUrl(formValues?.object_link_url) !== false && (
+                            <p style={{ display: 'flex', alignItems: 'center' }} data-testid="object_link_url_preview">
+                                <DoneIcon color="success" />
+                                <span>A preview will show on the View page.</span>
+                            </p>
+                        )}
                 </FormControl>
             </Grid>
-            {formValues?.object_embed_type === 'link' && (
-                <>
-                    <Grid item xs={12}>
-                        <FormControl
-                            variant="standard"
-                            // className={classes.typingArea}
-                            fullWidth
-                        >
-                            <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
-                            <Input
-                                id="object_link_url"
-                                data-testid="object_link_url"
-                                required
-                                value={formValues?.object_link_url || ''}
-                                onChange={handleChange('object_link_url')}
-                                error={
-                                    !!formValues?.object_link_url &&
-                                    formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                                    !isValidUrl(formValues?.object_link_url)
-                                }
-                            />
-                            {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                                !isValidUrl(formValues?.object_link_url) && (
-                                    <div className={classes.errorMessage} data-testid={'error-message-object_link_url'}>
-                                        This web address is not valid.
-                                    </div>
-                                )}
-                            {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                                isPreviewableUrl(formValues?.object_link_url) !== false && (
-                                    <p
-                                        style={{ display: 'flex', alignItems: 'center' }}
-                                        data-testid="object_link_url_preview"
-                                    >
-                                        <DoneIcon color="success" />
-                                        <span>A preview will show on the View page.</span>
-                                    </p>
-                                )}
+            <Grid item xs={12}>
+                <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
+                    Message advising about link
+                </InputLabel>
+                <Grid container>
+                    <Grid item xs={4}>
+                        <FormControl>
+                            <span>&nbsp;</span>
+                            <Select
+                                variant="standard"
+                                labelId="object_link_interaction_type-label"
+                                id="object_link_interaction_type"
+                                data-testid="object_link_interaction_type"
+                                value={linkInteractionTypeSelectRef.current}
+                                onChange={handleChange('object_link_interaction_type')}
+                                style={{ width: '100%' }}
+                            >
+                                <MenuItem
+                                    value={linkInteractionType_download}
+                                    data-testid="object_link_interaction_type-download"
+                                    selected={linkInteractionTypeSelectRef.current === linkInteractionType_download}
+                                >
+                                    can Download
+                                </MenuItem>
+                                <MenuItem
+                                    value={linkInteractionType_view}
+                                    data-testid="object_link_interaction_type-view"
+                                    selected={linkInteractionTypeSelectRef.current === linkInteractionType_view}
+                                >
+                                    can View
+                                </MenuItem>
+                                <MenuItem
+                                    value={linkInteractionType_none}
+                                    data-testid="object_link_interaction_type-none"
+                                    selected={
+                                        ![linkInteractionType_download, linkInteractionType_view].includes(
+                                            linkInteractionTypeSelectRef.current,
+                                        )
+                                    }
+                                >
+                                    No message
+                                </MenuItem>
+                            </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
-                        <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
-                            Message advising about link
-                        </InputLabel>
-                        <Grid container>
-                            <Grid item xs={4}>
-                                <FormControl>
-                                    <span>&nbsp;</span>
+                    <Grid item xs={4}>
+                        <FormControl style={{ minWidth: '10em' }}>
+                            {[linkInteractionType_download, linkInteractionType_view].includes(
+                                linkInteractionTypeSelectRef.current,
+                            ) && (
+                                <>
+                                    <InputLabel htmlFor="object_link_file_type">File type *</InputLabel>
                                     <Select
                                         variant="standard"
-                                        labelId="object_link_interaction_type-label"
-                                        id="object_link_interaction_type"
-                                        data-testid="object_link_interaction_type"
-                                        value={linkInteractionTypeSelectRef.current}
-                                        onChange={handleChange('object_link_interaction_type')}
-                                        style={{ width: '100%' }}
+                                        labelId="object_link_file_type"
+                                        id="object_link_file_type"
+                                        data-testid="object_link_file_type"
+                                        value={linkFileTypeSelectRef.current}
+                                        onChange={handleChange('object_link_file_type')}
+                                        style={{ width: '100%', marginTop: 20 }}
                                     >
+                                        {getFileTypeList.map((type, index) => (
+                                            <MenuItem
+                                                key={type.object_link_file_type}
+                                                data-testid={`object_link_file_type-${type.object_link_file_type}`}
+                                                value={type.object_link_file_type}
+                                                selected={type.object_link_file_type === linkFileTypeSelectRef.current}
+                                            >
+                                                {type.object_link_file_type}
+                                            </MenuItem>
+                                        ))}
                                         <MenuItem
-                                            value={linkInteractionType_download}
-                                            data-testid="object_link_interaction_type-download"
-                                            selected={
-                                                linkInteractionTypeSelectRef.current === linkInteractionType_download
-                                            }
+                                            data-testid={'object_link_file_type-new'}
+                                            value="new"
+                                            selected={linkFileTypeSelectRef.current === 'new'}
                                         >
-                                            can Download
-                                        </MenuItem>
-                                        <MenuItem
-                                            value={linkInteractionType_view}
-                                            data-testid="object_link_interaction_type-view"
-                                            selected={linkInteractionTypeSelectRef.current === linkInteractionType_view}
-                                        >
-                                            can View
-                                        </MenuItem>
-                                        <MenuItem
-                                            value={linkInteractionType_none}
-                                            data-testid="object_link_interaction_type-none"
-                                            selected={
-                                                ![linkInteractionType_download, linkInteractionType_view].includes(
-                                                    linkInteractionTypeSelectRef.current,
-                                                )
-                                            }
-                                        >
-                                            No message
+                                            New type
                                         </MenuItem>
                                     </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <FormControl style={{ minWidth: '10em' }}>
-                                    {[linkInteractionType_download, linkInteractionType_view].includes(
-                                        linkInteractionTypeSelectRef.current,
-                                    ) && (
-                                        <>
-                                            <InputLabel htmlFor="object_link_file_type">File type *</InputLabel>
+                                    {showFileTypeCreationForm && (
+                                        <Grid item xs={12}>
+                                            <FormControl variant="standard" fullWidth>
+                                                <InputLabel htmlFor="new_file_type">New File Type (abbrev)</InputLabel>
+                                                <Input
+                                                    id="new_file_type"
+                                                    data-testid="new_file_type"
+                                                    value={formValues?.new_file_type || ''}
+                                                    onChange={handleChange('new_file_type')}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                    )}{' '}
+                                </>
+                            )}
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <div className={classes.viewDuration}>
+                            {!!showLinkTimeForm && (
+                                <>
+                                    <InputLabel id="object_link_duration-label">Run time *</InputLabel>
+                                    <div>
+                                        <FormControl>
+                                            <Input
+                                                id="object_link_duration_minutes"
+                                                aria-labelledby="object_link_duration-label object_link_duration_minutes"
+                                                data-testid="object_link_duration_minutes"
+                                                required
+                                                value={formValues?.object_link_duration_minutes || ''}
+                                                onChange={handleChange('object_link_duration_minutes')}
+                                            />
+                                        </FormControl>
+                                        <span id="object_link_duration_minutes-label" style={{ paddingRight: 6 }}>
+                                            minutes{' '}
+                                        </span>
+                                        <span style={{ paddingRight: 6 }}>and </span>
+                                        <FormControl>
+                                            <Input
+                                                id="object_link_duration_seconds"
+                                                aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
+                                                data-testid="object_link_duration_seconds"
+                                                required
+                                                value={formValues?.object_link_duration_seconds || ''}
+                                                onChange={handleChange('object_link_duration_seconds')}
+                                            />
+                                        </FormControl>
+                                        <span id="object_link_duration_seconds-label">seconds</span>
+                                    </div>
+                                </>
+                            )}
+                            {!!showLinkSizeForm && (
+                                <>
+                                    <InputLabel id="object_link_file_size-label">File Size *</InputLabel>
+                                    <div>
+                                        <FormControl>
+                                            <Input
+                                                id="object_link_size_amount"
+                                                aria-labelledby="object_link_file_size-label"
+                                                data-testid="object_link_size_amount"
+                                                required
+                                                value={formValues?.object_link_size_amount || ''}
+                                                onChange={handleChange('object_link_size_amount')}
+                                            />
+                                        </FormControl>
+                                        <FormControl>
                                             <Select
                                                 variant="standard"
-                                                labelId="object_link_file_type"
-                                                id="object_link_file_type"
-                                                data-testid="object_link_file_type"
-                                                value={linkFileTypeSelectRef.current}
-                                                onChange={handleChange('object_link_file_type')}
-                                                style={{ width: '100%', marginTop: 20 }}
+                                                labelId="object_link_size_units"
+                                                id="object_link_size_units"
+                                                data-testid="object_link_size_units"
+                                                value={formValues?.object_link_size_units}
+                                                // value={linkFileTypeSelectRef.current}
+                                                onChange={handleChange('object_link_size_units')} // needs ref?
                                             >
-                                                {getFileTypeList.map((type, index) => (
+                                                {validFileSizeUnits.map(unit => (
                                                     <MenuItem
-                                                        key={type.object_link_file_type}
-                                                        data-testid={`object_link_file_type-${type.object_link_file_type}`}
-                                                        value={type.object_link_file_type}
-                                                        selected={
-                                                            type.object_link_file_type === linkFileTypeSelectRef.current
-                                                        }
+                                                        key={unit}
+                                                        id={`object_link_size_units-${unit}`}
+                                                        data-testid={`object_link_size_units-${unit}`}
+                                                        value={unit}
+                                                        selected={unit === formValues?.object_link_size_units}
                                                     >
-                                                        {type.object_link_file_type}
+                                                        {unit}
                                                     </MenuItem>
                                                 ))}
-                                                <MenuItem
-                                                    data-testid={'object_link_file_type-new'}
-                                                    value="new"
-                                                    selected={linkFileTypeSelectRef.current === 'new'}
-                                                >
-                                                    New type
-                                                </MenuItem>
                                             </Select>
-                                            {showFileTypeCreationForm && (
-                                                <Grid item xs={12}>
-                                                    <FormControl variant="standard" fullWidth>
-                                                        <InputLabel htmlFor="new_file_type">
-                                                            New File Type (abbrev)
-                                                        </InputLabel>
-                                                        <Input
-                                                            id="new_file_type"
-                                                            data-testid="new_file_type"
-                                                            value={formValues?.new_file_type || ''}
-                                                            onChange={handleChange('new_file_type')}
-                                                        />
-                                                    </FormControl>
-                                                </Grid>
-                                            )}{' '}
-                                        </>
-                                    )}
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <div className={classes.viewDuration}>
-                                    {!!showLinkTimeForm && (
-                                        <>
-                                            <InputLabel id="object_link_duration-label">Run time *</InputLabel>
-                                            <div>
-                                                <FormControl>
-                                                    <Input
-                                                        id="object_link_duration_minutes"
-                                                        aria-labelledby="object_link_duration-label object_link_duration_minutes"
-                                                        data-testid="object_link_duration_minutes"
-                                                        required
-                                                        value={formValues?.object_link_duration_minutes || ''}
-                                                        onChange={handleChange('object_link_duration_minutes')}
-                                                    />
-                                                </FormControl>
-                                                <span
-                                                    id="object_link_duration_minutes-label"
-                                                    style={{ paddingRight: 6 }}
-                                                >
-                                                    minutes{' '}
-                                                </span>
-                                                <span style={{ paddingRight: 6 }}>and </span>
-                                                <FormControl>
-                                                    <Input
-                                                        id="object_link_duration_seconds"
-                                                        aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
-                                                        data-testid="object_link_duration_seconds"
-                                                        required
-                                                        value={formValues?.object_link_duration_seconds || ''}
-                                                        onChange={handleChange('object_link_duration_seconds')}
-                                                    />
-                                                </FormControl>
-                                                <span id="object_link_duration_seconds-label">seconds</span>
-                                            </div>
-                                        </>
-                                    )}
-                                    {!!showLinkSizeForm && (
-                                        <>
-                                            <InputLabel id="object_link_file_size-label">File Size *</InputLabel>
-                                            <div>
-                                                <FormControl>
-                                                    <Input
-                                                        id="object_link_size_amount"
-                                                        aria-labelledby="object_link_file_size-label"
-                                                        data-testid="object_link_size_amount"
-                                                        required
-                                                        value={formValues?.object_link_size_amount || ''}
-                                                        onChange={handleChange('object_link_size_amount')}
-                                                    />
-                                                </FormControl>
-                                                <FormControl>
-                                                    <Select
-                                                        variant="standard"
-                                                        labelId="object_link_size_units"
-                                                        id="object_link_size_units"
-                                                        data-testid="object_link_size_units"
-                                                        value={formValues?.object_link_size_units}
-                                                        // value={linkFileTypeSelectRef.current}
-                                                        onChange={handleChange('object_link_size_units')} // needs ref?
-                                                    >
-                                                        {validFileSizeUnits.map(unit => (
-                                                            <MenuItem
-                                                                key={unit}
-                                                                id={`object_link_size_units-${unit}`}
-                                                                data-testid={`object_link_size_units-${unit}`}
-                                                                value={unit}
-                                                                selected={unit === formValues?.object_link_size_units}
-                                                            >
-                                                                {unit}
-                                                            </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            </Grid>
-                        </Grid>
+                                        </FormControl>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </Grid>
-                </>
-            )}
+                </Grid>
+            </Grid>
             <Grid item xs={12}>
                 <FormControl
                     variant="standard"

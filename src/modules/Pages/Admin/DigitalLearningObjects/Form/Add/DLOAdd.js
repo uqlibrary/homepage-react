@@ -43,7 +43,6 @@ export const DLOAdd = ({
         object_description: '',
         object_summary: '',
         object_owning_team_id: 1,
-        object_embed_type: 'link',
         object_link_url: '',
         object_download_instructions: '',
         object_publishing_user: account?.id,
