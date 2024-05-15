@@ -22,9 +22,9 @@ export const DLOEdit = ({
     dlorItemUpdating,
     dlorUpdatedItemError,
     dlorUpdatedItem,
-    dlorTeam,
-    dlorTeamLoading,
-    dlorTeamError,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
@@ -32,7 +32,7 @@ export const DLOEdit = ({
     const { dlorId } = useParams();
 
     React.useEffect(() => {
-        if (!dlorTeamLoading && !dlorTeamError && !dlorTeam) {
+        if (!dlorTeamListLoading && !dlorTeamListError && !dlorTeamList) {
             actions.loadOwningTeams();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,9 +119,9 @@ export const DLOEdit = ({
                             dlorItemLoading={dlorItemLoading}
                             dlorItem={dlorItem}
                             dlorItemError={dlorItemError}
-                            dlorTeam={dlorTeam}
-                            dlorTeamLoading={dlorTeamLoading}
-                            dlorTeamError={dlorTeamError}
+                            dlorTeamList={dlorTeamList}
+                            dlorTeamListLoading={dlorTeamListLoading}
+                            dlorTeamListError={dlorTeamListError}
                             dlorFilterList={dlorFilterList}
                             dlorFilterListLoading={dlorFilterListLoading}
                             dlorFilterListError={dlorFilterListError}
@@ -143,9 +143,9 @@ DLOEdit.propTypes = {
     dlorItemUpdating: PropTypes.bool,
     dlorUpdatedItemError: PropTypes.any,
     dlorUpdatedItem: PropTypes.object,
-    dlorTeam: PropTypes.array,
-    dlorTeamLoading: PropTypes.bool,
-    dlorTeamError: PropTypes.any,
+    dlorTeamList: PropTypes.array,
+    dlorTeamListLoading: PropTypes.bool,
+    dlorTeamListError: PropTypes.any,
     dlorFilterList: PropTypes.array,
     dlorFilterListLoading: PropTypes.bool,
     dlorFilterListError: PropTypes.any,

@@ -15,9 +15,9 @@ export const DLOAdd = ({
     dlorItemCreating,
     dlorCreatedItemError,
     dlorCreatedItem,
-    dlorTeam,
-    dlorTeamLoading,
-    dlorTeamError,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
     dlorFileTypeList,
     dlorFileTypeListLoading,
     dlorFileTypeListError,
@@ -67,9 +67,9 @@ export const DLOAdd = ({
                             dlorItemSaving={dlorItemCreating}
                             dlorSavedItemError={dlorCreatedItemError}
                             dlorSavedItem={dlorCreatedItem}
-                            dlorTeam={dlorTeam}
-                            dlorTeamLoading={dlorTeamLoading}
-                            dlorTeamError={dlorTeamError}
+                            dlorTeamList={dlorTeamList}
+                            dlorTeamListLoading={dlorTeamListLoading}
+                            dlorTeamListError={dlorTeamListError}
                             dlorFilterList={dlorFilterList}
                             dlorFilterListLoading={dlorFilterListLoading}
                             dlorFilterListError={dlorFilterListError}
@@ -91,9 +91,9 @@ DLOAdd.propTypes = {
     dlorItemCreating: PropTypes.bool,
     dlorCreatedItemError: PropTypes.any,
     dlorCreatedItem: PropTypes.object,
-    dlorTeam: PropTypes.array,
-    dlorTeamLoading: PropTypes.bool,
-    dlorTeamError: PropTypes.any,
+    dlorTeamList: PropTypes.array,
+    dlorTeamListLoading: PropTypes.bool,
+    dlorTeamListError: PropTypes.any,
     dlorFileTypeList: PropTypes.array,
     dlorFileTypeListLoading: PropTypes.bool,
     dlorFileTypeListError: PropTypes.any,

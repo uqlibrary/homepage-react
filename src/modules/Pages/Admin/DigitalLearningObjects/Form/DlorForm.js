@@ -112,9 +112,9 @@ export const DlorForm = ({
     dlorItemLoading,
     dlorItem,
     // dlorItemError,
-    dlorTeam,
-    dlorTeamLoading,
-    dlorTeamError,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
@@ -183,13 +183,13 @@ export const DlorForm = ({
     }, [dlorItem, mode]);
 
     useEffect(() => {
-        if (!dlorTeamError && !dlorTeamLoading && !!dlorTeam && dlorTeam.length > 0) {
+        if (!dlorTeamListError && !dlorTeamListLoading && !!dlorTeamList && dlorTeamList.length > 0) {
             if (mode === 'add') {
-                const firstTeam = dlorTeam?.filter((t, index) => index === 0) || [];
+                const firstTeam = dlorTeamList?.filter((t, index) => index === 0) || [];
                 teamSelectRef.current = firstTeam?.shift()?.team_id;
             }
         }
-    }, [dlorTeam, mode]);
+    }, [dlorTeamList, mode]);
 
     // these match the values in dlor cypress admin tests
     const titleMinimumLength = 8;
@@ -349,9 +349,9 @@ export const DlorForm = ({
     const isValidUsername = testUserName => {
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
-    const currentTeamDetails = dlorTeam?.find(team =>
-        mode === 'edit' ? team.team_id === formDefaults?.object_owning_team_id : team.team_id === teamSelectRef.current,
-    );
+    // const currentTeamDetails = dlorTeamList?.find(team =>
+    //     mode === 'edit' ? team.team_id === formDefaults?.object_owning_team_id : team.team_id === teamSelectRef.current,
+    // );
 
     const controlEditTeamDialog = () => {
         if (showTeamForm !== false) {
@@ -408,14 +408,14 @@ export const DlorForm = ({
                     // aria-labelledby="object_owning_team_label"
                     style={{ minWidth: '20em' }}
                 >
-                    {dlorTeam?.map((t, index) => {
+                    {dlorTeamList?.map((t, index) => {
                         return (
                             <MenuItem
                                 key={t.team_id}
                                 value={t.team_id}
                                 selected={t.team_id === teamSelectRef.current}
                                 data-testid={`object_owning_team-${t.team_id}`}
-                                divider={index === dlorTeam.length - 1}
+                                divider={index === dlorTeamList.length - 1}
                             >
                                 {t.team_name}
                             </MenuItem>
@@ -1053,7 +1053,7 @@ export const DlorForm = ({
     }
 
     useEffect(() => {
-        if (!dlorTeamError && !dlorTeamLoading && !dlorTeam) {
+        if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
             actions.loadOwningTeams();
         }
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
@@ -1379,17 +1379,17 @@ export const DlorForm = ({
     const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
     const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
 
-    if (!!dlorTeamLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
+    if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
             <Grid item xs={12}>
                 <InlineLoader message="Loading" />
             </Grid>
         );
     }
-    if (!!dlorTeamError) {
+    if (!!dlorTeamListError) {
         return (
             <Typography variant="body1" data-testid="dlor-form-addedit-error">
-                {dlorTeamError}
+                {dlorTeamListError}
             </Typography>
         );
     }

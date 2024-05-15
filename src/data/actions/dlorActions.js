@@ -189,17 +189,17 @@ export const deleteDlor = dlorId => {
 
 export function loadOwningTeams() {
     return dispatch => {
-        dispatch({ type: actions.DLOR_TEAM_LOADING });
+        dispatch({ type: actions.DLOR_TEAMLIST_LOADING });
         return get(DLOR_TEAM_LIST_API())
             .then(response => {
                 dispatch({
-                    type: actions.DLOR_TEAM_LOADED,
+                    type: actions.DLOR_TEAMLIST_LOADED,
                     payload: response.data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.DLOR_TEAM_FAILED,
+                    type: actions.DLOR_TEAMLIST_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
