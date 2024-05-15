@@ -132,6 +132,11 @@ export const DLOAdminHomepage = ({
         window.location.href = `${fullPath}/admin/dlor/add${userString}`;
     };
 
+    const navigateToTeamsListPage = () => {
+        const userString = getUserPostfix();
+        window.location.href = `${fullPath}/admin/dlor/team/manage${userString}`;
+    };
+
     const navigateToEditPage = uuid => {
         const userString = getUserPostfix();
         window.location.href = `${fullPath}/admin/dlor/edit/${uuid}${userString}`;
@@ -279,6 +284,13 @@ export const DLOAdminHomepage = ({
             />
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
                 <Grid item xs={12} style={{ textAlign: 'right' }}>
+                    <Button
+                        children="Manage teams"
+                        color="primary"
+                        data-testid="admin-dlor-visit-manage-teams-button"
+                        onClick={() => navigateToTeamsListPage()}
+                        variant="contained"
+                    />{' '}
                     <Button
                         children="Add object"
                         color="primary"

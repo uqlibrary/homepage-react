@@ -661,12 +661,34 @@ mock.onGet(/dlor\/find\/.*/)
     .onGet('dlor/teams/list')
     .reply(() => {
         console.log('get mock dlor/teams/list', dlor_team_list);
+
+        // function getTeamList() {
+        //     console.log('getTeamList', dlor_team_list.data);
+        //     return dlor_team_list.data.map(team => {
+        //         const newVar = {
+        //             objects_count: dlor_all.filter(d => {
+        //                 d.object_owning_team_id === team.team_id;
+        //             }).length,
+        //             ...team,
+        //         };
+        //         console.log('newVar=', newVar);
+        //         return newVar;
+        //     });
+        // }
+
         if (responseType === 'teamsLoadError') {
             return [500, { error: 'Teams api did not load' }];
         } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this should really be a 404, but lets
         } else {
             return [200, dlor_team_list];
+            // console.log('here');
+            // return [
+            //     200,
+            //     {
+            //         data: getTeamList(),
+            //     },
+            // ];
         }
     })
     .onPost('dlor/admin/object')
