@@ -113,7 +113,7 @@
         "sass-loader": "^13.3.3",
         "sinon": "5.0.2",
         "snapshot-diff": "^0.9.0",
-        "start-server-and-test": "^1.9.1",
+        "start-server-and-test": "^1.15.4",
         "string-to-arraybuffer": "^1.0.0",
         "style-loader": "^3.3.4",
         "terser-webpack-plugin": "^5.3.10",
