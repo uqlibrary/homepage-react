@@ -919,7 +919,8 @@ export const DlorForm = ({
                     fullWidth
                     style={{ paddingTop: 50 }}
                 >
-                    <InputLabel htmlFor="object_download_instructions" style={{ fontSize: 16 }}>
+                    {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
+                    <InputLabel htmlFor="object_download_instructions" style={{ fontSize: 20 }}>
                         Download Instructions
                     </InputLabel>
                     <CKEditor
