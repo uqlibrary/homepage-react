@@ -392,42 +392,22 @@ export const DlorForm = ({
         //     console.log('getTeamFieldValue ONE for', fieldName, showTeamForm);
         //     return formValues[fieldName];
         // }
-        if (
-            !!dlorItem?.owner?.team_id &&
-            dlorItem?.owner?.team_id === teamSelectRef.current &&
-            !!dlorItem?.owner?.[fieldName]
-        ) {
-            // they havent previously entered anything & we are editing
-            let response = dlorItem?.owner?.[fieldName];
-            if (fieldName === 'team_email') {
-                response = 'dummy';
-            }
-            return response;
+        console.log('getTeamFieldValue THREE-FOUR for', fieldName);
+        const find1 = dlorTeam?.find(team => team.team_id === teamSelectRef.current);
+        let response = find1?.[fieldName];
+        if (fieldName === 'team_email') {
+            // response = find1?.team_email;
+            response = 'dummy';
         }
-        if (
-            (mode === 'edit' &&
-                !!dlorItem?.owner?.team_id &&
-                dlorItem?.owner?.team_id !== teamSelectRef.current &&
-                !!dlorItem?.owner?.[fieldName]) ||
-            (mode === 'add' && !!dlorTeam && !!teamSelectRef.current)
-        ) {
-            console.log('getTeamFieldValue THREE-FOUR for', fieldName);
-            const find1 = dlorTeam?.find(team => team.team_id === teamSelectRef.current);
-            let response = find1?.[fieldName];
-            if (fieldName === 'team_email') {
-                // response = find1?.team_email;
-                response = 'dummy';
-            }
-            return response;
-        }
+        return response;
 
         // adding a new - use the default
         // if (!!formDefaults && !!formDefaults[fieldName]) {
         //     console.log('getTeamFieldValue FIVE for', fieldName, showTeamForm);
         //     return formDefaults[fieldName];
         // }
-        console.log('getTeamFieldValue FALL for', fieldName, showTeamForm);
-        return '';
+        // console.log('getTeamFieldValue FALL for', fieldName, showTeamForm);
+        // return '';
     }
 
     const stepPanelContentOwnership = (
