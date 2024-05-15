@@ -91,9 +91,9 @@ export const DLOEdit = ({
         object_publishing_user: dlorItem?.owner?.publishing_user_username,
         object_status: dlorItem?.object_status,
         object_review_date_next: dlorItem?.object_review_date_next,
-        team_name: dlorItem?.team_name,
-        team_manager: dlorItem?.team_manager,
-        team_email: dlorItem?.team_email,
+        // team_name: dlorItem?.owner?.team_name,
+        // team_manager: dlorItem?.owner?.team_manager,
+        // team_email: dlorItem?.owner?.team_email,
         object_keywords_string: dlorItem?.object_keywords?.join(', '),
         facets: dlorItem?.object_filters,
         object_link_types: dlorItem?.object_link_types,
@@ -105,6 +105,7 @@ export const DLOEdit = ({
         object_link_duration_seconds: getLinkSize('seconds'),
         object_is_featured: dlorItem?.object_is_featured,
     };
+    console.log('DLOEdit: formDefaults=', formDefaults);
 
     return (
         <Fragment>
