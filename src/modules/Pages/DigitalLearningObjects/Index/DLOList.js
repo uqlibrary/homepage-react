@@ -777,8 +777,8 @@ export const DLOList = ({
                 </button>
             </Typography>
             <Typography component={'p'}>
-                Use this <span style={{ fontStyle: 'italic' }}>Digital learning hub</span> to find digital learning.
-                objects for study and teaching
+                Use this <span style={{ fontStyle: 'italic' }}>Digital learning hub</span> to find digital learning
+                objects for study and teaching.
             </Typography>
             <Grid container spacing={2}>
                 <Grid
