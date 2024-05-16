@@ -8,6 +8,7 @@ import {
     DLOR_FILE_TYPE_LIST_API,
     DLOR_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
+    DLOR_TEAM_DELETE_API,
     DLOR_TEAM_LIST_API,
     DLOR_UPDATE_API,
 } from 'repositories/routes';
@@ -226,3 +227,27 @@ export function loadFileTypeList() {
             });
     };
 }
+
+export const deleteDlorTeam = teamId => {
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_TEAM_DELETING });
+
+        try {
+            console.log('#### start dlor team deletion');
+            const response = await destroy(DLOR_TEAM_DELETE_API({ id: teamId }));
+            dispatch({
+                type: actions.DLOR_TEAM_DELETED,
+                payload: [],
+            });
+
+            return Promise.resolve(response.data);
+        } catch (e) {
+            dispatch({
+                type: actions.DLOR_TEAM_DELETE_FAILED,
+                payload: e,
+            });
+
+            return Promise.reject(e);
+        }
+    };
+};

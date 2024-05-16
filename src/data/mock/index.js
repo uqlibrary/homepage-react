@@ -691,6 +691,14 @@ mock.onGet(/dlor\/find\/.*/)
             // ];
         }
     })
+    .onDelete('dlor/admin/team')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, {}];
+        }
+    })
     .onPost('dlor/admin/object')
     .reply(() => {
         if (responseType === 'saveError') {

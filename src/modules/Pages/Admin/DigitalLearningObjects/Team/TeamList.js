@@ -9,15 +9,44 @@ import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-const useStyles = makeStyles(theme => ({}));
+import { useConfirmationState } from 'hooks';
+import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { fullPath } from 'config/routes';
+import { loadOwningTeams } from '../../../../../data/actions';
+
+const useStyles = makeStyles(theme => ({
+    titleBlock: {
+        '& p:first-child': {
+            display: 'flex',
+            alignItems: 'center',
+            padding: 0,
+            fontSize: 16,
+            '& a': {
+                color: 'rgba(0, 0, 0, 0.87)',
+                textDecoration: 'underline',
+            },
+        },
+        // '& svg': {
+        //     marginInline: 6,
+        // },
+        // '& > p:nth-child(2)': {
+        //     padding: 0,
+        // },
+    },
+}));
 
 export const TeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTeamListError, account }) => {
     const classes = useStyles();
     console.log('TeamList l=', dlorTeamListLoading, '; e=', dlorTeamListError, '; d=', dlorTeamList);
+
+    const [teamToDelete, setObjectToDelete] = React.useState(null);
+    const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
 
     React.useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
@@ -29,10 +58,62 @@ export const TeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTeamL
         // TODO
     };
 
+    const deleteADlorTeam = teamId => {
+        return actions.deleteDlorTeam(teamId);
+    };
+    const confirmDelete = teamId => {
+        setObjectToDelete(teamId);
+        showDeleteConfirmation();
+    };
+    const deleteSelectedObject = () => {
+        console.log('deleteSelectedObject start');
+        !!teamToDelete &&
+            deleteADlorTeam(teamToDelete)
+                .then(() => {
+                    console.log('deleteSelectedObject delete success', teamToDelete);
+                    setObjectToDelete('');
+                    // setAlertNotice(''); // needed?
+                    actions.loadOwningTeams();
+                })
+                .catch(() => {
+                    console.log('deleteSelectedObject delete fail', teamToDelete);
+                    setObjectToDelete('');
+                    showDeleteFailureConfirmation();
+                });
+    };
+
+    const adminHomepageLink = () => {
+        const userString = getUserPostfix();
+        return `${fullPath}/admin/dlor${userString}`;
+    };
+
     return (
         <StandardPage title="Digital learning hub - Team Management">
+            <ConfirmationBox
+                actionButtonColor="secondary"
+                actionButtonVariant="contained"
+                confirmationBoxId="dlor-team-delete-confirm"
+                onAction={() => deleteSelectedObject()}
+                onClose={hideDeleteConfirmation}
+                onCancelAction={hideDeleteConfirmation}
+                isOpen={isDeleteConfirmOpen}
+                locale={{
+                    confirmationTitle: 'Do you want to delete this team?',
+                    confirmationMessage: '',
+                    cancelButtonLabel: 'No',
+                    confirmButtonLabel: 'Yes',
+                }}
+            />
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={12} style={{ textAlign: 'right' }}>
+                <Grid item xs={6}>
+                    <div className={classes.titleBlock}>
+                        <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
+                            <ArrowBackIcon fontSize="small" />{' '}
+                            <a href={adminHomepageLink()}>Digital learning hub admin</a>
+                        </Typography>
+                    </div>
+                </Grid>
+                <Grid item xs={6} style={{ textAlign: 'right' }}>
                     <Button
                         children="Add team"
                         color="primary"
@@ -96,18 +177,23 @@ export const TeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTeamL
                                                         </div>
                                                     </Grid>
                                                     <Grid item xs={1}>
-                                                        <IconButton onClick={() => navigateToEditPage(team?.team_name)}>
-                                                            <EditIcon />
-                                                        </IconButton>
+                                                        {team?.objects_count === 0 && (
+                                                            <IconButton
+                                                                data-testid={`dlor-homepage-delete-${team?.team_id}`}
+                                                                style={{ height: 40 }}
+                                                                onClick={() => confirmDelete(team?.team_id)}
+                                                                // disabled={team?.object_status === 'deleted'}
+                                                            >
+                                                                <DeleteForeverIcon />
+                                                            </IconButton>
+                                                        )}
                                                     </Grid>
                                                     <Grid item xs={1}>
                                                         <IconButton
-                                                            data-testid={`dlor-homepage-delete-${team?.team_name}`}
-                                                            style={{ height: 40 }}
-                                                            onClick={() => confirmDelete(team?.team_name)}
-                                                            // disabled={team?.object_status === 'deleted'}
+                                                            data-testid={`dlor-homepage-edit-${team?.team_id}`}
+                                                            onClick={() => navigateToEditPage(team?.team_id)}
                                                         >
-                                                            <DeleteForeverIcon />
+                                                            <EditIcon />
                                                         </IconButton>
                                                     </Grid>
                                                 </Grid>
