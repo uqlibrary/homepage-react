@@ -33,9 +33,20 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.waitUntil(() => cy.get('h1').should('exist'));
                 cy.get('h1').should('contain', 'Digital learning hub Management');
 
+                // check panel 1
                 cy.checkA11y('[data-testid="StandardPage"]', {
                     reportName: 'edit dlor Panel 1',
                     scopeName: 'Panel 1',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
+
+                // open the "edit a team dialog"
+                cy.waitUntil(() => cy.get('[data-testid="object-form-teamid-change"]').should('exist'));
+                cy.get('[data-testid="object-form-teamid-change"]').click();
+                cy.waitUntil(() => cy.get('[data-testid="team_manager_edit"]').should('exist'));
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'edit dlor Panel 1 with team dialog open',
+                    scopeName: 'Panel 1 with team dialog',
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
 
@@ -78,7 +89,113 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
                 cy.get('[data-testid="object_publishing_user"] input').should('have.value', 'uqjsmith');
                 cy.get('[data-testid="error-message-object_publishing_user"]').should('not.exist');
-                // TODO teams
+
+                // team editor
+
+                // swap teams and the edit button doesnt exist
+                cy.get('[data-testid="object-form-teamid-change"]')
+                    .should('exist')
+                    .contains('Update contact');
+                // swap to "team 1"
+                cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object_owning_team-1"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_owning_team"]').contains('LIB DX Digital Content');
+                cy.get('[data-testid="object-form-teamid-change"]').should('not.exist'); // button missing
+                // swap to "team 3"
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object_owning_team-3"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object_owning_team"]').contains('Library Indigenous Enquiries');
+                cy.get('[data-testid="object-form-teamid-change"]').should('not.exist'); // button missing
+
+                // back to "team 2", current Team
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object_owning_team-2"]')
+                    .should('exist')
+                    .click();
+
+                // can open the editor for this team
+                cy.get('[data-testid="team_manager_edit"]').should('not.exist');
+                cy.get('[data-testid="team_email_edit"]').should('not.exist');
+                cy.get('[data-testid="object-form-teamid-change"]')
+                    .should('exist')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="team_manager_edit"]').should('exist'));
+                cy.get('[data-testid="team_email_edit"]').should('exist');
+
+                // check the Close button works
+                cy.get('[data-testid="object-form-teamid-change"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="team_manager_edit"]').should('not.exist');
+                cy.get('[data-testid="team_email_edit"]').should('not.exist');
+
+                // ok, good - now reclick button to reopen edit team dialog so we can test the form itself
+                cy.get('[data-testid="object-form-teamid-change"]')
+                    .should('exist')
+                    .click();
+
+                // cy.get('[data-testid="dlor-panel-validity-indicator-0"] span').should('not.exist');
+                cy.get('[data-testid="team_manager_edit"]').type('111');
+                cy.get('[data-testid="team_email_edit"]')
+                    .clear()
+                    .type('lea');
+                cy.get('[data-testid="team_email_edit"]').type('@example.com');
+
+                // the user realises they actually want a new team and choose 'new' from the Owning team drop down
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object-form-teamid-new"]')
+                    .should('exist')
+                    .click();
+                // the fields _do not inherit_ from what the user types
+                cy.get('[data-testid="team_name_new"] input')
+                    .should('exist')
+                    .should('have.value', '')
+                    .type('new team');
+                cy.get('[data-testid="team_manager_new"] input')
+                    .should('exist')
+                    .should('have.value', '')
+                    .type('new name');
+                cy.get('[data-testid="team_email_new"] input')
+                    .should('exist')
+                    .should('have.value', '')
+                    .type('new@example.com');
+
+                // back to current team, team 2, so we can check those values are still there
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object_owning_team-2"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="object-form-teamid-change"]') // click button to open dialog
+                    .should('exist')
+                    .click();
+                // cy.get('[data-testid="team_name_edit"]').should('not.exist');
+                cy.get('[data-testid="team_manager_edit"] input')
+                    .should('exist')
+                    .should('have.value', 'Jane Green111');
+                cy.get('[data-testid="team_email_edit"] input')
+                    .should('exist')
+                    .should('have.value', 'lea@example.com');
+
+                // and then if we go back to the new form )again_ it has held the previous values we entered
+                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object-form-teamid-new"]')
+                    .should('exist')
+                    .click();
+                // the fields _do not inherit_ from what the user types on the edit-current form
+                cy.get('[data-testid="team_name_new"] input')
+                    .should('exist')
+                    .should('have.value', 'new team');
+                cy.get('[data-testid="team_manager_new"] input')
+                    .should('exist')
+                    .should('have.value', 'new name');
+                cy.get('[data-testid="team_email_new"] input')
+                    .should('exist')
+                    .should('have.value', 'new@example.com');
 
                 // go to panel 2
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -86,15 +203,9 @@ describe('Edit an object on the Digital learning hub', () => {
                     .click();
                 cy.waitUntil(() => cy.get('[data-testid="object_title"] input').should('exist'));
                 cy.get('[data-testid="object_title"] input').should('have.value', 'Advanced literature searching');
-                // cy.get('[data-testid="object_description"] textarea:first-child')
-                //     .should('exist')
-                //     .contains(
-                //         'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
-                //     );
                 CheckCKEditor(
                     'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
                 );
-                // TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .should('have.value', 'Using advanced searching techniques.');
@@ -324,13 +435,13 @@ describe('Edit an object on the Digital learning hub', () => {
                     .click();
 
                 // enter a new team
-                cy.get('[data-testid="team_name"]')
+                cy.get('[data-testid="team_name_new"]')
                     .should('exist')
                     .type('new team name');
-                cy.get('[data-testid="team_manager"]')
+                cy.get('[data-testid="team_manager_new"]')
                     .should('exist')
                     .type('john Manager');
-                cy.get('[data-testid="team_email"]')
+                cy.get('[data-testid="team_email_new"]')
                     .should('exist')
                     .type('john@example.com');
 
@@ -342,10 +453,6 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('xx');
-                // cy.get('[data-testid="object_description"] textarea:first-child')
-                //     .should('exist')
-                //     .clear()
-                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'), true);
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
@@ -410,13 +517,7 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
                 const typeableDownloadInstructions = 'xxx';
-                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                //     .should('exist')
-                //     .type(typeableDownloadInstructions);
                 TypeCKEditor(typeableDownloadInstructions, true);
-                // cy.get('[data-testid="dlor-massaged-download-instructions"]')
-                //     .should('exist')
-                //     .should('contain', 'xxx');
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -464,13 +565,13 @@ describe('Edit an object on the Digital learning hub', () => {
                 const expectedValues = {
                     object_title: 'Advanced literature searchingxx',
                     object_description:
-                        'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                        '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>',
                     object_summary: 'Using advanced searching techniques.xx',
                     object_link_interaction_type: 'download',
                     object_link_file_type: 'XLS',
                     object_link_size: '36000',
                     object_link_url: 'https://uq.h5p.com/content/1291624605868350759/page',
-                    object_download_instructions: 'some download instructionsxxx',
+                    object_download_instructions: '<p>' + typeableDownloadInstructions + '</p>',
                     object_is_featured: 1,
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
@@ -507,9 +608,6 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
 
-                    expectedValues.object_description =
-                        '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
-                    expectedValues.object_download_instructions = '<p>' + typeableDownloadInstructions + '</p>';
                     console.log('sentValues=', sentValues);
                     console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
@@ -562,10 +660,6 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                // cy.get('[data-testid="object_description"] textarea:first-child')
-                //     .should('exist')
-                //     .clear()
-                //     .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'), true);
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
@@ -625,10 +719,6 @@ describe('Edit an object on the Digital learning hub', () => {
 
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
-                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                //     .should('exist')
-                //     .clear()
-                //     .type(downloadInstructionText);
                 TypeCKEditor(downloadInstructionText, true);
 
                 // go to the fourth panel, Filtering
@@ -674,13 +764,13 @@ describe('Edit an object on the Digital learning hub', () => {
                 const expectedValues = {
                     object_title: 'Advanced literature searchingxxxxxxxx',
                     object_description:
-                        'new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                        '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>',
                     object_summary: 'Using advanced searching techniques.xxx',
                     object_link_interaction_type: 'view',
                     object_link_file_type: 'video',
                     object_link_size: 390,
                     object_link_url: 'http://example.com',
-                    object_download_instructions: downloadInstructionText,
+                    object_download_instructions: '<p>' + downloadInstructionText + '</p>',
                     object_is_featured: 0,
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
@@ -702,6 +792,9 @@ describe('Edit an object on the Digital learning hub', () => {
                         11, // Graduate attributes : Connected citizens
                     ],
                     object_keywords: ['cat', 'dog'],
+                    team_email: 'train@library.uq.edu.au',
+                    team_manager: 'Jane Green',
+                    team_name: 'Lib train Library Corporate Services',
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
@@ -722,9 +815,6 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete sentValues.object_keywords;
                     delete expectedValues.facets;
                     delete expectedValues.object_keywords;
-                    expectedValues.object_description =
-                        '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
-                    expectedValues.object_download_instructions = '<p>' + downloadInstructionText + '</p>';
                     console.log('sentValues=', sentValues);
                     console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
@@ -797,10 +887,6 @@ describe('Edit an object on the Digital learning hub', () => {
 
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
-                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                //     .should('exist')
-                //     .clear()
-                //     .type('word');
                 TypeCKEditor('word', true);
 
                 // go to the fourth panel, Filtering
@@ -837,7 +923,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     object_link_file_type: 'docx',
                     object_link_size: 2864,
                     object_link_url: 'https://www.youtube.com/watch?v=jwKH6X3cGMg',
-                    object_download_instructions: 'word',
+                    object_download_instructions: '<p>word</p>',
                     object_is_featured: 0,
                     object_publishing_user: 'uqldegro',
                     object_review_date_next: '2025-03-26T00:01',
@@ -853,6 +939,9 @@ describe('Edit an object on the Digital learning hub', () => {
                         45, // Licence : CC BY-NC Attribution NonCommercial
                     ],
                     object_keywords: ['cat', 'dog'],
+                    team_email: 'dlor@library.uq.edu.au',
+                    team_manager: 'John Smith',
+                    team_name: 'LIB DX Digital Content',
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
@@ -873,9 +962,8 @@ describe('Edit an object on the Digital learning hub', () => {
                     delete sentValues.object_keywords;
                     delete expectedValues.facets;
                     delete expectedValues.object_keywords;
-                    expectedValues.object_download_instructions = '<p>word</p>';
-                    console.log('sentFacets=', sentFacets);
-                    console.log('expectedFacets=', expectedFacets);
+                    console.log('sentValues=', sentValues);
+                    console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);

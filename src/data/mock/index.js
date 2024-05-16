@@ -584,7 +584,18 @@ function getaDlorResponseFromDlorAll(dlorId) {
     const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
     const single = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
     single.object_link_types = dlor_file_type_list.data;
-    console.log('single=', single);
+
+    const currentTeamDetails =
+        !!dlor_team_list &&
+        !!dlor_team_list.data &&
+        dlor_team_list.data.length > 0 &&
+        dlor_team_list.data.find(team => team.team_id === single?.object_owning_team_id);
+    if (!!currentTeamDetails) {
+        single.owner.team_name = currentTeamDetails.team_name;
+        single.owner.team_email = currentTeamDetails.team_email;
+        single.owner.team_manager = currentTeamDetails.team_manager;
+    }
+
     return single === null ? [404, {}] : [200, { data: single }];
 }
 
