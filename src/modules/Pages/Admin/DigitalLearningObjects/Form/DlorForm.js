@@ -93,18 +93,6 @@ const useStyles = makeStyles(theme => ({
             paddingBlock: 0,
         },
     },
-    //     typingArea: {
-    //         '& textarea ': {
-    //             backgroundColor: 'rgb(236, 236, 236, 0.5)',
-    //             borderRadius: 4,
-    //             padding: 10,
-    //         },
-    //         '& label': {
-    //             color: theme.typography.caption.color,
-    //             paddingLeft: 10,
-    //             paddingTop: 10,
-    //         },
-    //     },
     viewDuration: {
         '& > div': {
             display: 'flex',
@@ -387,11 +375,7 @@ export const DlorForm = ({
     const stepPanelContentOwnership = (
         <>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
                     <Input
                         id="object_publishing_user"
@@ -458,11 +442,7 @@ export const DlorForm = ({
             </Grid>
             {showTeamForm !== false && teamSelectRef.current === 'new' && (
                 <Grid item xs={5}>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
+                    <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
                         <Input
                             id="team_name_new"
@@ -471,11 +451,7 @@ export const DlorForm = ({
                             onChange={handleChange('team_name_new')}
                         />
                     </FormControl>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
+                    <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="team_manager_new">Name of Team manager *</InputLabel>
                         <Input
                             id="team_manager_new"
@@ -485,11 +461,7 @@ export const DlorForm = ({
                             onChange={handleChange('team_manager_new')}
                         />
                     </FormControl>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
+                    <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
                         <Input
                             id="team_email_new"
@@ -518,11 +490,7 @@ export const DlorForm = ({
                             Manage Teams
                         </a>
                     </p>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
+                    <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
                         <Input
                             id="team_manager_edit"
@@ -532,11 +500,7 @@ export const DlorForm = ({
                             onChange={handleChange('team_manager_edit')}
                         />
                     </FormControl>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
+                    <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
                         <Input
                             id="team_email_edit"
@@ -612,11 +576,7 @@ export const DlorForm = ({
     const stepPanelContentDescription = (
         <>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    fullWidth
-                    // className={classes.typingArea}
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_title">Object title *</InputLabel>
                     <Input
                         id="object_title"
@@ -674,11 +634,7 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
                     <Input
                         id="object_summary"
@@ -782,11 +738,7 @@ export const DlorForm = ({
     const stepPanelContentLinks = (
         <>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
                     <Input
                         id="object_link_url"
@@ -990,12 +942,7 @@ export const DlorForm = ({
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                    style={{ paddingTop: 50 }}
-                >
+                <FormControl variant="standard" fullWidth style={{ paddingTop: 50 }}>
                     <InputLabel htmlFor="object_download_instructions" style={{ fontSize: 16 }}>
                         Download Instructions
                     </InputLabel>
@@ -1047,11 +994,7 @@ export const DlorForm = ({
                     );
                 })}
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_keywords">
                         Keywords - enter a comma separated list of keywords *
                     </InputLabel>
