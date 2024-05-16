@@ -1,4 +1,6 @@
 // these constants must match the constants, eg titleMinimumLength in Dlor Admin components
+import { DLOR_ADMIN_USER } from '../../../support/constants';
+
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 describe('Edit an object on the Digital learning hub', () => {
@@ -22,11 +24,10 @@ describe('Edit an object on the Digital learning hub', () => {
             .should('contain', content);
     }
 
-    const mockDlorAdminUser = 'dloradmn';
     context('editing an object', () => {
         context('successfully', () => {
             it('is accessible', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
                 cy.injectAxe();
                 cy.viewport(1300, 1000);
@@ -84,7 +85,7 @@ describe('Edit an object on the Digital learning hub', () => {
                 });
             });
             it('loads fields correctly', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
                 cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
                 cy.get('[data-testid="object_publishing_user"] input').should('have.value', 'uqjsmith');
@@ -418,7 +419,7 @@ describe('Edit an object on the Digital learning hub', () => {
         context('successfully mock to db', () => {
             beforeEach(() => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
-                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
             });
             it('admin can edit an object for a new team and return to list', () => {
@@ -632,7 +633,7 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('contain', 'Return to list page')
                     .click();
-                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
+                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
                 cy.get('[data-testid="StandardPage-title"]')
                     .should('exist')
                     .should('contain', 'Digital learning hub Management');
@@ -853,7 +854,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     expect(cookie.value).to.equal('active');
                 });
 
-                cy.visit(`http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}`);
 
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -1003,7 +1004,7 @@ describe('Edit an object on the Digital learning hub', () => {
             });
             it('admin gets an error on a failed save', () => {
                 cy.visit(
-                    `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}&responseType=saveError`,
+                    `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}&responseType=saveError`,
                 );
 
                 // team is valid as is, so go to the second panel, Description
@@ -1056,7 +1057,7 @@ describe('Edit an object on the Digital learning hub', () => {
             cy.get('h1').contains('Permission denied');
         });
         it('displays correct page for admin users (list)', () => {
-            cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${mockDlorAdminUser}`);
+            cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital learning hub Management');

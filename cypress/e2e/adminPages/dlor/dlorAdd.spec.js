@@ -1,4 +1,6 @@
 // these constants must match the constants, eg titleMinimumLength in Dlor Admin components
+import { DLOR_ADMIN_USER } from '../../../support/constants';
+
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
@@ -15,11 +17,10 @@ describe('Add an object to the Digital learning hub', () => {
             .type(content);
     }
 
-    const mockDlorAdminUser = 'dloradmn';
     context('adding a new object', () => {
         context('successfully', () => {
             beforeEach(() => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
             });
             it('is accessible', () => {
@@ -498,7 +499,7 @@ describe('Add an object to the Digital learning hub', () => {
         context('successfully mock to db', () => {
             beforeEach(() => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
             });
             it('when the admin changes their mind about a new team, an old team is saved', () => {
@@ -676,7 +677,7 @@ describe('Add an object to the Digital learning hub', () => {
 
                 // and navigate back to the list page
                 cy.get('[data-testid="confirm-dlor-save-outcome"]').click();
-                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
+                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
                 cy.get('[data-testid="StandardPage-title"]')
                     .should('exist')
                     .should('contain', 'Digital learning hub Management');
@@ -898,7 +899,7 @@ describe('Add an object to the Digital learning hub', () => {
 
                 // and navigate back to the list page
                 cy.get('[data-testid="confirm-dlor-save-outcome"]').click();
-                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
+                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
                 cy.get('[data-testid="StandardPage-title"]')
                     .should('exist')
                     .should('contain', 'Digital learning hub Management');
@@ -1415,28 +1416,28 @@ describe('Add an object to the Digital learning hub', () => {
         });
         context('fails correctly', () => {
             it('admin gets an error when Teams list api doesnt load', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=teamsLoadError`);
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=teamsLoadError`);
                 // "responseType=teamsLoadError" on the url forces an error from mock api
                 cy.get('[data-testid="dlor-form-addedit-error"]').contains(
                     'An error has occurred during the request and this request cannot be processed',
                 );
             });
             it('admin gets an error when Filter list api doesnt load', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=filterLoadError`);
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=filterLoadError`);
                 // "responseType=filterLoadError" on the url forces an error from mock api
                 cy.get('[data-testid="dlor-homepage-error"]').contains(
                     'An error has occurred during the request and this request cannot be processed',
                 );
             });
             it('admin gets an error when Filter list is empty', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=filterLoadEmpty`);
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=filterLoadEmpty`);
                 // "responseType=filterLoadEmpty" on the url forces an error from mock api
                 cy.get('[data-testid="dlor-homepage-noresult"]').contains(
                     'Missing filters: We did not find any entries in the system - please try again later.',
                 );
             });
             it('admin gets an error on a failed save', () => {
-                cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}&responseType=saveError`);
+                cy.visit(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=saveError`);
 
                 // team is valid as is, so go to the second panel, Description
                 cy.waitUntil(() => cy.get('[data-testid="dlor-form-next-button"]').should('exist'));
@@ -1505,7 +1506,7 @@ describe('Add an object to the Digital learning hub', () => {
             cy.get('h1').contains('Permission denied');
         });
         it('displays correct page for admin users (list)', () => {
-            cy.visit(`http://localhost:2020/admin/dlor/add?user=${mockDlorAdminUser}`);
+            cy.visit(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital learning hub Management');
