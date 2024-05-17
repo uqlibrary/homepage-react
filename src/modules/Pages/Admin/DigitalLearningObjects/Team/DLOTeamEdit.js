@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
+import { useCookies } from 'react-cookie';
 
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -9,14 +10,10 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-
-import { useConfirmationState } from 'hooks';
 import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 
@@ -35,18 +32,23 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamItemLoading, dlorTeamItemError, account }) => {
+export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamLoading, dlorTeamError, account }) => {
     const { dlorTeamId } = useParams();
     const classes = useStyles();
-    console.log('DLOTeamEdit', dlorTeamId, ' l=', dlorTeamItemLoading, '; e=', dlorTeamItemError, '; d=', dlorTeam);
+    const [cookies, setCookie] = useCookies();
+    console.log('DLOTeamEdit', dlorTeamId, ' l=', dlorTeamLoading, '; e=', dlorTeamError, '; d=', dlorTeam);
 
     const [formValues, setFormValues] = React.useState(null);
 
     React.useEffect(() => {
-        if (!!dlorTeam && !dlorTeamItemLoading && !dlorTeamItemError) {
-            setFormValues(dlorTeam);
+        if (!!dlorTeam && !dlorTeamLoading && !dlorTeamError) {
+            setFormValues({
+                team_name: dlorTeam.team_name,
+                team_manager: dlorTeam.team_manager,
+                team_email: dlorTeam.team_email,
+            });
         }
-    }, [dlorTeam, dlorTeamItemLoading, dlorTeamItemError]);
+    }, [dlorTeam, dlorTeamLoading, dlorTeamError]);
 
     React.useEffect(() => {
         if (!!dlorTeamId) {
@@ -60,30 +62,48 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamItemLoading, dlorTeamIt
         return `${fullPath}/admin/dlor${userString}`;
     };
 
+    const teamManagementLink = () => {
+        const userString = getUserPostfix();
+        return `${fullPath}/admin/dlor/team/manage${userString}`;
+    };
+
     const handleChange = (prop, value) => e => {
         console.log('handleChange', prop, e.target);
+        const theNewValue = e.target.value;
+        const newValues = { ...formValues, [prop]: theNewValue };
+        setFormValues(newValues);
     };
 
     const saveChanges = () => {
         console.log('saveChanges', dlorTeamId, formValues);
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', formValues);
+        }
+
         actions.updateDlorTeam(dlorTeamId, formValues);
     };
 
     return (
-        <StandardPage title="Digital learning hub - Team Management">
+        <StandardPage title="Digital learning hub - Edit Team">
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
                 <Grid item xs={12}>
                     <div className={classes.titleBlock}>
                         <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <ArrowBackIcon fontSize="small" />{' '}
-                            <a href={adminHomepageLink()}>Digital learning hub admin</a>
+                            <a data-testid="dlor-edit-form-homelink" href={adminHomepageLink()}>
+                                Digital learning hub admin
+                            </a>
+                            <ArrowForwardIcon style={{ height: 15 }} />
+                            <a data-testid="dlor-edit-form-tmlink" href={teamManagementLink()}>
+                                Team management
+                            </a>
                         </Typography>
                     </div>
                 </Grid>
             </Grid>
             <Grid container spacing={2}>
                 {(() => {
-                    if (!!dlorTeamItemLoading) {
+                    if (!!dlorTeamLoading || (!dlorTeamError && !dlorTeam)) {
                         return (
                             <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                                 <div style={{ minHeight: 600 }}>
@@ -91,23 +111,20 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamItemLoading, dlorTeamIt
                                 </div>
                             </Grid>
                         );
-                    } else if (!!dlorTeamItemError) {
+                    } else if (!!dlorTeamError) {
                         return (
                             <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                                 <Typography variant="body1" data-testid="dlor-teamItem-error">
-                                    {dlorTeamItemError}
+                                    {dlorTeamError}
                                 </Typography>
                             </Grid>
                         );
-                    } else {
+                    } else if (!!dlorTeam) {
                         return (
                             <>
                                 <Grid item xs={12} data-testid="dlor-team-item-list">
                                     <Grid container key={`list-team-${dlorTeam?.team_id}`}>
                                         <form id="dlor-editTeam-form" style={{ width: '100%' }}>
-                                            {/* <Grid item xs={12}>*/}
-                                            {/*    <p>{dlorTeam?.team_id}</p>*/}
-                                            {/* </Grid>*/}
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
                                                     <InputLabel htmlFor="team_name">Team name *</InputLabel>
@@ -151,7 +168,7 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamItemLoading, dlorTeamIt
                                 <Grid item xs={12} align="right">
                                     <Button
                                         color="primary"
-                                        data-testid="admin-dlor-save-button-submit"
+                                        data-testid="admin-dlor-teamedit-save-button"
                                         variant="contained"
                                         children="Save"
                                         // disabled={!isFormValid}
@@ -171,8 +188,8 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamItemLoading, dlorTeamIt
 DLOTeamEdit.propTypes = {
     actions: PropTypes.any,
     dlorTeam: PropTypes.object,
-    dlorTeamItemLoading: PropTypes.bool,
-    dlorTeamItemError: PropTypes.any,
+    dlorTeamLoading: PropTypes.bool,
+    dlorTeamError: PropTypes.any,
     account: PropTypes.object,
 };
 

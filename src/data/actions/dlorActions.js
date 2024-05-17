@@ -11,6 +11,7 @@ import {
     DLOR_TEAM_DELETE_API,
     DLOR_TEAM_LIST_API,
     DLOR_TEAM_SINGLE_GET_API,
+    DLOR_TEAM_UPDATE_API,
     DLOR_UPDATE_API,
 } from 'repositories/routes';
 
@@ -276,6 +277,24 @@ export function loadADLORTeam(dlorId) {
     };
 }
 
-export function updateDlorTeam(teamId, updatedValues) {
-    console.log('updateDlorTeam', teamId, updatedValues);
+export function updateDlorTeam(teamId, request) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_TEAM_UPDATING });
+        return put(DLOR_TEAM_UPDATE_API(teamId), request)
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_TEAM_UPDATED,
+                    payload: response,
+                });
+                // refresh the list after change
+                dispatch(loadOwningTeams());
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_TEAM_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
 }
