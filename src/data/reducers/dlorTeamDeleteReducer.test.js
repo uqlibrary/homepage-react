@@ -18,7 +18,7 @@ describe('dlor delete team reducer', () => {
             ...emptyState,
             dlorTeamDeleted: mockDlorEntry,
             dlorTeamDeleting: false,
-            dlorTeamDeletedError: false,
+            dlorTeamDeleteError: false,
         });
     });
 
@@ -28,7 +28,7 @@ describe('dlor delete team reducer', () => {
             ...emptyState,
             dlorTeamDeleted: mockDlorEntry,
             dlorTeamDeleting: false,
-            dlorTeamDeletedError: false,
+            dlorTeamDeleteError: false,
         });
     });
 
@@ -40,7 +40,7 @@ describe('dlor delete team reducer', () => {
         expect(test).toEqual({
             ...emptyState,
             dlorTeamDeleting: false,
-            dlorTeamDeletedError: 'failed!',
+            dlorTeamDeleteError: 'failed!',
         });
     });
 });

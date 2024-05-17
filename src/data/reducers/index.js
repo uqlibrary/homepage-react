@@ -33,6 +33,7 @@ export { default as dlorFilterListReducer } from './dlorFilterListReducer';
 export { default as dlorGetSingleReducer } from './dlorGetSingleReducer';
 export { default as dlorTeamDeleteReducer } from './dlorTeamDeleteReducer';
 export { default as dlorTeamListReducer } from './dlorTeamListReducer';
+export { default as dlorTeamSingleReducer } from './dlorTeamSingleReducer';
 export { default as dlorCreateReducer } from './dlorCreateReducer';
 export { default as dlorUpdateReducer } from './dlorUpdateReducer';
 export { default as dlorDeleteReducer } from './dlorDeleteReducer';

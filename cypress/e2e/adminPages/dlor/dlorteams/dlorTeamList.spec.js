@@ -1,4 +1,4 @@
-import { DLOR_ADMIN_USER } from '../../../support/constants';
+import { DLOR_ADMIN_USER } from '../../../../support/constants';
 
 describe('Digital learning hub admin Teams management', () => {
     beforeEach(() => {

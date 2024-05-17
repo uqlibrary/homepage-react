@@ -51,6 +51,7 @@ export const flattedPathConfig = [
     '/admin/alerts/clone',
     '/admin/alerts/view',
     '/admin/dlor/edit',
+    '/admin/dlor/team/edit',
     '/admin/spotlights/edit',
     '/admin/spotlights/view',
     '/admin/spotlights/clone',
@@ -217,6 +218,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const dlorTeamId = `:dlorTeamId(${standardRegExp})`;
     const dlorAdminDisplay = [
         {
             path: pathConfig.admin.dloradmin,
@@ -226,9 +228,15 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
         {
             path: pathConfig.admin.dlorteammanage,
-            component: components.TeamList,
+            component: components.DLOTeamList,
             exact: true,
             pageTitle: 'Manage Teams for the Digital learning hub',
+        },
+        {
+            path: pathConfig.admin.dlorteamedit(dlorTeamId),
+            component: components.DLOTeamEdit,
+            exact: true,
+            pageTitle: 'Edit a Team for the Digital learning hub',
         },
         {
             path: pathConfig.admin.dloradd,

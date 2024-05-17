@@ -10,6 +10,7 @@ import {
     DLOR_GET_FILTER_LIST,
     DLOR_TEAM_DELETE_API,
     DLOR_TEAM_LIST_API,
+    DLOR_TEAM_SINGLE_GET_API,
     DLOR_UPDATE_API,
 } from 'repositories/routes';
 
@@ -251,3 +252,26 @@ export const deleteDlorTeam = teamId => {
         }
     };
 };
+
+export function loadADLORTeam(dlorId) {
+    console.log('loadADLOR', dlorId);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_TEAM_LOADING });
+        return get(DLOR_TEAM_SINGLE_GET_API({ id: dlorId }))
+            .then(response => {
+                console.log('loadADLORTeam response=', response);
+                dispatch({
+                    type: actions.DLOR_TEAM_LOADED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                console.log('loadADLORTeam error=', error);
+                dispatch({
+                    type: actions.DLOR_TEAM_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}

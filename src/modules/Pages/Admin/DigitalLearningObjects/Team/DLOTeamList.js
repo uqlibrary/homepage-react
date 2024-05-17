@@ -18,7 +18,6 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
-import { loadOwningTeams } from '../../../../../data/actions';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -32,18 +31,12 @@ const useStyles = makeStyles(theme => ({
                 textDecoration: 'underline',
             },
         },
-        // '& svg': {
-        //     marginInline: 6,
-        // },
-        // '& > p:nth-child(2)': {
-        //     padding: 0,
-        // },
     },
 }));
 
-export const TeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTeamListError, account }) => {
+export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTeamListError, account }) => {
     const classes = useStyles();
-    console.log('TeamList l=', dlorTeamListLoading, '; e=', dlorTeamListError, '; d=', dlorTeamList);
+    console.log('DLOTeamList l=', dlorTeamListLoading, '; e=', dlorTeamListError, '; d=', dlorTeamList);
 
     const [teamToDelete, setObjectToDelete] = React.useState(null);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
@@ -85,6 +78,11 @@ export const TeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTeamL
     const adminHomepageLink = () => {
         const userString = getUserPostfix();
         return `${fullPath}/admin/dlor${userString}`;
+    };
+
+    const navigateToEditPage = teamId => {
+        const userString = getUserPostfix();
+        window.location.href = `${fullPath}/admin/dlor/team/edit/${teamId}${userString}`;
     };
 
     return (
@@ -209,7 +207,7 @@ export const TeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTeamL
     );
 };
 
-TeamList.propTypes = {
+DLOTeamList.propTypes = {
     actions: PropTypes.any,
     dlorTeamList: PropTypes.array,
     dlorTeamListLoading: PropTypes.bool,
@@ -217,4 +215,4 @@ TeamList.propTypes = {
     account: PropTypes.object,
 };
 
-export default TeamList;
+export default DLOTeamList;

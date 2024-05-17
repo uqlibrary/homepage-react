@@ -185,7 +185,6 @@ export function convertFileSizeValuesToKb(fileSizeString) {
 }
 
 export function getDurationString(totalSeconds, format = 'MMMm SSSs') {
-    console.log('totalSeconds=', totalSeconds);
     if (totalSeconds === 0) {
         return '';
     }
@@ -195,7 +194,6 @@ export function getDurationString(totalSeconds, format = 'MMMm SSSs') {
 }
 
 export function getMinutesAndSecondFromTotalSeconds(totalSeconds) {
-    console.log('totalSeconds=', totalSeconds);
     if (totalSeconds === 0) {
         return { minutes: 0, seconds: 0 };
     }
@@ -206,7 +204,6 @@ export function getMinutesAndSecondFromTotalSeconds(totalSeconds) {
 }
 
 export function getMinutesFromTotalSeconds(totalSeconds) {
-    console.log('totalSeconds=', totalSeconds);
     if (totalSeconds === 0) {
         return { minutes: 0, seconds: 0 };
     }
@@ -217,7 +214,6 @@ export function getMinutesFromTotalSeconds(totalSeconds) {
 }
 
 export function getSecondsFromTotalSeconds(totalSeconds) {
-    console.log('totalSeconds=', totalSeconds);
     if (totalSeconds === 0) {
         return { minutes: 0, seconds: 0 };
     }
