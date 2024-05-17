@@ -275,3 +275,7 @@ export function loadADLORTeam(dlorId) {
             });
     };
 }
+
+export function updateDlorTeam(teamId, updatedValues) {
+    console.log('updateDlorTeam', teamId, updatedValues);
+}

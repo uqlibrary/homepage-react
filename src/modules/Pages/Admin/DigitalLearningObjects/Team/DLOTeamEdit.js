@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 
@@ -38,6 +40,14 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamItemLoading, dlorTeamIt
     const classes = useStyles();
     console.log('DLOTeamEdit', dlorTeamId, ' l=', dlorTeamItemLoading, '; e=', dlorTeamItemError, '; d=', dlorTeam);
 
+    const [formValues, setFormValues] = React.useState(null);
+
+    React.useEffect(() => {
+        if (!!dlorTeam && !dlorTeamItemLoading && !dlorTeamItemError) {
+            setFormValues(dlorTeam);
+        }
+    }, [dlorTeam, dlorTeamItemLoading, dlorTeamItemError]);
+
     React.useEffect(() => {
         if (!!dlorTeamId) {
             actions.loadADLORTeam(dlorTeamId);
@@ -48,6 +58,15 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamItemLoading, dlorTeamIt
     const adminHomepageLink = () => {
         const userString = getUserPostfix();
         return `${fullPath}/admin/dlor${userString}`;
+    };
+
+    const handleChange = (prop, value) => e => {
+        console.log('handleChange', prop, e.target);
+    };
+
+    const saveChanges = () => {
+        console.log('saveChanges', dlorTeamId, formValues);
+        actions.updateDlorTeam(dlorTeamId, formValues);
     };
 
     return (
@@ -83,15 +102,62 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamItemLoading, dlorTeamIt
                     } else {
                         return (
                             <>
-                                <Grid item style={{ width: '100%' }} data-testid="dlor-team-item-list">
-                                    <Grid container className={classes.listItem} key={`list-team-${dlorTeam?.team_id}`}>
-                                        <Grid item xs={12}>
-                                            <p>{dlorTeam?.team_id}</p>
-                                            <p>{dlorTeam?.team_name}</p>
-                                            <p>{dlorTeam?.team_manager}</p>
-                                            <p>{dlorTeam?.team_email}</p>
-                                        </Grid>
+                                <Grid item xs={12} data-testid="dlor-team-item-list">
+                                    <Grid container key={`list-team-${dlorTeam?.team_id}`}>
+                                        <form id="dlor-editTeam-form" style={{ width: '100%' }}>
+                                            {/* <Grid item xs={12}>*/}
+                                            {/*    <p>{dlorTeam?.team_id}</p>*/}
+                                            {/* </Grid>*/}
+                                            <Grid item xs={12}>
+                                                <FormControl variant="standard" fullWidth>
+                                                    <InputLabel htmlFor="team_name">Team name *</InputLabel>
+                                                    <Input
+                                                        id="team_name"
+                                                        data-testid="team_name"
+                                                        required
+                                                        value={formValues?.team_name || ''}
+                                                        onChange={handleChange('team_name')}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <FormControl variant="standard" fullWidth>
+                                                    <InputLabel htmlFor="team_manager">Name of Team Manager</InputLabel>
+                                                    <Input
+                                                        id="team_manager"
+                                                        data-testid="team_manager"
+                                                        value={formValues?.team_manager || ''}
+                                                        onChange={handleChange('team_manager')}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <FormControl variant="standard" fullWidth>
+                                                    <InputLabel htmlFor="team_email">
+                                                        Email address to contact team
+                                                    </InputLabel>
+                                                    <Input
+                                                        id="team_email"
+                                                        data-testid="team_email"
+                                                        value={formValues?.team_email || ''}
+                                                        onChange={handleChange('team_email')}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                        </form>
                                     </Grid>
+                                </Grid>
+
+                                <Grid item xs={12} align="right">
+                                    <Button
+                                        color="primary"
+                                        data-testid="admin-dlor-save-button-submit"
+                                        variant="contained"
+                                        children="Save"
+                                        // disabled={!isFormValid}
+                                        onClick={saveChanges}
+                                        // className={classes.saveButton}
+                                    />
                                 </Grid>
                             </>
                         );

@@ -146,10 +146,7 @@ export const DlorForm = ({
     const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
 
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
-    const [formValues, setFormValues2] = useState(formDefaults);
-    const setFormValues = f => {
-        setFormValues2(f);
-    };
+    const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
     const checkBoxArrayRef = useRef([]);
     const teamSelectRef = useRef(null);
