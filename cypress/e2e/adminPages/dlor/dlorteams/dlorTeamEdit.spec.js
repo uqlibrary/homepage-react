@@ -44,7 +44,7 @@ describe('Digital learning hub admin Edit Team', () => {
             cy.get('a[data-testid="dlor-edit-form-homelink"]')
                 .contains('Digital learning hub admin')
                 .should('have.attr', 'href', 'http://localhost:2020/admin/dlor?user=dloradmn');
-            cy.get('a[data-testid="dlor-edit-form-tmlink"]')
+            cy.get('a[data-testid="dlor-edit-form-uplink"]')
                 .contains('Team management')
                 .should('have.attr', 'href', 'http://localhost:2020/admin/dlor/team/manage?user=dloradmn');
         });
@@ -69,6 +69,15 @@ describe('Digital learning hub admin Edit Team', () => {
                 .should('exist')
                 .click();
 
+            cy.waitUntil(() => cy.get('[data-testid="confirm-dlor-team-save-outcome"]').should('exist'));
+            cy.get('[data-testid="dialogbox-dlor-team-save-outcome"] h2').contains('Changes have been saved');
+            cy.get('[data-testid="confirm-dlor-team-save-outcome"]')
+                .should('exist')
+                .contains('Return to Admin Teams page');
+            cy.get('[data-testid="cancel-dlor-team-save-outcome"]')
+                .should('exist')
+                .contains('Re-edit Team');
+
             // check the data we pretended to send to the server matches what we expect
             // acts as check of what we sent to api
             const expectedValues = {
@@ -90,6 +99,25 @@ describe('Digital learning hub admin Edit Team', () => {
                 cy.clearCookie('CYPRESS_DATA_SAVED');
                 cy.clearCookie('CYPRESS_TEST_DATA');
             });
+
+            // check save-confirmation popup
+            cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-team-save-outcome"]').should('exist'));
+            cy.get('[data-testid="confirm-dlor-team-save-outcome"]').should('contain', 'Return to Admin Teams page');
+            cy.get('[data-testid="confirm-dlor-team-save-outcome"]')
+                .should('exist')
+                .contains('Return to Admin Teams page');
+            cy.get('[data-testid="cancel-dlor-team-save-outcome"]')
+                .should('exist')
+                .contains('Re-edit Team');
+
+            // and navigate back to the team list page
+            cy.get('[data-testid="confirm-dlor-team-save-outcome"]')
+                .should('contain', 'Return to Admin Teams page')
+                .click();
+            cy.url().should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
+            cy.get('[data-testid="StandardPage-title"]')
+                .should('exist')
+                .should('contain', 'Digital learning hub - Team Management');
         });
     });
     context('user access', () => {

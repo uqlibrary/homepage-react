@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import { useCookies } from 'react-cookie';
@@ -16,6 +16,9 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
+import { useConfirmationState } from 'hooks';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { scrollToTopOfPage } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -32,15 +35,41 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamLoading, dlorTeamError, account }) => {
+export const DLOTeamEdit = ({
+    actions,
+    dlorTeam,
+    dlorTeamLoading,
+    dlorTeamError,
+    dlorItemUpdating,
+    dlorUpdatedItemError,
+    dlorUpdatedItem,
+}) => {
     const { dlorTeamId } = useParams();
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
     console.log('DLOTeamEdit', dlorTeamId, ' l=', dlorTeamLoading, '; e=', dlorTeamError, '; d=', dlorTeam);
+    console.log(
+        'DLOTeamEdit dlorUpdatedItem l=',
+        dlorItemUpdating,
+        '; e=',
+        dlorUpdatedItemError,
+        '; d=',
+        dlorUpdatedItem,
+    );
 
-    const [formValues, setFormValues] = React.useState(null);
+    const [formValues, setFormValues] = useState(null);
+    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
 
-    React.useEffect(() => {
+    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+
+    useEffect(() => {
+        if (!!dlorTeamId) {
+            actions.loadADLORTeam(dlorTeamId);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dlorTeamId]);
+
+    useEffect(() => {
         if (!!dlorTeam && !dlorTeamLoading && !dlorTeamError) {
             setFormValues({
                 team_name: dlorTeam.team_name,
@@ -50,12 +79,13 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamLoading, dlorTeamError,
         }
     }, [dlorTeam, dlorTeamLoading, dlorTeamError]);
 
-    React.useEffect(() => {
-        if (!!dlorTeamId) {
-            actions.loadADLORTeam(dlorTeamId);
+    useEffect(() => {
+        if (!!dlorUpdatedItem?.data?.team_id || !!dlorUpdatedItemError) {
+            setSaveStatus('complete');
+            showConfirmation();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dlorTeamId]);
+        console.log('useEffect: dlorUpdatedItem dlorUpdatedItem=', dlorUpdatedItem);
+    }, [showConfirmation, dlorUpdatedItem, dlorUpdatedItemError]);
 
     const adminHomepageLink = () => {
         const userString = getUserPostfix();
@@ -65,6 +95,39 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamLoading, dlorTeamError,
     const teamManagementLink = () => {
         const userString = getUserPostfix();
         return `${fullPath}/admin/dlor/team/manage${userString}`;
+    };
+
+    function closeConfirmationBox() {
+        setSaveStatus(null);
+        hideConfirmation();
+    }
+
+    const navigateToTeamManagementHomePage = () => {
+        // TODO also want to clear form here too before nav, so back button gives clear form?
+
+        closeConfirmationBox();
+        window.location.href = teamManagementLink();
+        scrollToTopOfPage();
+    };
+
+    const clearForm = actiontype => {
+        closeConfirmationBox();
+        window.location.reload(false);
+    };
+
+    const locale = {
+        successMessage: {
+            confirmationTitle: 'Changes have been saved', // mode === 'add' ? 'The team has been created' : 'Changes have been saved',
+            confirmationMessage: '',
+            cancelButtonLabel: 'Re-edit Team', // mode === 'add' ? 'Add another Team' : 'Re-edit Team',
+            confirmButtonLabel: 'Return to Admin Teams page',
+        },
+        errorMessage: {
+            confirmationTitle: dlorUpdatedItemError,
+            confirmationMessage: '',
+            cancelButtonLabel: 'Re-edit Team', // mode === 'add' ? 'Add another Team' : 'Re-edit Team',
+            confirmButtonLabel: 'Return to Admin Teams page',
+        },
     };
 
     const handleChange = (prop, value) => e => {
@@ -94,16 +157,18 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamLoading, dlorTeamError,
                                 Digital learning hub admin
                             </a>
                             <ArrowForwardIcon style={{ height: 15 }} />
-                            <a data-testid="dlor-edit-form-tmlink" href={teamManagementLink()}>
+                            <a data-testid="dlor-edit-form-uplink" href={teamManagementLink()}>
                                 Team management
                             </a>
+                            <ArrowForwardIcon style={{ height: 15 }} />
+                            Edit team {dlorTeam?.team_name}
                         </Typography>
                     </div>
                 </Grid>
             </Grid>
             <Grid container spacing={2}>
                 {(() => {
-                    if (!!dlorTeamLoading || (!dlorTeamError && !dlorTeam)) {
+                    if (!!dlorTeamLoading || !!dlorItemUpdating || (!dlorTeamError && !dlorTeam)) {
                         return (
                             <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                                 <div style={{ minHeight: 600 }}>
@@ -124,6 +189,22 @@ export const DLOTeamEdit = ({ actions, dlorTeam, dlorTeamLoading, dlorTeamError,
                             <>
                                 <Grid item xs={12} data-testid="dlor-team-item-list">
                                     <Grid container key={`list-team-${dlorTeam?.team_id}`}>
+                                        {saveStatus === 'complete' && (
+                                            <ConfirmationBox
+                                                actionButtonColor="primary"
+                                                actionButtonVariant="contained"
+                                                confirmationBoxId="dlor-team-save-outcome"
+                                                onAction={() => navigateToTeamManagementHomePage()}
+                                                hideCancelButton={!locale.successMessage.cancelButtonLabel}
+                                                cancelButtonLabel={locale.successMessage.cancelButtonLabel}
+                                                onCancelAction={() => clearForm()}
+                                                onClose={closeConfirmationBox}
+                                                isOpen={isOpen}
+                                                locale={
+                                                    !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
+                                                }
+                                            />
+                                        )}
                                         <form id="dlor-editTeam-form" style={{ width: '100%' }}>
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
@@ -191,6 +272,9 @@ DLOTeamEdit.propTypes = {
     dlorTeamLoading: PropTypes.bool,
     dlorTeamError: PropTypes.any,
     account: PropTypes.object,
+    dlorItemUpdating: PropTypes.bool,
+    dlorUpdatedItemError: PropTypes.any,
+    dlorUpdatedItem: PropTypes.object,
 };
 
 export default DLOTeamEdit;

@@ -699,15 +699,19 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, dlor_team_list];
         }
     })
-    .onPut('dlor/admin/team')
-    .reply(() => {
-        if (responseType === 'teamsLoadError') {
-            return [500, { error: 'Teams api did not load' }];
-        } else if (responseType === 'emptyResult') {
-            return [200, { data: [] }]; // this should really be a 404?
-        } else {
-            return [200, dlor_team_list.data.find(team => team.team_id === teamId)];
-        }
+    .onPut(/dlor\/admin\/team\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const teamId = urlparts.split('?')[0];
+        // if (responseType === 'error') {
+        //     return [500, {}];
+        // } else if (teamId === 'missingRecord') {
+        //     return [200, { data: {} }]; // this would more likely be a 404
+        // } else if (teamId === 'object_404') {
+        // return [404, { status: 'error', message: 'No records found for that UUID' }];
+        // } else {
+        return [200, { data: dlor_team_list.data.find(team => team.team_id === Number(teamId)) }];
+        // }
     })
     .onDelete('dlor/admin/team')
     .reply(() => {

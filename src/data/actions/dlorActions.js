@@ -279,11 +279,11 @@ export function loadADLORTeam(dlorId) {
 
 export function updateDlorTeam(teamId, request) {
     return dispatch => {
-        dispatch({ type: actions.DLOR_TEAM_UPDATING });
+        dispatch({ type: actions.DLOR_UPDATING });
         return put(DLOR_TEAM_UPDATE_API(teamId), request)
             .then(response => {
                 dispatch({
-                    type: actions.DLOR_TEAM_UPDATED,
+                    type: actions.DLOR_UPDATED,
                     payload: response,
                 });
                 // refresh the list after change
@@ -291,7 +291,7 @@ export function updateDlorTeam(teamId, request) {
             })
             .catch(error => {
                 dispatch({
-                    type: actions.DLOR_TEAM_UPDATE_FAILED,
+                    type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
