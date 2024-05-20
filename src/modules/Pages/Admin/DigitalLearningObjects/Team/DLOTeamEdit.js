@@ -14,7 +14,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -32,6 +32,11 @@ const useStyles = makeStyles(theme => ({
                 textDecoration: 'underline',
             },
         },
+    },
+    errorMessage: {
+        color: theme.palette.error.light,
+        fontSize: '0.8em',
+        marginTop: 2,
     },
 }));
 
@@ -137,6 +142,13 @@ export const DLOTeamEdit = ({
         actions.updateDlorTeam(dlorTeamId, formValues);
     };
 
+    const isValidTeamName = teamName => {
+        if (teamName.trim() === '') {
+            return false;
+        }
+        return true;
+    };
+
     return (
         <StandardPage title="Digital learning hub - Edit Team">
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
@@ -205,8 +217,17 @@ export const DLOTeamEdit = ({
                                                         required
                                                         value={formValues?.team_name || ''}
                                                         onChange={handleChange('team_name')}
+                                                        error={!isValidTeamName(formValues?.team_name)}
                                                     />
                                                 </FormControl>
+                                                {!isValidTeamName(formValues?.team_name) && (
+                                                    <div
+                                                        className={classes.errorMessage}
+                                                        data-testid="error-message-team_name"
+                                                    >
+                                                        This team name is not valid.
+                                                    </div>
+                                                )}
                                             </Grid>
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
@@ -229,7 +250,16 @@ export const DLOTeamEdit = ({
                                                         data-testid="team_email"
                                                         value={formValues?.team_email || ''}
                                                         onChange={handleChange('team_email')}
+                                                        error={!isValidEmail(formValues?.team_email)}
                                                     />
+                                                    {!isValidEmail(formValues?.team_email) && (
+                                                        <div
+                                                            className={classes.errorMessage}
+                                                            data-testid="error-message-team_email"
+                                                        >
+                                                            This email address is not valid.
+                                                        </div>
+                                                    )}
                                                 </FormControl>
                                             </Grid>
                                         </form>

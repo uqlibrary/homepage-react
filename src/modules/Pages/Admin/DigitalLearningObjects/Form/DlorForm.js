@@ -41,7 +41,11 @@ import {
     isValidNumber,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { dlorAdminLink, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import {
+    dlorAdminLink,
+    isValidEmail,
+    splitStringToArrayOnComma,
+} from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -337,10 +341,6 @@ export const DlorForm = ({
             !!url?.hostname.includes('.') && // tld only domain names really dont happen, must be a dot!
             url?.hostname.length >= '12.co'.length
         );
-    };
-
-    const isValidEmail = testEmail => {
-        return testEmail?.length >= 'ab@ab'.length && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(testEmail);
     };
 
     const isValidUsername = testUserName => {
