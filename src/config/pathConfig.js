@@ -13,6 +13,7 @@ export const pathConfig = {
         dloredit: dlorId => `/admin/dlor/edit/${dlorId}`,
         dlorteammanage: '/admin/dlor/team/manage',
         dlorteamedit: dlorTeamId => `/admin/dlor/team/edit/${dlorTeamId}`,
+        dlorteamadd: '/admin/dlor/team/add',
         masquerade: '/admin/masquerade',
         promopaneladd: '/admin/promopanel/add',
         promopaneledit: promopanelid => `/admin/promopanel/edit/${promopanelid}`,

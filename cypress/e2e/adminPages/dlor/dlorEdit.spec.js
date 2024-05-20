@@ -638,7 +638,7 @@ describe('Edit an object on the Digital learning hub', () => {
                     .should('exist')
                     .should('contain', 'Digital learning hub Management');
             });
-            it('admin can edit, choose a different existing team and re-edit', () => {
+            it('admin can edit, edit the current team, choose a different existing team and re-edit', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
@@ -646,7 +646,20 @@ describe('Edit an object on the Digital learning hub', () => {
 
                 // first panel, Ownership, loads
 
-                // change teams
+                // edit team details for the current team
+                cy.waitUntil(() => cy.get('[data-testid="object-form-teamid-change"]').should('exist'));
+                cy.get('[data-testid="object-form-teamid-change"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="team_manager_edit"]')
+                    .should('exist')
+                    .type('manager name');
+                cy.get('[data-testid="team_email_edit"]')
+                    .should('exist')
+                    .clear()
+                    .type('lea@example.com');
+
+                // and then change your mind and change teams instead
                 cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
                 cy.get('[data-testid="object_owning_team"]').click();
                 cy.get('[data-value="3"]')
@@ -793,9 +806,6 @@ describe('Edit an object on the Digital learning hub', () => {
                         11, // Graduate attributes : Connected citizens
                     ],
                     object_keywords: ['cat', 'dog'],
-                    team_email: 'train@library.uq.edu.au',
-                    team_manager: 'Jane Green',
-                    team_name: 'Lib train Library Corporate Services',
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;

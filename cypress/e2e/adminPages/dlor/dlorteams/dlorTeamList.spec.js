@@ -38,12 +38,12 @@ describe('Digital learning hub admin Teams management', () => {
             cy.get('[data-testid="dlor-homepage-edit-2"]').should('exist');
             cy.get('[data-testid="dlor-homepage-edit-3"]').should('exist');
         });
-        it.skip('has a working "add a team" button', () => {
+        it('has a working "add a team" button', () => {
             cy.get('[data-testid="admin-dlor-visit-add-button"]')
                 .should('exist')
-                .should('contain', 'Add object')
+                .should('contain', 'Add team')
                 .click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/team/manage/add?user=dloradmn');
+            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/team/add?user=dloradmn');
         });
         it('has a working "edit a team" button', () => {
             cy.get('[data-testid="dlor-homepage-edit-2"]')

@@ -23,6 +23,7 @@ export const flattedPathConfigExact = [
     '/admin/dlor',
     '/admin/dlor/add',
     '/admin/dlor/team/manage',
+    '/admin/dlor/team/add',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/spotlights/add',
@@ -227,6 +228,18 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: 'Manage the Digital learning hub',
         },
         {
+            path: pathConfig.admin.dloradd,
+            component: components.DLOAdd,
+            exact: true,
+            pageTitle: 'Create a new Object',
+        },
+        {
+            path: pathConfig.admin.dloredit(dlorId),
+            component: components.DLOEdit,
+            exact: true,
+            pageTitle: 'Edit an Object',
+        },
+        {
             path: pathConfig.admin.dlorteammanage,
             component: components.DLOTeamList,
             exact: true,
@@ -239,16 +252,10 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: 'Edit a Team for the Digital learning hub',
         },
         {
-            path: pathConfig.admin.dloradd,
-            component: components.DLOAdd,
+            path: pathConfig.admin.dlorteamadd,
+            component: components.DLOTeamAdd,
             exact: true,
-            pageTitle: 'Create a new Object',
-        },
-        {
-            path: pathConfig.admin.dloredit(dlorId),
-            component: components.DLOEdit,
-            exact: true,
-            pageTitle: 'Edit an Object',
+            pageTitle: 'Create a new Team',
         },
     ];
 

@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -48,7 +48,7 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
     }, [actions, dlorTeamList, dlorTeamListError, dlorTeamListLoading]);
 
     const navigateToAddPage = () => {
-        // TODO
+        window.location.href = dlorAdminLink('/team/add');
     };
 
     const deleteADlorTeam = teamId => {
@@ -76,8 +76,6 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
     };
 
     const navigateToEditPage = teamId => {
-        // const userString = getUserPostfix();
-        // window.location.href = `${fullPath}/admin/dlor/team/edit/${teamId}${userString}`;
         window.location.href = dlorAdminLink(`/team/edit/${teamId}`);
     };
 
@@ -102,7 +100,9 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
                 <Grid item xs={6}>
                     <div className={classes.titleBlock}>
                         <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <ArrowBackIcon fontSize="small" /> <a href={dlorAdminLink()}>Digital learning hub admin</a>
+                            <a href={dlorAdminLink()}>Digital learning hub admin</a>
+                            <ArrowForwardIcon style={{ height: 15 }} />
+                            Team management
                         </Typography>
                     </div>
                 </Grid>

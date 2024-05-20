@@ -8,6 +8,7 @@ import {
     DLOR_FILE_TYPE_LIST_API,
     DLOR_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
+    DLOR_TEAM_CREATE_API,
     DLOR_TEAM_DELETE_API,
     DLOR_TEAM_LIST_API,
     DLOR_TEAM_SINGLE_GET_API,
@@ -292,6 +293,31 @@ export function updateDlorTeam(teamId, request) {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function createDlorTeam(request) {
+    console.log('createDlorTeam request=', request);
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_CREATING });
+        return post(DLOR_TEAM_CREATE_API(), request)
+            .then(data => {
+                console.log('createDlorTeam response=', data);
+                dispatch({
+                    type: actions.DLOR_CREATED,
+                    payload: data,
+                });
+                // refresh the list after change
+                dispatch(loadOwningTeams());
+            })
+            .catch(error => {
+                console.log('createDlorTeam error=', error);
+                dispatch({
+                    type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

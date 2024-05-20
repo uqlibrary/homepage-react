@@ -1105,6 +1105,11 @@ export const DlorForm = ({
             valuesToSend.team_name = valuesToSend.team_name_new;
             valuesToSend.team_manager = valuesToSend.team_manager_new;
             valuesToSend.team_email = valuesToSend.team_email_new;
+        } else if (formValues?.object_owning_team_id !== formDefaults.object_owning_team_id) {
+            // they can only change manager and email for the original team; if they entered this then changed teams, undo
+            delete valuesToSend.team_name;
+            delete valuesToSend.team_manager;
+            delete valuesToSend.team_email;
         } else {
             valuesToSend.team_name = valuesToSend.team_name_edit;
             valuesToSend.team_manager = valuesToSend.team_manager_edit;
@@ -1122,23 +1127,19 @@ export const DlorForm = ({
         delete valuesToSend.object_keywords_string;
 
         if (valuesToSend?.object_link_interaction_type === linkInteractionType_download) {
-            console.log('rrrrrrrr download');
             valuesToSend.object_link_size = convertFileSizeToKb(
                 valuesToSend?.object_link_size_amount,
                 valuesToSend?.object_link_size_units,
             );
         } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_view) {
-            console.log('rrrrrrrr view');
             valuesToSend.object_link_size = getTotalSecondsFromMinutesAndSecond(
                 valuesToSend?.object_link_duration_minutes,
                 valuesToSend?.object_link_duration_seconds,
             );
         } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_none) {
-            console.log('rrrrrrrr other');
             delete valuesToSend?.object_link_file_type;
         }
         if (!!valuesToSend.new_file_type) {
-            console.log('rrrrrrrr new file type');
             valuesToSend.object_link_file_type = valuesToSend.new_file_type;
             delete valuesToSend.new_file_type;
         }

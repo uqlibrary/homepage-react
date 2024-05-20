@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     errorMessage: {
-        color: theme.palette.error.light,
+        color: '#d62929', // uq $error-500
         fontSize: '0.8em',
         marginTop: 2,
     },
@@ -40,50 +40,49 @@ const useStyles = makeStyles(theme => ({
 
 export const DLOTeamForm = ({
     actions,
-    // formDefaults,
-    dlorTeam,
+    formDefaults,
     dlorTeamLoading,
     dlorTeamError,
-    dlorItemUpdating,
-    dlorUpdatedItemError,
-    dlorUpdatedItem,
+    dlorTeamSaving,
+    dlorSavedTeamError,
+    dlorSavedTeam,
     mode,
 }) => {
     const { dlorTeamId } = useParams();
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
-    console.log('DLOTeamForm', dlorTeamId, ' l=', dlorTeamLoading, '; e=', dlorTeamError, '; d=', dlorTeam);
-    console.log(
-        'DLOTeamForm dlorUpdatedItem l=',
-        dlorItemUpdating,
-        '; e=',
-        dlorUpdatedItemError,
-        '; d=',
-        dlorUpdatedItem,
-    );
+    console.log('DLOTeamForm', dlorTeamId, ' l=', dlorTeamLoading, '; e=', dlorTeamError, '; d=', formDefaults);
+    console.log('DLOTeamForm dlorSavedTeam l=', dlorTeamSaving, '; e=', dlorSavedTeamError, '; d=', dlorSavedTeam);
 
-    const [formValues, setFormValues] = useState(null);
+    const [formValues, setFormValues] = useState({
+        team_name: '',
+        team_manager: '',
+        team_email: '',
+    });
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
+    const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     useEffect(() => {
-        if (!!dlorTeam && !dlorTeamLoading && !dlorTeamError) {
+        if (mode === 'edit' && !!formDefaults && !dlorTeamLoading && !dlorTeamError) {
+            console.log('formDefaults has changed', dlorTeamLoading, dlorTeamError, formDefaults);
             setFormValues({
-                team_name: dlorTeam.team_name,
-                team_manager: dlorTeam.team_manager,
-                team_email: dlorTeam.team_email,
+                team_name: formDefaults?.team_name,
+                team_manager: formDefaults?.team_manager,
+                team_email: formDefaults?.team_email,
             });
         }
-    }, [dlorTeam, dlorTeamLoading, dlorTeamError]);
+        setFormValidity(validateValues(formValues));
+    }, [mode, formDefaults, dlorTeamLoading, dlorTeamError]);
 
     useEffect(() => {
-        if (!!dlorUpdatedItem?.data?.team_id || !!dlorUpdatedItemError) {
+        if (!!dlorSavedTeam?.data?.team_id || !!dlorSavedTeamError) {
             setSaveStatus('complete');
             showConfirmation();
         }
-        console.log('useEffect: dlorUpdatedItem dlorUpdatedItem=', dlorUpdatedItem);
-    }, [showConfirmation, dlorUpdatedItem, dlorUpdatedItemError]);
+        console.log('useEffect: dlorSavedTeam dlorSavedTeam=', dlorSavedTeam);
+    }, [showConfirmation, dlorSavedTeam, dlorSavedTeamError]);
 
     function closeConfirmationBox() {
         setSaveStatus(null);
@@ -99,8 +98,9 @@ export const DLOTeamForm = ({
     };
 
     const clearForm = actiontype => {
+        console.log('clearForm');
         closeConfirmationBox();
-        window.location.reload(false);
+        mode === 'edit' && window.location.reload(false);
     };
 
     const locale = {
@@ -111,7 +111,7 @@ export const DLOTeamForm = ({
             confirmButtonLabel: 'Return to Admin Teams page',
         },
         errorMessage: {
-            confirmationTitle: dlorUpdatedItemError,
+            confirmationTitle: dlorSavedTeamError,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Team' : 'Re-edit Team',
             confirmButtonLabel: 'Return to Admin Teams page',
@@ -119,10 +119,17 @@ export const DLOTeamForm = ({
     };
 
     const handleChange = (prop, value) => e => {
-        console.log('handleChange', prop, e.target);
+        console.log('handleChange in', prop, e.target.value);
         const theNewValue = e.target.value;
         const newValues = { ...formValues, [prop]: theNewValue };
+        console.log('handleChange newValues=', newValues);
+
+        setFormValidity(validateValues(newValues));
         setFormValues(newValues);
+    };
+
+    const validateValues = currentValues => {
+        return isValidTeamName(currentValues?.team_name) && isValidEmailLocal(currentValues?.team_email);
     };
 
     const saveChanges = () => {
@@ -132,20 +139,21 @@ export const DLOTeamForm = ({
             setCookie('CYPRESS_DATA_SAVED', formValues);
         }
 
-        actions.updateDlorTeam(dlorTeamId, formValues);
+        return mode === 'add' ? actions.createDlorTeam(formValues) : actions.updateDlorTeam(dlorTeamId, formValues);
     };
 
     const isValidTeamName = teamName => {
-        if (teamName?.trim() === '') {
-            return false;
-        }
-        return true;
+        return (mode === 'edit' && teamName === formDefaults?.team_name) || teamName?.trim() !== '';
+    };
+
+    const isValidEmailLocal = emailAddress => {
+        return (emailAddress === formDefaults?.team_email || emailAddress?.trim() !== '') && isValidEmail(emailAddress);
     };
 
     return (
         <Grid container spacing={2}>
             {(() => {
-                if (!!dlorTeamLoading || !!dlorItemUpdating || (!dlorTeamError && !dlorTeam)) {
+                if ((!!dlorTeamLoading || !!dlorTeamSaving || (!dlorTeamError && !formDefaults)) && mode === 'edit') {
                     return (
                         <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                             <div style={{ minHeight: 600 }}>
@@ -161,11 +169,11 @@ export const DLOTeamForm = ({
                             </Typography>
                         </Grid>
                     );
-                } else if (!!dlorTeam) {
+                } else if (!!formDefaults) {
                     return (
                         <>
                             <Grid item xs={12} data-testid="dlor-team-item-list">
-                                <Grid container key={`list-team-${dlorTeam?.team_id}`}>
+                                <Grid container key={`list-team-${formDefaults?.team_id}`}>
                                     {saveStatus === 'complete' && (
                                         <ConfirmationBox
                                             actionButtonColor="primary"
@@ -177,9 +185,7 @@ export const DLOTeamForm = ({
                                             onCancelAction={() => clearForm()}
                                             onClose={closeConfirmationBox}
                                             isOpen={isOpen}
-                                            locale={
-                                                !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
-                                            }
+                                            locale={!!dlorSavedTeamError ? locale.errorMessage : locale.successMessage}
                                         />
                                     )}
                                     <form id="dlor-editTeam-form" style={{ width: '100%' }}>
@@ -218,16 +224,16 @@ export const DLOTeamForm = ({
                                         <Grid item xs={12}>
                                             <FormControl variant="standard" fullWidth>
                                                 <InputLabel htmlFor="team_email">
-                                                    Email address to contact team
+                                                    Email address to contact team *
                                                 </InputLabel>
                                                 <Input
                                                     id="team_email"
                                                     data-testid="team_email"
                                                     value={formValues?.team_email || ''}
                                                     onChange={handleChange('team_email')}
-                                                    error={!isValidEmail(formValues?.team_email)}
+                                                    error={!isValidEmailLocal(formValues?.team_email)}
                                                 />
-                                                {!isValidEmail(formValues?.team_email) && (
+                                                {!isValidEmailLocal(formValues?.team_email) && (
                                                     <div
                                                         className={classes.errorMessage}
                                                         data-testid="error-message-team_email"
@@ -244,10 +250,10 @@ export const DLOTeamForm = ({
                             <Grid item xs={12} align="right">
                                 <Button
                                     color="primary"
-                                    data-testid="admin-dlor-teamedit-save-button"
+                                    data-testid="admin-dlor-team-form-save-button"
                                     variant="contained"
                                     children="Save"
-                                    // disabled={!isFormValid}
+                                    disabled={!isFormValid}
                                     onClick={saveChanges}
                                     // className={classes.saveButton}
                                 />
@@ -262,13 +268,13 @@ export const DLOTeamForm = ({
 
 DLOTeamForm.propTypes = {
     actions: PropTypes.any,
-    dlorTeam: PropTypes.object,
+    formDefaults: PropTypes.object,
     dlorTeamLoading: PropTypes.bool,
     dlorTeamError: PropTypes.any,
     account: PropTypes.object,
-    dlorItemUpdating: PropTypes.bool,
-    dlorUpdatedItemError: PropTypes.any,
-    dlorUpdatedItem: PropTypes.object,
+    dlorTeamSaving: PropTypes.bool,
+    dlorSavedTeamError: PropTypes.any,
+    dlorSavedTeam: PropTypes.object,
     mode: PropTypes.string,
 };
 

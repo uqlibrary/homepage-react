@@ -580,17 +580,20 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
     },
 ]);
 
-function getSingleDlorRecordFromList(dlorId) {
-    console.log('getSingleDlorRecordFromList', dlorId);
-    const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
-    const singleRecord = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
-    !!singleRecord && (singleRecord.object_link_types = dlor_file_type_list.data);
-
-    const currentTeamDetails =
+function getSpecificTeam(teamId) {
+    return (
         !!dlor_team_list &&
         !!dlor_team_list.data &&
         dlor_team_list.data.length > 0 &&
-        dlor_team_list.data.find(team => team.team_id === singleRecord?.object_owning_team_id);
+        dlor_team_list.data.find(team => team.team_id === teamId)
+    );
+}
+function getSpecificDlorObject(dlorId) {
+    console.log('getSpecificDlorObject', dlorId);
+    const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
+    const singleRecord = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
+    !!singleRecord && (singleRecord.object_link_types = dlor_file_type_list.data);
+    const currentTeamDetails = getSpecificTeam(singleRecord?.object_owning_team_id);
     if (!!singleRecord && !!currentTeamDetails) {
         singleRecord.owner.team_name = currentTeamDetails.team_name;
         singleRecord.owner.team_email = currentTeamDetails.team_email;
@@ -611,7 +614,7 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (dlorId === 'object_404') {
             return [404, { status: 'error', message: 'No records found for that UUID' }];
         } else {
-            return getSingleDlorRecordFromList(dlorId);
+            return getSpecificDlorObject(dlorId);
         }
     })
     .onGet(/dlor\/admin\/team\/.*/)
@@ -637,7 +640,7 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (dlorId === 'missingRecord') {
             return [200, { data: {} }]; // this would more likely be a 404
         } else {
-            return getSingleDlorRecordFromList(dlorId);
+            return getSpecificDlorObject(dlorId);
         }
     })
     .onGet('dlor/list/full')
@@ -699,6 +702,25 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, dlor_team_list];
         }
     })
+    .onPost('dlor/admin/team')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [
+                200,
+                {
+                    data: {
+                        objects_count: 0,
+                        team_email: 'someone@example.com',
+                        team_id: dlor_team_list.data.length + 1,
+                        team_manager: '',
+                        team_name: 'New Team name',
+                    },
+                },
+            ];
+        }
+    })
     .onPut(/dlor\/admin\/team\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
@@ -726,7 +748,8 @@ mock.onGet(/dlor\/find\/.*/)
         if (responseType === 'saveError') {
             return [500, {}];
         } else {
-            return getSingleDlorRecordFromList('98j3-fgf95-8j34'); //any old id
+            // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
+            return getSpecificDlorObject('98j3-fgf95-8j34'); //any old id
         }
     })
     .onDelete(/dlor\/admin\/object\/.*/)

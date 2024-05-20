@@ -9,7 +9,7 @@ export default {
         }, {
             "team_id": 2,
             "team_name": "Lib train Library Corporate Services",
-            "team_email": "train@library.uq.edu.au",
+            "team_email": "train@library.uq.edu",
             "team_manager": "Jane Green",
             "objects_count": 0,
         }, {

@@ -338,4 +338,5 @@ export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/teams/list' });
 export const DLOR_TEAM_DELETE_API = () => ({ apiUrl: 'dlor/admin/team' });
 export const DLOR_TEAM_SINGLE_GET_API = ({ id }) => ({ apiUrl: `dlor/admin/team/${id}` });
 export const DLOR_TEAM_UPDATE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
+export const DLOR_TEAM_CREATE_API = () => ({ apiUrl: 'dlor/admin/team' });
 export const DLOR_FILE_TYPE_LIST_API = () => ({ apiUrl: 'dlor/admin/file_types/list' });
