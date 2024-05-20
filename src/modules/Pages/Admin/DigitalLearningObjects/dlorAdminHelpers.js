@@ -1,3 +1,5 @@
+import { fullPath } from 'config/routes';
+
 export function splitStringToArrayOnComma(keywordString) {
     let splitStringToArrayOnComma = '';
     if (!!keywordString) {
@@ -39,3 +41,8 @@ export function getUserPostfix(appendType = '?') {
     }
     return userString;
 }
+
+export const dlorAdminLink = (dlorPath = '') => {
+    const userString = getUserPostfix();
+    return `${fullPath}/admin/dlor${dlorPath}${userString}`;
+};

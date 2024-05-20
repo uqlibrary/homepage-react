@@ -14,7 +14,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -87,16 +87,6 @@ export const DLOTeamEdit = ({
         console.log('useEffect: dlorUpdatedItem dlorUpdatedItem=', dlorUpdatedItem);
     }, [showConfirmation, dlorUpdatedItem, dlorUpdatedItemError]);
 
-    const adminHomepageLink = () => {
-        const userString = getUserPostfix();
-        return `${fullPath}/admin/dlor${userString}`;
-    };
-
-    const teamManagementLink = () => {
-        const userString = getUserPostfix();
-        return `${fullPath}/admin/dlor/team/manage${userString}`;
-    };
-
     function closeConfirmationBox() {
         setSaveStatus(null);
         hideConfirmation();
@@ -106,7 +96,7 @@ export const DLOTeamEdit = ({
         // TODO also want to clear form here too before nav, so back button gives clear form?
 
         closeConfirmationBox();
-        window.location.href = teamManagementLink();
+        window.location.href = dlorAdminLink('/team/manage');
         scrollToTopOfPage();
     };
 
@@ -153,11 +143,11 @@ export const DLOTeamEdit = ({
                 <Grid item xs={12}>
                     <div className={classes.titleBlock}>
                         <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <a data-testid="dlor-edit-form-homelink" href={adminHomepageLink()}>
+                            <a data-testid="dlor-edit-form-homelink" href={dlorAdminLink()}>
                                 Digital learning hub admin
                             </a>
                             <ArrowForwardIcon style={{ height: 15 }} />
-                            <a data-testid="dlor-edit-form-uplink" href={teamManagementLink()}>
+                            <a data-testid="dlor-edit-form-uplink" href={dlorAdminLink('/team/manage')}>
                                 Team management
                             </a>
                             <ArrowForwardIcon style={{ height: 15 }} />

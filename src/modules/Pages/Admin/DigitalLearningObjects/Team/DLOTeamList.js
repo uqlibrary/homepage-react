@@ -16,7 +16,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 import { useConfirmationState } from 'hooks';
-import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { dlorAdminLink, getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 
 const useStyles = makeStyles(theme => ({
@@ -75,14 +75,10 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
                 });
     };
 
-    const adminHomepageLink = () => {
-        const userString = getUserPostfix();
-        return `${fullPath}/admin/dlor${userString}`;
-    };
-
     const navigateToEditPage = teamId => {
-        const userString = getUserPostfix();
-        window.location.href = `${fullPath}/admin/dlor/team/edit/${teamId}${userString}`;
+        // const userString = getUserPostfix();
+        // window.location.href = `${fullPath}/admin/dlor/team/edit/${teamId}${userString}`;
+        window.location.href = dlorAdminLink(`/team/edit/${teamId}`);
     };
 
     return (
@@ -106,8 +102,7 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
                 <Grid item xs={6}>
                     <div className={classes.titleBlock}>
                         <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <ArrowBackIcon fontSize="small" />{' '}
-                            <a href={adminHomepageLink()}>Digital learning hub admin</a>
+                            <ArrowBackIcon fontSize="small" /> <a href={dlorAdminLink()}>Digital learning hub admin</a>
                         </Typography>
                     </div>
                 </Grid>

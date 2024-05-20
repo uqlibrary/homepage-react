@@ -66,7 +66,7 @@ describe('Digital learning hub admin Teams management', () => {
                 .click();
             cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"]').should('not.exist');
         });
-        it('can delete an object', () => {
+        it('can delete a team', () => {
             // click delete icon on first Object
             cy.get('[data-testid="dlor-homepage-delete-2"]')
                 .should('exist')

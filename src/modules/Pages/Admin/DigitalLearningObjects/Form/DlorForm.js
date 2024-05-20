@@ -41,7 +41,7 @@ import {
     isValidNumber,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { getUserPostfix, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { dlorAdminLink, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -483,7 +483,7 @@ export const DlorForm = ({
                         A change here will affect all Objects for this team.
                         <br />
                         You can also{' '}
-                        <a target="_blank" href="admin/dlor/team/manage">
+                        <a target="_blank" href={dlorAdminLink('/team/manage')}>
                             Manage Teams
                         </a>
                     </p>
@@ -1179,8 +1179,7 @@ export const DlorForm = ({
         // TODO also want to clear form here too before nav, so back button gives clear form?
 
         closeConfirmationBox();
-        const userString = getUserPostfix();
-        window.location.href = `${fullPath}/admin/dlor${userString}`;
+        window.location.href = dlorAdminLink();
         scrollToTopOfPage();
     };
 

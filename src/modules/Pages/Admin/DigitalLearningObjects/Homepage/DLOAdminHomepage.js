@@ -21,7 +21,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
@@ -128,18 +128,15 @@ export const DLOAdminHomepage = ({
     }, [dlorList]);
 
     const navigateToAddPage = () => {
-        const userString = getUserPostfix();
-        window.location.href = `${fullPath}/admin/dlor/add${userString}`;
+        window.location.href = dlorAdminLink('/add');
     };
 
     const navigateToTeamsListPage = () => {
-        const userString = getUserPostfix();
-        window.location.href = `${fullPath}/admin/dlor/team/manage${userString}`;
+        window.location.href = dlorAdminLink('/team/manage');
     };
 
     const navigateToEditPage = uuid => {
-        const userString = getUserPostfix();
-        window.location.href = `${fullPath}/admin/dlor/edit/${uuid}${userString}`;
+        window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
 
     const confirmDelete = objectUuid => {

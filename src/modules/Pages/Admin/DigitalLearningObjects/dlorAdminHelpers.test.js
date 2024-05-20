@@ -1,4 +1,4 @@
-import { splitStringToArrayOnComma } from './dlorAdminHelpers';
+import { dlorAdminLink, splitStringToArrayOnComma } from './dlorAdminHelpers';
 
 describe('helpers', () => {
     it('splits keywords correctly', () => {
@@ -8,5 +8,8 @@ describe('helpers', () => {
         expect(splitStringToArrayOnComma('"abc, abc", def, "hij"')).toEqual(['abc, abc', 'def', 'hij']);
         expect(splitStringToArrayOnComma('abc')).toEqual(['abc']);
         expect(splitStringToArrayOnComma('abc,def,hij')).toEqual(['abc', 'def', 'hij']);
+    });
+    it('generates admin links correctly', () => {
+        expect(dlorAdminLink('/add')).toEqual('http://localhost/admin/dlor/add');
     });
 });
