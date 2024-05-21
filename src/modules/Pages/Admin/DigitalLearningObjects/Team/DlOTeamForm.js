@@ -66,7 +66,6 @@ export const DLOTeamForm = ({
 
     useEffect(() => {
         if (mode === 'edit' && !!formDefaults && !dlorTeamLoading && !dlorTeamError) {
-            console.log('formDefaults has changed', dlorTeamLoading, dlorTeamError, formDefaults);
             setFormValues({
                 team_name: formDefaults?.team_name,
                 team_manager: formDefaults?.team_manager,
@@ -81,7 +80,6 @@ export const DLOTeamForm = ({
             setSaveStatus('complete');
             showConfirmation();
         }
-        console.log('useEffect: dlorSavedTeam dlorSavedTeam=', dlorSavedTeam);
     }, [showConfirmation, dlorSavedTeam, dlorSavedTeamError]);
 
     function closeConfirmationBox() {
@@ -98,7 +96,6 @@ export const DLOTeamForm = ({
     };
 
     const clearForm = actiontype => {
-        console.log('clearForm');
         closeConfirmationBox();
         mode === 'edit' && window.location.reload(false);
     };
@@ -119,10 +116,8 @@ export const DLOTeamForm = ({
     };
 
     const handleChange = (prop, value) => e => {
-        console.log('handleChange in', prop, e.target.value);
         const theNewValue = e.target.value;
         const newValues = { ...formValues, [prop]: theNewValue };
-        console.log('handleChange newValues=', newValues);
 
         setFormValidity(validateValues(newValues));
         setFormValues(newValues);
@@ -133,7 +128,6 @@ export const DLOTeamForm = ({
     };
 
     const saveChanges = () => {
-        console.log('saveChanges', dlorTeamId, formValues);
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', formValues);

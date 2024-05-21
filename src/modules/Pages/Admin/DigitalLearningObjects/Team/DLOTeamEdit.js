@@ -43,23 +43,6 @@ export const DLOTeamEdit = ({
 }) => {
     const { dlorTeamId } = useParams();
     const classes = useStyles();
-    console.log('DLOTeamEdit', dlorTeamId, ' l=', dlorTeamLoading, '; e=', dlorTeamError, '; d=', dlorTeam);
-    console.log(
-        'DLOTeamEdit dlorUpdatedItem l=',
-        dlorItemUpdating,
-        '; e=',
-        dlorUpdatedItemError,
-        '; d=',
-        dlorUpdatedItem,
-    );
-
-    // const formDefaults = {
-    //     team_id: dlorTeam.team_id,
-    //     team_name: dlorTeam.team_name,
-    //     team_email: dlorTeam.team_email,
-    //     team_manager: dlorTeam.team_manager,
-    //     objects_count: dlorTeam.objects_count,
-    // };
 
     useEffect(() => {
         if (!!dlorTeamId) {
@@ -68,7 +51,6 @@ export const DLOTeamEdit = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorTeamId]);
 
-    console.log('DLOTeamEdit formDefaults=', dlorTeam);
     return (
         <StandardPage title="Digital learning hub - Edit Team">
             <Grid container spacing={2} style={{ marginBottom: 25 }}>

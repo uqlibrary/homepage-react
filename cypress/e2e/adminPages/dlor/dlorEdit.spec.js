@@ -266,7 +266,9 @@ describe('Edit an object on the Digital learning hub', () => {
             });
             it('changes "download" url accessibility message', () => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
-                cy.visit('http://localhost:2020/admin/dlor/edit/9bc192a8-324c-4f6b-ac50-07e7ff2df240?user=dloradmn');
+                cy.visit(
+                    `http://localhost:2020/admin/dlor/edit/9bc192a8-324c-4f6b-ac50-07e7ff2df240?user=${DLOR_ADMIN_USER}`,
+                );
                 // go to panel 2
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -342,7 +344,7 @@ describe('Edit an object on the Digital learning hub', () => {
             it('changes "view" url accessibility message', () => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
 
-                cy.visit('http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=dloradmn');
+                cy.visit(`http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}`);
                 // go to panel 2
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -1008,7 +1010,7 @@ describe('Edit an object on the Digital learning hub', () => {
         });
         context('fails correctly', () => {
             it('404 page return correctly', () => {
-                cy.visit('http://localhost:2020/admin/dlor/edit/object_404?user=dloradmn');
+                cy.visit(`http://localhost:2020/admin/dlor/edit/object_404?user=${DLOR_ADMIN_USER}`);
                 cy.waitUntil(() => cy.get('[data-testid="dlor-form-error"]').should('exist'));
                 cy.get('[data-testid="dlor-form-error"]').contains('The requested page could not be found.');
             });

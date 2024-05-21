@@ -7,7 +7,7 @@ describe('Digital learning hub admin Add Team', () => {
 
     context('Add DLOR Team', () => {
         beforeEach(() => {
-            cy.visit('http://localhost:2020/admin/dlor/team/add?user=dloradmn');
+            cy.visit(`http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
         });
         it('is accessible', () => {
@@ -43,10 +43,10 @@ describe('Digital learning hub admin Add Team', () => {
 
             cy.get('a[data-testid="dlor-add-form-homelink"]')
                 .contains('Digital learning hub admin')
-                .should('have.attr', 'href', 'http://localhost:2020/admin/dlor?user=dloradmn');
+                .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             cy.get('a[data-testid="dlor-add-form-uplink"]')
                 .contains('Team management')
-                .should('have.attr', 'href', 'http://localhost:2020/admin/dlor/team/manage?user=dloradmn');
+                .should('have.attr', 'href', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
         it('validates correctly', () => {
             // initially, save button is disabled - the form is invalid, but no errors appear
@@ -116,7 +116,7 @@ describe('Digital learning hub admin Add Team', () => {
     context('save test', () => {
         beforeEach(() => {
             cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
-            cy.visit('http://localhost:2020/admin/dlor/team/add?user=dloradmn');
+            cy.visit(`http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
         });
         it('saves correctly and starts another add', () => {

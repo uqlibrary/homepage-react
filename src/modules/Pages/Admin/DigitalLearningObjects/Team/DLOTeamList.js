@@ -59,17 +59,13 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
         showDeleteConfirmation();
     };
     const deleteSelectedObject = () => {
-        console.log('deleteSelectedObject start');
         !!teamToDelete &&
             deleteADlorTeam(teamToDelete)
                 .then(() => {
-                    console.log('deleteSelectedObject delete success', teamToDelete);
                     setObjectToDelete('');
-                    // setAlertNotice(''); // needed?
                     actions.loadOwningTeams();
                 })
                 .catch(() => {
-                    console.log('deleteSelectedObject delete fail', teamToDelete);
                     setObjectToDelete('');
                     showDeleteFailureConfirmation();
                 });

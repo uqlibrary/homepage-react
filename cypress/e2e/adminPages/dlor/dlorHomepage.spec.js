@@ -31,21 +31,21 @@ describe('Digital learning hub admin homepage', () => {
                 .should('exist')
                 .should('contain', 'Add object')
                 .click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/add?user=dloradmn');
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
         });
         it('has a working "manage teams" button', () => {
             cy.get('[data-testid="admin-dlor-visit-manage-teams-button"]')
                 .should('exist')
                 .should('contain', 'Manage teams')
                 .click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/team/manage?user=dloradmn');
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
         it('has a working "edit an object" button', () => {
             cy.get('[data-testid="admin-dlor-visit-add-button"]')
                 .should('exist')
                 .should('contain', 'Add object')
                 .click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/add?user=dloradmn');
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
         });
         it('shows a list of objects to manage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')

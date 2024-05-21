@@ -43,13 +43,13 @@ describe('Digital learning hub admin Teams management', () => {
                 .should('exist')
                 .should('contain', 'Add team')
                 .click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/team/add?user=dloradmn');
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}`);
         });
         it('has a working "edit a team" button', () => {
             cy.get('[data-testid="dlor-homepage-edit-2"]')
                 .should('exist')
                 .click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/team/edit/2?user=dloradmn');
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/edit/2?user=${DLOR_ADMIN_USER}`);
         });
         it('can cancel deletion of a Team', () => {
             // click delete icon on first Object
