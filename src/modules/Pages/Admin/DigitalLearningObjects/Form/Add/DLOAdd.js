@@ -15,9 +15,9 @@ export const DLOAdd = ({
     dlorItemCreating,
     dlorCreatedItemError,
     dlorCreatedItem,
-    dlorTeam,
-    dlorTeamLoading,
-    dlorTeamError,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
     dlorFileTypeList,
     dlorFileTypeListLoading,
     dlorFileTypeListError,
@@ -48,9 +48,9 @@ export const DLOAdd = ({
         object_publishing_user: account?.id,
         object_status: 'new',
         object_review_date_next: getTodayPlusOneYear(),
-        team_name: '',
-        team_manager: '',
-        team_email: '',
+        // team_name_add: '',
+        // team_manager_add: '',
+        // team_email_add: '',
         object_keywords_string: '',
         facets: [],
         object_link_interaction_type: 'none',
@@ -67,9 +67,9 @@ export const DLOAdd = ({
                             dlorItemSaving={dlorItemCreating}
                             dlorSavedItemError={dlorCreatedItemError}
                             dlorSavedItem={dlorCreatedItem}
-                            dlorTeam={dlorTeam}
-                            dlorTeamLoading={dlorTeamLoading}
-                            dlorTeamError={dlorTeamError}
+                            dlorTeamList={dlorTeamList}
+                            dlorTeamListLoading={dlorTeamListLoading}
+                            dlorTeamListError={dlorTeamListError}
                             dlorFilterList={dlorFilterList}
                             dlorFilterListLoading={dlorFilterListLoading}
                             dlorFilterListError={dlorFilterListError}
@@ -91,9 +91,9 @@ DLOAdd.propTypes = {
     dlorItemCreating: PropTypes.bool,
     dlorCreatedItemError: PropTypes.any,
     dlorCreatedItem: PropTypes.object,
-    dlorTeam: PropTypes.array,
-    dlorTeamLoading: PropTypes.bool,
-    dlorTeamError: PropTypes.any,
+    dlorTeamList: PropTypes.array,
+    dlorTeamListLoading: PropTypes.bool,
+    dlorTeamListError: PropTypes.any,
     dlorFileTypeList: PropTypes.array,
     dlorFileTypeListLoading: PropTypes.bool,
     dlorFileTypeListError: PropTypes.any,

@@ -1,9 +1,9 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
+    dlorTeam: null,
     dlorTeamLoading: null,
     dlorTeamError: null,
-    dlorTeam: null,
 };
 
 const handlers = {
@@ -28,12 +28,12 @@ const handlers = {
     }),
 };
 
-export default function dlorTeamReducer(state = initialState, action) {
+export default function dlorTeamSingleReducer(state = initialState, action) {
     const handler = handlers[action.type];
     if (!handler) {
         return state;
     }
     const handler1 = handler(state, action);
-    console.log('reducer dlorTeamReducer:', action.type, handler1);
+    console.log('reducer dlorTeamSingleReducer:', action.type, handler1);
     return handler1;
 }

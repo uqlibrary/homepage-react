@@ -132,7 +132,7 @@ describe('Digital learning hub actions', () => {
         it('dispatches expected actions when all dlors call fails', async () => {
             mockApi.onGet(repositories.routes.DLOR_TEAM_LIST_API()).reply(500);
 
-            const expectedActions = [actions.DLOR_TEAM_LOADING, actions.DLOR_TEAM_FAILED];
+            const expectedActions = [actions.DLOR_TEAMLIST_LOADING, actions.DLOR_TEAMLIST_FAILED];
 
             await mockActionsStore.dispatch(loadOwningTeams());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -141,7 +141,7 @@ describe('Digital learning hub actions', () => {
         it('handles dlor list', async () => {
             mockApi.onGet(repositories.routes.DLOR_TEAM_LIST_API().apiUrl).reply(200, []);
 
-            const expectedActions = [actions.DLOR_TEAM_LOADING, actions.DLOR_TEAM_LOADED];
+            const expectedActions = [actions.DLOR_TEAMLIST_LOADING, actions.DLOR_TEAMLIST_LOADED];
 
             await mockActionsStore.dispatch(loadOwningTeams());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -150,7 +150,11 @@ describe('Digital learning hub actions', () => {
         it('dispatches expected actions when dlor list call fails', async () => {
             mockApi.onGet(repositories.routes.DLOR_TEAM_LIST_API().apiUrl).reply(500);
 
-            const expectedActions = [actions.DLOR_TEAM_LOADING, actions.APP_ALERT_SHOW, actions.DLOR_TEAM_FAILED];
+            const expectedActions = [
+                actions.DLOR_TEAMLIST_LOADING,
+                actions.APP_ALERT_SHOW,
+                actions.DLOR_TEAMLIST_FAILED,
+            ];
 
             await mockActionsStore.dispatch(loadOwningTeams());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);

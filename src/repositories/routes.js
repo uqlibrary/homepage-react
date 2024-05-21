@@ -329,8 +329,14 @@ export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/list/full' });
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/find/${id}` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/facet/list' });
+
+// dlor admin routes
 export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
 export const DLOR_UPDATE_API = id => ({ apiUrl: `dlor/admin/object/${id}` });
 export const DLOR_DESTROY_API = ({ id }) => ({ apiUrl: `dlor/admin/object/${id}` });
 export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/teams/list' });
+export const DLOR_TEAM_DELETE_API = () => ({ apiUrl: 'dlor/admin/team' });
+export const DLOR_TEAM_SINGLE_GET_API = ({ id }) => ({ apiUrl: `dlor/admin/team/${id}` });
+export const DLOR_TEAM_UPDATE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
+export const DLOR_TEAM_CREATE_API = () => ({ apiUrl: 'dlor/admin/team' });
 export const DLOR_FILE_TYPE_LIST_API = () => ({ apiUrl: 'dlor/admin/file_types/list' });

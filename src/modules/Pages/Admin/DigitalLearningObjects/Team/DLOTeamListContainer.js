@@ -3,16 +3,13 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
-import DLOAdd from './DLOAdd';
+import DLOTeamList from 'modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamList';
 
 const mapStateToProps = state => {
     return {
         ...state.get('accountReducer'),
-        ...state.get('dlorListReducer'),
-        ...state.get('dlorFileTypeListReducer'),
-        ...state.get('dlorFilterListReducer'),
         ...state.get('dlorTeamListReducer'),
-        ...state.get('dlorCreateReducer'),
+        ...state.get('dlorTeamDeleteReducer'),
     };
 };
 
@@ -22,7 +19,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOAddContainer = connect(mapStateToProps, mapDispatchToProps)(DLOAdd);
-DLOAddContainer = withRouter(DLOAddContainer);
+let DLOTeamListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOTeamList);
+DLOTeamListContainer = withRouter(DLOTeamListContainer);
 
-export default DLOAddContainer;
+export default DLOTeamListContainer;

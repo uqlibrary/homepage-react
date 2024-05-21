@@ -1,3 +1,5 @@
+import { DLOR_ADMIN_USER } from '../../../support/constants';
+
 describe('Digital learning hub admin homepage', () => {
     beforeEach(() => {
         cy.clearCookies();
@@ -7,10 +9,9 @@ describe('Digital learning hub admin homepage', () => {
     const itemsPerPage = 10; // matches value in DLOAdminHomepage
     const gridFromExpectedRowCount = (expected = 23) => (expected > itemsPerPage ? itemsPerPage : expected) + 1;
 
-    const mockDlorAdminUser = 'dloradmn';
     context('homepage', () => {
         beforeEach(() => {
-            cy.visit(`http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
         });
         it('is accessible', () => {
@@ -30,14 +31,21 @@ describe('Digital learning hub admin homepage', () => {
                 .should('exist')
                 .should('contain', 'Add object')
                 .click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/add?user=dloradmn');
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
+        });
+        it('has a working "manage teams" button', () => {
+            cy.get('[data-testid="admin-dlor-visit-manage-teams-button"]')
+                .should('exist')
+                .should('contain', 'Manage teams')
+                .click();
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
         it('has a working "edit an object" button', () => {
             cy.get('[data-testid="admin-dlor-visit-add-button"]')
                 .should('exist')
                 .should('contain', 'Add object')
                 .click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/dlor/add?user=dloradmn');
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
         });
         it('shows a list of objects to manage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
@@ -306,7 +314,7 @@ describe('Digital learning hub admin homepage', () => {
     });
     context('error handling', () => {
         it('deletion failure pops up an error', () => {
-            cy.visit(`http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}&responseType=saveError`);
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}&responseType=saveError`);
             cy.viewport(1300, 1000);
 
             // click delete icon on first Object
@@ -353,7 +361,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.get('h1').contains('Permission denied');
         });
         it('displays correct page for admin users (list)', () => {
-            cy.visit(`http://localhost:2020/admin/dlor?user=${mockDlorAdminUser}`);
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital learning hub Management');

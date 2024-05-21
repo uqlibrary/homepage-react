@@ -36,13 +36,16 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { scrollToTopOfPage } from 'helpers/general';
 import {
     convertFileSizeToKb,
-    displayDownloadInstructions,
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { getUserPostfix, splitStringToArrayOnComma } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import {
+    dlorAdminLink,
+    isValidEmail,
+    splitStringToArrayOnComma,
+} from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -94,18 +97,6 @@ const useStyles = makeStyles(theme => ({
             paddingBlock: 0,
         },
     },
-    //     typingArea: {
-    //         '& textarea ': {
-    //             backgroundColor: 'rgb(236, 236, 236, 0.5)',
-    //             borderRadius: 4,
-    //             padding: 10,
-    //         },
-    //         '& label': {
-    //             color: theme.typography.caption.color,
-    //             paddingLeft: 10,
-    //             paddingTop: 10,
-    //         },
-    //     },
     viewDuration: {
         '& > div': {
             display: 'flex',
@@ -125,9 +116,9 @@ export const DlorForm = ({
     dlorItemLoading,
     dlorItem,
     // dlorItemError,
-    dlorTeam,
-    dlorTeamLoading,
-    dlorTeamError,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
@@ -147,7 +138,7 @@ export const DlorForm = ({
 
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
-    const [showTeamCreationForm, setShowTeamCreationForm] = useState(false); // enable-disable the Team creation fields
+    const [showTeamForm, setShowTeamForm] = useState(false); // enable-disable the Team creation fields
     const [showFileTypeCreationForm, setShowFileTypeCreationForm] = useState(false); // enable-disable the File Type creation fields
 
     const [isLinkFileTypeError, setIsLinkFileTypeError] = useState(false);
@@ -162,11 +153,9 @@ export const DlorForm = ({
     const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
     const checkBoxArrayRef = useRef([]);
-    const teamSelectRef = useRef(1);
+    const teamSelectRef = useRef(null);
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
-
-    console.log('**** ', mode, '; formValues?.object_link_types=', formValues?.object_link_types);
 
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
@@ -195,13 +184,13 @@ export const DlorForm = ({
     }, [dlorItem, mode]);
 
     useEffect(() => {
-        if (!dlorTeamError && !dlorTeamLoading && !!dlorTeam && dlorTeam.length > 0) {
+        if (!dlorTeamListError && !dlorTeamListLoading && !!dlorTeamList && dlorTeamList.length > 0) {
             if (mode === 'add') {
-                const firstTeam = dlorTeam?.filter((t, index) => index === 0) || [];
+                const firstTeam = dlorTeamList?.filter((t, index) => index === 0) || [];
                 teamSelectRef.current = firstTeam?.shift()?.team_id;
             }
         }
-    }, [dlorTeam, mode]);
+    }, [dlorTeamList, mode]);
 
     // these match the values in dlor cypress admin tests
     const titleMinimumLength = 8;
@@ -300,16 +289,16 @@ export const DlorForm = ({
     }
 
     const handleChange = (prop, value) => e => {
-        // handle radio & checkbox filter field changes
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
-        // handle teams dropdown changes
         if (prop === 'object_is_featured') {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
+
+        // handle teams dropdown changes
         if (prop === 'object_owning_team_id') {
-            setShowTeamCreationForm(theNewValue === 'new');
+            setShowTeamForm(theNewValue === 'new' ? 'new' : false);
             teamSelectRef.current = theNewValue !== 'new' ? e.target.value : 'new';
         }
         if (prop === 'object_link_interaction_type') {
@@ -354,22 +343,36 @@ export const DlorForm = ({
         );
     };
 
-    const isValidEmail = testEmail => {
-        return testEmail?.length >= 'ab@ab'.length && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(testEmail);
-    };
-
     const isValidUsername = testUserName => {
         return testUserName?.length >= 4 && testUserName?.length <= 8;
+    };
+    // const currentTeamDetails = dlorTeamList?.find(team =>
+    //     mode === 'edit' ? team.team_id === formDefaults?.object_owning_team_id : team.team_id === teamSelectRef.current,
+    // );
+
+    const controlEditTeamDialog = () => {
+        if (showTeamForm !== false) {
+            // clicked on "Close", close dialog
+            setShowTeamForm(false);
+            return;
+        }
+
+        setShowTeamForm(teamSelectRef.current);
+
+        // initialise values in form - duplicate code in resetForm for single call
+        const newValues = {
+            ...formValues,
+            team_manager_edit: !!formValues ? formValues.team_manager_edit : '',
+            team_email_edit: !!formValues ? formValues.team_email_edit : '',
+        };
+        setFormValidity(validateValues(newValues));
+        setFormValues(newValues);
     };
 
     const stepPanelContentOwnership = (
         <>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
                     <Input
                         id="object_publishing_user"
@@ -402,14 +405,14 @@ export const DlorForm = ({
                     // aria-labelledby="object_owning_team_label"
                     style={{ minWidth: '20em' }}
                 >
-                    {dlorTeam?.map((t, index) => {
+                    {dlorTeamList?.map((t, index) => {
                         return (
                             <MenuItem
                                 key={t.team_id}
                                 value={t.team_id}
                                 selected={t.team_id === teamSelectRef.current}
                                 data-testid={`object_owning_team-${t.team_id}`}
-                                divider={index === dlorTeam.length - 1}
+                                divider={index === dlorTeamList.length - 1}
                             >
                                 {t.team_name}
                             </MenuItem>
@@ -423,53 +426,90 @@ export const DlorForm = ({
                         Create a team
                     </MenuItem>
                 </Select>
+                {/* the user can only edit team details for the current Team - this is just a convenience form */}
+                {mode === 'edit' && formDefaults?.object_owning_team_id === teamSelectRef.current && (
+                    <Button
+                        onClick={() => controlEditTeamDialog()}
+                        style={{ marginLeft: '10px' }}
+                        data-testid="object-form-teamid-change"
+                    >
+                        {showTeamForm === false ? 'Update contact' : 'Close'}
+                    </Button>
+                )}
             </Grid>
-            {showTeamCreationForm && (
-                <Grid item xs={12}>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
-                        <InputLabel htmlFor="team_name">Name of new Team *</InputLabel>
+            {showTeamForm !== false && teamSelectRef.current === 'new' && (
+                <Grid item xs={5}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
                         <Input
-                            id="team_name"
-                            data-testid="team_name"
-                            value={formValues?.team_name || ''}
-                            onChange={handleChange('team_name')}
+                            id="team_name_new"
+                            data-testid="team_name_new"
+                            value={formValues?.team_name_new || ''}
+                            onChange={handleChange('team_name_new')}
                         />
                     </FormControl>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
-                        <InputLabel htmlFor="team_manager">Name of Team manager *</InputLabel>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="team_manager_new">Name of Team manager *</InputLabel>
                         <Input
-                            id="team_manager"
-                            data-testid="team_manager"
+                            id="team_manager_new"
+                            data-testid="team_manager_new"
                             required
-                            value={formValues?.team_manager || ''}
-                            onChange={handleChange('team_manager')}
+                            value={formValues?.team_manager_new || ''}
+                            onChange={handleChange('team_manager_new')}
                         />
                     </FormControl>
-                    <FormControl
-                        variant="standard"
-                        // className={classes.typingArea}
-                        fullWidth
-                    >
-                        <InputLabel htmlFor="team_email">Team email *</InputLabel>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
                         <Input
-                            id="team_email"
-                            data-testid="team_email"
+                            id="team_email_new"
+                            data-testid="team_email_new"
                             required
-                            value={formValues?.team_email || ''}
-                            onChange={handleChange('team_email')}
+                            value={formValues?.team_email_new || ''}
+                            onChange={handleChange('team_email_new')}
                             type="email"
-                            error={!isValidEmail(formValues?.team_email)}
+                            error={!isValidEmail(formValues?.team_email_new)}
                         />
-                        {!isValidEmail(formValues?.team_email) && (
-                            <div className={classes.errorMessage} data-testid="error-message-team_email">
+                        {!isValidEmail(formValues?.team_email_new) && (
+                            <div className={classes.errorMessage} data-testid="error-message-team_email_new">
+                                This email address is not valid.
+                            </div>
+                        )}
+                    </FormControl>
+                </Grid>
+            )}
+            {showTeamForm !== false && teamSelectRef.current !== 'new' && (
+                <Grid item xs={5}>
+                    <p style={{ fontStyle: 'italic', marginTop: -16 }}>
+                        A change here will affect all Objects for this team.
+                        <br />
+                        You can also{' '}
+                        <a target="_blank" href={dlorAdminLink('/team/manage')}>
+                            Manage Teams
+                        </a>
+                    </p>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
+                        <Input
+                            id="team_manager_edit"
+                            data-testid="team_manager_edit"
+                            required
+                            value={formValues?.team_manager_edit || ''}
+                            onChange={handleChange('team_manager_edit')}
+                        />
+                    </FormControl>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
+                        <Input
+                            id="team_email_edit"
+                            data-testid="team_email_edit"
+                            required
+                            value={formValues?.team_email_edit || ''}
+                            onChange={handleChange('team_email_edit')}
+                            type="email"
+                            error={!isValidEmail(formValues?.team_email_edit)}
+                        />
+                        {!isValidEmail(formValues?.team_email_edit) && (
+                            <div className={classes.errorMessage} data-testid="error-message-team_email_edit">
                                 This email address is not valid.
                             </div>
                         )}
@@ -533,11 +573,7 @@ export const DlorForm = ({
     const stepPanelContentDescription = (
         <>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    fullWidth
-                    // className={classes.typingArea}
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_title">Object title *</InputLabel>
                     <Input
                         id="object_title"
@@ -595,11 +631,7 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
                     <Input
                         id="object_summary"
@@ -690,10 +722,8 @@ export const DlorForm = ({
 
     const getFileTypeListbyMode = () => {
         if (mode === 'add') {
-            console.log('**** getFileTypeListbyMode add dlorFileTypeList=', dlorFileTypeList);
             return dlorFileTypeList || [];
         }
-        console.log('**** getFileTypeListbyMode edit formValues?.object_link_types=', formValues?.object_link_types);
         // else Edit
         return formValues?.object_link_types || [];
     };
@@ -705,11 +735,7 @@ export const DlorForm = ({
     const stepPanelContentLinks = (
         <>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
                     <Input
                         id="object_link_url"
@@ -913,12 +939,7 @@ export const DlorForm = ({
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                    style={{ paddingTop: 50 }}
-                >
+                <FormControl variant="standard" fullWidth style={{ paddingTop: 50 }}>
                     {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
                     <InputLabel htmlFor="object_download_instructions" style={{ fontSize: 20 }}>
                         Download Instructions
@@ -971,11 +992,7 @@ export const DlorForm = ({
                     );
                 })}
             <Grid item xs={12}>
-                <FormControl
-                    variant="standard"
-                    // className={classes.typingArea}
-                    fullWidth
-                >
+                <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_keywords">
                         Keywords - enter a comma separated list of keywords *
                     </InputLabel>
@@ -1034,7 +1051,7 @@ export const DlorForm = ({
     }
 
     useEffect(() => {
-        if (!dlorTeamError && !dlorTeamLoading && !dlorTeam) {
+        if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
             actions.loadOwningTeams();
         }
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
@@ -1085,33 +1102,45 @@ export const DlorForm = ({
         }
         if (formValues?.object_owning_team_id === 'new') {
             delete valuesToSend.object_owning_team_id;
-        } else {
+
+            valuesToSend.team_name = valuesToSend.team_name_new;
+            valuesToSend.team_manager = valuesToSend.team_manager_new;
+            valuesToSend.team_email = valuesToSend.team_email_new;
+        } else if (formValues?.object_owning_team_id !== formDefaults.object_owning_team_id) {
+            // they can only change manager and email for the original team; if they entered this then changed teams, undo
             delete valuesToSend.team_name;
             delete valuesToSend.team_manager;
             delete valuesToSend.team_email;
+        } else {
+            valuesToSend.team_name = valuesToSend.team_name_edit;
+            valuesToSend.team_manager = valuesToSend.team_manager_edit;
+            valuesToSend.team_email = valuesToSend.team_email_edit;
         }
+
+        delete valuesToSend.team_name_new;
+        delete valuesToSend.team_manager_new;
+        delete valuesToSend.team_email_new;
+        delete valuesToSend.team_name_edit;
+        delete valuesToSend.team_manager_edit;
+        delete valuesToSend.team_email_edit;
 
         valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
 
         if (valuesToSend?.object_link_interaction_type === linkInteractionType_download) {
-            console.log('rrrrrrrr download');
             valuesToSend.object_link_size = convertFileSizeToKb(
                 valuesToSend?.object_link_size_amount,
                 valuesToSend?.object_link_size_units,
             );
         } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_view) {
-            console.log('rrrrrrrr view');
             valuesToSend.object_link_size = getTotalSecondsFromMinutesAndSecond(
                 valuesToSend?.object_link_duration_minutes,
                 valuesToSend?.object_link_duration_seconds,
             );
         } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_none) {
-            console.log('rrrrrrrr other');
             delete valuesToSend?.object_link_file_type;
         }
         if (!!valuesToSend.new_file_type) {
-            console.log('rrrrrrrr new file type');
             valuesToSend.object_link_file_type = valuesToSend.new_file_type;
             delete valuesToSend.new_file_type;
         }
@@ -1152,8 +1181,7 @@ export const DlorForm = ({
         // TODO also want to clear form here too before nav, so back button gives clear form?
 
         closeConfirmationBox();
-        const userString = getUserPostfix();
-        window.location.href = `${fullPath}/admin/dlor${userString}`;
+        window.location.href = dlorAdminLink();
         scrollToTopOfPage();
     };
 
@@ -1172,15 +1200,31 @@ export const DlorForm = ({
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
-        currentValues?.object_owning_team_id === 'new' &&
-            currentValues?.team_name?.length < 1 &&
-            firstPanelErrorCount++;
-        currentValues?.object_owning_team_id === 'new' &&
-            currentValues?.team_manager?.length < 1 &&
-            firstPanelErrorCount++;
-        currentValues?.object_owning_team_id === 'new' &&
-            (currentValues?.team_email?.length < 1 || !isValidEmail(currentValues?.team_email)) &&
-            firstPanelErrorCount++;
+        if (teamSelectRef.current === 'new') {
+            if (
+                currentValues?.team_name_new === undefined ||
+                !currentValues?.team_name_new ||
+                currentValues?.team_name_new?.length < 1
+            ) {
+                firstPanelErrorCount++;
+            }
+            if (
+                currentValues?.team_manager_new === undefined ||
+                !currentValues?.team_manager_new ||
+                currentValues?.team_manager_new?.length < 1
+            ) {
+                firstPanelErrorCount++;
+            }
+            (currentValues?.team_email_new === undefined ||
+                !currentValues?.team_email_new ||
+                currentValues?.team_email_new?.length < 1 ||
+                !isValidEmail(currentValues?.team_email_new)) &&
+                firstPanelErrorCount++;
+        } else if (mode === 'edit') {
+            currentValues?.team_manager_edit?.length < 1 && firstPanelErrorCount++;
+            (currentValues?.team_email_edit?.length < 1 || !isValidEmail(currentValues?.team_email_edit)) &&
+                firstPanelErrorCount++;
+        }
 
         let secondPanelErrorCount = 0;
         currentValues?.object_title?.length < titleMinimumLength && secondPanelErrorCount++;
@@ -1333,17 +1377,17 @@ export const DlorForm = ({
     const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
     const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
 
-    if (!!dlorTeamLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
+    if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
             <Grid item xs={12}>
                 <InlineLoader message="Loading" />
             </Grid>
         );
     }
-    if (!!dlorTeamError) {
+    if (!!dlorTeamListError) {
         return (
             <Typography variant="body1" data-testid="dlor-form-addedit-error">
-                {dlorTeamError}
+                {dlorTeamListError}
             </Typography>
         );
     }
