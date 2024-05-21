@@ -778,7 +778,11 @@ export const DLOList = ({
             </Typography>
             <Typography component={'p'}>
                 Use this <span style={{ fontStyle: 'italic' }}>Digital learning hub</span> to find digital learning
-                objects for study and teaching.
+                objects for study and teaching.{' '}
+                <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
+                    How to use our digital learning objects
+                </a>
+                .
             </Typography>
             <Grid container spacing={2}>
                 <Grid
