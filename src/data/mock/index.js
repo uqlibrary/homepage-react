@@ -628,7 +628,7 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (teamId === 'object_404') {
             return [404, { status: 'error', message: 'No records found for that UUID' }];
         } else {
-            return [200, dlor_team_list.data.find(team => team.team_id === Number(teamId))];
+            return [200, { data: dlor_team_list.data.find(team => team.team_id === Number(teamId)) }];
         }
     })
     .onPut(/dlor\/admin\/object\/.*/)

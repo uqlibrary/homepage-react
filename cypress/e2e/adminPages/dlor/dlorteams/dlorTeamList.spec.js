@@ -46,7 +46,8 @@ describe('Digital learning hub admin Teams management', () => {
                 .should('exist')
                 .contains('4 Objects');
             cy.get('[data-testid="dlor-team-object-list-3"]').should('not.exist');
-
+        });
+        it('has a working "edit a dlor" button', () => {
             // can open a list and click edit
             cy.get('[data-testid="dlor-team-object-list-1"] summary')
                 .should('exist')
@@ -71,7 +72,7 @@ describe('Digital learning hub admin Teams management', () => {
         });
         it('can cancel deletion of a Team', () => {
             // click delete icon on first Object
-            cy.get('[data-testid="dlor-homepage-delete-2"]')
+            cy.get('[data-testid="dlor-homepage-delete-3"]')
                 .should('exist')
                 .click();
             // confirm delete box is open
@@ -86,7 +87,7 @@ describe('Digital learning hub admin Teams management', () => {
         });
         it('can delete a team', () => {
             // click delete icon on first Object
-            cy.get('[data-testid="dlor-homepage-delete-2"]')
+            cy.get('[data-testid="dlor-homepage-delete-3"]')
                 .should('exist')
                 .click();
             // confirm delete box is open
@@ -101,7 +102,7 @@ describe('Digital learning hub admin Teams management', () => {
             cy.get('[data-testid="dlor-teamlist-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 6);
         });
     });
     context('user access', () => {

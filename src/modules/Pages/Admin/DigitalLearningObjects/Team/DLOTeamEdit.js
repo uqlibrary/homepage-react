@@ -65,14 +65,14 @@ export const DLOTeamEdit = ({
                                 Team management
                             </a>
                             <ArrowForwardIcon style={{ height: 15 }} />
-                            Edit team {dlorTeam?.team_name}
+                            Edit team {dlorTeam?.data?.team_name}
                         </Typography>
                     </div>
                 </Grid>
             </Grid>
             <DlOTeamForm
                 actions={actions}
-                formDefaults={dlorTeam}
+                formDefaults={dlorTeam?.data}
                 dlorTeamLoading={dlorTeamLoading}
                 dlorTeamError={dlorTeamError}
                 dlorTeamSaving={dlorItemUpdating}
