@@ -49,7 +49,6 @@ export const DLOTeamList = ({
     dlorTeamDeleting,
     dlorTeamDeleted,
     dlorTeamDeleteError,
-    account,
 }) => {
     const classes = useStyles();
     console.log('DLOTeamList l=', dlorTeamListLoading, '; e=', dlorTeamListError, '; d=', dlorTeamList);
@@ -338,7 +337,6 @@ DLOTeamList.propTypes = {
     dlorTeamDeleted: PropTypes.array,
     dlorTeamDeleting: PropTypes.bool,
     dlorTeamDeleteError: PropTypes.any,
-    account: PropTypes.object,
 };
 
 export default DLOTeamList;

@@ -287,7 +287,6 @@ DLOTeamForm.propTypes = {
     formDefaults: PropTypes.object,
     dlorTeamLoading: PropTypes.bool,
     dlorTeamError: PropTypes.any,
-    account: PropTypes.object,
     dlorTeamSaving: PropTypes.bool,
     dlorSavedTeamError: PropTypes.any,
     dlorSavedTeam: PropTypes.object,

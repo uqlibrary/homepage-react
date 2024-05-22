@@ -89,7 +89,6 @@ DLOTeamEdit.propTypes = {
     dlorTeam: PropTypes.object,
     dlorTeamLoading: PropTypes.bool,
     dlorTeamError: PropTypes.any,
-    account: PropTypes.object,
     dlorItemUpdating: PropTypes.bool,
     dlorUpdatedItemError: PropTypes.any,
     dlorUpdatedItem: PropTypes.object,

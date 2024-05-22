@@ -63,14 +63,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const DLOAdminHomepage = ({
-    actions,
-    dlorList,
-    dlorListLoading,
-    dlorListError,
-    dlorItemDeleteError,
-    account,
-}) => {
+export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListError, dlorItemDeleteError }) => {
     const classes = useStyles();
 
     const statusTypes = [
@@ -450,7 +443,6 @@ DLOAdminHomepage.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
-    account: PropTypes.object,
 };
 
 export default DLOAdminHomepage;

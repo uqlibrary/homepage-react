@@ -77,7 +77,6 @@ DLOTeamAdd.propTypes = {
     dlorTeam: PropTypes.object,
     dlorTeamLoading: PropTypes.bool,
     dlorTeamError: PropTypes.any,
-    account: PropTypes.object,
     dlorItemCreating: PropTypes.bool,
     dlorCreatedItemError: PropTypes.any,
     dlorCreatedItem: PropTypes.object,
