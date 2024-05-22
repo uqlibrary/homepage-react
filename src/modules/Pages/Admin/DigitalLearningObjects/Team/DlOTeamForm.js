@@ -94,6 +94,9 @@ export const DLOTeamForm = ({
         window.location.href = dlorAdminLink('/team/manage');
         scrollToTopOfPage();
     };
+    const navigateToPreviousPage = () => {
+        window.history.back();
+    };
 
     const clearForm = actiontype => {
         closeConfirmationBox();
@@ -241,7 +244,16 @@ export const DLOTeamForm = ({
                                 </Grid>
                             </Grid>
 
-                            <Grid item xs={12} align="right">
+                            <Grid item xs={3} align="left">
+                                <Button
+                                    color="secondary"
+                                    children="Cancel"
+                                    data-testid="admin-dlor-form-button-cancel"
+                                    onClick={() => navigateToPreviousPage()}
+                                    variant="contained"
+                                />
+                            </Grid>
+                            <Grid item xs={9} align="right">
                                 <Button
                                     color="primary"
                                     data-testid="admin-dlor-team-form-save-button"

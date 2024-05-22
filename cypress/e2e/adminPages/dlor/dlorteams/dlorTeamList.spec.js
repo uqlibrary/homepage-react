@@ -30,13 +30,31 @@ describe('Digital learning hub admin Teams management', () => {
 
             // only one delete buttons appears
             cy.get('[data-testid="dlor-homepage-delete-1"]').should('not.exist');
-            cy.get('[data-testid="dlor-homepage-delete-2"]').should('exist');
-            cy.get('[data-testid="dlor-homepage-delete-3"]').should('not.exist');
+            cy.get('[data-testid="dlor-homepage-delete-2"]').should('not.exist');
+            cy.get('[data-testid="dlor-homepage-delete-3"]').should('exist');
 
             // three edit buttons appears
             cy.get('[data-testid="dlor-homepage-edit-1"]').should('exist');
             cy.get('[data-testid="dlor-homepage-edit-2"]').should('exist');
             cy.get('[data-testid="dlor-homepage-edit-3"]').should('exist');
+
+            // object counts are correct
+            cy.get('[data-testid="dlor-team-object-list-1"]')
+                .should('exist')
+                .contains('21 Objects');
+            cy.get('[data-testid="dlor-team-object-list-2"]')
+                .should('exist')
+                .contains('4 Objects');
+            cy.get('[data-testid="dlor-team-object-list-3"]').should('not.exist');
+
+            // can open a list and click edit
+            cy.get('[data-testid="dlor-team-object-list-1"] summary')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="dlor-team-object-list-item-1"]')
+                .should('exist')
+                .click();
+            cy.url().should('eq', 'http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=dloradmn');
         });
         it('has a working "add a team" button', () => {
             cy.get('[data-testid="admin-dlor-visit-add-button"]')

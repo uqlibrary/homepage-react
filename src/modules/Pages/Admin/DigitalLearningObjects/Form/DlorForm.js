@@ -1184,6 +1184,9 @@ export const DlorForm = ({
         window.location.href = dlorAdminLink();
         scrollToTopOfPage();
     };
+    const navigateToPreviousPage = () => {
+        window.history.back();
+    };
 
     function closeConfirmationBox() {
         setSaveStatus(null);
@@ -1490,7 +1493,7 @@ export const DlorForm = ({
                         color="secondary"
                         children="Cancel"
                         data-testid="admin-dlor-form-button-cancel"
-                        onClick={() => navigateToDlorAdminHomePage()}
+                        onClick={() => navigateToPreviousPage()}
                         variant="contained"
                     />
                 </Grid>

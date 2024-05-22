@@ -32,11 +32,26 @@ const useStyles = makeStyles(theme => ({
             },
         },
     },
+    details: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
 }));
 
-export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTeamListError, account }) => {
+export const DLOTeamList = ({
+    actions,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
+    dlorList,
+    dlorListLoading,
+    dlorListError,
+    account,
+}) => {
     const classes = useStyles();
     console.log('DLOTeamList l=', dlorTeamListLoading, '; e=', dlorTeamListError, '; d=', dlorTeamList);
+    console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
 
     const [teamToDelete, setObjectToDelete] = React.useState(null);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
@@ -46,6 +61,12 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
             actions.loadOwningTeams();
         }
     }, [actions, dlorTeamList, dlorTeamListError, dlorTeamListLoading]);
+
+    React.useEffect(() => {
+        if (!dlorListError && !dlorListLoading && !dlorList) {
+            actions.loadCurrentDLORs();
+        }
+    }, [dlorList]);
 
     const navigateToAddPage = () => {
         window.location.href = dlorAdminLink('/team/add');
@@ -71,10 +92,12 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
                 });
     };
 
-    const navigateToEditPage = teamId => {
+    const navigateToTeamEditPage = teamId => {
         window.location.href = dlorAdminLink(`/team/edit/${teamId}`);
     };
-
+    const navigateToDlorEditPage = uuid => {
+        window.location.href = dlorAdminLink(`/edit/${uuid}`);
+    };
     return (
         <StandardPage title="Digital learning hub - Team Management">
             <ConfirmationBox
@@ -112,7 +135,7 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
                     />
                 </Grid>
             </Grid>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} alignItems="center">
                 {(() => {
                     if (!!dlorTeamListLoading) {
                         return (
@@ -145,47 +168,117 @@ export const DLOTeamList = ({ actions, dlorTeamList, dlorTeamListLoading, dlorTe
                                     {dlorTeamList?.length > 0 &&
                                         dlorTeamList.map(team => {
                                             return (
-                                                <Grid
-                                                    container
-                                                    className={classes.listItem}
-                                                    key={`list-team-${team?.team_id}`}
-                                                >
+                                                <>
                                                     <Grid
-                                                        item
-                                                        xs={9}
-                                                        className={classes.sidebyside}
-                                                        data-testid={`dlor-homepage-panel-${team?.team_id}`}
+                                                        container
+                                                        key={`list-team-${team?.team_id}`}
+                                                        alignItems="center"
                                                     >
-                                                        <div>
-                                                            <Typography component={'span'}>
-                                                                {team?.team_name}
-                                                            </Typography>{' '}
-                                                            <Typography component={'span'}>
-                                                                ({team?.objects_count})
-                                                            </Typography>
-                                                        </div>
-                                                    </Grid>
-                                                    <Grid item xs={1}>
-                                                        {team?.objects_count === 0 && (
-                                                            <IconButton
-                                                                data-testid={`dlor-homepage-delete-${team?.team_id}`}
-                                                                style={{ height: 40 }}
-                                                                onClick={() => confirmDelete(team?.team_id)}
-                                                                // disabled={team?.object_status === 'deleted'}
-                                                            >
-                                                                <DeleteForeverIcon />
-                                                            </IconButton>
-                                                        )}
-                                                    </Grid>
-                                                    <Grid item xs={1}>
-                                                        <IconButton
-                                                            data-testid={`dlor-homepage-edit-${team?.team_id}`}
-                                                            onClick={() => navigateToEditPage(team?.team_id)}
+                                                        <Grid
+                                                            item
+                                                            xs={10}
+                                                            data-testid={`dlor-homepage-panel-${team?.team_id}`}
                                                         >
-                                                            <EditIcon />
-                                                        </IconButton>
+                                                            <Typography variant="body1">{team?.team_name}</Typography>{' '}
+                                                        </Grid>
+                                                        <Grid item xs={1}>
+                                                            {team?.objects_count === 0 && (
+                                                                <IconButton
+                                                                    data-testid={`dlor-homepage-delete-${team?.team_id}`}
+                                                                    style={{ height: 40 }}
+                                                                    onClick={() => confirmDelete(team?.team_id)}
+                                                                    // disabled={team?.object_status === 'deleted'}
+                                                                >
+                                                                    <DeleteForeverIcon />
+                                                                </IconButton>
+                                                            )}
+                                                        </Grid>
+                                                        <Grid item xs={1}>
+                                                            <IconButton
+                                                                data-testid={`dlor-homepage-edit-${team?.team_id}`}
+                                                                onClick={() => navigateToTeamEditPage(team?.team_id)}
+                                                            >
+                                                                <EditIcon />
+                                                            </IconButton>
+                                                        </Grid>
                                                     </Grid>
-                                                </Grid>
+                                                    <Grid container>
+                                                        <Grid item xs={12} style={{ marginBottom: 24 }}>
+                                                            {!dlorTeamListLoading &&
+                                                                !dlorListError &&
+                                                                !!dlorList &&
+                                                                dlorList.filter(
+                                                                    d => d?.object_owning_team_id === team?.team_id,
+                                                                ).length > 0 && (
+                                                                    <details
+                                                                        style={{ marginLeft: 20 }}
+                                                                        data-testid={`dlor-team-object-list-${team?.team_id}`}
+                                                                    >
+                                                                        <summary>
+                                                                            {`${
+                                                                                team?.objects_count
+                                                                            } Object${team?.objects_count > 1 && 's'}`}
+                                                                        </summary>
+                                                                        {!!dlorList &&
+                                                                            dlorList
+                                                                                .filter(
+                                                                                    d =>
+                                                                                        d?.object_owning_team_id ===
+                                                                                        team?.team_id,
+                                                                                )
+                                                                                .map(o => (
+                                                                                    <Grid
+                                                                                        container
+                                                                                        key={`team-object-${o.object_id}`}
+                                                                                    >
+                                                                                        <Grid item xs={1} />
+                                                                                        <Grid
+                                                                                            item
+                                                                                            xs={9}
+                                                                                            // data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
+                                                                                        >
+                                                                                            <div>
+                                                                                                <Typography
+                                                                                                    component={'h2'}
+                                                                                                    variant={'h6'}
+                                                                                                >
+                                                                                                    {o?.object_title}
+                                                                                                </Typography>
+                                                                                                <Typography
+                                                                                                    variant={'p'}
+                                                                                                >
+                                                                                                    <p>
+                                                                                                        {
+                                                                                                            o?.object_summary
+                                                                                                        }
+                                                                                                    </p>
+                                                                                                </Typography>
+                                                                                            </div>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={1}>
+                                                                                            <IconButton
+                                                                                                data-testid={`dlor-team-object-list-item-${o?.object_id}`}
+                                                                                                onClick={() =>
+                                                                                                    navigateToDlorEditPage(
+                                                                                                        o?.object_public_uuid,
+                                                                                                    )
+                                                                                                }
+                                                                                                disabled={
+                                                                                                    o?.object_status ===
+                                                                                                    'deleted'
+                                                                                                }
+                                                                                            >
+                                                                                                <EditIcon />
+                                                                                            </IconButton>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={1} />
+                                                                                    </Grid>
+                                                                                ))}
+                                                                    </details>
+                                                                )}
+                                                        </Grid>
+                                                    </Grid>
+                                                </>
                                             );
                                         })}
                                 </Grid>
@@ -203,6 +296,9 @@ DLOTeamList.propTypes = {
     dlorTeamList: PropTypes.array,
     dlorTeamListLoading: PropTypes.bool,
     dlorTeamListError: PropTypes.any,
+    dlorList: PropTypes.array,
+    dlorListLoading: PropTypes.bool,
+    dlorListError: PropTypes.any,
     account: PropTypes.object,
 };
 
