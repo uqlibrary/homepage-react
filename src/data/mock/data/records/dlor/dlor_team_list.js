@@ -11,7 +11,7 @@ export default {
             "team_name": "Lib train Library Corporate Services",
             "team_email": "train@library.uq.edu",
             "team_manager": "Jane Green",
-            "objects_count": 4,
+            "objects_count": 3,
         }, {
             "team_id": 3,
             "team_name": "Library Indigenous Enquiries",

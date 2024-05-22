@@ -73,7 +73,7 @@ export const DLOTeamList = ({
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
-            actions.loadCurrentDLORs();
+            actions.loadAllDLORs();
         }
     }, [dlorList]);
 
@@ -296,6 +296,13 @@ export const DLOTeamList = ({
                                                                                                     variant={'h6'}
                                                                                                 >
                                                                                                     {o?.object_title}
+                                                                                                    {o?.object_status !==
+                                                                                                        'current' && (
+                                                                                                        <strong>
+                                                                                                            {' '}
+                                                                                                            {`(${o?.object_status})`}
+                                                                                                        </strong>
+                                                                                                    )}
                                                                                                 </Typography>
                                                                                                 <Typography
                                                                                                     variant={'p'}
