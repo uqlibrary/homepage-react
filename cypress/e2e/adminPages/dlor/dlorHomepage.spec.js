@@ -1,6 +1,6 @@
 import { DLOR_ADMIN_USER } from '../../../support/constants';
 
-describe('Digital learning hub admin homepage', () => {
+describe('Digital Learning Hub admin homepage', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
@@ -18,7 +18,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.waitUntil(() => cy.get('h1').should('exist'));
-            cy.get('h1').should('contain', 'Digital learning hub Management');
+            cy.get('h1').should('contain', 'Digital Learning Hub Management');
 
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'dlor homepage',
@@ -364,7 +364,7 @@ describe('Digital learning hub admin homepage', () => {
             cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').should('contain', 'Digital learning hub Management');
+            cy.get('h1').should('contain', 'Digital Learning Hub Management');
         });
     });
 });

@@ -5,7 +5,7 @@ const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
 const REQUIRED_LENGTH_KEYWORDS = 4;
-describe('Add an object to the Digital learning hub', () => {
+describe('Add an object to the Digital Learning Hub', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
@@ -27,7 +27,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.injectAxe();
                 cy.viewport(1300, 1000);
                 cy.waitUntil(() => cy.get('h1').should('exist'));
-                cy.get('h1').should('contain', 'Digital learning hub Management');
+                cy.get('h1').should('contain', 'Digital Learning Hub Management');
 
                 // first panel is accessible
                 cy.checkA11y('[data-testid="StandardPage"]', {
@@ -680,7 +680,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
                 cy.get('[data-testid="StandardPage-title"]')
                     .should('exist')
-                    .should('contain', 'Digital learning hub Management');
+                    .should('contain', 'Digital Learning Hub Management');
             });
             it('admin can create a new object for a new team and make it featured and return to list', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
@@ -902,7 +902,7 @@ describe('Add an object to the Digital learning hub', () => {
                 cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
                 cy.get('[data-testid="StandardPage-title"]')
                     .should('exist')
-                    .should('contain', 'Digital learning hub Management');
+                    .should('contain', 'Digital Learning Hub Management');
             });
             it('admin can create a new object for an existing team and start a fresh form', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
@@ -1509,7 +1509,7 @@ describe('Add an object to the Digital learning hub', () => {
             cy.visit(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').should('contain', 'Digital learning hub Management');
+            cy.get('h1').should('contain', 'Digital Learning Hub Management');
         });
     });
 });

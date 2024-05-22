@@ -1,4 +1,4 @@
-describe('Digital learning hub', () => {
+describe('Digital Learning Hub', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');

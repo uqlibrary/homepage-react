@@ -52,13 +52,13 @@ export const DLOTeamEdit = ({
     }, [dlorTeamId]);
 
     return (
-        <StandardPage title="Digital learning hub - Edit Team">
+        <StandardPage title="Digital Learning Hub - Edit Team">
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
                 <Grid item xs={12}>
                     <div className={classes.titleBlock}>
                         <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                             <a data-testid="dlor-edit-form-homelink" href={dlorAdminLink()}>
-                                Digital learning hub admin
+                                Digital Learning Hub admin
                             </a>
                             <ArrowForwardIcon style={{ height: 15 }} />
                             <a data-testid="dlor-edit-form-uplink" href={dlorAdminLink('/team/manage')}>

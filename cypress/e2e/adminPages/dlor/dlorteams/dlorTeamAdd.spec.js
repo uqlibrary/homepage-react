@@ -1,6 +1,6 @@
 import { DLOR_ADMIN_USER } from '../../../../support/constants';
 
-describe('Digital learning hub admin Add Team', () => {
+describe('Digital Learning Hub admin Add Team', () => {
     beforeEach(() => {
         cy.clearCookies();
     });
@@ -14,7 +14,7 @@ describe('Digital learning hub admin Add Team', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.waitUntil(() => cy.get('h1').should('exist'));
-            cy.get('h1').should('contain', 'Digital learning hub - Add a new Team');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Add a new Team');
 
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'dlor add a team',
@@ -26,7 +26,7 @@ describe('Digital learning hub admin Add Team', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('be.visible')
-                .contains('Digital learning hub - Add a new Team');
+                .contains('Digital Learning Hub - Add a new Team');
 
             cy.get('[data-testid="team_name"] input')
                 .should('exist')
@@ -42,7 +42,7 @@ describe('Digital learning hub admin Add Team', () => {
                 .should('be.empty');
 
             cy.get('a[data-testid="dlor-add-form-homelink"]')
-                .contains('Digital learning hub admin')
+                .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             cy.get('a[data-testid="dlor-add-form-uplink"]')
                 .contains('Team management')
@@ -173,12 +173,12 @@ describe('Digital learning hub admin Add Team', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('be.visible')
-                .contains('Digital learning hub - Add a new Team');
+                .contains('Digital Learning Hub - Add a new Team');
 
             cy.url().should('eq', `http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}`);
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
-                .should('contain', 'Digital learning hub - Add a new Team');
+                .should('contain', 'Digital Learning Hub - Add a new Team');
             cy.get('[data-testid="team_name"] input')
                 .should('exist')
                 .should('be.visible')
@@ -246,7 +246,7 @@ describe('Digital learning hub admin Add Team', () => {
             cy.url().should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
-                .should('contain', 'Digital learning hub - Team Management');
+                .should('contain', 'Digital Learning Hub - Team management');
         });
     });
 
@@ -302,7 +302,7 @@ describe('Digital learning hub admin Add Team', () => {
             cy.visit(`http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').should('contain', 'Digital learning hub - Add a new Team');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Add a new Team');
         });
     });
 });

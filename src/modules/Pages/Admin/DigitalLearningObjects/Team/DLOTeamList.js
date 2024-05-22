@@ -154,7 +154,7 @@ export const DLOTeamList = ({
     }
 
     return (
-        <StandardPage title="Digital learning hub - Team Management">
+        <StandardPage title="Digital Learning Hub - Team management">
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
@@ -176,7 +176,7 @@ export const DLOTeamList = ({
                 <Grid item xs={6}>
                     <div className={classes.titleBlock}>
                         <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <a href={dlorAdminLink()}>Digital learning hub admin</a>
+                            <a href={dlorAdminLink()}>Digital Learning Hub admin</a>
                             <ArrowForwardIcon style={{ height: 15 }} />
                             Team management
                         </Typography>

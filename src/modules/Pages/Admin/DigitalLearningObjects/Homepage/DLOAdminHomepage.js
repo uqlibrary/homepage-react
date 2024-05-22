@@ -241,7 +241,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
     };
 
     return (
-        <StandardPage title="Digital learning hub Management">
+        <StandardPage title="Digital Learning Hub Management">
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"

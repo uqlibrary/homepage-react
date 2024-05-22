@@ -3,7 +3,7 @@ import { DLOR_ADMIN_USER } from '../../../support/constants';
 
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
-describe('Edit an object on the Digital learning hub', () => {
+describe('Edit an object on the Digital Learning Hub', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
@@ -32,7 +32,7 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.injectAxe();
                 cy.viewport(1300, 1000);
                 cy.waitUntil(() => cy.get('h1').should('exist'));
-                cy.get('h1').should('contain', 'Digital learning hub Management');
+                cy.get('h1').should('contain', 'Digital Learning Hub Management');
 
                 // check panel 1
                 cy.checkA11y('[data-testid="StandardPage"]', {
@@ -638,7 +638,7 @@ describe('Edit an object on the Digital learning hub', () => {
                 cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
                 cy.get('[data-testid="StandardPage-title"]')
                     .should('exist')
-                    .should('contain', 'Digital learning hub Management');
+                    .should('contain', 'Digital Learning Hub Management');
             });
             it('admin can edit, edit the current team, choose a different existing team and re-edit', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
@@ -858,7 +858,7 @@ describe('Edit an object on the Digital learning hub', () => {
 
                 cy.get('[data-testid="standard-card-edit-an-object-for-the-digital-learning-hub-header"]')
                     .should('exist')
-                    .should('contain', 'Edit an Object for the Digital learning hub');
+                    .should('contain', 'Edit an Object for the Digital Learning Hub');
             });
             it('with a new interaction type & is featured', () => {
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
@@ -1005,7 +1005,7 @@ describe('Edit an object on the Digital learning hub', () => {
 
                 cy.get('[data-testid="standard-card-edit-an-object-for-the-digital-learning-hub-header"]')
                     .should('exist')
-                    .should('contain', 'Edit an Object for the Digital learning hub');
+                    .should('contain', 'Edit an Object for the Digital Learning Hub');
             });
         });
         context('fails correctly', () => {
@@ -1072,7 +1072,7 @@ describe('Edit an object on the Digital learning hub', () => {
             cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').should('contain', 'Digital learning hub Management');
+            cy.get('h1').should('contain', 'Digital Learning Hub Management');
         });
     });
 });

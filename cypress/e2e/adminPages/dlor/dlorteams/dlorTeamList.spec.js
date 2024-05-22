@@ -1,6 +1,6 @@
 import { DLOR_ADMIN_USER } from '../../../../support/constants';
 
-describe('Digital learning hub admin Teams management', () => {
+describe('Digital Learning Hub admin Teams management', () => {
     beforeEach(() => {
         cy.clearCookies();
     });
@@ -14,7 +14,7 @@ describe('Digital learning hub admin Teams management', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.waitUntil(() => cy.get('h1').should('exist'));
-            cy.get('h1').should('contain', 'Digital learning hub - Team Management');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Team management');
 
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'dlor teams management',
@@ -194,7 +194,7 @@ describe('Digital learning hub admin Teams management', () => {
             cy.visit(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').should('contain', 'Digital learning hub - Team Management');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Team management');
         });
     });
 });

@@ -1,6 +1,6 @@
 import { DLOR_ADMIN_USER } from '../../../../support/constants';
 
-describe('Digital learning hub admin Edit Team', () => {
+describe('Digital Learning Hub admin Edit Team', () => {
     beforeEach(() => {
         cy.clearCookies();
     });
@@ -14,7 +14,7 @@ describe('Digital learning hub admin Edit Team', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.waitUntil(() => cy.get('h1').should('exist'));
-            cy.get('h1').should('contain', 'Digital learning hub - Edit Team');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Edit Team');
 
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'dlor teams management',
@@ -26,7 +26,7 @@ describe('Digital learning hub admin Edit Team', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('be.visible')
-                .contains('Digital learning hub - Edit Team');
+                .contains('Digital Learning Hub - Edit Team');
 
             cy.get('[data-testid="team_name"] input')
                 .should('exist')
@@ -48,7 +48,7 @@ describe('Digital learning hub admin Edit Team', () => {
                 .should('be.disabled');
 
             cy.get('a[data-testid="dlor-edit-form-homelink"]')
-                .contains('Digital learning hub admin')
+                .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             cy.get('a[data-testid="dlor-edit-form-uplink"]')
                 .contains('Team management')
@@ -187,7 +187,7 @@ describe('Digital learning hub admin Edit Team', () => {
             cy.url().should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
-                .should('contain', 'Digital learning hub - Team Management');
+                .should('contain', 'Digital Learning Hub - Team management');
         });
     });
     context('user access', () => {
@@ -207,7 +207,7 @@ describe('Digital learning hub admin Edit Team', () => {
             cy.visit(`http://localhost:2020/admin/dlor/team/edit/2?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').should('contain', 'Digital learning hub - Edit Team');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Edit Team');
         });
     });
 });

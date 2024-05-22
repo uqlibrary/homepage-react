@@ -225,7 +225,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.dloradmin,
             component: components.DLOAdminHomepage,
             exact: true,
-            pageTitle: 'Manage the Digital learning hub',
+            pageTitle: 'Manage the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dloradd,
@@ -243,13 +243,13 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.dlorteammanage,
             component: components.DLOTeamList,
             exact: true,
-            pageTitle: 'Manage Teams for the Digital learning hub',
+            pageTitle: 'Manage Teams for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorteamedit(dlorTeamId),
             component: components.DLOTeamEdit,
             exact: true,
-            pageTitle: 'Edit a Team for the Digital learning hub',
+            pageTitle: 'Edit a Team for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorteamadd,

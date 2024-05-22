@@ -48,9 +48,9 @@ export const DLOEdit = ({
 
     if (!!dlorItemError) {
         return (
-            <StandardPage title="Digital learning hub Management">
+            <StandardPage title="Digital Learning Hub Management">
                 <section aria-live="assertive">
-                    <StandardCard title="Edit an Object for the Digital learning hub">
+                    <StandardCard title="Edit an Object for the Digital Learning Hub">
                         <Typography variant="body1" data-testid="dlor-form-error">
                             {dlorItemError}
                         </Typography>
@@ -108,9 +108,9 @@ export const DLOEdit = ({
 
     return (
         <Fragment>
-            <StandardPage title="Digital learning hub Management">
+            <StandardPage title="Digital Learning Hub Management">
                 <section aria-live="assertive">
-                    <StandardCard title="Edit an Object for the Digital learning hub">
+                    <StandardCard title="Edit an Object for the Digital Learning Hub">
                         <DlorForm
                             actions={actions}
                             dlorItemSaving={dlorItemUpdating}

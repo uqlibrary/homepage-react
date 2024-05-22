@@ -11,7 +11,7 @@ const dlorCreationResponse = {
     contents: 'tba',
 };
 
-describe('Digital learning hub actions', () => {
+describe('Digital Learning Hub actions', () => {
     const MockDate = require('mockdate');
     beforeEach(() => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
@@ -55,7 +55,7 @@ describe('Digital learning hub actions', () => {
         });
     });
 
-    describe('Digital learning hub GET actions', () => {
+    describe('Digital Learning Hub GET actions', () => {
         it('dispatches expected actions when specific dlors call fails', async () => {
             mockApi
                 .onGet(repositories.routes.DLOR_GET_BY_ID_API({ id: 'e895b270-d62b-11e7-954e-57c2cc19d151' }))
@@ -67,7 +67,7 @@ describe('Digital learning hub actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
-        it('handles an Digital learning hub get request', async () => {
+        it('handles an Digital Learning Hub get request', async () => {
             mockApi
                 .onGet(
                     repositories.routes.DLOR_GET_BY_ID_API({
@@ -108,7 +108,7 @@ describe('Digital learning hub actions', () => {
         });
     });
 
-    describe('Digital learning hub Object creation', () => {
+    describe('Digital Learning Hub Object creation', () => {
         it('dispatches expected actions when dlor create call fails', async () => {
             mockApi.onAny(repositories.routes.DLOR_CREATE_API().apiUrl).reply(500);
 
