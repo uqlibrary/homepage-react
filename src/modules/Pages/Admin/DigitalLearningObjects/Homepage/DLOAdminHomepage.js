@@ -20,10 +20,10 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-
-import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { fullPath } from 'config/routes';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+
+import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 import { useConfirmationState } from 'hooks';
 
@@ -287,7 +287,9 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                         data-testid="admin-dlor-visit-add-button"
                         onClick={() => navigateToAddPage()}
                         variant="contained"
+                        style={{ marginRight: 6 }}
                     />
+                    <VisitHomepage />
                 </Grid>
             </Grid>
             <Grid container spacing={2}>

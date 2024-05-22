@@ -15,8 +15,11 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-import { useConfirmationState } from 'hooks';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+
+import { useConfirmationState } from 'hooks';
+import { fullPath } from 'config/routes';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -182,7 +185,7 @@ export const DLOTeamList = ({
                         </Typography>
                     </div>
                 </Grid>
-                <Grid item xs={6} style={{ textAlign: 'right' }}>
+                <Grid item xs={5} style={{ textAlign: 'right' }}>
                     <Button
                         children="Add team"
                         color="primary"
@@ -190,6 +193,9 @@ export const DLOTeamList = ({
                         onClick={() => navigateToAddPage()}
                         variant="contained"
                     />
+                </Grid>
+                <Grid item xs={1}>
+                    <VisitHomepage />
                 </Grid>
             </Grid>
             <Grid container spacing={2} alignItems="center">

@@ -29,11 +29,17 @@ import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import { useAccountContext } from 'context';
 import { useConfirmationState } from 'hooks';
+import { scrollToTopOfPage } from 'helpers/general';
+
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { scrollToTopOfPage } from 'helpers/general';
+import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+
 import {
     convertFileSizeToKb,
     getTotalSecondsFromMinutesAndSecond,
@@ -47,9 +53,6 @@ import {
     splitStringToArrayOnComma,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
-
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const moment = require('moment-timezone');
 
@@ -1411,6 +1414,10 @@ export const DlorForm = ({
 
     return (
         <>
+            <div style={{ textAlign: 'right', marginTop: -62, marginBottom: 32 }}>
+                {/* force the icon to the top right of the display */}
+                <VisitHomepage />
+            </div>
             {saveStatus === 'complete' && (
                 <ConfirmationBox
                     actionButtonColor="primary"

@@ -26,6 +26,12 @@ describe('Digital Learning Hub admin homepage', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('has a working "visit public homepage" button', () => {
+            cy.get('[data-testid="dlor-admin-public-homepage-link"]')
+                .should('exist')
+                .click();
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub');
+        });
         it('has a working "add an object" button', () => {
             cy.get('[data-testid="admin-dlor-visit-add-button"]')
                 .should('exist')

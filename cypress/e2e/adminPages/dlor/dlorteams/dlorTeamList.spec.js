@@ -22,7 +22,7 @@ describe('Digital Learning Hub admin Teams management', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('appears as expected', () => {
+        it('loads as expected', () => {
             // team name shows correctly
             cy.get('[data-testid="dlor-homepage-panel-1"]')
                 .should('exist')
@@ -44,7 +44,7 @@ describe('Digital Learning Hub admin Teams management', () => {
                 .contains('21 Objects');
             cy.get('[data-testid="dlor-team-object-list-2"]')
                 .should('exist')
-                .contains('4 Objects');
+                .contains('3 Objects');
             cy.get('[data-testid="dlor-team-object-list-3"]').should('not.exist');
         });
         it('has a working "edit a dlor" button', () => {

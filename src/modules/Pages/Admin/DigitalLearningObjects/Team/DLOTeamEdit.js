@@ -5,12 +5,15 @@ import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import DlOTeamForm from 'modules/Pages/Admin/DigitalLearningObjects/Team/DlOTeamForm';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -54,7 +57,7 @@ export const DLOTeamEdit = ({
     return (
         <StandardPage title="Digital Learning Hub - Edit Team">
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={12}>
+                <Grid item xs={11}>
                     <div className={classes.titleBlock}>
                         <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                             <a data-testid="dlor-edit-form-homelink" href={dlorAdminLink()}>
@@ -68,6 +71,9 @@ export const DLOTeamEdit = ({
                             Edit team {dlorTeam?.data?.team_name}
                         </Typography>
                     </div>
+                </Grid>
+                <Grid item xs={1}>
+                    <VisitHomepage />
                 </Grid>
             </Grid>
             <DlOTeamForm
