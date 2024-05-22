@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const LoginPrompt = ({ account, narrower }) => {
+const LoginPrompt = ({ account, narrower, instyle }) => {
     const classes = useStyles();
     const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(window.location.href)}`;
     let className = `${classes.loginAlert}`;
@@ -35,7 +35,7 @@ const LoginPrompt = ({ account, narrower }) => {
     return (
         <>
             {!account?.id && (
-                <div data-testid="dlor-homepage-loginprompt" className={className}>
+                <div data-testid="dlor-homepage-loginprompt" className={className} style={instyle}>
                     <InfoIcon />
                     <span>
                         <a style={{ color: '#1e72c6' }} href={loginLink}>

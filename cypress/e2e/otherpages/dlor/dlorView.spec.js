@@ -1,4 +1,4 @@
-describe('Digital Learning Hub', () => {
+describe('Digital Learning Hub View page', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
@@ -111,7 +111,7 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('contain', 'Influential communicators');
 
-            cy.get('[data-testid="detaipage-metadata-keywords"]')
+            cy.get('[data-testid="detailpage-metadata-keywords"]')
                 .should('exist')
                 .within(() => {
                     cy.get('h3').should('contain', 'Keywords');
@@ -132,17 +132,10 @@ describe('Digital Learning Hub', () => {
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
         });
-        it('the non-logged in user is prompted to login', () => {
-            cy.visit('digital-learning-hub/view/987y_isjgt_9866?user=public');
-            cy.viewport(1300, 1000);
-            cy.get('[data-testid="dlor-homepage-loginprompt"]')
-                .should('exist')
-                .contains('Log in for the full experience');
-        });
         it('a view page without keywords has a sensible sidebar', () => {
             cy.visit('digital-learning-hub/view/9k45_hgr4_876h');
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'EndNote 20: Getting started');
-            cy.get('[data-testid="detaipage-metadata-keywords"]').should('not.exist');
+            cy.get('[data-testid="detailpage-metadata-keywords"]').should('not.exist');
         });
         it('markdown translation works', () => {
             cy.visit('digital-learning-hub/view/987y_isjgt_9866');
@@ -192,6 +185,35 @@ describe('Digital Learning Hub', () => {
             cy.get('[data-testid="detailpage-getit-button"] a')
                 .should('exist')
                 .should('have.text', 'Access the object');
+        });
+    });
+    context('Access', () => {
+        it('the non-logged in user is prompted to login', () => {
+            cy.visit('digital-learning-hub/view/987y_isjgt_9866?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-homepage-loginprompt"]')
+                .should('exist')
+                .contains('Log in for the full experience');
+        });
+        it('Admin sees an edit button', () => {
+            cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="detailpage-admin-edit-button"]')
+                .should('exist')
+                .contains('Edit');
+            cy.get('[data-testid="detailpage-admin-edit-button"]').click();
+            cy.url().should('eq', 'http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=dloradmn');
+        });
+        it('Non-Admin does NOT see an edit button', () => {
+            cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="dlor-detailpage"]')
+                    .should('exist')
+                    .contains('Advanced literature searching'),
+            );
+            cy.get('[data-testid="detailpage-admin-edit-button"]').should('not.exist');
         });
     });
 });

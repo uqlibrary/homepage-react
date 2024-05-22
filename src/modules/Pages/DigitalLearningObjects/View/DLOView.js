@@ -4,17 +4,20 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import parse from 'html-react-parser';
 
+import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { getHomepageLink } from 'helpers/access';
+import { isDlorAdminUser } from 'helpers/access';
+import { useAccountContext } from 'context';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
@@ -24,6 +27,8 @@ import {
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { fullPath } from 'config/routes';
 
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
@@ -111,7 +116,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, account }) => {
+export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) => {
+    const { account } = useAccountContext();
     const { dlorId } = useParams();
     const classes = useStyles();
 
@@ -134,13 +140,17 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
         return (
             <div className={classes.titleBlock}>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                    <a href={`${getHomepageLink()}digital-learning-hub`}>Find a digital learning object</a>
+                    <a href={`${fullPath}/digital-learning-hub`}>Find a digital learning object</a>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>
             </div>
         );
     }
+
+    const navigateToEditPage = uuid => {
+        window.location.href = dlorAdminLink(`/edit/${uuid}`);
+    };
 
     if (!!dlorItemLoading || dlorItemLoading === null) {
         return (
@@ -205,9 +215,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                 {getTitleBlock()}
                 <Grid container spacing={4} data-testid="dlor-detailpage" className={classes.viewContent}>
                     <Grid item xs={12} md={8}>
-                        <div style={{ marginBottom: 12 }}>
-                            <LoginPrompt account={account} />
-                        </div>
+                        <LoginPrompt account={account} instyle={{ marginBottom: 12 }} />
                         <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
                             {dlorItem?.object_title}
                         </Typography>
@@ -256,9 +264,23 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                             </>
                         )}
                     </Grid>
-                    <Grid item xs={12} md={4} data-testid="detaipage-metadata">
+                    <Grid item xs={12} md={4} data-testid="detailpage-metadata">
                         {dlorItem?.object_filters?.length > 0 && (
                             <>
+                                {isDlorAdminUser(account) && (
+                                    <Button
+                                        onClick={() => navigateToEditPage(dlorItem?.object_public_uuid)}
+                                        data-testid="detailpage-admin-edit-button"
+                                        style={{
+                                            backgroundColor: '#2377cb',
+                                            color: '#fff',
+                                            marginBottom: 6,
+                                            paddingInline: 24,
+                                        }}
+                                    >
+                                        <EditIcon /> &nbsp; Edit
+                                    </Button>
+                                )}
                                 <Typography component={'h2'} variant={'h6'} className={classes.metaHeader}>
                                     <BookmarksIcon />
                                     Details
@@ -282,7 +304,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError, acc
                                     );
                                 })}
                                 {!!dlorItem?.object_keywords && (
-                                    <div data-testid="detaipage-metadata-keywords">
+                                    <div data-testid="detailpage-metadata-keywords">
                                         <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
                                             Keywords
                                         </Typography>
