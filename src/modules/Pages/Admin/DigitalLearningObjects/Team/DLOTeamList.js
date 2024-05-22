@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
@@ -16,8 +16,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 import { useConfirmationState } from 'hooks';
-import { dlorAdminLink, getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { fullPath } from 'config/routes';
+import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -47,26 +46,40 @@ export const DLOTeamList = ({
     dlorList,
     dlorListLoading,
     dlorListError,
+    dlorTeamDeleting,
+    dlorTeamDeleted,
+    dlorTeamDeleteError,
     account,
 }) => {
     const classes = useStyles();
     console.log('DLOTeamList l=', dlorTeamListLoading, '; e=', dlorTeamListError, '; d=', dlorTeamList);
     console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
+    console.log('deleting l=', dlorTeamDeleting, '; e=', dlorTeamDeleted, '; d=', dlorTeamDeleteError);
 
     const [teamToDelete, setObjectToDelete] = React.useState(null);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
             actions.loadOwningTeams();
         }
     }, [actions, dlorTeamList, dlorTeamListError, dlorTeamListLoading]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadCurrentDLORs();
         }
     }, [dlorList]);
+
+    useEffect(() => {
+        if (!!dlorTeamDeleteError) {
+            // delete failed
+            showDeleteConfirmation();
+        } else if (!dlorTeamDeleting && !!dlorTeamDeleted) {
+            // success
+            showDeleteConfirmation();
+        }
+    }, [dlorTeamDeleting, dlorTeamDeleted, dlorTeamDeleteError]);
 
     const navigateToAddPage = () => {
         window.location.href = dlorAdminLink('/team/add');
@@ -88,7 +101,7 @@ export const DLOTeamList = ({
                 })
                 .catch(() => {
                     setObjectToDelete('');
-                    showDeleteFailureConfirmation();
+                    showDeleteConfirmation();
                 });
     };
 
@@ -98,22 +111,49 @@ export const DLOTeamList = ({
     const navigateToDlorEditPage = uuid => {
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
+    const deletionConfirmationBoxLocale = {
+        confirmationMessage: {
+            confirmationTitle: 'Do you want to delete this team?',
+            confirmationMessage: '',
+            cancelButtonLabel: 'No',
+            confirmButtonLabel: 'Yes',
+        },
+        successMessage: {
+            confirmationTitle: 'The team has been deleted.',
+            confirmationMessage: '',
+            confirmButtonLabel: 'Close',
+        },
+        errorMessage: {
+            confirmationTitle: dlorTeamDeleteError?.message || dlorTeamDeleteError,
+            confirmationMessage: '',
+            confirmButtonLabel: 'Close',
+        },
+    };
+
+    function getLocale() {
+        if (!!dlorTeamDeleteError) {
+            return deletionConfirmationBoxLocale.errorMessage;
+        }
+        if (!!dlorTeamDeleted) {
+            return deletionConfirmationBoxLocale.successMessage;
+        }
+        return deletionConfirmationBoxLocale.confirmationMessage;
+    }
+
     return (
         <StandardPage title="Digital learning hub - Team Management">
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-team-delete-confirm"
-                onAction={() => deleteSelectedObject()}
+                onAction={() => {
+                    !!dlorTeamDeleteError || !!dlorTeamDeleted ? hideDeleteConfirmation() : deleteSelectedObject();
+                }}
                 onClose={hideDeleteConfirmation}
+                hideCancelButton={!!dlorTeamDeleteError || !!dlorTeamDeleted}
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
-                locale={{
-                    confirmationTitle: 'Do you want to delete this team?',
-                    confirmationMessage: '',
-                    cancelButtonLabel: 'No',
-                    confirmButtonLabel: 'Yes',
-                }}
+                locale={getLocale()}
             />
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
                 <Grid item xs={6}>
@@ -137,7 +177,7 @@ export const DLOTeamList = ({
             </Grid>
             <Grid container spacing={2} alignItems="center">
                 {(() => {
-                    if (!!dlorTeamListLoading) {
+                    if (!!dlorTeamListLoading || !!dlorTeamDeleting) {
                         return (
                             <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                                 <div style={{ minHeight: 600 }}>
@@ -168,12 +208,8 @@ export const DLOTeamList = ({
                                     {dlorTeamList?.length > 0 &&
                                         dlorTeamList.map(team => {
                                             return (
-                                                <>
-                                                    <Grid
-                                                        container
-                                                        key={`list-team-${team?.team_id}`}
-                                                        alignItems="center"
-                                                    >
+                                                <div key={`list-team-${team?.team_id}`}>
+                                                    <Grid container alignItems="center">
                                                         <Grid
                                                             item
                                                             xs={10}
@@ -278,7 +314,7 @@ export const DLOTeamList = ({
                                                                 )}
                                                         </Grid>
                                                     </Grid>
-                                                </>
+                                                </div>
                                             );
                                         })}
                                 </Grid>
@@ -299,6 +335,9 @@ DLOTeamList.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
+    dlorTeamDeleted: PropTypes.array,
+    dlorTeamDeleting: PropTypes.bool,
+    dlorTeamDeleteError: PropTypes.any,
     account: PropTypes.object,
 };
 

@@ -735,7 +735,7 @@ mock.onGet(/dlor\/find\/.*/)
         return [200, { data: dlor_team_list.data.find(team => team.team_id === Number(teamId)) }];
         // }
     })
-    .onDelete('dlor/admin/team')
+    .onDelete(/dlor\/admin\/team\/.*/)
     .reply(() => {
         if (responseType === 'saveError') {
             return [500, {}];

@@ -98,11 +98,59 @@ describe('Digital learning hub admin Teams management', () => {
             cy.get('[data-testid="confirm-dlor-team-delete-confirm"]')
                 .should('exist')
                 .click();
+
+            // it worked!
+            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"]').should('be.visible'));
+            cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"] h2').contains('The team has been deleted.');
+            cy.get('[data-testid="cancel-dlor-team-delete-confirm"]').should('not.exist');
+            cy.get('[data-testid="confirm-dlor-team-delete-confirm"]')
+                .should('exist')
+                .contains('Close');
+
+            cy.get('[data-testid="confirm-dlor-team-delete-confirm"]').click();
+
             // cant really test it was deleted - that will happen in canary. just confirm the page reloads
             cy.get('[data-testid="dlor-teamlist-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 6);
+                .should('have.length', 3);
+        });
+    });
+    context('failed actions', () => {
+        beforeEach(() => {
+            cy.visit(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}&responseType=saveError`);
+            cy.viewport(1300, 1000);
+        });
+        it('a failed deletion is handled properly', () => {
+            // click delete icon on first Object
+            cy.get('[data-testid="dlor-homepage-delete-3"]')
+                .should('exist')
+                .click();
+            // confirm delete box is open
+            cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"]')
+                .should('exist')
+                .contains('Do you want to delete this team?');
+            // say "yes"
+            cy.get('[data-testid="confirm-dlor-team-delete-confirm"]')
+                .should('exist')
+                .click();
+
+            // it failed! just what we wanted :)
+            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"]').should('be.visible'));
+            cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"] h2').contains(
+                'An error has occurred during the request and this request cannot be processed.',
+            );
+            cy.get('[data-testid="cancel-dlor-team-delete-confirm"]').should('not.exist');
+            cy.get('[data-testid="confirm-dlor-team-delete-confirm"]')
+                .should('exist')
+                .contains('Close');
+            cy.get('[data-testid="confirm-dlor-team-delete-confirm"]').click();
+
+            // cant really test it was deleted - that will happen in canary. just confirm the page reloads
+            cy.get('[data-testid="dlor-teamlist-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 3);
         });
     });
     context('user access', () => {

@@ -237,7 +237,7 @@ export const deleteDlorTeam = teamId => {
 
         try {
             console.log('#### start dlor team deletion');
-            const response = await destroy(DLOR_TEAM_DELETE_API({ id: teamId }));
+            const response = await destroy(DLOR_TEAM_DELETE_API(teamId));
             dispatch({
                 type: actions.DLOR_TEAM_DELETED,
                 payload: [],
