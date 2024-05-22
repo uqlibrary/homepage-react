@@ -55,8 +55,15 @@ export const DLOTeamList = ({
     console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
     console.log('deleting l=', dlorTeamDeleting, '; e=', dlorTeamDeleted, '; d=', dlorTeamDeleteError);
 
+    const DELETION_STEP_NULL = null;
+    const DELETION_STEP_ONE_CONFIRM = 1;
+    const DELETION_STEP_TWO_HAPPENING = 2;
+
     const [teamToDelete, setObjectToDelete] = React.useState(null);
+    const [deleteStep, setDeleteStep] = React.useState(DELETION_STEP_NULL);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
+
+    console.log('###### deleteStep=', deleteStep, '; l=', dlorTeamDeleting, '; dlorTeamDeleted=', dlorTeamDeleted);
 
     useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
@@ -71,10 +78,10 @@ export const DLOTeamList = ({
     }, [dlorList]);
 
     useEffect(() => {
-        if (!!dlorTeamDeleteError) {
+        if (!!dlorTeamDeleteError && deleteStep === DELETION_STEP_TWO_HAPPENING) {
             // delete failed
             showDeleteConfirmation();
-        } else if (!dlorTeamDeleting && !!dlorTeamDeleted) {
+        } else if (!dlorTeamDeleting && !!dlorTeamDeleted && deleteStep === DELETION_STEP_TWO_HAPPENING) {
             // success
             showDeleteConfirmation();
         }
@@ -89,9 +96,11 @@ export const DLOTeamList = ({
     };
     const confirmDelete = teamId => {
         setObjectToDelete(teamId);
+        setDeleteStep(DELETION_STEP_ONE_CONFIRM);
         showDeleteConfirmation();
     };
     const deleteSelectedObject = () => {
+        setDeleteStep(DELETION_STEP_TWO_HAPPENING);
         !!teamToDelete &&
             deleteADlorTeam(teamToDelete)
                 .then(() => {
@@ -111,7 +120,7 @@ export const DLOTeamList = ({
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
     const deletionConfirmationBoxLocale = {
-        confirmationMessage: {
+        confirmItMessage: {
             confirmationTitle: 'Do you want to delete this team?',
             confirmationMessage: '',
             cancelButtonLabel: 'No',
@@ -133,10 +142,15 @@ export const DLOTeamList = ({
         if (!!dlorTeamDeleteError) {
             return deletionConfirmationBoxLocale.errorMessage;
         }
-        if (!!dlorTeamDeleted) {
+        if (!!dlorTeamDeleted && deleteStep === DELETION_STEP_TWO_HAPPENING) {
             return deletionConfirmationBoxLocale.successMessage;
         }
-        return deletionConfirmationBoxLocale.confirmationMessage;
+        return deletionConfirmationBoxLocale.confirmItMessage;
+    }
+
+    function localHideDeleteConfirmation() {
+        setDeleteStep(null);
+        return hideDeleteConfirmation();
     }
 
     return (
@@ -146,10 +160,14 @@ export const DLOTeamList = ({
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-team-delete-confirm"
                 onAction={() => {
-                    !!dlorTeamDeleteError || !!dlorTeamDeleted ? hideDeleteConfirmation() : deleteSelectedObject();
+                    !!dlorTeamDeleteError || (!!dlorTeamDeleted && deleteStep === DELETION_STEP_TWO_HAPPENING)
+                        ? localHideDeleteConfirmation()
+                        : deleteSelectedObject();
                 }}
                 onClose={hideDeleteConfirmation}
-                hideCancelButton={!!dlorTeamDeleteError || !!dlorTeamDeleted}
+                hideCancelButton={
+                    !!dlorTeamDeleteError || (!!dlorTeamDeleted && deleteStep === DELETION_STEP_TWO_HAPPENING)
+                }
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
                 locale={getLocale()}

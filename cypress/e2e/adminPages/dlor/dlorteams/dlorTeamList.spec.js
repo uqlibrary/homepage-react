@@ -113,7 +113,31 @@ describe('Digital learning hub admin Teams management', () => {
             cy.get('[data-testid="dlor-teamlist-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 4);
+
+            // a second delte throw up the correct dialog boxes
+            // (and doesnt think it is already done
+            cy.get('[data-testid="dlor-homepage-delete-4"]')
+                .should('exist')
+                .click();
+            // confirm delete box is open
+            cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"]')
+                .should('exist')
+                .contains('Do you want to delete this team?');
+            // say "yes"
+            cy.get('[data-testid="confirm-dlor-team-delete-confirm"]')
+                .should('exist')
+                .click();
+
+            // it worked!
+            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"]').should('be.visible'));
+            cy.get('[data-testid="dialogbox-dlor-team-delete-confirm"] h2').contains('The team has been deleted.');
+            cy.get('[data-testid="cancel-dlor-team-delete-confirm"]').should('not.exist');
+            cy.get('[data-testid="confirm-dlor-team-delete-confirm"]')
+                .should('exist')
+                .contains('Close');
+
+            cy.get('[data-testid="confirm-dlor-team-delete-confirm"]').click();
         });
     });
     context('failed actions', () => {
@@ -150,7 +174,7 @@ describe('Digital learning hub admin Teams management', () => {
             cy.get('[data-testid="dlor-teamlist-list"]')
                 .should('exist')
                 .children()
-                .should('have.length', 3);
+                .should('have.length', 4);
         });
     });
     context('user access', () => {

@@ -18,6 +18,12 @@ export default {
             "team_email": "ind@library.uq.edu.au",
             "team_manager": "Mary Blue",
             "objects_count": 0,
+        }, {
+            "team_id": 4,
+            "team_name": "A team to allow test of secondary delete",
+            "team_email": "ind@library.uq.edu.au",
+            "team_manager": "Someone else",
+            "objects_count": 0,
         },
     ]
 };
