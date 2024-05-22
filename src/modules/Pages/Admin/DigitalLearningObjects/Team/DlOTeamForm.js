@@ -76,7 +76,10 @@ export const DLOTeamForm = ({
     }, [mode, formDefaults, dlorTeamLoading, dlorTeamError]);
 
     useEffect(() => {
-        if (!!dlorSavedTeam?.data?.team_id || !!dlorSavedTeamError) {
+        if (!!dlorSavedTeamError) {
+            setSaveStatus('error');
+            showConfirmation();
+        } else if (!!dlorSavedTeam?.data?.team_id) {
             setSaveStatus('complete');
             showConfirmation();
         }
@@ -113,8 +116,7 @@ export const DLOTeamForm = ({
         errorMessage: {
             confirmationTitle: dlorSavedTeamError,
             confirmationMessage: '',
-            cancelButtonLabel: mode === 'add' ? 'Add another Team' : 'Re-edit Team',
-            confirmButtonLabel: 'Return to Admin Teams page',
+            confirmButtonLabel: 'Close',
         },
     };
 
@@ -171,18 +173,26 @@ export const DLOTeamForm = ({
                         <>
                             <Grid item xs={12} data-testid="dlor-team-item-list">
                                 <Grid container key={`list-team-${formDefaults?.team_id}`}>
-                                    {saveStatus === 'complete' && (
+                                    {(saveStatus === 'complete' || saveStatus === 'error') && (
                                         <ConfirmationBox
                                             actionButtonColor="primary"
                                             actionButtonVariant="contained"
                                             confirmationBoxId="dlor-team-save-outcome"
-                                            onAction={() => navigateToTeamManagementHomePage()}
-                                            hideCancelButton={!locale.successMessage.cancelButtonLabel}
+                                            onAction={() => {
+                                                saveStatus === 'error'
+                                                    ? closeConfirmationBox()
+                                                    : navigateToTeamManagementHomePage();
+                                            }}
+                                            hideCancelButton={
+                                                saveStatus === 'error' || !locale.successMessage.cancelButtonLabel
+                                            }
                                             cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                                             onCancelAction={() => clearForm()}
                                             onClose={closeConfirmationBox}
                                             isOpen={isOpen}
-                                            locale={!!dlorSavedTeamError ? locale.errorMessage : locale.successMessage}
+                                            locale={
+                                                saveStatus === 'error' ? locale.errorMessage : locale.successMessage
+                                            }
                                         />
                                     )}
                                     <form id="dlor-editTeam-form" style={{ width: '100%' }}>

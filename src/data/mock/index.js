@@ -705,7 +705,7 @@ mock.onGet(/dlor\/find\/.*/)
     .onPost('dlor/admin/team')
     .reply(() => {
         if (responseType === 'saveError') {
-            return [500, {}];
+            return [400, {}];
         } else {
             return [
                 200,

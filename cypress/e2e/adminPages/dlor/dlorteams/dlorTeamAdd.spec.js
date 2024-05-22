@@ -250,6 +250,41 @@ describe('Digital learning hub admin Add Team', () => {
         });
     });
 
+    context('failed saving', () => {
+        it('a failed save shows correctly', () => {
+            cy.visit(`http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}&responseType=saveError`);
+            cy.get('[data-testid="team_name"] input')
+                .should('exist')
+                .type('Valid Team Name');
+            cy.get('[data-testid="team_manager"] input')
+                .should('exist')
+                .type('Valid Team manager name');
+            cy.get('[data-testid="team_email"] input')
+                .should('exist')
+                .type('lea@example.com');
+            cy.get('[data-testid="admin-dlor-team-form-save-button"]')
+                .should('exist')
+                .click();
+
+            // it failed! just what we wanted :)
+            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-team-save-outcome"]').should('be.visible'));
+            cy.get('[data-testid="dialogbox-dlor-team-save-outcome"] h2').contains(
+                'Request failed with status code 400',
+            );
+            cy.get('[data-testid="confirm-dlor-team-save-outcome"]')
+                .should('exist')
+                .contains('Close');
+            cy.get('[data-testid="cancel-dlor-team-save-outcome"]').should('not.exist');
+
+            cy.get('[data-testid="confirm-dlor-team-save-outcome"]')
+                .contains('Close')
+                .click();
+
+            // and when we close the dialog we stay on the form
+            cy.get('[data-testid="dialogbox-dlor-team-save-outcome"]').should('not.exist');
+        });
+    });
+
     context('user access', () => {
         it('displays an "unauthorised" page to public users', () => {
             cy.visit('http://localhost:2020/admin/dlor/team/add?user=public');
