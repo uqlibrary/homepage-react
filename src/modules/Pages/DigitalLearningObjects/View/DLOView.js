@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { isDlorAdminUser } from 'helpers/access';
+import { getHomepageLink, isDlorAdminUser } from 'helpers/access';
 import { useAccountContext } from 'context';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
@@ -152,6 +152,11 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
 
+    // function navigateToDetailPage(uuid) {
+    //     console.log('navigateToDetailPage', `${getHomepageLink()}digital-learning-hub/view/${uuid}`);
+    //     window.location.href = `${getHomepageLink()}digital-learning-hub/view/${uuid}`;
+    // }
+
     if (!!dlorItemLoading || dlorItemLoading === null) {
         return (
             <div style={{ minHeight: 600 }}>
@@ -209,6 +214,9 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         return label;
     }
 
+    console.log('dlorItem=', dlorItem);
+    console.log('dlorItem?.object_series=', dlorItem?.object_series);
+
     return (
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
@@ -229,7 +237,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                 </a>
                             </div>
                         )}
-
                         {isPreviewableUrl(dlorItem.object_link_url) !== false && (
                             <div data-testid="detailpage-preview">
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
@@ -250,7 +257,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                 </div>
                             </div>
                         )}
-
                         {!!dlorItem?.object_download_instructions && (
                             <>
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
@@ -261,6 +267,33 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                         dlorItem.object_download_instructions,
                                         classes.downloadInstructions,
                                     )}
+                            </>
+                        )}
+                        {!!dlorItem?.object_series && dlorItem?.object_series.length > 0 && (
+                            <>
+                                <Typography component="h2" variant="h6" style={{ paddingTop: 20 }}>
+                                    {dlorItem.series_name}
+                                </Typography>
+                                <ol>
+                                    {dlorItem?.object_series.map(s => {
+                                        console.log('series=', s);
+                                        const className1 =
+                                            s.series_object_uid === dlorItem?.object_uid ? 'highlight' : '';
+                                        return (
+                                            <li>
+                                                <a
+                                                    className={classes.$className1}
+                                                    // href={() => navigateToDetailPage(s?.series_object_uuid)}
+                                                    href={`${getHomepageLink()}digital-learning-hub/view/${
+                                                        s?.series_object_uuid
+                                                    }`}
+                                                >
+                                                    {s.series_object_title}
+                                                </a>
+                                            </li>
+                                        );
+                                    })}
+                                </ol>
                             </>
                         )}
                     </Grid>
