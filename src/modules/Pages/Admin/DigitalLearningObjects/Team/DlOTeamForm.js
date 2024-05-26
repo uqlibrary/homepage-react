@@ -59,7 +59,12 @@ export const DLOTeamForm = ({
         team_manager: '',
         team_email: '',
     });
-    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
+    const [saveStatus, setSaveStatus2] = useState(null); // control confirmation box display
+    const setSaveStatus = x => {
+        console.log('setSaveStatus was ', saveStatus, '; now ', x);
+        setSaveStatus2(x);
+    };
+    console.log('saveStatus=', saveStatus);
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -76,7 +81,7 @@ export const DLOTeamForm = ({
     }, [mode, formDefaults, dlorTeamLoading, dlorTeamError]);
 
     useEffect(() => {
-        if (!!dlorSavedTeamError) {
+        if (!!dlorSavedTeamError || !!dlorTeamError) {
             setSaveStatus('error');
             showConfirmation();
         } else if (!!dlorSavedTeam?.data?.team_id) {
