@@ -114,6 +114,9 @@ const useStyles = makeStyles(theme => ({
             position: 'absolute',
         },
     },
+    highlightSeriesName: {
+        border: 'thin sold black',
+    },
 }));
 
 export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) => {
@@ -278,7 +281,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                     {dlorItem?.object_series.map(s => {
                                         console.log('series=', s);
                                         const className1 =
-                                            s.series_object_uid === dlorItem?.object_uid ? 'highlight' : '';
+                                            s.series_object_uid === dlorItem?.object_uid ? 'highlightSeriesName' : '';
                                         return (
                                             <li>
                                                 <a
