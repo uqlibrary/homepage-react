@@ -650,7 +650,9 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this would more likely be a 404
         } else {
-            return [200, dlor_all];
+            const map = dlor_all.map(d => d.object_series.remove());
+            console.log('dlor map', map);
+            return [200, map];
         }
     })
     .onGet('dlor/list/current')
@@ -660,7 +662,14 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this would more likely be a 404
         } else {
-            const currentRecords = dlor_all.data.filter(o => o.object_status === 'current');
+            const currentRecords = dlor_all.data
+                .map(d => {
+                    const newObj = { ...d }; // Create a shallow copy of the object
+                    delete newObj.object_series; // Delete the 'series' property
+                    return newObj;
+                })
+                .filter(o => o.object_status === 'current');
+            console.log('dlor currentRecords', currentRecords);
             return [200, { data: currentRecords }];
         }
     })

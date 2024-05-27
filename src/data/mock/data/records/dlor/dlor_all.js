@@ -89,7 +89,7 @@ export default {
                 }
             ],
             "series_id": 7,
-            "series_name": 'The something series!',
+            "series_name": 'The something series',
             // "series_order": 2, // order of this object in this series
         },
         {
@@ -297,6 +297,28 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "9k45_hgr4_876h", // object-uid value of other entry
+                    "series_object_title": "EndNote 20: Getting started", // matches name of other object.
+                    "series_object_order": 1, // order of this object in this series
+                }, {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_iuuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df2415",
+                    "series_object_title": "Dummy entry to increase list size 15",
+                    "series_object_order": 4,
+                }
+            ],
+            "series_id": 7,
+            "series_name": 'The something series',
+            // "series_order": 2, // order of this object in this series
         },
         {
             "object_id": 4,
@@ -556,6 +578,28 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "9k45_hgr4_876h", // object-uid value of other entry
+                    "series_object_title": "EndNote 20: Getting started", // matches name of other object.
+                    "series_object_order": 1, // order of this object in this series
+                }, {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_iuuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df2415",
+                    "series_object_title": "Dummy entry to increase list size 15",
+                    "series_object_order": 4,
+                }
+            ],
+            "series_id": 7,
+            "series_name": 'The something series',
+            // "series_order": 2, // order of this object in this series
         }, {
             "object_id": 24,
             "object_public_uuid": "9bc174f7-5326-4a8b-bfab-d5081c688597",
@@ -1902,6 +1946,28 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "9k45_hgr4_876h", // object-uid value of other entry
+                    "series_object_title": "EndNote 20: Getting started", // matches name of other object.
+                    "series_object_order": 1, // order of this object in this series
+                }, {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_iuuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df2415",
+                    "series_object_title": "Dummy entry to increase list size 15",
+                    "series_object_order": 4,
+                }
+            ],
+            "series_id": 7,
+            "series_name": 'The something series',
+            // "series_order": 2, // order of this object in this series
         }
     ]
 };
