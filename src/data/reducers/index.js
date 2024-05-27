@@ -38,3 +38,5 @@ export { default as dlorCreateReducer } from './dlorCreateReducer';
 export { default as dlorUpdateReducer } from './dlorUpdateReducer';
 export { default as dlorDeleteReducer } from './dlorDeleteReducer';
 export { default as dlorFileTypeListReducer } from './dlorFileTypeListReducer';
+export { default as dlorSeriesListReducer } from './dlorSeriesListReducer';
+export { default as dlorSeriesDeleteReducer } from './dlorSeriesDeleteReducer';

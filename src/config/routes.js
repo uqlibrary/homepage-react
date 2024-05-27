@@ -22,6 +22,8 @@ export const flattedPathConfigExact = [
     '/admin/alerts',
     '/admin/dlor',
     '/admin/dlor/add',
+    '/admin/dlor/series/manage',
+    // '/admin/dlor/series/add',
     '/admin/dlor/team/manage',
     '/admin/dlor/team/add',
     '/admin/masquerade',
@@ -52,6 +54,7 @@ export const flattedPathConfig = [
     '/admin/alerts/clone',
     '/admin/alerts/view',
     '/admin/dlor/edit',
+    '/admin/dlor/series/edit',
     '/admin/dlor/team/edit',
     '/admin/spotlights/edit',
     '/admin/spotlights/view',
@@ -220,6 +223,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     ];
 
     const dlorTeamId = `:dlorTeamId(${standardRegExp})`;
+    const dlorSeriesId = `:dlorSeriesId(${standardRegExp})`;
     const dlorAdminDisplay = [
         {
             path: pathConfig.admin.dloradmin,
@@ -257,6 +261,24 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Create a new Team',
         },
+        {
+            path: pathConfig.admin.dlorseriesmanage,
+            component: components.DLOSeriesList,
+            exact: true,
+            pageTitle: 'Manage Series for the Digital Learning Hub',
+        },
+        {
+            path: pathConfig.admin.dlorseriesedit(dlorSeriesId),
+            component: components.DLOSeriesEdit,
+            exact: true,
+            pageTitle: 'Edit a Series for the Digital Learning Hub',
+        },
+        // {
+        //     path: pathConfig.admin.dlorseriesadd,
+        //     component: components.DLOSeriesAdd,
+        //     exact: true,
+        //     pageTitle: 'Create a new Series',
+        // },
     ];
 
     const testntagDisplay = [
