@@ -814,8 +814,10 @@ mock.onGet(/dlor\/find\/.*/)
             //     return [200, { data: {} }]; // this would more likely be a 404
             // } else if (seriesId === 'object_404') {
             //     return [404, { status: 'error', message: 'No records found for that id' }];
-            // } else {
-            return [200, { data: dlor_series_all.data.find(series => series.series_id === Number(seriesId)) }];
+        } else {
+            const result = dlor_series_all.data.find(s => s.series_id === Number(seriesId));
+            console.log('mock get single series', seriesId, result);
+            return [200, { data: result }];
         }
     })
     .onPut(/dlor\/admin\/series\/.*/)

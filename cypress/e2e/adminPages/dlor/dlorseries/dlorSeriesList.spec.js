@@ -115,7 +115,7 @@ describe('Digital Learning Hub admin Series management', () => {
                 .click();
             cy.location('href').should('eq', `http://localhost:2020/admin/dlor/series/add?user=${DLOR_ADMIN_USER}`);
         });
-        it.skip('has a working "edit a series" button', () => {
+        it('has a working "edit a series" button', () => {
             cy.get('[data-testid="dlor-serieslist-edit-2"]')
                 .should('exist')
                 .click();

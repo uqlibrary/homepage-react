@@ -56,7 +56,7 @@ export const DLOSeriesForm = ({
     const { dlorSeriesId } = useParams();
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
-    console.log('DLOSeriesForm', dlorSeriesId, ' l=', dlorSeriesLoading, '; e=', dlorSeriesError, '; d=', formDefaults);
+    console.log('DLOSeriesForm data', dlorSeriesId, ' l=', dlorSeriesLoading, '; e=', dlorSeriesError, '; d=', formDefaults);
     console.log(
         'DLOSeriesForm dlorSavedSeries l=',
         dlorSeriesSaving,
@@ -66,9 +66,14 @@ export const DLOSeriesForm = ({
         dlorSavedSeries,
     );
 
-    const [formValues, setFormValues] = useState({
+    const [formValues, setFormValues2] = useState({
         series_name: '',
     });
+    const setFormValues = x => {
+        console.log('setFormValues', x);
+        setFormValues2(x);
+    }
+
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
 
@@ -77,7 +82,7 @@ export const DLOSeriesForm = ({
     useEffect(() => {
         if (mode === 'edit' && !!formDefaults && !dlorSeriesLoading && !dlorSeriesError) {
             setFormValues({
-                series_name: formDefaults?.team_name,
+                series_name: formDefaults?.series_name,
             });
         }
         setFormValidity(validateValues(formValues));
@@ -155,11 +160,10 @@ export const DLOSeriesForm = ({
         return (mode === 'edit' && seriesName === formDefaults?.series_name) || seriesName?.trim() !== '';
     };
 
-    const isValidEmailLocal = emailAddress => {
-        return (
-            (emailAddress === formDefaults?.series_email || emailAddress?.trim() !== '') && isValidEmail(emailAddress)
-        );
-    };
+    const listForThisSeries =
+        !dlorListError && !dlorListLoading && dlorList?.filter(d => d?.series_id === dlorSeriesId);
+    const listNOTForThisSeries =
+        !dlorListError && !dlorListLoading && dlorList?.filter(d => d?.series_id !== dlorSeriesId && d?.series_id > 0);
 
     return (
         <Grid container spacing={2}>
@@ -237,29 +241,11 @@ export const DLOSeriesForm = ({
                             </Grid>
 
                             <Grid item xs={12}>
-                                {!dlorListError &&
-                                    !!dlorList &&
-                                    // dlorList.filter(d => !!d?.series_id).length > 0) &&
-                                    dlorList.map(item => <li>{item.object_title}</li>)
-                                // dlorList.map(d => {
-                                // return ( <p>d.object_title</p>
-                                //     // <FormControlLabel
-                                //     //     key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
-                                //     //       className={classes.facetControl}
-                                //     //       control={
-                                //     //           <Checkbox
-                                //     //               onChange={handleobjectSelection(thisfacet.facet_id)}
-                                //     //               id={`filter-${thisfacet.facet_id}`}
-                                //     //               data-testid={`filter-${thisfacet.facet_id}`}
-                                //     //               checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)}
-                                //     //           />
-                                //     //       }
-                                //     //       label={thisfacet.facet_name}
-                                //     // />
-                                //
-                                // )
-                                }
-                                }
+                                {!!listForThisSeries && listForThisSeries.length > 0 && listForThisSeries.map(item => <li>{item.object_title}</li>)
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                {!!listNOTForThisSeries && listNOTForThisSeries.length > 0 && listNOTForThisSeries.map(item => <li>{item.object_title}</li>)
                             </Grid>
 
                             <Grid item xs={3} align="left">

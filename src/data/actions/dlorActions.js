@@ -361,7 +361,7 @@ export const deleteDlorSeries = seriesId => {
 };
 
 export function loadADLORSeries(dlorId) {
-    console.log('loadADLOR', dlorId);
+    console.log('loadADLORSeries', dlorId);
     return dispatch => {
         dispatch({ type: actions.DLOR_SERIES_LOADING });
         return get(DLOR_SERIES_SINGLE_GET_API({ id: dlorId }))
@@ -369,7 +369,7 @@ export function loadADLORSeries(dlorId) {
                 console.log('loadADLORSeries response=', response);
                 dispatch({
                     type: actions.DLOR_SERIES_LOADED,
-                    payload: response,
+                    payload: response.data,
                 });
             })
             .catch(error => {
