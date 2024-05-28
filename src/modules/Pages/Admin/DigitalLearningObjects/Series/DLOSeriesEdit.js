@@ -79,6 +79,7 @@ export const DLOSeriesEdit = ({
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [formValues, setFormValues2] = useState({
         object_series_name: '',
+        series_list: [],
     });
     const setFormValues = x => {
         console.log('setFormValues', x);
@@ -96,12 +97,20 @@ export const DLOSeriesEdit = ({
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
+        if (!!dlorList && !dlorListLoading && !dlorListError) {
+            setFormValues({
+                object_series_name: formValues?.object_series_name,
+                object_list: dlorList || [],
+            });
+        }
+        setFormValidity(validateValues(formValues));
     }, [dlorList]);
 
     useEffect(() => {
         if (!!dlorSeries && !dlorSeriesLoading && !dlorSeriesError) {
             setFormValues({
                 object_series_name: dlorSeries?.object_series_name,
+                object_list: formValues.object_list || [],
             });
         }
         setFormValidity(validateValues(formValues));
@@ -153,6 +162,7 @@ export const DLOSeriesEdit = ({
     };
 
     const handleChange = (prop, value) => e => {
+        console.log('handleChange', prop, value, e.target);
         const theNewValue = e.target.value;
         const newValues = { ...formValues, [prop]: theNewValue };
 
@@ -265,7 +275,7 @@ export const DLOSeriesEdit = ({
                                                         id="object_series_name"
                                                         data-testid="object_series_name"
                                                         required
-                                                        value={dlorSeries?.object_series_name || ''}
+                                                        value={formValues?.object_series_name || ''}
                                                         onChange={handleChange('object_series_name')}
                                                         error={!isValidSeriesName(dlorSeries?.object_series_name)}
                                                     />
@@ -284,26 +294,38 @@ export const DLOSeriesEdit = ({
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <p>Drag to reorder, drag between lists</p>
-                                    <h2>Objects in this series ({dlorSeries.object_series_id})</h2>
-                                    <div id="dragLandingAarea" style={{ minHeight: '10em' }}>
-                                        {listForThisSeries.length === 0 && <p>(None yet)</p>}
+                                    <h2>Objects in this series</h2>
+                                    <div id="dragLandingAarea">
+                                        {formValues?.object_list?.length === 0 && <p>(None yet)</p>}
                                         <ul style={{ listStyleType: 'none' }}>
-                                            {!!listForThisSeries &&
-                                                listForThisSeries.length > 0 &&
-                                                listForThisSeries.map(o => (
-                                                    <li key={o.object_id} className={classes.draggableItem}>
-                                                        <span>{o.object_title}</span>
-                                                        <div>
-                                                            <a
-                                                                href={`${fullPath}/digital-learning-hub/view/${o?.object_public_uuid}`}
-                                                                data-testid={`dlor-series-edit-view-${o.object_id}`}
-                                                            >
-                                                                <VisibilityIcon style={{ color: 'black' }} />
-                                                            </a>
-                                                        </div>
-                                                    </li>
-                                                ))}
+                                            {!!formValues?.object_list &&
+                                                formValues?.object_list?.length > 0 &&
+                                                formValues?.object_list
+                                                    ?.filter((o, index) => {
+                                                        return o.object_series_id === Number(dlorSeriesId);
+                                                    })
+                                                    .map((o, index) => (
+                                                        <li key={o.object_id} className={classes.draggableItem}>
+                                                            <span>{o.object_title}</span>
+                                                            <div>
+                                                                <Input
+                                                                    id="object_series_order"
+                                                                    data-testid="object_series_order"
+                                                                    required
+                                                                    value={o.object_series_order || 0}
+                                                                    onChange={handleChange('object_series_order')}
+                                                                    style={{ marginRight: 10 }}
+                                                                />
+                                                                <a
+                                                                    href={`${fullPath}/digital-learning-hub/view/${o?.object_public_uuid}`}
+                                                                    data-testid={`dlor-series-edit-view-${o.object_id}`}
+                                                                    target="_blank"
+                                                                >
+                                                                    <VisibilityIcon style={{ color: 'black' }} />
+                                                                </a>
+                                                            </div>
+                                                        </li>
+                                                    ))}
                                         </ul>
                                     </div>
                                 </Grid>
@@ -311,21 +333,33 @@ export const DLOSeriesEdit = ({
                                 <Grid item xs={12}>
                                     <h2>Objects available to add to this series</h2>
                                     <ul style={{ listStyleType: 'none' }}>
-                                        {!!listNOTForThisSeries &&
-                                            listNOTForThisSeries.length > 0 &&
-                                            listNOTForThisSeries.map(o => (
-                                                <li key={o.object_id} className={classes.draggableItem}>
-                                                    {' '}
-                                                    <span>{o.object_title}</span>
-                                                    <div>
-                                                        <a
-                                                            href={`${fullPath}/digital-learning-hub/view/${o?.object_public_uuid}`}
-                                                        >
-                                                            <VisibilityIcon style={{ color: 'black' }} />
-                                                        </a>
-                                                    </div>
-                                                </li>
-                                            ))}
+                                        {!!formValues?.object_list &&
+                                            formValues?.object_list.length > 0 &&
+                                            formValues?.object_list
+                                                ?.filter((o, index) => {
+                                                    return !(o.object_series_id > 0);
+                                                })
+                                                .map((o, index) => (
+                                                    <li key={o.object_id} className={classes.draggableItem}>
+                                                        {' '}
+                                                        <span>{o.object_title}</span>
+                                                        <div>
+                                                            <Input
+                                                                id="object_series_order"
+                                                                data-testid="object_series_order"
+                                                                required
+                                                                value={o.object_series_order || 0}
+                                                                onChange={handleChange('object_series_order')}
+                                                                style={{ marginRight: 10 }}
+                                                            />
+                                                            <a
+                                                                href={`${fullPath}/digital-learning-hub/view/${o?.object_public_uuid}`}
+                                                            >
+                                                                <VisibilityIcon style={{ color: 'black' }} />
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                ))}
                                     </ul>
                                 </Grid>
 
