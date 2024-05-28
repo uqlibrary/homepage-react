@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
+import { useCookies } from 'react-cookie';
 
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -70,6 +71,7 @@ export const DLOSeriesEdit = ({
 }) => {
     const { dlorSeriesId } = useParams();
     const classes = useStyles();
+    const [cookies, setCookie] = useCookies();
 
     console.log('dlorSingle l=', dlorSeriesLoading, '; e=', dlorSeriesError, '; d=', dlorSeries);
     console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
@@ -176,7 +178,6 @@ export const DLOSeriesEdit = ({
 
     const handleChange = (prop, value) => e => {
         console.log('handleChange', prop, value, e.target);
-        console.log('handleChange formValues=', formValues);
         const theNewValue = e.target.value;
 
         let newValues;
@@ -184,14 +185,11 @@ export const DLOSeriesEdit = ({
         let unassigned = formValues.object_list_unassigned;
         // id={`linked_object_series_order-${f.object_public_uuid}`}unassigned_
         if (prop.startsWith('linked_object_series_order-')) {
-            console.log('linked_object_series_order - start');
             const uuid = prop.replace('linked_object_series_order-', '');
             const thisdlor = linked.find(d => d.object_public_uuid === uuid);
             thisdlor.object_series_order = e.target.value;
-            console.log('linked_object_series_order thisdlor=', thisdlor);
 
             if (e.target.value === 0) {
-                console.log('linked_object_series_order becomes unassigned');
                 // remove thisdlor from linked group
                 linked = linked.filter(d => d.object_public_uuid !== uuid);
                 // add thisdlor to unassigned group
@@ -209,14 +207,11 @@ export const DLOSeriesEdit = ({
                 object_list_unassigned: unassigned,
             };
         } else if (prop.startsWith('unassigned_object_series_order-')) {
-            console.log('unassigned_object_series_order - start');
             const uuid = prop.replace('unassigned_object_series_order-', '');
             const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
             thisdlor.object_series_order = e.target.value;
-            console.log('unassigned_object_series_order thisdlor=', thisdlor);
 
             if (e.target.value !== 0) {
-                console.log('unassigned_object_series_order becomes linked');
                 // remove thisdlor from unassigned group
                 unassigned = unassigned.filter(d => d.object_public_uuid !== uuid);
                 // add thisdlor to linked group
@@ -229,11 +224,11 @@ export const DLOSeriesEdit = ({
                 object_list_linked: linked,
                 object_list_unassigned: unassigned,
             };
-            console.log('newValues=', newValues);
         } else {
             // series name edited
             newValues = { ...formValues, [prop]: theNewValue };
         }
+        console.log('handleChange newValues=', newValues);
 
         setFormValidity(validateValues(newValues));
         setFormValues(newValues);
@@ -245,9 +240,18 @@ export const DLOSeriesEdit = ({
     };
 
     const saveChanges = () => {
+        const valuesToSend = {
+            series_name: formValues.object_series_name,
+            series_list: formValues.object_list_linked.map(item => ({
+                object_series_id: item.object_id,
+                object_series_order: Number(item.object_series_order),
+            })),
+        };
+        console.log('valuesToSend=', valuesToSend);
+
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', formValues);
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
         actions.updateDlorSeries(dlorSeriesId, formValues);
