@@ -404,10 +404,12 @@ export function loadDlorSeriesList() {
 }
 
 export function updateDlorSeries(seriesId, request) {
+    console.log('updateDlorSeries', seriesId, request);
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
         return put(DLOR_SERIES_UPDATE_API(seriesId), request)
             .then(response => {
+                console.log('updateDlorSeries response=', response);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response,
@@ -416,6 +418,7 @@ export function updateDlorSeries(seriesId, request) {
                 dispatch(loadDlorSeriesList());
             })
             .catch(error => {
+                console.log('updateDlorSeries error=', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,

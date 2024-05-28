@@ -56,18 +56,18 @@ const useStyles = makeStyles(theme => ({
 
 export const DLOSeriesEdit = ({
     actions,
+    // series data to load
     dlorSeries,
     dlorSeriesLoading,
     dlorSeriesError,
+    // saving changes
     dlorItemUpdating,
     dlorUpdatedItemError,
     dlorUpdatedItem,
+    // get object-child-of-series data
     dlorList,
     dlorListLoading,
     dlorListError,
-    dlorSeriesSaving,
-    dlorSavedSeriesError,
-    dlorSavedSeries,
 }) => {
     const { dlorSeriesId } = useParams();
     const classes = useStyles();
@@ -132,14 +132,14 @@ export const DLOSeriesEdit = ({
     }, [dlorSeries, dlorSeriesLoading, dlorSeriesError]);
 
     useEffect(() => {
-        if (!!dlorSavedSeriesError) {
+        if (!!dlorUpdatedItemError) {
             setSaveStatus('error');
             showConfirmation();
-        } else if (!!dlorSavedSeries?.data?.object_series_id) {
+        } else if (!!dlorUpdatedItem?.data?.object_series_id) {
             setSaveStatus('complete');
             showConfirmation();
         }
-    }, [showConfirmation, dlorSavedSeries, dlorSavedSeriesError]);
+    }, [showConfirmation, dlorUpdatedItem, dlorUpdatedItemError]);
 
     function closeConfirmationBox() {
         setSaveStatus(null);
@@ -167,10 +167,10 @@ export const DLOSeriesEdit = ({
             confirmationTitle: 'Changes have been saved',
             confirmationMessage: '',
             cancelButtonLabel: 'Re-edit Series',
-            confirmButtonLabel: 'Return to Admin Seriess page',
+            confirmButtonLabel: 'Return to Admin Series page',
         },
         errorMessage: {
-            confirmationTitle: dlorSavedSeriesError,
+            confirmationTitle: dlorUpdatedItemError,
             confirmationMessage: '',
             confirmButtonLabel: 'Close',
         },
@@ -243,7 +243,7 @@ export const DLOSeriesEdit = ({
         const valuesToSend = {
             series_name: formValues.object_series_name,
             series_list: formValues.object_list_linked.map(item => ({
-                object_series_id: item.object_id,
+                object_uuid: item.object_public_uuid,
                 object_series_order: Number(item.object_series_order),
             })),
         };
@@ -254,7 +254,7 @@ export const DLOSeriesEdit = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        actions.updateDlorSeries(dlorSeriesId, formValues);
+        actions.updateDlorSeries(dlorSeriesId, valuesToSend);
     };
 
     const isValidSeriesName = seriesName => {
@@ -285,7 +285,7 @@ export const DLOSeriesEdit = ({
             </Grid>
             <Grid container spacing={2}>
                 {(() => {
-                    if (!!dlorSeriesLoading || !!dlorSeriesSaving || (!dlorSeriesError && !dlorSeries)) {
+                    if (!!dlorSeriesLoading || !!dlorItemUpdating || (!dlorSeriesError && !dlorSeries)) {
                         return (
                             <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                                 <div style={{ minHeight: 600 }}>
@@ -391,34 +391,45 @@ export const DLOSeriesEdit = ({
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <h2>Objects available to add to this series</h2>
-                                    <ul style={{ listStyleType: 'none' }}>
-                                        {formValues?.object_list_unassigned?.map((f, index) => {
-                                            // console.log('dragLandingAarea 2 f=', f);
-                                            return (
-                                                <li key={f.object_id} className={classes.draggableItem}>
-                                                    <span>{f.object_title}</span>
-                                                    <div>
-                                                        <Input
-                                                            id={`object_series_order-${f.object_public_uuid}`}
-                                                            data-testid={`object_series_order-${f.object_public_uuid}`}
-                                                            required
-                                                            value={f.object_series_order}
-                                                            onChange={handleChange(
-                                                                `unassigned_object_series_order-${f.object_public_uuid}`,
-                                                            )}
-                                                            style={{ marginRight: 10 }}
-                                                        />
-                                                        <a
-                                                            href={`${fullPath}/digital-learning-hub/view/${f?.object_public_uuid}`}
-                                                        >
-                                                            <VisibilityIcon style={{ color: 'black' }} />
-                                                        </a>
-                                                    </div>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
+                                    <details>
+                                        <Typography
+                                            component={'summary'}
+                                            style={{
+                                                fontSize: '1.3em',
+                                                fontWeight: 'bold',
+                                            }}
+                                            data-testid="admin-dlor-series-summary-button"
+                                        >
+                                            Objects available to add to this series
+                                        </Typography>
+                                        <ul style={{ listStyleType: 'none' }}>
+                                            {formValues?.object_list_unassigned?.map((f, index) => {
+                                                // console.log('dragLandingAarea 2 f=', f);
+                                                return (
+                                                    <li key={f.object_id} className={classes.draggableItem}>
+                                                        <span>{f.object_title}</span>
+                                                        <div>
+                                                            <Input
+                                                                id={`object_series_order-${f.object_public_uuid}`}
+                                                                data-testid={`object_series_order-${f.object_public_uuid}`}
+                                                                required
+                                                                value={f.object_series_order}
+                                                                onChange={handleChange(
+                                                                    `unassigned_object_series_order-${f.object_public_uuid}`,
+                                                                )}
+                                                                style={{ marginRight: 10 }}
+                                                            />
+                                                            <a
+                                                                href={`${fullPath}/digital-learning-hub/view/${f?.object_public_uuid}`}
+                                                            >
+                                                                <VisibilityIcon style={{ color: 'black' }} />
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </details>
                                 </Grid>
 
                                 <Grid item xs={3} align="left">
