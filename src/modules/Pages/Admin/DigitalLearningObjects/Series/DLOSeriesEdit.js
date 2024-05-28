@@ -180,7 +180,7 @@ export const DLOSeriesEdit = ({
         const theNewValue = e.target.value;
 
         let newValues;
-        const linked = formValues.object_list_linked;
+        let linked = formValues.object_list_linked;
         let unassigned = formValues.object_list_unassigned;
         // id={`linked_object_series_order-${f.object_public_uuid}`}unassigned_
         if (prop.startsWith('linked_object_series_order-')) {
@@ -200,6 +200,9 @@ export const DLOSeriesEdit = ({
                 // move within linked group
                 linked.map(d => d.object_public_uuid === uuid && (d.object_series_order = e.target.value));
             }
+            linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
+            unassigned = unassigned.sort((a, b) => a.object_series_order - b.object_series_order);
+
             newValues = {
                 object_series_name: formValues.object_series_name,
                 object_list_linked: linked,
@@ -219,6 +222,8 @@ export const DLOSeriesEdit = ({
                 // add thisdlor to linked group
                 linked.push(thisdlor);
             }
+            linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
+            unassigned = unassigned.sort((a, b) => a.object_series_order - b.object_series_order);
             newValues = {
                 object_series_name: formValues.object_series_name,
                 object_list_linked: linked,
