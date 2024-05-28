@@ -824,15 +824,11 @@ mock.onGet(/dlor\/find\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const seriesId = urlparts.split('?')[0];
-        // if (responseType === 'error') {
-        //     return [500, {}];
-        // } else if (seriesId === 'missingRecord') {
-        //     return [200, { data: {} }]; // this would more likely be a 404
-        // } else if (seriesId === 'object_404') {
-        // return [404, { status: 'error', message: 'No records found for that UUID' }];
-        // } else {
-        return [200, { data: dlor_series_all.data.find(series => series.object_series_id === Number(seriesId)) }];
-        // }
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, { data: dlor_series_all.data.find(series => series.object_series_id === Number(seriesId)) }];
+        }
     })
     .onPost('dlor/admin/series')
     .reply(() => {
