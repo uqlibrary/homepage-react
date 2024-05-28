@@ -67,7 +67,7 @@ export const DLOSeriesForm = ({
     );
 
     const [formValues, setFormValues2] = useState({
-        series_name: '',
+        object_series_name: '',
     });
     const setFormValues = x => {
         console.log('setFormValues', x);
@@ -82,7 +82,7 @@ export const DLOSeriesForm = ({
     useEffect(() => {
         if (mode === 'edit' && !!formDefaults && !dlorSeriesLoading && !dlorSeriesError) {
             setFormValues({
-                series_name: formDefaults?.series_name,
+                object_series_name: formDefaults?.object_series_name,
             });
         }
         setFormValidity(validateValues(formValues));
@@ -92,7 +92,7 @@ export const DLOSeriesForm = ({
         if (!!dlorSavedSeriesError) {
             setSaveStatus('error');
             showConfirmation();
-        } else if (!!dlorSavedSeries?.data?.series_id) {
+        } else if (!!dlorSavedSeries?.data?.object_series_id) {
             setSaveStatus('complete');
             showConfirmation();
         }
@@ -142,7 +142,7 @@ export const DLOSeriesForm = ({
     };
 
     const validateValues = currentValues => {
-        return isValidSeriesName(currentValues?.series_name);
+        return isValidSeriesName(currentValues?.object_series_name);
     };
 
     const saveChanges = () => {
@@ -157,13 +157,13 @@ export const DLOSeriesForm = ({
     };
 
     const isValidSeriesName = seriesName => {
-        return (mode === 'edit' && seriesName === formDefaults?.series_name) || seriesName?.trim() !== '';
+        return (mode === 'edit' && seriesName === formDefaults?.object_series_name) || seriesName?.trim() !== '';
     };
 
     const listForThisSeries =
-        !dlorListError && !dlorListLoading && dlorList?.filter(d => d?.series_id === dlorSeriesId);
+        !dlorListError && !dlorListLoading && dlorList?.filter(d => d?.object_series_id === dlorSeriesId);
     const listNOTForThisSeries =
-        !dlorListError && !dlorListLoading && dlorList?.filter(d => d?.series_id !== dlorSeriesId && d?.series_id > 0);
+        !dlorListError && !dlorListLoading && dlorList?.filter(d => d?.object_series_id !== dlorSeriesId && d?.object_series_id > 0);
 
     return (
         <Grid container spacing={2}>
@@ -191,7 +191,7 @@ export const DLOSeriesForm = ({
                     return (
                         <>
                             <Grid item xs={12} data-testid="dlor-series-item-list">
-                                <Grid container key={`list-series-${formDefaults?.series_id}`}>
+                                <Grid container key={`list-series-${formDefaults?.object_series_id}`}>
                                     {(saveStatus === 'complete' || saveStatus === 'error') && (
                                         <ConfirmationBox
                                             actionButtonColor="primary"
@@ -217,20 +217,20 @@ export const DLOSeriesForm = ({
                                     <form id="dlor-editSeries-form" style={{ width: '100%' }}>
                                         <Grid item xs={12}>
                                             <FormControl variant="standard" fullWidth>
-                                                <InputLabel htmlFor="series_name">Series name *</InputLabel>
+                                                <InputLabel htmlFor="object_series_name">Series name *</InputLabel>
                                                 <Input
-                                                    id="series_name"
-                                                    data-testid="series_name"
+                                                    id="object_series_name"
+                                                    data-testid="object_series_name"
                                                     required
-                                                    value={formValues?.series_name || ''}
-                                                    onChange={handleChange('series_name')}
-                                                    error={!isValidSeriesName(formValues?.series_name)}
+                                                    value={formValues?.object_series_name || ''}
+                                                    onChange={handleChange('object_series_name')}
+                                                    error={!isValidSeriesName(formValues?.object_series_name)}
                                                 />
                                             </FormControl>
-                                            {!isValidSeriesName(formValues?.series_name) && (
+                                            {!isValidSeriesName(formValues?.object_series_name) && (
                                                 <div
                                                     className={classes.errorMessage}
-                                                    data-testid="error-message-series_name"
+                                                    data-testid="error-message-object_series_name"
                                                 >
                                                     This series name is not valid.
                                                 </div>

@@ -708,10 +708,10 @@ export const DLOList = ({
                                 )}
                             </Typography>
                         </header>
-                        {!!object?.series_name && (
+                        {!!object?.object_series_name && (
                             <Typography
                                 component={'p'}
-                                data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-series_name`}
+                                data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-object_series_name`}
                             >
                                 Part of:{' '}
                                 <span
@@ -721,7 +721,7 @@ export const DLOList = ({
                                         fontWeight: 'bold',
                                     }}
                                 >
-                                    {object?.series_name}
+                                    {object?.object_series_name}
                                 </span>
                             </Typography>
                         )}

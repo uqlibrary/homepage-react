@@ -815,7 +815,7 @@ mock.onGet(/dlor\/find\/.*/)
             // } else if (seriesId === 'object_404') {
             //     return [404, { status: 'error', message: 'No records found for that id' }];
         } else {
-            const result = dlor_series_all.data.find(s => s.series_id === Number(seriesId));
+            const result = dlor_series_all.data.find(s => s.object_series_id === Number(seriesId));
             console.log('mock get single series', seriesId, result);
             return [200, { data: result }];
         }
@@ -831,7 +831,7 @@ mock.onGet(/dlor\/find\/.*/)
         // } else if (seriesId === 'object_404') {
         // return [404, { status: 'error', message: 'No records found for that UUID' }];
         // } else {
-        return [200, { data: dlor_series_all.data.find(series => series.series_id === Number(seriesId)) }];
+        return [200, { data: dlor_series_all.data.find(series => series.object_series_id === Number(seriesId)) }];
         // }
     })
     .onPost('dlor/admin/series')
@@ -844,7 +844,7 @@ mock.onGet(/dlor\/find\/.*/)
                 {
                     data: {
                         objects_count: 0,
-                        series_name: 'New Series name',
+                        object_series_name: 'New Series name',
                     },
                 },
             ];

@@ -92,9 +92,9 @@ export default {
                     "series_object_order": 5,
                 }
             ],
-            "series_id": 2,
-            "series_name": 'Digital Essentials',
-            "series_order": 1,
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 1,
         },
         {
             "object_id": 2,
@@ -174,9 +174,9 @@ export default {
                     "series_object_order": 1,
                 }
             ],
-            "series_id": 1,
-            "series_name": "Advanced literature searching",
-            "series_order": 1,
+            "object_series_id": 1,
+            "object_series_name": "Advanced literature searching",
+            "object_series_order": 1,
         },
         {
             "object_id": 8,
@@ -250,9 +250,9 @@ export default {
                     "series_object_order": 1,
                 }
             ],
-            "series_id": 8,
-            "series_name": "Indigenising curriculum",
-            "series_order": 1,
+            "object_series_id": 8,
+            "object_series_name": "Indigenising curriculum",
+            "object_series_order": 1,
         },
         {
             "object_id": 3,
@@ -348,9 +348,9 @@ export default {
                     "series_object_order": 5,
                 }
             ],
-            "series_id": 2,
-            "series_name": 'Digital Essentials',
-            "series_order": 2,
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 2,
         },
         {
             "object_id": 4,
@@ -443,9 +443,9 @@ export default {
                     "series_object_order": 5,
                 }
             ],
-            "series_id": 2,
-            "series_name": 'Digital Essentials',
-            "series_order": 3,
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 3,
         },
         {
             "object_id": 6,
@@ -520,9 +520,9 @@ export default {
                     "series_object_order": 5,
                 }
             ],
-            "series_id": 2,
-            "series_name": 'Digital Essentials',
-            "series_order": 4,
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 4,
         },
         {
             "object_id": 5,
@@ -615,9 +615,9 @@ export default {
                     "series_object_order": 5,
                 }
             ],
-            "series_id": 2,
-            "series_name": 'Digital Essentials',
-            "series_order": 5,
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 5,
         },
         {
             "object_id": 7,
@@ -695,9 +695,9 @@ export default {
                     "series_object_order": 1,
                 }
             ],
-            "series_id": 3,
-            "series_name": "EndNote",
-            "series_order": 1,
+            "object_series_id": 3,
+            "object_series_name": "EndNote",
+            "object_series_order": 1,
         }, {
             "object_id": 24,
             "object_public_uuid": "9bc174f7-5326-4a8b-bfab-d5081c688597",
@@ -783,9 +783,9 @@ export default {
                     "series_object_order": 1,
                 }
             ],
-            "series_id": 6,
-            "series_name": "Research techniques",
-            "series_order": 1,
+            "object_series_id": 6,
+            "object_series_name": "Research techniques",
+            "object_series_order": 1,
         }, {
             "object_id": 28,
             "object_public_uuid": "9bc1894a-8b0d-46da-a25e-02d26e2e056c",
@@ -876,9 +876,9 @@ export default {
                     "series_object_order": 1,
                 }
             ],
-            "series_id": 1,
-            "series_name": "Advanced literature searching",
-            "series_order": 2,
+            "object_series_id": 1,
+            "object_series_name": "Advanced literature searching",
+            "object_series_order": 2,
         }, {
             "object_id": 31,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df240",
@@ -981,9 +981,9 @@ export default {
                     "series_object_order": 5,
                 }
             ],
-            "series_id": 2,
-            "series_name": 'Digital Essentials',
-            "series_order": 6,
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 6,
         }, {
             "object_id": 980,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-01",
@@ -1058,8 +1058,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 981,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-02",
@@ -1134,8 +1134,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 982,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-03",
@@ -1210,8 +1210,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 983,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-04",
@@ -1286,8 +1286,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 984,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-05",
@@ -1362,8 +1362,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 985,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-06",
@@ -1438,8 +1438,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 986,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07",
@@ -1514,8 +1514,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 987,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-08",
@@ -1590,8 +1590,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 988,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-09",
@@ -1666,8 +1666,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 989,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-10",
@@ -1742,8 +1742,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 990,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-11",
@@ -1818,8 +1818,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 991,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-12",
@@ -1894,8 +1894,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 992,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-13",
@@ -1970,8 +1970,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 993,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-14",
@@ -2046,8 +2046,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 994,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df2415",
@@ -2122,8 +2122,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "series_id": null,
-            "series_name": null,
+            "object_series_id": null,
+            "object_series_name": null,
         }
     ]
 };

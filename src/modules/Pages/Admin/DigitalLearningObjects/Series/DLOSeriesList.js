@@ -164,15 +164,15 @@ export const DLOSeriesList = ({
     }
 
     const noSeriesName = 'Not in a series';
-    const unSeriedObjectDone = dlorSeriesList?.find(s => s.series_name === noSeriesName);
-    const unSeriedObjects = dlorList?.filter(o => !!o.series_id);
+    const unSeriedObjectDone = dlorSeriesList?.find(s => s.object_series_name === noSeriesName);
+    const unSeriedObjects = dlorList?.filter(o => !!o.object_series_id);
     const unSeriedObjectCount = unSeriedObjects?.length;
     !unSeriedObjectDone &&
         !!dlorSeriesList &&
         dlorSeriesList.length > 0 &&
         dlorSeriesList.push({
-            series_id: null,
-            series_name: noSeriesName,
+            object_series_id: null,
+            object_series_name: noSeriesName,
         });
 
     return (
@@ -252,7 +252,7 @@ export const DLOSeriesList = ({
                                         dlorSeriesList.map(series => {
                                             const summarylabelCount = (
                                                 <>
-                                                    {series?.series_id === null
+                                                    {series?.object_series_id === null
                                                         ? 'other Objects'
                                                         : `${series?.objects_count} Object${
                                                               series?.objects_count > 1 ? 's' : ''
@@ -260,37 +260,42 @@ export const DLOSeriesList = ({
                                                 </>
                                             );
                                             return (
-                                                <div key={`list-series-${series?.series_id}`}>
+                                                <div key={`list-series-${series?.object_series_id}`}>
                                                     <Grid container alignItems="center">
                                                         <Grid
                                                             item
                                                             xs={10}
-                                                            data-testid={`dlor-serieslist-panel-${series?.series_id}`}
+                                                            data-testid={`dlor-serieslist-panel-${series?.object_series_id}`}
                                                         >
                                                             <Typography variant="body1">
-                                                                {series?.series_name}
+                                                                {series?.object_series_name}
                                                             </Typography>{' '}
                                                         </Grid>
                                                         <Grid item xs={1}>
-                                                            {!series?.objects_count && series?.series_id !== null && (
-                                                                <IconButton
-                                                                    data-testid={`dlor-serieslist-delete-${series?.series_id}`}
-                                                                    style={{ height: 40 }}
-                                                                    onClick={() =>
-                                                                        requestUserToConfirmDelete(series?.series_id)
-                                                                    }
-                                                                    // disabled={series?.object_status === 'deleted'}
-                                                                >
-                                                                    <DeleteForeverIcon />
-                                                                </IconButton>
-                                                            )}
+                                                            {!series?.objects_count &&
+                                                                series?.object_series_id !== null && (
+                                                                    <IconButton
+                                                                        data-testid={`dlor-serieslist-delete-${series?.object_series_id}`}
+                                                                        style={{ height: 40 }}
+                                                                        onClick={() =>
+                                                                            requestUserToConfirmDelete(
+                                                                                series?.object_series_id,
+                                                                            )
+                                                                        }
+                                                                        // disabled={series?.object_status === 'deleted'}
+                                                                    >
+                                                                        <DeleteForeverIcon />
+                                                                    </IconButton>
+                                                                )}
                                                         </Grid>
                                                         <Grid item xs={1}>
-                                                            {series?.series_id !== null && (
+                                                            {series?.object_series_id !== null && (
                                                                 <IconButton
-                                                                    data-testid={`dlor-serieslist-edit-${series?.series_id}`}
+                                                                    data-testid={`dlor-serieslist-edit-${series?.object_series_id}`}
                                                                     onClick={() =>
-                                                                        navigateToSeriesEditPage(series?.series_id)
+                                                                        navigateToSeriesEditPage(
+                                                                            series?.object_series_id,
+                                                                        )
                                                                     }
                                                                 >
                                                                     <EditIcon />
@@ -298,19 +303,22 @@ export const DLOSeriesList = ({
                                                             )}
                                                         </Grid>
                                                     </Grid>
-                                                    {(series?.objects_count > 0 || series.series_id === null) && (
+                                                    {(series?.objects_count > 0 ||
+                                                        series.object_series_id === null) && (
                                                         <Grid container>
                                                             <Grid item xs={12} style={{ marginBottom: 24 }}>
                                                                 <details
                                                                     style={{ marginLeft: 20 }}
-                                                                    data-testid={`dlor-series-object-list-${series?.series_id}`}
+                                                                    data-testid={`dlor-series-object-list-${series?.object_series_id}`}
                                                                 >
                                                                     <summary>{summarylabelCount}</summary>
 
                                                                     {!!dlorList &&
                                                                         dlorList
                                                                             .filter(
-                                                                                o => o?.series_id === series?.series_id,
+                                                                                o =>
+                                                                                    o?.object_series_id ===
+                                                                                    series?.object_series_id,
                                                                             )
                                                                             .map(o => (
                                                                                 <Grid

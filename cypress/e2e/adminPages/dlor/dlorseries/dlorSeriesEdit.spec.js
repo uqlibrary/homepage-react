@@ -24,7 +24,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
         });
         it('loads as expected', () => {
             // series name shows correctly
-            cy.get('[data-testid="series_name"] input')
+            cy.get('[data-testid="object_series_name"] input')
                 .should('exist')
                 .should('have.value', 'Advanced literature searching');
         });

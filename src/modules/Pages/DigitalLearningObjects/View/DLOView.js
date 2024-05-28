@@ -275,7 +275,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         {!!dlorItem?.object_series && dlorItem?.object_series.length > 0 && (
                             <>
                                 <Typography component="h2" variant="h6" style={{ paddingTop: 20 }}>
-                                    {dlorItem.series_name}
+                                    {dlorItem.object_series_name}
                                 </Typography>
                                 <ol>
                                     {dlorItem?.object_series.map(s => {

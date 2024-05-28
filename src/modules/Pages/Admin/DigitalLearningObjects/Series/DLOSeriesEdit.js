@@ -78,7 +78,7 @@ export const DLOSeriesEdit = ({
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [formValues, setFormValues2] = useState({
-        series_name: '',
+        object_series_name: '',
     });
     const setFormValues = x => {
         console.log('setFormValues', x);
@@ -101,7 +101,7 @@ export const DLOSeriesEdit = ({
     useEffect(() => {
         if (!!dlorSeries && !dlorSeriesLoading && !dlorSeriesError) {
             setFormValues({
-                series_name: dlorSeries?.series_name,
+                object_series_name: dlorSeries?.object_series_name,
             });
         }
         setFormValidity(validateValues(formValues));
@@ -111,7 +111,7 @@ export const DLOSeriesEdit = ({
         if (!!dlorSavedSeriesError) {
             setSaveStatus('error');
             showConfirmation();
-        } else if (!!dlorSavedSeries?.data?.series_id) {
+        } else if (!!dlorSavedSeries?.data?.object_series_id) {
             setSaveStatus('complete');
             showConfirmation();
         }
@@ -161,7 +161,7 @@ export const DLOSeriesEdit = ({
     };
 
     const validateValues = currentValues => {
-        return isValidSeriesName(currentValues?.series_name);
+        return isValidSeriesName(currentValues?.object_series_name);
     };
 
     const saveChanges = () => {
@@ -174,7 +174,7 @@ export const DLOSeriesEdit = ({
     };
 
     const isValidSeriesName = seriesName => {
-        return seriesName === dlorSeries?.series_name || seriesName?.trim() !== '';
+        return seriesName === dlorSeries?.object_series_name || seriesName?.trim() !== '';
     };
 
     const listForThisSeries =
@@ -182,13 +182,13 @@ export const DLOSeriesEdit = ({
         !dlorListLoading &&
         dlorList
             ?.filter(d => {
-                return d?.series_id === Number(dlorSeriesId);
+                return d?.object_series_id === Number(dlorSeriesId);
             })
             .sort();
     const listNOTForThisSeries =
         !dlorListError &&
         !dlorListLoading &&
-        dlorList?.filter(d => d?.series_id !== Number(dlorSeriesId) && d?.series_id > 0);
+        dlorList?.filter(d => d?.object_series_id !== Number(dlorSeriesId) && d?.object_series_id > 0);
 
     return (
         <StandardPage title="Digital Learning Hub - Edit Series">
@@ -204,7 +204,7 @@ export const DLOSeriesEdit = ({
                                 Series management
                             </a>
                             <ArrowForwardIcon style={{ height: 15 }} />
-                            Edit series {dlorSeries?.series_name}
+                            Edit series {dlorSeries?.object_series_name}
                         </Typography>
                     </div>
                 </Grid>
@@ -234,7 +234,7 @@ export const DLOSeriesEdit = ({
                         return (
                             <>
                                 <Grid item xs={12} data-testid="dlor-series-item-list">
-                                    <Grid container key={`list-series-${dlorSeries?.series_id}`}>
+                                    <Grid container key={`list-series-${dlorSeries?.object_series_id}`}>
                                         {(saveStatus === 'complete' || saveStatus === 'error') && (
                                             <ConfirmationBox
                                                 actionButtonColor="primary"
@@ -260,20 +260,20 @@ export const DLOSeriesEdit = ({
                                         <form id="dlor-editSeries-form" style={{ width: '100%' }}>
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
-                                                    <InputLabel htmlFor="series_name">Series name *</InputLabel>
+                                                    <InputLabel htmlFor="object_series_name">Series name *</InputLabel>
                                                     <Input
-                                                        id="series_name"
-                                                        data-testid="series_name"
+                                                        id="object_series_name"
+                                                        data-testid="object_series_name"
                                                         required
-                                                        value={dlorSeries?.series_name || ''}
-                                                        onChange={handleChange('series_name')}
-                                                        error={!isValidSeriesName(dlorSeries?.series_name)}
+                                                        value={dlorSeries?.object_series_name || ''}
+                                                        onChange={handleChange('object_series_name')}
+                                                        error={!isValidSeriesName(dlorSeries?.object_series_name)}
                                                     />
                                                 </FormControl>
-                                                {!isValidSeriesName(dlorSeries?.series_name) && (
+                                                {!isValidSeriesName(dlorSeries?.object_series_name) && (
                                                     <div
                                                         className={classes.errorMessage}
-                                                        data-testid="error-message-series_name"
+                                                        data-testid="error-message-object_series_name"
                                                     >
                                                         This series name is not valid.
                                                     </div>
@@ -285,7 +285,7 @@ export const DLOSeriesEdit = ({
 
                                 <Grid item xs={12}>
                                     <p>Drag to reorder, drag between lists</p>
-                                    <h2>Objects in this series ({dlorSeries.series_id})</h2>
+                                    <h2>Objects in this series ({dlorSeries.object_series_id})</h2>
                                     <div id="dragLandingAarea" style={{ minHeight: '10em' }}>
                                         {listForThisSeries.length === 0 && <p>(None yet)</p>}
                                         <ul style={{ listStyleType: 'none' }}>
