@@ -28,7 +28,6 @@ export const DLOTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admi
 export const DLOTeamAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamAddContainer')));
 export const DLOSeriesList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesListContainer')));
 export const DLOSeriesEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesEditContainer')));
-// export const DLOSeriesAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesAddContainer')));
 
 export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));

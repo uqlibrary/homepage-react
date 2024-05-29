@@ -23,7 +23,6 @@ export const flattedPathConfigExact = [
     '/admin/dlor',
     '/admin/dlor/add',
     '/admin/dlor/series/manage',
-    // '/admin/dlor/series/add',
     '/admin/dlor/team/manage',
     '/admin/dlor/team/add',
     '/admin/masquerade',
@@ -273,12 +272,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Edit a Series for the Digital Learning Hub',
         },
-        // {
-        //     path: pathConfig.admin.dlorseriesadd,
-        //     component: components.DLOSeriesAdd,
-        //     exact: true,
-        //     pageTitle: 'Create a new Series',
-        // },
     ];
 
     const testntagDisplay = [

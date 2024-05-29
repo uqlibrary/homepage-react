@@ -16,7 +16,6 @@ export const pathConfig = {
         dlorteamadd: '/admin/dlor/team/add',
         dlorseriesmanage: '/admin/dlor/series/manage',
         dlorseriesedit: dlorSeriesId => `/admin/dlor/series/edit/${dlorSeriesId}`,
-        // dlorseriesadd: '/admin/dlor/series/add',
         masquerade: '/admin/masquerade',
         promopaneladd: '/admin/promopanel/add',
         promopaneledit: promopanelid => `/admin/promopanel/edit/${promopanelid}`,
