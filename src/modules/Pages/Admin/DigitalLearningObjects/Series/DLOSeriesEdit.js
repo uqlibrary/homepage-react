@@ -261,6 +261,10 @@ export const DLOSeriesEdit = ({
         return seriesName === dlorSeries?.object_series_name || seriesName?.trim() !== '';
     };
 
+    const toTitleCase = str => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     return (
         <StandardPage title="Digital Learning Hub - Edit Series">
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
@@ -363,7 +367,15 @@ export const DLOSeriesEdit = ({
                                                 // console.log('dragLandingAarea 1 f=', f);
                                                 return (
                                                     <li key={f.object_id} className={classes.draggableItem}>
-                                                        <span>{f.object_title}</span>
+                                                        <span
+                                                            data-testid={`dlor-series-edit-draggable-title-${f?.object_public_uuid}`}
+                                                        >
+                                                            {f.object_title}{' '}
+                                                            {f.object_status !== 'current' && (
+                                                                <b>{`(${toTitleCase(f.object_status)})`}</b>
+                                                            )}
+                                                        </span>
+
                                                         <div>
                                                             <Input
                                                                 id={`object_series_order-${f.object_public_uuid}`}
@@ -407,7 +419,14 @@ export const DLOSeriesEdit = ({
                                                 // console.log('dragLandingAarea 2 f=', f);
                                                 return (
                                                     <li key={f.object_id} className={classes.draggableItem}>
-                                                        <span>{f.object_title}</span>
+                                                        <span
+                                                            data-testid={`dlor-series-edit-draggable-title-${f?.object_public_uuid}`}
+                                                        >
+                                                            {f.object_title}{' '}
+                                                            {f.object_status !== 'current' && (
+                                                                <b>{`(${toTitleCase(f.object_status)})`}</b>
+                                                            )}
+                                                        </span>
                                                         <div>
                                                             <Input
                                                                 id={`object_series_order-${f.object_public_uuid}`}
