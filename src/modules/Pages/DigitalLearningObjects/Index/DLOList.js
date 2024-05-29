@@ -29,6 +29,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getHomepageLink } from 'helpers/access';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
+import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -277,6 +278,11 @@ export const DLOList = ({
         const skipNavLander = document.querySelector('#first-panel-button');
         !!skipNavLander && skipNavLander.focus({ focusVisible: true });
     }
+
+    const heroTitleDlor = 'Find a digital learning object';
+    const heroDescriptionDlor =
+        'Use the Digital Learning Hub to find modules, videos and guides for teaching and study.';
+    const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
@@ -766,18 +772,25 @@ export const DLOList = ({
 
     if (!!dlorFilterListLoading || dlorFilterListLoading === null || !!dlorListLoading || dlorListLoading === null) {
         return (
-            <StandardPage>
-                <Typography component={'h1'} variant={'h6'}>
-                    Find a digital learning object
-                </Typography>
-                <Grid container spacing={2}>
-                    <Grid item md={12}>
-                        <div style={{ minHeight: 600 }}>
-                            <InlineLoader message="Loading" />
-                        </div>
+            <>
+                <HeroCard
+                    heroTitle={heroTitleDlor}
+                    heroDescription={heroDescriptionDlor}
+                    heroBackgroundImage={heroBackgroundImageDlor}
+                />
+                <StandardPage>
+                    <Typography component={'h1'} variant={'h6'}>
+                        Find a digital learning object
+                    </Typography>
+                    <Grid container spacing={2}>
+                        <Grid item md={12}>
+                            <div style={{ minHeight: 600 }}>
+                                <InlineLoader message="Loading" />
+                            </div>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </StandardPage>
+                </StandardPage>
+            </>
         );
     }
 
@@ -786,143 +799,150 @@ export const DLOList = ({
     };
 
     return (
-        <StandardPage>
-            <Typography component={'h1'} variant={'h6'}>
-                Find a digital learning object
-                <button className={classes.skipLink} id="skip-filters" onClick={() => skipToElement()}>
-                    Skip facet selection to view Digital Learning Hub entries
-                </button>
-            </Typography>
-            <Typography component={'p'}>
-                Use this Digital Learning Hub to find digital learning objects for teaching and study.{' '}
-                <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
-                    How to use our digital learning objects
-                </a>
-                .
-            </Typography>
-            <Grid container spacing={2}>
-                <Grid
-                    item
-                    xs={12}
-                    md={3}
-                    className={classes.filterSidebar}
-                    id="filterSidebar"
-                    data-testid="filterSidebar"
-                >
-                    {(() => {
-                        if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
-                            return (
-                                <Typography variant="body1" data-testid="dlor-homepage-filter-error">
-                                    Filters currently unavailable - please try again later.
-                                </Typography>
-                            );
-                        } else {
-                            return displayFilterSidebarContents();
-                        }
-                    })()}
-                </Grid>
-                <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
-                    <TextField
-                        className={classes.keywordSearchPanel}
-                        data-testid="dlor-homepage-keyword"
-                        label="Search our digital objects by keyword"
-                        onChange={handleKeywordSearch}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton onClick={clearKeywordField}>
-                                        {keyWordSearchRef.current?.value === '' ? (
-                                            <SearchIcon />
-                                        ) : (
-                                            <CloseIcon data-testid="keyword-clear" />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
-                        inputRef={keyWordSearchRef}
-                    />
-                    {(() => {
-                        if (!!dlorListError) {
-                            return (
-                                <Typography variant="body1" data-testid="dlor-homepage-error">
-                                    {dlorListError}
-                                </Typography>
-                            );
-                        } else if (!dlorList || dlorList.length === 0) {
-                            return (
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12}>
-                                        <Typography variant="body1" data-testid="dlor-homepage-noresult">
-                                            We did not find any entries in the system - please try again later.
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            );
-                        } else {
-                            dlorList?.forEach(d => {
-                                // add a constructed array of facet-parent_facet-child
-                                d.constructedFilters = d?.object_filters?.flatMap(filter =>
-                                    filter?.filter_values?.map(
-                                        value => `${filter?.filter_key}-${slugifyName(value.id)}`,
-                                    ),
+        <>
+            <HeroCard
+                heroTitle={heroTitleDlor}
+                heroDescription={heroDescriptionDlor}
+                heroBackgroundImage={heroBackgroundImageDlor}
+            />
+            <StandardPage>
+                <Typography component={'p'} style={{ marginBlock: '2em', fontSize: '1.2em', fontStyle: 'italic' }}>
+                    Find out{' '}
+                    <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
+                        how to use our digital learning objects
+                    </a>
+                    .
+                    <button className={classes.skipLink} id="skip-filters" onClick={() => skipToElement()}>
+                        Skip facet selection to view Digital Learning Hub entries
+                    </button>
+                </Typography>
+                <Grid container spacing={2}>
+                    <Grid
+                        item
+                        xs={12}
+                        md={3}
+                        className={classes.filterSidebar}
+                        id="filterSidebar"
+                        data-testid="filterSidebar"
+                    >
+                        {(() => {
+                            if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
+                                return (
+                                    <Typography variant="body1" data-testid="dlor-homepage-filter-error">
+                                        Filters currently unavailable - please try again later.
+                                    </Typography>
                                 );
-                            });
-
-                            const dlorData = paginateDlorList(paginationPage);
-                            const paginationCount = Math.ceil(filterDlorList()?.length / numberItemsPerPage);
-                            if (!dlorData || dlorData.length === 0) {
+                            } else {
+                                return displayFilterSidebarContents();
+                            }
+                        })()}
+                    </Grid>
+                    <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                        <TextField
+                            className={classes.keywordSearchPanel}
+                            data-testid="dlor-homepage-keyword"
+                            label="Search our digital objects by keyword"
+                            onChange={handleKeywordSearch}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={clearKeywordField}>
+                                            {keyWordSearchRef.current?.value === '' ? (
+                                                <SearchIcon />
+                                            ) : (
+                                                <CloseIcon data-testid="keyword-clear" />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                            inputRef={keyWordSearchRef}
+                        />
+                        {(() => {
+                            if (!!dlorListError) {
+                                return (
+                                    <Typography variant="body1" data-testid="dlor-homepage-error">
+                                        {dlorListError}
+                                    </Typography>
+                                );
+                            } else if (!dlorList || dlorList.length === 0) {
                                 return (
                                     <Grid container spacing={3}>
                                         <Grid item xs={12}>
-                                            <Typography variant="body1" data-testid="dlor-homepage-empty">
-                                                No records satisfied this filter selection.
+                                            <Typography variant="body1" data-testid="dlor-homepage-noresult">
+                                                We did not find any entries in the system - please try again later.
                                             </Typography>
                                         </Grid>
                                     </Grid>
                                 );
                             } else {
-                                return (
-                                    <div className={classes.panelBody}>
-                                        <LoginPrompt account={account} narrower />
-                                        <Grid
-                                            container
-                                            spacing={3}
-                                            className={classes.panelGrid}
-                                            data-testid="dlor-homepage-list"
-                                            id="dlor-homepage-list"
-                                        >
-                                            <div
-                                                id="filterIconShowId"
-                                                data-testid="filterIconShowId"
-                                                className={classes.showFilterSidebarIcon}
-                                            >
-                                                <IconButton aria-label="Show the filters" onClick={() => showFilters()}>
-                                                    <FilterAltIcon />
-                                                </IconButton>
-                                            </div>
-                                            {!!dlorData &&
-                                                dlorData.length > 0 &&
-                                                dlorData.map((o, index) => displayItemPanel(o, index))}
-                                            {!!dlorData && dlorData.length > 0 && (
-                                                <Pagination
-                                                    count={paginationCount}
-                                                    showFirstButton
-                                                    showLastButton
-                                                    onChange={handlePaginationChange}
-                                                    page={paginationPage}
-                                                    className={classes.dlorPagination}
-                                                />
-                                            )}
+                                dlorList?.forEach(d => {
+                                    // add a constructed array of facet-parent_facet-child
+                                    d.constructedFilters = d?.object_filters?.flatMap(filter =>
+                                        filter?.filter_values?.map(
+                                            value => `${filter?.filter_key}-${slugifyName(value.id)}`,
+                                        ),
+                                    );
+                                });
+
+                                const dlorData = paginateDlorList(paginationPage);
+                                const paginationCount = Math.ceil(filterDlorList()?.length / numberItemsPerPage);
+                                if (!dlorData || dlorData.length === 0) {
+                                    return (
+                                        <Grid container spacing={3}>
+                                            <Grid item xs={12}>
+                                                <Typography variant="body1" data-testid="dlor-homepage-empty">
+                                                    No records satisfied this filter selection.
+                                                </Typography>
+                                            </Grid>
                                         </Grid>
-                                    </div>
-                                );
+                                    );
+                                } else {
+                                    return (
+                                        <div className={classes.panelBody}>
+                                            <LoginPrompt account={account} narrower />
+                                            <Grid
+                                                container
+                                                spacing={3}
+                                                className={classes.panelGrid}
+                                                data-testid="dlor-homepage-list"
+                                                id="dlor-homepage-list"
+                                            >
+                                                <div
+                                                    id="filterIconShowId"
+                                                    data-testid="filterIconShowId"
+                                                    className={classes.showFilterSidebarIcon}
+                                                >
+                                                    <IconButton
+                                                        aria-label="Show the filters"
+                                                        onClick={() => showFilters()}
+                                                    >
+                                                        <FilterAltIcon />
+                                                    </IconButton>
+                                                </div>
+                                                {!!dlorData &&
+                                                    dlorData.length > 0 &&
+                                                    dlorData.map((o, index) => displayItemPanel(o, index))}
+                                                {!!dlorData && dlorData.length > 0 && (
+                                                    <Pagination
+                                                        count={paginationCount}
+                                                        showFirstButton
+                                                        showLastButton
+                                                        onChange={handlePaginationChange}
+                                                        page={paginationPage}
+                                                        className={classes.dlorPagination}
+                                                    />
+                                                )}
+                                            </Grid>
+                                        </div>
+                                    );
+                                }
                             }
-                        }
-                    })()}
+                        })()}
+                    </Grid>
                 </Grid>
-            </Grid>
-        </StandardPage>
+            </StandardPage>
+        </>
     );
 };
 
