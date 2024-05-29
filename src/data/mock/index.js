@@ -810,14 +810,8 @@ mock.onGet(/dlor\/find\/.*/)
         const seriesId = urlparts.split('?')[0];
         if (responseType === 'error') {
             return [500, {}];
-            // } else if (seriesId === 'missingRecord') {
-            //     return [200, { data: {} }]; // this would more likely be a 404
-            // } else if (seriesId === 'object_404') {
-            //     return [404, { status: 'error', message: 'No records found for that id' }];
         } else {
-            const result = dlor_series_all.data.find(s => s.object_series_id === Number(seriesId));
-            console.log('mock get single series', seriesId, result);
-            return [200, { data: result }];
+            return [200, { data: dlor_series_all.data.find(s => s.series_id === Number(seriesId)) }];
         }
     })
     .onPut(/dlor\/admin\/series\/.*/)
@@ -827,7 +821,7 @@ mock.onGet(/dlor\/find\/.*/)
         if (responseType === 'saveError') {
             return [500, {}];
         } else {
-            return [200, { data: dlor_series_all.data.find(series => series.object_series_id === Number(seriesId)) }];
+            return [200, { data: dlor_series_all.data.find(series => series.series_id === Number(seriesId)) }];
         }
     })
     .onPost('dlor/admin/series')
@@ -835,15 +829,7 @@ mock.onGet(/dlor\/find\/.*/)
         if (responseType === 'saveError') {
             return [400, {}];
         } else {
-            return [
-                200,
-                {
-                    data: {
-                        objects_count: 0,
-                        object_series_name: 'New Series name',
-                    },
-                },
-            ];
+            return [200, { data: { objects_count: 0, series_name: 'New Series name' } }];
         }
     });
 

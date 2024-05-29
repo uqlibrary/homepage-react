@@ -15,7 +15,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Edit Series');
             // series name shows correctly
-            cy.get('[data-testid="object_series_name"] input')
+            cy.get('[data-testid="series_name"] input')
                 .should('exist')
                 .should('have.value', 'Advanced literature searching');
             // linked
@@ -96,7 +96,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 expect(cookie).to.exist;
                 expect(cookie.value).to.equal('active');
             });
-            cy.get('[data-testid="object_series_name"] input').type(' xxx');
+            cy.get('[data-testid="series_name"] input').type(' xxx');
             cy.get('[data-testid="admin-dlor-series-form-save-button"]')
                 .should('exist')
                 .click();
@@ -150,7 +150,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .should('be.visible')
                 .contains('Digital Learning Hub - Edit Series');
-            cy.get('[data-testid="object_series_name"] input')
+            cy.get('[data-testid="series_name"] input')
                 .should('exist')
                 .should('be.visible')
                 .should('have.value', 'Advanced literature searching');
@@ -160,7 +160,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 expect(cookie).to.exist;
                 expect(cookie.value).to.equal('active');
             });
-            cy.get('[data-testid="object_series_name"] input').type(' yyy');
+            cy.get('[data-testid="series_name"] input').type(' yyy');
             cy.get('[data-testid="admin-dlor-series-form-save-button"]')
                 .should('exist')
                 .click();
@@ -222,7 +222,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.visit(`http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}&responseType=saveError`);
             cy.viewport(1300, 1000);
 
-            cy.get('[data-testid="object_series_name"] input').type(' yyy');
+            cy.get('[data-testid="series_name"] input').type(' yyy');
             cy.get('[data-testid="admin-dlor-series-form-save-button"]')
                 .should('exist')
                 .click();

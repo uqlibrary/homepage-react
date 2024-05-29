@@ -76,12 +76,13 @@ export const DLOSeriesEdit = ({
 
     console.log('dlorSingle l=', dlorSeriesLoading, '; e=', dlorSeriesError, '; d=', dlorSeries);
     console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
+    console.log('dlorUpdatedItem l=', dlorItemUpdating, '; e=', dlorUpdatedItemError, '; d=', dlorUpdatedItem);
 
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [formValues, setFormValues2] = useState({
-        object_series_name: '',
+        series_name: '',
         object_list_linked: [],
         object_list_unassigned: [],
     });
@@ -103,7 +104,7 @@ export const DLOSeriesEdit = ({
         }
         if (!!dlorList && !dlorListLoading && !dlorListError) {
             setFormValues({
-                object_series_name: formValues?.object_series_name,
+                series_name: formValues?.series_name,
                 object_list_linked:
                     dlorList?.length > 0
                         ? dlorList?.filter((o, index) => {
@@ -124,7 +125,7 @@ export const DLOSeriesEdit = ({
     useEffect(() => {
         if (!!dlorSeries && !dlorSeriesLoading && !dlorSeriesError) {
             setFormValues({
-                object_series_name: dlorSeries?.object_series_name,
+                series_name: dlorSeries?.series_name,
                 object_list_linked: formValues.object_list_linked || [],
                 object_list_unassigned: formValues.object_list_unassigned || [],
             });
@@ -136,7 +137,7 @@ export const DLOSeriesEdit = ({
         if (!!dlorUpdatedItemError) {
             setSaveStatus('error');
             showConfirmation();
-        } else if (!!dlorUpdatedItem?.data?.object_series_id) {
+        } else if (!!dlorUpdatedItem?.data?.series_id) {
             setSaveStatus('complete');
             showConfirmation();
         }
@@ -148,8 +149,6 @@ export const DLOSeriesEdit = ({
     }
 
     const navigateToSeriesManagementHomePage = () => {
-        // TODO also want to clear form here too before nav, so back button gives clear form?
-
         closeConfirmationBox();
         window.location.href = dlorAdminLink('/series/manage');
         scrollToTopOfPage();
@@ -203,7 +202,7 @@ export const DLOSeriesEdit = ({
             unassigned = unassigned.sort((a, b) => a.object_series_order - b.object_series_order);
 
             newValues = {
-                object_series_name: formValues.object_series_name,
+                series_name: formValues.series_name,
                 object_list_linked: linked,
                 object_list_unassigned: unassigned,
             };
@@ -221,7 +220,7 @@ export const DLOSeriesEdit = ({
             linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
             unassigned = unassigned.sort((a, b) => a.object_series_order - b.object_series_order);
             newValues = {
-                object_series_name: formValues.object_series_name,
+                series_name: formValues.series_name,
                 object_list_linked: linked,
                 object_list_unassigned: unassigned,
             };
@@ -236,13 +235,13 @@ export const DLOSeriesEdit = ({
     };
 
     const validateValues = currentValues => {
-        return isValidSeriesName(currentValues?.object_series_name);
+        return isValidSeriesName(currentValues?.series_name);
         // TODO && loop over series and they are all numeric
     };
 
     const saveChanges = () => {
         const valuesToSend = {
-            series_name: formValues.object_series_name,
+            series_name: formValues.series_name,
             series_list: formValues.object_list_linked.map(item => ({
                 object_uuid: item.object_public_uuid,
                 object_series_order: Number(item.object_series_order),
@@ -259,7 +258,7 @@ export const DLOSeriesEdit = ({
     };
 
     const isValidSeriesName = seriesName => {
-        return seriesName === dlorSeries?.object_series_name || seriesName?.trim() !== '';
+        return seriesName === dlorSeries?.series_name || seriesName?.trim() !== '';
     };
 
     return (
@@ -276,7 +275,7 @@ export const DLOSeriesEdit = ({
                                 Series management
                             </a>
                             <ArrowForwardIcon style={{ height: 15 }} />
-                            Edit series {dlorSeries?.object_series_name}
+                            Edit series {dlorSeries?.series_name}
                         </Typography>
                     </div>
                 </Grid>
@@ -306,7 +305,7 @@ export const DLOSeriesEdit = ({
                         return (
                             <>
                                 <Grid item xs={12} data-testid="dlor-series-item-list">
-                                    <Grid container key={`list-series-${dlorSeries?.object_series_id}`}>
+                                    <Grid container key={`list-series-${dlorSeries?.series_id}`}>
                                         {(saveStatus === 'complete' || saveStatus === 'error') && (
                                             <ConfirmationBox
                                                 actionButtonColor="primary"
@@ -332,20 +331,20 @@ export const DLOSeriesEdit = ({
                                         <form id="dlor-editSeries-form" style={{ width: '100%' }}>
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
-                                                    <InputLabel htmlFor="object_series_name">Series name *</InputLabel>
+                                                    <InputLabel htmlFor="series_name">Series name *</InputLabel>
                                                     <Input
-                                                        id="object_series_name"
-                                                        data-testid="object_series_name"
+                                                        id="series_name"
+                                                        data-testid="series_name"
                                                         required
-                                                        value={formValues?.object_series_name}
-                                                        onChange={handleChange('object_series_name')}
-                                                        error={!isValidSeriesName(dlorSeries?.object_series_name)}
+                                                        value={formValues?.series_name}
+                                                        onChange={handleChange('series_name')}
+                                                        error={!isValidSeriesName(dlorSeries?.series_name)}
                                                     />
                                                 </FormControl>
-                                                {!isValidSeriesName(dlorSeries?.object_series_name) && (
+                                                {!isValidSeriesName(dlorSeries?.series_name) && (
                                                     <div
                                                         className={classes.errorMessage}
-                                                        data-testid="error-message-object_series_name"
+                                                        data-testid="error-message-series_name"
                                                     >
                                                         This series name is not valid.
                                                     </div>
