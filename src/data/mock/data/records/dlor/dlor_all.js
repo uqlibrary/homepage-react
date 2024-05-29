@@ -69,6 +69,32 @@ export default {
             "object_link_file_type": "video",
             "object_link_size": "2864", // 47m44s
             "object_is_featured": 1,
+            "object_series": [
+                {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 1,
+                }, {
+                    "series_object_uuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_uuid": "0h4y_87f3_6js7",
+                    "series_object_title": "Choose the right tool - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "98j3-fgf95-8j34",
+                    "series_object_title": "Digital security  - Digital Essentials",
+                    "series_object_order": 4,
+                }, {
+                    "series_object_uuid": "0j45_87h4_23hd7",
+                    "series_object_title": "Communicate and collaborate - Digital Essentials",
+                    "series_object_order": 5,
+                }
+            ],
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 1,
         },
         {
             "object_id": 2,
@@ -137,6 +163,20 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "98s0_dy5k3_98h4",
+                    "series_object_title": "Advanced literature searching",
+                    "series_object_order": 1,
+                }, {
+                    "series_object_uuid": "9bc1894a-8b0d-46da-a25e-02d26e2e056c",
+                    "series_object_title": "Advanced literature searching for science",
+                    "series_object_order": 1,
+                }
+            ],
+            "object_series_id": 1,
+            "object_series_name": "Advanced literature searching",
+            "object_series_order": 1,
         },
         {
             "object_id": 8,
@@ -203,6 +243,16 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 1,
+            "object_series": [
+                {
+                    "series_object_uuid": "kj5t_8yg4_kj4f",
+                    "series_object_title": "UQ has a Blak History",
+                    "series_object_order": 1,
+                }
+            ],
+            "object_series_id": 8,
+            "object_series_name": "Indigenising curriculum",
+            "object_series_order": 1,
         },
         {
             "object_id": 3,
@@ -275,6 +325,32 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 1,
+                }, {
+                    "series_object_uuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_uuid": "0h4y_87f3_6js7",
+                    "series_object_title": "Choose the right tool - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "98j3-fgf95-8j34",
+                    "series_object_title": "Digital security  - Digital Essentials",
+                    "series_object_order": 4,
+                }, {
+                    "series_object_uuid": "0j45_87h4_23hd7",
+                    "series_object_title": "Communicate and collaborate - Digital Essentials",
+                    "series_object_order": 5,
+                }
+            ],
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 2,
         },
         {
             "object_id": 4,
@@ -344,6 +420,32 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 1,
+                }, {
+                    "series_object_uuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_uuid": "0h4y_87f3_6js7",
+                    "series_object_title": "Choose the right tool - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "98j3-fgf95-8j34",
+                    "series_object_title": "Digital security  - Digital Essentials",
+                    "series_object_order": 4,
+                }, {
+                    "series_object_uuid": "0j45_87h4_23hd7",
+                    "series_object_title": "Communicate and collaborate - Digital Essentials",
+                    "series_object_order": 5,
+                }
+            ],
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 3,
         },
         {
             "object_id": 6,
@@ -395,6 +497,32 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 1,
+                }, {
+                    "series_object_uuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_uuid": "0h4y_87f3_6js7",
+                    "series_object_title": "Choose the right tool - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "98j3-fgf95-8j34",
+                    "series_object_title": "Digital security  - Digital Essentials",
+                    "series_object_order": 4,
+                }, {
+                    "series_object_uuid": "0j45_87h4_23hd7",
+                    "series_object_title": "Communicate and collaborate - Digital Essentials",
+                    "series_object_order": 5,
+                }
+            ],
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 4,
         },
         {
             "object_id": 5,
@@ -464,6 +592,32 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 1,
+                }, {
+                    "series_object_uuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_uuid": "0h4y_87f3_6js7",
+                    "series_object_title": "Choose the right tool - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "98j3-fgf95-8j34",
+                    "series_object_title": "Digital security  - Digital Essentials",
+                    "series_object_order": 4,
+                }, {
+                    "series_object_uuid": "0j45_87h4_23hd7",
+                    "series_object_title": "Communicate and collaborate - Digital Essentials",
+                    "series_object_order": 5,
+                }
+            ],
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 5,
         },
         {
             "object_id": 7,
@@ -534,6 +688,16 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "9k45_hgr4_876h",
+                    "series_object_title": "EndNote 20: Getting started",
+                    "series_object_order": 1,
+                }
+            ],
+            "object_series_id": 3,
+            "object_series_name": "EndNote",
+            "object_series_order": 1,
         }, {
             "object_id": 24,
             "object_public_uuid": "9bc174f7-5326-4a8b-bfab-d5081c688597",
@@ -612,6 +776,16 @@ export default {
             "object_link_file_type": "PPT",
             "object_link_size": "6542130",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "9bc174f7-5326-4a8b-bfab-d5081c688597",
+                    "series_object_title": "Health information and research essentials",
+                    "series_object_order": 1,
+                }
+            ],
+            "object_series_id": 6,
+            "object_series_name": "Research techniques",
+            "object_series_order": 1,
         }, {
             "object_id": 28,
             "object_public_uuid": "9bc1894a-8b0d-46da-a25e-02d26e2e056c",
@@ -691,6 +865,20 @@ export default {
             "object_link_file_type": "PDF",
             "object_link_size": "500000",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "98s0_dy5k3_98h4",
+                    "series_object_title": "Advanced literature searching",
+                    "series_object_order": 1,
+                }, {
+                    "series_object_uuid": "9bc1894a-8b0d-46da-a25e-02d26e2e056c",
+                    "series_object_title": "Advanced literature searching for science",
+                    "series_object_order": 1,
+                }
+            ],
+            "object_series_id": 1,
+            "object_series_name": "Advanced literature searching",
+            "object_series_order": 2,
         }, {
             "object_id": 31,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df240",
@@ -770,6 +958,32 @@ export default {
             "object_link_file_type": "XLS",
             "object_link_size": "3424874",
             "object_is_featured": 0,
+            "object_series": [
+                {
+                    "series_object_uuid": "987y_isjgt_9866",
+                    "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
+                    "series_object_order": 1,
+                }, {
+                    "series_object_uuid": "938h_4986_654f",
+                    "series_object_title": "Artificial Intelligence - Digital Essentials",
+                    "series_object_order": 2,
+                }, {
+                    "series_object_uuid": "0h4y_87f3_6js7",
+                    "series_object_title": "Choose the right tool - Digital Essentials",
+                    "series_object_order": 3,
+                }, {
+                    "series_object_uuid": "98j3-fgf95-8j34",
+                    "series_object_title": "Digital security  - Digital Essentials",
+                    "series_object_order": 4,
+                }, {
+                    "series_object_uuid": "0j45_87h4_23hd7",
+                    "series_object_title": "Communicate and collaborate - Digital Essentials",
+                    "series_object_order": 5,
+                }
+            ],
+            "object_series_id": 2,
+            "object_series_name": 'Digital Essentials',
+            "object_series_order": 6,
         }, {
             "object_id": 980,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-01",
@@ -844,6 +1058,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 981,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-02",
@@ -918,6 +1134,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 982,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-03",
@@ -992,6 +1210,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 983,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-04",
@@ -1066,6 +1286,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 984,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-05",
@@ -1140,6 +1362,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 985,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-06",
@@ -1214,6 +1438,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 986,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07",
@@ -1288,6 +1514,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 987,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-08",
@@ -1362,6 +1590,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 988,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-09",
@@ -1436,6 +1666,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 989,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-10",
@@ -1510,6 +1742,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 990,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-11",
@@ -1584,6 +1818,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 991,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-12",
@@ -1658,6 +1894,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 992,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-13",
@@ -1732,6 +1970,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 993,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-14",
@@ -1806,6 +2046,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }, {
             "object_id": 994,
             "object_public_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df2415",
@@ -1880,6 +2122,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }
     ]
 };

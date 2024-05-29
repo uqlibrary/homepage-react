@@ -67,6 +67,7 @@ import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 import dlor_team_list from './data/records/dlor/dlor_team_list';
 import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
+import dlor_series_all from './data/records/dlor/dlor_series_all';
 
 const moment = require('moment');
 
@@ -650,7 +651,13 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this would more likely be a 404
         } else {
-            return [200, dlor_all];
+            const currentRecords = dlor_all.data.map(d => {
+                const newObj = { ...d }; // Create a shallow copy of the object
+                delete newObj.object_series; // Delete the 'series' property
+                return newObj;
+            });
+            console.log('dlor currentRecords', currentRecords);
+            return [200, { data: currentRecords }];
         }
     })
     .onGet('dlor/list/current')
@@ -660,7 +667,14 @@ mock.onGet(/dlor\/find\/.*/)
         } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this would more likely be a 404
         } else {
-            const currentRecords = dlor_all.data.filter(o => o.object_status === 'current');
+            const currentRecords = dlor_all.data
+                .map(d => {
+                    const newObj = { ...d }; // Create a shallow copy of the object
+                    delete newObj.object_series; // Delete the 'series' property
+                    return newObj;
+                })
+                .filter(o => o.object_status === 'current');
+            console.log('dlor currentRecords', currentRecords);
             return [200, { data: currentRecords }];
         }
     })
@@ -771,6 +785,65 @@ mock.onGet(/dlor\/find\/.*/)
         } else {
             console.log('mock: dlorFileTypeList=', dlor_file_type_list);
             return [200, dlor_file_type_list];
+        }
+    })
+
+    .onGet(/dlor\/series\/list/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else {
+            return [200, dlor_series_all];
+        }
+    })
+    .onDelete(/dlor\/admin\/series\/.*/)
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, { status: 'OK' }];
+        }
+    })
+    .onGet(/dlor\/admin\/series\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const seriesId = urlparts.split('?')[0];
+        if (responseType === 'error') {
+            return [500, {}];
+            // } else if (seriesId === 'missingRecord') {
+            //     return [200, { data: {} }]; // this would more likely be a 404
+            // } else if (seriesId === 'object_404') {
+            //     return [404, { status: 'error', message: 'No records found for that id' }];
+        } else {
+            const result = dlor_series_all.data.find(s => s.object_series_id === Number(seriesId));
+            console.log('mock get single series', seriesId, result);
+            return [200, { data: result }];
+        }
+    })
+    .onPut(/dlor\/admin\/series\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const seriesId = urlparts.split('?')[0];
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, { data: dlor_series_all.data.find(series => series.object_series_id === Number(seriesId)) }];
+        }
+    })
+    .onPost('dlor/admin/series')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [400, {}];
+        } else {
+            return [
+                200,
+                {
+                    data: {
+                        objects_count: 0,
+                        object_series_name: 'New Series name',
+                    },
+                },
+            ];
         }
     });
 

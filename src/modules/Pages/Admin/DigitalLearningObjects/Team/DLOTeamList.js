@@ -19,7 +19,6 @@ import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAd
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
 
 import { useConfirmationState } from 'hooks';
-import { fullPath } from 'config/routes';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {

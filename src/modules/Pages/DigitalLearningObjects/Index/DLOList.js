@@ -708,6 +708,23 @@ export const DLOList = ({
                                 )}
                             </Typography>
                         </header>
+                        {!!object?.object_series_name && (
+                            <Typography
+                                component={'p'}
+                                data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-object_series_name`}
+                            >
+                                Part of:{' '}
+                                <span
+                                    style={{
+                                        fontVariant: 'small-caps',
+                                        textTransform: 'lowercase',
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    {object?.object_series_name}
+                                </span>
+                            </Typography>
+                        )}
                         <div>
                             <p>{object?.object_summary}</p>
                         </div>

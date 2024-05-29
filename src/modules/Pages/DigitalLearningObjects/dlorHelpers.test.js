@@ -3,6 +3,7 @@ import {
     getDurationString,
     // convertDurationStringToSeconds,
     convertFileSizeStringToKb,
+    toTitleCase,
 } from './dlorHelpers';
 
 describe('helpers', () => {
@@ -40,5 +41,12 @@ describe('helpers', () => {
         // expect(
         //     convertDurationStringToSeconds('47 minutes and 44 seconds', /(\d+)\s*minutes\s*and\s*(\d+)\s*seconds/),
         // ).toEqual(2864);
+    });
+
+    it('changes to titlecase correctly', () => {
+        expect(toTitleCase('AAA')).toEqual('Aaa');
+        expect(toTitleCase('aaa')).toEqual('Aaa');
+        expect(toTitleCase('aAa')).toEqual('Aaa');
+        expect(toTitleCase('aaa BBB BBB')).toEqual('Aaa bbb bbb');
     });
 });

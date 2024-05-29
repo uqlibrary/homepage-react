@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { isDlorAdminUser } from 'helpers/access';
+import { getHomepageLink, isDlorAdminUser } from 'helpers/access';
 import { useAccountContext } from 'context';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
@@ -26,6 +26,7 @@ import {
     getFileSizeString,
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
+    toTitleCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
@@ -114,6 +115,23 @@ const useStyles = makeStyles(theme => ({
             position: 'absolute',
         },
     },
+    seriesList: {
+        listStyleType: 'none',
+        '& li': {
+            border: '1px solid black',
+            padding: '0.7em',
+            marginBottom: '0.5em',
+            borderBottomWidth: 2,
+            borderRightWidth: 2,
+        },
+    },
+    highlightSeriesName: {
+        backgroundColor: '#fef8e8', // $warning-50
+        margin: '-1em !important',
+        zIndex: '999',
+        position: 'relative',
+        marginBottom: '0 !important',
+    },
 }));
 
 export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) => {
@@ -133,7 +151,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
 
     const deslugify = slug => {
         const words = slug?.replace(/_/g, ' ');
-        return words?.charAt(0).toUpperCase() + words?.slice(1);
+        return toTitleCase(words);
     };
 
     function getTitleBlock(detailTitle = 'View an entry') {
@@ -151,6 +169,11 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     const navigateToEditPage = uuid => {
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
+
+    // function navigateToDetailPage(uuid) {
+    //     console.log('navigateToDetailPage', `${getHomepageLink()}digital-learning-hub/view/${uuid}`);
+    //     window.location.href = `${getHomepageLink()}digital-learning-hub/view/${uuid}`;
+    // }
 
     if (!!dlorItemLoading || dlorItemLoading === null) {
         return (
@@ -209,6 +232,9 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         return label;
     }
 
+    console.log('dlorItem=', dlorItem);
+    console.log('dlorItem?.object_series=', dlorItem?.object_series);
+
     return (
         <StandardPage>
             <StandardCard className={classes.dlorEntry}>
@@ -229,7 +255,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                 </a>
                             </div>
                         )}
-
                         {isPreviewableUrl(dlorItem.object_link_url) !== false && (
                             <div data-testid="detailpage-preview">
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
@@ -250,7 +275,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                 </div>
                             </div>
                         )}
-
                         {!!dlorItem?.object_download_instructions && (
                             <>
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
@@ -261,6 +285,40 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                         dlorItem.object_download_instructions,
                                         classes.downloadInstructions,
                                     )}
+                            </>
+                        )}
+                        {!!dlorItem?.object_series && dlorItem?.object_series.length > 0 && (
+                            <>
+                                <Typography
+                                    className={classes.highlighted}
+                                    component="h2"
+                                    variant="h6"
+                                    style={{ paddingTop: 20 }}
+                                >
+                                    Part of a series: {dlorItem.object_series_name}
+                                </Typography>
+                                <ol className={classes.seriesList}>
+                                    {dlorItem?.object_series.map(s => {
+                                        return (
+                                            <li
+                                                className={`${
+                                                    s.series_object_uuid === dlorItem?.object_public_uuid
+                                                        ? classes.highlightSeriesName
+                                                        : null
+                                                }`}
+                                                key={`dlor-view-series-item-${s.series_object_uuid}`}
+                                            >
+                                                <a
+                                                    href={`${getHomepageLink()}digital-learning-hub/view/${
+                                                        s?.series_object_uuid
+                                                    }`}
+                                                >
+                                                    {s.series_object_title}
+                                                </a>
+                                            </li>
+                                        );
+                                    })}
+                                </ol>
                             </>
                         )}
                     </Grid>

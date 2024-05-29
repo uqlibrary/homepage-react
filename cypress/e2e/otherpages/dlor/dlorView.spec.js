@@ -5,19 +5,6 @@ describe('Digital Learning Hub View page', () => {
     });
 
     context('details page', () => {
-        it('is accessible', () => {
-            cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
-            cy.injectAxe();
-            cy.viewport(1300, 1000);
-
-            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage"] h1').should('exist'));
-            cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'Advanced literature searching');
-            cy.checkA11y('[data-testid="StandardPage"]', {
-                reportName: 'dlor',
-                scopeName: 'Content',
-                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-            });
-        });
         it('appears as expected', () => {
             cy.visit('digital-learning-hub/view/938h_4986_654f');
             // body content is as expected
@@ -126,11 +113,24 @@ describe('Digital Learning Hub View page', () => {
                 statusCode: 200,
                 body: 'user has navigated to pressbook link',
             });
-            cy.get('[data-testid="dlor-detailpage"] a')
+            cy.get('[data-testid="detailpage-getit-button"] a')
                 .should('exist')
                 .should('contain', 'Access the object')
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
+        });
+        it('is accessible', () => {
+            cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+
+            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage"] h1').should('exist'));
+            cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'Advanced literature searching');
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'dlor',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
         });
         it('a view page without keywords has a sensible sidebar', () => {
             cy.visit('digital-learning-hub/view/9k45_hgr4_876h');

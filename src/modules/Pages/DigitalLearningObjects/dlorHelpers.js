@@ -251,3 +251,7 @@ export function isValidNumber(value) {
     // Check if the value is a number and greater than zero
     return !isNaN(numberValue) && numberValue > 0;
 }
+
+export const toTitleCase = str => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};

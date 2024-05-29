@@ -13,6 +13,11 @@ import {
     DLOR_TEAM_LIST_API,
     DLOR_TEAM_SINGLE_GET_API,
     DLOR_TEAM_UPDATE_API,
+    DLOR_SERIES_CREATE_API,
+    DLOR_SERIES_DELETE_API,
+    DLOR_SERIES_LIST_API,
+    DLOR_SERIES_SINGLE_GET_API,
+    DLOR_SERIES_UPDATE_API,
     DLOR_UPDATE_API,
 } from 'repositories/routes';
 
@@ -196,6 +201,7 @@ export function loadOwningTeams() {
         dispatch({ type: actions.DLOR_TEAMLIST_LOADING });
         return get(DLOR_TEAM_LIST_API())
             .then(response => {
+                console.log('dlorActions response=', response);
                 dispatch({
                     type: actions.DLOR_TEAMLIST_LOADED,
                     payload: response.data,
@@ -316,6 +322,128 @@ export function createDlorTeam(request) {
             })
             .catch(error => {
                 console.log('createDlorTeam error=', error);
+                dispatch({
+                    type: actions.DLOR_CREATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export const deleteDlorSeries = seriesId => {
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_SERIES_DELETING });
+        return destroy(DLOR_SERIES_DELETE_API(seriesId))
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.DLOR_SERIES_DELETED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.DLOR_SERIES_DELETE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_SERIES_DELETE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+};
+
+export function loadADLORSeries(dlorId) {
+    console.log('loadADLORSeries', dlorId);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SERIES_LOADING });
+        return get(DLOR_SERIES_SINGLE_GET_API({ id: dlorId }))
+            .then(response => {
+                console.log('loadADLORSeries response=', response);
+                dispatch({
+                    type: actions.DLOR_SERIES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                console.log('loadADLORSeries error=', error);
+                dispatch({
+                    type: actions.DLOR_SERIES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorSeriesList() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SERIESLIST_LOADING });
+        return get(DLOR_SERIES_LIST_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_SERIESLIST_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_SERIESLIST_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function updateDlorSeries(seriesId, request) {
+    console.log('updateDlorSeries', seriesId, request);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_UPDATING });
+        return put(DLOR_SERIES_UPDATE_API(seriesId), request)
+            .then(response => {
+                console.log('updateDlorSeries response=', response);
+                dispatch({
+                    type: actions.DLOR_UPDATED,
+                    payload: response,
+                });
+                // refresh the list after change
+                dispatch(loadDlorSeriesList());
+            })
+            .catch(error => {
+                console.log('updateDlorSeries error=', error);
+                dispatch({
+                    type: actions.DLOR_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function createDlorSeries(request) {
+    console.log('createDlorSeries request=', request);
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_CREATING });
+        return post(DLOR_SERIES_CREATE_API(), request)
+            .then(data => {
+                console.log('createDlorSeries response=', data);
+                dispatch({
+                    type: actions.DLOR_CREATED,
+                    payload: data,
+                });
+                // refresh the list after change
+                dispatch(loadDlorSeriesList());
+            })
+            .catch(error => {
+                console.log('createDlorSeries error=', error);
                 dispatch({
                     type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,

@@ -244,7 +244,6 @@ export const DlorForm = ({
         resetForm(fieldname, newContent);
     };
 
-    // export const ManageAuthorsList = ({ onBulkRowDelete, onRowAdd, onRowDelete, onRowUpdate, onScopusIngest }) => {
     const handleFacetChange = unused => e => {
         let newValues;
 
