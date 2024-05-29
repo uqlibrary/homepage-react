@@ -16,7 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { PromoPanelSplitButton } from './PromoPanelSplitButton';
 
-c;
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 import { scrollToTopOfPage } from 'helpers/general';
