@@ -27,6 +27,9 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .should('be.visible')
                 .should('have.value', 2);
+            cy.get('[data-testid="dlor-series-edit-draggable-title-9bc1894a-8b0d-46da-a25e-02d26e2e056c"]')
+                .should('exist')
+                .contains('(Deprecated)');
             // unaffiliated
             cy.get('[data-testid="object_series_order-9bc192a8-324c-4f6b-ac50-01"] input')
                 .should('exist')
