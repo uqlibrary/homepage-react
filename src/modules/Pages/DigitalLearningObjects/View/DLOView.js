@@ -114,8 +114,22 @@ const useStyles = makeStyles(theme => ({
             position: 'absolute',
         },
     },
+    seriesList: {
+        listStyleType: 'none',
+        '& li': {
+            border: '1px solid black',
+            padding: '0.7em',
+            marginBottom: '0.5em',
+            borderBottomWidth: 2,
+            borderRightWidth: 2,
+        },
+    },
     highlightSeriesName: {
-        border: 'thin sold black',
+        backgroundColor: '#fef8e8', // $warning-50
+        margin: '-1em !important',
+        zIndex: '999',
+        position: 'relative',
+        marginBottom: '0 !important',
     },
 }));
 
@@ -274,19 +288,26 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         )}
                         {!!dlorItem?.object_series && dlorItem?.object_series.length > 0 && (
                             <>
-                                <Typography component="h2" variant="h6" style={{ paddingTop: 20 }}>
-                                    {dlorItem.object_series_name}
+                                <Typography
+                                    className={classes.highlighted}
+                                    component="h2"
+                                    variant="h6"
+                                    style={{ paddingTop: 20 }}
+                                >
+                                    Part of a series: {dlorItem.object_series_name}
                                 </Typography>
-                                <ol>
+                                <ol className={classes.seriesList}>
                                     {dlorItem?.object_series.map(s => {
-                                        console.log('series=', s);
-                                        const className1 =
-                                            s.series_object_uid === dlorItem?.object_uid ? 'highlightSeriesName' : '';
                                         return (
-                                            <li>
+                                            <li
+                                                className={`${
+                                                    s.series_object_uuid === dlorItem?.object_public_uuid
+                                                        ? classes.highlightSeriesName
+                                                        : null
+                                                }`}
+                                                key={`dlor-view-series-item-${s.series_object_uuid}`}
+                                            >
                                                 <a
-                                                    className={classes.$className1}
-                                                    // href={() => navigateToDetailPage(s?.series_object_uuid)}
                                                     href={`${getHomepageLink()}digital-learning-hub/view/${
                                                         s?.series_object_uuid
                                                     }`}
