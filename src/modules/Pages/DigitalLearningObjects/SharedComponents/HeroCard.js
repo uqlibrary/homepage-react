@@ -70,15 +70,28 @@ const HeroCard = ({ heroTitle, heroDescription, heroBackgroundImage }) => {
         <div className={classes.layoutCardOverwriter}>
             <Grid container className={classes.uqHero__parent} direction={{ xs: 'column', md: 'row' }}>
                 <Grid item xs={12} md={6}>
-                    <div className={classes.uqHero__image} style={{ backgroundImage: `url(${heroBackgroundImage})` }} />
+                    <div
+                        className={classes.uqHero__image}
+                        style={{ backgroundImage: `url(${heroBackgroundImage})` }}
+                        data-testid="hero-card-image"
+                    />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <div className={classes.uqHero__wrapper}>
                         <div className={classes.uqHero__content}>
-                            <Typography component={'h1'} variant={'h1'} className={classes.uqHero__title}>
+                            <Typography
+                                component={'h1'}
+                                variant={'h1'}
+                                className={classes.uqHero__title}
+                                data-testid="hero-card-title"
+                            >
                                 {heroTitle}
                             </Typography>
-                            <Typography component={'p'} className={classes.uqHero__description}>
+                            <Typography
+                                component={'p'}
+                                className={classes.uqHero__description}
+                                data-testid="hero-card-description"
+                            >
                                 {heroDescription}
                             </Typography>
                         </div>

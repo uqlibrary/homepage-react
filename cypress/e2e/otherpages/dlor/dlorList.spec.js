@@ -14,7 +14,13 @@ describe('Digital Learning Hub', () => {
         it('is accessible', () => {
             cy.injectAxe();
 
-            cy.waitUntil(() => cy.get('h1').should('exist'));
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="hero-card-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Find a digital learning object'),
+            );
             cy.get('h1').should('contain', 'Find a digital learning object');
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'dlor',
@@ -29,6 +35,24 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .children()
                 .should('have.length', itemsPerPage + extraRowCount);
+
+            // hero card shows
+            cy.get('[data-testid="hero-card-image"]')
+                .should('exist')
+                .should('be.visible')
+                .should($img => {
+                    const style = window.getComputedStyle($img[0]);
+                    const width = parseInt(style.width, 10);
+                    expect(width).to.be.gt(600); // vaguely check its nice and big
+                });
+            cy.get('[data-testid="hero-card-title"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('Find a digital learning object');
+            cy.get('[data-testid="hero-card-description"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('Use the Digital Learning Hub to find modules, videos and guides for teaching and study.');
 
             // sorts properly
             cy.get('[data-testid="dlor-homepage-list"] div:nth-child(2) article h2').should(
@@ -546,10 +570,31 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .contains('We did not find any entries in the system - please try again later.');
         });
-        it('still filters on mobile page', () => {
+        it('mobile page works as expected', () => {
             cy.visit('digital-learning-hub');
             cy.viewport(800, 900);
 
+            // tablet/phone hero images should be full width
+            let bodyWidth;
+            cy.get('body').should($elem => {
+                bodyWidth = $elem.width();
+            });
+            cy.get('[data-testid="hero-card-image"]')
+                .should('exist')
+                .should('be.visible')
+                .should($img => {
+                    expect($img.width()).to.equal(bodyWidth);
+                });
+            cy.get('[data-testid="hero-card-title"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('Find a digital learning object');
+            cy.get('[data-testid="hero-card-description"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('Use the Digital Learning Hub to find modules, videos and guides for teaching and study.');
+
+            // filters correctly
             cy.get('[data-testid="filterSidebar"]')
                 .should('exist')
                 .should('not.be.visible');
