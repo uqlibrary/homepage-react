@@ -368,7 +368,11 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                         </Typography>
                                         <ul className={classes.filterDisplayList}>
                                             {dlorItem.object_keywords.map((keyword, index) => {
-                                                return <li key={index}>{toTitleCase(keyword)}</li>;
+                                                return (
+                                                    <li key={index}>
+                                                        {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
+                                                    </li>
+                                                );
                                             })}
                                         </ul>
                                     </div>
