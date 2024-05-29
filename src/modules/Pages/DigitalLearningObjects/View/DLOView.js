@@ -1,5 +1,4 @@
 import React from 'react';
-// import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import parse from 'html-react-parser';
@@ -12,6 +11,7 @@ import { Grid } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import EditIcon from '@mui/icons-material/Edit';
+import StarIcon from '@mui/icons-material/Star';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -118,19 +118,25 @@ const useStyles = makeStyles(theme => ({
     seriesList: {
         listStyleType: 'none',
         '& li': {
-            border: '1px solid black',
             padding: '0.7em',
             marginBottom: '0.5em',
-            borderBottomWidth: 2,
-            borderRightWidth: 2,
+        },
+        '& a': {
+            color: '#000',
         },
     },
+    seriesName: {
+        backgroundColor: '#d1d0d2', // $grey-300
+    },
     highlightSeriesName: {
-        backgroundColor: '#fef8e8', // $warning-50
-        margin: '-1em !important',
-        zIndex: '999',
-        position: 'relative',
-        marginBottom: '0 !important',
+        backgroundColor: '#fff',
+        fontStyle: 'italic',
+        border: '1px solid #d1d0d2', // $grey-300
+        display: 'flex',
+        alignItems: 'center',
+        '& a': {
+            paddingLeft: 2,
+        },
     },
 }));
 
@@ -304,10 +310,11 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                                 className={`${
                                                     s.series_object_uuid === dlorItem?.object_public_uuid
                                                         ? classes.highlightSeriesName
-                                                        : null
+                                                        : classes.seriesName
                                                 }`}
                                                 key={`dlor-view-series-item-${s.series_object_uuid}`}
                                             >
+                                                {s.series_object_uuid === dlorItem?.object_public_uuid && <StarIcon />}
                                                 <a
                                                     href={`${getHomepageLink()}digital-learning-hub/view/${
                                                         s?.series_object_uuid
