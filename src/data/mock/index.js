@@ -804,16 +804,6 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, { status: 'OK' }];
         }
     })
-    .onGet(/dlor\/admin\/series\/.*/)
-    .reply(config => {
-        const urlparts = config.url.split('/').pop();
-        const seriesId = urlparts.split('?')[0];
-        if (responseType === 'error') {
-            return [500, {}];
-        } else {
-            return [200, { data: dlor_series_all.data.find(s => s.series_id === Number(seriesId)) }];
-        }
-    })
     .onPut(/dlor\/admin\/series\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();

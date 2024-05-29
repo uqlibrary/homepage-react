@@ -16,7 +16,6 @@ import {
     DLOR_SERIES_CREATE_API,
     DLOR_SERIES_DELETE_API,
     DLOR_SERIES_LIST_API,
-    DLOR_SERIES_SINGLE_GET_API,
     DLOR_SERIES_UPDATE_API,
     DLOR_UPDATE_API,
 } from 'repositories/routes';
@@ -359,29 +358,6 @@ export const deleteDlorSeries = seriesId => {
             });
     };
 };
-
-export function loadADLORSeries(dlorId) {
-    console.log('loadADLORSeries', dlorId);
-    return dispatch => {
-        dispatch({ type: actions.DLOR_SERIES_LOADING });
-        return get(DLOR_SERIES_SINGLE_GET_API({ id: dlorId }))
-            .then(response => {
-                console.log('loadADLORSeries response=', response);
-                dispatch({
-                    type: actions.DLOR_SERIES_LOADED,
-                    payload: response.data,
-                });
-            })
-            .catch(error => {
-                console.log('loadADLORSeries error=', error);
-                dispatch({
-                    type: actions.DLOR_SERIES_FAILED,
-                    payload: error.message,
-                });
-                checkExpireSession(dispatch, error);
-            });
-    };
-}
 
 export function loadDlorSeriesList() {
     return dispatch => {

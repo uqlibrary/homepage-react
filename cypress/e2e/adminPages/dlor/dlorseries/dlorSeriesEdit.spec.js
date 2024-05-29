@@ -96,6 +96,10 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 expect(cookie).to.exist;
                 expect(cookie.value).to.equal('active');
             });
+
+            cy.waitUntil(() =>
+                cy.get('[data-testid="series_name"] input').should('have.value', 'Advanced literature searching'),
+            );
             cy.get('[data-testid="series_name"] input').type(' xxx');
             cy.get('[data-testid="admin-dlor-series-form-save-button"]')
                 .should('exist')
@@ -160,6 +164,10 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 expect(cookie).to.exist;
                 expect(cookie.value).to.equal('active');
             });
+
+            cy.waitUntil(() =>
+                cy.get('[data-testid="series_name"] input').should('have.value', 'Advanced literature searching'),
+            );
             cy.get('[data-testid="series_name"] input').type(' yyy');
             cy.get('[data-testid="admin-dlor-series-form-save-button"]')
                 .should('exist')

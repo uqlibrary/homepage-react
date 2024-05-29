@@ -57,10 +57,6 @@ const useStyles = makeStyles(theme => ({
 
 export const DLOSeriesEdit = ({
     actions,
-    // series data to load
-    dlorSeries,
-    dlorSeriesLoading,
-    dlorSeriesError,
     // saving changes
     dlorItemUpdating,
     dlorUpdatedItemError,
@@ -74,10 +70,13 @@ export const DLOSeriesEdit = ({
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
 
-    console.log('dlorSingle l=', dlorSeriesLoading, '; e=', dlorSeriesError, '; d=', dlorSeries);
     console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
     console.log('dlorUpdatedItem l=', dlorItemUpdating, '; e=', dlorUpdatedItemError, '; d=', dlorUpdatedItem);
 
+    const [originalSeriesDetails, setOriginalSeriesDetails] = useState({
+        series_id: '',
+        series_name: '',
+    });
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
@@ -92,19 +91,17 @@ export const DLOSeriesEdit = ({
     };
 
     useEffect(() => {
-        if (!!dlorSeriesId) {
-            actions.loadADLORSeries(dlorSeriesId);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dlorSeriesId]);
-
-    useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
         if (!!dlorList && !dlorListLoading && !dlorListError) {
+            const seriesDetail = dlorList.find(s => s.object_series_id === Number(dlorSeriesId));
+            setOriginalSeriesDetails({
+                series_id: seriesDetail?.object_series_id,
+                series_name: seriesDetail?.object_series_name,
+            });
             setFormValues({
-                series_name: formValues?.series_name,
+                series_name: seriesDetail?.object_series_name,
                 object_list_linked:
                     dlorList?.length > 0
                         ? dlorList?.filter((o, index) => {
@@ -120,18 +117,7 @@ export const DLOSeriesEdit = ({
             });
         }
         setFormValidity(validateValues(formValues));
-    }, [dlorList]);
-
-    useEffect(() => {
-        if (!!dlorSeries && !dlorSeriesLoading && !dlorSeriesError) {
-            setFormValues({
-                series_name: dlorSeries?.series_name,
-                object_list_linked: formValues.object_list_linked || [],
-                object_list_unassigned: formValues.object_list_unassigned || [],
-            });
-        }
-        setFormValidity(validateValues(formValues));
-    }, [dlorSeries, dlorSeriesLoading, dlorSeriesError]);
+    }, [dlorSeriesId, dlorList]);
 
     useEffect(() => {
         if (!!dlorUpdatedItemError) {
@@ -236,7 +222,6 @@ export const DLOSeriesEdit = ({
 
     const validateValues = currentValues => {
         return isValidSeriesName(currentValues?.series_name);
-        // TODO && loop over series and they are all numeric
     };
 
     const saveChanges = () => {
@@ -258,7 +243,7 @@ export const DLOSeriesEdit = ({
     };
 
     const isValidSeriesName = seriesName => {
-        return seriesName === dlorSeries?.series_name || seriesName?.trim() !== '';
+        return seriesName?.trim() !== '';
     };
 
     return (
@@ -275,7 +260,7 @@ export const DLOSeriesEdit = ({
                                 Series management
                             </a>
                             <ArrowForwardIcon style={{ height: 15 }} />
-                            Edit series {dlorSeries?.series_name}
+                            Edit series {originalSeriesDetails.series_name}
                         </Typography>
                     </div>
                 </Grid>
@@ -285,7 +270,7 @@ export const DLOSeriesEdit = ({
             </Grid>
             <Grid container spacing={2}>
                 {(() => {
-                    if (!!dlorSeriesLoading || !!dlorItemUpdating || (!dlorSeriesError && !dlorSeries)) {
+                    if (!!dlorItemUpdating || !!dlorListLoading) {
                         return (
                             <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                                 <div style={{ minHeight: 600 }}>
@@ -293,19 +278,19 @@ export const DLOSeriesEdit = ({
                                 </div>
                             </Grid>
                         );
-                    } else if (!!dlorSeriesError) {
+                    } else if (!!dlorListError) {
                         return (
                             <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
                                 <Typography variant="body1" data-testid="dlor-seriesItem-error">
-                                    {dlorSeriesError}
+                                    {dlorListError}
                                 </Typography>
                             </Grid>
                         );
-                    } else if (!!dlorSeries) {
+                    } else if (!!originalSeriesDetails) {
                         return (
                             <>
                                 <Grid item xs={12} data-testid="dlor-series-item-list">
-                                    <Grid container key={`list-series-${dlorSeries?.series_id}`}>
+                                    <Grid container key={`list-series-${originalSeriesDetails.series_id}`}>
                                         {(saveStatus === 'complete' || saveStatus === 'error') && (
                                             <ConfirmationBox
                                                 actionButtonColor="primary"
@@ -338,10 +323,11 @@ export const DLOSeriesEdit = ({
                                                         required
                                                         value={formValues?.series_name}
                                                         onChange={handleChange('series_name')}
-                                                        error={!isValidSeriesName(dlorSeries?.series_name)}
+                                                        error={!isValidSeriesName(formValues?.series_name)}
                                                     />
                                                 </FormControl>
-                                                {!isValidSeriesName(dlorSeries?.series_name) && (
+                                                {/* dlorList to stop it flashing an error */}
+                                                {!!dlorList && !isValidSeriesName(formValues?.series_name) && (
                                                     <div
                                                         className={classes.errorMessage}
                                                         data-testid="error-message-series_name"
@@ -478,9 +464,6 @@ export const DLOSeriesEdit = ({
 
 DLOSeriesEdit.propTypes = {
     actions: PropTypes.any,
-    dlorSeries: PropTypes.object,
-    dlorSeriesLoading: PropTypes.bool,
-    dlorSeriesError: PropTypes.any,
     dlorItemUpdating: PropTypes.bool,
     dlorUpdatedItemError: PropTypes.any,
     dlorUpdatedItem: PropTypes.object,
