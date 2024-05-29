@@ -26,6 +26,7 @@ import {
     getFileSizeString,
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
+    toTitleCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
@@ -150,7 +151,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
 
     const deslugify = slug => {
         const words = slug?.replace(/_/g, ' ');
-        return words?.charAt(0).toUpperCase() + words?.slice(1);
+        return toTitleCase(words);
     };
 
     function getTitleBlock(detailTitle = 'View an entry') {
@@ -367,11 +368,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                         </Typography>
                                         <ul className={classes.filterDisplayList}>
                                             {dlorItem.object_keywords.map((keyword, index) => {
-                                                return (
-                                                    <li key={index}>
-                                                        {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
-                                                    </li>
-                                                );
+                                                return <li key={index}>{toTitleCase(keyword)}</li>;
                                             })}
                                         </ul>
                                     </div>

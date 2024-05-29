@@ -24,6 +24,7 @@ import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlo
 import { scrollToTopOfPage } from 'helpers/general';
 import { useConfirmationState } from 'hooks';
 import { fullPath } from 'config/routes';
+import { toTitleCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -259,10 +260,6 @@ export const DLOSeriesEdit = ({
 
     const isValidSeriesName = seriesName => {
         return seriesName === dlorSeries?.object_series_name || seriesName?.trim() !== '';
-    };
-
-    const toTitleCase = str => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
     return (
