@@ -26,6 +26,7 @@ import {
     getFileSizeString,
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
+    getDlorViewPageUrl,
     toTitleCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
@@ -176,11 +177,6 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
 
-    // function navigateToDetailPage(uuid) {
-    //     console.log('navigateToDetailPage', `${getHomepageLink()}digital-learning-hub/view/${uuid}`);
-    //     window.location.href = `${getHomepageLink()}digital-learning-hub/view/${uuid}`;
-    // }
-
     if (!!dlorItemLoading || dlorItemLoading === null) {
         return (
             <div style={{ minHeight: 600 }}>
@@ -320,11 +316,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                                     {s.series_object_uuid === dlorItem?.object_public_uuid && (
                                                         <StarIcon />
                                                     )}
-                                                    <a
-                                                        href={`${getHomepageLink()}digital-learning-hub/view/${
-                                                            s?.series_object_uuid
-                                                        }`}
-                                                    >
+                                                    <a href={getDlorViewPageUrl(s?.series_object_uuid)}>
                                                         {s.series_object_title}
                                                     </a>
                                                 </li>

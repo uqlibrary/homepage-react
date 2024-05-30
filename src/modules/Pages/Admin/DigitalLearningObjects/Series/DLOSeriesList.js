@@ -317,6 +317,7 @@ export const DLOSeriesList = ({
                                                                             )
                                                                             .map(o => (
                                                                                 <ObjectListItem
+                                                                                    key={`series-object-${o.object_public_uuid}`}
                                                                                     object={o}
                                                                                     listParentName="series"
                                                                                 />

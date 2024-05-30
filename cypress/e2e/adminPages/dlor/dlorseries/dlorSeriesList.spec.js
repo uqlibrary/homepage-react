@@ -98,6 +98,16 @@ describe('Digital Learning Hub admin Series management', () => {
                 .should('exist')
                 .contains('other Objects');
         });
+        it('has a working "view a dlor" button', () => {
+            // can open a list and click edit
+            cy.get('[data-testid="dlor-series-object-list-1"] summary')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="dlor-series-object-list-item-view-2"]')
+                .should('exist')
+                .click();
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4');
+        });
         it('has a working "edit a dlor" button', () => {
             // can open a list and click edit
             cy.get('[data-testid="dlor-series-object-list-1"] summary')

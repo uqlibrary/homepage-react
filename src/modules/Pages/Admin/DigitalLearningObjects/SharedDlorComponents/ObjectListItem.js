@@ -5,10 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
-import { dlorAdminLink } from '../dlorAdminHelpers';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
+import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { fullPath } from 'config/routes';
 
 export const ObjectListItem = ({ object, listParentName = 'team' }) => {
-    console.log('ObjectListItem object=', object);
     const navigateToDlorEditPage = uuid => {
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
@@ -16,7 +19,7 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
     return (
         <Grid container key={`${listParentName}-object-${object.object_id}`}>
             <Grid item xs={1} />
-            <Grid item xs={9}>
+            <Grid item xs={8}>
                 <div>
                     <Typography component={'h2'} variant={'h6'}>
                         {object?.object_title}
@@ -26,6 +29,14 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
                         <p>{object?.object_summary}</p>
                     </Typography>
                 </div>
+            </Grid>
+            <Grid item xs={1}>
+                <a
+                    data-testid={`dlor-${listParentName}-object-list-item-view-${object?.object_id}`}
+                    href={getDlorViewPageUrl(object?.object_public_uuid)}
+                >
+                    <VisibilityIcon style={{ color: 'black', marginTop: 8 }} />
+                </a>
             </Grid>
             <Grid item xs={1}>
                 <IconButton

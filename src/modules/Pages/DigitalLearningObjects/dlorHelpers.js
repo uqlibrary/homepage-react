@@ -1,5 +1,6 @@
 import React from 'react';
 import parse from 'html-react-parser';
+import { fullPath } from 'config/routes';
 
 export const displayDownloadInstructions = (downloadInstructions, theClass) => {
     function addRelnoopenerNoreferrer(htmlString) {
@@ -255,3 +256,5 @@ export function isValidNumber(value) {
 export const toTitleCase = str => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
+
+export const getDlorViewPageUrl = uuid => `${fullPath}/digital-learning-hub/view/${uuid}`;

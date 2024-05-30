@@ -47,6 +47,16 @@ describe('Digital Learning Hub admin Teams management', () => {
                 .contains('3 Objects');
             cy.get('[data-testid="dlor-team-object-list-3"]').should('not.exist');
         });
+        it('has a working "view a dlor" button', () => {
+            // can open a list and click view an object
+            cy.get('[data-testid="dlor-team-object-list-1"] summary')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="dlor-team-object-list-item-view-1"]')
+                .should('exist')
+                .click();
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866');
+        });
         it('has a working "edit a dlor" button', () => {
             // can open a list and click edit
             cy.get('[data-testid="dlor-team-object-list-1"] summary')

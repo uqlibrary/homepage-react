@@ -30,6 +30,7 @@ import { getHomepageLink } from 'helpers/access';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
+import { getDlorViewPageUrl } from '../dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -668,7 +669,7 @@ export const DLOList = ({
     };
 
     function navigateToDetailPage(uuid) {
-        window.location.href = `${getHomepageLink()}digital-learning-hub/view/${uuid}`;
+        window.location.href = getDlorViewPageUrl(uuid);
     }
 
     function displayItemPanel(object, index) {

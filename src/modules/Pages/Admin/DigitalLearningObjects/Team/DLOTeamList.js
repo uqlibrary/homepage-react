@@ -282,12 +282,12 @@ export const DLOTeamList = ({
                                                                                         d?.object_owning_team_id ===
                                                                                         team?.team_id,
                                                                                 )
-                                                                                .map(o => {
-                                                                                    console.log('o=', o);
-                                                                                    return (
-                                                                                        <ObjectListItem object={o} />
-                                                                                    );
-                                                                                })}
+                                                                                .map(o => (
+                                                                                    <ObjectListItem
+                                                                                        key={`team-object-${o.object_public_uuid}`}
+                                                                                        object={o}
+                                                                                    />
+                                                                                ))}
                                                                     </details>
                                                                 )}
                                                         </Grid>

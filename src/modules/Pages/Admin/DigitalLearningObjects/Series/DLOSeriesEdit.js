@@ -24,7 +24,7 @@ import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlo
 import { scrollToTopOfPage } from 'helpers/general';
 import { useConfirmationState } from 'hooks';
 import { fullPath } from 'config/routes';
-import { toTitleCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { getDlorViewPageUrl, toTitleCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -371,7 +371,7 @@ export const DLOSeriesEdit = ({
                                                                     style={{ marginRight: 10 }}
                                                                 />
                                                                 <a
-                                                                    href={`${fullPath}/digital-learning-hub/view/${f?.object_public_uuid}`}
+                                                                    href={getDlorViewPageUrl(f?.object_public_uuid)}
                                                                     data-testid={`dlor-series-edit-view-${f.object_id}`}
                                                                     target="_blank"
                                                                 >
@@ -421,9 +421,7 @@ export const DLOSeriesEdit = ({
                                                                 )}
                                                                 style={{ marginRight: 10 }}
                                                             />
-                                                            <a
-                                                                href={`${fullPath}/digital-learning-hub/view/${f?.object_public_uuid}`}
-                                                            >
+                                                            <a href={getDlorViewPageUrl(f?.object_public_uuid)}>
                                                                 <VisibilityIcon style={{ color: 'black' }} />
                                                             </a>
                                                         </div>
