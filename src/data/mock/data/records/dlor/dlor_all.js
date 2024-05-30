@@ -73,7 +73,7 @@ export default {
                 {
                     "series_object_uuid": "987y_isjgt_9866",
                     "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
-                    "series_object_order": 1,
+                    "series_object_order": 4,
                 }, {
                     "series_object_uuid": "938h_4986_654f",
                     "series_object_title": "Artificial Intelligence - Digital Essentials",
@@ -84,8 +84,8 @@ export default {
                     "series_object_order": 3,
                 }, {
                     "series_object_uuid": "98j3-fgf95-8j34",
-                    "series_object_title": "Digital security  - Digital Essentials",
-                    "series_object_order": 4,
+                    "series_object_title": "Digital security - Digital Essentials",
+                    "series_object_order": 1,
                 }, {
                     "series_object_uuid": "0j45_87h4_23hd7",
                     "series_object_title": "Communicate and collaborate - Digital Essentials",
@@ -94,7 +94,7 @@ export default {
             ],
             "object_series_id": 2,
             "object_series_name": 'Digital Essentials',
-            "object_series_order": 1,
+            "object_series_order": 4,
         },
         {
             "object_id": 2,
@@ -329,7 +329,7 @@ export default {
                 {
                     "series_object_uuid": "987y_isjgt_9866",
                     "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
-                    "series_object_order": 1,
+                    "series_object_order": 4,
                 }, {
                     "series_object_uuid": "938h_4986_654f",
                     "series_object_title": "Artificial Intelligence - Digital Essentials",
@@ -340,8 +340,8 @@ export default {
                     "series_object_order": 3,
                 }, {
                     "series_object_uuid": "98j3-fgf95-8j34",
-                    "series_object_title": "Digital security  - Digital Essentials",
-                    "series_object_order": 4,
+                    "series_object_title": "Digital security - Digital Essentials",
+                    "series_object_order": 1,
                 }, {
                     "series_object_uuid": "0j45_87h4_23hd7",
                     "series_object_title": "Communicate and collaborate - Digital Essentials",
@@ -424,7 +424,7 @@ export default {
                 {
                     "series_object_uuid": "987y_isjgt_9866",
                     "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
-                    "series_object_order": 1,
+                    "series_object_order": 4,
                 }, {
                     "series_object_uuid": "938h_4986_654f",
                     "series_object_title": "Artificial Intelligence - Digital Essentials",
@@ -435,8 +435,8 @@ export default {
                     "series_object_order": 3,
                 }, {
                     "series_object_uuid": "98j3-fgf95-8j34",
-                    "series_object_title": "Digital security  - Digital Essentials",
-                    "series_object_order": 4,
+                    "series_object_title": "Digital security - Digital Essentials",
+                    "series_object_order": 1,
                 }, {
                     "series_object_uuid": "0j45_87h4_23hd7",
                     "series_object_title": "Communicate and collaborate - Digital Essentials",
@@ -450,7 +450,7 @@ export default {
         {
             "object_id": 6,
             "object_public_uuid": "98j3-fgf95-8j34",
-            "object_title": "Digital security  - Digital Essentials",
+            "object_title": "Digital security - Digital Essentials",
             "object_description": "Cyber security threats and scams, protecting your privacy online and proper account and password management.",
             "object_summary": "Cyber security threats and scams, protecting your privacy online and proper account and password management.",
             "object_review_date_next": "2050-01-01T00:01",
@@ -501,7 +501,7 @@ export default {
                 {
                     "series_object_uuid": "987y_isjgt_9866",
                     "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
-                    "series_object_order": 1,
+                    "series_object_order": 4,
                 }, {
                     "series_object_uuid": "938h_4986_654f",
                     "series_object_title": "Artificial Intelligence - Digital Essentials",
@@ -512,8 +512,8 @@ export default {
                     "series_object_order": 3,
                 }, {
                     "series_object_uuid": "98j3-fgf95-8j34",
-                    "series_object_title": "Digital security  - Digital Essentials",
-                    "series_object_order": 4,
+                    "series_object_title": "Digital security - Digital Essentials",
+                    "series_object_order": 1,
                 }, {
                     "series_object_uuid": "0j45_87h4_23hd7",
                     "series_object_title": "Communicate and collaborate - Digital Essentials",
@@ -522,7 +522,7 @@ export default {
             ],
             "object_series_id": 2,
             "object_series_name": 'Digital Essentials',
-            "object_series_order": 4,
+            "object_series_order": 1,
         },
         {
             "object_id": 5,
@@ -596,7 +596,7 @@ export default {
                 {
                     "series_object_uuid": "987y_isjgt_9866",
                     "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
-                    "series_object_order": 1,
+                    "series_object_order": 4,
                 }, {
                     "series_object_uuid": "938h_4986_654f",
                     "series_object_title": "Artificial Intelligence - Digital Essentials",
@@ -607,8 +607,8 @@ export default {
                     "series_object_order": 3,
                 }, {
                     "series_object_uuid": "98j3-fgf95-8j34",
-                    "series_object_title": "Digital security  - Digital Essentials",
-                    "series_object_order": 4,
+                    "series_object_title": "Digital security - Digital Essentials",
+                    "series_object_order": 1,
                 }, {
                     "series_object_uuid": "0j45_87h4_23hd7",
                     "series_object_title": "Communicate and collaborate - Digital Essentials",
@@ -962,7 +962,7 @@ export default {
                 {
                     "series_object_uuid": "987y_isjgt_9866",
                     "series_object_title": "Accessibility - Digital Essentials (has Youtube link)",
-                    "series_object_order": 1,
+                    "series_object_order": 4,
                 }, {
                     "series_object_uuid": "938h_4986_654f",
                     "series_object_title": "Artificial Intelligence - Digital Essentials",
@@ -973,8 +973,8 @@ export default {
                     "series_object_order": 3,
                 }, {
                     "series_object_uuid": "98j3-fgf95-8j34",
-                    "series_object_title": "Digital security  - Digital Essentials",
-                    "series_object_order": 4,
+                    "series_object_title": "Digital security - Digital Essentials",
+                    "series_object_order": 1,
                 }, {
                     "series_object_uuid": "0j45_87h4_23hd7",
                     "series_object_title": "Communicate and collaborate - Digital Essentials",

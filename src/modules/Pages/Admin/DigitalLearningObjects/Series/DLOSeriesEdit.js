@@ -345,41 +345,42 @@ export const DLOSeriesEdit = ({
                                     <div id="dragLandingAarea">
                                         {formValues?.object_list_linked?.length === 0 && <p>(None yet)</p>}
                                         <ul style={{ listStyleType: 'none' }}>
-                                            {formValues?.object_list_linked?.map((f, index) => {
-                                                // console.log('dragLandingAarea 1 f=', f);
-                                                return (
-                                                    <li key={f.object_id} className={classes.draggableItem}>
-                                                        <span
-                                                            data-testid={`dlor-series-edit-draggable-title-${f?.object_public_uuid}`}
-                                                        >
-                                                            {f.object_title}{' '}
-                                                            {f.object_status !== 'current' && (
-                                                                <b>{`(${toTitleCase(f.object_status)})`}</b>
-                                                            )}
-                                                        </span>
-
-                                                        <div>
-                                                            <Input
-                                                                id={`object_series_order-${f.object_public_uuid}`}
-                                                                data-testid={`object_series_order-${f.object_public_uuid}`}
-                                                                required
-                                                                value={f.object_series_order}
-                                                                onChange={handleChange(
-                                                                    `linked_object_series_order-${f.object_public_uuid}`,
-                                                                )}
-                                                                style={{ marginRight: 10 }}
-                                                            />
-                                                            <a
-                                                                href={`${fullPath}/digital-learning-hub/view/${f?.object_public_uuid}`}
-                                                                data-testid={`dlor-series-edit-view-${f.object_id}`}
-                                                                target="_blank"
+                                            {formValues?.object_list_linked
+                                                ?.sort((a, b) => a.object_series_order - b.object_series_order)
+                                                .map((f, index) => {
+                                                    return (
+                                                        <li key={f.object_id} className={classes.draggableItem}>
+                                                            <span
+                                                                data-testid={`dlor-series-edit-draggable-title-${f?.object_public_uuid}`}
                                                             >
-                                                                <VisibilityIcon style={{ color: 'black' }} />
-                                                            </a>
-                                                        </div>
-                                                    </li>
-                                                );
-                                            })}
+                                                                {f.object_title}{' '}
+                                                                {f.object_status !== 'current' && (
+                                                                    <b>{`(${toTitleCase(f.object_status)})`}</b>
+                                                                )}
+                                                            </span>
+
+                                                            <div>
+                                                                <Input
+                                                                    id={`object_series_order-${f.object_public_uuid}`}
+                                                                    data-testid={`object_series_order-${f.object_public_uuid}`}
+                                                                    required
+                                                                    value={f.object_series_order}
+                                                                    onChange={handleChange(
+                                                                        `linked_object_series_order-${f.object_public_uuid}`,
+                                                                    )}
+                                                                    style={{ marginRight: 10 }}
+                                                                />
+                                                                <a
+                                                                    href={`${fullPath}/digital-learning-hub/view/${f?.object_public_uuid}`}
+                                                                    data-testid={`dlor-series-edit-view-${f.object_id}`}
+                                                                    target="_blank"
+                                                                >
+                                                                    <VisibilityIcon style={{ color: 'black' }} />
+                                                                </a>
+                                                            </div>
+                                                        </li>
+                                                    );
+                                                })}
                                         </ul>
                                     </div>
                                 </Grid>

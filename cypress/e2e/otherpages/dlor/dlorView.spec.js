@@ -108,6 +108,27 @@ describe('Digital Learning Hub View page', () => {
                     cy.get('li:first-child').contains('Generative AI');
                 });
 
+            // the series footer appears as expected (shows the sorting is working)
+            cy.get('[data-testid="dlor-view-series-item-98j3-fgf95-8j34-order-0"]')
+                .should('exist')
+                .contains('Digital security - Digital Essentials');
+            cy.get('[data-testid="dlor-view-series-item-938h_4986_654f-order-1"]')
+                .should('exist')
+                .contains('Artificial Intelligence - Digital Essentials');
+            // and is starred as the current item
+            cy.get('[data-testid="dlor-view-series-item-938h_4986_654f-order-1"] [data-testid="StarIcon"]').should(
+                'exist',
+            );
+            cy.get('[data-testid="dlor-view-series-item-0h4y_87f3_6js7-order-2"]')
+                .should('exist')
+                .contains('Choose the right tool - Digital Essentials');
+            cy.get('[data-testid="dlor-view-series-item-987y_isjgt_9866-order-3"]')
+                .should('exist')
+                .contains('Accessibility - Digital Essentials (has Youtube link)');
+            cy.get('[data-testid="dlor-view-series-item-0j45_87h4_23hd7-order-4"]')
+                .should('exist')
+                .contains('Communicate and collaborate - Digital Essentials');
+
             // the link can be clicked
             cy.intercept('GET', 'https://uq.h5p.com/content/1291624610498497569', {
                 statusCode: 200,

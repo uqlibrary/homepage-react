@@ -304,27 +304,32 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                     Part of a series: {dlorItem.object_series_name}
                                 </Typography>
                                 <ol className={classes.seriesList}>
-                                    {dlorItem?.object_series.map(s => {
-                                        return (
-                                            <li
-                                                className={`${
-                                                    s.series_object_uuid === dlorItem?.object_public_uuid
-                                                        ? classes.highlightSeriesName
-                                                        : classes.seriesName
-                                                }`}
-                                                key={`dlor-view-series-item-${s.series_object_uuid}`}
-                                            >
-                                                {s.series_object_uuid === dlorItem?.object_public_uuid && <StarIcon />}
-                                                <a
-                                                    href={`${getHomepageLink()}digital-learning-hub/view/${
-                                                        s?.series_object_uuid
+                                    {dlorItem?.object_series
+                                        ?.sort((a, b) => a.series_object_order - b.series_object_order)
+                                        .map((s, index) => {
+                                            return (
+                                                <li
+                                                    className={`${
+                                                        s.series_object_uuid === dlorItem?.object_public_uuid
+                                                            ? classes.highlightSeriesName
+                                                            : classes.seriesName
                                                     }`}
+                                                    key={`dlor-view-series-item-${s.series_object_uuid}`}
+                                                    data-testid={`dlor-view-series-item-${s.series_object_uuid}-order-${index}`}
                                                 >
-                                                    {s.series_object_title}
-                                                </a>
-                                            </li>
-                                        );
-                                    })}
+                                                    {s.series_object_uuid === dlorItem?.object_public_uuid && (
+                                                        <StarIcon />
+                                                    )}
+                                                    <a
+                                                        href={`${getHomepageLink()}digital-learning-hub/view/${
+                                                            s?.series_object_uuid
+                                                        }`}
+                                                    >
+                                                        {s.series_object_title}
+                                                    </a>
+                                                </li>
+                                            );
+                                        })}
                                 </ol>
                             </>
                         )}
