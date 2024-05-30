@@ -16,6 +16,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
 
 import { useConfirmationState } from 'hooks';
@@ -315,55 +316,10 @@ export const DLOSeriesList = ({
                                                                                     series?.series_id,
                                                                             )
                                                                             .map(o => (
-                                                                                <Grid
-                                                                                    container
-                                                                                    key={`series-object-${o.object_id}`}
-                                                                                >
-                                                                                    <Grid item xs={1} />
-                                                                                    <Grid
-                                                                                        item
-                                                                                        xs={9}
-                                                                                        // data-testid={`dlor-serieslist-panel-${o?.object_public_uuid}`}
-                                                                                    >
-                                                                                        <div>
-                                                                                            <Typography
-                                                                                                component={'h2'}
-                                                                                                variant={'h6'}
-                                                                                            >
-                                                                                                {o?.object_title}
-                                                                                                {o?.object_status !==
-                                                                                                    'current' && (
-                                                                                                    <strong>
-                                                                                                        {' '}
-                                                                                                        {`(${o?.object_status})`}
-                                                                                                    </strong>
-                                                                                                )}
-                                                                                            </Typography>
-                                                                                            <Typography variant={'p'}>
-                                                                                                <p>
-                                                                                                    {o?.object_summary}
-                                                                                                </p>
-                                                                                            </Typography>
-                                                                                        </div>
-                                                                                    </Grid>
-                                                                                    <Grid item xs={1}>
-                                                                                        <IconButton
-                                                                                            data-testid={`dlor-series-object-list-item-${o?.object_id}`}
-                                                                                            onClick={() =>
-                                                                                                navigateToDlorEditPage(
-                                                                                                    o?.object_public_uuid,
-                                                                                                )
-                                                                                            }
-                                                                                            disabled={
-                                                                                                o?.object_status ===
-                                                                                                'deleted'
-                                                                                            }
-                                                                                        >
-                                                                                            <EditIcon />
-                                                                                        </IconButton>
-                                                                                    </Grid>
-                                                                                    <Grid item xs={1} />
-                                                                                </Grid>
+                                                                                <ObjectListItem
+                                                                                    object={o}
+                                                                                    listParentName="series"
+                                                                                />
                                                                             ))}
                                                                 </details>
                                                             </Grid>
