@@ -355,7 +355,7 @@ describe('Digital Learning Hub', () => {
             cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34"]')
                 .should('exist')
                 .should('be.visible')
-                .should('contain', 'Digital security  - Digital Essentials');
+                .should('contain', 'Digital security - Digital Essentials');
 
             cy.get('[data-testid="dlor-homepage-keyword"]').type('{selectall}{backspace}');
             // all panels showing again & keyword search field empty
