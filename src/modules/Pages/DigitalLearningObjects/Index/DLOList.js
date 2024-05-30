@@ -246,6 +246,21 @@ const useStyles = makeStyles(theme => ({
             justifyContent: 'center',
         },
     },
+    uqActionButton: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        borderColor: theme.palette.primary.main,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: 6,
+        padding: '8px 12px',
+        fontWeight: 400,
+        '&:hover': {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.primary.main,
+            textDecoration: 'none',
+        },
+    },
 }));
 
 export const DLOList = ({
@@ -780,9 +795,6 @@ export const DLOList = ({
                     heroBackgroundImage={heroBackgroundImageDlor}
                 />
                 <StandardPage>
-                    <Typography component={'h1'} variant={'h6'}>
-                        Find a digital learning object
-                    </Typography>
                     <Grid container spacing={2}>
                         <Grid item md={12}>
                             <div style={{ minHeight: 600 }}>
@@ -807,16 +819,31 @@ export const DLOList = ({
                 heroBackgroundImage={heroBackgroundImageDlor}
             />
             <StandardPage>
-                <Typography component={'p'} style={{ marginBlock: '2em', fontSize: '1.2em', fontStyle: 'italic' }}>
-                    Find out{' '}
-                    <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
-                        how to use our digital learning objects
-                    </a>
-                    .
-                    <button className={classes.skipLink} id="skip-filters" onClick={() => skipToElement()}>
-                        Skip facet selection to view Digital Learning Hub entries
-                    </button>
-                </Typography>
+                <Grid container style={{ marginBlock: '2em' }} alignItems="center">
+                    <Grid item xs={12} md={10}>
+                        <Typography component={'p'} style={{ fontSize: '1.2em', fontStyle: 'italic' }}>
+                            Find out{' '}
+                            <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
+                                how to use our digital learning objects
+                            </a>
+                            .
+                            <button className={classes.skipLink} id="skip-filters" onClick={() => skipToElement()}>
+                                Skip facet selection to view Digital Learning Hub entries
+                            </button>
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        <p style={{ fontSize: '1.2em' }}>
+                            <a
+                                data-testid="dlor-homepage-contact"
+                                className={classes.uqActionButton}
+                                href="https://forms.office.com/r/8t0ugSZgE7"
+                            >
+                                Contact us
+                            </a>
+                        </p>
+                    </Grid>
+                </Grid>
                 <Grid container spacing={2}>
                     <Grid
                         item

@@ -550,6 +550,20 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 1 + numExtraButtons);
         });
+        it('contact us works', () => {
+            cy.intercept('GET', /forms.office.com/, {
+                statusCode: 200,
+                body: 'user has navigated to contact form',
+            });
+
+            cy.get('[data-testid="dlor-homepage-contact"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('Contact us')
+                .click();
+
+            cy.get('body').contains('user has navigated to contact form');
+        });
     });
     context('other homepage visits', () => {
         it('can handle an error', () => {
