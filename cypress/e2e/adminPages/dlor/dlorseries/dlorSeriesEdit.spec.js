@@ -109,11 +109,11 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 series_name: 'Advanced literature searching xxx',
                 series_list: [
                     {
-                        object_uuid: '98s0_dy5k3_98h4',
+                        object_public_uuid: '98s0_dy5k3_98h4',
                         object_series_order: 1,
                     },
                     {
-                        object_uuid: '9bc1894a-8b0d-46da-a25e-02d26e2e056c',
+                        object_public_uuid: '9bc1894a-8b0d-46da-a25e-02d26e2e056c',
                         object_series_order: 2,
                     },
                 ],
@@ -177,11 +177,11 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 series_name: 'Advanced literature searching yyy',
                 series_list: [
                     {
-                        object_uuid: '98s0_dy5k3_98h4',
+                        object_public_uuid: '98s0_dy5k3_98h4',
                         object_series_order: 1,
                     },
                     {
-                        object_uuid: '9bc1894a-8b0d-46da-a25e-02d26e2e056c',
+                        object_public_uuid: '9bc1894a-8b0d-46da-a25e-02d26e2e056c',
                         object_series_order: 2,
                     },
                 ],

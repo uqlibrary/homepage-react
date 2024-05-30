@@ -228,7 +228,7 @@ export const DLOSeriesEdit = ({
         const valuesToSend = {
             series_name: formValues.series_name,
             series_list: formValues.object_list_linked.map(item => ({
-                object_uuid: item.object_public_uuid,
+                object_public_uuid: item.object_public_uuid,
                 object_series_order: Number(item.object_series_order),
             })),
         };
