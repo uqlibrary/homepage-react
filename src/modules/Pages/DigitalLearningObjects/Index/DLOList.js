@@ -284,6 +284,7 @@ export const DLOList = ({
     const classes = useStyles();
 
     const [selectedFilters, setSelectedFilters] = useState([]);
+    const [filterListTrimmed, setFilterListTrimmed] = useState([]);
     const [keywordSearch, setKeywordSearch] = useState('');
     const checkBoxArrayRef = useRef([]);
     const keyWordSearchRef = useRef('');
@@ -306,6 +307,28 @@ export const DLOList = ({
         }
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
+        }
+        if (!!dlorFilterList && !!dlorList) {
+            const filterList = dlorFilterList;
+            // Step 1: Extract all unique id values from dlorList
+            const idsFromDlorList = new Set();
+            dlorList?.forEach(item => {
+                item.object_filters.forEach(filter => {
+                    filter.filter_values.forEach(value => {
+                        idsFromDlorList.add(value.id);
+                    });
+                });
+            });
+
+            // Step 2 & 3: Iterate over filterList and remove entries not found in dlorList
+            filterList?.forEach(facetType => {
+                facetType.facet_list = facetType.facet_list.filter(facet =>
+                    // Check if facet_id exists in idsFromDlorList
+                    idsFromDlorList.has(facet.facet_id),
+                );
+            });
+
+            setFilterListTrimmed(filterList);
         }
     }, [dlorList, dlorFilterList]);
 
@@ -480,7 +503,7 @@ export const DLOList = ({
         checkBoxArrayRef.current = [];
 
         // reset panel open-close to initial position
-        dlorFilterList?.map((facetType, index) => {
+        filterListTrimmed?.map((facetType, index) => {
             if (isFirstFilterPanel(index)) {
                 showPanel(index);
             } else {
@@ -521,7 +544,7 @@ export const DLOList = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} className={classes.filterSidebarBody}>
-                    {dlorFilterList?.map((facetType, index) => {
+                    {filterListTrimmed?.map((facetType, index) => {
                         return (
                             <Grid item key={facetType?.facet_type_slug} className={classes.filterSidebarType}>
                                 <Grid container className={classes.filterSidebarTypeHeading}>
@@ -666,8 +689,8 @@ export const DLOList = ({
     };
 
     const getPublicHelp = facetTypeSlug => {
-        return !!dlorFilterList
-            ? dlorFilterList.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()?.facet_type_help_public
+        return !!filterListTrimmed
+            ? filterListTrimmed.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()?.facet_type_help_public
             : '';
     };
 
@@ -854,7 +877,7 @@ export const DLOList = ({
                         data-testid="filterSidebar"
                     >
                         {(() => {
-                            if (!!dlorFilterListError || !dlorFilterList || dlorFilterList.length === 0) {
+                            if (!!dlorFilterListError || !filterListTrimmed || filterListTrimmed.length === 0) {
                                 return (
                                     <Typography variant="body1" data-testid="dlor-homepage-filter-error">
                                         Filters currently unavailable - please try again later.

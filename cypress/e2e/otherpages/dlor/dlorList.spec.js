@@ -168,6 +168,19 @@ describe('Digital Learning Hub', () => {
                 .contains('Aboriginal and Torres Strait Islander')
                 .should('be.visible');
 
+            // filter item not in data is not in sidebar
+            cy.get('[data-testid="panel-minimisation-icon-1"]') // Graduate Attributes
+                .should('exist')
+                .click();
+            cy.get('[data-testid="sidebar-panel-1"]')
+                .should('exist')
+                .children()
+                .should('have.length', 5); // one filter removed
+            cy.get('[data-testid="checkbox-graduate_attributes-15"]') // Respectful leaders is missing as no data includes it
+                .should('not.exist');
+            cy.get('[data-testid="checkbox-graduate_attributes-14"]') // general check we haven't mucked it up completely - "Influential communicators" is still present
+                .should('exist');
+
             cy.get('[data-testid="dlor-homepage-loginprompt"]').should('not.exist');
 
             // when the object doesn't have a particular facet type, it just doesn't appear in the panel footer item
