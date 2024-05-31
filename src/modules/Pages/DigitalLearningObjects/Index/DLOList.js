@@ -832,7 +832,7 @@ export const DLOList = ({
                             </button>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={12} md={2} style={{ textAlign: 'right' }}>
                         <p style={{ fontSize: '1.2em' }}>
                             <a
                                 data-testid="dlor-homepage-contact"
