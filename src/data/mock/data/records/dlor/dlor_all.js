@@ -743,7 +743,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -832,7 +832,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -925,7 +925,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1027,7 +1027,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1103,7 +1103,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1179,7 +1179,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1255,7 +1255,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1331,7 +1331,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1407,7 +1407,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1483,7 +1483,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1559,7 +1559,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1635,7 +1635,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1711,7 +1711,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1787,7 +1787,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1863,7 +1863,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -1939,7 +1939,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -2015,7 +2015,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",
@@ -2091,7 +2091,7 @@ export default {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
-                        name: 'Interactive activity',
+                        name: 'Interactive',
                     }]
                 }, {
                     "filter_key": "media_format",

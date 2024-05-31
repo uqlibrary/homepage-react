@@ -86,7 +86,7 @@ export default {
                     "facet_name": "Guide",
                 }, {
                     "facet_id": 17,
-                    "facet_name": "Interactive activity",
+                    "facet_name": "Interactive",
                 }, {
                     "facet_id": 18,
                     "facet_name": "Module",

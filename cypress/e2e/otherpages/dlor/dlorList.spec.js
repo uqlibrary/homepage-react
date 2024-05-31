@@ -409,7 +409,7 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 1 + extraRowCount);
 
-            // interactive activity not visible
+            // Interactive not visible
             cy.get('[data-testid="checkbox-item_type-17"]')
                 .should('exist')
                 .should('not.be.visible');
@@ -426,7 +426,7 @@ describe('Digital Learning Hub', () => {
                 .should('be.visible')
                 .click({ force: true });
 
-            // interactive activity not visible
+            // Interactive not visible
             cy.get('[data-testid="checkbox-item_type-17"]')
                 .should('exist')
                 .should('not.be.visible');
