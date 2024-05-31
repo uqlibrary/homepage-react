@@ -91,74 +91,6 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.viewport(1300, 1000);
         });
 
-        it('saves correctly with reload form', () => {
-            cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
-                expect(cookie).to.exist;
-                expect(cookie.value).to.equal('active');
-            });
-
-            cy.waitUntil(() =>
-                cy.get('[data-testid="series_name"] input').should('have.value', 'Advanced literature searching'),
-            );
-            cy.get('[data-testid="series_name"] input').type(' xxx');
-            cy.get('[data-testid="admin-dlor-series-form-save-button"]')
-                .should('exist')
-                .click();
-
-            const expectedValues = {
-                series_name: 'Advanced literature searching xxx',
-                series_list: [
-                    {
-                        object_public_uuid: '98s0_dy5k3_98h4',
-                        object_series_order: 1,
-                    },
-                    {
-                        object_public_uuid: '9bc1894a-8b0d-46da-a25e-02d26e2e056c',
-                        object_series_order: 2,
-                    },
-                ],
-            };
-            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
-                expect(cookie).to.exist;
-                const decodedValue = decodeURIComponent(cookie.value);
-                const sentValues = JSON.parse(decodedValue);
-
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
-
-                console.log('Comparison', sentValues, expectedValues);
-
-                expect(sentValues).to.deep.equal(expectedValues);
-
-                cy.clearCookie('CYPRESS_DATA_SAVED');
-                cy.clearCookie('CYPRESS_TEST_DATA');
-            });
-
-            // prompted when save succeeds
-            cy.get('[data-testid="dialogbox-dlor-series-save-outcome"] h2').contains('Changes have been saved');
-            cy.get('[data-testid="confirm-dlor-series-save-outcome"]')
-                .should('exist')
-                .contains('Return to Admin Series page');
-            cy.get('[data-testid="cancel-dlor-series-save-outcome"]')
-                .should('exist')
-                .contains('Re-edit Series');
-
-            // choose to re-edit series
-            cy.get('[data-testid="cancel-dlor-series-save-outcome"]')
-                .should('exist')
-                .click();
-
-            // form reloads
-            cy.url().should('eq', `http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}`);
-            cy.get('[data-testid="StandardPage-title"]')
-                .should('exist')
-                .should('be.visible')
-                .contains('Digital Learning Hub - Edit Series');
-            cy.get('[data-testid="series_name"] input')
-                .should('exist')
-                .should('be.visible')
-                .should('have.value', 'Advanced literature searching');
-        });
         it('saves correctly with return to list', () => {
             cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                 expect(cookie).to.exist;
@@ -207,9 +139,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.get('[data-testid="confirm-dlor-series-save-outcome"]')
                 .should('exist')
                 .contains('Return to Admin Series page');
-            cy.get('[data-testid="cancel-dlor-series-save-outcome"]')
-                .should('exist')
-                .contains('Re-edit Series');
+            cy.get('[data-testid="cancel-dlor-series-save-outcome"]').should('not.exist');
 
             // choose to return to list page
             cy.get('[data-testid="confirm-dlor-series-save-outcome"]')

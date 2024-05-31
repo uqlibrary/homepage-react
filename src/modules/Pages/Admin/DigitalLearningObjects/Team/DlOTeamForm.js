@@ -115,7 +115,7 @@ export const DLOTeamForm = ({
         successMessage: {
             confirmationTitle: mode === 'add' ? 'The team has been created' : 'Changes have been saved',
             confirmationMessage: '',
-            cancelButtonLabel: mode === 'add' ? 'Add another Team' : 'Re-edit Team',
+            cancelButtonLabel: mode === 'add' ? 'Add another Team' : null,
             confirmButtonLabel: 'Return to Admin Teams page',
         },
         errorMessage: {

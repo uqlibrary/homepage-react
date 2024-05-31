@@ -140,20 +140,18 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 .click();
 
             cy.waitUntil(() => cy.get('[data-testid="confirm-dlor-team-save-outcome"]').should('exist'));
+
+            // check save-confirmation popup
             cy.get('[data-testid="dialogbox-dlor-team-save-outcome"] h2').contains('Changes have been saved');
-            cy.get('[data-testid="confirm-dlor-team-save-outcome"]')
-                .should('exist')
-                .contains('Return to Admin Teams page');
-            cy.get('[data-testid="cancel-dlor-team-save-outcome"]')
-                .should('exist')
-                .contains('Re-edit Team');
+            cy.get('[data-testid="confirm-dlor-team-save-outcome"]').should('contain', 'Return to Admin Teams page');
+            cy.get('[data-testid="cancel-dlor-team-save-outcome"]').should('not.exist');
 
             // check the data we pretended to send to the server matches what we expect
             // acts as check of what we sent to api
             const expectedValues = {
                 team_name: 'Lib train Library Corporate Services changed',
                 team_manager: 'Jane Green changed',
-                team_email: 'train@library.uq.edu.au',
+                team_email: 'train@library.uq.edu.au', // (we added .au to the email)
             };
             console.log('document.cookies', document.cookie);
             cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
@@ -169,16 +167,6 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 cy.clearCookie('CYPRESS_DATA_SAVED');
                 cy.clearCookie('CYPRESS_TEST_DATA');
             });
-
-            // check save-confirmation popup
-            cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-team-save-outcome"]').should('exist'));
-            cy.get('[data-testid="confirm-dlor-team-save-outcome"]').should('contain', 'Return to Admin Teams page');
-            cy.get('[data-testid="confirm-dlor-team-save-outcome"]')
-                .should('exist')
-                .contains('Return to Admin Teams page');
-            cy.get('[data-testid="cancel-dlor-team-save-outcome"]')
-                .should('exist')
-                .contains('Re-edit Team');
 
             // and navigate back to the team list page
             cy.get('[data-testid="confirm-dlor-team-save-outcome"]')
