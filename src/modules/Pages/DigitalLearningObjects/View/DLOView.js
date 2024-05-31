@@ -156,6 +156,11 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorId]);
 
+    React.useEffect(() => {
+        window.scrollTo(0, 0); // onload, scroll up
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const deslugify = slug => {
         const words = slug?.replace(/_/g, ' ');
         return toTitleCase(words);
