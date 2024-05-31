@@ -4,9 +4,12 @@ import { useParams } from 'react-router';
 import parse from 'html-react-parser';
 
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
-import { Grid } from '@mui/material';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
@@ -137,6 +140,11 @@ const useStyles = makeStyles(theme => ({
             },
         },
     },
+    gatherDemographicsClass: {
+        padding: '1em',
+        marginTop: 24,
+        borderRadius: 10,
+    },
 }));
 
 export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) => {
@@ -239,24 +247,62 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
 
     return (
         <StandardPage>
-            <StandardCard className={classes.dlorEntry}>
+            <div className={classes.dlorEntry}>
                 {getTitleBlock()}
                 <Grid container spacing={4} data-testid="dlor-detailpage" className={classes.viewContent}>
                     <Grid item xs={12} md={8}>
                         <LoginPrompt account={account} instyle={{ marginBottom: 12 }} />
-                        <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
-                            {dlorItem?.object_title}
-                        </Typography>
-                        <div data-testid="dlor-detailpage-description">
+                        <div
+                            data-testid="dlor-detailpage-description"
+                            style={{ backgroundColor: 'white', padding: 12 }}
+                        >
+                            <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
+                                {dlorItem?.object_title}
+                            </Typography>
                             {!!dlorItem?.object_description && parse(dlorItem.object_description)}
                         </div>
-                        {!!dlorItem?.object_link_url && (
-                            <div className={classes.uqActionButton} data-testid="detailpage-getit-button">
-                                <a aria-label="Click to access the object" href={dlorItem.object_link_url}>
-                                    {getItButtonLabel(dlorItem)}
-                                </a>
+
+                        <div
+                            id="gatherDemographics"
+                            className={classes.gatherDemographicsClass}
+                            style={{ backgroundColor: 'white' }}
+                        >
+                            <p>To help us understand how you will use this object, please tell us:</p>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="alertTitle">Your relevant subject</InputLabel>
+                                <Input
+                                    id="alertTitle"
+                                    data-testid="admin-alerts-form-title"
+                                    // error={!values.alertTitle}
+                                    // value={values.alertTitle}
+                                    // onChange={handleChange('alertTitle')}
+                                    inputProps={{ maxLength: 100 }}
+                                />
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="alertTitle">Your school</InputLabel>
+                                <Input
+                                    id="alertTitle"
+                                    data-testid="admin-alerts-form-title"
+                                    // error={!values.alertTitle}
+                                    // value={values.alertTitle}
+                                    // onChange={handleChange('alertTitle')}
+                                    inputProps={{ maxLength: 100 }}
+                                />
+                            </FormControl>
+                            <div className="footer">
+                                <div
+                                    className={classes.uqActionButton}
+                                    // style={{ position: 'relative' }}
+                                    style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}
+                                >
+                                    <a aria-label="Click to access the object" href={dlorItem?.object_link_url}>
+                                        {getItButtonLabel(dlorItem)}
+                                    </a>
+                                </div>
                             </div>
-                        )}
+                        </div>
+
                         {isPreviewableUrl(dlorItem.object_link_url) !== false && (
                             <div data-testid="detailpage-preview">
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
@@ -278,7 +324,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                             </div>
                         )}
                         {!!dlorItem?.object_download_instructions && (
-                            <>
+                            <div style={{ backgroundColor: 'white', padding: 12, marginTop: 24 }}>
                                 <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
                                     How to use this object
                                 </Typography>
@@ -287,16 +333,11 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                         dlorItem.object_download_instructions,
                                         classes.downloadInstructions,
                                     )}
-                            </>
+                            </div>
                         )}
-                        {!!dlorItem?.object_series && dlorItem?.object_series.length > 0 && (
-                            <>
-                                <Typography
-                                    className={classes.highlighted}
-                                    component="h2"
-                                    variant="h6"
-                                    style={{ paddingTop: 20 }}
-                                >
+                        {!!dlorItem?.object_series && dlorItem?.object_series.length > 1 && (
+                            <div style={{ backgroundColor: 'white', padding: 12, marginTop: 24 }}>
+                                <Typography className={classes.highlighted} component="h2" variant="h6">
                                     Part of a series: {dlorItem.object_series_name}
                                 </Typography>
                                 <ol className={classes.seriesList}>
@@ -322,7 +363,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                             );
                                         })}
                                 </ol>
-                            </>
+                            </div>
                         )}
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="detailpage-metadata">
@@ -384,7 +425,7 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                         )}
                     </Grid>
                 </Grid>
-            </StandardCard>
+            </div>
         </StandardPage>
     );
 };
