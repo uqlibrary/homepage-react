@@ -666,11 +666,34 @@ export const DLOList = ({
             return sortedList;
         }
 
+        function parseSelectedFilters(selectedFilters) {
+            return selectedFilters?.reduce((acc, filter) => {
+                const [facetTypeSlug, facetId] = filter?.split('-');
+                if (!acc[facetTypeSlug]) {
+                    acc[facetTypeSlug] = [];
+                }
+                acc[facetTypeSlug].push(facetId);
+                return acc;
+            }, {});
+        }
+
+        function filterDlor(entry, groupedFilters) {
+            return Object.entries(groupedFilters)?.every(([groupKey, groupValues]) =>
+                entry?.object_filters?.some(
+                    filterGroup =>
+                        filterGroup?.filter_key === groupKey &&
+                        groupValues?.some(value =>
+                            filterGroup?.filter_values?.some(val => val?.id?.toString() === value),
+                        ),
+                ),
+            );
+        }
+
+        // Group selectedFilters by facetTypeSlug
+        const groupedFilters = parseSelectedFilters(selectedFilters);
+
         return sortedList?.filter(d => {
-            const passesCheckboxFilter =
-                !!d?.constructedFilters &&
-                !!selectedFilters &&
-                !!selectedFilters.every(el => d?.constructedFilters.includes(el));
+            const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
                 !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
             return passesCheckboxFilter && passesKeyWordFilter;
@@ -680,7 +703,7 @@ export const DLOList = ({
     const paginateDlorList = pageloadShown => {
         const filteredDlorList = filterDlorList();
 
-        const paginatedFilteredDlorList = filteredDlorList.filter((_, index) => {
+        const paginatedFilteredDlorList = filteredDlorList?.filter((_, index) => {
             const startIndex = (pageloadShown - 1) * numberItemsPerPage;
             const endIndex = startIndex + numberItemsPerPage;
             return index >= startIndex && index < endIndex;
@@ -690,7 +713,7 @@ export const DLOList = ({
 
     const getPublicHelp = facetTypeSlug => {
         return !!filterListTrimmed
-            ? filterListTrimmed.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()?.facet_type_help_public
+            ? filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()?.facet_type_help_public
             : '';
     };
 

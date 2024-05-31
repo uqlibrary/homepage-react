@@ -212,13 +212,58 @@ describe('Digital Learning Hub', () => {
                 .should('not.be.checked')
                 .check();
 
-            // reduces to 4 panels
+            // reduces panel count
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
                 .should('have.length', 4 + extraRowCount);
 
-            // unhide the Item type panel
+            // check can reduce with mutiple per "filter type
+            // open the Licence type panel
+            cy.get('[data-testid="panel-minimisation-icon-5"]')
+                .should('exist')
+                .should('have.attr', 'aria-label', 'Open this filter section');
+            cy.get('[data-testid="panel-downarrow-5"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            // check UQ copyright
+            cy.get('[data-testid="checkbox-licence-51"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            // reduces panel count
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + extraRowCount);
+            // add another checkbox: CC BY-NC Attribution NonCommercial
+            cy.get('[data-testid="checkbox-licence-45"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            // INCREASES panel count!!!
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 3 + extraRowCount);
+            // uncheck UQ copyright
+            cy.get('[data-testid="checkbox-licence-51"] input[type=checkbox]')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+            // reduces panel count
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + extraRowCount);
+            // remove checkbox: CC BY-NC Attribution NonCommercial
+            cy.get('[data-testid="checkbox-licence-45"] input[type=checkbox]')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+
+            // open the Item type panel
             cy.get('[data-testid="panel-minimisation-icon-2"]')
                 .should('exist')
                 .should('have.attr', 'aria-label', 'Open this filter section');
