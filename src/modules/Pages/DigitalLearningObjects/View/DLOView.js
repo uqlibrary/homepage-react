@@ -120,6 +120,8 @@ const useStyles = makeStyles(theme => ({
         },
     },
     seriesList: {
+        paddingInlineStart: 0,
+        marginInlineStart: 0,
         '& li': {
             display: 'flex',
             marginBottom: '0.5em',
