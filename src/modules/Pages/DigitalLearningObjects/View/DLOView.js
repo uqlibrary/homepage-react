@@ -117,26 +117,24 @@ const useStyles = makeStyles(theme => ({
         },
     },
     seriesList: {
-        listStyleType: 'none',
         '& li': {
-            padding: '0.7em',
+            display: 'flex',
             marginBottom: '0.5em',
-        },
-        '& a': {
-            color: '#000',
-        },
-    },
-    seriesName: {
-        backgroundColor: '#d1d0d2', // $grey-300
-    },
-    highlightSeriesName: {
-        backgroundColor: '#fff',
-        fontStyle: 'italic',
-        border: '1px solid #d1d0d2', // $grey-300
-        display: 'flex',
-        alignItems: 'center',
-        '& a': {
-            paddingLeft: 2,
+            '& a': {
+                backgroundColor: '#d1d0d2', // $grey-300
+                color: '#000',
+            },
+            '& a, & > span': {
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                padding: 10,
+                textDecoration: 'none',
+                border: '1px solid #d1d0d2', // $grey-300
+            },
+            '& a:hover': {
+                backgroundColor: '#a3a1a4', // $grey-500
+            },
         },
     },
 }));
@@ -307,20 +305,19 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                                         .map((s, index) => {
                                             return (
                                                 <li
-                                                    className={`${
-                                                        s.series_object_uuid === dlorItem?.object_public_uuid
-                                                            ? classes.highlightSeriesName
-                                                            : classes.seriesName
-                                                    }`}
                                                     key={`dlor-view-series-item-${s.series_object_uuid}`}
                                                     data-testid={`dlor-view-series-item-${s.series_object_uuid}-order-${index}`}
                                                 >
-                                                    {s.series_object_uuid === dlorItem?.object_public_uuid && (
-                                                        <StarIcon />
+                                                    {s.series_object_uuid === dlorItem?.object_public_uuid ? (
+                                                        <span>
+                                                            <StarIcon />
+                                                            <span>{s.series_object_title}</span>
+                                                        </span>
+                                                    ) : (
+                                                        <a href={getDlorViewPageUrl(s?.series_object_uuid)}>
+                                                            {s.series_object_title}
+                                                        </a>
                                                     )}
-                                                    <a href={getDlorViewPageUrl(s?.series_object_uuid)}>
-                                                        {s.series_object_title}
-                                                    </a>
                                                 </li>
                                             );
                                         })}
