@@ -144,7 +144,9 @@ describe('Digital Learning Hub admin Edit Team', () => {
             // check save-confirmation popup
             cy.get('[data-testid="dialogbox-dlor-team-save-outcome"] h2').contains('Changes have been saved');
             cy.get('[data-testid="confirm-dlor-team-save-outcome"]').should('contain', 'Return to Admin Teams page');
-            cy.get('[data-testid="cancel-dlor-team-save-outcome"]').should('not.exist');
+            cy.get('[data-testid="cancel-dlor-team-save-outcome"]')
+                .should('exist')
+                .contains('Re-edit Team');
 
             // check the data we pretended to send to the server matches what we expect
             // acts as check of what we sent to api

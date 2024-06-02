@@ -152,6 +152,7 @@ export const DLOSeriesEdit = ({
         successMessage: {
             confirmationTitle: 'Changes have been saved',
             confirmationMessage: '',
+            cancelButtonLabel: 'Re-edit Series',
             confirmButtonLabel: 'Return to Admin Series page',
         },
         errorMessage: {
