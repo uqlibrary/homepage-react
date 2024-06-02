@@ -149,17 +149,14 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
     console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
 
     React.useEffect(() => {
+        window.scrollTo(0, 0); // onchange of dlor id, scroll up
+
         if (!!dlorId) {
             actions.clearADlor();
             actions.loadADLOR(dlorId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorId]);
-
-    React.useEffect(() => {
-        window.scrollTo(0, 0); // onload, scroll up
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const deslugify = slug => {
         const words = slug?.replace(/_/g, ' ');
