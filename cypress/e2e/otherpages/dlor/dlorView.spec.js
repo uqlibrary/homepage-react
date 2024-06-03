@@ -200,7 +200,7 @@ describe('Digital Learning Hub View page', () => {
                 .should('have.text', 'Access the object (XLS 3.4 GB)');
         });
 
-        it('A neither watchable nor downloadable object shows just "Accesss the object" on the Get It button', () => {
+        it('A neither watchable nor downloadable object shows just "Access the object" on the Get It button', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="detailpage-getit-button"] a')

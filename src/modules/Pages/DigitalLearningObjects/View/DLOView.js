@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     },
     uqActionButton: {
         marginBlock: 32,
-        '& a': {
+        '& button': {
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.white.main,
             borderColor: theme.palette.primary.main,
@@ -54,6 +54,7 @@ const useStyles = makeStyles(theme => ({
             borderStyle: 'solid',
             borderRadius: 6,
             padding: '8px 12px',
+            fontSize: 18,
             fontWeight: 400,
             '&:hover': {
                 backgroundColor: theme.palette.white.main,
@@ -61,6 +62,9 @@ const useStyles = makeStyles(theme => ({
                 textDecoration: 'none',
             },
         },
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: 12,
     },
     metaHeader: {
         display: 'flex',
@@ -149,12 +153,36 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) => {
+export const DLOView = ({
+    actions,
+    // get viewed dlor item
+    dlorItem,
+    dlorItemLoading,
+    dlorItemError,
+    // sending demographics and/or subscribe request
+    dlorUpdatedItem,
+    dlorItemUpdating,
+    dlorUpdatedItemError,
+}) => {
     const { account } = useAccountContext();
     const { dlorId } = useParams();
     const classes = useStyles();
 
     console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
+    console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
+
+    const [formValues, setFormValues] = React.useState({
+        subjectCode: '',
+        schoolName: '',
+    });
+
+    const handleChange = (prop, value) => e => {
+        const theNewValue = e.target.value;
+        const newValues = { ...formValues, [prop]: theNewValue };
+
+        // setFormValidity(validateValues(newValues));
+        setFormValues(newValues);
+    };
 
     React.useEffect(() => {
         window.scrollTo(0, 0); // onchange of dlor id, scroll up
@@ -185,6 +213,13 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
 
     const navigateToEditPage = uuid => {
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
+    };
+
+    const saveAndNavigate = dlorItem => {
+        console.log('saveAndNavigate uuid', dlorItem.object_link_url);
+        // actions.saveDlorDemographics(dlorItem.object_public_uuid, formValues);
+
+        // window.location.href = dlorItem?.object_link_url;
     };
 
     if (!!dlorItemLoading || dlorItemLoading === null) {
@@ -270,39 +305,39 @@ export const DLOView = ({ actions, dlorItem, dlorItemLoading, dlorItemError }) =
                             style={{ backgroundColor: 'white' }}
                         >
                             <p>To help us understand how you will use this object, please tell us:</p>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="alertTitle">Your relevant subject</InputLabel>
-                                <Input
-                                    id="alertTitle"
-                                    data-testid="admin-alerts-form-title"
-                                    // error={!values.alertTitle}
-                                    // value={values.alertTitle}
-                                    // onChange={handleChange('alertTitle')}
-                                    inputProps={{ maxLength: 100 }}
-                                />
-                            </FormControl>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="alertTitle">Your school</InputLabel>
-                                <Input
-                                    id="alertTitle"
-                                    data-testid="admin-alerts-form-title"
-                                    // error={!values.alertTitle}
-                                    // value={values.alertTitle}
-                                    // onChange={handleChange('alertTitle')}
-                                    inputProps={{ maxLength: 100 }}
-                                />
-                            </FormControl>
-                            <div className="footer">
-                                <div
-                                    className={classes.uqActionButton}
-                                    // style={{ position: 'relative' }}
-                                    style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}
-                                >
-                                    <a aria-label="Click to access the object" href={dlorItem?.object_link_url}>
-                                        {getItButtonLabel(dlorItem)}
-                                    </a>
+                            <form>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="subjectCode">
+                                        Your relevant subject or UQ course code
+                                    </InputLabel>
+                                    <Input
+                                        id="subjectCode"
+                                        data-testid="view-demographics-subject-code"
+                                        value={formValues?.subjectCode}
+                                        onChange={handleChange('subjectCode')}
+                                    />
+                                </FormControl>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="schoolName">Your school</InputLabel>
+                                    <Input
+                                        id="schoolName"
+                                        data-testid="view-demographics-school-name"
+                                        value={formValues?.schoolName}
+                                        onChange={handleChange('schoolName')}
+                                        // inputProps={{ maxLength: 100 }}
+                                    />
+                                </FormControl>
+                                <div className="footer">
+                                    <div className={classes.uqActionButton}>
+                                        <button
+                                            aria-label="Click to access the object"
+                                            onClick={() => saveAndNavigate(dlorItem)}
+                                        >
+                                            {getItButtonLabel(dlorItem)}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
 
                         {isPreviewableUrl(dlorItem.object_link_url) !== false && (
@@ -437,6 +472,9 @@ DLOView.propTypes = {
     dlorItem: PropTypes.any,
     dlorItemLoading: PropTypes.bool,
     dlorItemError: PropTypes.any,
+    dlorUpdatedItem: PropTypes.any,
+    dlorItemUpdating: PropTypes.bool,
+    dlorUpdatedItemError: PropTypes.any,
     account: PropTypes.object,
 };
 

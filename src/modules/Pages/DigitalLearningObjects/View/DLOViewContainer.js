@@ -8,6 +8,7 @@ import DLOView from './DLOView';
 const mapStateToProps = state => {
     return {
         ...state.get('dlorGetSingleReducer'),
+        ...state.get('dlorUpdateReducer'),
     };
 };
 

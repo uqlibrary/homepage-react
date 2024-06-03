@@ -4,6 +4,7 @@ import {
     DLOR_ALL_API,
     DLOR_ALL_CURRENT_API,
     DLOR_CREATE_API,
+    DLOR_DEMOGRAPHICS_SAVE_API,
     DLOR_DESTROY_API,
     DLOR_FILE_TYPE_LIST_API,
     DLOR_GET_BY_ID_API,
@@ -425,6 +426,40 @@ export function createDlorSeries(request) {
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function saveDlorDemographics(dlorUuid, formItems) {
+    const request = {
+        dlorUuid: dlorUuid,
+        demographics: {
+            subject: formItems.subjectCode,
+            school: formItems.schoolName,
+        },
+        // subscribeRequest: { // later
+        //     userName: 'Lea de Groot',
+        //     userEmail: 'uqldegro@uq.edu.au',
+        // },
+    };
+    return async dispatch => {
+        dispatch({ type: actions.DLOR_UPDATING });
+        return post(DLOR_DEMOGRAPHICS_SAVE_API(), request)
+            .then(data => {
+                console.log('saveDlorDemographics response=', data);
+                dispatch({
+                    type: actions.DLOR_UPDATED,
+                    payload: data,
+                });
+                // refresh the list after change
+                dispatch(loadDlorSeriesList());
+            })
+            .catch(error => {
+                console.log('saveDlorDemographics error=', error);
+                dispatch({
+                    type: actions.DLOR_UPDATE_FAILED,
+                    payload: error.message,
+                });
             });
     };
 }

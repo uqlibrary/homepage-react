@@ -330,6 +330,7 @@ export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/find/${id}` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/facet/list' });
 export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/series/list' });
+export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/demographics' });
 
 // dlor admin routes
 export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
