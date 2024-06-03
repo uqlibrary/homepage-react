@@ -227,10 +227,12 @@ export const DLOSeriesEdit = ({
     const saveChanges = () => {
         const valuesToSend = {
             series_name: formValues.series_name,
-            series_list: formValues.object_list_linked.map(item => ({
-                object_public_uuid: item.object_public_uuid,
-                object_series_order: Number(item.object_series_order),
-            })),
+            series_list: formValues.object_list_linked
+                .filter(item => Number(item.object_series_order) > 0)
+                .map(item => ({
+                    object_public_uuid: item.object_public_uuid,
+                    object_series_order: Number(item.object_series_order),
+                })),
         };
         console.log('valuesToSend=', valuesToSend);
 
