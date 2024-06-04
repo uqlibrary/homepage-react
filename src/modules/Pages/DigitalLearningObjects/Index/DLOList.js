@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import parse from 'html-react-parser';
 
 import { Grid } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -183,7 +184,8 @@ const useStyles = makeStyles(theme => ({
         left: 0,
         backgroundColor: '#fff',
         border: '1px solid #ccc',
-        padding: 10,
+        padding: 14,
+        lineHeight: 1.4,
         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
         zIndex: 1000,
         fontSize: 16,
@@ -431,7 +433,7 @@ export const DLOList = ({
         return `dlor-list-${facetType?.facet_type_slug}-help-popup`;
     }
 
-    function showHelpText(facetType) {
+    function openHelpText(facetType) {
         const popupId = getPopupId(facetType);
         const popupElement = !!popupId && document.getElementById(popupId);
         !!popupElement && (popupElement.style.display = 'block');
@@ -610,13 +612,15 @@ export const DLOList = ({
                                         >
                                             {getFacetTypeIcon(facetType?.facet_type_slug)} &nbsp;{' '}
                                             {facetType?.facet_type_name}{' '}
-                                            <IconButton
-                                                aria-label="View facet help"
-                                                onClick={() => showHelpText(facetType)}
-                                                data-testid={sidebarElementId(index, 'panel-help-icon')}
-                                            >
-                                                <HelpOutlineIcon size="small" />
-                                            </IconButton>
+                                            {!!facetType.facet_type_help_public && (
+                                                <IconButton
+                                                    aria-label="View facet help"
+                                                    onClick={() => openHelpText(facetType)}
+                                                    data-testid={sidebarElementId(index, 'panel-help-icon')}
+                                                >
+                                                    <HelpOutlineIcon size="small" />
+                                                </IconButton>
+                                            )}
                                         </Typography>
                                         <div
                                             id={getPopupId(facetType)}
@@ -630,7 +634,8 @@ export const DLOList = ({
                                             >
                                                 Close
                                             </button>
-                                            <span id="popupText">{facetType.facet_type_help_public}</span>
+                                            {!!facetType?.facet_type_help_public &&
+                                                parse(facetType.facet_type_help_public)}
                                         </div>
                                     </Grid>
                                     <Grid item md={1} className={classes.facetPanelControl}>
