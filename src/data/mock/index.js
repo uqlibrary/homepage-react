@@ -821,6 +821,14 @@ mock.onGet(/dlor\/find\/.*/)
         } else {
             return [200, { data: { objects_count: 0, series_name: 'New Series name' } }];
         }
+    })
+    .onPost('dlor/demographics')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [400, {}];
+        } else {
+            return [200, {}];
+        }
     });
 
 mock.onGet('exams/course/FREN1010/summary')
@@ -1454,6 +1462,6 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onAny()
     .reply(function(config) {
-        console.log('url not mocked...', config);
+        console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });

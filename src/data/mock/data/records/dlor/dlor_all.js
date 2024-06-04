@@ -710,9 +710,9 @@ export default {
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
             "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p>",
-            "object_link_url_id": 9,
+            "object_link_url_id": 89,
             "object_link_url_parent": 24,
-            "object_link_url": "https:\/\/uq.pressbooks.pub\/health-information-research-essentials\/",
+            "object_link_url": "http://localhost:2020/exams",
             "object_keywords": [
                 "health literacy",
                 "evidence-based practice",

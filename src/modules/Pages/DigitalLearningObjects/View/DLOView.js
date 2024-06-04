@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import parse from 'html-react-parser';
+import { useCookies } from 'react-cookie';
 
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -54,7 +55,6 @@ const useStyles = makeStyles(theme => ({
             borderStyle: 'solid',
             borderRadius: 6,
             padding: '8px 12px',
-            fontSize: 18,
             fontWeight: 400,
             '&:hover': {
                 backgroundColor: theme.palette.white.main,
@@ -107,6 +107,16 @@ const useStyles = makeStyles(theme => ({
     //         paddingTop: 0,
     //     },
     // },
+    headerBlock: {
+        '& p': {
+            margin: 0,
+            fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+            fontWight: 300,
+            fontSize: '1rem',
+            lineHeight: 1.5,
+            letterSpacing: '0.00938em',
+        },
+    },
     downloadInstructions: {
         lineHeight: 1.5,
     },
@@ -167,6 +177,7 @@ export const DLOView = ({
     const { account } = useAccountContext();
     const { dlorId } = useParams();
     const classes = useStyles();
+    const [cookies, setCookie] = useCookies();
 
     console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
@@ -194,6 +205,18 @@ export const DLOView = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorId]);
 
+    function navigateToObjectLink() {
+        window.location.href = dlorItem?.object_link_url;
+    }
+
+    React.useEffect(() => {
+        // safe to navigate now as the demographic request has started on the BE
+        // (we dont bother waiting for it come back?)
+        if (!!dlorItemUpdating) {
+            navigateToObjectLink();
+        }
+    }, [dlorItemUpdating]);
+
     const deslugify = slug => {
         const words = slug?.replace(/_/g, ' ');
         return toTitleCase(words);
@@ -216,13 +239,32 @@ export const DLOView = ({
     };
 
     const saveAndNavigate = dlorItem => {
-        console.log('saveAndNavigate uuid', dlorItem.object_link_url);
-        // actions.saveDlorDemographics(dlorItem.object_public_uuid, formValues);
+        console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
 
-        // window.location.href = dlorItem?.object_link_url;
+        if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0) {
+            const valuestoSend = {
+                dlorUuid: dlorItem.object_public_uuid,
+                demographics: {
+                    subject: formValues.subjectCode,
+                    school: formValues.schoolName,
+                },
+                // subscribeRequest: { // later
+                //     userName: 'Lea de Groot',
+                //     userEmail: 'uqldegro@uq.edu.au',
+                // },
+            };
+            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+            if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+                setCookie('CYPRESS_DATA_SAVED', valuestoSend);
+            }
+            actions.saveDlorDemographics(valuestoSend);
+            // navigation to link happens when the save has started via useEffect on dlorItemUpdating}
+        } else {
+            navigateToObjectLink();
+        }
     };
 
-    if (!!dlorItemLoading || dlorItemLoading === null) {
+    if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
         return (
             <div style={{ minHeight: 600 }}>
                 <InlineLoader message="Loading" />
@@ -292,6 +334,7 @@ export const DLOView = ({
                         <div
                             data-testid="dlor-detailpage-description"
                             style={{ backgroundColor: 'white', padding: 12 }}
+                            className={classes.headerBlock}
                         >
                             <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
                                 {dlorItem?.object_title}
@@ -299,46 +342,51 @@ export const DLOView = ({
                             {!!dlorItem?.object_description && parse(dlorItem.object_description)}
                         </div>
 
-                        <div
-                            id="gatherDemographics"
-                            className={classes.gatherDemographicsClass}
-                            style={{ backgroundColor: 'white' }}
-                        >
-                            <p>To help us understand how you will use this object, please tell us:</p>
-                            <form>
-                                <FormControl variant="standard" fullWidth>
-                                    <InputLabel htmlFor="subjectCode">
-                                        Your relevant subject or UQ course code
-                                    </InputLabel>
-                                    <Input
-                                        id="subjectCode"
-                                        data-testid="view-demographics-subject-code"
-                                        value={formValues?.subjectCode}
-                                        onChange={handleChange('subjectCode')}
-                                    />
-                                </FormControl>
-                                <FormControl variant="standard" fullWidth>
-                                    <InputLabel htmlFor="schoolName">Your school</InputLabel>
-                                    <Input
-                                        id="schoolName"
-                                        data-testid="view-demographics-school-name"
-                                        value={formValues?.schoolName}
-                                        onChange={handleChange('schoolName')}
-                                        // inputProps={{ maxLength: 100 }}
-                                    />
-                                </FormControl>
-                                <div className="footer">
-                                    <div className={classes.uqActionButton}>
-                                        <button
-                                            aria-label="Click to access the object"
-                                            onClick={() => saveAndNavigate(dlorItem)}
-                                        >
-                                            {getItButtonLabel(dlorItem)}
-                                        </button>
+                        {dlorItem?.object_link_url?.startsWith('http') && (
+                            <div
+                                id="gatherDemographics"
+                                className={classes.gatherDemographicsClass}
+                                style={{ backgroundColor: 'white' }}
+                                data-testid="detailpage-getit-button"
+                            >
+                                <p>To help us understand how you will use this object, please tell us:</p>
+                                <form>
+                                    <FormControl variant="standard" fullWidth>
+                                        <InputLabel htmlFor="subjectCode">
+                                            Your relevant subject or UQ course code
+                                        </InputLabel>
+                                        <Input
+                                            id="subjectCode"
+                                            data-testid="view-demographics-subject-code"
+                                            value={formValues?.subjectCode}
+                                            onChange={handleChange('subjectCode')}
+                                            inputProps={{ maxLength: 10 }}
+                                        />
+                                    </FormControl>
+                                    <FormControl variant="standard" fullWidth>
+                                        <InputLabel htmlFor="schoolName">Your school</InputLabel>
+                                        <Input
+                                            id="schoolName"
+                                            data-testid="view-demographics-school-name"
+                                            value={formValues?.schoolName}
+                                            onChange={handleChange('schoolName')}
+                                            // inputProps={{ maxLength: 100 }}
+                                        />
+                                    </FormControl>
+                                    <div className="footer">
+                                        <div className={classes.uqActionButton}>
+                                            <Button
+                                                aria-label="Click to access the object"
+                                                onClick={() => saveAndNavigate(dlorItem)}
+                                                data-testid="detailpage-clicklink"
+                                            >
+                                                {getItButtonLabel(dlorItem)}
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
-                        </div>
+                                </form>
+                            </div>
+                        )}
 
                         {isPreviewableUrl(dlorItem.object_link_url) !== false && (
                             <div data-testid="detailpage-preview">

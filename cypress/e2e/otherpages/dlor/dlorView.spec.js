@@ -134,7 +134,7 @@ describe('Digital Learning Hub View page', () => {
                 statusCode: 200,
                 body: 'user has navigated to pressbook link',
             });
-            cy.get('[data-testid="detailpage-getit-button"] a')
+            cy.get('[data-testid="detailpage-getit-button"] button')
                 .should('exist')
                 .should('contain', 'Access the object')
                 .click();
@@ -158,13 +158,62 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'EndNote 20: Getting started');
             cy.get('[data-testid="detailpage-metadata-keywords"]').should('not.exist');
         });
-        it('markdown translation works', () => {
-            cy.visit('digital-learning-hub/view/987y_isjgt_9866');
+        it('can visit the object link and gather demographics', () => {
+            cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
+            cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597');
             cy.viewport(1300, 1000);
-            // cy.get('[data-testid="dlor-massaged-download-instructions"] a')
-            //     .should('exist')
-            //     .contains('example link')
-            //     .should('have.attr', 'href', 'http://example.com');
+
+            const typeSubject = 'PHIL1001';
+            const typeSchoolName = 'School of Mathematics';
+
+            cy.get('[data-testid="view-demographics-subject-code"] input')
+                .should('exist')
+                .type(typeSubject);
+            cy.get('[data-testid="view-demographics-school-name"] input')
+                .should('exist')
+                .type(typeSchoolName);
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .click();
+
+            const expectedValues = {
+                dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
+                demographics: {
+                    subject: typeSubject,
+                    school: typeSchoolName,
+                },
+            };
+            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                expect(cookie).to.exist;
+                const decodedValue = decodeURIComponent(cookie.value);
+                const sentValues = JSON.parse(decodedValue);
+
+                console.log('sentValues=', sentValues);
+                console.log('expectedValues=', expectedValues);
+
+                expect(sentValues).to.deep.equal(expectedValues);
+
+                cy.clearCookie('CYPRESS_DATA_SAVED');
+                cy.clearCookie('CYPRESS_TEST_DATA');
+            });
+
+            cy.url().should('eq', 'http://localhost:2020/exams');
+        });
+        it('can visit the object link without gathering demographics', () => {
+            cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
+            cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597');
+            cy.viewport(1300, 1000);
+
+            // user chooses not to enter data
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .click();
+
+            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
+                expect(cookie).not.to.exist;
+            });
+
+            cy.url().should('eq', 'http://localhost:2020/exams');
         });
         it('can handle an error', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?responseType=error');
@@ -186,7 +235,7 @@ describe('Digital Learning Hub View page', () => {
         it('A watchable object shows the correct units on the Get It button', () => {
             cy.visit('digital-learning-hub/view/987y_isjgt_9866');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="detailpage-getit-button"] a')
+            cy.get('[data-testid="detailpage-getit-button"] button')
                 .should('exist')
                 .should('have.text', 'Access the object (video 47m 44s)');
         });
@@ -195,7 +244,7 @@ describe('Digital Learning Hub View page', () => {
             cy.visit('digital-learning-hub/view/9bc192a8-324c-4f6b-ac50-07e7ff2df240');
 
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="detailpage-getit-button"] a')
+            cy.get('[data-testid="detailpage-getit-button"] button')
                 .should('exist')
                 .should('have.text', 'Access the object (XLS 3.4 GB)');
         });
@@ -203,12 +252,12 @@ describe('Digital Learning Hub View page', () => {
         it('A neither watchable nor downloadable object shows just "Access the object" on the Get It button', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="detailpage-getit-button"] a')
+            cy.get('[data-testid="detailpage-getit-button"] button')
                 .should('exist')
                 .should('have.text', 'Access the object');
         });
     });
-    context('Access', () => {
+    context('user-level privilege', () => {
         it('the non-logged in user is prompted to login', () => {
             cy.visit('digital-learning-hub/view/987y_isjgt_9866?user=public');
             cy.viewport(1300, 1000);

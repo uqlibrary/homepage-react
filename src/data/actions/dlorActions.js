@@ -430,18 +430,7 @@ export function createDlorSeries(request) {
     };
 }
 
-export function saveDlorDemographics(dlorUuid, formItems) {
-    const request = {
-        dlorUuid: dlorUuid,
-        demographics: {
-            subject: formItems.subjectCode,
-            school: formItems.schoolName,
-        },
-        // subscribeRequest: { // later
-        //     userName: 'Lea de Groot',
-        //     userEmail: 'uqldegro@uq.edu.au',
-        // },
-    };
+export function saveDlorDemographics(request) {
     return async dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
         return post(DLOR_DEMOGRAPHICS_SAVE_API(), request)
