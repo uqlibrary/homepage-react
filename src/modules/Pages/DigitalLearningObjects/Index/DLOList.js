@@ -23,6 +23,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
 import SearchIcon from '@mui/icons-material/Search';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -174,6 +175,29 @@ const useStyles = makeStyles(theme => ({
         '& button': {
             borderColor: 'transparent',
             backgroundColor: '#f7f7f7',
+        },
+    },
+    filterSidebarFacetHelpPopup: {
+        position: 'absolute',
+        top: 35,
+        left: 0,
+        backgroundColor: '#fff',
+        border: '1px solid #ccc',
+        padding: 10,
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+        zIndex: 1000,
+        fontSize: 16,
+        '& span': {
+            display: 'block',
+            marginTop: 40,
+        },
+        '& button': {
+            marginTop: 10,
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            float: 'right',
+            width: '6em',
         },
     },
     facetPanelControl: {
@@ -403,6 +427,22 @@ export const DLOList = ({
         }
     }
 
+    function getPopupId(facetType) {
+        return `dlor-list-${facetType?.facet_type_slug}-help-popup`;
+    }
+
+    function showHelpText(facetType) {
+        const popupId = getPopupId(facetType);
+        const popupElement = !!popupId && document.getElementById(popupId);
+        !!popupElement && (popupElement.style.display = 'block');
+    }
+
+    function closeHelpText(facetType) {
+        const popupId = getPopupId(facetType);
+        const popupElement = !!popupId && document.getElementById(popupId);
+        !!popupElement && (popupElement.style.display = 'none');
+    }
+
     function showFilters() {
         // hide the filter icon
         const icon = document.getElementById('filterIconShowId');
@@ -521,6 +561,9 @@ export const DLOList = ({
 
         // set pagination back to page 1
         setPaginationPage(1);
+
+        // close help dialogs
+        dlorFilterList.forEach(f => closeHelpText(f));
     }
 
     function displayFilterSidebarContents() {
@@ -559,11 +602,36 @@ export const DLOList = ({
                         return (
                             <Grid item key={facetType?.facet_type_slug} className={classes.filterSidebarType}>
                                 <Grid container className={classes.filterSidebarTypeHeading}>
-                                    <Grid item md={11}>
-                                        <Typography component={'h3'} variant="subtitle1">
+                                    <Grid item md={11} style={{ position: 'relative' }}>
+                                        <Typography
+                                            component={'h3'}
+                                            variant="subtitle1"
+                                            style={{ display: 'flex', alignItems: 'center' }}
+                                        >
                                             {getFacetTypeIcon(facetType?.facet_type_slug)} &nbsp;{' '}
-                                            {facetType?.facet_type_name}
+                                            {facetType?.facet_type_name}{' '}
+                                            <IconButton
+                                                aria-label="View facet help"
+                                                onClick={() => showHelpText(facetType)}
+                                                data-testid={sidebarElementId(index, 'panel-help-icon')}
+                                            >
+                                                <HelpOutlineIcon size="small" />
+                                            </IconButton>
                                         </Typography>
+                                        <div
+                                            id={getPopupId(facetType)}
+                                            className={classes.filterSidebarFacetHelpPopup}
+                                            style={{ display: 'none' }}
+                                        >
+                                            <button
+                                                id="closePopup"
+                                                onClick={() => closeHelpText(facetType)}
+                                                data-testid={sidebarElementId(index, 'panel-help-close')}
+                                            >
+                                                Close
+                                            </button>
+                                            <span id="popupText">{facetType.facet_type_help_public}</span>
+                                        </div>
                                     </Grid>
                                     <Grid item md={1} className={classes.facetPanelControl}>
                                         <IconButton

@@ -469,11 +469,26 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible');
 
+            cy.get('[data-testid="panel-help-close-0"]')
+                .should('exist')
+                .should('not.be.visible');
+            cy.get('[data-testid="panel-help-icon-0"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="panel-help-close-0"]')
+                .should('exist')
+                .should('be.visible');
+
             // click reset
             cy.get('[data-testid="sidebar-filter-reset-button"]')
                 .should('exist')
                 .should('be.visible')
                 .click({ force: true });
+
+            // popup help closes
+            cy.get('[data-testid="panel-help-close-0"]')
+                .should('exist')
+                .should('not.be.visible');
 
             // Interactive not visible
             cy.get('[data-testid="checkbox-item_type-17"]')
