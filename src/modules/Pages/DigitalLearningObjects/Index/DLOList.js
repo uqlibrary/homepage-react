@@ -197,7 +197,7 @@ const useStyles = makeStyles(theme => ({
             fontSize: '0.9rem',
         },
     },
-    filterResetButton: {
+    resetButton: {
         borderColor: 'transparent',
         backgroundColor: '#f7f7f7',
         color: 'rgb(13, 109, 205)',
@@ -452,7 +452,7 @@ export const DLOList = ({
 
         if (keywordIsSearchable(keyword)) {
             setKeywordSearch(keyword);
-        } else if (keyword.length === 0) {
+        } else if (!keyword || keyword.length === 0) {
             clearKeywordField();
         }
     };
@@ -499,8 +499,8 @@ export const DLOList = ({
         return index === 0;
     }
 
-    function resetFilters() {
-        // reshow the panels
+    function resetFiltering() {
+        // reshow any closed sidebar panels
         setSelectedFilters([]);
 
         // clear the filter checkboxes
@@ -514,6 +514,13 @@ export const DLOList = ({
                 hidePanel(index);
             }
         });
+
+        // clear the keyword filter
+        setKeywordSearch('');
+        handleKeywordSearch('');
+
+        // set pagination back to page 1
+        setPaginationPage(1);
     }
 
     function displayFilterSidebarContents() {
@@ -539,8 +546,8 @@ export const DLOList = ({
                     <Grid item xs={1}>
                         <button
                             data-testid="sidebar-filter-reset-button"
-                            className={classes.filterResetButton}
-                            onClick={() => resetFilters()}
+                            className={classes.resetButton}
+                            onClick={() => resetFiltering()}
                             aria-label="Reset filter to default"
                         >
                             Reset
@@ -858,6 +865,7 @@ export const DLOList = ({
     }
 
     const handlePaginationChange = (e, value) => {
+        console.log('handlePaginationChange ', value);
         setPaginationPage(value);
     };
 

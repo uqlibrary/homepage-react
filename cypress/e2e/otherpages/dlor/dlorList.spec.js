@@ -12,6 +12,7 @@ describe('Digital Learning Hub', () => {
             cy.viewport(1300, 1000);
         });
         it('is accessible', () => {
+            // sometimes this fails locally after cypress has been open for a while - it doesn't fail on the server
             cy.injectAxe();
 
             cy.waitUntil(() =>
@@ -441,6 +442,9 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .children()
                 .should('have.length', itemsPerPage + extraRowCount);
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(5) button') // page 3 button shows so all pages showing
+                .should('exist')
+                .should('be.visible');
 
             // check the "ATSIC" checkbox
             cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
@@ -483,6 +487,55 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .children()
                 .should('have.length', itemsPerPage + extraRowCount);
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(5) button') // page 3 button shows so all pages showing
+                .should('exist')
+                .should('be.visible');
+
+            // click reset
+            cy.get('[data-testid="sidebar-filter-reset-button"]')
+                .should('exist')
+                .should('be.visible')
+                .click({ force: true });
+
+            // all panels showing
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', itemsPerPage + extraRowCount);
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(5) button') // page 3 button shows so all pages showing
+                .should('exist')
+                .should('be.visible');
+
+            // check the "CCO/Public domain" checkbox
+            cy.get('[data-testid="panel-minimisation-icon-5"]').click();
+            cy.get('[data-testid="checkbox-licence-50"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            // button for "go to first page of results" is highlighted
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button') // first page
+                .should('exist')
+                // .should('have.value', '1')
+                .should('have.class', 'Mui-selected');
+            // change to pagination page 2
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button')
+                .should('exist')
+                .click();
+            // button for "go to second page of results" is highlighted
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button') // second page
+                .should('exist')
+                .should('have.class', 'Mui-selected');
+
+            // click reset
+            cy.get('[data-testid="sidebar-filter-reset-button"]')
+                .should('exist')
+                .should('be.visible')
+                .click({ force: true });
+            // has reset pagination to page 1
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button') // first page
+                .should('exist')
+                // .should('have.value', '1')
+                .should('have.class', 'Mui-selected');
         });
         it('has working site navigation - can move around the pages', () => {
             cy.waitUntil(() => cy.get('h1').should('exist'));
@@ -555,14 +608,15 @@ describe('Digital Learning Hub', () => {
 
             const numPages = 3;
             const numExtraButtons = 4; // first, prev, next, last
+
             // there are the expected number of buttons in pagination widget
             cy.get('nav[aria-label="pagination navigation"] li')
                 .should('exist')
                 .children()
                 .should('have.length', numPages + numExtraButtons);
 
-            // button 1 has focus
-            cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button')
+            // button for "go to first page of results" is highlighted
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button') // first page
                 .should('exist')
                 // .should('have.value', '1')
                 .should('have.class', 'Mui-selected');
@@ -574,6 +628,10 @@ describe('Digital Learning Hub', () => {
             cy.get('[data-testid="dlor-homepage-list"] button:first-child article header h2').should(
                 'contain',
                 'Accessibility - Digital Essentials',
+            );
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(11) article header h2').should(
+                'contain',
+                'Dummy entry to increase list size 2',
             );
 
             // click pagination for next page
@@ -589,6 +647,10 @@ describe('Digital Learning Hub', () => {
             cy.get('[data-testid="dlor-homepage-list"] button:first-child article header h2').should(
                 'contain',
                 'Dummy entry to increase list size 3',
+            );
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(11) article header h2').should(
+                'contain',
+                'Dummy entry to increase list size 12',
             );
 
             // click pagination to go to first page
