@@ -22,6 +22,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
 import SearchIcon from '@mui/icons-material/Search';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -253,6 +254,9 @@ const useStyles = makeStyles(theme => ({
         borderWidth: 1,
         borderStyle: 'solid',
         borderRadius: 6,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-around',
         padding: '8px 12px',
         fontWeight: 400,
         '&:hover': {
@@ -884,8 +888,11 @@ export const DLOList = ({
                                 data-testid="dlor-homepage-contact"
                                 className={classes.uqActionButton}
                                 href="https://forms.office.com/r/8t0ugSZgE7"
+                                target="_blank"
+                                title="Load a contact form, in a new window"
                             >
                                 Contact us
+                                <OpenInNewIcon />
                             </a>
                         </p>
                     </Grid>
