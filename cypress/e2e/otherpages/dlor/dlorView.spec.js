@@ -263,7 +263,7 @@ describe('Digital Learning Hub View page', () => {
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
-                .contains('Log in for the full experience');
+                .contains('Log in for extra features');
         });
         it('Admin sees an edit button', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');

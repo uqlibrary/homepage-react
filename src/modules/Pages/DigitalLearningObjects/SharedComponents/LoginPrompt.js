@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 
 import InfoIcon from '@mui/icons-material/Info';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const useStyles = makeStyles(theme => ({
     loginAlert: {
@@ -17,6 +18,8 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         '& span': {
             marginLeft: 10,
+            display: 'flex',
+            alignItems: 'center',
         },
         // width: '100%',
     },
@@ -40,8 +43,14 @@ const LoginPrompt = ({ account, narrower, instyle }) => {
                     <span>
                         <a style={{ color: '#1e72c6' }} href={loginLink}>
                             Log in
-                        </a>{' '}
-                        for the full experience
+                        </a>
+                        &nbsp;for extra features{'  '}&nbsp;
+                        <a
+                            href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22746342"
+                            target="_blank"
+                        >
+                            <HelpOutlineIcon style={{ marginTop: 6 }} />
+                        </a>
                     </span>
                 </div>
             )}

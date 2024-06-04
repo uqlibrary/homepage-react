@@ -197,7 +197,7 @@ describe('Digital Learning Hub', () => {
             cy.viewport(1300, 1000);
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
-                .contains('Log in for the full experience');
+                .contains('Log in for extra features');
         });
         it('can filter panels', () => {
             // initially, all panels are showing
