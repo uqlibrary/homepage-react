@@ -879,7 +879,7 @@ export const DLOList = ({
             <StandardPage>
                 <Grid container style={{ marginBlock: '2em' }} alignItems="center">
                     <Grid item xs={12} md={10}>
-                        <Typography component={'p'} style={{ fontSize: '1.2em', fontStyle: 'italic' }}>
+                        <Typography component={'p'} style={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
                                 how to use our digital learning objects
