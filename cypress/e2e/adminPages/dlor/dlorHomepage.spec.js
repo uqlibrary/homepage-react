@@ -67,16 +67,36 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"] > div:first-child svg')
                 .should('exist')
                 .should('have.attr', 'style', 'color: green;'); // has green tick
+            cy.get('[data-testid="dlor-homepage-list"] > div:first-child div:nth-child(3) p:first-child').contains(
+                'Team One',
+            );
+            cy.get('[data-testid="dlor-homepage-list"] > div:first-child div:nth-child(3) p:nth-child(2)').contains(
+                'uqldegro',
+            );
+
             cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) h2')
                 .should('exist')
                 .should('contain', 'UQ has a Blak History');
             cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) svg')
                 .should('exist')
                 .should('have.attr', 'style', 'color: green;'); // has green tick
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:first-child').contains(
+                'Team One',
+            );
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:nth-child(2)').contains(
+                'uquser1',
+            );
+
             cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) h2')
                 .should('exist')
                 .should('contain', 'Advanced literature searching');
             cy.get('[data-testid="dlor-homepage-featured-98s0_dy5k3_98h4"]').should('not.exist'); // unfeatured: no green tick
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:first-child').contains(
+                'Team Two',
+            );
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:nth-child(2)').contains(
+                'uqjsmith',
+            );
         });
         it('pagination works', () => {
             // no data-testids in pagination :(

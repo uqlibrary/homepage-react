@@ -397,7 +397,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                     </Grid>
                                                     <Grid
                                                         item
-                                                        xs={9}
+                                                        xs={7}
                                                         className={classes.sidebyside}
                                                         data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
                                                     >
@@ -405,10 +405,16 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                             <Typography component={'h2'} variant={'h6'}>
                                                                 {o?.object_title}
                                                             </Typography>
-                                                            <Typography variant={'p'}>
+                                                            <Typography component={'p'}>
                                                                 <p>{o?.object_summary}</p>
                                                             </Typography>
                                                         </div>
+                                                    </Grid>
+                                                    <Grid item xs={2}>
+                                                        <Typography component={'p'}>{o?.owner?.team_name}</Typography>
+                                                        <Typography component={'p'}>
+                                                            {o?.owner?.publishing_user_username}
+                                                        </Typography>
                                                     </Grid>
                                                     <Grid item xs={1}>
                                                         <IconButton
