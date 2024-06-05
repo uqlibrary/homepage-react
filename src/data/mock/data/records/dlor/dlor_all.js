@@ -19,39 +19,46 @@ export default {
                     "filter_values": [{
                         id: 18,
                         name: 'Module',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "topic",
                     "filter_values": [{
                         id: 3,
                         name: 'Digital skills',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 30,
                         name: 'Video',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 34,
                         name: 'Cross-disciplinary',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 45,
                         name: 'CC BY-NC Attribution NonCommercial',
+                        help: 'https://creativecommons.org/licenses/by-nc/4.0/',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 11,
                         name: 'Connected citizens',
+                        help: '',
                     }, {
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 },
             ],
@@ -114,42 +121,50 @@ export default {
                     "filter_values": [{
                         id: 2,
                         name: 'Assignments',
+                        help: '',
                     }, {
                         id: 7,
                         name: 'Research',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 16,
                         name: 'Guide',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 27,
                         name: 'Pressbook',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 34,
                         name: 'Cross-disciplinary',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 46,
                         name: 'CC BY-NC-ND Attribution NonCommercial No-Derivatives',
+                        help: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 10,
                         name: 'Accomplished scholars',
+                        help: '',
                     }, {
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 },
             ],
@@ -197,39 +212,46 @@ export default {
                     "filter_values": [{
                         id: 1,
                         name: 'Aboriginal and Torres Strait Islander',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 18,
                         name: 'Module',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 24,
                         name: 'H5P',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 34,
                         name: 'Cross-disciplinary',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 44,
                         name: 'CC BY Attribution',
+                        help: 'https://creativecommons.org/licenses/by/4.0/',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 11,
                         name: 'Connected citizens',
+                        help: '',
                     }, {
                         id: 13,
                         name: 'Culturally capable',
+                        help: '',
                     }]
                 },
             ],
@@ -273,45 +295,54 @@ export default {
                     "filter_values": [{
                         id: 2,
                         name: 'Assignments',
+                        help: '',
                     }, {
                         id: 8,
                         name: 'Software',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 18,
                         name: 'Module',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 24,
                         name: 'H5P',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 37,
                         name: 'Health; Behavioural Sciences',
+                        help: '',
                     }, {
                         id: 40,
                         name: 'Medicine; Biomedical Sciences',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 51,
                         name: 'UQ copyright',
+                        help: 'https://policies.uq.edu.au/document/view-current.php?id=117#major1',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 10,
                         name: 'Accomplished scholars',
+                        help: '',
                     }, {
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 },
             ],
@@ -371,42 +402,50 @@ export default {
                     "filter_values": [{
                         id: 2,
                         name: 'Assignments',
+                        help: '',
                     }, {
                         id: 3,
                         name: 'Digital skills',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 18,
                         name: 'Module',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 27,
                         name: 'Pressbook',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 34,
                         name: 'Cross-disciplinary',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 45,
                         name: 'CC BY-NC Attribution NonCommercial',
+                        help: 'https://creativecommons.org/licenses/by-nc/4.0/',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 10,
                         name: 'Accomplished scholars',
+                        help: '',
                     }, {
                         id: 12,
                         name: 'Courageous thinkers',
+                        help: '',
                     }]
                 },
             ],
@@ -466,24 +505,28 @@ export default {
                     "filter_values": [{
                         id: 27,
                         name: 'Pressbook',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 34,
                         name: 'Cross-disciplinary',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 44,
                         name: 'CC BY Attribution',
+                        help: 'https://creativecommons.org/licenses/by/4.0/',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 11,
                         name: 'Connected citizens',
+                        help: '',
                     }]
                 },
             ],
@@ -543,42 +586,50 @@ export default {
                     "filter_values": [{
                         id: 2,
                         name: 'Assignments',
+                        help: '',
                     }, {
                         id: 3,
                         name: 'Digital skills',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 18,
                         name: 'Module',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 27,
                         name: 'Pressbook',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 34,
                         name: 'Cross-disciplinary',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 45,
                         name: 'CC BY-NC Attribution NonCommercial',
+                        help: 'https://creativecommons.org/licenses/by-nc/4.0/',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 11,
                         name: 'Connected citizens',
+                        help: '',
                     }, {
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 },
             ],
@@ -638,39 +689,46 @@ export default {
                     "filter_values": [{
                         id: 6,
                         name: 'Referencing',
+                        help: '',
                     }, {
                         id: 8,
                         name: 'Software',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 18,
                         name: 'Module',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 24,
                         name: 'H5P',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 34,
                         name: 'Cross-disciplinary',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 45,
                         name: 'CC BY-NC Attribution NonCommercial',
+                        help: 'https://creativecommons.org/licenses/by-nc/4.0/',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 10,
                         name: 'Accomplished scholars',
+                        help: '',
                     }, {
                         id: 14,
                         name: 'Influential communicators',
@@ -726,42 +784,50 @@ export default {
                     "filter_values": [{
                         id: 1,
                         name: 'Aboriginal and Torres Strait Islander',
+                        help: '',
                     }, {
                         id: 2,
                         name: 'Assignments',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 4,
                         name: 'Employability',
+                        help: '',
                     }, {
                         id: 5,
                         name: 'Information literacy',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 26,
                         name: 'PowerPoint',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 35,
                         name: 'Business; Economics',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 45,
                         name: 'CC BY-NC Attribution NonCommercial',
+                        help: 'https://creativecommons.org/licenses/by-nc/4.0/',
                     }]
                 },
             ],
@@ -813,15 +879,18 @@ export default {
                     "filter_values": [{
                         id: 1,
                         name: 'Aboriginal and Torres Strait Islander',
+                        help: '',
                     }, {
                         id: 2,
                         name: 'Assignments',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 10,
                         name: 'Accomplished scholars',
+                        help: '',
                     }, {
                         id: 13,
                         name: 'Culturally capable',
@@ -833,24 +902,28 @@ export default {
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 30,
                         name: 'Video',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 40,
                         name: 'Medicine; Biomedical Sciences',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 47,
                         name: 'CC BY-NC-SA Attribution NonCommercial Share Alike',
+                        help: 'https://creativecommons.org/licenses/by-nc-sa/4.0',
                     }]
                 },
             ],
@@ -911,39 +984,46 @@ export default {
                     "filter_values": [{
                         id: 2,
                         name: 'Assignments',
+                        help: '',
                     }, {
                         id: 8,
                         name: 'Software',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1016,36 +1096,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1092,36 +1178,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1168,36 +1260,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1244,36 +1342,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1320,36 +1424,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1396,36 +1506,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1472,36 +1588,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1548,36 +1670,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1624,36 +1752,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1700,36 +1834,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1776,36 +1916,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1852,36 +1998,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -1928,36 +2080,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -2004,36 +2162,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],
@@ -2080,36 +2244,42 @@ export default {
                     "filter_values": [{
                         id: 9,
                         name: 'Other',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "graduate_attributes",
                     "filter_values": [{
                         id: 14,
                         name: 'Influential communicators',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "item_type",
                     "filter_values": [{
                         id: 17,
                         name: 'Interactive',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "media_format",
                     "filter_values": [{
                         id: 29,
                         name: 'Spreadsheet',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "subject",
                     "filter_values": [{
                         id: 38,
                         name: 'Humanities; Arts',
+                        help: '',
                     }]
                 }, {
                     "filter_key": "licence",
                     "filter_values": [{
                         id: 50,
                         name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
                     }]
                 },
             ],

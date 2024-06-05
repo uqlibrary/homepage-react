@@ -33,6 +33,7 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-topic"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Assignments');
+            cy.get('[data-testid="detailpage-filter-topic"] ul li:first-child a').should('not.exist'); // no help link
             cy.get('[data-testid="detailpage-filter-topic"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Software');
@@ -47,6 +48,7 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-item_type"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Module');
+            cy.get('[data-testid="detailpage-filter-item_type"] ul li:first-child a').should('not.exist'); // no help link
 
             cy.get('[data-testid="detailpage-filter-media_format"] h3')
                 .should('exist')
@@ -58,6 +60,7 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-media_format"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'H5P');
+            cy.get('[data-testid="detailpage-filter-media_format"] ul li:first-child a').should('not.exist'); // no help link
 
             cy.get('[data-testid="detailpage-filter-subject"] h3')
                 .should('exist')
@@ -69,6 +72,7 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-subject"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Health; Behavioural Sciences');
+            cy.get('[data-testid="detailpage-filter-subject"] ul li:first-child a').should('not.exist'); // no help link
             cy.get('[data-testid="detailpage-filter-subject"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Medicine; Biomedical Sciences');
@@ -83,6 +87,7 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-licence"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'UQ copyright');
+            cy.get('[data-testid="detailpage-filter-licence"] ul li:first-child a').should('exist'); // help link exists
 
             cy.get('[data-testid="detailpage-filter-graduate_attributes"] h3')
                 .should('exist')
@@ -94,6 +99,7 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Accomplished scholars');
+            cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul li:first-child a').should('not.exist'); // no help link
             cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Influential communicators');

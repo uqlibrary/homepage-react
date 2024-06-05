@@ -16,6 +16,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import EditIcon from '@mui/icons-material/Edit';
 import StarIcon from '@mui/icons-material/Star';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -329,7 +330,7 @@ export const DLOView = ({
             <div className={classes.dlorEntry}>
                 {getTitleBlock()}
                 <Grid container spacing={4} data-testid="dlor-detailpage" className={classes.viewContent}>
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={9}>
                         <LoginPrompt account={account} instyle={{ marginBottom: 12 }} />
                         <div
                             data-testid="dlor-detailpage-description"
@@ -451,7 +452,7 @@ export const DLOView = ({
                             </div>
                         )}
                     </Grid>
-                    <Grid item xs={12} md={4} data-testid="detailpage-metadata">
+                    <Grid item xs={12} md={3} data-testid="detailpage-metadata">
                         {dlorItem?.object_filters?.length > 0 && (
                             <>
                                 {isDlorAdminUser(account) && (
@@ -484,7 +485,28 @@ export const DLOView = ({
                                             <ul className={classes.filterDisplayList}>
                                                 {!!filter.filter_values &&
                                                     filter.filter_values.map((value, subIndex) => {
-                                                        return <li key={subIndex}>{value.name}</li>;
+                                                        return (
+                                                            <li
+                                                                key={subIndex}
+                                                                style={{ display: 'flex', alignItems: 'center' }}
+                                                            >
+                                                                {value.name}
+                                                                {!!value?.help && value?.help.startsWith('http') && (
+                                                                    <a
+                                                                        href={value.help}
+                                                                        target="_blank"
+                                                                        title="View the help for this filter"
+                                                                        style={{
+                                                                            color: '#333',
+                                                                            marginTop: 2,
+                                                                            marginLeft: 3,
+                                                                        }}
+                                                                    >
+                                                                        <HelpOutlineIcon size="small" />
+                                                                    </a>
+                                                                )}
+                                                            </li>
+                                                        );
                                                     })}
                                             </ul>
                                         </div>
