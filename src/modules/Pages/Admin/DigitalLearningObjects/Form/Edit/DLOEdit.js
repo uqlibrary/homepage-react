@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
+import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 
 import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
@@ -13,7 +14,22 @@ import {
     getMinutesFromTotalSeconds,
     getSecondsFromTotalSeconds,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
+const useStyles = makeStyles(() => ({
+    titleBlock: {
+        '& p:first-child': {
+            display: 'flex',
+            alignItems: 'center',
+            padding: 0,
+            fontSize: 16,
+            '& a': {
+                color: 'rgba(0, 0, 0, 0.87)',
+                textDecoration: 'underline',
+            },
+        },
+    },
+}));
 export const DLOEdit = ({
     actions,
     dlorItemLoading,
@@ -30,6 +46,7 @@ export const DLOEdit = ({
     dlorFilterListError,
 }) => {
     const { dlorId } = useParams();
+    const classes = useStyles();
 
     React.useEffect(() => {
         if (!dlorTeamListLoading && !dlorTeamListError && !dlorTeamList) {
@@ -108,27 +125,33 @@ export const DLOEdit = ({
 
     return (
         <Fragment>
-            <StandardPage title="Digital Learning Hub Management">
+            <StandardPage title="Digital Learning Hub - Edit Object">
+                <DlorAdminBreadcrumbs
+                    breadCrumbList={[
+                        {
+                            title: `Edit object: ${dlorItem?.object_title || ''}`,
+                            id: 'edit-object',
+                        },
+                    ]}
+                />
                 <section aria-live="assertive">
-                    <StandardCard title="Edit an Object for the Digital Learning Hub">
-                        <DlorForm
-                            actions={actions}
-                            dlorItemSaving={dlorItemUpdating}
-                            dlorSavedItemError={dlorUpdatedItemError}
-                            dlorSavedItem={dlorUpdatedItem}
-                            dlorItemLoading={dlorItemLoading}
-                            dlorItem={dlorItem}
-                            dlorItemError={dlorItemError}
-                            dlorTeamList={dlorTeamList}
-                            dlorTeamListLoading={dlorTeamListLoading}
-                            dlorTeamListError={dlorTeamListError}
-                            dlorFilterList={dlorFilterList}
-                            dlorFilterListLoading={dlorFilterListLoading}
-                            dlorFilterListError={dlorFilterListError}
-                            formDefaults={formDefaults}
-                            mode="edit"
-                        />
-                    </StandardCard>
+                    <DlorForm
+                        actions={actions}
+                        dlorItemSaving={dlorItemUpdating}
+                        dlorSavedItemError={dlorUpdatedItemError}
+                        dlorSavedItem={dlorUpdatedItem}
+                        dlorItemLoading={dlorItemLoading}
+                        dlorItem={dlorItem}
+                        dlorItemError={dlorItemError}
+                        dlorTeamList={dlorTeamList}
+                        dlorTeamListLoading={dlorTeamListLoading}
+                        dlorTeamListError={dlorTeamListError}
+                        dlorFilterList={dlorFilterList}
+                        dlorFilterListLoading={dlorFilterListLoading}
+                        dlorFilterListError={dlorFilterListError}
+                        formDefaults={formDefaults}
+                        mode="edit"
+                    />
                 </section>
             </StandardPage>
         </Fragment>

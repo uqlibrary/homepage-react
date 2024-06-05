@@ -411,9 +411,14 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                         </div>
                                                     </Grid>
                                                     <Grid item xs={2}>
-                                                        <Typography component={'p'}>{o?.owner?.team_name}</Typography>
                                                         <Typography component={'p'}>
                                                             {o?.owner?.publishing_user_username}
+                                                        </Typography>
+                                                        <Typography
+                                                            component={'p'}
+                                                            style={{ textIndent: -12, paddingLeft: 12 }}
+                                                        >
+                                                            {o?.owner?.team_name}
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item xs={1}>

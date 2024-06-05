@@ -18,7 +18,7 @@ import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearning
 import { useConfirmationState } from 'hooks';
 import { scrollToTopOfPage } from 'helpers/general';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     titleBlock: {
         '& p:first-child': {
             display: 'flex',

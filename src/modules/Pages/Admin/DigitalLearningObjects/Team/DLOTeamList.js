@@ -14,14 +14,13 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { useConfirmationState } from 'hooks';
 
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
-import { useConfirmationState } from 'hooks';
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     titleBlock: {
         '& p:first-child': {
             display: 'flex',
@@ -172,17 +171,15 @@ export const DLOTeamList = ({
                 isOpen={isDeleteConfirmOpen}
                 locale={getLocale()}
             />
+            <DlorAdminBreadcrumbs
+                breadCrumbList={[
+                    {
+                        title: 'Team management',
+                    },
+                ]}
+            />
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={6}>
-                    <div className={classes.titleBlock}>
-                        <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <a href={dlorAdminLink()}>Digital Learning Hub admin</a>
-                            <ArrowForwardIcon style={{ height: 15 }} />
-                            Team management
-                        </Typography>
-                    </div>
-                </Grid>
-                <Grid item xs={5} style={{ textAlign: 'right' }}>
+                <Grid item xs={12} style={{ textAlign: 'right' }}>
                     <Button
                         children="Add team"
                         color="primary"
@@ -190,9 +187,6 @@ export const DLOTeamList = ({
                         onClick={() => navigateToAddPage()}
                         variant="contained"
                     />
-                </Grid>
-                <Grid item xs={1}>
-                    <VisitHomepage />
                 </Grid>
             </Grid>
             <Grid container spacing={2} alignItems="center">

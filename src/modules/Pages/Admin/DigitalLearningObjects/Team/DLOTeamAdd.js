@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
 
-import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
-import Typography from '@mui/material/Typography';
-
-import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
-
-import DlOTeamForm from 'modules/Pages/Admin/DigitalLearningObjects/Team/DlOTeamForm';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+
+import DlOTeamForm from 'modules/Pages/Admin/DigitalLearningObjects/Team/DlOTeamForm';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -45,26 +40,17 @@ export const DLOTeamAdd = ({ actions, dlorItemCreating, dlorCreatedItemError, dl
 
     return (
         <StandardPage title="Digital Learning Hub - Add a new Team">
-            <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={11}>
-                    <div className={classes.titleBlock}>
-                        <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <a data-testid="dlor-add-form-homelink" href={dlorAdminLink()}>
-                                Digital Learning Hub admin
-                            </a>
-                            <ArrowForwardIcon style={{ height: 15 }} />
-                            <a data-testid="dlor-add-form-uplink" href={dlorAdminLink('/team/manage')}>
-                                Team management
-                            </a>
-                            <ArrowForwardIcon style={{ height: 15 }} />
-                            Add new team
-                        </Typography>
-                    </div>
-                </Grid>
-                <Grid item xs={1}>
-                    <VisitHomepage />
-                </Grid>
-            </Grid>
+            <DlorAdminBreadcrumbs
+                breadCrumbList={[
+                    {
+                        link: dlorAdminLink('/team/manage'),
+                        title: 'Team management',
+                    },
+                    {
+                        title: 'Add new team',
+                    },
+                ]}
+            />
             <DlOTeamForm
                 actions={actions}
                 formDefaults={formDefaults}

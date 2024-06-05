@@ -84,6 +84,16 @@ describe('Add an object to the Digital Learning Hub', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
             });
+            it('loads as expected', () => {
+                cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
+                    .contains('Digital Learning Hub admin')
+                    .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+                cy.get(
+                    '[data-testid="dlor-breadcrumb--create-an-object-for-the-digital-learning-hub-label-0"]',
+                ).contains('Create an Object for the Digital Learning Hub');
+
+                cy.get('[data-testid="object_publishing_user"] input').should('have.value', 'dloradmn');
+            });
             it('validates fields correctly', () => {
                 // first enter all the fields and show the save button doesnt enable until all the fields are entered
 

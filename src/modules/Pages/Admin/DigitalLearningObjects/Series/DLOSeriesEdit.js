@@ -10,8 +10,6 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
-
-import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -19,11 +17,10 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/DlorAdminBreadcrumbs';
 
 import { scrollToTopOfPage } from 'helpers/general';
 import { useConfirmationState } from 'hooks';
-import { fullPath } from 'config/routes';
 import { getDlorViewPageUrl, toTitleCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
@@ -250,26 +247,18 @@ export const DLOSeriesEdit = ({
 
     return (
         <StandardPage title="Digital Learning Hub - Edit Series">
-            <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={11}>
-                    <div className={classes.titleBlock}>
-                        <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <a data-testid="dlor-edit-form-homelink" href={dlorAdminLink()}>
-                                Digital Learning Hub admin
-                            </a>
-                            <ArrowForwardIcon style={{ height: 15 }} />
-                            <a data-testid="dlor-edit-form-uplink" href={dlorAdminLink('/series/manage')}>
-                                Series management
-                            </a>
-                            <ArrowForwardIcon style={{ height: 15 }} />
-                            Edit series {originalSeriesDetails.series_name}
-                        </Typography>
-                    </div>
-                </Grid>
-                <Grid item xs={1}>
-                    <VisitHomepage />
-                </Grid>
-            </Grid>
+            <DlorAdminBreadcrumbs
+                breadCrumbList={[
+                    {
+                        link: dlorAdminLink('/series/manage'),
+                        title: 'Series management',
+                    },
+                    {
+                        title: `Edit series: ${originalSeriesDetails.series_name || ''}`,
+                        id: 'edit-series',
+                    },
+                ]}
+            />
             <Grid container spacing={2}>
                 {(() => {
                     if (!!dlorItemUpdating || !!dlorListLoading) {

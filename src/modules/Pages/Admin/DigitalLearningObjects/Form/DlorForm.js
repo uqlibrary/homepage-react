@@ -1437,10 +1437,6 @@ export const DlorForm = ({
 
     return (
         <>
-            <div style={{ textAlign: 'right', marginTop: -62, marginBottom: 32 }}>
-                {/* force the icon to the top right of the display */}
-                <VisitHomepage />
-            </div>
             {saveStatus === 'complete' && (
                 <ConfirmationBox
                     actionButtonColor="primary"

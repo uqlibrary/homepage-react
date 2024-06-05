@@ -68,7 +68,7 @@ export default {
             "owner": {
                 "publishing_user_username": "uqldegro",
                 "team_id": 1,
-                "team_name": "Team One",
+                "team_name": "CDS DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
@@ -172,7 +172,7 @@ export default {
             "owner": {
                 "publishing_user_username": "uqjsmith",
                 "team_id": 2,
-                "team_name": "Team Two",
+                "team_name": "Faculty Services Librarians",
                 "team_email": "team2@uq.edu.au",
                 "team_manager": "Test McTester"
             },
@@ -259,7 +259,7 @@ export default {
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
-                "team_name": "Team One",
+                "team_name": "CDS DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
@@ -350,7 +350,7 @@ export default {
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
-                "team_name": "Team One",
+                "team_name": "CDS DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
@@ -453,7 +453,7 @@ export default {
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
-                "team_name": "Team One",
+                "team_name": "CDS DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
@@ -534,7 +534,7 @@ export default {
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
-                "team_name": "Team One",
+                "team_name": "CDS DX Digital Content",
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
@@ -637,7 +637,7 @@ export default {
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 2,
-                "team_name": "Team Two",
+                "team_name": "Faculty Services Librarians",
                 "team_email": "team2@uq.edu.au",
                 "team_manager": "Test McTester"
             },
@@ -740,7 +740,7 @@ export default {
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 2,
-                "team_name": "Team Two",
+                "team_name": "Faculty Services Librarians",
                 "team_email": "team2@uq.edu.au",
                 "team_manager": "Test McTester"
             },

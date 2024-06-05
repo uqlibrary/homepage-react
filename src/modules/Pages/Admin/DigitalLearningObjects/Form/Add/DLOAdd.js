@@ -1,14 +1,30 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-const moment = require('moment-timezone');
+import { makeStyles } from '@mui/styles';
 
-import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
-
+import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { useAccountContext } from 'context';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
+import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+
+const moment = require('moment-timezone');
+
+const useStyles = makeStyles(() => ({
+    titleBlock: {
+        '& p:first-child': {
+            display: 'flex',
+            alignItems: 'center',
+            padding: 0,
+            fontSize: 16,
+            '& a': {
+                color: 'rgba(0, 0, 0, 0.87)',
+                textDecoration: 'underline',
+            },
+        },
+    },
+}));
 
 export const DLOAdd = ({
     actions,
@@ -26,6 +42,7 @@ export const DLOAdd = ({
     dlorFilterListError,
 }) => {
     const { account } = useAccountContext();
+    const classes = useStyles();
 
     console.log('**** DLOAdd load=', dlorFileTypeListLoading, '; e=', dlorFileTypeListError, '; ', dlorFileTypeList);
 
@@ -60,26 +77,31 @@ export const DLOAdd = ({
     return (
         <Fragment>
             <StandardPage title="Digital Learning Hub Management">
+                <DlorAdminBreadcrumbs
+                    breadCrumbList={[
+                        {
+                            title: 'Create an Object for the Digital Learning Hub',
+                        },
+                    ]}
+                />
                 <section aria-live="assertive">
-                    <StandardCard title="Create an Object for the Digital Learning Hub">
-                        <DlorForm
-                            actions={actions}
-                            dlorItemSaving={dlorItemCreating}
-                            dlorSavedItemError={dlorCreatedItemError}
-                            dlorSavedItem={dlorCreatedItem}
-                            dlorTeamList={dlorTeamList}
-                            dlorTeamListLoading={dlorTeamListLoading}
-                            dlorTeamListError={dlorTeamListError}
-                            dlorFilterList={dlorFilterList}
-                            dlorFilterListLoading={dlorFilterListLoading}
-                            dlorFilterListError={dlorFilterListError}
-                            formDefaults={formDefaults}
-                            dlorFileTypeList={dlorFileTypeList}
-                            dlorFileTypeListLoading={dlorFileTypeListLoading}
-                            dlorFileTypeListError={dlorFileTypeListError}
-                            mode="add"
-                        />
-                    </StandardCard>
+                    <DlorForm
+                        actions={actions}
+                        dlorItemSaving={dlorItemCreating}
+                        dlorSavedItemError={dlorCreatedItemError}
+                        dlorSavedItem={dlorCreatedItem}
+                        dlorTeamList={dlorTeamList}
+                        dlorTeamListLoading={dlorTeamListLoading}
+                        dlorTeamListError={dlorTeamListError}
+                        dlorFilterList={dlorFilterList}
+                        dlorFilterListLoading={dlorFilterListLoading}
+                        dlorFilterListError={dlorFilterListError}
+                        formDefaults={formDefaults}
+                        dlorFileTypeList={dlorFileTypeList}
+                        dlorFileTypeListLoading={dlorFileTypeListLoading}
+                        dlorFileTypeListError={dlorFileTypeListError}
+                        mode="add"
+                    />
                 </section>
             </StandardPage>
         </Fragment>

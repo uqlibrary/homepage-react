@@ -47,10 +47,10 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 .should('exist')
                 .should('be.disabled');
 
-            cy.get('a[data-testid="dlor-edit-form-homelink"]')
+            cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
                 .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-            cy.get('a[data-testid="dlor-edit-form-uplink"]')
+            cy.get('a[data-testid="dlor-breadcrumb--team-management-link-0"]')
                 .contains('Team management')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });

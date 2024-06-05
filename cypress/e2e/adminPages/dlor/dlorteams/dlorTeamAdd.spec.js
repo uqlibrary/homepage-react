@@ -41,12 +41,13 @@ describe('Digital Learning Hub admin Add Team', () => {
                 .should('be.visible')
                 .should('be.empty');
 
-            cy.get('a[data-testid="dlor-add-form-homelink"]')
+            cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
                 .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-            cy.get('a[data-testid="dlor-add-form-uplink"]')
+            cy.get('a[data-testid="dlor-breadcrumb--team-management-link-0"]')
                 .contains('Team management')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
+            cy.get('[data-testid="dlor-breadcrumb--add-new-team-label-1"]').contains('Add new team');
         });
         it('validates correctly', () => {
             // initially, save button is disabled - the form is invalid, but no errors appear

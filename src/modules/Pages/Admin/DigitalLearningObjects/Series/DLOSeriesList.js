@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -17,11 +16,11 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
 
 import { useConfirmationState } from 'hooks';
+import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     titleBlock: {
         '& p:first-child': {
             display: 'flex',
@@ -195,17 +194,16 @@ export const DLOSeriesList = ({
                 isOpen={isDeleteConfirmOpen}
                 locale={getLocale()}
             />
+            <DlorAdminBreadcrumbs
+                breadCrumbList={[
+                    {
+                        title: 'Series management',
+                    },
+                ]}
+            />
+
             <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={6}>
-                    <div className={classes.titleBlock}>
-                        <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                            <a href={dlorAdminLink()}>Digital Learning Hub admin</a>
-                            <ArrowForwardIcon style={{ height: 15 }} />
-                            Series management
-                        </Typography>
-                    </div>
-                </Grid>
-                <Grid item xs={5} style={{ textAlign: 'right' }}>
+                <Grid item xs={12} style={{ textAlign: 'right' }}>
                     <Button
                         children="Add series (later)"
                         color="primary"
@@ -214,9 +212,6 @@ export const DLOSeriesList = ({
                         variant="contained"
                         disabled // THIS IS CURRENTLY DISABLED
                     />
-                </Grid>
-                <Grid item xs={1}>
-                    <VisitHomepage />
                 </Grid>
             </Grid>
             <Grid container spacing={2} alignItems="center">

@@ -32,7 +32,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.injectAxe();
                 cy.viewport(1300, 1000);
                 cy.waitUntil(() => cy.get('h1').should('exist'));
-                cy.get('h1').should('contain', 'Digital Learning Hub Management');
+                cy.get('h1').should('contain', 'Digital Learning Hub - Edit Object');
 
                 // check panel 1
                 cy.checkA11y('[data-testid="StandardPage"]', {
@@ -87,9 +87,17 @@ describe('Edit an object on the Digital Learning Hub', () => {
             it('loads fields correctly', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
+
                 cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
                 cy.get('[data-testid="object_publishing_user"] input').should('have.value', 'uqjsmith');
                 cy.get('[data-testid="error-message-object_publishing_user"]').should('not.exist');
+
+                cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
+                    .contains('Digital Learning Hub admin')
+                    .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+                cy.get('[data-testid="dlor-breadcrumb--edit-object-label-0"]').contains(
+                    'Edit object: Advanced literature searching',
+                );
 
                 // team editor
 
@@ -421,10 +429,11 @@ describe('Edit an object on the Digital Learning Hub', () => {
         context('successfully mock to db', () => {
             beforeEach(() => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
-                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
-                cy.viewport(1300, 1000);
             });
             it('admin can edit an object for a new team and return to list', () => {
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
+                cy.viewport(1300, 1000);
+
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
@@ -641,6 +650,9 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('contain', 'Digital Learning Hub Management');
             });
             it('admin can edit, edit the current team, choose a different existing team and re-edit', () => {
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
+                cy.viewport(1300, 1000);
+
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
@@ -856,17 +868,18 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="standard-card-edit-an-object-for-the-digital-learning-hub-header"]')
+                cy.get('[data-testid="dlor-detailpage-sitelabel"]')
                     .should('exist')
-                    .should('contain', 'Edit an Object for the Digital Learning Hub');
+                    .should('contain', 'Edit object: Advanced literature searching');
             });
             it('with a new interaction type & is featured', () => {
+                cy.visit(`http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}`);
+                cy.viewport(1300, 1000);
+
                 cy.getCookie('CYPRESS_TEST_DATA').then(cookie => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
                 });
-
-                cy.visit(`http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}`);
 
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -978,34 +991,34 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     console.log('sentValues=', sentValues);
                     console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
-                    // expect(sentFacets).to.deep.equal(expectedFacets);
-                    // expect(sentKeywords).to.deep.equal(expectedKeywords);
-                    // cy.clearCookie('CYPRESS_DATA_SAVED');
-                    // cy.clearCookie('CYPRESS_TEST_DATA');
+                    expect(sentFacets).to.deep.equal(expectedFacets);
+                    expect(sentKeywords).to.deep.equal(expectedKeywords);
+                    cy.clearCookie('CYPRESS_DATA_SAVED');
+                    cy.clearCookie('CYPRESS_TEST_DATA');
                 });
 
-                // // confirm save happened
-                // cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
-                // cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
-                // cy.get('[data-testid="confirm-dlor-save-outcome"]')
-                //     .should('exist')
-                //     .contains('Return to list page');
-                // cy.get('[data-testid="cancel-dlor-save-outcome"]')
-                //     .should('exist')
-                //     .contains('Re-edit Object');
-                //
-                // // now clear the form to create another Object
-                // cy.get('[data-testid="cancel-dlor-save-outcome"]')
-                //     .should('contain', 'Re-edit Object')
-                //     .click();
-                // cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
-                // cy.get('[data-testid="dlor-form-next-button"]')
-                //     .should('exist')
-                //     .click();
-                //
-                // cy.get('[data-testid="standard-card-edit-an-object-for-the-digital-learning-hub-header"]')
-                //     .should('exist')
-                //     .should('contain', 'Edit an Object for the Digital Learning Hub');
+                // confirm save happened
+                cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
+                cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Return to list page');
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('exist')
+                    .contains('Re-edit Object');
+
+                // now clear the form to create another Object
+                cy.get('[data-testid="cancel-dlor-save-outcome"]')
+                    .should('contain', 'Re-edit Object')
+                    .click();
+                cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="dlor-detailpage-sitelabel"]')
+                    .should('exist')
+                    .should('contain', 'Edit object: Accessibility - Digital Essentials (has Youtube link)');
             });
         });
         context('fails correctly', () => {
@@ -1072,7 +1085,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
             cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').should('contain', 'Digital Learning Hub Management');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Edit Object');
         });
     });
 });

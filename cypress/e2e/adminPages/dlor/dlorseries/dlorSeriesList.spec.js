@@ -23,6 +23,11 @@ describe('Digital Learning Hub admin Series management', () => {
             });
         });
         it('loads as expected', () => {
+            cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
+                .contains('Digital Learning Hub admin')
+                .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            cy.get('[data-testid="dlor-breadcrumb--series-management-label-0"]').contains('Series management');
+
             // series name shows correctly
             cy.get('[data-testid="dlor-serieslist-panel-1"]')
                 .should('exist')

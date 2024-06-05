@@ -14,6 +14,17 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Edit Series');
+
+            cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
+                .contains('Digital Learning Hub admin')
+                .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            cy.get('a[data-testid="dlor-breadcrumb--series-management-link-0"]')
+                .contains('Series management')
+                .should('have.attr', 'href', `http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
+            cy.get('[data-testid="dlor-breadcrumb--edit-series-label-1"]').contains(
+                'Edit series: Advanced literature searching',
+            );
+
             // series name shows correctly
             cy.get('[data-testid="series_name"] input')
                 .should('exist')
