@@ -165,9 +165,13 @@ export const DlorForm = ({
     };
 
     function getFacetIds(slug) {
+        console.log('getFacetIds slug=', slug);
         const facetType = dlorFilterList?.find(item => item.facet_type_slug === slug);
+        console.log('getFacetIds facetType=', facetType);
 
-        return facetType?.facet_list?.map(facet => facet.facet_id) || [];
+        const newVar = facetType?.facet_list?.map(facet => facet.facet_id) || [];
+        console.log('getFacetIds result=', newVar);
+        return newVar;
     }
 
     useEffect(() => {
@@ -983,6 +987,7 @@ export const DlorForm = ({
             </Grid>
             {!!dlorFilterList &&
                 dlorFilterList.map(filterItem => {
+                    console.log('stepPanelContentFilters dlorFilterList.map filterItem=', filterItem);
                     return (
                         <Grid item xs={4} key={filterItem.facet_type_slug}>
                             <Typography component={'h3'} variant={'h7'}>
@@ -1304,6 +1309,7 @@ export const DlorForm = ({
     };
 
     function displayControlByFacetType(filterItem) {
+        console.log('displayControlByFacetType', filterItem.facet_type_name, ' filterItem=', filterItem);
         const facetIsSet = (findId, facets = null) => {
             return checkBoxArrayRef.current.includes(findId);
             // return facets?.some(ff => ff?.filter_values?.some(value => value?.id === findId));
@@ -1314,6 +1320,12 @@ export const DlorForm = ({
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => {
+                    console.log(
+                        'displayControlByFacetType ',
+                        filterItem.facet_type_name,
+                        filterItem?.facet_type_number,
+                        thisfacet,
+                    );
                     return (
                         <FormControlLabel
                             key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
@@ -1334,6 +1346,12 @@ export const DlorForm = ({
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => {
+                    console.log(
+                        'displayControlByFacetType ',
+                        filterItem.facet_type_name,
+                        filterItem?.facet_type_number,
+                        thisfacet,
+                    );
                     return (
                         <FormControlLabel
                             key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
@@ -1360,6 +1378,12 @@ export const DlorForm = ({
                     onChange={handleFacetChange(filterItem.id)}
                 >
                     {filterItem?.facet_list?.map(thisfacet => {
+                        console.log(
+                            'displayControlByFacetType ',
+                            filterItem.facet_type_name,
+                            filterItem?.facet_type_number,
+                            thisfacet,
+                        );
                         return (
                             <FormControlLabel
                                 key={thisfacet.facet_id}
