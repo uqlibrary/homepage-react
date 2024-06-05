@@ -469,13 +469,13 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible');
 
-            cy.get('[data-testid="panel-help-close-0"]')
+            cy.get('[data-testid="panel-help-close-1"]')
                 .should('exist')
                 .should('not.be.visible');
-            cy.get('[data-testid="panel-help-icon-0"]')
+            cy.get('[data-testid="panel-help-icon-1"]')
                 .should('exist')
                 .click();
-            cy.get('[data-testid="panel-help-close-0"]')
+            cy.get('[data-testid="panel-help-close-1"]')
                 .should('exist')
                 .should('be.visible');
 
@@ -486,7 +486,7 @@ describe('Digital Learning Hub', () => {
                 .click({ force: true });
 
             // popup help closes
-            cy.get('[data-testid="panel-help-close-0"]')
+            cy.get('[data-testid="panel-help-close-1"]')
                 .should('exist')
                 .should('not.be.visible');
 
