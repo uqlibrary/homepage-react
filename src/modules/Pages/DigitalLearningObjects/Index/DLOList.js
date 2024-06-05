@@ -339,6 +339,7 @@ export const DLOList = ({
             actions.loadAllFilters();
         }
         if (!!dlorFilterList && !!dlorList) {
+            console.log('will filter filterlist', dlorFilterList);
             const filterList = dlorFilterList;
             // Step 1: Extract all unique id values from dlorList
             const idsFromDlorList = new Set();
@@ -357,6 +358,7 @@ export const DLOList = ({
                     idsFromDlorList.has(facet.facet_id),
                 );
             });
+            console.log('have filtered filterlist', filterList);
 
             setFilterListTrimmed(filterList);
         }
@@ -938,7 +940,7 @@ export const DLOList = ({
     }
 
     const handlePaginationChange = (e, value) => {
-        console.log('handlePaginationChange ', value);
+        console.log('handlePaginationChange ', value, 'filters currently', filterListTrimmed);
         setPaginationPage(value);
     };
 
