@@ -21,7 +21,6 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('md')]: {
             marginRight: '-5em',
             position: 'relative',
-            zIndex: 999,
             display: 'flex',
             justifyContent: 'flex-end',
         },
