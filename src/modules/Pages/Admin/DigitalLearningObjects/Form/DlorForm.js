@@ -1272,9 +1272,14 @@ export const DlorForm = ({
                 (currentValues?.object_link_file_type === 'new' && !currentValues?.new_file_type)) &&
             thirdPanelErrorCount++;
 
+        // if minutes and seconds are both zero, error, otherwise zero allowed
         currentValues.object_link_interaction_type === linkInteractionType_view &&
-            (!isValidNumber(currentValues?.object_link_duration_minutes) ||
-                !isValidNumber(currentValues?.object_link_duration_seconds)) &&
+            (!isValidNumber(currentValues?.object_link_duration_minutes, true) ||
+                !isValidNumber(currentValues?.object_link_duration_seconds, true) ||
+                !isValidNumber(
+                    Number(currentValues?.object_link_duration_minutes) +
+                        Number(currentValues?.object_link_duration_seconds),
+                )) &&
             thirdPanelErrorCount++;
 
         currentValues.object_link_interaction_type === linkInteractionType_download &&

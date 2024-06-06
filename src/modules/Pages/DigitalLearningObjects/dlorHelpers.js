@@ -247,9 +247,12 @@ export function getTotalSecondsFromMinutesAndSecond(minutes, seconds) {
 //     return minutes * 60 + seconds;
 // }
 
-export function isValidNumber(value) {
+export function isValidNumber(value, isZeroAllowed = false) {
     const numberValue = Number(value);
 
+    if (!!isZeroAllowed) {
+        return !isNaN(numberValue) && numberValue >= 0;
+    }
     // Check if the value is a number and greater than zero
     return !isNaN(numberValue) && numberValue > 0;
 }
