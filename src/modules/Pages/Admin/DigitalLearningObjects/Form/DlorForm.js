@@ -522,6 +522,17 @@ export const DlorForm = ({
                     </FormControl>
                 </Grid>
             )}
+            <Grid item xs={12}>
+                {mode === 'edit' ? (
+                    <Typography component={'p'}>
+                        Next Review Date: {formValues?.object_review_date_next} (edit to come)
+                    </Typography>
+                ) : (
+                    <Typography component={'p'}>
+                        Next Review Date: {formValues?.object_review_date_next} (setting to come)
+                    </Typography>
+                )}
+            </Grid>
         </>
     );
 
