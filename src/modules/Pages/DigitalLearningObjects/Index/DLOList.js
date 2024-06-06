@@ -944,6 +944,9 @@ export const DLOList = ({
         setPaginationPage(value);
     };
 
+    // this will eventually be an internal form
+    const contactFormLink = 'https://forms.office.com/r/8t0ugSZgE7';
+
     return (
         <>
             <HeroCard
@@ -970,7 +973,7 @@ export const DLOList = ({
                             <a
                                 data-testid="dlor-homepage-contact"
                                 className={classes.uqActionButton}
-                                href="https://forms.office.com/r/8t0ugSZgE7"
+                                href={contactFormLink}
                                 target="_blank"
                                 title="Load a contact form, in a new window"
                             >
@@ -1054,10 +1057,19 @@ export const DLOList = ({
                                 if (!dlorData || dlorData.length === 0) {
                                     return (
                                         <Grid container spacing={3}>
-                                            <Grid item xs={12}>
-                                                <Typography variant="body1" data-testid="dlor-homepage-empty">
-                                                    No records satisfied this filter selection.
-                                                </Typography>
+                                            <Grid item xs={1} />
+                                            <Grid item xs={11} data-testid="dlor-homepage-empty">
+                                                <p>Can't find what you are looking for?</p>
+                                                <ul>
+                                                    <li>Check your search terms and filters are correct.</li>
+                                                    <li>
+                                                        You may need to uncheck filters to get results for your keyword.
+                                                    </li>
+                                                    <li>
+                                                        You are welcome to suggest a new object via our{' '}
+                                                        <a href={contactFormLink}>feedback form</a>.
+                                                    </li>
+                                                </ul>
                                             </Grid>
                                         </Grid>
                                     );

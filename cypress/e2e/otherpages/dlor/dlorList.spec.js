@@ -359,7 +359,7 @@ describe('Digital Learning Hub', () => {
             // wipes all the panels
             cy.get('[data-testid="dlor-homepage-empty"]')
                 .should('exist')
-                .contains('No records satisfied this filter selection.');
+                .contains("Can't find what you are looking for?");
 
             // use the clear button
             cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
