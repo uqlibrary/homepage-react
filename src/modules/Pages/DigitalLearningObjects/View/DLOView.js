@@ -223,7 +223,7 @@ export const DLOView = ({
         return toTitleCase(words);
     };
 
-    function getTitleBlock(detailTitle = 'View an entry') {
+    function getTitleBlock(detailTitle = 'View an object') {
         return (
             <div className={classes.titleBlock}>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
