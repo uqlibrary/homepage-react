@@ -92,7 +92,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 })
                 .click();
 
-            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4');
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');
         });
     });
     context('successfully mock to db', () => {

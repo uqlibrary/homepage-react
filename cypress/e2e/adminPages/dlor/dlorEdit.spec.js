@@ -271,6 +271,25 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     }
                     currentCheckboxId++;
                 }
+
+                cy.get('[data-testid="filter-group_topic"]')
+                    .children()
+                    .should('have.length', 9 + 1);
+                cy.get('[data-testid="filter-group_media_format"]')
+                    .children()
+                    .should('have.length', 12 + 1);
+                cy.get('[data-testid="filter-group_graduate_attributes"]')
+                    .children()
+                    .should('have.length', 6 + 1);
+                cy.get('[data-testid="filter-group_subject"]')
+                    .children()
+                    .should('have.length', 10 + 1);
+                cy.get('[data-testid="filter-group_item_type"] div') // radio group has different structure
+                    .children()
+                    .should('have.length', 6);
+                cy.get('[data-testid="filter-group_licence"] div')
+                    .children()
+                    .should('have.length', 8);
             });
             it('changes "download" url accessibility message', () => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db

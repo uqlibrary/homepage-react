@@ -36,7 +36,7 @@ export function getUserPostfix(appendType = '?') {
         );
 
         // Get user from query string
-        const user = queryString.get('user');
+        const user = !!queryString && queryString.get('user');
         userString = !!user ? `${appendType}user=${user}` : '';
     }
     return userString;

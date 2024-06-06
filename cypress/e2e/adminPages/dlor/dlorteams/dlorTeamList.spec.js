@@ -60,7 +60,7 @@ describe('Digital Learning Hub admin Teams management', () => {
             cy.get('[data-testid="dlor-team-object-list-item-view-1"]')
                 .should('exist')
                 .click();
-            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866');
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866?user=dloradmn');
         });
         it('has a working "edit a dlor" button', () => {
             // can open a list and click edit

@@ -340,7 +340,7 @@ export const DLOList = ({
         }
         if (!!dlorFilterList && !!dlorList) {
             console.log('will filter filterlist', dlorFilterList);
-            const filterList = dlorFilterList;
+            const trimmedFilterList = [...dlorFilterList];
             // Step 1: Extract all unique id values from dlorList
             const idsFromDlorList = new Set();
             dlorList?.forEach(item => {
@@ -351,16 +351,16 @@ export const DLOList = ({
                 });
             });
 
-            // Step 2 & 3: Iterate over filterList and remove entries not found in dlorList
-            filterList?.forEach(facetType => {
+            // Step 2 & 3: Iterate over trimmedFilterList and remove entries not found in dlorList
+            trimmedFilterList?.forEach(facetType => {
                 facetType.facet_list = facetType.facet_list.filter(facet =>
                     // Check if facet_id exists in idsFromDlorList
                     idsFromDlorList.has(facet.facet_id),
                 );
             });
-            console.log('have filtered filterlist', filterList);
+            console.log('have filtered filterlist', trimmedFilterList);
 
-            setFilterListTrimmed(filterList);
+            setFilterListTrimmed(trimmedFilterList);
         }
     }, [dlorList, dlorFilterList]);
 

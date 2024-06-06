@@ -989,8 +989,17 @@ export const DlorForm = ({
                 dlorFilterList.map(filterItem => {
                     console.log('stepPanelContentFilters dlorFilterList.map filterItem=', filterItem);
                     return (
-                        <Grid item xs={4} key={filterItem.facet_type_slug}>
-                            <Typography component={'h3'} variant={'h7'}>
+                        <Grid
+                            item
+                            xs={4}
+                            key={filterItem.facet_type_slug}
+                            data-testid={`filter-group_${filterItem.facet_type_slug}`}
+                        >
+                            <Typography
+                                component={'h3'}
+                                variant={'h7'}
+                                id={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
+                            >
                                 {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
                                 {filterItem?.facet_type_required && <span className={classes.required}>*</span>}
                             </Typography>
@@ -1372,7 +1381,7 @@ export const DlorForm = ({
             const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
             result = (
                 <RadioGroup
-                    aria-labelledby={`demo-radio-object_${filterItem.facet_id}_label-group-label`}
+                    aria-labelledby={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
                     name={radioGroupName}
                     value={filterItem.facet_id}
                     onChange={handleFacetChange(filterItem.id)}

@@ -111,7 +111,7 @@ describe('Digital Learning Hub admin Series management', () => {
             cy.get('[data-testid="dlor-series-object-list-item-view-2"]')
                 .should('exist')
                 .click();
-            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4');
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');
         });
         it('has a working "edit a dlor" button', () => {
             // can open a list and click edit

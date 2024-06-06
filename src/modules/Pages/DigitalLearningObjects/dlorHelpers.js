@@ -1,6 +1,7 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import { fullPath } from 'config/routes';
+import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 export const displayDownloadInstructions = (downloadInstructions, theClass) => {
     function addRelnoopenerNoreferrer(htmlString) {
@@ -257,4 +258,7 @@ export const toTitleCase = str => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
-export const getDlorViewPageUrl = uuid => `${fullPath}/digital-learning-hub/view/${uuid}`;
+export const getDlorViewPageUrl = uuid => {
+    const userString = getUserPostfix();
+    return `${fullPath}/digital-learning-hub/view/${uuid}${userString}`;
+};
