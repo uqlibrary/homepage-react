@@ -492,13 +492,19 @@ export const DLOList = ({
 
     const handleKeywordSearch = e => {
         const keyword = e?.target?.value;
-        keyWordSearchRef.current.value = keyword;
 
         if (keywordIsSearchable(keyword)) {
             setKeywordSearch(keyword);
-        } else if (!keyword || keyword.length === 0) {
+            setPaginationPage(1);
+        } else if (
+            !keyword ||
+            keyword.length === 0 // they've cleared it
+        ) {
             clearKeywordField();
+            setPaginationPage(1);
         }
+
+        keyWordSearchRef.current.value = keyword;
     };
 
     const clearKeywordField = () => {
@@ -536,6 +542,7 @@ export const DLOList = ({
             );
             checkBoxArrayRef.current = checkBoxArrayRef.current.filter(id => id !== checkboxId);
         }
+        setPaginationPage(1);
         console.log('end of handleCheckboxAction', checkBoxArrayRef.current);
     };
 

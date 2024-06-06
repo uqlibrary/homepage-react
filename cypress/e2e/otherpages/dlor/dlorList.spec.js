@@ -435,6 +435,34 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible')
                 .should('contain', 'Choose the right tool - Digital Essentials');
+
+            // clear form
+            cy.get('[data-testid="keyword-clear"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('dummy');
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', itemsPerPage + extraRowCount);
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button') // click pagination for page 2
+                .should('exist')
+                .click();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 5 + extraRowCount);
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button') // second page
+                .should('exist')
+                .should('have.class', 'Mui-selected');
+            // when we change the search term it should return to page 1 of results
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .clear()
+                .type('acc');
+            cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button') // first page
+                .should('exist')
+                // .should('have.value', '1')
+                .should('have.class', 'Mui-selected');
         });
         it('reset button works', () => {
             // all panels showing
