@@ -2294,6 +2294,1318 @@ export default {
             "object_is_featured": 0,
             "object_series_id": null,
             "object_series_name": null,
+        }, {
+            "object_id": 881,
+            "object_public_uuid": "987y-dfgrf4-76gsg-02",
+            "object_title": "Dummy entry to check pagination 01",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 882,
+            "object_public_uuid": "987y-dfgrf4-76gsg-03",
+            "object_title": "Dummy entry to check pagination 02",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 883,
+            "object_public_uuid": "987y-dfgrf4-76gsg-04",
+            "object_title": "Dummy entry to check pagination 03",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 884,
+            "object_public_uuid": "987y-dfgrf4-76gsg-05",
+            "object_title": "Dummy entry to check pagination 04",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 885,
+            "object_public_uuid": "987y-dfgrf4-76gsg-06",
+            "object_title": "Dummy entry to check pagination 05",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 886,
+            "object_public_uuid": "987y-dfgrf4-76gsg-07",
+            "object_title": "Dummy entry to check pagination 06",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 887,
+            "object_public_uuid": "987y-dfgrf4-76gsg-08",
+            "object_title": "Dummy entry to check pagination 07",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 888,
+            "object_public_uuid": "987y-dfgrf4-76gsg-09",
+            "object_title": "Dummy entry to check pagination 08",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 889,
+            "object_public_uuid": "987y-dfgrf4-76gsg-10",
+            "object_title": "Dummy entry to check pagination 09",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 890,
+            "object_public_uuid": "987y-dfgrf4-76gsg-11",
+            "object_title": "Dummy entry to check pagination 10",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 891,
+            "object_public_uuid": "987y-dfgrf4-76gsg-12",
+            "object_title": "Dummy entry to check pagination 11",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 892,
+            "object_public_uuid": "987y-dfgrf4-76gsg-13",
+            "object_title": "Dummy entry to check pagination 12",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 893,
+            "object_public_uuid": "987y-dfgrf4-76gsg-14",
+            "object_title": "Dummy entry to check pagination 13",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 894,
+            "object_public_uuid": "987y-dfgrf4-76gsg-15",
+            "object_title": "Dummy entry to check pagination 14",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 895,
+            "object_public_uuid": "987y-dfgrf4-76gsg-16",
+            "object_title": "Dummy entry to check pagination 15",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
+        }, {
+            "object_id": 880,
+            "object_public_uuid": "987y-dfgrf4-76gsg-01",
+            "object_title": "Dummy entry to check pagination 16",
+            "object_description": "<p>Dummy description</p>",
+            "object_summary": "Complete this module to to help you find the right tool for your specific task.",
+            "object_review_date_next": "2025-04-08",
+            "object_status": "rejected",
+            "object_owning_team_id": 1,
+            "created_at": "2024-01-01T00:00:00.000000Z",
+            "updated_at": "2024-03-03T23:48:01.000000Z",
+            "object_download_instructions": "<p><a href='https:\/\/web.library.uq.edu.au\/research-tools-techniques\/digital-essentials\/using-digital-essentials-modules?p=1#1'>Embed or link a module</a> in your Learn.UQ course.</p><p>Blackboard - download the Common Cartridge (Web Links) file from the homepage.</p><p>Blackboard Ultra - copy the URL and add it using the Teaching tools with LTI connection.</p>",
+            "object_link_url_id": 16,
+            "object_link_url_parent": 31,
+            "object_link_url": "https:\/\/uq.pressbooks.pub\/digital-essentials-choose-the-right-tool\/chapter\/module-overview\/",
+            "object_keywords": [
+                "software",
+                "data analysis",
+                "image",
+                "video",
+                "audio",
+                "3d model",
+                "coding",
+                "referencing",
+                "reference"
+            ],
+            "object_filters": [
+                {
+                    "filter_key": "topic",
+                    "filter_values": [{
+                        id: 9,
+                        name: 'Other',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "graduate_attributes",
+                    "filter_values": [{
+                        id: 14,
+                        name: 'Influential communicators',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "item_type",
+                    "filter_values": [{
+                        id: 17,
+                        name: 'Interactive',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "media_format",
+                    "filter_values": [{
+                        id: 29,
+                        name: 'Spreadsheet',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "subject",
+                    "filter_values": [{
+                        id: 38,
+                        name: 'Humanities; Arts',
+                        help: '',
+                    }]
+                }, {
+                    "filter_key": "licence",
+                    "filter_values": [{
+                        id: 50,
+                        name: 'CC0\/Public domain',
+                        help: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                    }]
+                },
+            ],
+            "owner": {
+                "publishing_user_username": "uqmsato",
+                "team_id": 1,
+                "team_name": "LIB DX Digital Content",
+                "team_email": "team1@uq.edu.au",
+                "team_manager": "Steve Lancaster"
+            },
+            "object_link_interaction_type": "none",
+            "object_is_featured": 0,
+            "object_series_id": null,
+            "object_series_name": null,
         }
     ]
 };

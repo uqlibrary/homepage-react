@@ -188,7 +188,9 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         filteredDlorList = filterOnKeyword(filteredDlorList);
 
         filteredDlorList.sort((a, b) => b.object_is_featured - a.object_is_featured);
-
+        return filteredDlorList;
+    };
+    const getPaginatedList = (filteredDlorList, pageloadShown) => {
         const paginatedFilteredDlorList = filteredDlorList.filter((_, index) => {
             const startIndex = (pageloadShown - 1) * numberItemsPerPage;
             const endIndex = startIndex + numberItemsPerPage;
@@ -330,7 +332,11 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                             </Grid>
                         );
                     } else {
-                        const paginationCount = Math.ceil(filterOnKeyword(dlorList)?.length / numberItemsPerPage);
+                        const filteredListLocal = filterDLorList(dlorList);
+                        const paginationCount = Math.ceil(
+                            filterOnKeyword(filteredListLocal)?.length / numberItemsPerPage,
+                        );
+                        const paginatedList = getPaginatedList(filteredListLocal, paginationPage);
                         return (
                             <>
                                 <Grid item xs={12}>
@@ -378,8 +384,8 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                     inputRef={keyWordSearchRef}
                                 />{' '}
                                 <Grid item style={{ width: '100%' }} data-testid="dlor-homepage-list">
-                                    {dlorList?.length > 0 &&
-                                        filterDLorList(dlorList, paginationPage).map(o => {
+                                    {paginatedList?.length > 0 &&
+                                        paginatedList.map(o => {
                                             return (
                                                 <Grid
                                                     container
@@ -442,7 +448,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                 </Grid>
                                             );
                                         })}
-                                    {!!dlorList && dlorList.length > 0 && (
+                                    {!!paginationCount && paginationCount > 0 && (
                                         <Pagination
                                             count={paginationCount}
                                             showFirstButton
