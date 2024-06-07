@@ -949,6 +949,9 @@ export const DLOList = ({
     const handlePaginationChange = (e, value) => {
         console.log('handlePaginationChange ', value, 'filters currently', filterListTrimmed);
         setPaginationPage(value);
+        // and scroll back to the top
+        const topOfBodyElement = document.getElementById('topOfBody');
+        topOfBodyElement?.scrollIntoView({ behavior: 'smooth' });
     };
 
     // this will eventually be an internal form
@@ -962,7 +965,7 @@ export const DLOList = ({
                 heroBackgroundImage={heroBackgroundImageDlor}
             />
             <StandardPage>
-                <Grid container style={{ marginBlock: '2em' }} alignItems="center">
+                <Grid container style={{ marginBlock: '2em' }} alignItems="center" id="topOfBody">
                     <Grid item xs={12} md={10}>
                         <Typography component={'p'} style={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
