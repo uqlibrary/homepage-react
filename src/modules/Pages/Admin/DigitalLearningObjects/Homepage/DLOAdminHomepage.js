@@ -414,9 +414,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                             <Typography component={'h2'} variant={'h6'}>
                                                                 {o?.object_title}
                                                             </Typography>
-                                                            <Typography component={'p'}>
-                                                                <p>{o?.object_summary}</p>
-                                                            </Typography>
+                                                            <Typography component={'p'}>{o?.object_summary}</Typography>
                                                         </div>
                                                     </Grid>
                                                     <Grid item xs={2}>
