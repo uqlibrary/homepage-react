@@ -52,6 +52,7 @@ const useStyles = makeStyles(theme => ({
     highlighted: {
         color: theme.palette.primary.light,
         fontWeight: 400,
+        marginLeft: 4,
     },
     dlorCard: {
         backgroundColor: '#fff',
@@ -76,12 +77,12 @@ const useStyles = makeStyles(theme => ({
                 '& h2': {
                     lineHeight: 1,
                     marginBlock: 7,
+                    display: 'flex',
+                    alignItems: 'center',
                 },
                 '& h2 span': {
                     fontSize: '0.9rem',
                 },
-                display: 'flex',
-                flexDirection: 'column-reverse',
             },
             '& > div': {
                 maxHeight: 180,
@@ -865,7 +866,14 @@ export const DLOList = ({
                     <article>
                         <header>
                             <Typography component={'h2'} variant={'h6'}>
-                                {object?.object_title}
+                                <span>{object?.object_title}</span>
+                                {!!hasTopicFacet('topic') && (
+                                    <span className={classes.highlighted}>
+                                        {getConcatenatedFilterLabels('topic', true)}
+                                    </span>
+                                )}
+                            </Typography>
+                            <Typography component={'p'}>
                                 {!!object?.object_cultural_advice && (
                                     <div
                                         style={{ display: 'flex', alignItems: 'center', marginTop: 4 }}
@@ -874,11 +882,6 @@ export const DLOList = ({
                                         <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />{' '}
                                         <span className={classes.tagLabel}>Cultural advice</span>
                                     </div>
-                                )}
-                                {!!hasTopicFacet('topic') && (
-                                    <span className={classes.highlighted}>
-                                        {getConcatenatedFilterLabels('topic', true)}
-                                    </span>
                                 )}
                             </Typography>
                         </header>
