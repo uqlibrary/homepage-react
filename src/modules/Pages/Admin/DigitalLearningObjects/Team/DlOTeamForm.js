@@ -70,6 +70,7 @@ export const DLOTeamForm = ({
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     useEffect(() => {
+        setSaveStatus(null);
         if (mode === 'edit' && !!formDefaults && !dlorTeamLoading && !dlorTeamError) {
             setFormValues({
                 team_name: formDefaults?.team_name,

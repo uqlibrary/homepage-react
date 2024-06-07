@@ -1215,8 +1215,7 @@ export const DlorForm = ({
     };
 
     const navigateToDlorAdminHomePage = () => {
-        // TODO also want to clear form here too before nav, so back button gives clear form?
-
+        setSaveStatus(null);
         closeConfirmationBox();
         window.location.href = dlorAdminLink();
         scrollToTopOfPage();

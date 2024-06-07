@@ -91,7 +91,9 @@ export const DLOSeriesEdit = ({
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
-        if (!!dlorList && !dlorListLoading && !dlorListError) {
+        if (!dlorListLoading && !dlorListError && !!dlorList) {
+            setSaveStatus(null);
+
             const seriesDetail = dlorList.find(s => s.object_series_id === Number(dlorSeriesId));
             setOriginalSeriesDetails({
                 series_id: seriesDetail?.object_series_id,
