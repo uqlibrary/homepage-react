@@ -121,6 +121,7 @@ export const DLOEdit = ({
         object_link_duration_minutes: getLinkSize('minutes'),
         object_link_duration_seconds: getLinkSize('seconds'),
         object_is_featured: dlorItem?.object_is_featured,
+        object_cultural_advice: dlorItem?.object_cultural_advice,
     };
 
     return (

@@ -223,6 +223,10 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .should('not.be.checked');
 
+                cy.get('[data-testid="object_cultural_advice"] input')
+                    .should('exist')
+                    .should('not.be.checked');
+
                 // go to panel 3
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -494,6 +498,11 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('not.be.checked');
                 cy.get('[data-testid="object_is_featured"] input').check();
 
+                cy.get('[data-testid="object_cultural_advice"] input')
+                    .should('exist')
+                    .should('not.be.checked');
+                cy.get('[data-testid="object_cultural_advice"] input').check();
+
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -604,6 +613,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     object_link_url: 'https://uq.h5p.com/content/1291624605868350759/page',
                     object_download_instructions: '<p>' + typeableDownloadInstructions + '</p>',
                     object_is_featured: 1,
+                    object_cultural_advice: 1,
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',
@@ -819,6 +829,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: '<p>' + downloadInstructionText + '</p>',
                     object_is_featured: 0,
+                    object_cultural_advice: 0,
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',
@@ -970,6 +981,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     object_link_url: 'https://www.youtube.com/watch?v=jwKH6X3cGMg',
                     object_download_instructions: '<p>word</p>',
                     object_is_featured: 0,
+                    object_cultural_advice: 0,
                     object_publishing_user: 'uqldegro',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',

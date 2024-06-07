@@ -627,6 +627,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: '',
                     object_is_featured: 1,
+                    object_cultural_advice: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
@@ -843,6 +844,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: typeableDownloadInstructions,
                     object_is_featured: 1,
+                    object_cultural_advice: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
@@ -944,6 +946,11 @@ describe('Add an object to the Digital Learning Hub', () => {
                     .should('exist')
                     .type('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
 
+                cy.get('[data-testid="object_cultural_advice"] input')
+                    .should('exist')
+                    .should('not.be.checked');
+                cy.get('[data-testid="object_cultural_advice"] input').check();
+
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -1039,6 +1046,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_link_url: 'http://example.com',
                     object_download_instructions: downloadInstructionText,
                     object_is_featured: 0,
+                    object_cultural_advice: 1,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
@@ -1227,6 +1235,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_link_url: 'http://example.com',
                     object_owning_team_id: 1,
                     object_is_featured: 0,
+                    object_cultural_advice: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
@@ -1380,6 +1389,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_link_url: 'http://example.com',
                     object_owning_team_id: 1,
                     object_is_featured: 0,
+                    object_cultural_advice: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',

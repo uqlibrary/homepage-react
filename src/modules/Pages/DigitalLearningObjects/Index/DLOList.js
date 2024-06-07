@@ -345,7 +345,6 @@ export const DLOList = ({
             actions.loadAllFilters();
         }
         if (!!dlorFilterList && !!dlorList) {
-            console.log('will filter filterlist', dlorFilterList);
             const trimmedFilterList = [...dlorFilterList];
             // Step 1: Extract all unique id values from dlorList
             const idsFromDlorList = new Set();

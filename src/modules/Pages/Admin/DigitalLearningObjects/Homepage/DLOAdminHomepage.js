@@ -17,6 +17,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DoneIcon from '@mui/icons-material/Done';
 import SearchIcon from '@mui/icons-material/Search';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -414,6 +415,27 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                             <Typography component={'h2'} variant={'h6'}>
                                                                 {o?.object_title}
                                                             </Typography>
+                                                            {!!o?.object_cultural_advice && (
+                                                                <div
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        fontVariant: 'small-caps',
+                                                                        textTransform: 'lowercase',
+                                                                        fontWeight: 'bold',
+                                                                    }}
+                                                                    data-testid={`dlor-homepage-panel-${o?.object_public_uuid}-cultural-advice`}
+                                                                >
+                                                                    <InfoIcon
+                                                                        style={{
+                                                                            fill: '#2377CB',
+                                                                            marginRight: 2,
+                                                                            width: 20,
+                                                                        }}
+                                                                    />{' '}
+                                                                    <span>Cultural advice</span>
+                                                                </div>
+                                                            )}
                                                             <Typography component={'p'}>{o?.object_summary}</Typography>
                                                         </div>
                                                     </Grid>

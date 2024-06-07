@@ -72,6 +72,7 @@ export const DLOAdd = ({
         facets: [],
         object_link_interaction_type: 'none',
         object_is_featured: 0,
+        object_cultural_advice: 0,
     };
 
     return (

@@ -298,7 +298,7 @@ export const DlorForm = ({
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
-        if (prop === 'object_is_featured') {
+        if (['object_is_featured', 'object_cultural_advice'].includes(prop)) {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
 
@@ -561,7 +561,6 @@ export const DlorForm = ({
     };
 
     function resetForm(prop, theNewValue) {
-        console.log('THE NEW VALUE', theNewValue);
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
@@ -732,6 +731,18 @@ export const DlorForm = ({
                         style={{ paddingLeft: 0 }}
                     />
                     Feature this Object at the top of the list page
+                </InputLabel>
+            </Grid>
+            <Grid item xs={12}>
+                <FormLabel>Cultural advice?</FormLabel>
+                <InputLabel>
+                    <Checkbox
+                        checked={!!formValues?.object_cultural_advice}
+                        data-testid="object_cultural_advice"
+                        onChange={handleChange('object_cultural_advice')}
+                        style={{ paddingLeft: 0 }}
+                    />
+                    Display the standard Cultural advice against this item
                 </InputLabel>
             </Grid>
         </>
@@ -998,7 +1009,6 @@ export const DlorForm = ({
             </Grid>
             {!!dlorFilterList &&
                 dlorFilterList.map(filterItem => {
-                    console.log('stepPanelContentFilters dlorFilterList.map filterItem=', filterItem);
                     return (
                         <Grid
                             item
@@ -1226,7 +1236,6 @@ export const DlorForm = ({
     };
 
     const validateValues = currentValues => {
-        console.log('validateValues', currentValues);
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
@@ -1334,7 +1343,6 @@ export const DlorForm = ({
     };
 
     function displayControlByFacetType(filterItem) {
-        console.log('displayControlByFacetType', filterItem.facet_type_name, ' filterItem=', filterItem);
         const facetIsSet = (findId, facets = null) => {
             return checkBoxArrayRef.current.includes(findId);
             // return facets?.some(ff => ff?.filter_values?.some(value => value?.id === findId));
@@ -1345,12 +1353,6 @@ export const DlorForm = ({
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => {
-                    console.log(
-                        'displayControlByFacetType ',
-                        filterItem.facet_type_name,
-                        filterItem?.facet_type_number,
-                        thisfacet,
-                    );
                     return (
                         <FormControlLabel
                             key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
@@ -1371,12 +1373,6 @@ export const DlorForm = ({
             result =
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => {
-                    console.log(
-                        'displayControlByFacetType ',
-                        filterItem.facet_type_name,
-                        filterItem?.facet_type_number,
-                        thisfacet,
-                    );
                     return (
                         <FormControlLabel
                             key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
@@ -1403,12 +1399,6 @@ export const DlorForm = ({
                     onChange={handleFacetChange(filterItem.id)}
                 >
                     {filterItem?.facet_list?.map(thisfacet => {
-                        console.log(
-                            'displayControlByFacetType ',
-                            filterItem.facet_type_name,
-                            filterItem?.facet_type_number,
-                            thisfacet,
-                        );
                         return (
                             <FormControlLabel
                                 key={thisfacet.facet_id}
