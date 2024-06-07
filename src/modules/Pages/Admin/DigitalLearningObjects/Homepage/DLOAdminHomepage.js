@@ -203,6 +203,9 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
 
     const handlePaginationChange = (e, value) => {
         setPaginationPage(value);
+        // and scroll back to the top
+        const topOfBodyElement = document.getElementById('topOfBody');
+        topOfBodyElement?.scrollIntoView({ behavior: 'smooth' });
     };
 
     function keywordIsSearchable(keyword) {
@@ -339,7 +342,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                         const paginatedList = getPaginatedList(filteredListLocal, paginationPage);
                         return (
                             <>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} id="topOfBody">
                                     {statusTypes?.length > 0 &&
                                         statusTypes.map((objectStatus, index) => {
                                             const checkBoxid = `checkbox-status-${objectStatus.type}`;
