@@ -75,6 +75,7 @@ describe('Digital Learning Hub', () => {
                 'contain',
                 'Accessibility - Digital Essentials',
             );
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866-cultural-advice"]').should('not.exist');
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article header h2').should(
                 'contain',
                 '(Digital skills)',
@@ -93,6 +94,11 @@ describe('Digital Learning Hub', () => {
                 'contain',
                 'CC BY-NC Attribution NonCommercial',
             );
+
+            // article 2 has CA
+            cy.get('[data-testid="dlor-homepage-panel-kj5t_8yg4_kj4f-cultural-advice"]')
+                .should('exist')
+                .contains('Cultural advice');
 
             // article 3 contents correct
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] button').should('exist');

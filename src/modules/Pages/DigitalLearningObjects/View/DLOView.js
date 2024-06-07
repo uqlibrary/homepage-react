@@ -343,6 +343,23 @@ export const DLOView = ({
                             {!!dlorItem?.object_description && parse(dlorItem.object_description)}
                         </div>
 
+                        {!!dlorItem?.object_cultural_advice && (
+                            <div
+                                data-testid="dlor-detailpage-cultural-advice"
+                                style={{ backgroundColor: 'white', padding: 12, marginTop: 24 }}
+                            >
+                                <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
+                                    Cultural advice
+                                </Typography>
+                                <p>
+                                    <a href="">Culturally sensitive collections</a> &ndash; Aboriginal and Torres Strait
+                                    Islander peoples are advised that our collections and sites may contain images,
+                                    voices or names of persons now deceased. Information may be culturally sensitive for
+                                    some individuals and communities.
+                                </p>
+                            </div>
+                        )}
+
                         {dlorItem?.object_link_url?.startsWith('http') && (
                             <div
                                 id="gatherDemographics"

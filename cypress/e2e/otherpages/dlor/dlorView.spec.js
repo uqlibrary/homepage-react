@@ -12,6 +12,7 @@ describe('Digital Learning Hub View page', () => {
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
             );
+            cy.get('[data-testid="dlor-detailpage-cultural-advice"]').should('not.exist');
             cy.get('[data-testid="dlor-detailpage-description"]').should(
                 'contain',
                 'Types of AI, implications for society, using AI in your studies and how UQ is involved. (longer lines)',
@@ -145,6 +146,12 @@ describe('Digital Learning Hub View page', () => {
                 .should('contain', 'Access the object')
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
+
+            // cultural advice appears
+            cy.visit('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
+            cy.get('[data-testid="dlor-detailpage-cultural-advice"]')
+                .should('exist')
+                .contains('Cultural advice');
         });
         it('is accessible', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');

@@ -25,6 +25,7 @@ import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
 import SearchIcon from '@mui/icons-material/Search';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -290,6 +291,11 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.main,
             textDecoration: 'none',
         },
+    },
+    tagLabel: {
+        fontVariant: 'small-caps',
+        textTransform: 'lowercase',
+        fontWeight: 'bold',
     },
 }));
 
@@ -860,9 +866,17 @@ export const DLOList = ({
                     <article>
                         <header>
                             <Typography component={'h2'} variant={'h6'}>
-                                {object?.object_title}{' '}
+                                {object?.object_title}
+                                {!!object?.object_cultural_advice && (
+                                    <div
+                                        style={{ display: 'flex', alignItems: 'center', marginTop: 4 }}
+                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-cultural-advice`}
+                                    >
+                                        <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />{' '}
+                                        <span className={classes.tagLabel}>Cultural advice</span>
+                                    </div>
+                                )}
                                 {!!hasTopicFacet('topic') && (
-                                    // use flex to show this above the title
                                     <span className={classes.highlighted}>
                                         {getConcatenatedFilterLabels('topic', true)}
                                     </span>
@@ -874,16 +888,7 @@ export const DLOList = ({
                                 component={'p'}
                                 data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-object_series_name`}
                             >
-                                Part of:{' '}
-                                <span
-                                    style={{
-                                        fontVariant: 'small-caps',
-                                        textTransform: 'lowercase',
-                                        fontWeight: 'bold',
-                                    }}
-                                >
-                                    {object?.object_series_name}
-                                </span>
+                                Part of: <span className={classes.tagLabel}>{object?.object_series_name}</span>
                             </Typography>
                         )}
                         <div>
