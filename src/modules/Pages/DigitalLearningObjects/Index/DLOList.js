@@ -26,6 +26,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -297,6 +299,8 @@ const useStyles = makeStyles(theme => ({
         fontVariant: 'small-caps',
         textTransform: 'lowercase',
         fontWeight: 'bold',
+        marginRight: 10,
+        color: '#333',
     },
 }));
 
@@ -874,25 +878,50 @@ export const DLOList = ({
                                 )}
                             </Typography>
                             <Typography component={'p'}>
-                                {!!object?.object_cultural_advice && (
-                                    <div
-                                        style={{ display: 'flex', alignItems: 'center', marginTop: 4 }}
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-cultural-advice`}
-                                    >
-                                        <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />{' '}
-                                        <span className={classes.tagLabel}>Cultural advice</span>
+                                {(!!object?.object_cultural_advice ||
+                                    !!object?.object_is_featured ||
+                                    !!object?.object_series_name) && (
+                                    <div style={{ display: 'flex', alignItems: 'center', marginLeft: -4 }}>
+                                        {!!object?.object_is_featured && (
+                                            <>
+                                                <BookmarkIcon style={{ fill: '#51247A', marginRight: 2, width: 20 }} />
+                                                <span
+                                                    className={classes.tagLabel}
+                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-featured`}
+                                                >
+                                                    Featured
+                                                </span>
+                                            </>
+                                        )}
+                                        {!!object?.object_cultural_advice && (
+                                            <>
+                                                <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />
+                                                <span
+                                                    className={classes.tagLabel}
+                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-cultural-advice`}
+                                                >
+                                                    Cultural advice
+                                                </span>
+                                            </>
+                                        )}
+                                        {!!object?.object_series_name && (
+                                            <>
+                                                <PlaylistAddCheckIcon
+                                                    style={{ fill: '#4aa74e', marginRight: 2, width: 20 }}
+                                                />
+                                                <span
+                                                    className={classes.tagLabel}
+                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-object_series_name`}
+                                                >
+                                                    Series: {object?.object_series_name}
+                                                </span>
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </Typography>
                         </header>
-                        {!!object?.object_series_name && (
-                            <Typography
-                                component={'p'}
-                                data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-object_series_name`}
-                            >
-                                Part of: <span className={classes.tagLabel}>{object?.object_series_name}</span>
-                            </Typography>
-                        )}
+
                         <div>
                             <p>{object?.object_summary}</p>
                         </div>

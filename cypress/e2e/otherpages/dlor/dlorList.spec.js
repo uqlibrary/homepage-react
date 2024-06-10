@@ -76,6 +76,12 @@ describe('Digital Learning Hub', () => {
                 'Accessibility - Digital Essentials',
             );
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866-cultural-advice"]').should('not.exist');
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866-featured"]')
+                .should('exist')
+                .contains('Featured');
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866-object_series_name"]')
+                .should('exist')
+                .contains('Series: Digital Essentials');
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article header h2').should(
                 'contain',
                 '(Digital skills)',
@@ -99,6 +105,12 @@ describe('Digital Learning Hub', () => {
             cy.get('[data-testid="dlor-homepage-panel-kj5t_8yg4_kj4f-cultural-advice"]')
                 .should('exist')
                 .contains('Cultural advice');
+            cy.get('[data-testid="dlor-homepage-panel-kj5t_8yg4_kj4f-featured"]')
+                .should('exist')
+                .contains('Featured');
+            cy.get('[data-testid="dlor-homepage-panel-kj5t_8yg4_kj4f-object_series_name"]')
+                .should('exist')
+                .contains('Series: Indigenising curriculum');
 
             // article 3 contents correct
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] button').should('exist');
@@ -106,6 +118,11 @@ describe('Digital Learning Hub', () => {
                 'contain',
                 'Advanced literature searching',
             );
+            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-cultural-advice"]').should('not.exist');
+            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-featured"]').should('not.exist');
+            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-object_series_name"]')
+                .should('exist')
+                .contains('Series: Advanced literature searching');
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article header h2').should(
                 'contain',
                 '(Assignments, Research)',
