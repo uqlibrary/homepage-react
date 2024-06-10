@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 
-import { Grid } from '@mui/material';
+import { Grid, Pagination } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
-import { Pagination } from '@mui/material';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -30,9 +29,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { getHomepageLink } from 'helpers/access';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
@@ -1025,18 +1022,17 @@ export const DLOList = ({
                         </Typography>
                     </Grid>
                     <Grid item xs={12} md={2} style={{ textAlign: 'right' }}>
-                        <p style={{ fontSize: '1.2em' }}>
-                            <a
-                                data-testid="dlor-homepage-contact"
-                                className={classes.uqActionButton}
-                                href={contactFormLink}
-                                target="_blank"
-                                title="Load a contact form, in a new window"
-                            >
-                                Contact us
-                                <OpenInNewIcon />
-                            </a>
-                        </p>
+                        <a
+                            data-testid="dlor-homepage-contact"
+                            className={classes.uqActionButton}
+                            href={contactFormLink}
+                            target="_blank"
+                            title="Load a contact form, in a new window"
+                            style={{ fontSize: '1.2em', maxWidth: '8em' }}
+                        >
+                            Contact us
+                            <OpenInNewIcon />
+                        </a>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
@@ -1069,7 +1065,7 @@ export const DLOList = ({
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={clearKeywordField}>
+                                        <IconButton onClick={clearKeywordField} aria-label="search by keyword">
                                             {keyWordSearchRef.current?.value === '' ? (
                                                 <SearchIcon />
                                             ) : (

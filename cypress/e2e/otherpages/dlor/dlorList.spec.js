@@ -17,10 +17,10 @@ describe('Digital Learning Hub', () => {
 
             cy.waitUntil(() =>
                 cy
-                    .get('[data-testid="hero-card-title"]')
+                    .get('[data-testid="dlor-homepage-list"] div:nth-child(2) article h2')
                     .should('exist')
                     .should('be.visible')
-                    .contains('Find a digital learning object'),
+                    .should('contain', 'Accessibility - Digital Essentials'),
             );
             cy.get('h1').should('contain', 'Find a digital learning object');
             cy.checkA11y('[data-testid="StandardPage"]', {
