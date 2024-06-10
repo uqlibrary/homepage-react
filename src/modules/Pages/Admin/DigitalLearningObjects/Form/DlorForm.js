@@ -131,6 +131,7 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
+    console.log('dlorItem l=', dlorItemLoading, '; dlorItem=', dlorItem);
     const { account } = useAccountContext();
     const classes = useStyles();
     const history = useHistory();
@@ -1217,6 +1218,7 @@ export const DlorForm = ({
     const navigateToDlorAdminHomePage = () => {
         setSaveStatus(null);
         closeConfirmationBox();
+        actions.clearADlor();
         window.location.href = dlorAdminLink();
         scrollToTopOfPage();
     };
