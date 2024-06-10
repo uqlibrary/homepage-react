@@ -877,17 +877,27 @@ export const DLOList = ({
                                     </span>
                                 )}
                             </Typography>
-                            <Typography component={'p'}>
+                            <>
                                 {(!!object?.object_cultural_advice ||
                                     !!object?.object_is_featured ||
                                     !!object?.object_series_name) && (
-                                    <div style={{ display: 'flex', alignItems: 'center', marginLeft: -4 }}>
+                                    <Typography
+                                        component={'p'}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            marginLeft: -4,
+                                            marginTop: -4,
+                                            marginBottom: 6,
+                                        }}
+                                    >
                                         {!!object?.object_is_featured && (
                                             <>
                                                 <BookmarkIcon style={{ fill: '#51247A', marginRight: 2, width: 20 }} />
                                                 <span
                                                     className={classes.tagLabel}
                                                     data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-featured`}
+                                                    style={{ marginLeft: -2 }}
                                                 >
                                                     Featured
                                                 </span>
@@ -907,7 +917,7 @@ export const DLOList = ({
                                         {!!object?.object_series_name && (
                                             <>
                                                 <PlaylistAddCheckIcon
-                                                    style={{ fill: '#4aa74e', marginRight: 2, width: 20 }}
+                                                    style={{ fill: '#4aa74e', marginRight: 2, width: 24 }}
                                                 />
                                                 <span
                                                     className={classes.tagLabel}
@@ -917,9 +927,9 @@ export const DLOList = ({
                                                 </span>
                                             </>
                                         )}
-                                    </div>
+                                    </Typography>
                                 )}
-                            </Typography>
+                            </>
                         </header>
 
                         <div>
