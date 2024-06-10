@@ -151,7 +151,7 @@ describe('Digital Learning Hub View page', () => {
             cy.visit('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
             cy.get('[data-testid="dlor-detailpage-cultural-advice"]')
                 .should('exist')
-                .contains('Cultural advice');
+                .contains('Aboriginal and Torres Strait Islander peoples are warned');
         });
         it('is accessible', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');

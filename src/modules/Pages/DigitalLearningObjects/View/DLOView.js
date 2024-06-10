@@ -17,6 +17,7 @@ import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import EditIcon from '@mui/icons-material/Edit';
 import StarIcon from '@mui/icons-material/Star';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -161,6 +162,14 @@ const useStyles = makeStyles(theme => ({
         padding: '1em',
         marginTop: 24,
         borderRadius: 10,
+    },
+    caWrapper: { display: 'flex', alignItems: 'center', marginTop: 4 },
+    tagLabel: {
+        fontVariant: 'small-caps',
+        textTransform: 'lowercase',
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#333',
     },
 }));
 
@@ -332,33 +341,45 @@ export const DLOView = ({
                 <Grid container spacing={4} data-testid="dlor-detailpage" className={classes.viewContent}>
                     <Grid item xs={12} md={9}>
                         <LoginPrompt account={account} instyle={{ marginBottom: 12 }} />
+                        <div style={{ marginBottom: 12 }}>
+                            <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
+                                {dlorItem?.object_title}
+                                {!!dlorItem?.object_cultural_advice && (
+                                    <div
+                                        className={classes.caWrapper}
+                                        data-testid={`dlor-homepage-panel-${dlorItem?.object_public_uuid}-cultural-advice`}
+                                    >
+                                        <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />{' '}
+                                        <span className={classes.tagLabel}>Cultural advice</span>
+                                    </div>
+                                )}
+                            </Typography>
+                        </div>
+                        {!!dlorItem?.object_cultural_advice && (
+                            <p
+                                data-testid="dlor-detailpage-cultural-advice"
+                                style={{
+                                    padding: '1em',
+                                    borderColor: 'rgb(187, 216, 245)',
+                                    color: 'rgb(0, 0, 0)',
+                                    backgroundColor: 'rgb(187, 216, 245)',
+                                    borderRadius: 3,
+                                    // marginRight: '-2.5em',
+                                }}
+                            >
+                                Aboriginal and Torres Strait Islander peoples are warned that this resource may contain
+                                images, transcripts or names of Aboriginal and Torres Strait Islander peoples now
+                                deceased. It may also contain historically and culturally sensitive words, terms, and
+                                descriptions.
+                            </p>
+                        )}
                         <div
                             data-testid="dlor-detailpage-description"
                             style={{ backgroundColor: 'white', padding: 12 }}
                             className={classes.headerBlock}
                         >
-                            <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
-                                {dlorItem?.object_title}
-                            </Typography>
                             {!!dlorItem?.object_description && parse(dlorItem.object_description)}
                         </div>
-
-                        {!!dlorItem?.object_cultural_advice && (
-                            <div
-                                data-testid="dlor-detailpage-cultural-advice"
-                                style={{ backgroundColor: 'white', padding: 12, marginTop: 24 }}
-                            >
-                                <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
-                                    Cultural advice
-                                </Typography>
-                                <p>
-                                    <a href="">Culturally sensitive collections</a> &ndash; Aboriginal and Torres Strait
-                                    Islander peoples are advised that our collections and sites may contain images,
-                                    voices or names of persons now deceased. Information may be culturally sensitive for
-                                    some individuals and communities.
-                                </p>
-                            </div>
-                        )}
 
                         {dlorItem?.object_link_url?.startsWith('http') && (
                             <div
