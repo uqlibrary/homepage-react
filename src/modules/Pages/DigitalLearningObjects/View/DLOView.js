@@ -13,11 +13,13 @@ import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import EditIcon from '@mui/icons-material/Edit';
-import StarIcon from '@mui/icons-material/Star';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import StarIcon from '@mui/icons-material/Star';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -170,6 +172,7 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 'bold',
         fontSize: 16,
         color: '#333',
+        marginRight: 10,
     },
 }));
 
@@ -344,17 +347,61 @@ export const DLOView = ({
                         <div style={{ marginBottom: 12 }}>
                             <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
                                 {dlorItem?.object_title}
-                                {!!dlorItem?.object_cultural_advice && (
-                                    <div
-                                        className={classes.caWrapper}
-                                        data-testid={`dlor-homepage-panel-${dlorItem?.object_public_uuid}-cultural-advice`}
-                                    >
-                                        <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />{' '}
-                                        <span className={classes.tagLabel}>Cultural advice</span>
-                                    </div>
-                                )}
                             </Typography>
                         </div>
+                        <>
+                            {(!!dlorItem?.object_cultural_advice ||
+                                !!dlorItem?.object_is_featured ||
+                                !!dlorItem?.object_series_name) && (
+                                <Typography
+                                    component={'p'}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginLeft: -4,
+                                        marginTop: -4,
+                                        marginBottom: 6,
+                                    }}
+                                >
+                                    {!!dlorItem?.object_is_featured && (
+                                        <>
+                                            <BookmarkIcon style={{ fill: '#51247A', marginRight: 2, width: 20 }} />
+                                            <span
+                                                className={classes.tagLabel}
+                                                data-testid={'dlor-detailpage-featured-custom-indicator'}
+                                                style={{ marginLeft: -2 }}
+                                            >
+                                                Featured
+                                            </span>
+                                        </>
+                                    )}
+                                    {!!dlorItem?.object_cultural_advice && (
+                                        <>
+                                            <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />
+                                            <span
+                                                className={classes.tagLabel}
+                                                data-testid={'dlor-detailpage-cultural-advice-custom-indicator'}
+                                            >
+                                                Cultural advice
+                                            </span>
+                                        </>
+                                    )}
+                                    {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
+                                        <>
+                                            <PlaylistAddCheckIcon
+                                                style={{ fill: '#4aa74e', marginRight: 2, width: 24 }}
+                                            />
+                                            <span
+                                                className={classes.tagLabel}
+                                                data-testid={'dlor-detailpage-object_series_name-custom-indicator'}
+                                            >
+                                                Series: {dlorItem?.object_series_name}
+                                            </span>
+                                        </>
+                                    )}
+                                </Typography>
+                            )}
+                        </>
                         {!!dlorItem?.object_cultural_advice && (
                             <p
                                 data-testid="dlor-detailpage-cultural-advice"
@@ -364,7 +411,6 @@ export const DLOView = ({
                                     color: 'rgb(0, 0, 0)',
                                     backgroundColor: 'rgb(187, 216, 245)',
                                     borderRadius: 3,
-                                    // marginRight: '-2.5em',
                                 }}
                             >
                                 Aboriginal and Torres Strait Islander peoples are warned that this resource may contain
@@ -459,7 +505,7 @@ export const DLOView = ({
                                     )}
                             </div>
                         )}
-                        {!!dlorItem?.object_series && dlorItem?.object_series.length > 1 && (
+                        {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
                             <div style={{ backgroundColor: 'white', padding: 12, marginTop: 24 }}>
                                 <Typography className={classes.highlighted} component="h2" variant="h6">
                                     Part of a series: {dlorItem.object_series_name}

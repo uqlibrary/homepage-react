@@ -12,7 +12,13 @@ describe('Digital Learning Hub View page', () => {
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
             );
-            cy.get('[data-testid="dlor-detailpage-cultural-advice"]').should('not.exist');
+
+            cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]').should('not.exist');
+            cy.get('[data-testid="dlor-detailpage-featured-custom-indicator"]').should('not.exist');
+            cy.get('[data-testid="dlor-detailpage-object_series_name-custom-indicator"]')
+                .should('exist')
+                .contains('Series: Digital Essentials');
+
             cy.get('[data-testid="dlor-detailpage-description"]').should(
                 'contain',
                 'Types of AI, implications for society, using AI in your studies and how UQ is involved. (longer lines)',
@@ -147,8 +153,15 @@ describe('Digital Learning Hub View page', () => {
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
 
-            // cultural advice appears
+            // cultural advice & custom indicators appears
             cy.visit('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
+            cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]')
+                .should('exist')
+                .contains('Cultural advice');
+            cy.get('[data-testid="dlor-detailpage-featured-custom-indicator"]')
+                .should('exist')
+                .contains('Featured');
+            cy.get('[data-testid="dlor-detailpage-object_series_name-custom-indicator"]').should('not.exist');
             cy.get('[data-testid="dlor-detailpage-cultural-advice"]')
                 .should('exist')
                 .contains('Aboriginal and Torres Strait Islander peoples are warned');
