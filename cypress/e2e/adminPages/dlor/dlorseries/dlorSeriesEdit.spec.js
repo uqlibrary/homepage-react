@@ -83,6 +83,17 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 expect(isVisible).to.eq(true);
             });
         });
+        it('has a working "cancel edit" button', () => {
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="admin-dlor-series-form-button-cancel"]')
+                    .should('exist')
+                    .contains('Cancel'),
+            );
+            cy.get('[data-testid="admin-dlor-series-form-button-cancel"]').click();
+            cy.waitUntil(() => cy.get('[data-testid="dlor-serieslist-edit-1"]').should('exist'));
+            cy.url().should('eq', `http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
+        });
         it('has a working "view a dlor" button', () => {
             cy.get('a[target="_blank"][data-testid="dlor-series-edit-view-2"]')
                 .should('be.visible')
@@ -236,7 +247,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
         });
     });
 
-    context('failed saving', () => {
+    context('failures', () => {
         it('a failed save shows correctly', () => {
             cy.visit(`http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}&responseType=saveError`);
             cy.viewport(1300, 1000);
@@ -256,6 +267,13 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .contains('Close');
             cy.get('[data-testid="confirm-dlor-series-save-outcome"]').click();
+        });
+        it('a failed api load shows correctly', () => {
+            cy.visit(
+                `http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}&responseType=fullListError`,
+            );
+            cy.waitUntil(() => cy.get('[data-testid="dlor-seriesItem-error"]').should('exist'));
+            cy.get('[data-testid="dlor-seriesItem-error"]').contains('An error has occurred during the request');
         });
     });
     context('user access', () => {

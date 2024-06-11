@@ -448,6 +448,19 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     cy.clearCookie('CYPRESS_TEST_DATA');
                 });
             });
+            it('the form cancel button works', () => {
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="admin-dlor-form-button-cancel"]')
+                        .should('exist')
+                        .scrollIntoView()
+                        .contains('Cancel'),
+                );
+                cy.get('[data-testid="admin-dlor-form-button-cancel"]').click();
+                cy.waitUntil(() => cy.get('[data-testid="checkbox-status-current"]').should('exist'));
+                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            });
         });
         context('successfully mock to db', () => {
             beforeEach(() => {

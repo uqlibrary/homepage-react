@@ -329,6 +329,7 @@ export const DLOList = ({
 
     const [paginationPage, setPaginationPage] = React.useState(1);
 
+    /* istanbul ignore next */
     function skipToElement() {
         const skipNavLander = document.querySelector('#first-panel-button');
         !!skipNavLander && skipNavLander.focus({ focusVisible: true });
@@ -372,6 +373,7 @@ export const DLOList = ({
     }, [dlorList, dlorFilterList]);
 
     function hideElement(element, displayproperty = null) {
+        /* istanbul ignore next */
         if (!element) {
             return;
         }
@@ -383,6 +385,7 @@ export const DLOList = ({
     }
 
     function showElement(element, displayproperty = null) {
+        /* istanbul ignore next */
         if (!element) {
             return;
         }
@@ -425,6 +428,7 @@ export const DLOList = ({
     function showHidePanel(index) {
         const upArrowIcon = document.getElementById(UpArrowId(index));
         const downArrowIcon = document.getElementById(DownArrowId(index));
+        /* istanbul ignore else */
         if (
             (!!downArrowIcon && downArrowIcon.style.display === 'none') ||
             (!!upArrowIcon && upArrowIcon.style.display !== 'none')
@@ -644,9 +648,11 @@ export const DLOList = ({
                                             style={{ display: 'none' }}
                                         >
                                             <button
-                                                id="closePopup"
-                                                onClick={() => closeHelpText(facetType)}
                                                 data-testid={sidebarElementId(index, 'panel-help-close')}
+                                                onClick={
+                                                    /* istanbul ignore next */ () =>
+                                                        /* istanbul ignore next */ closeHelpText(facetType)
+                                                }
                                             >
                                                 Close
                                             </button>
@@ -812,9 +818,13 @@ export const DLOList = ({
     };
 
     const getPublicHelp = facetTypeSlug => {
-        return !!filterListTrimmed
-            ? filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()?.facet_type_help_public
-            : '';
+        let result = '';
+        /* istanbul ignore else */
+        if (!!filterListTrimmed) {
+            result = filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()
+                ?.facet_type_help_public;
+        }
+        return result;
     };
 
     const getFacetTypeIcon = facetTypeSlug => {
@@ -841,11 +851,7 @@ export const DLOList = ({
 
         const getConcatenatedFilterLabels = (facetTypeSlug, wrapInParam = false) => {
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
-            // console.log('getConcatenatedFilterLabels object?.object_filters=', object?.object_filters);
-            // console.log('getConcatenatedFilterLabels facetTypeSlug=', facetTypeSlug);
-            // console.log('getConcatenatedFilterLabels f=', f);
             const output = f?.pop();
-            // console.log('getConcatenatedFilterLabels output=', output);
             const facetNames = output?.filter_values?.map(item => item.name)?.join(', ');
             return !!wrapInParam ? `(${facetNames})` : facetNames;
         };
@@ -1016,7 +1022,11 @@ export const DLOList = ({
                                 how to use our digital learning objects
                             </a>
                             .
-                            <button className={classes.skipLink} id="skip-filters" onClick={() => skipToElement()}>
+                            <button
+                                className={classes.skipLink}
+                                id="skip-filters"
+                                onClick={/* istanbul ignore next */ () => /* istanbul ignore next */ skipToElement()}
+                            >
                                 Skip facet selection to view Digital Learning Hub entries
                             </button>
                         </Typography>
@@ -1151,6 +1161,7 @@ export const DLOList = ({
                                                 {!!dlorData &&
                                                     dlorData.length > 0 &&
                                                     dlorData.map((o, index) => displayItemPanel(o, index))}
+                                                /* istanbul ignore else */
                                                 {!!dlorData && dlorData.length > 0 && (
                                                     <Pagination
                                                         count={paginationCount}

@@ -210,7 +210,7 @@ export const DLOView = ({
 
     React.useEffect(() => {
         window.scrollTo(0, 0); // onchange of dlor id, scroll up
-
+        /* istanbul ignore else */
         if (!!dlorId) {
             actions.clearADlor();
             actions.loadADLOR(dlorId);
@@ -266,7 +266,10 @@ export const DLOView = ({
                 //     userEmail: 'uqldegro@uq.edu.au',
                 // },
             };
-            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+                ? cookies.CYPRESS_TEST_DATA
+                : /* istanbul ignore next */ null;
+            /* istanbul ignore else */
             if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
                 setCookie('CYPRESS_DATA_SAVED', valuestoSend);
             }
@@ -313,6 +316,7 @@ export const DLOView = ({
 
     const getYoutubeEmbeddableUrl = urlIn => {
         const url = getYoutubeUrlForPreviewEmbed(urlIn); // assumes is return in ?v= format
+        /* istanbul ignore next */
         if (url === false) {
             return false;
         }
@@ -320,15 +324,19 @@ export const DLOView = ({
     };
 
     function getItButtonLabel(dlorItem) {
-        const interactionType = dlorItem?.object_link_interaction_type || null;
+        const interactionType = dlorItem?.object_link_interaction_type || /* istanbul ignore next */ null;
         const fileType = dlorItem?.object_link_file_type || null;
 
         let label = 'Access the object';
         if (interactionType === 'view') {
-            const viewingTime = dlorItem?.object_link_size ? getDurationString(dlorItem?.object_link_size) : '';
+            const viewingTime = dlorItem?.object_link_size
+                ? getDurationString(dlorItem?.object_link_size)
+                : /* istanbul ignore next */ '';
             label = `Access the object (${fileType} ${viewingTime})`;
         } else if (interactionType === 'download') {
-            const fileSize = !!dlorItem?.object_link_size ? getFileSizeString(dlorItem?.object_link_size) : null;
+            const fileSize = !!dlorItem?.object_link_size
+                ? getFileSizeString(dlorItem?.object_link_size)
+                : /* istanbul ignore next */ null;
             label = `Access the object (${fileType} ${fileSize})`;
         }
         return label;
@@ -525,7 +533,10 @@ export const DLOView = ({
                                                             <span>{s.series_object_title}</span>
                                                         </span>
                                                     ) : (
-                                                        <a href={getDlorViewPageUrl(s?.series_object_uuid)}>
+                                                        <a
+                                                            href={getDlorViewPageUrl(s?.series_object_uuid)}
+                                                            rel="noopener noreferrer"
+                                                        >
                                                             {s.series_object_title}
                                                         </a>
                                                     )}

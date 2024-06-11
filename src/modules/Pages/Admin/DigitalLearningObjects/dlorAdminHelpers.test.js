@@ -8,6 +8,7 @@ describe('helpers', () => {
         expect(splitStringToArrayOnComma('"abc, abc", def, "hij"')).toEqual(['abc, abc', 'def', 'hij']);
         expect(splitStringToArrayOnComma('abc')).toEqual(['abc']);
         expect(splitStringToArrayOnComma('abc,def,hij')).toEqual(['abc', 'def', 'hij']);
+        expect(splitStringToArrayOnComma('')).toEqual('');
     });
     it('generates admin links correctly', () => {
         expect(dlorAdminLink('/add')).toEqual('http://localhost/admin/dlor/add');

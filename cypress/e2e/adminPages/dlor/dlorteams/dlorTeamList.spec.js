@@ -29,19 +29,19 @@ describe('Digital Learning Hub admin Teams management', () => {
             cy.get('[data-testid="dlor-breadcrumb--team-management-label-0"]').contains('Team management');
 
             // team name shows correctly
-            cy.get('[data-testid="dlor-homepage-panel-1"]')
+            cy.get('[data-testid="dlor-teamlist-panel-1"]')
                 .should('exist')
                 .contains('LIB DX Digital Content');
 
             // only one delete buttons appears
-            cy.get('[data-testid="dlor-homepage-delete-1"]').should('not.exist');
-            cy.get('[data-testid="dlor-homepage-delete-2"]').should('not.exist');
-            cy.get('[data-testid="dlor-homepage-delete-3"]').should('exist');
+            cy.get('[data-testid="dlor-teamlist-delete-1"]').should('not.exist');
+            cy.get('[data-testid="dlor-teamlist-delete-2"]').should('not.exist');
+            cy.get('[data-testid="dlor-teamlist-delete-3"]').should('exist');
 
             // three edit buttons appears
-            cy.get('[data-testid="dlor-homepage-edit-1"]').should('exist');
-            cy.get('[data-testid="dlor-homepage-edit-2"]').should('exist');
-            cy.get('[data-testid="dlor-homepage-edit-3"]').should('exist');
+            cy.get('[data-testid="dlor-teamlist-edit-1"]').should('exist');
+            cy.get('[data-testid="dlor-teamlist-edit-2"]').should('exist');
+            cy.get('[data-testid="dlor-teamlist-edit-3"]').should('exist');
 
             // object counts are correct
             cy.get('[data-testid="dlor-team-object-list-1"]')
@@ -80,14 +80,14 @@ describe('Digital Learning Hub admin Teams management', () => {
             cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}`);
         });
         it('has a working "edit a team" button', () => {
-            cy.get('[data-testid="dlor-homepage-edit-2"]')
+            cy.get('[data-testid="dlor-teamlist-edit-2"]')
                 .should('exist')
                 .click();
             cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/edit/2?user=${DLOR_ADMIN_USER}`);
         });
         it('can cancel deletion of a Team', () => {
             // click delete icon on first Object
-            cy.get('[data-testid="dlor-homepage-delete-3"]')
+            cy.get('[data-testid="dlor-teamlist-delete-3"]')
                 .should('exist')
                 .click();
             // confirm delete box is open
@@ -102,7 +102,7 @@ describe('Digital Learning Hub admin Teams management', () => {
         });
         it('can delete a team', () => {
             // click delete icon on first Object
-            cy.get('[data-testid="dlor-homepage-delete-3"]')
+            cy.get('[data-testid="dlor-teamlist-delete-3"]')
                 .should('exist')
                 .click();
             // confirm delete box is open
@@ -132,7 +132,7 @@ describe('Digital Learning Hub admin Teams management', () => {
 
             // a second delte throw up the correct dialog boxes
             // (and doesnt think it is already done
-            cy.get('[data-testid="dlor-homepage-delete-4"]')
+            cy.get('[data-testid="dlor-teamlist-delete-4"]')
                 .should('exist')
                 .click();
             // confirm delete box is open
@@ -156,13 +156,19 @@ describe('Digital Learning Hub admin Teams management', () => {
         });
     });
     context('failed actions', () => {
-        beforeEach(() => {
-            cy.visit(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}&responseType=saveError`);
+        it('a failed api load shows correctly', () => {
+            cy.visit(
+                `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}&responseType=teamsLoadError`,
+            );
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="dlor-teamlist-error"]').should('exist'));
+            cy.get('[data-testid="dlor-teamlist-error"]').contains('An error has occurred during the request');
         });
         it('a failed deletion is handled properly', () => {
+            cy.visit(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}&responseType=saveError`);
+            cy.viewport(1300, 1000);
             // click delete icon on first Object
-            cy.get('[data-testid="dlor-homepage-delete-3"]')
+            cy.get('[data-testid="dlor-teamlist-delete-3"]')
                 .should('exist')
                 .click();
             // confirm delete box is open

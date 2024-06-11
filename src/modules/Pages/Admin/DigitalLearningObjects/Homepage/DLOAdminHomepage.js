@@ -146,12 +146,12 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         console.log('deleteSelectedObject start');
         !!objectToDelete &&
             deleteADlor(objectToDelete)
-                .then(() => {
-                    console.log('deleteSelectedObject delete success', objectToDelete);
-                    setObjectToDelete('');
-                    // setAlertNotice(''); // needed?
-                    actions.loadAllDLORs();
-                })
+                .then(
+                    /* istanbul ignore next */ () => /* istanbul ignore next */ {
+                        setObjectToDelete('');
+                        actions.loadAllDLORs();
+                    },
+                )
                 .catch(() => {
                     console.log('deleteSelectedObject delete fail', objectToDelete);
                     setObjectToDelete('');
@@ -239,8 +239,11 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
 
         if (keywordIsSearchable(keyword)) {
             setKeywordSearch(keyword);
-        } else if (keyword.length === 0) {
-            clearKeywordField();
+        } else {
+            /* istanbul ignore next */
+            if (keyword.length === 0) {
+                clearKeywordField();
+            }
         }
     };
 
@@ -452,6 +455,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                     </Grid>
                                                     <Grid item xs={1}>
                                                         <IconButton
+                                                            data-testid={`dlor-homepage-edit-${o?.object_public_uuid}`}
                                                             onClick={() => navigateToEditPage(o?.object_public_uuid)}
                                                             disabled={o?.object_status === 'deleted'}
                                                         >

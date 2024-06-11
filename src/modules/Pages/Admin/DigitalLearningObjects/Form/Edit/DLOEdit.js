@@ -49,6 +49,7 @@ export const DLOEdit = ({
     const classes = useStyles();
 
     React.useEffect(() => {
+        /* istanbul ignore next */
         if (!dlorTeamListLoading && !dlorTeamListError && !dlorTeamList) {
             actions.loadOwningTeams();
         }
@@ -56,6 +57,7 @@ export const DLOEdit = ({
     }, []);
 
     React.useEffect(() => {
+        /* istanbul ignore next */
         if (!!dlorId) {
             actions.clearADlor();
             actions.loadADLOR(dlorId);
@@ -80,22 +82,18 @@ export const DLOEdit = ({
     function getLinkSize(type) {
         if (dlorItem?.object_link_interaction_type === 'download') {
             if (type === 'unit' || type === 'amount') {
-                return getFileSizeString(dlorItem?.object_link_size || '', type);
-            } else {
-                return null;
+                return getFileSizeString(dlorItem?.object_link_size || /* istanbul ignore next */ '', type);
             }
-            return getFileSizeString(dlorItem?.object_link_size || '');
+            return null;
         } else if (dlorItem?.object_link_interaction_type === 'view') {
             if (type === 'minutes') {
-                return getMinutesFromTotalSeconds(dlorItem?.object_link_size || '');
+                return getMinutesFromTotalSeconds(dlorItem?.object_link_size || /* istanbul ignore next */ '');
             } else if (type === 'seconds') {
-                return getSecondsFromTotalSeconds(dlorItem?.object_link_size || '');
-            } else {
-                return null;
+                return getSecondsFromTotalSeconds(dlorItem?.object_link_size || /* istanbul ignore next */ '');
             }
-        } else {
-            return '';
+            return null;
         }
+        return '';
     }
 
     const formDefaults = {

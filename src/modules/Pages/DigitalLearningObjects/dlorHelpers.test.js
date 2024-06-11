@@ -1,8 +1,11 @@
 import {
-    getFileSizeString,
+    convertFileSizeToKb,
     getDurationString,
-    // convertDurationStringToSeconds,
-    convertFileSizeStringToKb,
+    getFileSizeString,
+    getMinutesFromTotalSeconds,
+    getTotalSecondsFromMinutesAndSecond,
+    getSecondsFromTotalSeconds,
+    getYoutubeUrlForPreviewEmbed,
     toTitleCase,
 } from './dlorHelpers';
 
@@ -18,22 +21,25 @@ describe('helpers', () => {
         expect(getFileSizeString(324126728)).toEqual('324.1 GB');
         expect(getFileSizeString(8141267281)).toEqual('8.1 TB');
 
-        // expect(convertFileSizeStringToKb('8.1 TB')).toEqual('8100000000');
-        // expect(convertFileSizeStringToKb('324.1 GB')).toEqual('324100000');
-        // expect(convertFileSizeStringToKb('72.4 GB')).toEqual('72400000');
-        // expect(convertFileSizeStringToKb('6.3 GB')).toEqual('6300000');
-        // expect(convertFileSizeStringToKb('324.1 MB')).toEqual('324100');
-        // expect(convertFileSizeStringToKb('54.4 MB')).toEqual('54400');
-        // expect(convertFileSizeStringToKb('4.5 MB')).toEqual('4500');
-        // expect(convertFileSizeStringToKb('324 KB')).toEqual('324');
-        // expect(convertFileSizeStringToKb('')).toEqual('0');
-        //
-        // // expect(convertFileSizeStringToKb('invalid string')).toThrow(
-        // //     'convertFileSizeStringToKb:Invalid size string "invalid string"',
-        // // );
+        expect(getFileSizeString(0)).toEqual('');
+        expect(getFileSizeString(324)).toEqual('324 KB');
+        expect(getFileSizeString(4543)).toEqual('4.5 MB');
+        expect(getFileSizeString(54412)).toEqual('54.4 MB');
+        expect(getFileSizeString(324126)).toEqual('324.1 MB');
+        expect(getFileSizeString(6341267)).toEqual('6.3 GB');
+        expect(getFileSizeString(72412672)).toEqual('72.4 GB');
+        expect(getFileSizeString(324126728)).toEqual('324.1 GB');
+        expect(getFileSizeString(8141267281)).toEqual('8.1 TB');
+
+        expect(getFileSizeString(0, 'unit')).toEqual('KB');
+        expect(getFileSizeString(324, 'unit')).toEqual('KB');
+
+        expect(getFileSizeString(0, 'amount')).toEqual(0);
+        expect(getFileSizeString(4543, 'amount')).toEqual('4.5');
     });
 
     it('returns correct duration string', () => {
+        expect(getDurationString(0)).toEqual('');
         expect(getDurationString(2864)).toEqual('47m 44s');
         expect(getDurationString(2864, 'MMM minutes and SSS seconds')).toEqual('47 minutes and 44 seconds');
 
@@ -48,5 +54,47 @@ describe('helpers', () => {
         expect(toTitleCase('aaa')).toEqual('Aaa');
         expect(toTitleCase('aAa')).toEqual('Aaa');
         expect(toTitleCase('aaa BBB BBB')).toEqual('Aaa bbb bbb');
+    });
+
+    it('converts valid units', () => {
+        expect(convertFileSizeToKb(4, 'TB')).toEqual('4000000000');
+        expect(convertFileSizeToKb(5, 'GB')).toEqual('5000000');
+        expect(convertFileSizeToKb(34, 'MB')).toEqual('34000');
+        expect(convertFileSizeToKb(654, 'KB')).toEqual('654');
+    });
+
+    it('gets minutes from total seconds', () => {
+        expect(getMinutesFromTotalSeconds(0)).toEqual(0); // { minutes: 0, seconds: 0 });
+
+        expect(getMinutesFromTotalSeconds(10)).toEqual(0); // { minutes: 0, seconds: 10 });
+        expect(getMinutesFromTotalSeconds(60)).toEqual(1);
+        expect(getMinutesFromTotalSeconds(340)).toEqual(5);
+    });
+
+    it('gets seconds from total seconds', () => {
+        expect(getSecondsFromTotalSeconds(0)).toEqual(0); // { minutes: 0, seconds: 0 });
+
+        expect(getSecondsFromTotalSeconds(10)).toEqual(10);
+        expect(getSecondsFromTotalSeconds(60)).toEqual(0);
+        expect(getSecondsFromTotalSeconds(340)).toEqual(40);
+    });
+
+    it('gets total seconds from minutes and seconds', () => {
+        expect(getTotalSecondsFromMinutesAndSecond(0, 0)).toEqual(0);
+        expect(getTotalSecondsFromMinutesAndSecond(0, 10)).toEqual(10);
+        expect(getTotalSecondsFromMinutesAndSecond(1, 0)).toEqual(60);
+        expect(getTotalSecondsFromMinutesAndSecond(5, 40)).toEqual(340);
+    });
+
+    it('gets correct youtube url', () => {
+        expect(getYoutubeUrlForPreviewEmbed('ftp://something')).toEqual(false);
+        expect(getYoutubeUrlForPreviewEmbed('http://notyoutubedomain.com')).toEqual(false);
+        expect(getYoutubeUrlForPreviewEmbed('https://www.youtube.com/123')).toEqual(false); // to short to be a valid id
+        expect(getYoutubeUrlForPreviewEmbed('https://www.youtube.com/jwKH6X3cGMg')).toEqual(
+            'https://www.youtube.com/?v=jwKH6X3cGMg',
+        );
+        expect(getYoutubeUrlForPreviewEmbed('https://www.youtube.com/watch?v=jwKH6X3cGMg&something=else')).toEqual(
+            'https://www.youtube.com/?v=jwKH6X3cGMg',
+        );
     });
 });

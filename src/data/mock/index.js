@@ -646,7 +646,7 @@ mock.onGet(/dlor\/find\/.*/)
     })
     .onGet('dlor/list/full')
     .reply(() => {
-        if (responseType === 'error') {
+        if (responseType === 'fullListError') {
             return [500, {}];
         } else if (responseType === 'emptyResult') {
             return [200, { data: [] }]; // this would more likely be a 404
@@ -680,7 +680,7 @@ mock.onGet(/dlor\/find\/.*/)
     })
     .onGet('dlor/facet/list')
     .reply(() => {
-        if (responseType === 'error') {
+        if (responseType === 'filtererror') {
             return [500, {}];
         } else if (responseType === 'filterLoadError') {
             return [500, { error: 'Filter api did not load' }];
@@ -768,8 +768,10 @@ mock.onGet(/dlor\/find\/.*/)
     })
     .onDelete(/dlor\/admin\/object\/.*/)
     .reply(config => {
-        if (responseType === 'saveError') {
+        if (responseType === 'deleteError') {
             return [500, {}];
+            // } else if (responseType === 'saveError') {
+            //     return [500, {}];
         } else {
             return [200, {}];
         }

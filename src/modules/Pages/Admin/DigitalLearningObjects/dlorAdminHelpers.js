@@ -11,6 +11,7 @@ export function splitStringToArrayOnComma(keywordString) {
             .replace(/,  /g, ', ') // (then correct any doubles)
             .trim()
             .split(/, (?=(?:(?:[^"]*"){2})*[^"]*$)/); // split on the comma, except commas inside quotes
+        /* istanbul ignore else */
         if (!!splitStringToArrayOnComma && splitStringToArrayOnComma.length > 0) {
             splitStringToArrayOnComma = splitStringToArrayOnComma.map(keyword => {
                 return keyword

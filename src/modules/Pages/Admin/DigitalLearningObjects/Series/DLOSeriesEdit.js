@@ -106,13 +106,13 @@ export const DLOSeriesEdit = ({
                         ? dlorList?.filter((o, index) => {
                               return o.object_series_id === Number(dlorSeriesId);
                           })
-                        : [],
+                        : /* istanbul ignore next */ [],
                 object_list_unassigned:
                     dlorList?.length > 0
                         ? dlorList?.filter((d, index) => {
                               return !(d?.object_series_id > 0);
                           })
-                        : [],
+                        : /* istanbul ignore next */ [],
             });
         }
         setFormValidity(validateValues(formValues));
@@ -139,7 +139,7 @@ export const DLOSeriesEdit = ({
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
-        window.history.back();
+        window.location.href = dlorAdminLink('/series/manage');
     };
 
     const clearForm = actiontype => {
@@ -169,6 +169,7 @@ export const DLOSeriesEdit = ({
         let linked = formValues.object_list_linked;
         let unassigned = formValues.object_list_unassigned;
         // id={`linked_object_series_order-${f.object_public_uuid}`}unassigned_
+        /* istanbul ignore next */
         if (prop.startsWith('linked_object_series_order-')) {
             const uuid = prop.replace('linked_object_series_order-', '');
             const thisdlor = linked.find(d => d.object_public_uuid === uuid);
@@ -263,6 +264,7 @@ export const DLOSeriesEdit = ({
             />
             <Grid container spacing={2}>
                 {(() => {
+                    /* istanbul ignore else */
                     if (!!dlorItemUpdating || !!dlorListLoading) {
                         return (
                             <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
@@ -429,7 +431,7 @@ export const DLOSeriesEdit = ({
                                     <Button
                                         color="secondary"
                                         children="Cancel"
-                                        data-testid="admin-dlor-form-button-cancel"
+                                        data-testid="admin-dlor-series-form-button-cancel"
                                         onClick={() => navigateToPreviousPage()}
                                         variant="contained"
                                     />

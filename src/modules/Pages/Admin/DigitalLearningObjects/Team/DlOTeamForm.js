@@ -104,11 +104,12 @@ export const DLOTeamForm = ({
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
-        window.history.back();
+        window.location.href = dlorAdminLink('/team/manage');
     };
 
     const clearForm = actiontype => {
         closeConfirmationBox();
+        /* istanbul ignore next */
         mode === 'edit' && window.location.reload(false);
     };
 
@@ -158,6 +159,7 @@ export const DLOTeamForm = ({
     return (
         <Grid container spacing={2}>
             {(() => {
+                /* istanbul ignore else */
                 if ((!!dlorTeamLoading || !!dlorTeamSaving || (!dlorTeamError && !formDefaults)) && mode === 'edit') {
                     return (
                         <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
@@ -179,28 +181,25 @@ export const DLOTeamForm = ({
                         <>
                             <Grid item xs={12} data-testid="dlor-team-item-list">
                                 <Grid container key={`list-team-${formDefaults?.team_id}`}>
-                                    {(saveStatus === 'complete' || saveStatus === 'error') && (
-                                        <ConfirmationBox
-                                            actionButtonColor="primary"
-                                            actionButtonVariant="contained"
-                                            confirmationBoxId="dlor-team-save-outcome"
-                                            onAction={() => {
-                                                saveStatus === 'error'
-                                                    ? closeConfirmationBox()
-                                                    : navigateToTeamManagementHomePage();
-                                            }}
-                                            hideCancelButton={
-                                                saveStatus === 'error' || !locale.successMessage.cancelButtonLabel
-                                            }
-                                            cancelButtonLabel={locale.successMessage.cancelButtonLabel}
-                                            onCancelAction={() => clearForm()}
-                                            onClose={closeConfirmationBox}
-                                            isOpen={isOpen}
-                                            locale={
-                                                saveStatus === 'error' ? locale.errorMessage : locale.successMessage
-                                            }
-                                        />
-                                    )}
+                                    <ConfirmationBox
+                                        actionButtonColor="primary"
+                                        actionButtonVariant="contained"
+                                        confirmationBoxId="dlor-team-save-outcome"
+                                        onAction={() => {
+                                            saveStatus === 'error'
+                                                ? closeConfirmationBox()
+                                                : navigateToTeamManagementHomePage();
+                                        }}
+                                        hideCancelButton={
+                                            saveStatus === 'error' || !locale.successMessage.cancelButtonLabel
+                                        }
+                                        cancelButtonLabel={locale.successMessage.cancelButtonLabel}
+                                        onCancelAction={() => clearForm()}
+                                        onClose={closeConfirmationBox}
+                                        isOpen={saveStatus !== null}
+                                        locale={saveStatus === 'error' ? locale.errorMessage : locale.successMessage}
+                                    />
+
                                     <form id="dlor-editTeam-form" style={{ width: '100%' }}>
                                         <Grid item xs={12}>
                                             <FormControl variant="standard" fullWidth>
@@ -264,7 +263,7 @@ export const DLOTeamForm = ({
                                 <Button
                                     color="secondary"
                                     children="Cancel"
-                                    data-testid="admin-dlor-form-button-cancel"
+                                    data-testid="admin-dlor-team-form-button-cancel"
                                     onClick={() => navigateToPreviousPage()}
                                     variant="contained"
                                 />

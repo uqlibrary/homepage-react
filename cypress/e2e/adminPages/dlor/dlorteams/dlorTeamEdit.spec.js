@@ -118,6 +118,17 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 .should('exist')
                 .should('be.disabled');
         });
+        it('has a working "cancel edit" button', () => {
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="admin-dlor-team-form-button-cancel"]')
+                    .should('exist')
+                    .contains('Cancel'),
+            );
+            cy.get('[data-testid="admin-dlor-team-form-button-cancel"]').click();
+            cy.waitUntil(() => cy.get('[data-testid="dlor-teamlist-edit-1"]').should('exist'));
+            cy.url().should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
+        });
     });
     context('save test', () => {
         beforeEach(() => {
@@ -178,6 +189,13 @@ describe('Digital Learning Hub admin Edit Team', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Team management');
+        });
+    });
+    context('failures', () => {
+        it('a failed api load shows correctly', () => {
+            cy.visit(`http://localhost:2020/admin/dlor/team/edit/1?user=${DLOR_ADMIN_USER}&responseType=error`);
+            cy.waitUntil(() => cy.get('[data-testid="dlor-teamItem-error"]').should('exist'));
+            cy.get('[data-testid="dlor-teamItem-error"]').contains('An error has occurred during the request');
         });
     });
     context('user access', () => {

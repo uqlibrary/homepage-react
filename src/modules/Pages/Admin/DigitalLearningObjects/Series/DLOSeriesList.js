@@ -96,10 +96,6 @@ export const DLOSeriesList = ({
         }
     }, [dlorSeriesDeleting, dlorSeriesDeleted, dlorSeriesDeleteError]);
 
-    const navigateToAddPage = () => {
-        window.location.href = dlorAdminLink('/series/add');
-    };
-
     const deleteADlorSeries = seriesId => {
         return actions.deleteDlorSeries(seriesId);
     };
@@ -125,9 +121,6 @@ export const DLOSeriesList = ({
 
     const navigateToSeriesEditPage = seriesId => {
         window.location.href = dlorAdminLink(`/series/edit/${seriesId}`);
-    };
-    const navigateToDlorEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
     const deletionConfirmationBoxLocale = {
         confirmItMessage: {
@@ -202,18 +195,6 @@ export const DLOSeriesList = ({
                 ]}
             />
 
-            <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={12} style={{ textAlign: 'right' }}>
-                    <Button
-                        children="Add series (later)"
-                        color="primary"
-                        data-testid="admin-dlor-visit-add-button"
-                        onClick={() => navigateToAddPage()}
-                        variant="contained"
-                        disabled // THIS IS CURRENTLY DISABLED
-                    />
-                </Grid>
-            </Grid>
             <Grid container spacing={2} alignItems="center">
                 {(() => {
                     if (!!dlorSeriesListLoading || !!dlorSeriesDeleting) {

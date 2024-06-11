@@ -46,12 +46,21 @@ describe('Digital Learning Hub admin homepage', () => {
                 .click();
             cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
-        it('has a working "edit an object" button', () => {
-            cy.get('[data-testid="admin-dlor-visit-add-button"]')
+        it('has a working "manage series" button', () => {
+            cy.get('[data-testid="admin-dlor-visit-manage-series-button"]')
                 .should('exist')
-                .should('contain', 'Add object')
+                .should('contain', 'Manage series')
                 .click();
-            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
+        });
+        it('has a working "edit an object" button', () => {
+            cy.get('[data-testid="dlor-homepage-edit-98s0_dy5k3_98h4"]')
+                .should('exist')
+                .click();
+            cy.location('href').should(
+                'eq',
+                `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
+            );
         });
         it('shows a list of objects to manage', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
@@ -170,6 +179,7 @@ describe('Digital Learning Hub admin homepage', () => {
                 .should('be.visible')
                 .should('contain', 'Accessibility - Digital Essentials');
 
+            // filter on keyword in title
             cy.get('[data-testid="dlor-homepage-keyword"]').type('ummy');
             cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2')
                 .should('exist')
@@ -180,6 +190,104 @@ describe('Digital Learning Hub admin homepage', () => {
                 .should('exist')
                 .children()
                 .should('have.length', 2 + numExtraButtons); // now only 2 pages
+            // click clear keyword
+            cy.get('[data-testid="keyword-clear"]')
+                .should('exist')
+                .click();
+
+            // filter on keyword in description
+            // "Implications" is found in the description of "Artificial Intelligence - Digital Essentials"
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .clear()
+                .type('Implications');
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Artificial Intelligence - Digital Essentials');
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + numExtraButtons); // now only 1 page
+            // click clear keyword
+            cy.get('[data-testid="keyword-clear"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount());
+
+            // filter on keyword in summary
+            // "freeware" is found in the summary of "Choose the right tool - Digital Essentials"
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .clear()
+                .type('freeware');
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Choose the right tool - Digital Essentials');
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + numExtraButtons); // now only 1 page
+            // click clear keyword
+            cy.get('[data-testid="keyword-clear"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount());
+
+            // filter on keyword in keyword list
+            // "ethics" is found in the keyword list of "Artificial Intelligence - Digital Essentials"
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .clear()
+                .type('ethics');
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(1) h2')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Artificial Intelligence - Digital Essentials');
+            // there are the expected number of buttons in pagination widget
+            cy.get('nav[aria-label="pagination navigation"] li')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + numExtraButtons); // now only 1 page
+            // click clear keyword
+            cy.get('[data-testid="keyword-clear"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount());
+        });
+        it('can clear a keyword', () => {
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount());
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .should('exist')
+                .should('be.visible');
+
+            cy.get('[data-testid="dlor-homepage-keyword"]').type('size A');
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount(1));
+
+            // click clear keyword
+            cy.get('[data-testid="keyword-clear"]')
+                .should('exist')
+                .click();
+
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', gridFromExpectedRowCount()); // all records show again
         });
         it('can cancel deletion of an Object', () => {
             // click delete icon on first Object
@@ -339,8 +447,18 @@ describe('Digital Learning Hub admin homepage', () => {
         });
     });
     context('error handling', () => {
+        it('shows an error when list api fails', () => {
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}&responseType=fullListError`);
+            cy.waitUntil(() => cy.get('[data-testid="dlor-homepage-error"]').should('exist'));
+            cy.get('[data-testid="dlor-homepage-error"]').contains('An error has occurred during the request');
+        });
+        // it('shows an error when filter api fails', () => {
+        //     cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}&responseType=filtererror`);
+        //     cy.waitUntil(() => cy.get('[data-testid="dlor-homepage-error"]').should('exist'));
+        //     cy.get('[data-testid="dlor-homepage-error"]').contains('An error has occurred during the request');
+        // });
         it('deletion failure pops up an error', () => {
-            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}&responseType=saveError`);
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}&responseType=deleteError`);
             cy.viewport(1300, 1000);
 
             // click delete icon on first Object

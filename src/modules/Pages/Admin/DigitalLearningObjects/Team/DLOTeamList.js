@@ -227,14 +227,14 @@ export const DLOTeamList = ({
                                                         <Grid
                                                             item
                                                             xs={10}
-                                                            data-testid={`dlor-homepage-panel-${team?.team_id}`}
+                                                            data-testid={`dlor-teamlist-panel-${team?.team_id}`}
                                                         >
                                                             <Typography variant="body1">{team?.team_name}</Typography>{' '}
                                                         </Grid>
                                                         <Grid item xs={1}>
                                                             {team?.objects_count === 0 && (
                                                                 <IconButton
-                                                                    data-testid={`dlor-homepage-delete-${team?.team_id}`}
+                                                                    data-testid={`dlor-teamlist-delete-${team?.team_id}`}
                                                                     style={{ height: 40 }}
                                                                     onClick={() => confirmDelete(team?.team_id)}
                                                                     // disabled={team?.object_status === 'deleted'}
@@ -245,7 +245,7 @@ export const DLOTeamList = ({
                                                         </Grid>
                                                         <Grid item xs={1}>
                                                             <IconButton
-                                                                data-testid={`dlor-homepage-edit-${team?.team_id}`}
+                                                                data-testid={`dlor-teamlist-edit-${team?.team_id}`}
                                                                 onClick={() => navigateToTeamEditPage(team?.team_id)}
                                                             >
                                                                 <EditIcon />

@@ -103,6 +103,12 @@ describe('Digital Learning Hub admin Series management', () => {
                 .should('exist')
                 .contains('other Objects');
         });
+        it('has a working "edit a series" button', () => {
+            cy.get('[data-testid="dlor-serieslist-edit-1"]')
+                .should('exist')
+                .click();
+            cy.url().should('eq', 'http://localhost:2020/admin/dlor/series/edit/1?user=dloradmn');
+        });
         it('has a working "view a dlor" button', () => {
             // can open a list and click edit
             cy.get('[data-testid="dlor-series-object-list-1"] summary')
@@ -217,6 +223,11 @@ describe('Digital Learning Hub admin Series management', () => {
         beforeEach(() => {
             cy.visit(`http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}&responseType=saveError`);
             cy.viewport(1300, 1000);
+        });
+        it('a failed api load shows correctly', () => {
+            cy.visit(`http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}&responseType=error`);
+            cy.waitUntil(() => cy.get('[data-testid="dlor-serieslist-error"]').should('exist'));
+            cy.get('[data-testid="dlor-serieslist-error"]').contains('An error has occurred during the request');
         });
         it('a failed deletion is handled properly', () => {
             // click delete icon on first Object

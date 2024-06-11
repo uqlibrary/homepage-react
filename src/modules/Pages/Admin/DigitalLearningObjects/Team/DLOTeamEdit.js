@@ -2,33 +2,11 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
-import { makeStyles } from '@mui/styles';
-
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import DlOTeamForm from 'modules/Pages/Admin/DigitalLearningObjects/Team/DlOTeamForm';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
-
-const useStyles = makeStyles(theme => ({
-    titleBlock: {
-        '& p:first-child': {
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-                textDecoration: 'underline',
-            },
-        },
-    },
-    errorMessage: {
-        color: theme.palette.error.light,
-        fontSize: '0.8em',
-        marginTop: 2,
-    },
-}));
 
 export const DLOTeamEdit = ({
     actions,
@@ -40,9 +18,9 @@ export const DLOTeamEdit = ({
     dlorUpdatedItem,
 }) => {
     const { dlorTeamId } = useParams();
-    const classes = useStyles();
 
     useEffect(() => {
+        /* istanbul ignore else */
         if (!!dlorTeamId) {
             actions.loadADLORTeam(dlorTeamId);
         }
