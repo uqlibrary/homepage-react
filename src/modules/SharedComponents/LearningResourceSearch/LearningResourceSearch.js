@@ -65,7 +65,6 @@ export const LearningResourceSearch = ({
 
     const throttledReadingListLoadSuggestions = useRef(
         throttle(1000, newValue => {
-            console.log('This', newValue);
             actions.loadCourseReadingListsSuggestions(newValue);
         }),
     );
@@ -164,13 +163,6 @@ export const LearningResourceSearch = ({
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
                                     label={locale.search.placeholder}
-                                    // onKeyDown={e => {
-                                    //     console.log(e.code);
-                                    //     if (e.code === 'Space') {
-                                    //         e.stopPropagation();
-                                    //         e.preventDefault();
-                                    //     }
-                                    // }}
                                 />
                             );
                         }}

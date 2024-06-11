@@ -1,5 +1,4 @@
 import React from 'react';
-import { APP_URL } from 'config/general';
 import { pathConfig } from 'config/pathConfig';
 
 /*
@@ -60,22 +59,21 @@ export default {
                 message: 'This work has been deleted.',
                 status: 410,
             },
+            // deliberate trivial wording differences for debugging
             422: {
                 message:
-                    'Error has occurred during request and request cannot be processed. Please contact ' +
-                    'webmaster@library.uq.edu.au or try again later.',
+                    'An Error has occurred during this request and the request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
                 status: 500,
             },
             500: {
                 message:
-                    'Error has occurred during request and request cannot be processed. Please contact ' +
-                    'webmaster@library.uq.edu.au or try again later.',
+                    'An error has occurred during the request and this request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
                 status: 500,
             },
             generic:
-                'Error has occurred during request and request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
+                'An error has occurred during the request and the request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
             genericAlternate:
-                "Error has occurred during request and request can't be processed. Please contact webmaster@library.uq.edu.au or try again later.",
+                "An error has occurred during this request and this request can't be processed. Please contact webmaster@library.uq.edu.au or try again later.",
         },
     },
     campuses: {

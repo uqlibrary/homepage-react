@@ -22,6 +22,7 @@ import 'cypress-axe';
 
 // Custom
 import './commands';
+import 'cypress-real-events';
 
 // Ignore uncaught exceptions
 // https://docs.cypress.io/guides/references/error-messages.html#Uncaught-exceptions-from-your-application

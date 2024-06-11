@@ -202,7 +202,7 @@ const webpackConfig = {
                 parallel: true,
                 terserOptions: {
                     compress: {
-                        drop_console: config.removeConsoleLog,
+                        // drop_console: config.removeConsoleLog,
                     },
                 },
             }),

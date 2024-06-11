@@ -138,15 +138,17 @@
         "@sentry/tracing": "^7.15.0",
         "@webcomponents/webcomponentsjs": "^2.8.0",
         "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
-        "axios": "^0.28.0",
+        "axios": "^0.28.1",
         "axios-cache-interceptor": "^0.10.2",
         "babel-plugin-add-module-exports": "^1.0.4",
         "classnames": "^2.5.1",
         "connected-react-router": "^6.9.3",
         "copy-webpack-plugin": "^6.4.1",
         "core-js": "^3.36.0",
+        "cypress-real-events": "^1.12.0",
         "history": "^4.7.2",
         "html-react-parser": "^3.0.16",
+        "html2text": "^6.0.0",
         "immutable": "^3.8.2",
         "js-cookie": "^2.2.0",
         "jss-preset-default": "^10.10.0",
@@ -234,7 +236,7 @@
         "test:debug": "npm-run-all -p test jest-preview"
     },
     "engines": {
-        "npm": "~10.2.5",
+        "npm": "~10.5.0",
         "node": ">=18.19.0"
     },
     "babel": {
