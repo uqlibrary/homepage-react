@@ -356,7 +356,6 @@
             "src/helpers/*.{js,jsx}",
             "src/middleware/*.{js,jsx}",
             "src/reducers/*.{js,jsx}",
-            "src/repositories/routes.js"
         ],
         "coverageDirectory": "coverage/jest",
         "coverageReporters": [
@@ -426,6 +425,7 @@
             "!src/modules/Pages/PastExamPaperSearch/**",
             "!src/modules/Pages/PastExamPaperList/**",
             "!src/modules/Pages/LearningResources/**",
+            "!src/modules/Pages/DigitalLearningObjects/**",
             "!src/modules/Pages/NotFound/**",
             "!src/modules/Pages/PaymentReceipt/**",
             "!src/modules/SharedComponents/**"
