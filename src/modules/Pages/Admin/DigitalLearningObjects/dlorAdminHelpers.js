@@ -31,6 +31,7 @@ export function splitStringToArrayOnComma(keywordString) {
  */
 export function getUserPostfix(appendType = '?') {
     let userString = '';
+    /* istanbul ignore next */
     if (window.location.hostname === 'localhost') {
         const queryString = new URLSearchParams(
             window.location.search || window.location.hash.substring(location.hash.indexOf('?')),

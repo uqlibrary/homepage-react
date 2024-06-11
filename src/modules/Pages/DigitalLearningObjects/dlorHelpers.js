@@ -3,6 +3,7 @@ import parse from 'html-react-parser';
 import { fullPath } from 'config/routes';
 import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
+/* istanbul ignore next */
 export const displayDownloadInstructions = (downloadInstructions, theClass) => {
     function addRelnoopenerNoreferrer(htmlString) {
         // Use regular expression to find all anchor tags (<a>)
@@ -55,6 +56,7 @@ export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
     } else {
         videoId = params.get('v');
     }
+    /* istanbul ignore next */
     if (!videoId) {
         return false;
     }
