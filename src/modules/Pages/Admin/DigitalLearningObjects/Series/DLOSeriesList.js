@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -20,26 +18,6 @@ import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//Shar
 import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
-const useStyles = makeStyles(() => ({
-    titleBlock: {
-        '& p:first-child': {
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-                textDecoration: 'underline',
-            },
-        },
-    },
-    details: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '100%',
-    },
-}));
-
 export const DLOSeriesList = ({
     actions,
     dlorSeriesList,
@@ -52,11 +30,6 @@ export const DLOSeriesList = ({
     dlorSeriesDeleted,
     dlorSeriesDeleteError,
 }) => {
-    const classes = useStyles();
-    console.log('DLOSeriesList l=', dlorSeriesListLoading, '; e=', dlorSeriesListError, '; d=', dlorSeriesList);
-    console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
-    console.log('deleting l=', dlorSeriesDeleting, '; e=', dlorSeriesDeleted, '; d=', dlorSeriesDeleteError);
-
     const DELETION_STEP_NULL = null;
     const DELETION_STEP_ONE_CONFIRM = 1;
     const DELETION_STEP_TWO_HAPPENING = 2;
@@ -64,15 +37,6 @@ export const DLOSeriesList = ({
     const [seriesToDelete, setObjectToDelete] = React.useState(null);
     const [deleteStep, setDeleteStep] = React.useState(DELETION_STEP_NULL);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
-
-    console.log(
-        '###### deleteStep=',
-        deleteStep,
-        '; l=',
-        dlorSeriesDeleting,
-        '; dlorSeriesDeleted=',
-        dlorSeriesDeleted,
-    );
 
     useEffect(() => {
         if (!dlorSeriesListError && !dlorSeriesListLoading && !dlorSeriesList) {
@@ -113,7 +77,6 @@ export const DLOSeriesList = ({
                     actions.loadDlorSeriesList();
                 })
                 .catch(() => {
-                    console.log('in catch');
                     setObjectToDelete('');
                     showDeleteConfirmation();
                 });

@@ -143,7 +143,6 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
     };
 
     const deleteSelectedObject = () => {
-        console.log('deleteSelectedObject start');
         !!objectToDelete &&
             deleteADlor(objectToDelete)
                 .then(
@@ -153,7 +152,6 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                     },
                 )
                 .catch(() => {
-                    console.log('deleteSelectedObject delete fail', objectToDelete);
                     setObjectToDelete('');
                     showDeleteFailureConfirmation();
                 });

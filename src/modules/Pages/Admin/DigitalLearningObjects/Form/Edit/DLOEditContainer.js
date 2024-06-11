@@ -6,14 +6,12 @@ import * as actions from 'data/actions';
 import DLOEdit from './DLOEdit';
 
 const mapStateToProps = state => {
-    const newVar = {
+    return {
         ...state.get('dlorFilterListReducer'),
         ...state.get('dlorGetSingleReducer'),
         ...state.get('dlorTeamListReducer'),
         ...state.get('dlorUpdateReducer'),
     };
-    // console.log('DLOEditContainer mapStateToProps', newVar);
-    return newVar;
 };
 
 const mapDispatchToProps = dispatch => {

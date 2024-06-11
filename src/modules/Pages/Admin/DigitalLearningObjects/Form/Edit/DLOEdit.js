@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 
 import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
@@ -16,20 +15,6 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
-const useStyles = makeStyles(() => ({
-    titleBlock: {
-        '& p:first-child': {
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-                textDecoration: 'underline',
-            },
-        },
-    },
-}));
 export const DLOEdit = ({
     actions,
     dlorItemLoading,
@@ -46,7 +31,6 @@ export const DLOEdit = ({
     dlorFilterListError,
 }) => {
     const { dlorId } = useParams();
-    const classes = useStyles();
 
     React.useEffect(() => {
         /* istanbul ignore next */

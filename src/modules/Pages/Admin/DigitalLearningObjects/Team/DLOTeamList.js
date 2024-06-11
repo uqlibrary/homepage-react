@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -20,26 +19,6 @@ import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAd
 import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
-const useStyles = makeStyles(() => ({
-    titleBlock: {
-        '& p:first-child': {
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-                textDecoration: 'underline',
-            },
-        },
-    },
-    details: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '100%',
-    },
-}));
-
 export const DLOTeamList = ({
     actions,
     dlorTeamList,
@@ -52,11 +31,6 @@ export const DLOTeamList = ({
     dlorTeamDeleted,
     dlorTeamDeleteError,
 }) => {
-    const classes = useStyles();
-    console.log('DLOTeamList l=', dlorTeamListLoading, '; e=', dlorTeamListError, '; d=', dlorTeamList);
-    console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
-    console.log('deleting l=', dlorTeamDeleting, '; e=', dlorTeamDeleted, '; d=', dlorTeamDeleteError);
-
     const DELETION_STEP_NULL = null;
     const DELETION_STEP_ONE_CONFIRM = 1;
     const DELETION_STEP_TWO_HAPPENING = 2;
@@ -64,8 +38,6 @@ export const DLOTeamList = ({
     const [teamToDelete, setObjectToDelete] = React.useState(null);
     const [deleteStep, setDeleteStep] = React.useState(DELETION_STEP_NULL);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
-
-    console.log('###### deleteStep=', deleteStep, '; l=', dlorTeamDeleting, '; dlorTeamDeleted=', dlorTeamDeleted);
 
     useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {

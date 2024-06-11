@@ -192,9 +192,6 @@ export const DLOView = ({
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
 
-    console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
-    console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
-
     const [formValues, setFormValues] = React.useState({
         subjectCode: '',
         schoolName: '',
@@ -252,8 +249,6 @@ export const DLOView = ({
     };
 
     const saveAndNavigate = dlorItem => {
-        console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
-
         if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0) {
             const valuestoSend = {
                 dlorUuid: dlorItem.object_public_uuid,
@@ -341,9 +336,6 @@ export const DLOView = ({
         }
         return label;
     }
-
-    console.log('dlorItem=', dlorItem);
-    console.log('dlorItem?.object_series=', dlorItem?.object_series);
 
     return (
         <StandardPage>

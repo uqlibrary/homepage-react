@@ -151,9 +151,7 @@ export function getTotalSecondsFromMinutesAndSecond(minutes, seconds) {
     if (!minutes && !seconds) {
         return 0;
     }
-    const totalSeconds = (minutes || 0) * 1 * 60 + (seconds || 0) * 1;
-    console.log('getTotalSecondsFromMinutesAndSecond from ', minutes, seconds, 'get', totalSeconds);
-    return totalSeconds;
+    return (minutes || 0) * 1 * 60 + (seconds || 0) * 1;
 }
 
 export function isValidNumber(value, isZeroAllowed = false) {

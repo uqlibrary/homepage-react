@@ -131,7 +131,6 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
-    console.log('dlorItem l=', dlorItemLoading, '; dlorItem=', dlorItem);
     const { account } = useAccountContext();
     const classes = useStyles();
     const history = useHistory();
@@ -166,13 +165,9 @@ export const DlorForm = ({
     };
 
     function getFacetIds(slug) {
-        console.log('getFacetIds slug=', slug);
         const facetType = dlorFilterList?.find(item => item.facet_type_slug === slug);
-        console.log('getFacetIds facetType=', facetType);
 
-        const newVar = facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
-        console.log('getFacetIds result=', newVar);
-        return newVar;
+        return facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
     }
 
     useEffect(() => {
@@ -239,12 +234,6 @@ export const DlorForm = ({
     };
 
     const handleEditorChange = (fieldname, newContent) => {
-        // console.log('testing the change fire', fieldname, newContent);
-        // console.log('Form Values:', formValues);
-        // setFormValues({
-        //     ...formValues,
-        //     object_description: newContent,
-        // });
         setSummarySuggestionOpen(true);
         resetForm(fieldname, newContent);
     };
@@ -289,7 +278,6 @@ export const DlorForm = ({
     };
 
     function setInteractionTypeDisplays(value) {
-        console.log('**** setInteractionTypeDisplays value=', value);
         linkInteractionTypeSelectRef.current = value;
         setShowLinkTimeForm(value === linkInteractionType_view);
         setShowLinkSizeForm(value === linkInteractionType_download);
@@ -634,16 +622,12 @@ export const DlorForm = ({
                         data={formValues?.object_description || ''}
                         onReady={editor => {
                             // You can store the "editor" and use when it is needed.
-                            // console.log("Editor is ready to use!", editor);
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
-                            // const plainText = html2text.fromString(htmlData);
-                            // console.log('data:', plainText);
-                            // /setTimeout(() => console.log('TEST FIRE'), 0);
                             handleEditorChange('object_description', htmlData);
                         }}
                     />
@@ -990,17 +974,12 @@ export const DlorForm = ({
                         config={editorConfig}
                         data={formValues?.object_download_instructions || ''}
                         onReady={editor => {
-                            // You can store the "editor" and use when it is needed.
-                            // console.log("Editor is ready to use!", editor);
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
-                            // const plainText = html2text.fromString(htmlData);
-                            // console.log('data:', plainText);
-                            // /setTimeout(() => console.log('TEST FIRE'), 0);
                             handleEditorChange('object_download_instructions', htmlData);
                         }}
                     />
@@ -1106,7 +1085,6 @@ export const DlorForm = ({
     /* istanbul ignore next */
     useEffect(() => {
         setFormValidity(validateValues(formDefaults));
-        console.log('useEffect: formDefaults', formDefaults);
         const isFileTypeSet =
             [linkInteractionType_download, linkInteractionType_view].includes(
                 formDefaults?.object_link_interaction_type || null,
@@ -1124,7 +1102,6 @@ export const DlorForm = ({
         if (!!dlorFilterList && dlorFilterList.length > 0) {
             setFormValidity(validateValues(formDefaults));
         }
-        console.log('useEffect: dlorFilterList');
     }, [dlorFilterList]);
 
     useEffect(() => {
@@ -1132,7 +1109,6 @@ export const DlorForm = ({
             setSaveStatus('complete');
             showConfirmation();
         }
-        console.log('useEffect: dlorSavedItem');
     }, [showConfirmation, dlorSavedItem, dlorSavedItemError]);
 
     const saveDlor = () => {

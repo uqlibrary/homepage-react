@@ -311,14 +311,6 @@ export const DLOList = ({
     dlorFilterListError,
     account,
 }) => {
-    console.log(
-        'DLOList dlorListError=',
-        dlorListError,
-        '; dlorListLoading=',
-        dlorListLoading,
-        '; dlorList=',
-        dlorList,
-    );
     const classes = useStyles();
 
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -366,7 +358,6 @@ export const DLOList = ({
                     idsFromDlorList.has(facet.facet_id),
                 );
             });
-            console.log('have filtered filterlist', trimmedFilterList);
 
             setFilterListTrimmed(trimmedFilterList);
         }
@@ -533,28 +524,18 @@ export const DLOList = ({
         const individualFilterId = `${facetTypeSlug}-${facetId}`;
 
         if (e?.target?.checked) {
-            console.log('22222 check');
             const updateFilters = [...selectedFilters, individualFilterId];
-            console.log('selectedFilters::updateFilters=', updateFilters);
             setSelectedFilters(updateFilters);
 
-            console.log('55555 CHECK then', [...checkBoxArrayRef.current, checkboxId]);
             checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
         } else {
-            console.log('22222 UNcheck', facetId);
             // unchecking a filter checkbox
             const updateFilters = selectedFilters.filter(f2 => f2 !== individualFilterId);
-            console.log('selectedFilters::updateFilters=', updateFilters);
             setSelectedFilters(updateFilters);
 
-            console.log(
-                '55555 uncheck then',
-                checkBoxArrayRef.current.filter(id => id !== checkboxId),
-            );
             checkBoxArrayRef.current = checkBoxArrayRef.current.filter(id => id !== checkboxId);
         }
         setPaginationPage(1);
-        console.log('end of handleCheckboxAction', checkBoxArrayRef.current);
     };
 
     function isFirstFilterPanel(index) {
@@ -996,7 +977,6 @@ export const DLOList = ({
     }
 
     const handlePaginationChange = (e, value) => {
-        console.log('handlePaginationChange ', value, 'filters currently', filterListTrimmed);
         setPaginationPage(value);
         // and scroll back to the top
         const topOfBodyElement = document.getElementById('topOfBody');

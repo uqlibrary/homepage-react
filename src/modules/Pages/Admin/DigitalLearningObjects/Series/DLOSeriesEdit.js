@@ -67,9 +67,6 @@ export const DLOSeriesEdit = ({
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
 
-    console.log('dlorList l=', dlorListLoading, '; e=', dlorListError, '; d=', dlorList);
-    console.log('dlorUpdatedItem l=', dlorItemUpdating, '; e=', dlorUpdatedItemError, '; d=', dlorUpdatedItem);
-
     const [originalSeriesDetails, setOriginalSeriesDetails] = useState({
         series_id: '',
         series_name: '',
@@ -77,15 +74,11 @@ export const DLOSeriesEdit = ({
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
-    const [formValues, setFormValues2] = useState({
+    const [formValues, setFormValues] = useState({
         series_name: '',
         object_list_linked: [],
         object_list_unassigned: [],
     });
-    const setFormValues = x => {
-        console.log('setFormValues', x);
-        setFormValues2(x);
-    };
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
@@ -162,13 +155,11 @@ export const DLOSeriesEdit = ({
     };
 
     const handleChange = (prop, value) => e => {
-        console.log('handleChange', prop, value, e.target);
         const theNewValue = e.target.value;
 
         let newValues;
         let linked = formValues.object_list_linked;
         let unassigned = formValues.object_list_unassigned;
-        // id={`linked_object_series_order-${f.object_public_uuid}`}unassigned_
         /* istanbul ignore next */
         if (prop.startsWith('linked_object_series_order-')) {
             const uuid = prop.replace('linked_object_series_order-', '');
@@ -214,7 +205,6 @@ export const DLOSeriesEdit = ({
             // series name edited
             newValues = { ...formValues, [prop]: theNewValue };
         }
-        console.log('handleChange newValues=', newValues);
 
         setFormValidity(validateValues(newValues));
         setFormValues(newValues);
@@ -234,7 +224,6 @@ export const DLOSeriesEdit = ({
                     object_series_order: Number(item.object_series_order),
                 })),
         };
-        console.log('valuesToSend=', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {

@@ -1,8 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@mui/styles';
-
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { useAccountContext } from 'context';
 
@@ -10,21 +8,6 @@ import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
 const moment = require('moment-timezone');
-
-const useStyles = makeStyles(() => ({
-    titleBlock: {
-        '& p:first-child': {
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-                textDecoration: 'underline',
-            },
-        },
-    },
-}));
 
 export const DLOAdd = ({
     actions,
@@ -42,9 +25,6 @@ export const DLOAdd = ({
     dlorFilterListError,
 }) => {
     const { account } = useAccountContext();
-    const classes = useStyles();
-
-    console.log('**** DLOAdd load=', dlorFileTypeListLoading, '; e=', dlorFileTypeListError, '; ', dlorFileTypeList);
 
     function getTodayPlusOneYear(baseDate = null) {
         const today = baseDate || moment();

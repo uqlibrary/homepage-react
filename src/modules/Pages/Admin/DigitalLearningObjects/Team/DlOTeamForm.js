@@ -51,20 +51,13 @@ export const DLOTeamForm = ({
     const { dlorTeamId } = useParams();
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
-    console.log('DLOTeamForm', dlorTeamId, ' l=', dlorTeamLoading, '; e=', dlorTeamError, '; d=', formDefaults);
-    console.log('DLOTeamForm dlorSavedTeam l=', dlorTeamSaving, '; e=', dlorSavedTeamError, '; d=', dlorSavedTeam);
 
     const [formValues, setFormValues] = useState({
         team_name: '',
         team_manager: '',
         team_email: '',
     });
-    const [saveStatus, setSaveStatus2] = useState(null); // control confirmation box display
-    const setSaveStatus = x => {
-        console.log('setSaveStatus was ', saveStatus, '; now ', x);
-        setSaveStatus2(x);
-    };
-    console.log('saveStatus=', saveStatus);
+    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
