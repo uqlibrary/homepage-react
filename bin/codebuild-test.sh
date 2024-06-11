@@ -109,6 +109,7 @@ case "$PIPE_NUM" in
           "src/modules/Pages/LearningResources/\*\*" \
           "src/modules/Pages/NotFound/\*\*" \
           "src/modules/Pages/PaymentReceipt/\*\*" \
+          "src/modules/Pages/DigitalLearningObjects/\*\*" \
           "src/modules/SharedComponents/\*\*" \
         )
         for filepath in "${FILE_REFERENCES[@]}"
