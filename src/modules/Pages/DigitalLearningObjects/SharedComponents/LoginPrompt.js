@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const LoginPrompt = ({ account, narrower, instyle }) => {
+const LoginPrompt = ({ account, narrower, prompt, instyle }) => {
     const classes = useStyles();
     const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(window.location.href)}`;
     let className = `${classes.loginAlert}`;
@@ -44,7 +44,8 @@ const LoginPrompt = ({ account, narrower, instyle }) => {
                         <a style={{ color: '#1e72c6' }} href={loginLink}>
                             Log in
                         </a>
-                        &nbsp;for extra features{'  '}&nbsp;
+                        &nbsp;{prompt}
+                        {'  '}&nbsp;
                         <a
                             href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22746342"
                             target="_blank"
@@ -61,9 +62,11 @@ const LoginPrompt = ({ account, narrower, instyle }) => {
 LoginPrompt.propTypes = {
     account: PropTypes.object,
     narrower: PropTypes.bool,
+    prompt: PropTypes.string,
 };
 LoginPrompt.defaultProps = {
     narrower: false,
+    prompt: 'for extra features',
 };
 
 export default LoginPrompt;

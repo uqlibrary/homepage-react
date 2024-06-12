@@ -824,12 +824,12 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, { data: { objects_count: 0, series_name: 'New Series name' } }];
         }
     })
-    .onPost('dlor/demographics')
+    .onPost(routes.DLOR_DEMOGRAPHICS_SAVE_API().apiUrl)
     .reply(() => {
-        if (responseType === 'saveError') {
-            return [400, {}];
+        if (responseType === 'notifyError') {
+            return [500, {}];
         } else {
-            return [200, {}];
+            return [200, { status: 'OK', data: { demographics: true, subscription: true } }];
         }
     });
 
