@@ -1141,7 +1141,6 @@ export const DLOList = ({
                                                 {!!dlorData &&
                                                     dlorData.length > 0 &&
                                                     dlorData.map((o, index) => displayItemPanel(o, index))}
-                                                /* istanbul ignore else */
                                                 {!!dlorData && dlorData.length > 0 && (
                                                     <Pagination
                                                         count={paginationCount}
