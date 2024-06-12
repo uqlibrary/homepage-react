@@ -503,7 +503,6 @@ export const DLOList = ({
             keyword.length === 0 // they've cleared it
         ) {
             clearKeywordField();
-            setPaginationPage(1);
         }
 
         keyWordSearchRef.current.value = keyword;
@@ -512,7 +511,7 @@ export const DLOList = ({
     const clearKeywordField = () => {
         setKeywordSearch('');
         keyWordSearchRef.current.value = '';
-        setPaginationPage(1);
+        setPaginationPage(1); // set pagination back to page 1
     };
 
     const handleCheckboxAction = prop => e => {
@@ -558,12 +557,7 @@ export const DLOList = ({
             }
         });
 
-        // clear the keyword filter
-        setKeywordSearch('');
-        handleKeywordSearch('');
-
-        // set pagination back to page 1
-        setPaginationPage(1);
+        clearKeywordField();
 
         // close help dialogs
         dlorFilterList.forEach(f => closeHelpText(f));
