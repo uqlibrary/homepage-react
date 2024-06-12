@@ -317,40 +317,6 @@ export const DLOView = ({
         navigateToObjectLink();
     };
 
-    if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
-        return (
-            <div style={{ minHeight: 600 }}>
-                <InlineLoader message="Loading" />
-            </div>
-        );
-    }
-
-    if (!!dlorItemError) {
-        return (
-            <StandardPage>
-                <StandardCard className={classes.dlorEntry}>
-                    {getTitleBlock()}
-                    <Typography variant="body1" data-testid="dlor-detailpage-error">
-                        {dlorItemError}
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
-        );
-    }
-
-    if (!dlorItem || Object.keys(dlorItem)?.length === 0) {
-        return (
-            <StandardPage>
-                <StandardCard className={classes.dlorEntry}>
-                    {getTitleBlock()}
-                    <Typography variant="body1" data-testid="dlor-detailpage-empty">
-                        We could not find the requested entry - please check the web address.
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
-        );
-    }
-
     const getYoutubeEmbeddableUrl = urlIn => {
         const url = getYoutubeUrlForPreviewEmbed(urlIn); // assumes is return in ?v= format
         /* istanbul ignore next */
@@ -388,6 +354,40 @@ export const DLOView = ({
             confirmationMessage: '',
             confirmButtonLabel: 'Visit link now',
         };
+    }
+
+    if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
+        return (
+            <div style={{ minHeight: 600 }}>
+                <InlineLoader message="Loading" />
+            </div>
+        );
+    }
+
+    if (!!dlorItemError) {
+        return (
+            <StandardPage>
+                <StandardCard className={classes.dlorEntry}>
+                    {getTitleBlock()}
+                    <Typography variant="body1" data-testid="dlor-detailpage-error">
+                        {dlorItemError}
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
+    }
+
+    if (!dlorItem || Object.keys(dlorItem)?.length === 0) {
+        return (
+            <StandardPage>
+                <StandardCard className={classes.dlorEntry}>
+                    {getTitleBlock()}
+                    <Typography variant="body1" data-testid="dlor-detailpage-empty">
+                        We could not find the requested entry - please check the web address.
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
     }
 
     return (
