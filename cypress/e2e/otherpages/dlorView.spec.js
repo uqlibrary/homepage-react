@@ -146,6 +146,21 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .contains('Communicate and collaborate - Digital Essentials');
 
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
+
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Access the object')
+                .click();
+            cy.get('body').contains('user has navigated to pressbook link');
+        });
+        it('has expected cultural advice', () => {
             // custom indicators appears
             cy.visit('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
             cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]')
@@ -158,13 +173,6 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="dlor-detailpage-cultural-advice"]')
                 .should('exist')
                 .contains('Aboriginal and Torres Strait Islander peoples are warned');
-
-            // the link can be clicked
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .should('contain', 'Access the object')
-                .click();
-            cy.get('body').contains('user has navigated to pressbook link');
         });
         it('is accessible', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
@@ -209,6 +217,13 @@ describe('Digital Learning Hub View page', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597');
             cy.viewport(1300, 1000);
 
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
+
             // user chooses not to enter data
             cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
@@ -233,6 +248,13 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="view-demographics-school-name"] input')
                 .should('exist')
                 .type(typeSchoolName);
+
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
             cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
                 .click();
@@ -296,6 +318,12 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="view-notify-preferredName"]').should('not.exist');
             cy.get('[data-testid="view-notify-userEmail"]').should('not.exist');
 
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
             cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
                 .click();
@@ -344,6 +372,12 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .should('have.value', 'j.Researcher@uq.edu.au');
 
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
             cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
                 .click();
@@ -406,6 +440,12 @@ describe('Digital Learning Hub View page', () => {
                 .clear()
                 .type('caro@example.com');
 
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
             cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
                 .click();
@@ -476,6 +516,12 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .should('have.value', 'j.Researcher@uq.edu.au');
 
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
             cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
                 .click();
@@ -544,6 +590,12 @@ describe('Digital Learning Hub View page', () => {
                 .clear()
                 .type('cda@example.com');
 
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
             cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
                 .click();
@@ -604,6 +656,12 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .should('have.value', 'j.Researcher@uq.edu.au');
 
+            cy.window().then(win => {
+                cy.stub(win, 'open').callsFake(url => {
+                    // we want to override the "target=_blank because it actually opens a new window in cypress :(
+                    win.location.href = url;
+                });
+            });
             cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
                 .click();

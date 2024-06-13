@@ -246,7 +246,11 @@ export const DLOView = ({
     }, [dlorId]);
 
     function navigateToObjectLink() {
-        window.location.href = dlorItem?.object_link_url;
+        const newWindow = window.open(dlorItem?.object_link_url, '_blank', 'noopener,noreferrer');
+        /* istanbul ignore next */
+        if (newWindow) {
+            newWindow.opener = null;
+        }
     }
 
     useEffect(() => {
@@ -297,11 +301,15 @@ export const DLOView = ({
                     userEmail: !!formValues.notify ? formValues.userEmail : '',
                 },
             };
+            /* istanbul ignore else */
             if (!!account.id) {
                 valuestoSend.subscribeRequest.loggedin = true;
             }
 
-            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+                ? cookies.CYPRESS_TEST_DATA
+                : /* istanbul ignore next */ null;
+            /* istanbul ignore else */
             if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
                 setCookie('CYPRESS_DATA_SAVED', valuestoSend);
             }
@@ -494,7 +502,9 @@ export const DLOView = ({
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
                             {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
                                 <div className={classes.uqActionButton} data-testid="detailpage-getit-button">
-                                    <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
+                                    <a href={dlorItem.object_link_url} rel="noopener noreferrer" target="_blank">
+                                        {getItButtonLabel(dlorItem)}
+                                    </a>
                                 </div>
                             )}
                             {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
@@ -504,11 +514,11 @@ export const DLOView = ({
                                     style={{ backgroundColor: 'white' }}
                                     data-testid="detailpage-getit-and demographics"
                                 >
-                                    <p>To help us understand how you will use this object, please tell us:</p>
+                                    <p>Help us understand how you will use this object. Please tell us: </p>
                                     <form>
                                         <FormControl variant="standard" fullWidth>
                                             <InputLabel htmlFor="subjectCode">
-                                                Your relevant subject or UQ course code
+                                                Your relevant course, program or session
                                             </InputLabel>
                                             <Input
                                                 id="subjectCode"
@@ -519,7 +529,7 @@ export const DLOView = ({
                                             />
                                         </FormControl>
                                         <FormControl variant="standard" fullWidth>
-                                            <InputLabel htmlFor="schoolName">Your school</InputLabel>
+                                            <InputLabel htmlFor="schoolName">Your school, faculty or unit</InputLabel>
                                             <Input
                                                 id="schoolName"
                                                 data-testid="view-demographics-school-name"
