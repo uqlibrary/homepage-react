@@ -831,6 +831,18 @@ mock.onGet(/dlor\/find\/.*/)
         } else {
             return [200, { status: 'OK', data: { demographics: true, subscription: true } }];
         }
+    })
+    .onPost(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_known' }).apiUrl)
+    .reply(() => {
+        return [200, { data: { response: 'a_conf_code_that_is_known' } }];
+    })
+    .onPost(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_not_known' }).apiUrl)
+    .reply(() => {
+        return [404, { data: { response: 'a_conf_code_that_is_not_known' } }];
+    })
+    .onPost(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_throws_an_error' }).apiUrl)
+    .reply(() => {
+        return [400, { data: { response: 'a_conf_code_that_throws_an_error' } }];
     });
 
 mock.onGet('exams/course/FREN1010/summary')

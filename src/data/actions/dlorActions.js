@@ -9,6 +9,7 @@ import {
     DLOR_FILE_TYPE_LIST_API,
     DLOR_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
+    DLOR_SUBSCRIPTION_CONFIRMATION_API,
     DLOR_TEAM_CREATE_API,
     DLOR_TEAM_DELETE_API,
     DLOR_TEAM_LIST_API,
@@ -449,6 +450,29 @@ export function saveDlorDemographics(request) {
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
                 });
+            });
+    };
+}
+
+export function loadDlorSubscriptionConfirmation(confirmationId) {
+    console.log('loadDlorSubscriptionConfirmation', confirmationId);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_UPDATING });
+        return post(DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: confirmationId }))
+            .then(response => {
+                console.log('loadDlorSubscriptionConfirmation ok', response);
+                dispatch({
+                    type: actions.DLOR_UPDATED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                console.log('loadDlorSubscriptionConfirmation error', error);
+                dispatch({
+                    type: actions.DLOR_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
             });
     };
 }

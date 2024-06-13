@@ -43,6 +43,7 @@ export const pathConfig = {
     bookExamBooth: '/book-exam-booth',
     dlorHome: '/digital-learning-hub',
     dlorView: dlorId => `/digital-learning-hub/view/${dlorId}`,
+    dlorSubscriptionConfirmation: confirmationId => `/digital-learning-hub/confirm/${confirmationId}`,
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
     pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
