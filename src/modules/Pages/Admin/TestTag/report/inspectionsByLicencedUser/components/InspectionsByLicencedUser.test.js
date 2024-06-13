@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, act, fireEvent, userEvent } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitFor, act, fireEvent, userEvent } from 'test-utils';
 import Immutable from 'immutable';
 
 import * as actions from '../../../../../../../data/actions/actionTypes';
@@ -26,7 +26,7 @@ const selectOptionFromListByIndex = (index, actions) => {
     });
 };
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -54,18 +54,20 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <InspectionsByLicencedUser
-                actions={actions}
-                userInspections={userInspections}
-                totalInspections={totalInspections}
-                licencedUsers={licencedUsers}
-                userInspectionsLoading={userInspectionsLoading}
-                userInspectionsError={userInspectionsError}
-                licencedUsersLoading={licencedUsersLoading}
-                licencedUsersLoaded={licencedUsersLoaded}
-                licencedUsersError={licencedUsersError}
-                {...props}
-            />
+            <WithRouter>
+                <InspectionsByLicencedUser
+                    actions={actions}
+                    userInspections={userInspections}
+                    totalInspections={totalInspections}
+                    licencedUsers={licencedUsers}
+                    userInspectionsLoading={userInspectionsLoading}
+                    userInspectionsError={userInspectionsError}
+                    licencedUsersLoading={licencedUsersLoading}
+                    licencedUsersLoaded={licencedUsersLoaded}
+                    licencedUsersError={licencedUsersError}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

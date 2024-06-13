@@ -37,7 +37,6 @@
         "@testing-library/react": "^12.1.5",
         "@testing-library/react-hooks": "^8.0.1",
         "@testing-library/user-event": "^12.8.3",
-        "@types/enzyme": "^3.10.18",
         "@types/file-saver": "^2.0.7",
         "@types/highcharts": "^5.0.36",
         "@types/history": "^4.7.11",
@@ -82,8 +81,6 @@
         "cypress-plugin-tab": "^1.0.5",
         "cypress-wait-until": "^3.0.1",
         "dotenv-webpack": "^8.0.1",
-        "enzyme": "^3.11.0",
-        "enzyme-to-json": "^3.6.2",
         "eslint": "^8.56.0",
         "eslint-config-prettier": "^8.10.0",
         "eslint-plugin-jsx-a11y": "^6.8.0",
@@ -136,7 +133,6 @@
         "@mui/x-date-pickers": "^5.0.20",
         "@sentry/browser": "^8.7.0",
         "@webcomponents/webcomponentsjs": "^2.8.0",
-        "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
         "axios": "^0.28.1",
         "axios-cache-interceptor": "^0.10.2",
         "babel-plugin-add-module-exports": "^1.0.4",
@@ -233,7 +229,7 @@
         "test:debug": "npm-run-all -p test jest-preview"
     },
     "engines": {
-        "npm": "~10.5.0",
+        "npm": ">=10.5.0",
         "node": ">=18.19.0"
     },
     "babel": {
@@ -333,8 +329,7 @@
             "es6"
         ],
         "unmockedModulePathPatterns": [
-            "react",
-            "enzyme"
+            "react"
         ],
         "collectCoverage": true,
         "collectCoverageFrom": [
