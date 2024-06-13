@@ -79,7 +79,7 @@ const useStyles = makeStyles(theme => ({
                     display: 'flex',
                     alignItems: 'center',
                 },
-                '& h2 span': {
+                '& h2 span:nth-child(2)': {
                     fontSize: '0.9rem',
                 },
             },
