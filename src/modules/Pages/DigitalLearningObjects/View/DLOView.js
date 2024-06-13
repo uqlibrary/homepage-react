@@ -509,11 +509,11 @@ export const DLOView = ({
                                     style={{ backgroundColor: 'white' }}
                                     data-testid="detailpage-getit-and demographics"
                                 >
-                                    <p>To help us understand how you will use this object, please tell us:</p>
+                                    <p>Help us understand how you will use this object. Please tell us: </p>
                                     <form>
                                         <FormControl variant="standard" fullWidth>
                                             <InputLabel htmlFor="subjectCode">
-                                                Your relevant subject or UQ course code
+                                                Your relevant course, program or session
                                             </InputLabel>
                                             <Input
                                                 id="subjectCode"
@@ -524,7 +524,7 @@ export const DLOView = ({
                                             />
                                         </FormControl>
                                         <FormControl variant="standard" fullWidth>
-                                            <InputLabel htmlFor="schoolName">Your school</InputLabel>
+                                            <InputLabel htmlFor="schoolName">Your school, faculty or unit</InputLabel>
                                             <Input
                                                 id="schoolName"
                                                 data-testid="view-demographics-school-name"
