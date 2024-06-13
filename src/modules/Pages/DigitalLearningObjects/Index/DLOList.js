@@ -79,9 +79,6 @@ const useStyles = makeStyles(theme => ({
                     display: 'flex',
                     alignItems: 'center',
                 },
-                '& h2 span': {
-                    fontSize: '0.9rem',
-                },
             },
             '& > div': {
                 maxHeight: 180,
@@ -222,19 +219,6 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: 5,
         '& .MuiFormControlLabel-label': {
             fontSize: '0.9rem',
-        },
-    },
-    resetButton: {
-        borderColor: 'transparent',
-        backgroundColor: '#f7f7f7',
-        color: 'rgb(13, 109, 205)',
-        fontSize: 14,
-        letterSpacing: '0.03em',
-        minHeight: 40,
-        cursor: 'pointer',
-        '&:hover': {
-            textDecoration: 'underline',
-            textDecorationColor: 'rgb(13, 109, 205)',
         },
     },
     skipLink: {
@@ -503,7 +487,6 @@ export const DLOList = ({
             keyword.length === 0 // they've cleared it
         ) {
             clearKeywordField();
-            setPaginationPage(1);
         }
 
         keyWordSearchRef.current.value = keyword;
@@ -512,7 +495,7 @@ export const DLOList = ({
     const clearKeywordField = () => {
         setKeywordSearch('');
         keyWordSearchRef.current.value = '';
-        setPaginationPage(1);
+        setPaginationPage(1); // set pagination back to page 1
     };
 
     const handleCheckboxAction = prop => e => {
@@ -558,12 +541,7 @@ export const DLOList = ({
             }
         });
 
-        // clear the keyword filter
-        setKeywordSearch('');
-        handleKeywordSearch('');
-
-        // set pagination back to page 1
-        setPaginationPage(1);
+        clearKeywordField();
 
         // close help dialogs
         dlorFilterList.forEach(f => closeHelpText(f));
@@ -592,7 +570,7 @@ export const DLOList = ({
                     <Grid item xs={1}>
                         <button
                             data-testid="sidebar-filter-reset-button"
-                            className={classes.resetButton}
+                            className={classes.uqActionButton}
                             onClick={() => resetFiltering()}
                             aria-label="Reset filter to default"
                         >
@@ -834,7 +812,7 @@ export const DLOList = ({
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
             const output = f?.pop();
             const facetNames = output?.filter_values?.map(item => item.name)?.join(', ');
-            return !!wrapInParam ? `(${facetNames})` : facetNames;
+            return !!wrapInParam ? /* istanbul ignore next */ `(${facetNames})` : facetNames;
         };
 
         return (
@@ -855,11 +833,6 @@ export const DLOList = ({
                         <header>
                             <Typography component={'h2'} variant={'h6'}>
                                 <span>{object?.object_title}</span>
-                                {!!hasTopicFacet('topic') && (
-                                    <span className={classes.highlighted}>
-                                        {getConcatenatedFilterLabels('topic', true)}
-                                    </span>
-                                )}
                             </Typography>
                             <>
                                 {(!!object?.object_cultural_advice ||
@@ -938,13 +911,13 @@ export const DLOList = ({
                                     </span>
                                 </>
                             )}
-                            {!!hasTopicFacet('licence') && (
+                            {!!hasTopicFacet('topic') && (
                                 <>
-                                    {getFacetTypeIcon('licence')}
+                                    {getFacetTypeIcon('topic')}
                                     <span
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-licence`}
+                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-topic`}
                                     >
-                                        {getConcatenatedFilterLabels('licence')}
+                                        {getConcatenatedFilterLabels('topic')}
                                     </span>
                                 </>
                             )}
@@ -1141,7 +1114,6 @@ export const DLOList = ({
                                                 {!!dlorData &&
                                                     dlorData.length > 0 &&
                                                     dlorData.map((o, index) => displayItemPanel(o, index))}
-                                                /* istanbul ignore else */
                                                 {!!dlorData && dlorData.length > 0 && (
                                                     <Pagination
                                                         count={paginationCount}

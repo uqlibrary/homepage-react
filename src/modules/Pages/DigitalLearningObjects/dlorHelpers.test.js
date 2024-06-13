@@ -1,11 +1,14 @@
 import {
     convertFileSizeToKb,
+    getDlorViewPageUrl,
     getDurationString,
     getFileSizeString,
     getMinutesFromTotalSeconds,
     getTotalSecondsFromMinutesAndSecond,
     getSecondsFromTotalSeconds,
     getYoutubeUrlForPreviewEmbed,
+    isPreviewableUrl,
+    isValidNumber,
     toTitleCase,
 } from './dlorHelpers';
 
@@ -87,6 +90,7 @@ describe('helpers', () => {
     });
 
     it('gets correct youtube url', () => {
+        expect(getYoutubeUrlForPreviewEmbed('not a url')).toEqual(false);
         expect(getYoutubeUrlForPreviewEmbed('ftp://something')).toEqual(false);
         expect(getYoutubeUrlForPreviewEmbed('http://notyoutubedomain.com')).toEqual(false);
         expect(getYoutubeUrlForPreviewEmbed('https://www.youtube.com/123')).toEqual(false); // to short to be a valid id
@@ -96,5 +100,22 @@ describe('helpers', () => {
         expect(getYoutubeUrlForPreviewEmbed('https://www.youtube.com/watch?v=jwKH6X3cGMg&something=else')).toEqual(
             'https://www.youtube.com/?v=jwKH6X3cGMg',
         );
+
+        expect(isPreviewableUrl('https://www.youtube.com/jwKH6X3cGMg')).toEqual(true);
+        expect(isPreviewableUrl('http://notyoutubedomain.com')).toEqual(false);
+    });
+
+    it('checks numbers', () => {
+        expect(isValidNumber(0, true)).toEqual(true);
+        expect(isValidNumber(0, false)).toEqual(false);
+        expect(isValidNumber(0)).toEqual(false); // use default value of false for coverage
+        expect(isValidNumber(99, true)).toEqual(true);
+        expect(isValidNumber(99, false)).toEqual(true);
+        expect(isValidNumber('A', true)).toEqual(false);
+        expect(isValidNumber('A', false)).toEqual(false);
+    });
+
+    it('generates view urls', () => {
+        expect(getDlorViewPageUrl('xyz')).toEqual('http://localhost/digital-learning-hub/view/xyz');
     });
 });

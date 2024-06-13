@@ -146,6 +146,15 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .contains('Communicate and collaborate - Digital Essentials');
 
+            // the link can be clicked
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Access the object')
+                .click();
+            cy.get('body').contains('user has navigated to pressbook link');
+        });
+        it('has expected cultural advice', () => {
             // custom indicators appears
             cy.visit('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
             cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]')
@@ -158,13 +167,6 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="dlor-detailpage-cultural-advice"]')
                 .should('exist')
                 .contains('Aboriginal and Torres Strait Islander peoples are warned');
-
-            // the link can be clicked
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .should('contain', 'Access the object')
-                .click();
-            cy.get('body').contains('user has navigated to pressbook link');
         });
         it('is accessible', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');

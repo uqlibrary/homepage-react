@@ -297,11 +297,15 @@ export const DLOView = ({
                     userEmail: !!formValues.notify ? formValues.userEmail : '',
                 },
             };
+            /* istanbul ignore else */
             if (!!account.id) {
                 valuestoSend.subscribeRequest.loggedin = true;
             }
 
-            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+                ? cookies.CYPRESS_TEST_DATA
+                : /* istanbul ignore next */ null;
+            /* istanbul ignore else */
             if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
                 setCookie('CYPRESS_DATA_SAVED', valuestoSend);
             }
@@ -316,40 +320,6 @@ export const DLOView = ({
         setConfirmationOpen(false);
         navigateToObjectLink();
     };
-
-    if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
-        return (
-            <div style={{ minHeight: 600 }}>
-                <InlineLoader message="Loading" />
-            </div>
-        );
-    }
-
-    if (!!dlorItemError) {
-        return (
-            <StandardPage>
-                <StandardCard className={classes.dlorEntry}>
-                    {getTitleBlock()}
-                    <Typography variant="body1" data-testid="dlor-detailpage-error">
-                        {dlorItemError}
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
-        );
-    }
-
-    if (!dlorItem || Object.keys(dlorItem)?.length === 0) {
-        return (
-            <StandardPage>
-                <StandardCard className={classes.dlorEntry}>
-                    {getTitleBlock()}
-                    <Typography variant="body1" data-testid="dlor-detailpage-empty">
-                        We could not find the requested entry - please check the web address.
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
-        );
-    }
 
     const getYoutubeEmbeddableUrl = urlIn => {
         const url = getYoutubeUrlForPreviewEmbed(urlIn); // assumes is return in ?v= format
@@ -388,6 +358,40 @@ export const DLOView = ({
             confirmationMessage: '',
             confirmButtonLabel: 'Visit link now',
         };
+    }
+
+    if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
+        return (
+            <div style={{ minHeight: 600 }}>
+                <InlineLoader message="Loading" />
+            </div>
+        );
+    }
+
+    if (!!dlorItemError) {
+        return (
+            <StandardPage>
+                <StandardCard className={classes.dlorEntry}>
+                    {getTitleBlock()}
+                    <Typography variant="body1" data-testid="dlor-detailpage-error">
+                        {dlorItemError}
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
+    }
+
+    if (!dlorItem || Object.keys(dlorItem)?.length === 0) {
+        return (
+            <StandardPage>
+                <StandardCard className={classes.dlorEntry}>
+                    {getTitleBlock()}
+                    <Typography variant="body1" data-testid="dlor-detailpage-empty">
+                        We could not find the requested entry - please check the web address.
+                    </Typography>
+                </StandardCard>
+            </StandardPage>
+        );
     }
 
     return (
@@ -504,11 +508,11 @@ export const DLOView = ({
                                     style={{ backgroundColor: 'white' }}
                                     data-testid="detailpage-getit-and demographics"
                                 >
-                                    <p>To help us understand how you will use this object, please tell us:</p>
+                                    <p>Help us understand how you will use this object. Please tell us: </p>
                                     <form>
                                         <FormControl variant="standard" fullWidth>
                                             <InputLabel htmlFor="subjectCode">
-                                                Your relevant subject or UQ course code
+                                                Your relevant course, program or session
                                             </InputLabel>
                                             <Input
                                                 id="subjectCode"
@@ -519,7 +523,7 @@ export const DLOView = ({
                                             />
                                         </FormControl>
                                         <FormControl variant="standard" fullWidth>
-                                            <InputLabel htmlFor="schoolName">Your school</InputLabel>
+                                            <InputLabel htmlFor="schoolName">Your school, faculty or unit</InputLabel>
                                             <Input
                                                 id="schoolName"
                                                 data-testid="view-demographics-school-name"

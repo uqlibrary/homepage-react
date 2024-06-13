@@ -82,10 +82,6 @@ describe('Digital Learning Hub', () => {
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866-object_series_name"]')
                 .should('exist')
                 .contains('Series: Digital Essentials');
-            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article header h2').should(
-                'contain',
-                '(Digital skills)',
-            );
             cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article').should(
                 'contain',
                 'Understanding the importance of accessibility online and creating accessible content.',
@@ -94,12 +90,9 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .children()
                 .should('have.length', 6); // 3 svg, 3 spans-with-text
-            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').should('contain', 'Module');
-            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').should('contain', 'Video');
-            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').should(
-                'contain',
-                'CC BY-NC Attribution NonCommercial',
-            );
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').contains('Module');
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').contains('Video');
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] article footer').contains('Digital skills');
 
             // article 2 has CA
             cy.get('[data-testid="dlor-homepage-panel-kj5t_8yg4_kj4f-cultural-advice"]')
@@ -123,10 +116,6 @@ describe('Digital Learning Hub', () => {
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-object_series_name"]')
                 .should('exist')
                 .contains('Series: Advanced literature searching');
-            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article header h2').should(
-                'contain',
-                '(Assignments, Research)',
-            );
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4"] article').should(
                 'contain',
                 'Using advanced searching techniques',
@@ -137,17 +126,16 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 6); // 3 svg, 3 spans-with-text
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-type"]').should('contain', 'Guide');
             cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-media"]').should('contain', 'Pressbook');
-            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-licence"]').should('contain', 'CC BY-NC');
+            cy.get('[data-testid="dlor-homepage-panel-98s0_dy5k3_98h4-footer-topic"]').should(
+                'contain',
+                'Assignments, Research',
+            );
 
             // fourth panel
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] button').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article header h2').should(
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
-            );
-            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article header h2').should(
-                'contain',
-                '(Assignments, Software)',
             );
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article').should(
                 'contain',
@@ -159,9 +147,9 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 6); // 3 svg, 3 spans-with-text
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-type"]').should('contain', 'Module');
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-media"]').should('contain', 'H5P');
-            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-licence"]').should(
+            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f-footer-topic"]').should(
                 'contain',
-                'UQ copyright',
+                'Assignments, Software',
             );
 
             // filter sidebar
@@ -211,10 +199,6 @@ describe('Digital Learning Hub', () => {
             // (in practice, I think every object should have each of these)
             cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34-footer-type"]').should('not.exist'); // MISSING FROM API RESULT
             cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34-footer-media"]').should('contain', 'Pressbook');
-            cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34-footer-licence"]').should(
-                'contain',
-                'CC BY Attribution',
-            );
 
             cy.visit('digital-learning-hub?user=public');
             cy.viewport(1300, 1000);
@@ -656,7 +640,7 @@ describe('Digital Learning Hub', () => {
             cy.get('h1').should('contain', 'Find a digital learning object');
             cy.url().should('include', 'http://localhost:2020/digital-learning-hub');
         });
-        it('shows a previews appropriately', () => {
+        it('shows a preview appropriately', () => {
             // shows a preview when a youtube video is linked
             cy.visit('http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866');
             cy.get('[data-testid="detailpage-preview"]')
@@ -737,6 +721,10 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 1 + numExtraButtons);
         });
         it('contact us works', () => {
+            cy.intercept('GET', /forms.office.com/, {
+                statusCode: 200,
+                body: 'user has navigated to the contact form',
+            });
             cy.get('[data-testid="dlor-homepage-contact"]')
                 .should('be.visible')
                 .then($a => {
@@ -744,7 +732,7 @@ describe('Digital Learning Hub', () => {
                     $a.attr('target', '_self');
                 })
                 .click();
-            cy.url().should('include', 'https://forms.office.com/');
+            cy.get('body').contains('user has navigated to the contact form');
         });
     });
     context('other homepage visits', () => {
