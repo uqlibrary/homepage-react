@@ -12,12 +12,14 @@ import { Pagination } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import EditIcon from '@mui/icons-material/Edit';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DoneIcon from '@mui/icons-material/Done';
-import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -61,6 +63,14 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.white.main,
         fontSize: '14px',
         padding: 6,
+    },
+    tagLabel: {
+        fontVariant: 'small-caps',
+        textTransform: 'lowercase',
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#333',
+        marginRight: 9,
     },
 }));
 
@@ -416,27 +426,81 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                             <Typography component={'h2'} variant={'h6'}>
                                                                 {o?.object_title}
                                                             </Typography>
-                                                            {!!o?.object_cultural_advice && (
-                                                                <div
-                                                                    style={{
-                                                                        display: 'flex',
-                                                                        alignItems: 'center',
-                                                                        fontVariant: 'small-caps',
-                                                                        textTransform: 'lowercase',
-                                                                        fontWeight: 'bold',
-                                                                    }}
-                                                                    data-testid={`dlor-homepage-panel-${o?.object_public_uuid}-cultural-advice`}
-                                                                >
-                                                                    <InfoIcon
+                                                            <>
+                                                                {(!!o?.object_cultural_advice ||
+                                                                    !!o?.object_is_featured ||
+                                                                    !!o?.object_series_name) && (
+                                                                    <Typography
+                                                                        component={'p'}
                                                                         style={{
-                                                                            fill: '#2377CB',
-                                                                            marginRight: 2,
-                                                                            width: 20,
+                                                                            display: 'flex',
+                                                                            alignItems: 'center',
+                                                                            marginLeft: -4,
+                                                                            marginTop: -4,
+                                                                            marginBottom: 6,
                                                                         }}
-                                                                    />{' '}
-                                                                    <span>Cultural advice</span>
-                                                                </div>
-                                                            )}
+                                                                    >
+                                                                        {!!o?.object_is_featured && (
+                                                                            <>
+                                                                                <BookmarkIcon
+                                                                                    style={{
+                                                                                        fill: '#51247A',
+                                                                                        marginRight: 2,
+                                                                                        width: 20,
+                                                                                    }}
+                                                                                />
+                                                                                <span
+                                                                                    className={classes.tagLabel}
+                                                                                    data-testid={
+                                                                                        'dlor-detailpage-featured-custom-indicator'
+                                                                                    }
+                                                                                    style={{ marginLeft: -2 }}
+                                                                                >
+                                                                                    Featured
+                                                                                </span>
+                                                                            </>
+                                                                        )}
+                                                                        {!!o?.object_cultural_advice && (
+                                                                            <>
+                                                                                <InfoIcon
+                                                                                    style={{
+                                                                                        fill: '#2377CB',
+                                                                                        marginRight: 2,
+                                                                                        width: 20,
+                                                                                    }}
+                                                                                />
+                                                                                <span
+                                                                                    className={classes.tagLabel}
+                                                                                    data-testid={
+                                                                                        'dlor-detailpage-cultural-advice-custom-indicator'
+                                                                                    }
+                                                                                >
+                                                                                    Cultural advice
+                                                                                </span>
+                                                                            </>
+                                                                        )}
+                                                                        {!!o?.object_series_name && (
+                                                                            <>
+                                                                                <PlaylistAddCheckIcon
+                                                                                    style={{
+                                                                                        fill: '#4aa74e',
+                                                                                        marginRight: 2,
+                                                                                        width: 24,
+                                                                                    }}
+                                                                                />
+                                                                                <span
+                                                                                    className={classes.tagLabel}
+                                                                                    data-testid={
+                                                                                        'dlor-detailpage-object_series_name-custom-indicator'
+                                                                                    }
+                                                                                >
+                                                                                    Series: {o?.object_series_name}
+                                                                                </span>
+                                                                            </>
+                                                                        )}
+                                                                    </Typography>
+                                                                )}
+                                                            </>
                                                             <Typography component={'p'}>{o?.object_summary}</Typography>
                                                         </div>
                                                     </Grid>

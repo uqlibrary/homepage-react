@@ -737,6 +737,10 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 1 + numExtraButtons);
         });
         it('contact us works', () => {
+            cy.intercept('GET', /forms.office.com/, {
+                statusCode: 200,
+                body: 'user has navigated to the contact form',
+            });
             cy.get('[data-testid="dlor-homepage-contact"]')
                 .should('be.visible')
                 .then($a => {
@@ -744,7 +748,7 @@ describe('Digital Learning Hub', () => {
                     $a.attr('target', '_self');
                 })
                 .click();
-            cy.url().should('include', 'https://forms.office.com/');
+            cy.get('body').contains('user has navigated to the contact form');
         });
     });
     context('other homepage visits', () => {
