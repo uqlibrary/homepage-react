@@ -19,6 +19,7 @@ const useStyles = makeStyles(theme => ({
 // http://localhost:2020/digital-learning-hub/confirm/a_conf_code_that_is_not_known
 // http://localhost:2020/digital-learning-hub/confirm/a_known_conf_code_that_has_expired
 // http://localhost:2020/digital-learning-hub/confirm/a_conf_code_that_is_known
+// http://localhost:2020/digital-learning-hub/confirm/a_conf_code_that_has_already_been_used
 
 export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
     console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
@@ -40,7 +41,7 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
         );
     }
 
-    if (!!dlorUpdatedItemError || !['ok', 'expired', 'missing'].includes(dlorUpdatedItem?.response)) {
+    if (!!dlorUpdatedItemError || !['ok', 'expired', 'missing', 'used'].includes(dlorUpdatedItem?.response)) {
         return (
             <StandardPage>
                 <StandardCard title="Confirming a Digital Object subscription">
@@ -88,6 +89,22 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                         </a>{' '}
                         to try again
                     </Typography>
+                </>
+            );
+        } else if (dlorUpdatedItem.response === 'used') {
+            response = (
+                <>
+                    <Typography component={'p'}>Thank you for subscribing!</Typography>
+                    <Typography component={'p'}>You have already confirmed this subscription</Typography>
+                    <ul>
+                        <li>
+                            Visit{' '}
+                            <a href={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
+                                {dlorUpdatedItem.object_title}
+                            </a>{' '}
+                            now.
+                        </li>
+                    </ul>
                 </>
             );
         } else {
