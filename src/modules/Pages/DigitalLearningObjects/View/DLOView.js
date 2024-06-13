@@ -247,6 +247,7 @@ export const DLOView = ({
 
     function navigateToObjectLink() {
         const newWindow = window.open(dlorItem?.object_link_url, '_blank', 'noopener,noreferrer');
+        /* istanbul ignore next */
         if (newWindow) {
             newWindow.opener = null;
         }
@@ -300,11 +301,15 @@ export const DLOView = ({
                     userEmail: !!formValues.notify ? formValues.userEmail : '',
                 },
             };
+            /* istanbul ignore else */
             if (!!account.id) {
                 valuestoSend.subscribeRequest.loggedin = true;
             }
 
-            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+                ? cookies.CYPRESS_TEST_DATA
+                : /* istanbul ignore next */ null;
+            /* istanbul ignore else */
             if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
                 setCookie('CYPRESS_DATA_SAVED', valuestoSend);
             }

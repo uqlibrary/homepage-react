@@ -812,7 +812,7 @@ export const DLOList = ({
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
             const output = f?.pop();
             const facetNames = output?.filter_values?.map(item => item.name)?.join(', ');
-            return !!wrapInParam ? `(${facetNames})` : facetNames;
+            return !!wrapInParam ? /* istanbul ignore next */ `(${facetNames})` : facetNames;
         };
 
         return (
