@@ -458,7 +458,7 @@ export function loadDlorSubscriptionConfirmation(confirmationId) {
     console.log('loadDlorSubscriptionConfirmation', confirmationId);
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
-        return post(DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: confirmationId }))
+        return get(DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: confirmationId }))
             .then(response => {
                 console.log('loadDlorSubscriptionConfirmation ok', response);
                 dispatch({

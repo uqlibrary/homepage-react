@@ -832,17 +832,45 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, { status: 'OK', data: { demographics: true, subscription: true } }];
         }
     })
-    .onPost(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_known' }).apiUrl)
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_known' }).apiUrl)
     .reply(() => {
-        return [200, { data: { response: 'a_conf_code_that_is_known' } }];
+        return [
+            200,
+            {
+                data: {
+                    response: 'ok',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+        // includes when they resubscribe on one they have already clicked?
     })
-    .onPost(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_not_known' }).apiUrl)
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_known_conf_code_that_has_expired' }).apiUrl)
     .reply(() => {
-        return [404, { data: { response: 'a_conf_code_that_is_not_known' } }];
+        return [
+            200,
+            {
+                data: {
+                    response: 'expired',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+        // includes when they resubscribe on one they have already clicked?
     })
-    .onPost(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_throws_an_error' }).apiUrl)
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_not_known' }).apiUrl)
     .reply(() => {
-        return [400, { data: { response: 'a_conf_code_that_throws_an_error' } }];
+        return [200, { data: { response: 'missing' } }];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'wrong_data' }).apiUrl)
+    .reply(() => {
+        return [200, { data: { response: 'something unexpected' } }];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_throws_an_error' }).apiUrl)
+    .reply(() => {
+        return [400, { error: 'something went wrong' }];
     });
 
 mock.onGet('exams/course/FREN1010/summary')
