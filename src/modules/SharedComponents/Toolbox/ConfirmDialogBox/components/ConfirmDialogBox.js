@@ -9,7 +9,6 @@ import DialogContent from '@mui/material/DialogContent';
 import withStyles from '@mui/styles/withStyles';
 import Grid from '@mui/material/Grid';
 import Hidden from '@mui/material/Hidden';
-import PromoPanel from "../../../../Index/components/subComponents/PromoPanel";
 
 export const styles = theme => ({
     alternateActionButtonClass: {
@@ -56,7 +55,7 @@ export class ConfirmDialogBox extends Component {
         this._onAlternateAction = this._onAlternateAction.bind(this);
         this._hideConfirmation = this._hideConfirmation.bind(this);
         this._onAction = this._onAction.bind(this);
-        console.log(this.props.isOpen);
+
         this.state = {
             isDialogOpen: this.props.isOpen,
         };
