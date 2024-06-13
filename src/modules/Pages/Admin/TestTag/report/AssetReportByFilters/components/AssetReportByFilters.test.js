@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import AssetReportByFilters from './AssetReportByFilters';
@@ -10,7 +10,7 @@ import buildingList from '../../../../../../../data/mock/data/testing/testAndTag
 
 import { getUserPermissions } from '../../../helpers/auth';
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -38,18 +38,20 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <AssetReportByFilters
-                actions={actions}
-                assetList={assetList}
-                assetListLoading={assetListLoading}
-                assetListLoaded={assetListLoaded}
-                assetListError={assetListError}
-                taggedBuildingList={taggedBuildingList}
-                taggedBuildingListLoading={taggedBuildingListLoading}
-                taggedBuildingListLoaded={taggedBuildingListLoaded}
-                taggedBuildingListError={taggedBuildingListError}
-                {...props}
-            />
+            <WithRouter>
+                <AssetReportByFilters
+                    actions={actions}
+                    assetList={assetList}
+                    assetListLoading={assetListLoading}
+                    assetListLoaded={assetListLoaded}
+                    assetListError={assetListError}
+                    taggedBuildingList={taggedBuildingList}
+                    taggedBuildingListLoading={taggedBuildingListLoading}
+                    taggedBuildingListLoaded={taggedBuildingListLoaded}
+                    taggedBuildingListError={taggedBuildingListError}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

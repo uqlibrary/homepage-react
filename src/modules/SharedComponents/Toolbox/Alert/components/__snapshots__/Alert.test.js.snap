@@ -1,31 +1,1887 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Alert should dismiss alert 1`] = `undefined`;
+exports[`Alert should dismiss alert 1`] = `
+<div>
+  <div
+    class="makeStyles-common-161"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-168 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-164 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Error alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="error-icon"
+                focusable="true"
+                id="error-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-165 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                Title
+              </strong>
+               
+              Message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-166 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-167 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-167 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should display dismiss button for smaller screen size 1`] = `undefined`;
+exports[`Alert should display dismiss button for smaller screen size 1`] = `
+<div>
+  <div
+    class="makeStyles-warning-187 makeStyles-common-177"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-184 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-180 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Important alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="warning-icon"
+                focusable="true"
+                id="warning-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-181 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                Title
+              </strong>
+               
+              Message
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-183 css-13i4rnv-MuiGrid-root"
+            >
+              <button
+                aria-label="Click to dismiss this alert"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                data-testid="1-dismiss-button-mobile"
+                id="1-dismiss-button-mobile"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="CloseIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-183 css-13i4rnv-MuiGrid-root"
+            >
+              <button
+                aria-label="Click to dismiss this alert"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                data-testid="1-hide-button-mobile"
+                id="1-hide-button-mobile"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="CloseIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-182 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should display loader 1`] = `undefined`;
+exports[`Alert should display loader 1`] = `
+<div>
+  <div
+    class="makeStyles-warning-219 makeStyles-common-209"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-216 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-212 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <span
+                aria-label="Loading Alerts"
+                class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary spinner css-a0wk1a-MuiCircularProgress-root"
+                data-testid="spinner"
+                id="spinner"
+                role="progressbar"
+                style="width: 38px; height: 38px;"
+              >
+                <svg
+                  class="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+                  viewBox="22 22 44 44"
+                >
+                  <circle
+                    class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-176wh8e-MuiCircularProgress-circle"
+                    cx="44"
+                    cy="44"
+                    fill="none"
+                    r="20.5"
+                    stroke-width="3"
+                  />
+                </svg>
+              </span>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-213 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                Title
+              </strong>
+               
+              Message
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-215 css-13i4rnv-MuiGrid-root"
+            >
+              <button
+                aria-label="Click to dismiss this alert"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                data-testid="1-dismiss-button-mobile"
+                id="1-dismiss-button-mobile"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="CloseIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-215 css-13i4rnv-MuiGrid-root"
+            >
+              <button
+                aria-label="Click to dismiss this alert"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                data-testid="1-hide-button-mobile"
+                id="1-hide-button-mobile"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="CloseIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-214 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should fire an action when user clicks on the message text 1`] = `undefined`;
+exports[`Alert should fire an action when user clicks on the message text 1`] = `
+<div>
+  <div
+    class="makeStyles-warning-235 makeStyles-common-225"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-232 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-228 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Important alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="warning-icon"
+                focusable="true"
+                id="warning-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-229 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                Title
+              </strong>
+               
+              Click me
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-231 css-13i4rnv-MuiGrid-root"
+            >
+              <button
+                aria-label="Click to dismiss this alert"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                data-testid="1-dismiss-button-mobile"
+                id="1-dismiss-button-mobile"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="CloseIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-231 css-13i4rnv-MuiGrid-root"
+            >
+              <button
+                aria-label="Click to dismiss this alert"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                data-testid="1-hide-button-mobile"
+                id="1-hide-button-mobile"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="CloseIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-230 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should not fire an action when user clicks on the message text and no action is assigned 1`] = `undefined`;
+exports[`Alert should not fire an action when user clicks on the message text and no action is assigned 1`] = `
+<div>
+  <div
+    class="makeStyles-warning-251 makeStyles-common-241"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-244 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Important alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="warning-icon"
+                focusable="true"
+                id="warning-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-245 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                Title
+              </strong>
+               
+              Click me
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-247 css-13i4rnv-MuiGrid-root"
+            >
+              <button
+                aria-label="Click to dismiss this alert"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                data-testid="1-dismiss-button-mobile"
+                id="1-dismiss-button-mobile"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="CloseIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-247 css-13i4rnv-MuiGrid-root"
+            >
+              <button
+                aria-label="Click to dismiss this alert"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                data-testid="1-hide-button-mobile"
+                id="1-hide-button-mobile"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="CloseIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render clickable action button 1`] = `undefined`;
+exports[`Alert should render clickable action button 1`] = `
+<div>
+  <div
+    class="makeStyles-error-153 makeStyles-common-145"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-152 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-148 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Error alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="error-icon"
+                focusable="true"
+                id="error-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-149 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is an error title
+              </strong>
+               
+              This is an error message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-150 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            Dismiss
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-151 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-151 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render custom alert 1`] = `undefined`;
+exports[`Alert should render custom alert 1`] = `
+<div>
+  <div
+    class="makeStyles-error-41 makeStyles-common-33"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-40 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-36 alert-icon makeStyles-wiggler-35 css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              test
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-37 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is a custom title
+              </strong>
+               
+              This is a custom message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-38 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-39 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-39 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render default view 1`] = `undefined`;
+exports[`Alert should render default view 1`] = `
+<div>
+  <div
+    class="makeStyles-warning-11 makeStyles-common-1"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-8 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-4 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Important alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="warning-icon"
+                focusable="true"
+                id="warning-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-5 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                Title
+              </strong>
+               
+              Message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-6 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-7 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-7 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render done type of alert 1`] = `undefined`;
+exports[`Alert should render done type of alert 1`] = `
+<div>
+  <div
+    class="makeStyles-done-144 makeStyles-common-129"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-136 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-132 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Success alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="done-icon"
+                focusable="true"
+                id="done-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-133 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is an done title
+              </strong>
+               
+              This is an done message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-134 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-135 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-135 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render error outline type of alert 1`] = `undefined`;
+exports[`Alert should render error outline type of alert 1`] = `
+<div>
+  <div
+    class="makeStyles-error_outline-58 makeStyles-common-49"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-56 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-52 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Error alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="error-outline-icon"
+                focusable="true"
+                id="error-outline-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-53 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is an error outline title
+              </strong>
+               
+              This is an error outline message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-54 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-55 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-55 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render error type of alert 1`] = `undefined`;
+exports[`Alert should render error type of alert 1`] = `
+<div>
+  <div
+    class="makeStyles-error-25 makeStyles-common-17"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-24 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-20 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Error alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="error-icon"
+                focusable="true"
+                id="error-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-21 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is an error title
+              </strong>
+               
+              This is an error message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-22 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-23 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-23 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render help outline type of alert 1`] = `undefined`;
+exports[`Alert should render help outline type of alert 1`] = `
+<div>
+  <div
+    class="makeStyles-help_outline-125 makeStyles-common-113"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-120 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-116 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Help aler.t"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="help-outline-icon"
+                focusable="true"
+                id="help-outline-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-117 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is an help outline title
+              </strong>
+               
+              This is an help outline message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-118 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-119 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-119 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render help type of alert 1`] = `undefined`;
+exports[`Alert should render help type of alert 1`] = `
+<div>
+  <div
+    class="makeStyles-help-108 makeStyles-common-97"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-104 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-100 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Help alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="help-icon"
+                focusable="true"
+                id="help-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-101 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is an help title
+              </strong>
+               
+              This is an help message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-102 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-103 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-103 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render info outline type of alert 1`] = `undefined`;
+exports[`Alert should render info outline type of alert 1`] = `
+<div>
+  <div
+    class="makeStyles-info_outline-95 makeStyles-common-81"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-88 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-84 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="info-outline-icon"
+                focusable="true"
+                id="info-outline-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-85 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is an info outline title
+              </strong>
+               
+              This is an info outline message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-86 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-87 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-87 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
-exports[`Alert should render info type of alert 1`] = `undefined`;
+exports[`Alert should render info type of alert 1`] = `
+<div>
+  <div
+    class="makeStyles-info-78 makeStyles-common-65"
+    data-testid="1"
+    id="1"
+  >
+    <div
+      class="layout-card"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-true makeStyles-linked-72 css-cyocdy-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container css-11ywc1e-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item makeStyles-icon-68 alert-icon  css-13i4rnv-MuiGrid-root"
+              data-testid="1-action-icon-button"
+              id="1-action-icon-button"
+            >
+              <svg
+                aria-hidden="false"
+                aria-label="Alert."
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                data-testid="info-icon"
+                focusable="true"
+                id="info-icon"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                />
+              </svg>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-text-69 alert-text css-1vd824g-MuiGrid-root"
+              data-testid="1-action-message-button"
+              id="1-action-message-button"
+            >
+              <strong>
+                This is an info title
+              </strong>
+               
+              This is an info message
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true MuiGrid-grid-sm-auto makeStyles-actionButton-70 css-11gq09b-MuiGrid-root"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth action alert-button css-1w2px6u-MuiButtonBase-root-MuiButton-root"
+            data-testid="1-action-button"
+            id="1-action-button"
+            tabindex="0"
+            type="button"
+          >
+            button
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-71 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-dismiss-button"
+            id="1-dismiss-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item makeStyles-dismissButton-71 css-13i4rnv-MuiGrid-root"
+        >
+          <button
+            aria-label="Click to dismiss this alert"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+            data-testid="1-hide-button"
+            id="1-hide-button"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

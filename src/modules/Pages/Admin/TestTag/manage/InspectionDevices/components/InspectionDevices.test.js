@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionDevices from './InspectionDevices';
-import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore, userEvent } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore, userEvent } from 'test-utils';
 import Immutable from 'immutable';
 import { PERMISSIONS } from '../../../config/auth';
 
@@ -17,7 +17,7 @@ const actions = {
     updateInspectionDevice: jest.fn(() => Promise.resolve()),
     deleteInspectionDevice: jest.fn(() => Promise.resolve()),
 };
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
         testTagUserReducer: {
@@ -38,18 +38,20 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <InspectionDevices
-                componentId="test"
-                componentIdLower="test"
-                actions={actions}
-                config={config}
-                pageLocale={locale.pages.manage.inspectiondevices}
-                inspectionDevices={inspectionDevices.data}
-                inspectionDevicesLoading={false}
-                inspectionDevicesError={null}
-                requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
-                {...props}
-            />
+            <WithRouter>
+                <InspectionDevices
+                    componentId="test"
+                    componentIdLower="test"
+                    actions={actions}
+                    config={config}
+                    pageLocale={locale.pages.manage.inspectiondevices}
+                    inspectionDevices={inspectionDevices.data}
+                    inspectionDevicesLoading={false}
+                    inspectionDevicesError={null}
+                    requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

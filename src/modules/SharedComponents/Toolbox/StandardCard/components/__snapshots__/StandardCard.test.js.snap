@@ -1,259 +1,308 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Cards component renders given ID for standar card 1`] = `
-<ForwardRef(Card)
-  className="testClass StandardCard "
-  data-analyticsid="test-card"
-  data-testid="test-card"
-  id="test-card"
-  style={Object {}}
-  variant="elevation"
->
-  <ForwardRef(CardHeader)
-    action={<React.Fragment />}
-    classes={
-      Object {
-        "root": undefined,
-      }
-    }
-    style={
-      Object {
-        "borderTopLeftRadius": 4,
-        "borderTopRightRadius": 4,
-      }
-    }
-    title="card title"
-    titleTypographyProps={
-      Object {
-        "color": "inherit",
-        "component": "h2",
-        "data-testid": "test-card-header",
-        "variant": "h5",
-      }
-    }
-  />
-  <ForwardRef(CardContent)
-    className=""
-    data-testid="test-card-content"
-    style={Object {}}
-  />
-</ForwardRef(Card)>
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-26 testClass StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="test-card"
+    data-testid="test-card"
+    id="test-card"
+  >
+    <div
+      class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="test-card-header"
+        >
+          card title
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+      data-testid="test-card-content"
+    />
+  </div>
+</div>
 `;
 
 exports[`Cards component renders with custom colours and full height 1`] = `
-<ForwardRef(Card)
-  className="undefined StandardCard "
-  data-analyticsid="standard-card-card-title"
-  data-testid="standard-card-card-title"
-  id="standard-card-card-title"
-  style={
-    Object {
-      "backgroundColor": "#fcc",
-      "height": "100%",
-    }
-  }
-  variant="elevation"
->
-  <ForwardRef(CardHeader)
-    action={<React.Fragment />}
-    classes={
-      Object {
-        "root": "#555",
-      }
-    }
-    style={
-      Object {
-        "backgroundColor": "#ccc",
-        "borderTopLeftRadius": 4,
-        "borderTopRightRadius": 4,
-        "color": "#111",
-      }
-    }
-    title="card title"
-    titleTypographyProps={
-      Object {
-        "color": "inherit",
-        "component": "h2",
-        "data-testid": "standard-card-card-title-header",
-        "variant": "h5",
-      }
-    }
-  />
-  <ForwardRef(CardContent)
-    className="no-padding"
-    data-testid="standard-card-card-title-content"
-    style={
-      Object {
-        "color": "blue !important",
-      }
-    }
-  />
-</ForwardRef(Card)>
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-11 StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-card-title"
+    data-testid="standard-card-card-title"
+    id="standard-card-card-title"
+    style="background-color: rgb(255, 204, 204); height: 100%;"
+  >
+    <div
+      class="MuiCardHeader-root Cards-cardHeaderPrimary-13 #555 css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px; background-color: rgb(204, 204, 204); color: rgb(17, 17, 17);"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="standard-card-card-title-header"
+        >
+          card title
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root Cards-cardContentNoPadding-12 no-padding css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-card-title-content"
+    />
+  </div>
+</div>
+`;
+
+exports[`Cards component renders with custom content classname 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-36 testClass StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-card-title"
+    data-testid="standard-card-card-title"
+    id="standard-card-card-title"
+  >
+    <div
+      class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="standard-card-card-title-header"
+        >
+          card title
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root  customClass css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-card-title-content"
+    />
+  </div>
+</div>
+`;
+
+exports[`Cards component renders with header action 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-31 testClass StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-card-title"
+    data-testid="standard-card-card-title"
+    id="standard-card-card-title"
+  >
+    <div
+      class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="standard-card-card-title-header"
+        >
+          card title
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-card-title-content"
+    />
+  </div>
+</div>
 `;
 
 exports[`Cards component renders with small title and as a subcard 1`] = `
-<ForwardRef(Card)
-  className="testClass StandardCard "
-  data-analyticsid="standard-card-card-title"
-  data-testid="standard-card-card-title"
-  id="standard-card-card-title"
-  style={Object {}}
-  variant="elevation"
->
-  <ForwardRef(CardHeader)
-    action={<React.Fragment />}
-    classes={
-      Object {
-        "root": undefined,
-      }
-    }
-    style={
-      Object {
-        "borderTopLeftRadius": 4,
-        "borderTopRightRadius": 4,
-      }
-    }
-    title="card title"
-    titleTypographyProps={
-      Object {
-        "color": "inherit",
-        "component": "h3",
-        "data-testid": "standard-card-card-title-header",
-        "variant": "h6",
-      }
-    }
-  />
-  <ForwardRef(CardContent)
-    className=""
-    data-testid="standard-card-card-title-content"
-    style={Object {}}
-  />
-</ForwardRef(Card)>
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-21 testClass StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-card-title"
+    data-testid="standard-card-card-title"
+    id="standard-card-card-title"
+  >
+    <div
+      class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h3
+          class="MuiTypography-root MuiTypography-h6 MuiCardHeader-title css-7n68d0-MuiTypography-root"
+          data-testid="standard-card-card-title-header"
+        >
+          card title
+        </h3>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-card-title-content"
+    />
+  </div>
+</div>
 `;
 
 exports[`Cards component renders with square top and accent header 1`] = `
-<ForwardRef(Card)
-  className="undefined StandardCard "
-  data-analyticsid="standard-card-card-title"
-  data-testid="standard-card-card-title"
-  id="standard-card-card-title"
-  style={Object {}}
-  variant="elevation"
->
-  <ForwardRef(CardHeader)
-    action={<React.Fragment />}
-    classes={
-      Object {
-        "root": "#333",
-      }
-    }
-    style={
-      Object {
-        "borderTopLeftRadius": 0,
-        "borderTopRightRadius": 0,
-      }
-    }
-    title="card title"
-    titleTypographyProps={
-      Object {
-        "color": "inherit",
-        "component": "h2",
-        "data-testid": "standard-card-card-title-header",
-        "variant": "h5",
-      }
-    }
-  />
-  <ForwardRef(CardContent)
-    className=""
-    data-testid="standard-card-card-title-content"
-    style={Object {}}
-  />
-</ForwardRef(Card)>
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-16 StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-card-title"
+    data-testid="standard-card-card-title"
+    id="standard-card-card-title"
+  >
+    <div
+      class="MuiCardHeader-root Cards-cardHeaderAccent-19 #333 css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 0; border-top-right-radius: 0;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="standard-card-card-title-header"
+        >
+          card title
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-card-title-content"
+    />
+  </div>
+</div>
 `;
 
 exports[`Cards component renders with title and help button 1`] = `
-<ForwardRef(Card)
-  className="testClass StandardCard "
-  data-analyticsid="standard-card-card-title"
-  data-testid="standard-card-card-title"
-  id="standard-card-card-title"
-  style={Object {}}
-  variant="elevation"
->
-  <ForwardRef(CardHeader)
-    action={<React.Fragment />}
-    classes={
-      Object {
-        "root": undefined,
-      }
-    }
-    style={
-      Object {
-        "borderTopLeftRadius": 4,
-        "borderTopRightRadius": 4,
-      }
-    }
-    title="card title"
-    titleTypographyProps={
-      Object {
-        "color": "inherit",
-        "component": "h2",
-        "data-testid": "standard-card-card-title-header",
-        "variant": "h5",
-      }
-    }
-  />
-  <ForwardRef(CardContent)
-    className=""
-    data-testid="standard-card-card-title-content"
-    style={Object {}}
-  />
-</ForwardRef(Card)>
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-6 testClass StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-card-title"
+    data-testid="standard-card-card-title"
+    id="standard-card-card-title"
+  >
+    <div
+      class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="standard-card-card-title-header"
+        >
+          card title
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-card-title-content"
+    />
+  </div>
+</div>
 `;
 
 exports[`Cards component renders with title and no help icon 1`] = `
-<ForwardRef(Card)
-  className="testClass StandardCard "
-  data-analyticsid="standard-card-card-title"
-  data-testid="standard-card-card-title"
-  id="standard-card-card-title"
-  style={Object {}}
-  variant="elevation"
->
-  <ForwardRef(CardHeader)
-    action={<React.Fragment />}
-    classes={
-      Object {
-        "root": undefined,
-      }
-    }
-    style={
-      Object {
-        "borderTopLeftRadius": 4,
-        "borderTopRightRadius": 4,
-      }
-    }
-    title="card title"
-    titleTypographyProps={
-      Object {
-        "color": "inherit",
-        "component": "h2",
-        "data-testid": "standard-card-card-title-header",
-        "variant": "h5",
-      }
-    }
-  />
-  <ForwardRef(CardContent)
-    className=""
-    data-testid="standard-card-card-title-content"
-    style={Object {}}
-  />
-</ForwardRef(Card)>
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-1 testClass StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-card-title"
+    data-testid="standard-card-card-title"
+    id="standard-card-card-title"
+  >
+    <div
+      class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="standard-card-card-title-header"
+        >
+          card title
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-card-title-content"
+    />
+  </div>
+</div>
 `;
 
 exports[`StandardCard component should render StyledCard with same props 1`] = `
-<WithStyles(Cards)
-  test1="test1value"
-  test2="test2value"
-/>
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-41 testClass StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-card-title"
+    data-testid="standard-card-card-title"
+    id="standard-card-card-title"
+  >
+    <div
+      class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="standard-card-card-title-header"
+        >
+          card title
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-card-title-content"
+    />
+  </div>
+</div>
 `;

@@ -1,4 +1,6 @@
+import React from 'react';
 import Masquerade from './Masquerade';
+import { render, WithReduxStore, fireEvent } from 'test-utils';
 
 function setup(testProps = {}) {
     const props = {
@@ -10,7 +12,11 @@ function setup(testProps = {}) {
         account: {},
         ...testProps,
     };
-    return getElement(Masquerade, props);
+    return render(
+        <WithReduxStore>
+            <Masquerade {...props} />
+        </WithReduxStore>,
+    );
 }
 
 beforeAll(() => {
@@ -20,68 +26,44 @@ beforeAll(() => {
 
 describe('Component Masquerade', () => {
     it('should correctly set state on username change', () => {
-        const wrapper = setup();
+        const { getByLabelText } = setup();
 
-        wrapper.instance()._usernameChanged({
-            target: {
-                value: 'uqtest',
-            },
-        });
-
-        wrapper.update();
-        expect(wrapper.state('userName')).toEqual('uqtest');
+        fireEvent.change(getByLabelText(/Enter a UQ staff or student username/i), { target: { value: 'uqtest' } });
+        expect(getByLabelText(/Enter a UQ staff or student username/i).value).toEqual('uqtest');
     });
 
     it('should not masquerade if Esc key is pressed', () => {
-        const wrapper = setup();
-        wrapper.instance()._usernameChanged({
-            target: {
-                value: 'uqtest',
-            },
-        });
-        wrapper.update();
+        const { getByTestId, getByLabelText } = setup();
+        fireEvent.change(getByLabelText(/Enter a UQ staff or student username/i), { target: { value: 'uqtest' } });
+        fireEvent.keyPress(getByTestId('masquerade-userName'), { key: 'Escape', keyCode: 27 });
 
-        wrapper.instance()._masqueradeAs({
-            key: 'Esc',
-        });
-
-        expect(wrapper.state('loading')).toBeFalsy();
-    });
-
-    it('should not masquerade if Enter is pressed but username length is 0', () => {
-        const wrapper = setup();
-        wrapper.instance()._masqueradeAs({
-            key: 'Enter',
-        });
-        expect(wrapper.state('loading')).toBeFalsy();
+        expect(getByTestId('masquerade-submit')).toBeEnabled();
     });
 
     it('should masquerade if Enter is pressed and username is set', () => {
-        const wrapper = setup();
-        wrapper.instance()._usernameChanged({
-            target: {
-                value: 'uqtest',
-            },
-        });
-        wrapper.update();
+        const { getByTestId, getByLabelText } = setup();
+        fireEvent.change(getByLabelText(/Enter a UQ staff or student username/i), { target: { value: 'uqtest' } });
+        fireEvent.keyPress(getByTestId('masquerade-userName'), { key: 'Enter', keyCode: 13 });
 
-        wrapper.instance()._masqueradeAs({
-            key: 'Enter',
-        });
-        expect(wrapper.state('loading')).toBeTruthy();
+        expect(getByTestId('masquerade-submit')).toBeDisabled();
     });
 
     it('should not masquerade if Enter is pressed without entering username', () => {
-        const wrapper = setup();
-        wrapper.instance()._masqueradeAs({
-            key: 'Enter',
-        });
-        expect(wrapper.state('loading')).toBeFalsy();
+        const { getByTestId } = setup();
+        fireEvent.keyUp(getByTestId('masquerade-submit'), { key: 'Enter', keyCode: 13 });
+        expect(getByTestId('masquerade-submit')).toBeEnabled();
+    });
+
+    it('should masquerade if button is pressed and username is set', () => {
+        const { getByTestId, getByLabelText } = setup();
+        fireEvent.change(getByLabelText(/Enter a UQ staff or student username/i), { target: { value: 'uqtest' } });
+        fireEvent.click(getByTestId('masquerade-submit'));
+        expect(getByTestId('masquerade-submit')).toBeDisabled();
     });
 
     it('should not masquerade if button is pressed without entering username', () => {
-        const wrapper = setup();
-        wrapper.instance()._masqueradeAs({ type: 'Click' });
-        expect(wrapper.state('loading')).toBeFalsy();
+        const { getByTestId } = setup();
+        fireEvent.click(getByTestId('masquerade-submit'));
+        expect(getByTestId('masquerade-submit')).toBeEnabled();
     });
 });

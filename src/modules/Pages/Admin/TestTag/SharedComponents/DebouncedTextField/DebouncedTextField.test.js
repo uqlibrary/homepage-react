@@ -1,6 +1,6 @@
 import React from 'react';
 import DebouncedTextField from './DebouncedTextField';
-import { rtlRender, rerender, act, fireEvent, waitFor } from 'test-utils';
+import { rtlRender, act, fireEvent, waitFor } from 'test-utils';
 
 function setup(testProps = {}, renderer = rtlRender) {
     return renderer(<DebouncedTextField {...testProps} />);
@@ -50,7 +50,7 @@ describe('DebouncedTextField Renders component', () => {
         const value = 'some value';
         const resetValue = 'reset value';
 
-        const { getByTestId } = setup({
+        const { getByTestId, rerender } = setup({
             onChange,
 
             value,

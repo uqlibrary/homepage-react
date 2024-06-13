@@ -1,6 +1,8 @@
-import { StandardCard, Cards } from './StandardCard';
+import React from 'react';
+import { rtlRender } from 'test-utils';
+import { StandardCard } from './StandardCard';
 
-function setup(testProps, isShallow = true) {
+function setup(testProps = {}) {
     const props = {
         title: 'card title',
         classes: {
@@ -8,28 +10,28 @@ function setup(testProps, isShallow = true) {
         },
         ...testProps,
     };
-    return getElement(Cards, props, isShallow);
+    return rtlRender(<StandardCard {...props} />);
 }
 
 describe('Cards component', () => {
     it('renders with title and no help icon', () => {
-        const wrapper = setup({});
-        expect(toJson(wrapper)).toMatchSnapshot();
+        const { container } = setup();
+        expect(container).toMatchSnapshot();
     });
 
     it('renders with title and help button', () => {
-        const wrapper = setup({
+        const { container } = setup({
             help: {
                 title: 'help',
                 text: 'help text',
                 buttonLabel: 'OK',
             },
         });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it('renders with custom colours and full height', () => {
-        const wrapper = setup({
+        const { container } = setup({
             customBackgroundColor: '#fcc',
             customTitleColor: '#111',
             customTitleBgColor: '#ccc',
@@ -43,11 +45,11 @@ describe('Cards component', () => {
                 cardHeaderPrimary: '#555',
             },
         });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it('renders with square top and accent header', () => {
-        const wrapper = setup({
+        const { container } = setup({
             squareTop: true,
             accentHeader: true,
             classes: {
@@ -55,33 +57,36 @@ describe('Cards component', () => {
             },
         });
 
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it('renders with small title and as a subcard', () => {
-        const wrapper = setup({
+        const { container } = setup({
             smallTitle: true,
             subCard: true,
         });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect(container).toMatchSnapshot();
     });
 
     it('renders given ID for standar card', () => {
-        const wrapper = setup({ standardCardId: 'test-card' });
-        expect(toJson(wrapper)).toMatchSnapshot();
+        const { container } = setup({ standardCardId: 'test-card' });
+        expect(container).toMatchSnapshot();
+    });
+
+    it('renders with header action', () => {
+        const { container } = setup({ headerAction: jest.fn() });
+        expect(container).toMatchSnapshot();
+    });
+
+    it('renders with custom content classname', () => {
+        const { container } = setup({ contentProps: { className: 'customClass' } });
+        expect(container).toMatchSnapshot();
     });
 });
 
 describe('StandardCard component', () => {
     it('should render StyledCard with same props', () => {
-        const wrapper = getElement(
-            StandardCard,
-            {
-                test1: 'test1value',
-                test2: 'test2value',
-            },
-            true,
-        );
-        expect(toJson(wrapper)).toMatchSnapshot();
+        const { container } = setup({ test1: 'test1value', test2: 'test2value' });
+        expect(container).toMatchSnapshot();
     });
 });

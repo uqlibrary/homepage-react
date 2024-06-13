@@ -1,26 +1,12 @@
 /* eslint-env jest */
-import React from 'react';
-
-import Enzyme, { mount, render, shallow } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import toJson from 'enzyme-to-json';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import { Provider } from 'react-redux';
 import Immutable from 'immutable';
-import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import MockAdapter from 'axios-mock-adapter';
-import { mui1theme } from 'config';
 import { api, sessionApi } from 'config/axios';
-import ThemeProvider from '@mui/styles/ThemeProvider';
-import { StyledEngineProvider } from '@mui/material/styles';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
-// jest.mock('@date-io/moment');
-import MomentUtils from '@date-io/moment';
 
 const setupStoreForActions = () => {
     const middlewares = [thunk];
@@ -46,52 +32,6 @@ const setupMockAdapter = () => {
 const setupSessionMockAdapter = () => {
     return new MockAdapter(sessionApi, { delayResponse: 100 });
 };
-
-// get a mounted or shallow element
-const getElement = (component, props, args = {}) => {
-    const { isShallow, requiresStore, context, store } = {
-        isShallow: true,
-        requiresStore: false,
-        context: {},
-        store: setupStoreForMount().store,
-        ...args,
-    };
-
-    if (isShallow) {
-        if (requiresStore) {
-            return shallow(<Provider store={store}>{React.createElement(component, props)}</Provider>, {
-                context,
-            });
-        } else {
-            return shallow(React.createElement(component, props), { context });
-        }
-    }
-    return mount(
-        <Provider store={store}>
-            <MemoryRouter initialEntries={[{ pathname: '/', key: 'testKey' }]}>
-                <StyledEngineProvider injectFirst>
-                    <ThemeProvider theme={mui1theme}>
-                        <LocalizationProvider dateAdapter={MomentUtils}>
-                            {React.createElement(component, props)}
-                        </LocalizationProvider>
-                    </ThemeProvider>
-                </StyledEngineProvider>
-            </MemoryRouter>
-        </Provider>,
-    );
-};
-
-// React Enzyme adapter
-Enzyme.configure({ adapter: new Adapter() });
-
-// Make Enzyme functions available in all test files without importing
-global.shallow = shallow;
-global.render = render;
-global.mount = mount;
-global.toJson = toJson;
-
-// make standard libraries/methods globally available to all tests
-global.getElement = getElement;
 
 // set global store for testing actions
 global.setupStoreForActions = setupStoreForActions;

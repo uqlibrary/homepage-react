@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import InspectionsDue from './InspectionsDue';
@@ -27,7 +27,7 @@ const defaultLocationState = {
     roomListLoaded: false,
 };
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -53,13 +53,15 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <InspectionsDue
-                actions={actions}
-                inspectionsDue={inspectionsDue}
-                inspectionsDueLoading={inspectionsDueLoading}
-                inspectionsDueError={inspectionsDueError}
-                {...props}
-            />
+            <WithRouter>
+                <InspectionsDue
+                    actions={actions}
+                    inspectionsDue={inspectionsDue}
+                    inspectionsDueLoading={inspectionsDueLoading}
+                    inspectionsDueError={inspectionsDueError}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }
