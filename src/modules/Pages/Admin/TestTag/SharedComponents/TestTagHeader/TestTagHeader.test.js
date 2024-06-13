@@ -1,6 +1,6 @@
 import React from 'react';
 import TestTagHeader from './TestTagHeader';
-import { rtlRender, renderWithRouter } from 'test-utils';
+import { rtlRender, WithRouter} from 'test-utils';
 import InspectionIcon from '@mui/icons-material/Search';
 /*
 
@@ -10,7 +10,11 @@ import InspectionIcon from '@mui/icons-material/Search';
 */
 
 function setup(testProps = {}, renderer = rtlRender) {
-    return renderer(<TestTagHeader {...testProps} />);
+    return renderer(
+        <WithRouter>
+            <TestTagHeader {...testProps} />
+        </WithRouter>,
+    );
 }
 
 describe('TestTagHeader Renders component', () => {
@@ -39,13 +43,7 @@ describe('TestTagHeader Renders component', () => {
                 title: 'Item 2',
             },
         ];
-        const { getByTestId, queryByTestId } = setup(
-            {
-                departmentText: 'UQL',
-                breadcrumbs,
-            },
-            renderWithRouter,
-        );
+        const { getByTestId, queryByTestId } = setup({ departmentText: 'UQL', breadcrumbs });
         expect(getByTestId('test_tag_header')).toBeInTheDocument();
         expect(getByTestId('test_tag_header-navigation')).toBeInTheDocument();
         expect(getByTestId('test_tag_header-navigation-dashboard')).toHaveTextContent('Dashboard');
@@ -68,14 +66,7 @@ describe('TestTagHeader Renders component', () => {
                 icon: <InspectionIcon data-testid="item2icon" fontSize={'small'} />,
             },
         ];
-        const { getByTestId, queryByTestId } = setup(
-            {
-                departmentText: 'UQL',
-                breadcrumbs,
-            },
-            renderWithRouter,
-        );
-
+        const { getByTestId, queryByTestId } = setup({ departmentText: 'UQL', breadcrumbs });
         expect(getByTestId('test_tag_header')).toBeInTheDocument();
         expect(getByTestId('test_tag_header-navigation')).toBeInTheDocument();
         expect(getByTestId('test_tag_header-navigation-dashboard')).toHaveTextContent('Dashboard');
@@ -99,13 +90,7 @@ describe('TestTagHeader Renders component', () => {
                 link: '#',
             },
         ];
-        const { getByTestId, queryByTestId } = setup(
-            {
-                departmentText: 'UQL',
-                breadcrumbs,
-            },
-            renderWithRouter,
-        );
+        const { getByTestId, queryByTestId } = setup({ departmentText: 'UQL', breadcrumbs });
 
         expect(getByTestId('test_tag_header')).toBeInTheDocument();
         expect(getByTestId('test_tag_header-navigation')).toBeInTheDocument();
@@ -128,13 +113,7 @@ describe('TestTagHeader Renders component', () => {
                 title: 'Item 2',
             },
         ];
-        const { getByTestId, queryByTestId } = setup(
-            {
-                departmentText: 'UQL',
-                breadcrumbs,
-            },
-            renderWithRouter,
-        );
+        const { getByTestId, queryByTestId } = setup({ departmentText: 'UQL', breadcrumbs });
         expect(getByTestId('test_tag_header')).toBeInTheDocument();
         expect(getByTestId('test_tag_header-navigation')).toBeInTheDocument();
         expect(getByTestId('test_tag_header-navigation-dashboard')).toHaveTextContent('Dashboard');

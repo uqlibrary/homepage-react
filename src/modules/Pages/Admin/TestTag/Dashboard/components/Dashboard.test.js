@@ -1,6 +1,6 @@
 import React from 'react';
 import Dashboard from './Dashboard';
-import { renderWithRouter, WithReduxStore, act, fireEvent, waitFor } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, act, fireEvent, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
 import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadDashboard';
@@ -12,7 +12,7 @@ import { PERMISSIONS } from '../../config/auth';
 
 const redHex = '#951126';
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -42,15 +42,17 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <Dashboard
-                actions={actions}
-                locale={locale}
-                dashboardConfig={dashboardConfig}
-                dashboardConfigLoading={dashboardConfigLoading}
-                dashboardConfigError={dashboardConfigError}
-                user={user}
-                {...props}
-            />
+            <WithRouter>
+                <Dashboard
+                    actions={actions}
+                    locale={locale}
+                    dashboardConfig={dashboardConfig}
+                    dashboardConfigLoading={dashboardConfigLoading}
+                    dashboardConfigError={dashboardConfigError}
+                    user={user}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

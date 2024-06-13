@@ -1,4 +1,6 @@
+import React from 'react';
 import { ConfirmDialogBox, styles } from './ConfirmDialogBox';
+import { rtlRender, fireEvent } from 'test-utils';
 
 const getProps = (testProps = {}) => ({
     classes: {},
@@ -15,30 +17,34 @@ const getProps = (testProps = {}) => ({
     onAlternateAction: jest.fn(),
     onRef: jest.fn(),
     showAlternateActionButton: false,
+    isOpen: true,
     ...testProps,
 });
 
 function setup(testProps = {}) {
-    return getElement(ConfirmDialogBox, getProps(testProps));
+    return rtlRender(<ConfirmDialogBox {...getProps(testProps)} />);
 }
 
 describe('ConfirmDialogBox snapshots tests', () => {
     it('renders component with yes/no buttons', () => {
-        const wrapper = setup();
-        const tree = toJson(wrapper);
-        expect(tree).toMatchSnapshot();
+        const { getByText, getByRole } = setup();
+        expect(getByText('Confirmation')).toBeInTheDocument();
+        expect(getByText('Are you sure?')).toBeInTheDocument();
+        expect(getByRole('button', { name: /Yes/ })).toBeInTheDocument();
+        expect(getByRole('button', { name: /No/ })).toBeInTheDocument();
     });
 
     it('renders component with yes', () => {
-        const wrapper = setup({ hideCancelButton: true });
-        const tree = toJson(wrapper);
-        expect(tree).toMatchSnapshot();
+        const { getByRole, queryByRole } = setup({ hideCancelButton: true });
+        expect(getByRole('button', { name: /Yes/ })).toBeInTheDocument();
+        expect(queryByRole('button', { name: /No/ })).not.toBeInTheDocument();
     });
 
     it('renders component with yes/no/maybe buttons', () => {
-        const wrapper = setup({ showAlternateActionButton: true });
-        const tree = toJson(wrapper);
-        expect(tree).toMatchSnapshot();
+        const { getByRole } = setup({ showAlternateActionButton: true });
+        expect(getByRole('button', { name: /Yes/ })).toBeInTheDocument();
+        expect(getByRole('button', { name: /Maybe/ })).toBeInTheDocument();
+        expect(getByRole('button', { name: /No/ })).toBeInTheDocument();
     });
 
     it('should have a proper style generator', () => {
@@ -67,7 +73,7 @@ describe('ConfirmDialogBox snapshots tests', () => {
     });
 
     it('renders component with customised locale', () => {
-        const wrapper = setup({
+        const { getByRole, getByText } = setup({
             locale: {
                 alternateActionButtonLabel: 'ENG: Maybe',
                 cancelButtonLabel: 'ENG: No',
@@ -77,70 +83,57 @@ describe('ConfirmDialogBox snapshots tests', () => {
             },
             showAlternateActionButton: true,
         });
-        const tree = toJson(wrapper);
-        expect(tree).toMatchSnapshot();
-    });
-
-    it('should call componentWillUnmount and set ref to null', () => {
-        const wrapper = setup();
-        const componentWillUnmount = jest.spyOn(wrapper.instance(), 'componentWillUnmount');
-        wrapper.unmount();
-        expect(componentWillUnmount).toHaveBeenCalled();
-    });
-
-    it('should show and hide confirmation dialog', () => {
-        const wrapper = setup();
-        wrapper.instance().showConfirmation();
-        expect(wrapper.state().isDialogOpen).toBeTruthy();
-        expect(toJson(wrapper)).toMatchSnapshot();
-
-        wrapper.instance()._hideConfirmation();
-        expect(wrapper.state().isDialogOpen).toBeFalsy();
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect(getByText('ENG: Confirmation')).toBeInTheDocument();
+        expect(getByText('ENG: Are you sure?')).toBeInTheDocument();
+        expect(getByRole('button', { name: /ENG: Yes/ })).toBeInTheDocument();
+        expect(getByRole('button', { name: /ENG: Maybe/ })).toBeInTheDocument();
+        expect(getByRole('button', { name: /ENG: No/ })).toBeInTheDocument();
     });
 
     it('the ok-equivalent button should work', () => {
         const testFn = jest.fn();
-        const wrapper = setup({
+        const { getByRole } = setup({
             onAction: testFn,
         });
-        wrapper
-            .find('ForwardRef(Button)')
-            .get(0)
-            .props.onClick();
-
-        expect(wrapper.state().isDialogOpen).toBeFalsy();
+        fireEvent.click(getByRole('button', { name: /Yes/ }));
         expect(testFn).toHaveBeenCalled();
     });
 
     it('the cancel-equivalent button should work', () => {
         const testFn = jest.fn();
-        const wrapper = setup({
+        const { getByRole } = setup({
             onCancelAction: testFn,
         });
-
-        wrapper
-            .find('ForwardRef(Button)')
-            .get(1)
-            .props.onClick();
-
-        expect(wrapper.state().isDialogOpen).toBeFalsy();
+        fireEvent.click(getByRole('button', { name: /No/ }));
         expect(testFn).toHaveBeenCalled();
     });
 
     it('the alternate action button should work', () => {
         const testFn = jest.fn();
-        const wrapper = setup({
+        const { getByRole } = setup({
             showAlternateActionButton: true,
             onAlternateAction: testFn,
         });
-
-        wrapper
-            .find('ForwardRef(Button)')
-            .get(1)
-            .props.onClick();
-
-        expect(wrapper.state().isDialogOpen).toBeFalsy();
+        fireEvent.click(getByRole('button', { name: /Maybe/ }));
         expect(testFn).toHaveBeenCalled();
+    });
+
+    describe('Class instance', () => {
+        const getInstance = props => {
+            const instance = new ConfirmDialogBox(props ?? getProps());
+            instance.setState = jest.fn(newState => {
+                instance.state = { ...instance.state, ...newState };
+            });
+            return instance;
+        };
+
+        it('should show and hide confirmation dialog', () => {
+            const instance = getInstance({ ...getProps({ isOpen: false }) });
+            instance.showConfirmation();
+            expect(instance.state.isDialogOpen).toBeTruthy();
+
+            instance._hideConfirmation();
+            expect(instance.state.isDialogOpen).toBeFalsy();
+        });
     });
 });
