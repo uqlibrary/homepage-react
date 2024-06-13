@@ -221,19 +221,6 @@ const useStyles = makeStyles(theme => ({
             fontSize: '0.9rem',
         },
     },
-    resetButton: {
-        borderColor: 'transparent',
-        backgroundColor: '#f7f7f7',
-        color: 'rgb(13, 109, 205)',
-        fontSize: 14,
-        letterSpacing: '0.03em',
-        minHeight: 40,
-        cursor: 'pointer',
-        '&:hover': {
-            textDecoration: 'underline',
-            textDecorationColor: 'rgb(13, 109, 205)',
-        },
-    },
     skipLink: {
         // hidden when not focused
         position: 'absolute',
@@ -583,7 +570,7 @@ export const DLOList = ({
                     <Grid item xs={1}>
                         <button
                             data-testid="sidebar-filter-reset-button"
-                            className={classes.resetButton}
+                            className={classes.uqActionButton}
                             onClick={() => resetFiltering()}
                             aria-label="Reset filter to default"
                         >
