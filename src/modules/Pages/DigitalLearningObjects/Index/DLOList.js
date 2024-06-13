@@ -79,9 +79,6 @@ const useStyles = makeStyles(theme => ({
                     display: 'flex',
                     alignItems: 'center',
                 },
-                '& h2 span:nth-child(2)': {
-                    fontSize: '0.9rem',
-                },
             },
             '& > div': {
                 maxHeight: 180,
@@ -849,11 +846,6 @@ export const DLOList = ({
                         <header>
                             <Typography component={'h2'} variant={'h6'}>
                                 <span>{object?.object_title}</span>
-                                {!!hasTopicFacet('topic') && (
-                                    <span className={classes.highlighted}>
-                                        {getConcatenatedFilterLabels('topic', true)}
-                                    </span>
-                                )}
                             </Typography>
                             <>
                                 {(!!object?.object_cultural_advice ||
@@ -932,13 +924,13 @@ export const DLOList = ({
                                     </span>
                                 </>
                             )}
-                            {!!hasTopicFacet('licence') && (
+                            {!!hasTopicFacet('topic') && (
                                 <>
-                                    {getFacetTypeIcon('licence')}
+                                    {getFacetTypeIcon('topic')}
                                     <span
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-licence`}
+                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-topic`}
                                     >
-                                        {getConcatenatedFilterLabels('licence')}
+                                        {getConcatenatedFilterLabels('topic')}
                                     </span>
                                 </>
                             )}
