@@ -246,7 +246,10 @@ export const DLOView = ({
     }, [dlorId]);
 
     function navigateToObjectLink() {
-        window.location.href = dlorItem?.object_link_url;
+        const newWindow = window.open(dlorItem?.object_link_url, '_blank', 'noopener,noreferrer');
+        if (newWindow) {
+            newWindow.opener = null;
+        }
     }
 
     useEffect(() => {
@@ -494,7 +497,9 @@ export const DLOView = ({
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
                             {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
                                 <div className={classes.uqActionButton} data-testid="detailpage-getit-button">
-                                    <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
+                                    <a href={dlorItem.object_link_url} rel="noopener noreferrer" target="_blank">
+                                        {getItButtonLabel(dlorItem)}
+                                    </a>
                                 </div>
                             )}
                             {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
