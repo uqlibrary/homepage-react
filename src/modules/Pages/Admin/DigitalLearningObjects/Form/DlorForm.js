@@ -31,7 +31,6 @@ import DoneIcon from '@mui/icons-material/Done';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import { useConfirmationState } from 'hooks';
 import { scrollToTopOfPage } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -128,13 +127,13 @@ export const DlorForm = ({
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
 
-    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [confirmationOpen, setConfirmationOpen] = React.useState(false);
 
-    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamForm, setShowTeamForm] = useState(false); // enable-disable the Team creation fields
+
+    // show-hide the File Type creation fields
     const [showFileTypeCreationForm, setShowFileTypeCreationForm] = useState(false);
-    // enable-disable the File Type creation fields
 
     // const [isLinkFileTypeError, setIsLinkFileTypeError] = useState(false);
 
@@ -163,8 +162,20 @@ export const DlorForm = ({
     }
 
     useEffect(() => {
+        console.log(
+            'useEffect FIRST l=',
+            dlorItemSaving,
+            '; e=',
+            dlorSavedItemError,
+            '; dlorSavedItem=',
+            dlorSavedItem,
+        );
+        setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
+    }, [dlorItemSaving, dlorSavedItemError, dlorSavedItem]);
+
+    useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
-            closeConfirmationBox();
+            setConfirmationOpen(false);
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
@@ -1048,7 +1059,9 @@ export const DlorForm = ({
         if (mode === 'add' && !dlorFileTypeListError && !dlorFileTypeListLoading && !dlorFileTypeList) {
             actions.loadFileTypeList();
         }
-        closeConfirmationBox(); // hide any conf left over from earlier add/edit efforts
+
+        console.log('useEffect 2ND l=', dlorItemSaving, '; e=', dlorSavedItemError, '; dlorSavedItem=', dlorSavedItem);
+        setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -1076,10 +1089,9 @@ export const DlorForm = ({
 
     useEffect(() => {
         if ((!!dlorSavedItem && !!dlorSavedItem.data?.object_id) || !!dlorSavedItemError) {
-            setSaveStatus('complete');
-            showConfirmation();
+            setConfirmationOpen(true);
         }
-    }, [showConfirmation, dlorSavedItem, dlorSavedItemError]);
+    }, [dlorSavedItem, dlorSavedItemError]);
 
     const saveDlor = () => {
         const valuesToSend = { ...formValues };
@@ -1167,8 +1179,7 @@ export const DlorForm = ({
     };
 
     const navigateToDlorAdminHomePage = () => {
-        setSaveStatus(null);
-        closeConfirmationBox();
+        setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink();
         scrollToTopOfPage();
@@ -1178,12 +1189,11 @@ export const DlorForm = ({
     };
 
     function closeConfirmationBox() {
-        setSaveStatus(null);
-        hideConfirmation();
+        setConfirmationOpen(false);
     }
 
     const clearForm = () => {
-        closeConfirmationBox();
+        setConfirmationOpen(false);
         window.location.reload(false);
     };
 
@@ -1403,20 +1413,18 @@ export const DlorForm = ({
 
     return (
         <>
-            {saveStatus === 'complete' && (
-                <ConfirmationBox
-                    actionButtonColor="primary"
-                    actionButtonVariant="contained"
-                    confirmationBoxId="dlor-save-outcome"
-                    onAction={() => navigateToDlorAdminHomePage()}
-                    hideCancelButton={!locale.successMessage.cancelButtonLabel}
-                    cancelButtonLabel={locale.successMessage.cancelButtonLabel}
-                    onCancelAction={() => clearForm()}
-                    onClose={closeConfirmationBox}
-                    isOpen={isOpen}
-                    locale={!!dlorSavedItemError ? locale.errorMessage : locale.successMessage}
-                />
-            )}
+            <ConfirmationBox
+                actionButtonColor="primary"
+                actionButtonVariant="contained"
+                confirmationBoxId="dlor-save-outcome"
+                onAction={() => navigateToDlorAdminHomePage()}
+                hideCancelButton={!locale.successMessage.cancelButtonLabel}
+                cancelButtonLabel={locale.successMessage.cancelButtonLabel}
+                onCancelAction={() => clearForm()}
+                onClose={closeConfirmationBox}
+                isOpen={confirmationOpen}
+                locale={!!dlorSavedItemError ? locale.errorMessage : locale.successMessage}
+            />
             <form id="dlor-addedit-form">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -1511,10 +1519,10 @@ DlorForm.propTypes = {
     dlorFileTypeList: PropTypes.array,
     dlorFileTypeListLoading: PropTypes.bool,
     dlorFileTypeListError: PropTypes.any,
-    dlorSavedItem: PropTypes.array,
+    dlorSavedItem: PropTypes.object,
     dlorItemSaving: PropTypes.bool,
     dlorSavedItemError: PropTypes.any,
-    formDefaults: PropTypes.array,
+    formDefaults: PropTypes.object,
     mode: PropTypes.string,
 };
 
