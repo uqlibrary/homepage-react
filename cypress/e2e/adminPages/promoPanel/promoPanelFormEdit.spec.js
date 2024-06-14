@@ -200,7 +200,7 @@ describe('Promopanel Admin Form Pages', () => {
                 .contains('Schedule Conflict');
             cy.data('admin-promopanel-group-button-cancel').click();
         });
-        it.only('can edit an existing schedule, setting dates in the past.', () => {
+        it('can edit an existing schedule, setting dates in the past.', () => {
             cy.get('[data-testid="admin-promopanel-form-button-editSchedule-0"]').click();
             cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] button').click();
             cy.get(
