@@ -280,9 +280,7 @@ describe('BulkAssetUpdate', () => {
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
         userEvent.click(within(frow2).getByLabelText('Select row'));
 
-        act(() => {
-            userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
-        });
+        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
 
         await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update'));
 
