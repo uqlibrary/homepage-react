@@ -115,7 +115,7 @@ describe('InspectionsByLicencedUser', () => {
             expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
             expect(getByTestId('user_inspections-user-name-select')).toBeInTheDocument();
 
-            userEvent.click(getByTestId('user_inspections-user-name-select'));
+            await userEvent.click(getByTestId('user_inspections-user-name-select'));
 
             selectOptionFromListByIndex(1, { getByRole, getAllByRole });
 
@@ -263,7 +263,7 @@ describe('InspectionsByLicencedUser', () => {
             expect(getByText('Tests by licenced users report for Library')).toBeInTheDocument();
             expect(getByTestId('user_inspections-user-name-select')).toBeInTheDocument();
 
-            userEvent.click(getByTestId('user_inspections-user-name-select'));
+            await userEvent.click(getByTestId('user_inspections-user-name-select'));
 
             selectOptionFromListByIndex(0, { getByRole, getAllByRole });
             selectOptionFromListByIndex(1, { getByRole, getAllByRole });
