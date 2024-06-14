@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-    renderWithRouter,
+    rtlRender,
+    WithRouter,
     WithReduxStore,
     waitForElementToBeRemoved,
     userEvent,
@@ -34,7 +35,7 @@ const defaultLocationState = {
 import Locations, { actionHandler, locationDataFieldKeys } from './Locations';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _userData = { ...userData, privileges: { ...userData.privileges, can_admin: 1 } };
 
@@ -54,7 +55,9 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <Locations actions={actions} {...props} />
+            <WithRouter>
+                <Locations actions={actions} {...props} />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

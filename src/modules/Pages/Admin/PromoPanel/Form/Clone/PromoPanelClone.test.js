@@ -1,6 +1,6 @@
 import React from 'react';
 import PromoPanelClone from './PromoPanelClone';
-import { renderWithRouter } from '../../../../../../../utils/test-utils';
+import { WithRouter, rtlRender } from 'test-utils';
 
 function setup(testProps = {}) {
     const props = {
@@ -16,7 +16,11 @@ function setup(testProps = {}) {
         promoPanelUserTypesError: null,
         promoPanelActionError: null,
     };
-    return renderWithRouter(<PromoPanelClone {...props} {...testProps} />);
+    return rtlRender(
+        <WithRouter>
+            <PromoPanelClone {...props} {...testProps} />
+        </WithRouter>,
+    );
 }
 describe('Promo Panel Clone', () => {
     it('shows an error if one exists', () => {

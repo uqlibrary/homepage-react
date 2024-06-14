@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetsList from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetsMine';
@@ -30,7 +30,7 @@ import pageConfig from './config';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -68,16 +68,18 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <FilterDialog
-                id="test"
-                locale={locale}
-                actions={actions}
-                config={config}
-                locationLocale={locationLocale}
-                assetTypeLocale={assetTypeLocale}
-                errorMessageFormatter={errorMessageFormatter}
-                {...props}
-            />
+            <WithRouter>
+                <FilterDialog
+                    id="test"
+                    locale={locale}
+                    actions={actions}
+                    config={config}
+                    locationLocale={locationLocale}
+                    assetTypeLocale={assetTypeLocale}
+                    errorMessageFormatter={errorMessageFormatter}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

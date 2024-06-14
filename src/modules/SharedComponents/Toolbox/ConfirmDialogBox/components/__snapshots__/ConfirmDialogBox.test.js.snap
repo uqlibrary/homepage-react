@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfirmDialogBox snapshots tests should have a proper style generator 1`] = `
+Object {
+  "alternateActionButtonClass": Object {
+    "&:hover": Object {
+      "backgroundColor": "test3",
+    },
+    "backgroundColor": "test2",
+    "color": "test4",
+  },
+}
+`;
+
+exports[`ConfirmDialogBox snapshots tests should have a proper style generator 2`] = `
+Object {
+  "alternateActionButtonClass": Object {
+    "&:hover": Object {
+      "backgroundColor": undefined,
+    },
+    "backgroundColor": undefined,
+    "color": undefined,
+  },
+}
+`;
+
+exports[`ConfirmDialogBox snapshots tests should have a proper style generator 3`] = `
+Object {
+  "alternateActionButtonClass": Object {
+    "&:hover": Object {
+      "backgroundColor": undefined,
+    },
+    "backgroundColor": undefined,
+    "color": undefined,
+  },
+}
+`;

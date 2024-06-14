@@ -1,6 +1,6 @@
 import React from 'react';
 import Users from './Users';
-import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
 import { getUserPermissions } from '../../../helpers/auth';
@@ -81,7 +81,7 @@ const userList = [
 ];
 
 const theUser = userList[3];
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
         testTagUserReducer: {
@@ -95,14 +95,16 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <Users
-                id="test"
-                actions={actions}
-                userListLoading={false}
-                userList={userList}
-                userListError={null}
-                {...props}
-            />
+            <WithRouter>
+                <Users
+                    id="test"
+                    actions={actions}
+                    userListLoading={false}
+                    userList={userList}
+                    userListError={null}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }
