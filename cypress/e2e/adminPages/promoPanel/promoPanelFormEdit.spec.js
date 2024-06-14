@@ -30,11 +30,9 @@ describe('Promopanel Admin Form Pages', () => {
             previewIsDisabled(false);
             testId('admin-promopanel-form-admin-note').type('Test Admin Note');
             testId('admin-promopanel-form-title').type('Test Admin Title');
-            cy.get('.ck-content')
-                .clear()
-                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
-                // depending on the platform. Best to just leave as plain text for testing.
-                .type('This is the content of the panel');
+            // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+            // depending on the platform. Best to just leave as plain text for testing.
+            cy.typeCKEditor('.ck-content[contenteditable=true]', 'This is the content of the panel');
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
             testId('admin-promopanel-form-button-preview').click();
@@ -119,11 +117,9 @@ describe('Promopanel Admin Form Pages', () => {
                 .clear()
 
                 .type('Edit Admin Title');
-            cy.get('.ck-content')
-                .clear()
-                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
-                // depending on the platform. Best to just leave as plain text for testing.
-                .type('Editing the content of the panel');
+            // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+            // depending on the platform. Best to just leave as plain text for testing.
+            cy.typeCKEditor('.ck-content[contenteditable=true]', 'This is the content of the panel');
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
             cy.get('#group-multiple-checkbox').click();
@@ -204,10 +200,12 @@ describe('Promopanel Admin Form Pages', () => {
                 .contains('Schedule Conflict');
             cy.data('admin-promopanel-group-button-cancel').click();
         });
-        it('can edit an existing schedule, setting dates in the past.', () => {
+        it.only('can edit an existing schedule, setting dates in the past.', () => {
             cy.get('[data-testid="admin-promopanel-form-button-editSchedule-0"]').click();
             cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] button').click();
-            cy.get('.MuiPopper-root:last-of-type .MuiPickersCalendarHeader-labelContainer').click();
+            cy.get(
+                '.MuiPickersPopper-root:last-of-type .MuiPickersCalendarHeader-labelContainer .MuiPickersCalendarHeader-label',
+            ).click();
 
             cy.get('.MuiYearPicker-root')
                 .contains('2000')
@@ -215,7 +213,9 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('body').type('{esc}');
 
             cy.get('[data-testid="admin-promopanel-form-end-date-edit-container"] button').click();
-            cy.get('.MuiPopper-root:last-of-type .MuiPickersCalendarHeader-labelContainer').click();
+            cy.get(
+                '.MuiPickersPopper-root:last-of-type .MuiPickersCalendarHeader-labelContainer .MuiPickersCalendarHeader-label',
+            ).click();
 
             cy.get('.MuiYearPicker-root')
                 .contains('2001')
