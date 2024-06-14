@@ -174,3 +174,20 @@ export const getDlorViewPageUrl = uuid => {
     const userString = getUserPostfix();
     return `${fullPath}/digital-learning-hub/view/${uuid}${userString}`;
 };
+
+export const isValidUrl = testUrl => {
+    let url;
+
+    try {
+        url = new URL(testUrl);
+    } catch (_) {
+        return false;
+    }
+
+    return (
+        (url?.protocol === 'http:' || url?.protocol === 'https:') &&
+        !!url?.hostname &&
+        !!url?.hostname.includes('.') && // tld only domain names really dont happen, must be a dot!
+        url?.hostname.length >= '12.co'.length
+    );
+};

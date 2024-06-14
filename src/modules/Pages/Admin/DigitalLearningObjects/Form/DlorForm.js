@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { PropTypes } from 'prop-types';
 import { useCookies } from 'react-cookie';
 
 import html2text from 'html2text';
@@ -24,7 +24,6 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
@@ -32,13 +31,11 @@ import DoneIcon from '@mui/icons-material/Done';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import { useAccountContext } from 'context';
 import { useConfirmationState } from 'hooks';
 import { scrollToTopOfPage } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
 
 import {
     convertFileSizeToKb,
@@ -52,9 +49,7 @@ import {
     isValidEmail,
     splitStringToArrayOnComma,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { fullPath } from 'config/routes';
-
-const moment = require('moment-timezone');
+import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     charactersRemaining: {
@@ -118,7 +113,6 @@ export const DlorForm = ({
     dlorSavedItem,
     dlorItemLoading,
     dlorItem,
-    // dlorItemError,
     dlorTeamList,
     dlorTeamListLoading,
     dlorTeamListError,
@@ -131,24 +125,22 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
-    const { account } = useAccountContext();
     const classes = useStyles();
-    const history = useHistory();
     const [cookies, setCookie] = useCookies();
-    const theme = useTheme();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamForm, setShowTeamForm] = useState(false); // enable-disable the Team creation fields
-    const [showFileTypeCreationForm, setShowFileTypeCreationForm] = useState(false); // enable-disable the File Type creation fields
+    const [showFileTypeCreationForm, setShowFileTypeCreationForm] = useState(false);
+    // enable-disable the File Type creation fields
 
-    const [isLinkFileTypeError, setIsLinkFileTypeError] = useState(false);
+    // const [isLinkFileTypeError, setIsLinkFileTypeError] = useState(false);
 
-    const linkInteractionType_download = 'download';
-    const linkInteractionType_view = 'view';
-    const linkInteractionType_none = 'none';
+    const linkInteractionTypeDOWNLOAD = 'download';
+    const linkInteractionTypeVIEW = 'view';
+    const linkInteractionTypeNONE = 'none';
     const [showLinkTimeForm, setShowLinkTimeForm] = useState(false);
     const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
 
@@ -193,7 +185,7 @@ export const DlorForm = ({
                 teamSelectRef.current = firstTeam?.shift()?.team_id;
             }
         }
-    }, [dlorTeamList, mode]);
+    }, [dlorTeamList, dlorTeamListError, dlorTeamListLoading, mode]);
 
     // these match the values in dlor cypress admin tests
     const titleMinimumLength = 8;
@@ -238,7 +230,7 @@ export const DlorForm = ({
         resetForm(fieldname, newContent);
     };
 
-    const handleFacetChange = unused => e => {
+    const handleFacetChange = () => e => {
         let newValues;
 
         let facetId = Number(e.target.id.replace('filter-', ''));
@@ -279,11 +271,11 @@ export const DlorForm = ({
 
     function setInteractionTypeDisplays(value) {
         linkInteractionTypeSelectRef.current = value;
-        setShowLinkTimeForm(value === linkInteractionType_view);
-        setShowLinkSizeForm(value === linkInteractionType_download);
+        setShowLinkTimeForm(value === linkInteractionTypeVIEW);
+        setShowLinkSizeForm(value === linkInteractionTypeDOWNLOAD);
     }
 
-    const handleChange = (prop, value) => e => {
+    const handleChange = prop => e => {
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
@@ -303,9 +295,6 @@ export const DlorForm = ({
                 linkFileTypeSelectRef.current = 'new';
             }
         }
-        if (prop === 'object_link_size_amount') {
-            setIsLinkFileTypeError(isValidNumber(theNewValue));
-        }
 
         if (prop === 'object_summary') {
             setSummaryContent(e.target.value);
@@ -322,29 +311,9 @@ export const DlorForm = ({
         resetForm(prop, theNewValue);
     };
 
-    const isValidUrl = testUrl => {
-        let url;
-
-        try {
-            url = new URL(testUrl);
-        } catch (_) {
-            return false;
-        }
-
-        return (
-            (url?.protocol === 'http:' || url?.protocol === 'https:') &&
-            !!url?.hostname &&
-            !!url?.hostname.includes('.') && // tld only domain names really dont happen, must be a dot!
-            url?.hostname.length >= '12.co'.length
-        );
-    };
-
     const isValidUsername = testUserName => {
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
-    // const currentTeamDetails = dlorTeamList?.find(team =>
-    //     mode === 'edit' ? team.team_id === formDefaults?.object_owning_team_id : team.team_id === teamSelectRef.current,
-    // );
 
     const controlEditTeamDialog = () => {
         if (showTeamForm !== false) {
@@ -562,7 +531,7 @@ export const DlorForm = ({
         setFormValues(newValues);
     }
 
-    const useSuggestion = e => {
+    const useSuggestion = () => {
         const newSummary = suggestSummary(formValues?.object_description);
         setSummaryContent(newSummary);
         // handleChange('object_summary', e);
@@ -803,24 +772,24 @@ export const DlorForm = ({
                                 style={{ width: '100%' }}
                             >
                                 <MenuItem
-                                    value={linkInteractionType_download}
+                                    value={linkInteractionTypeDOWNLOAD}
                                     data-testid="object_link_interaction_type-download"
-                                    selected={linkInteractionTypeSelectRef.current === linkInteractionType_download}
+                                    selected={linkInteractionTypeSelectRef.current === linkInteractionTypeDOWNLOAD}
                                 >
                                     can Download
                                 </MenuItem>
                                 <MenuItem
-                                    value={linkInteractionType_view}
+                                    value={linkInteractionTypeVIEW}
                                     data-testid="object_link_interaction_type-view"
-                                    selected={linkInteractionTypeSelectRef.current === linkInteractionType_view}
+                                    selected={linkInteractionTypeSelectRef.current === linkInteractionTypeVIEW}
                                 >
                                     can View
                                 </MenuItem>
                                 <MenuItem
-                                    value={linkInteractionType_none}
+                                    value={linkInteractionTypeNONE}
                                     data-testid="object_link_interaction_type-none"
                                     selected={
-                                        ![linkInteractionType_download, linkInteractionType_view].includes(
+                                        ![linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                                             linkInteractionTypeSelectRef.current,
                                         )
                                     }
@@ -832,7 +801,7 @@ export const DlorForm = ({
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl style={{ minWidth: '10em' }}>
-                            {[linkInteractionType_download, linkInteractionType_view].includes(
+                            {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                                 linkInteractionTypeSelectRef.current,
                             ) && (
                                 <>
@@ -846,7 +815,7 @@ export const DlorForm = ({
                                         onChange={handleChange('object_link_file_type')}
                                         style={{ width: '100%', marginTop: 20 }}
                                     >
-                                        {getFileTypeList.map((type, index) => (
+                                        {getFileTypeList.map(type => (
                                             <MenuItem
                                                 key={type.object_link_file_type}
                                                 data-testid={`object_link_file_type-${type.object_link_file_type}`}
@@ -1080,13 +1049,14 @@ export const DlorForm = ({
             actions.loadFileTypeList();
         }
         closeConfirmationBox(); // hide any conf left over from earlier add/edit efforts
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /* istanbul ignore next */
     useEffect(() => {
         setFormValidity(validateValues(formDefaults));
         const isFileTypeSet =
-            [linkInteractionType_download, linkInteractionType_view].includes(
+            [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                 formDefaults?.object_link_interaction_type || null,
             ) && !!formDefaults?.object_link_file_type;
         if (!!isFileTypeSet) {
@@ -1095,14 +1065,14 @@ export const DlorForm = ({
             setShowFileTypeCreationForm(true);
             formDefaults.object_link_file_type = 'new';
         }
-    }, [formDefaults]);
+    }, [formDefaults, validateValues]);
 
     useEffect(() => {
         // this is needed to get the validation badges after the filter list loads
         if (!!dlorFilterList && dlorFilterList.length > 0) {
             setFormValidity(validateValues(formDefaults));
         }
-    }, [dlorFilterList]);
+    }, [dlorFilterList, formDefaults, validateValues]);
 
     useEffect(() => {
         if ((!!dlorSavedItem && !!dlorSavedItem.data?.object_id) || !!dlorSavedItemError) {
@@ -1124,7 +1094,8 @@ export const DlorForm = ({
             valuesToSend.team_manager = valuesToSend.team_manager_new;
             valuesToSend.team_email = valuesToSend.team_email_new;
         } else if (formValues?.object_owning_team_id !== formDefaults.object_owning_team_id) {
-            // they can only change manager and email for the original team; if they entered this then changed teams, undo
+            // they can only change manager and email for the original team;
+            // if they entered this then changed teams, undo
             delete valuesToSend.team_name;
             delete valuesToSend.team_manager;
             delete valuesToSend.team_email;
@@ -1145,17 +1116,17 @@ export const DlorForm = ({
         delete valuesToSend.object_keywords_string;
 
         /* istanbul ignore else */
-        if (valuesToSend?.object_link_interaction_type === linkInteractionType_download) {
+        if (valuesToSend?.object_link_interaction_type === linkInteractionTypeDOWNLOAD) {
             valuesToSend.object_link_size = convertFileSizeToKb(
                 valuesToSend?.object_link_size_amount,
                 valuesToSend?.object_link_size_units,
             );
-        } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_view) {
+        } else if (valuesToSend?.object_link_interaction_type === linkInteractionTypeVIEW) {
             valuesToSend.object_link_size = getTotalSecondsFromMinutesAndSecond(
                 valuesToSend?.object_link_duration_minutes,
                 valuesToSend?.object_link_duration_seconds,
             );
-        } else if (valuesToSend?.object_link_interaction_type === linkInteractionType_none) {
+        } else if (valuesToSend?.object_link_interaction_type === linkInteractionTypeNONE) {
             delete valuesToSend?.object_link_file_type;
         }
         if (!!valuesToSend.new_file_type) {
@@ -1211,7 +1182,7 @@ export const DlorForm = ({
         hideConfirmation();
     }
 
-    const clearForm = actiontype => {
+    const clearForm = () => {
         closeConfirmationBox();
         window.location.reload(false);
     };
@@ -1255,15 +1226,13 @@ export const DlorForm = ({
         let thirdPanelErrorCount = 0;
         !isValidUrl(currentValues?.object_link_url) && thirdPanelErrorCount++;
 
-        [linkInteractionType_download, linkInteractionType_view].includes(
-            currentValues?.object_link_interaction_type,
-        ) &&
+        [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(currentValues?.object_link_interaction_type) &&
             (!currentValues?.object_link_file_type ||
                 (currentValues?.object_link_file_type === 'new' && !currentValues?.new_file_type)) &&
             thirdPanelErrorCount++;
 
         // if minutes and seconds are both zero, error, otherwise zero allowed
-        currentValues.object_link_interaction_type === linkInteractionType_view &&
+        currentValues.object_link_interaction_type === linkInteractionTypeVIEW &&
             (!isValidNumber(currentValues?.object_link_duration_minutes, true) ||
                 !isValidNumber(currentValues?.object_link_duration_seconds, true) ||
                 !isValidNumber(
@@ -1272,7 +1241,7 @@ export const DlorForm = ({
                 )) &&
             thirdPanelErrorCount++;
 
-        currentValues.object_link_interaction_type === linkInteractionType_download &&
+        currentValues.object_link_interaction_type === linkInteractionTypeDOWNLOAD &&
         !isValidNumber(currentValues?.object_link_size_amount) &&
         !currentValues?.object_link_size_unit && // needs valid check here?
             thirdPanelErrorCount++;
@@ -1324,7 +1293,7 @@ export const DlorForm = ({
     };
 
     function displayControlByFacetType(filterItem) {
-        const facetIsSet = (findId, facets = null) => {
+        const facetIsSet = findId => {
             return checkBoxArrayRef.current.includes(findId);
             // return facets?.some(ff => ff?.filter_values?.some(value => value?.id === findId));
         };
@@ -1524,6 +1493,29 @@ export const DlorForm = ({
             </Grid>
         </>
     );
+};
+
+DlorForm.propTypes = {
+    actions: PropTypes.any,
+    dlorItemLoading: PropTypes.bool,
+    dlorItem: PropTypes.object,
+    dlorItemUpdating: PropTypes.bool,
+    dlorUpdatedItemError: PropTypes.any,
+    dlorUpdatedItem: PropTypes.object,
+    dlorTeamList: PropTypes.array,
+    dlorTeamListLoading: PropTypes.bool,
+    dlorTeamListError: PropTypes.any,
+    dlorFilterList: PropTypes.array,
+    dlorFilterListLoading: PropTypes.bool,
+    dlorFilterListError: PropTypes.any,
+    dlorFileTypeList: PropTypes.array,
+    dlorFileTypeListLoading: PropTypes.bool,
+    dlorFileTypeListError: PropTypes.any,
+    dlorSavedItem: PropTypes.array,
+    dlorItemSaving: PropTypes.bool,
+    dlorSavedItemError: PropTypes.any,
+    formDefaults: PropTypes.array,
+    mode: PropTypes.string,
 };
 
 export default DlorForm;
