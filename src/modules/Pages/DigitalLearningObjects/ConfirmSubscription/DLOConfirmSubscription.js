@@ -3,69 +3,51 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+
 import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-
-const useStyles = makeStyles(theme => ({
-    //
-}));
-
-// http://localhost:2020/digital-learning-hub/confirm/wrong_data
-// http://localhost:2020/digital-learning-hub/confirm/a_conf_code_that_is_not_known
-// http://localhost:2020/digital-learning-hub/confirm/a_known_conf_code_that_has_expired
-// http://localhost:2020/digital-learning-hub/confirm/a_conf_code_that_is_known
-// http://localhost:2020/digital-learning-hub/confirm/a_conf_code_that_has_already_been_used
+import { fullPath } from 'config/routes';
 
 export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
-    console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
     const { confirmationId } = useParams();
-    const classes = useStyles();
 
     useEffect(() => {
         /* istanbul ignore else */
         if (!!confirmationId) {
             actions.loadDlorSubscriptionConfirmation(confirmationId);
         }
-    }, [confirmationId]);
-
-    if (!!dlorItemUpdating || dlorItemUpdating === null) {
-        return (
-            <div style={{ minHeight: 600 }}>
-                <InlineLoader message="Loading" />
-            </div>
-        );
-    }
-
-    if (!!dlorUpdatedItemError || !['ok', 'expired', 'missing', 'used'].includes(dlorUpdatedItem?.response)) {
-        return (
-            <StandardPage>
-                <StandardCard title="Confirming a Digital Object subscription">
-                    <Typography variant={'body1'} data-testid="dlor-detailpage-error">
-                        {!!dlorUpdatedItemError
-                            ? dlorUpdatedItemError
-                            : 'Something seems to have gone wrong - please check your email and try again.'}
-                    </Typography>
-                </StandardCard>
-            </StandardPage>
-        );
-    }
+    }, [actions, confirmationId]);
 
     function pageContents(dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem) {
-        let response = <p>Sorry, something went wrong with your request. Please try again later.</p>;
-        if (dlorUpdatedItem.response === 'ok') {
-            response = (
+        if (!!dlorItemUpdating || dlorItemUpdating === null) {
+            return (
+                <div style={{ minHeight: 600 }}>
+                    <InlineLoader message="Loading" />
+                </div>
+            );
+        } else if (!!dlorUpdatedItemError) {
+            return (
+                <Typography variant={'body1'} data-testid="dlor-confirm-error">
+                    {dlorUpdatedItemError}
+                </Typography>
+            );
+        } else if (dlorUpdatedItem.response === 'ok') {
+            return (
                 <>
-                    <Typography component={'p'}>Thank you for subscribing!</Typography>
-                    <Typography component={'p'}>
-                        Your subscription has been confirmed and you will receive any notable updates by email.
+                    <Typography component={'p'} data-testid="dlor-confirm-line-1">
+                        Thank you for your interest in following <b>{dlorUpdatedItem.object_title}</b>.
+                    </Typography>
+                    <Typography component={'p'} data-testid="dlor-confirm-line-2">
+                        Your request has been confirmed. We will send an email when we update the object.
                     </Typography>
                     <ul>
-                        <li>
+                        <li data-testid="dlor-confirm-line-3">
                             Visit{' '}
                             <a href={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
                                 {dlorUpdatedItem.object_title}
@@ -76,28 +58,37 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                 </>
             );
         } else if (dlorUpdatedItem.response === 'expired') {
-            response = (
+            return (
                 <>
-                    <Typography component={'p'}>Thank you for subscribing!</Typography>
-                    <Typography component={'p'}>
+                    <Typography component={'p'} data-testid="dlor-confirm-line-1">
+                        Thank you for your interest in following <b>{dlorUpdatedItem.object_title}</b>.
+                    </Typography>
+                    <Typography component={'p'} data-testid="dlor-confirm-line-2">
                         Unfortunately, your confirmation period expired before you were able to visit this link.
                     </Typography>
-                    <Typography component={'p'}>
-                        Visit{' '}
-                        <a href={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
-                            {dlorUpdatedItem.object_title}
-                        </a>{' '}
-                        to try again
-                    </Typography>
+
+                    <ul>
+                        <li data-testid="dlor-confirm-line-3">
+                            Visit{' '}
+                            <a href={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
+                                {dlorUpdatedItem.object_title}
+                            </a>{' '}
+                            to try again.
+                        </li>
+                    </ul>
                 </>
             );
         } else if (dlorUpdatedItem.response === 'used') {
-            response = (
+            return (
                 <>
-                    <Typography component={'p'}>Thank you for subscribing!</Typography>
-                    <Typography component={'p'}>You have already confirmed this subscription</Typography>
+                    <Typography component={'p'} data-testid="dlor-confirm-line-1">
+                        Thank you for your interest in following <b>{dlorUpdatedItem.object_title}</b>.
+                    </Typography>
+                    <Typography component={'p'} data-testid="dlor-confirm-line-2">
+                        You have already confirmed this notification request.
+                    </Typography>
                     <ul>
-                        <li>
+                        <li data-testid="dlor-confirm-line-3">
                             Visit{' '}
                             <a href={getDlorViewPageUrl(dlorUpdatedItem.object_public_uuid)}>
                                 {dlorUpdatedItem.object_title}
@@ -107,33 +98,48 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     </ul>
                 </>
             );
+        } else if (!['ok', 'expired', 'missing', 'used'].includes(dlorUpdatedItem?.response)) {
+            return (
+                <Typography variant={'body1'} data-testid="dlor-confirm-error">
+                    Something seems to have gone wrong - please check your email and try again.
+                </Typography>
+            );
         } else {
-            //  dlorUpdatedItem.response === 'missing':
-            response = (
+            // specifically dlorUpdatedItem.response === 'missing', which should cover all other 200 response cases
+            return (
                 <>
-                    <Typography component={'p'}>
-                        Thank you for your interest in subscribing to our Digital Learning Objects!
+                    <Typography component={'p'} data-testid="dlor-confirm-line-1">
+                        Thank you for your interest in our Digital learning hub.
                     </Typography>
-                    <Typography component={'p'}>
-                        Unfortunately, your confirmation code isn't one that is currently available.
+                    <Typography
+                        component={'p'}
+                        data-testid="dlor-confirm-line-2"
+                        style={{ display: 'flex', alignItems: 'center', marginBlock: 6 }}
+                    >
+                        <ErrorOutlineIcon style={{ fill: '#d62929', marginRight: 6 }} />
+                        <span>Unfortunately, your confirmation code isn't one that is currently available.</span>
                     </Typography>
-                    <Typography component={'p'}>Please check your email and try again.</Typography>
+                    <Typography component={'p'} data-testid="dlor-confirm-line-3">
+                        You could:
+                    </Typography>
+                    <ul style={{ marginTop: 0 }}>
+                        <li data-testid="dlor-confirm-line-3">check your email and try again</li>
+                        <li data-testid="dlor-confirm-line-3">
+                            visit <a href={`${fullPath}/digital-learning-hub`}>our Digital learning hub</a> to view
+                            available objects.
+                        </li>
+                    </ul>
                 </>
             );
         }
-        return response;
     }
 
     return (
         <StandardPage notitle>
-            <StandardCard title="Confirming a Digital Object subscription">
-                <Grid container spacing={1}>
-                    <Grid item xs={12} id="masquerade">
-                        <Grid container spacing={3} alignItems={'flex-end'} style={{ marginTop: 12 }}>
-                            <Grid item xs>
-                                {pageContents(dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem)}
-                            </Grid>
-                        </Grid>
+            <StandardCard title="Confirming your Digital Learning Hub notification request">
+                <Grid container>
+                    <Grid item xs={12}>
+                        {pageContents(dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem)}
                     </Grid>
                 </Grid>
             </StandardCard>

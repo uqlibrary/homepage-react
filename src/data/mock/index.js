@@ -845,13 +845,23 @@ mock.onGet(/dlor\/find\/.*/)
             },
         ];
     })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'error' }).apiUrl)
+    .reply(() => {
+        return [
+            500,
+            {
+                status: 'error',
+                error: 'something went wrong',
+            },
+        ];
+    })
     .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_has_already_been_used' }).apiUrl)
     .reply(() => {
         return [
             200,
             {
                 data: {
-                    response: 'ok',
+                    response: 'used',
                     object_public_uuid: '938h_4986_654f',
                     object_title: 'Artificial Intelligence - Digital Essentials',
                 },
@@ -865,6 +875,20 @@ mock.onGet(/dlor\/find\/.*/)
             {
                 data: {
                     response: 'expired',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+        // includes when they resubscribe on one they have already clicked?
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'an_unexpected_response_type' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'something_unexpected',
                     object_public_uuid: '938h_4986_654f',
                     object_title: 'Artificial Intelligence - Digital Essentials',
                 },
