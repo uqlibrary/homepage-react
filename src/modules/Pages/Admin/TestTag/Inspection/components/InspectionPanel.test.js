@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionPanel from './InspectionPanel';
-import { rtlRender, rerender, act, fireEvent, WithReduxStore, waitFor, within } from 'test-utils';
+import { rtlRender, act, fireEvent, WithReduxStore, waitFor, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';
@@ -134,7 +134,7 @@ describe('InspectionPanel', () => {
             }),
         );
 
-        const { getByTestId } = setup({
+        const { getByTestId, rerender } = setup({
             id: 'test',
             formValues,
             selectedAsset: {},

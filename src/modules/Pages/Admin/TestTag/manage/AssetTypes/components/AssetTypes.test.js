@@ -1,12 +1,10 @@
 import React from 'react';
 import ManageAssetTypes from './AssetTypes';
-import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
-// import assetData from '../../../../../../data/mock/data/testAndTag/testTagAssets';
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import assetTypeData from '../../../../../../../data/mock/data/records/testAndTag/test_tag_asset_types';
-// import configData from '../../../../../../data/mock/data/testAndTag/testTagOnLoadInspection';
 import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
 
@@ -18,7 +16,7 @@ const actions = {
     deleteAndReassignAssetType: jest.fn(() => Promise.resolve()),
     deleteAssetType: jest.fn(() => Promise.resolve()),
 };
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
         testTagUserReducer: {
@@ -38,14 +36,16 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <ManageAssetTypes
-                id="test"
-                actions={actions}
-                assetTypesList={assetTypeData.data}
-                assetTypesListLoading={false}
-                assetTypesListError={null}
-                {...props}
-            />
+            <WithRouter>
+                <ManageAssetTypes
+                    id="test"
+                    actions={actions}
+                    assetTypesList={assetTypeData.data}
+                    assetTypesListLoading={false}
+                    assetTypesListError={null}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

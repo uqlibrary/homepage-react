@@ -1,6 +1,6 @@
 import React from 'react';
 import Inspection from './Inspection';
-import { renderWithRouter, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 import {
     mockAllIsIntersecting,
@@ -54,7 +54,7 @@ const selectOptionFromListByIndex = (index, actions) => {
     });
 };
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -108,24 +108,26 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <Inspection
-                actions={actions}
-                defaultFormValues={defaultFormValues}
-                currentRetestList={currentRetestList}
-                currentAssetOwnersList={currentAssetOwnersList}
-                defaultNextTestDateValue={DEFAULT_NEXT_TEST_DATE_VALUE}
-                assetsListError={assetsListError}
-                inspectionConfig={inspectionConfig}
-                inspectionConfigLoading={inspectionConfigLoading}
-                inspectionConfigError={inspectionConfigError}
-                floorListError={floorListError}
-                roomListError={roomListError}
-                saveInspectionSaving={saveInspectionSaving}
-                saveInspectionSuccess={saveInspectionSuccess}
-                saveInspectionError={saveInspectionError}
-                user={user}
-                {...props}
-            />
+            <WithRouter>
+                <Inspection
+                    actions={actions}
+                    defaultFormValues={defaultFormValues}
+                    currentRetestList={currentRetestList}
+                    currentAssetOwnersList={currentAssetOwnersList}
+                    defaultNextTestDateValue={DEFAULT_NEXT_TEST_DATE_VALUE}
+                    assetsListError={assetsListError}
+                    inspectionConfig={inspectionConfig}
+                    inspectionConfigLoading={inspectionConfigLoading}
+                    inspectionConfigError={inspectionConfigError}
+                    floorListError={floorListError}
+                    roomListError={roomListError}
+                    saveInspectionSaving={saveInspectionSaving}
+                    saveInspectionSuccess={saveInspectionSuccess}
+                    saveInspectionError={saveInspectionError}
+                    user={user}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

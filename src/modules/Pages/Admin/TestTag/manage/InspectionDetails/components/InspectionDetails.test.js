@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionDetails from './InspectionDetails';
-import { renderWithRouter, waitFor, WithReduxStore, userEvent, act } from 'test-utils';
+import { rtlRender, WithRouter, waitFor, WithReduxStore, userEvent, act } from 'test-utils';
 import Immutable from 'immutable';
 import * as tntActions from '../../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
@@ -66,7 +66,7 @@ const mockAPIReturn = [
         last_discard: null,
     },
 ];
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
         testTagUserReducer: {
@@ -93,13 +93,15 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <InspectionDetails
-                actions={actions}
-                assetsList={[]}
-                assetsListLoading={false}
-                assetsListError={null}
-                {...props}
-            />
+            <WithRouter>
+                <InspectionDetails
+                    actions={actions}
+                    assetsList={[]}
+                    assetsListLoading={false}
+                    assetsListError={null}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

@@ -1,147 +1,219 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component Masquerade Should render form as expected 1`] = `
-<StandardPage
-  title="Masquerade"
->
-  <StandardCard
-    noHeader={true}
+<div>
+  <div
+    class="layout-card"
   >
-    <ForwardRef(Grid)
-      container={true}
-      spacing={1}
+    <div
+      class="MuiGrid-root MuiGrid-container css-1bzpx2o-MuiGrid-root"
+      data-testid="StandardPage"
+      id="StandardPage"
     >
-      <ForwardRef(Grid)
-        id="masquerade"
-        item={true}
-        xs={12}
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-title-4 css-1vd824g-MuiGrid-root"
       >
-        <ForwardRef(Typography)>
-          <span>
-            <strong>
-              WARNING!!
-            </strong>
-             When masquerading as a user, you will effectively become that user, and changes you make will apply to the account!
-          </span>
-        </ForwardRef(Typography)>
-        <ForwardRef(Grid)
-          alignItems="flex-end"
-          container={true}
-          spacing={3}
-          style={
-            Object {
-              "marginTop": 12,
-            }
-          }
+        <h1
+          class="MuiTypography-root MuiTypography-h4 makeStyles-layoutTitle-3 css-v0z470-MuiTypography-root"
+          data-testid="StandardPage-title"
         >
-          <ForwardRef(Grid)
-            item={true}
-            xs={true}
+          Masquerade
+        </h1>
+      </div>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+      >
+        <div
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-6 StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+          data-analyticsid="standard-card"
+          data-testid="standard-card"
+          id="standard-card"
+        >
+          <div
+            class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+            data-testid="standard-card-content"
           >
-            <ForwardRef(TextField)
-              data-testid="masquerade-userName"
-              fullWidth={true}
-              id="userName"
-              label="Enter a UQ staff or student username (eg. uqjsmith1 or s123456)"
-              onChange={[Function]}
-              onKeyPress={[Function]}
-              value=""
-              variant="standard"
-            />
-          </ForwardRef(Grid)>
-          <ForwardRef(Grid)
-            item={true}
-            sm="auto"
-            xs={12}
-          >
-            <ForwardRef(Button)
-              color="primary"
-              data-testid="masquerade-submit"
-              disabled={false}
-              fullWidth={true}
-              id="submitMasquerade"
-              onClick={[Function]}
-              variant="contained"
+            <div
+              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-a5rdam-MuiGrid-root"
             >
-              Masquerade
-            </ForwardRef(Button)>
-          </ForwardRef(Grid)>
-        </ForwardRef(Grid)>
-      </ForwardRef(Grid)>
-    </ForwardRef(Grid)>
-  </StandardCard>
-</StandardPage>
+              <div
+                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+                id="masquerade"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+                >
+                  <span>
+                    <strong>
+                      WARNING!!
+                    </strong>
+                     When masquerading as a user, you will effectively become that user, and changes you make will apply to the account!
+                  </span>
+                </p>
+                <div
+                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-1vne64g-MuiGrid-root"
+                  style="margin-top: 12px;"
+                >
+                  <div
+                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1vd824g-MuiGrid-root"
+                  >
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                      data-testid="masquerade-userName"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-yexcec-MuiFormLabel-root-MuiInputLabel-root"
+                        data-shrink="false"
+                        for="userName"
+                        id="userName-label"
+                      >
+                        Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-199lw75-MuiInputBase-root-MuiInput-root"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
+                          id="userName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-pr9bjb-MuiGrid-root"
+                  >
+                    <button
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-fullWidth css-pitokd-MuiButtonBase-root-MuiButton-root"
+                      data-testid="masquerade-submit"
+                      id="submitMasquerade"
+                      tabindex="0"
+                      type="button"
+                    >
+                      Masquerade
+                      <span
+                        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 `;
 
 exports[`Component Masquerade Should render readonly description 1`] = `
-<StandardPage
-  title="Masquerade"
->
-  <StandardCard
-    noHeader={true}
+<div>
+  <div
+    class="layout-card"
   >
-    <ForwardRef(Grid)
-      container={true}
-      spacing={1}
+    <div
+      class="MuiGrid-root MuiGrid-container css-1bzpx2o-MuiGrid-root"
+      data-testid="StandardPage"
+      id="StandardPage"
     >
-      <ForwardRef(Grid)
-        id="masquerade"
-        item={true}
-        xs={12}
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-title-14 css-1vd824g-MuiGrid-root"
       >
-        <ForwardRef(Typography)>
-          <span>
-            <strong>
-              NOTE:
-            </strong>
-             As a read-only masquerader, you can view all parts of the profile, but you are not able to make any changes to the account.
-          </span>
-        </ForwardRef(Typography)>
-        <ForwardRef(Grid)
-          alignItems="flex-end"
-          container={true}
-          spacing={3}
-          style={
-            Object {
-              "marginTop": 12,
-            }
-          }
+        <h1
+          class="MuiTypography-root MuiTypography-h4 makeStyles-layoutTitle-13 css-v0z470-MuiTypography-root"
+          data-testid="StandardPage-title"
         >
-          <ForwardRef(Grid)
-            item={true}
-            xs={true}
+          Masquerade
+        </h1>
+      </div>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+      >
+        <div
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-16 StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+          data-analyticsid="standard-card"
+          data-testid="standard-card"
+          id="standard-card"
+        >
+          <div
+            class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+            data-testid="standard-card-content"
           >
-            <ForwardRef(TextField)
-              data-testid="masquerade-userName"
-              fullWidth={true}
-              id="userName"
-              label="Enter a UQ staff or student username (eg. uqjsmith1 or s123456)"
-              onChange={[Function]}
-              onKeyPress={[Function]}
-              value=""
-              variant="standard"
-            />
-          </ForwardRef(Grid)>
-          <ForwardRef(Grid)
-            item={true}
-            sm="auto"
-            xs={12}
-          >
-            <ForwardRef(Button)
-              color="primary"
-              data-testid="masquerade-submit"
-              disabled={false}
-              fullWidth={true}
-              id="submitMasquerade"
-              onClick={[Function]}
-              variant="contained"
+            <div
+              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-a5rdam-MuiGrid-root"
             >
-              Masquerade
-            </ForwardRef(Button)>
-          </ForwardRef(Grid)>
-        </ForwardRef(Grid)>
-      </ForwardRef(Grid)>
-    </ForwardRef(Grid)>
-  </StandardCard>
-</StandardPage>
+              <div
+                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+                id="masquerade"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+                >
+                  <span>
+                    <strong>
+                      NOTE:
+                    </strong>
+                     As a read-only masquerader, you can view all parts of the profile, but you are not able to make any changes to the account.
+                  </span>
+                </p>
+                <div
+                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-1vne64g-MuiGrid-root"
+                  style="margin-top: 12px;"
+                >
+                  <div
+                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1vd824g-MuiGrid-root"
+                  >
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                      data-testid="masquerade-userName"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-yexcec-MuiFormLabel-root-MuiInputLabel-root"
+                        data-shrink="false"
+                        for="userName"
+                        id="userName-label"
+                      >
+                        Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-199lw75-MuiInputBase-root-MuiInput-root"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
+                          id="userName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-pr9bjb-MuiGrid-root"
+                  >
+                    <button
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-fullWidth css-pitokd-MuiButtonBase-root-MuiButton-root"
+                      data-testid="masquerade-submit"
+                      id="submitMasquerade"
+                      tabindex="0"
+                      type="button"
+                    >
+                      Masquerade
+                      <span
+                        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 `;

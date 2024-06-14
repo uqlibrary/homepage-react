@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-    renderWithRouter,
+    rtlRender,
+    WithRouter,
     WithReduxStore,
     waitFor,
     userEvent,
@@ -43,7 +44,7 @@ import pageConfig from './config';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -84,16 +85,18 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <BulkAssetUpdate
-                id="test"
-                locale={locale}
-                actions={actions}
-                config={config}
-                locationLocale={locationLocale}
-                assetTypeLocale={assetTypeLocale}
-                errorMessageFormatter={errorMessageFormatter}
-                {...props}
-            />
+            <WithRouter>
+                <BulkAssetUpdate
+                    id="test"
+                    locale={locale}
+                    actions={actions}
+                    config={config}
+                    locationLocale={locationLocale}
+                    assetTypeLocale={assetTypeLocale}
+                    errorMessageFormatter={errorMessageFormatter}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }

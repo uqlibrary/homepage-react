@@ -1,6 +1,6 @@
 import React from 'react';
 import PromoPanelEdit from './PromoPanelEdit';
-import { renderWithRouter } from '../../../../../../../utils/test-utils';
+import { rtlRender, WithRouter } from 'test-utils';
 import * as actions from 'data/actions';
 
 function setup(testProps = {}) {
@@ -18,7 +18,11 @@ function setup(testProps = {}) {
         promoPanelUserTypesError: null,
         promoPanelActionError: null,
     };
-    return renderWithRouter(<PromoPanelEdit {...props} {...testProps} />);
+    return rtlRender(
+        <WithRouter>
+            <PromoPanelEdit {...props} {...testProps} />
+        </WithRouter>,
+    );
 }
 
 describe('Promo Panel Edit Container', () => {
