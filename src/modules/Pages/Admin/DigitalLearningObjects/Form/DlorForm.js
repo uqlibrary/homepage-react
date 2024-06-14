@@ -129,7 +129,6 @@ export const DlorForm = ({
 
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
 
-    const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showTeamForm, setShowTeamForm] = useState(false); // enable-disable the Team creation fields
 
     // show-hide the File Type creation fields
@@ -173,6 +172,11 @@ export const DlorForm = ({
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
     }, [dlorItemSaving, dlorSavedItemError, dlorSavedItem]);
 
+    function setInteractionTypeDisplays(value) {
+        linkInteractionTypeSelectRef.current = value;
+        setShowLinkTimeForm(value === linkInteractionTypeVIEW);
+        setShowLinkSizeForm(value === linkInteractionTypeDOWNLOAD);
+    }
     useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
             setConfirmationOpen(false);
@@ -236,9 +240,122 @@ export const DlorForm = ({
         },
     };
 
+    const isValidUsername = testUserName => {
+        return testUserName?.length >= 4 && testUserName?.length <= 8;
+    };
+
+    function validatePanelOwnership(currentValues) {
+        let firstPanelErrorCount = 0;
+        // valid user id is 8 or 9 char
+        !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
+        if (teamSelectRef.current === 'new') {
+            if (
+                currentValues?.team_name_new === undefined ||
+                !currentValues?.team_name_new ||
+                currentValues?.team_name_new?.length < 1
+            ) {
+                firstPanelErrorCount++;
+            }
+            if (
+                currentValues?.team_manager_new === undefined ||
+                !currentValues?.team_manager_new ||
+                currentValues?.team_manager_new?.length < 1
+            ) {
+                firstPanelErrorCount++;
+            }
+            (currentValues?.team_email_new === undefined ||
+                !currentValues?.team_email_new ||
+                currentValues?.team_email_new?.length < 1 ||
+                !isValidEmail(currentValues?.team_email_new)) &&
+                firstPanelErrorCount++;
+        } else if (mode === 'edit') {
+            currentValues?.team_manager_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
+            (currentValues?.team_email_edit?.length < 1 || !isValidEmail(currentValues?.team_email_edit)) &&
+                firstPanelErrorCount++;
+        }
+        return firstPanelErrorCount;
+    }
+
+    function validatePanelDescription(currentValues) {
+        let secondPanelErrorCount = 0;
+        currentValues?.object_title?.length < titleMinimumLength && secondPanelErrorCount++;
+        html2text.fromString(currentValues?.object_description)?.length < descriptionMinimumLength &&
+            secondPanelErrorCount++;
+        currentValues?.object_summary?.length < summaryMinimumLength && secondPanelErrorCount++;
+        return secondPanelErrorCount;
+    }
+
+    function validatePanelLinks(currentValues) {
+        let thirdPanelErrorCount = 0;
+        !isValidUrl(currentValues?.object_link_url) && thirdPanelErrorCount++;
+
+        [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(currentValues?.object_link_interaction_type) &&
+            (!currentValues?.object_link_file_type ||
+                (currentValues?.object_link_file_type === 'new' && !currentValues?.new_file_type)) &&
+            thirdPanelErrorCount++;
+
+        // if minutes and seconds are both zero, error, otherwise zero allowed
+        currentValues.object_link_interaction_type === linkInteractionTypeVIEW &&
+            (!isValidNumber(currentValues?.object_link_duration_minutes, true) ||
+                !isValidNumber(currentValues?.object_link_duration_seconds, true) ||
+                !isValidNumber(
+                    Number(currentValues?.object_link_duration_minutes) +
+                        Number(currentValues?.object_link_duration_seconds),
+                )) &&
+            thirdPanelErrorCount++;
+
+        currentValues.object_link_interaction_type === linkInteractionTypeDOWNLOAD &&
+        !isValidNumber(currentValues?.object_link_size_amount) &&
+        !currentValues?.object_link_size_unit && // needs valid check here?
+            thirdPanelErrorCount++;
+        return thirdPanelErrorCount;
+    }
+
+    function validatePanelFiltering(currentValues) {
+        let fourthPanelErrorCount = 0;
+        currentValues?.object_keywords_string?.length < keywordMinimumLength && fourthPanelErrorCount++;
+
+        function isDeepStructure(variable) {
+            return Array.isArray(variable) ? typeof variable[0] === 'object' && variable[0] !== null : false;
+        }
+
+        // check the required facets are checked
+        !!dlorFilterList &&
+            dlorFilterList.forEach(filterType => {
+                if (!!filterType.facet_type_required) {
+                    const possibleFacetIds = filterType.facet_list.map(facet => facet.facet_id);
+                    let hasMatch;
+                    if (mode === 'add') {
+                        hasMatch = currentValues?.facets?.some(selectedFacet => {
+                            return possibleFacetIds.includes(selectedFacet);
+                        });
+                    } else {
+                        // edit
+                        if (isDeepStructure(currentValues?.facets)) {
+                            const justFacetIds = !!currentValues?.facets && flatMapFacets(currentValues?.facets);
+                            hasMatch = justFacetIds?.some(id => {
+                                return possibleFacetIds?.includes(id);
+                            });
+                        } else {
+                            hasMatch = currentValues?.facets?.some(id => {
+                                return possibleFacetIds?.includes(id);
+                            });
+                        }
+                    }
+                    if (!hasMatch) {
+                        fourthPanelErrorCount++;
+                    }
+                }
+            });
+        return fourthPanelErrorCount;
+    }
+
     const handleEditorChange = (fieldname, newContent) => {
         setSummarySuggestionOpen(true);
-        resetForm(fieldname, newContent);
+        // amalgamate new value into data set
+        const newValues = { ...formValues, [fieldname]: newContent };
+
+        setFormValues(newValues);
     };
 
     const handleFacetChange = () => e => {
@@ -276,15 +393,8 @@ export const DlorForm = ({
             };
         }
         checkBoxArrayRef.current = current;
-        setFormValidity(validateValues(newValues));
         setFormValues(newValues);
     };
-
-    function setInteractionTypeDisplays(value) {
-        linkInteractionTypeSelectRef.current = value;
-        setShowLinkTimeForm(value === linkInteractionTypeVIEW);
-        setShowLinkSizeForm(value === linkInteractionTypeDOWNLOAD);
-    }
 
     const handleChange = prop => e => {
         let theNewValue =
@@ -319,11 +429,10 @@ export const DlorForm = ({
             setShowFileTypeCreationForm(theNewValue === 'new');
         }
 
-        resetForm(prop, theNewValue);
-    };
+        // amalgamate new value into data set
+        const newValues = { ...formValues, [prop]: theNewValue };
 
-    const isValidUsername = testUserName => {
-        return testUserName?.length >= 4 && testUserName?.length <= 8;
+        setFormValues(newValues);
     };
 
     const controlEditTeamDialog = () => {
@@ -335,13 +444,11 @@ export const DlorForm = ({
 
         setShowTeamForm(teamSelectRef.current);
 
-        // initialise values in form - duplicate code in resetForm for single call
         const newValues = {
             ...formValues,
             team_manager_edit: !!formValues ? formValues.team_manager_edit : /* istanbul ignore next */ '',
             team_email_edit: !!formValues ? formValues.team_email_edit : /* istanbul ignore next */ '',
         };
-        setFormValidity(validateValues(newValues));
         setFormValues(newValues);
     };
 
@@ -534,19 +641,14 @@ export const DlorForm = ({
         return slice;
     };
 
-    function resetForm(prop, theNewValue) {
-        // amalgamate new value into data set
-        const newValues = { ...formValues, [prop]: theNewValue };
-
-        setFormValidity(validateValues(newValues));
-        setFormValues(newValues);
-    }
-
     const useSuggestion = () => {
         const newSummary = suggestSummary(formValues?.object_description);
         setSummaryContent(newSummary);
-        // handleChange('object_summary', e);
-        resetForm('object_summary', newSummary);
+        // amalgamate new value into data set
+        const newValues = { ...formValues, ['object_summary']: newSummary };
+
+        setFormValues(newValues);
+
         setSummarySuggestionOpen(false);
     };
 
@@ -968,6 +1070,63 @@ export const DlorForm = ({
         </>
     );
 
+    function displayControlByFacetType(filterItem) {
+        const facetIsSet = findId => {
+            return checkBoxArrayRef.current.includes(findId);
+            // return facets?.some(ff => ff?.filter_values?.some(value => value?.id === findId));
+        };
+
+        let result = <></>;
+        /* istanbul ignore else */
+        if (filterItem?.facet_type_number === 'one-or-more' || filterItem?.facet_type_number === 'zero-or-more') {
+            result =
+                !!filterItem.facet_list &&
+                filterItem.facet_list.map(thisfacet => {
+                    return (
+                        <FormControlLabel
+                            key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
+                            className={classes.facetControl}
+                            control={
+                                <Checkbox
+                                    onChange={handleFacetChange(thisfacet.facet_id)}
+                                    id={`filter-${thisfacet.facet_id}`}
+                                    data-testid={`filter-${thisfacet.facet_id}`}
+                                    checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)}
+                                />
+                            }
+                            label={thisfacet.facet_name}
+                        />
+                    );
+                });
+        } else if (filterItem?.facet_type_number === 'exactly-one') {
+            const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
+            result = (
+                <RadioGroup
+                    aria-labelledby={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
+                    name={radioGroupName}
+                    value={filterItem.facet_id}
+                    onChange={handleFacetChange(filterItem.id)}
+                >
+                    {filterItem?.facet_list?.map(thisfacet => {
+                        return (
+                            <FormControlLabel
+                                key={thisfacet.facet_id}
+                                className={classes.facetControl}
+                                control={<Radio checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)} />}
+                                value={thisfacet.facet_id}
+                                data-testid={`filter-${thisfacet.facet_id}`}
+                                label={thisfacet.facet_name}
+                            />
+                        );
+                    })}
+                </RadioGroup>
+            );
+        } else {
+            result = <>unknown facet type</>;
+        }
+        return result;
+    }
+
     const stepPanelContentFilters = (
         <>
             <Grid item xs={12}>
@@ -1044,8 +1203,6 @@ export const DlorForm = ({
     ];
     const [activeStep, setActiveStep] = useState(0);
 
-    const [panelValidity, setPanelValidity] = useState(new Array(steps?.length).fill(true));
-
     useEffect(() => {
         /* istanbul ignore else */
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
@@ -1067,7 +1224,6 @@ export const DlorForm = ({
 
     /* istanbul ignore next */
     useEffect(() => {
-        setFormValidity(validateValues(formDefaults));
         const isFileTypeSet =
             [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                 formDefaults?.object_link_interaction_type || null,
@@ -1078,14 +1234,8 @@ export const DlorForm = ({
             setShowFileTypeCreationForm(true);
             formDefaults.object_link_file_type = 'new';
         }
-    }, [formDefaults, validateValues]);
-
-    useEffect(() => {
-        // this is needed to get the validation badges after the filter list loads
-        if (!!dlorFilterList && dlorFilterList.length > 0) {
-            setFormValidity(validateValues(formDefaults));
-        }
-    }, [dlorFilterList, formDefaults, validateValues]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formDefaults]);
 
     useEffect(() => {
         if ((!!dlorSavedItem && !!dlorSavedItem.data?.object_id) || !!dlorSavedItemError) {
@@ -1197,188 +1347,6 @@ export const DlorForm = ({
         window.location.reload(false);
     };
 
-    const validateValues = currentValues => {
-        let firstPanelErrorCount = 0;
-        // valid user id is 8 or 9 char
-        !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
-        if (teamSelectRef.current === 'new') {
-            if (
-                currentValues?.team_name_new === undefined ||
-                !currentValues?.team_name_new ||
-                currentValues?.team_name_new?.length < 1
-            ) {
-                firstPanelErrorCount++;
-            }
-            if (
-                currentValues?.team_manager_new === undefined ||
-                !currentValues?.team_manager_new ||
-                currentValues?.team_manager_new?.length < 1
-            ) {
-                firstPanelErrorCount++;
-            }
-            (currentValues?.team_email_new === undefined ||
-                !currentValues?.team_email_new ||
-                currentValues?.team_email_new?.length < 1 ||
-                !isValidEmail(currentValues?.team_email_new)) &&
-                firstPanelErrorCount++;
-        } else if (mode === 'edit') {
-            currentValues?.team_manager_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
-            (currentValues?.team_email_edit?.length < 1 || !isValidEmail(currentValues?.team_email_edit)) &&
-                firstPanelErrorCount++;
-        }
-
-        let secondPanelErrorCount = 0;
-        currentValues?.object_title?.length < titleMinimumLength && secondPanelErrorCount++;
-        html2text.fromString(currentValues?.object_description)?.length < descriptionMinimumLength &&
-            secondPanelErrorCount++;
-        currentValues?.object_summary?.length < summaryMinimumLength && secondPanelErrorCount++;
-
-        let thirdPanelErrorCount = 0;
-        !isValidUrl(currentValues?.object_link_url) && thirdPanelErrorCount++;
-
-        [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(currentValues?.object_link_interaction_type) &&
-            (!currentValues?.object_link_file_type ||
-                (currentValues?.object_link_file_type === 'new' && !currentValues?.new_file_type)) &&
-            thirdPanelErrorCount++;
-
-        // if minutes and seconds are both zero, error, otherwise zero allowed
-        currentValues.object_link_interaction_type === linkInteractionTypeVIEW &&
-            (!isValidNumber(currentValues?.object_link_duration_minutes, true) ||
-                !isValidNumber(currentValues?.object_link_duration_seconds, true) ||
-                !isValidNumber(
-                    Number(currentValues?.object_link_duration_minutes) +
-                        Number(currentValues?.object_link_duration_seconds),
-                )) &&
-            thirdPanelErrorCount++;
-
-        currentValues.object_link_interaction_type === linkInteractionTypeDOWNLOAD &&
-        !isValidNumber(currentValues?.object_link_size_amount) &&
-        !currentValues?.object_link_size_unit && // needs valid check here?
-            thirdPanelErrorCount++;
-
-        let fourthPanelErrorCount = 0;
-        currentValues?.object_keywords_string?.length < keywordMinimumLength && fourthPanelErrorCount++;
-
-        function isDeepStructure(variable) {
-            return Array.isArray(variable) ? typeof variable[0] === 'object' && variable[0] !== null : false;
-        }
-
-        // check the required facets are checked
-        !!dlorFilterList &&
-            dlorFilterList.forEach(filterType => {
-                if (!!filterType.facet_type_required) {
-                    const possibleFacetIds = filterType.facet_list.map(facet => facet.facet_id);
-                    let hasMatch;
-                    if (mode === 'add') {
-                        hasMatch = currentValues?.facets?.some(selectedFacet => {
-                            return possibleFacetIds.includes(selectedFacet);
-                        });
-                    } else {
-                        // edit
-                        if (isDeepStructure(currentValues?.facets)) {
-                            const justFacetIds = !!currentValues?.facets && flatMapFacets(currentValues?.facets);
-                            hasMatch = justFacetIds?.some(id => {
-                                return possibleFacetIds?.includes(id);
-                            });
-                        } else {
-                            hasMatch = currentValues?.facets?.some(id => {
-                                return possibleFacetIds?.includes(id);
-                            });
-                        }
-                    }
-                    if (!hasMatch) {
-                        fourthPanelErrorCount++;
-                    }
-                }
-            });
-
-        setPanelValidity([firstPanelErrorCount, secondPanelErrorCount, thirdPanelErrorCount, fourthPanelErrorCount]);
-
-        return (
-            firstPanelErrorCount === 0 &&
-            secondPanelErrorCount === 0 &&
-            thirdPanelErrorCount === 0 &&
-            fourthPanelErrorCount === 0
-        );
-    };
-
-    function displayControlByFacetType(filterItem) {
-        const facetIsSet = findId => {
-            return checkBoxArrayRef.current.includes(findId);
-            // return facets?.some(ff => ff?.filter_values?.some(value => value?.id === findId));
-        };
-
-        let result = <></>;
-        /* istanbul ignore else */
-        if (filterItem?.facet_type_number === 'one-or-more') {
-            result =
-                !!filterItem.facet_list &&
-                filterItem.facet_list.map(thisfacet => {
-                    return (
-                        <FormControlLabel
-                            key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
-                            className={classes.facetControl}
-                            control={
-                                <Checkbox
-                                    onChange={handleFacetChange(thisfacet.facet_id)}
-                                    id={`filter-${thisfacet.facet_id}`}
-                                    data-testid={`filter-${thisfacet.facet_id}`}
-                                    checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)}
-                                />
-                            }
-                            label={thisfacet.facet_name}
-                        />
-                    );
-                });
-        } else if (filterItem?.facet_type_number === 'zero-or-more') {
-            result =
-                !!filterItem.facet_list &&
-                filterItem.facet_list.map(thisfacet => {
-                    return (
-                        <FormControlLabel
-                            key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
-                            className={classes.facetControl}
-                            control={
-                                <Checkbox
-                                    onChange={handleFacetChange(thisfacet.facet_id)}
-                                    id={`filter-${thisfacet.facet_id}`}
-                                    data-testid={`filter-${thisfacet.facet_id}`}
-                                    checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)}
-                                />
-                            }
-                            label={thisfacet.facet_name}
-                        />
-                    );
-                });
-        } else if (filterItem?.facet_type_number === 'exactly-one') {
-            const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
-            result = (
-                <RadioGroup
-                    aria-labelledby={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
-                    name={radioGroupName}
-                    value={filterItem.facet_id}
-                    onChange={handleFacetChange(filterItem.id)}
-                >
-                    {filterItem?.facet_list?.map(thisfacet => {
-                        return (
-                            <FormControlLabel
-                                key={thisfacet.facet_id}
-                                className={classes.facetControl}
-                                control={<Radio checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)} />}
-                                value={thisfacet.facet_id}
-                                data-testid={`filter-${thisfacet.facet_id}`}
-                                label={thisfacet.facet_name}
-                            />
-                        );
-                    })}
-                </RadioGroup>
-            );
-        } else {
-            result = <>unknown facet type</>;
-        }
-        return result;
-    }
-
     const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
     const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
 
@@ -1411,6 +1379,19 @@ export const DlorForm = ({
         );
     }
 
+    function panelErrorCount(index) {
+        if (index === 0) {
+            return validatePanelOwnership(formValues);
+        } else if (index === 1) {
+            return validatePanelDescription(formValues);
+        } else if (index === 2) {
+            return validatePanelLinks(formValues);
+        } else {
+            // index must = 3
+            return validatePanelFiltering(formValues);
+        }
+    }
+
     return (
         <>
             <ConfirmationBox
@@ -1437,12 +1418,12 @@ export const DlorForm = ({
                                 return (
                                     <Step key={step.label} {...stepProps} style={{ paddingRight: 25 }}>
                                         <StepLabel {...labelProps}>
-                                            {panelValidity[index] === 0 ? (
+                                            {panelErrorCount(index) === 0 ? (
                                                 <span>{step.label}</span>
                                             ) : (
                                                 <Badge
                                                     color="error"
-                                                    badgeContent={panelValidity[index]}
+                                                    badgeContent={panelErrorCount(index)}
                                                     className={classes.errorCount}
                                                     data-testid={`dlor-panel-validity-indicator-${index}`}
                                                 >
@@ -1474,7 +1455,12 @@ export const DlorForm = ({
                                     data-testid="admin-dlor-save-button-submit"
                                     variant="contained"
                                     children="Save"
-                                    disabled={!isFormValid}
+                                    disabled={
+                                        validatePanelOwnership(formValues) > 0 ||
+                                        validatePanelDescription(formValues) > 0 ||
+                                        validatePanelLinks(formValues) > 0 ||
+                                        validatePanelFiltering(formValues) > 0
+                                    }
                                     onClick={saveDlor}
                                     // className={classes.saveButton}
                                 />
