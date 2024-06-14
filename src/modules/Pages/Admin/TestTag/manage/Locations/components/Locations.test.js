@@ -262,9 +262,9 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
@@ -297,9 +297,9 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
@@ -344,9 +344,8 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
@@ -393,9 +392,8 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
@@ -446,16 +444,15 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
@@ -499,15 +496,15 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
@@ -560,15 +557,14 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
@@ -620,15 +616,14 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
@@ -679,23 +674,21 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-floor-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
@@ -736,21 +729,21 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-floor-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
@@ -807,21 +800,20 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-floor-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
@@ -876,21 +868,20 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-floor-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
