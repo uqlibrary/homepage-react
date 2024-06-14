@@ -62,7 +62,8 @@ export const flattedPathConfig = [
     '/admin/promopanel/view',
     '/admin/promopanel/clone',
     '/digital-learning-hub/view',
-    '/digital-learning-hub/confirm',
+    '/digital-learning-hub/confirm/subscribe',
+    // '/digital-learning-hub/confirm/unsubscribe',
     '/exams/course',
 ];
 
