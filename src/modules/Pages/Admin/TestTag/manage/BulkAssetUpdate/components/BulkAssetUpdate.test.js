@@ -6,7 +6,6 @@ import {
     waitFor,
     userEvent,
     within,
-    act,
     waitForElementToBeRemoved,
 } from 'test-utils';
 import Immutable from 'immutable';
@@ -211,9 +210,7 @@ describe('BulkAssetUpdate', () => {
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
         userEvent.click(within(frow2).getByLabelText('Select row'));
 
-        act(() => {
-            userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
-        });
+        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
 
         await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update'));
 
@@ -321,9 +318,8 @@ describe('BulkAssetUpdate', () => {
         // submit button
         expect(getByTestId('bulk_asset_update-submit-button')).not.toHaveAttribute('disabled');
 
-        act(() => {
-            userEvent.click(getByTestId('bulk_asset_update-submit-button'));
-        });
+        await userEvent.click(getByTestId('bulk_asset_update-submit-button'));
+
         // confirmation panel
         await findByTestId('dialogbox-bulk-asset-update');
 
@@ -409,9 +405,7 @@ describe('BulkAssetUpdate', () => {
         // submit button
         expect(getByTestId('bulk_asset_update-submit-button')).not.toHaveAttribute('disabled');
 
-        act(() => {
-            userEvent.click(getByTestId('bulk_asset_update-submit-button'));
-        });
+        await userEvent.click(getByTestId('bulk_asset_update-submit-button'));
 
         // confirmation panel
         await findByTestId('dialogbox-bulk-asset-update');
