@@ -33,8 +33,13 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
             );
         } else if (!!dlorUpdatedItemError) {
             return (
-                <Typography variant={'body1'} data-testid="dlor-confirm-error">
-                    {dlorUpdatedItemError}
+                <Typography
+                    variant={'body1'}
+                    data-testid="dlor-confirm-error"
+                    style={{ display: 'flex', alignItems: 'center', marginBlock: 6 }}
+                >
+                    <ErrorOutlineIcon style={{ fill: '#d62929', marginRight: 6 }} />
+                    <span>{dlorUpdatedItemError}</span>
                 </Typography>
             );
         } else if (dlorUpdatedItem.response === 'ok') {
@@ -100,8 +105,13 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
             );
         } else if (!['ok', 'expired', 'missing', 'used'].includes(dlorUpdatedItem?.response)) {
             return (
-                <Typography variant={'body1'} data-testid="dlor-confirm-error">
-                    Something seems to have gone wrong - please check your email and try again.
+                <Typography
+                    variant={'body1'}
+                    data-testid="dlor-confirm-error"
+                    style={{ display: 'flex', alignItems: 'center', marginBlock: 6 }}
+                >
+                    <ErrorOutlineIcon style={{ fill: '#d62929', marginRight: 6 }} />
+                    <span>Something seems to have gone wrong - please check your email and try again.</span>
                 </Typography>
             );
         } else {
