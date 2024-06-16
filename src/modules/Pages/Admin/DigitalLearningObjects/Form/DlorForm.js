@@ -127,7 +127,7 @@ export const DlorForm = ({
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
 
-    const [confirmationOpen, setConfirmationOpen] = React.useState(false);
+    const [confirmationOpen, setConfirmationOpen] = useState(false);
 
     const [showTeamForm, setShowTeamForm] = useState(false); // enable-disable the Team creation fields
 

@@ -119,11 +119,6 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         showDeleteFailureConfirmation,
         hideDeleteFailureConfirmation,
     ] = useConfirmationState();
-    const [
-        isDeleteFailureConfirmationConfirmationOpen,
-        showDeleteFailureConfirmationConfirmation,
-        hideDeleteFailureConfirmationConfirmation,
-    ] = useConfirmationState();
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
@@ -152,6 +147,10 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         showDeleteConfirmation();
     };
 
+    const deleteADlor = dlorId => {
+        return actions.deleteDlor(dlorId);
+    };
+
     const deleteSelectedObject = () => {
         !!objectToDelete &&
             deleteADlor(objectToDelete)
@@ -167,11 +166,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                 });
     };
 
-    const deleteADlor = dlorId => {
-        return actions.deleteDlor(dlorId);
-    };
-
-    const handleStatusTypeChange = checkedType => e => {
+    const handleStatusTypeChange = checkedType => () => {
         const checkedTypeId = statusTypes.findIndex(object => object.type === checkedType);
 
         const newStatusTypeSet = checkedStatusType.map((itemCurrentCheckedness, index) =>
@@ -182,14 +177,39 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
 
     const numberItemsPerPage = 10; // value also set in cypress dlorHomepage.spec
 
-    function filterOnKeyword(filteredDlorList) {
-        if (!!keywordSearch && !!keywordIsSearchable(keywordSearch)) {
-            filteredDlorList = filteredDlorList.filter(t => keywordFoundIn(t, keywordSearch));
-        }
-        return filteredDlorList;
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword?.length > 1;
     }
 
-    const filterDLorList = (dlorlistToFilter, pageloadShown) => {
+    const keywordFoundIn = (object, enteredKeyword) => {
+        const enteredKeywordLower = enteredKeyword.toLowerCase();
+        if (
+            object.object_title.toLowerCase().includes(enteredKeywordLower) ||
+            object.object_description.toLowerCase().includes(enteredKeywordLower) ||
+            object.object_summary.toLowerCase().includes(enteredKeywordLower)
+        ) {
+            return true;
+        }
+        if (
+            !!object?.object_keywords?.some(k => {
+                return k.toLowerCase().startsWith(enteredKeywordLower);
+            })
+        ) {
+            return true;
+        }
+        return false;
+    };
+
+    function filterOnKeyword(filteredDlorList) {
+        let _filteredDlorList = filteredDlorList;
+        if (!!keywordSearch && !!keywordIsSearchable(keywordSearch)) {
+            _filteredDlorList = filteredDlorList.filter(t => keywordFoundIn(t, keywordSearch));
+        }
+        return _filteredDlorList;
+    }
+
+    const filterDLorList = dlorlistToFilter => {
         const requestedStatuses = statusTypes
             .filter((type, index) => checkedStatusType[index] === true)
             .map(t => t.type);
@@ -217,28 +237,10 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         topOfBodyElement?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    function keywordIsSearchable(keyword) {
-        // don't filter on something terribly short
-        return keyword?.length > 1;
-    }
-
-    const keywordFoundIn = (object, enteredKeyword) => {
-        const enteredKeywordLower = enteredKeyword.toLowerCase();
-        if (
-            object.object_title.toLowerCase().includes(enteredKeywordLower) ||
-            object.object_description.toLowerCase().includes(enteredKeywordLower) ||
-            object.object_summary.toLowerCase().includes(enteredKeywordLower)
-        ) {
-            return true;
-        }
-        if (
-            !!object?.object_keywords?.some(k => {
-                return k.toLowerCase().startsWith(enteredKeywordLower);
-            })
-        ) {
-            return true;
-        }
-        return false;
+    const clearKeywordField = () => {
+        setKeywordSearch('');
+        keyWordSearchRef.current.value = '';
+        setPaginationPage(1);
     };
 
     const handleKeywordSearch = e => {
@@ -253,12 +255,6 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                 clearKeywordField();
             }
         }
-    };
-
-    const clearKeywordField = () => {
-        setKeywordSearch('');
-        keyWordSearchRef.current.value = '';
-        setPaginationPage(1);
     };
 
     return (
@@ -562,6 +558,7 @@ DLOAdminHomepage.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
+    dlorItemDeleteError: PropTypes.any,
 };
 
 export default DLOAdminHomepage;

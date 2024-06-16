@@ -345,7 +345,7 @@ export const DLOList = ({
 
             setFilterListTrimmed(trimmedFilterList);
         }
-    }, [dlorList, dlorFilterList]);
+    }, [dlorList, dlorFilterList, dlorListError, dlorListLoading, dlorFilterListError, dlorFilterListLoading, actions]);
 
     function hideElement(element, displayproperty = null) {
         /* istanbul ignore next */
@@ -476,6 +476,12 @@ export const DLOList = ({
         return false;
     };
 
+    const clearKeywordField = () => {
+        setKeywordSearch('');
+        keyWordSearchRef.current.value = '';
+        setPaginationPage(1); // set pagination back to page 1
+    };
+
     const handleKeywordSearch = e => {
         const keyword = e?.target?.value;
 
@@ -490,12 +496,6 @@ export const DLOList = ({
         }
 
         keyWordSearchRef.current.value = keyword;
-    };
-
-    const clearKeywordField = () => {
-        setKeywordSearch('');
-        keyWordSearchRef.current.value = '';
-        setPaginationPage(1); // set pagination back to page 1
     };
 
     const handleCheckboxAction = prop => e => {
@@ -546,6 +546,28 @@ export const DLOList = ({
         // close help dialogs
         dlorFilterList.forEach(f => closeHelpText(f));
     }
+
+    const getPublicHelp = facetTypeSlug => {
+        let result = '';
+        /* istanbul ignore else */
+        if (!!filterListTrimmed) {
+            result = filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()
+                ?.facet_type_help_public;
+        }
+        return result;
+    };
+
+    const getFacetTypeIcon = facetTypeSlug => {
+        const iconList = {
+            item_type: <LaptopIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            media_format: <DescriptionIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            licence: <CopyrightIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            topic: <TopicIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            graduate_attributes: <SchoolSharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            subject: <LocalLibrarySharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+        };
+        return iconList[facetTypeSlug];
+    };
 
     function displayFilterSidebarContents() {
         return (
@@ -774,28 +796,6 @@ export const DLOList = ({
             return index >= startIndex && index < endIndex;
         });
         return paginatedFilteredDlorList;
-    };
-
-    const getPublicHelp = facetTypeSlug => {
-        let result = '';
-        /* istanbul ignore else */
-        if (!!filterListTrimmed) {
-            result = filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()
-                ?.facet_type_help_public;
-        }
-        return result;
-    };
-
-    const getFacetTypeIcon = facetTypeSlug => {
-        const iconList = {
-            item_type: <LaptopIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            media_format: <DescriptionIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            licence: <CopyrightIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            topic: <TopicIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            graduate_attributes: <SchoolSharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            subject: <LocalLibrarySharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-        };
-        return iconList[facetTypeSlug];
     };
 
     function navigateToDetailPage(uuid) {
