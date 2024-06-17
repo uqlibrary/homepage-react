@@ -579,11 +579,7 @@ export const DLOList = ({
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <span
-                            id="filterIconHideId"
-                            data-testid="filterIconHideId"
-                            className={classes.hideFilterSidebarIcon}
-                        >
+                        <span data-testid="sidebar-filter-icon-hide-id" className={classes.hideFilterSidebarIcon}>
                             <IconButton aria-label="hide the filters" onClick={() => hideFilters()}>
                                 <CloseIcon />
                             </IconButton>
@@ -1005,7 +1001,7 @@ export const DLOList = ({
                         md={3}
                         className={classes.filterSidebar}
                         id="filterSidebar"
-                        data-testid="filterSidebar"
+                        data-testid="sidebar-filter"
                     >
                         {(() => {
                             if (!!dlorFilterListError || !filterListTrimmed || filterListTrimmed.length === 0) {
@@ -1101,7 +1097,7 @@ export const DLOList = ({
                                             >
                                                 <div
                                                     id="filterIconShowId"
-                                                    data-testid="filterIconShowId"
+                                                    data-testid="sidebar-filter-icon"
                                                     className={classes.showFilterSidebarIcon}
                                                 >
                                                     <IconButton
