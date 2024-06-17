@@ -617,7 +617,10 @@ export const DLOList = ({
                                                 <IconButton
                                                     aria-label="View facet help"
                                                     onClick={() => openHelpText(facetType)}
-                                                    data-testid={sidebarElementId(index, 'panel-help-icon')}
+                                                    data-testid={sidebarElementId(
+                                                        facetType?.facet_type_slug,
+                                                        'panel-help-icon',
+                                                    )}
                                                 >
                                                     <HelpOutlineIcon size="small" />
                                                 </IconButton>
@@ -629,7 +632,10 @@ export const DLOList = ({
                                             style={{ display: 'none' }}
                                         >
                                             <button
-                                                data-testid={sidebarElementId(index, 'panel-help-close')}
+                                                data-testid={sidebarElementId(
+                                                    facetType?.facet_type_slug,
+                                                    'panel-help-close',
+                                                )}
                                                 onClick={
                                                     /* istanbul ignore next */ () =>
                                                         /* istanbul ignore next */ closeHelpText(facetType)
@@ -648,12 +654,18 @@ export const DLOList = ({
                                                     ? filterMinimiseButtonLabel
                                                     : filterMaximiseButtonLabel
                                             }
-                                            data-testid={sidebarElementId(index, 'panel-minimisation-icon')}
+                                            data-testid={sidebarElementId(
+                                                facetType?.facet_type_slug,
+                                                'panel-minimisation-icon',
+                                            )}
                                             onClick={() => showHidePanel(index)}
                                         >
                                             <KeyboardArrowUpIcon
                                                 id={sidebarElementId(index, 'panel-uparrow')}
-                                                data-testid={sidebarElementId(index, 'panel-uparrow')}
+                                                data-testid={sidebarElementId(
+                                                    facetType?.facet_type_slug,
+                                                    'panel-uparrow',
+                                                )}
                                                 style={
                                                     isFirstFilterPanel(index)
                                                         ? {}
@@ -667,7 +679,10 @@ export const DLOList = ({
                                             />
                                             <KeyboardArrowDownIcon
                                                 id={sidebarElementId(index, 'panel-downarrow')}
-                                                data-testid={sidebarElementId(index, 'panel-downarrow')}
+                                                data-testid={sidebarElementId(
+                                                    facetType?.facet_type_slug,
+                                                    'panel-downarrow',
+                                                )}
                                                 style={
                                                     isFirstFilterPanel(index)
                                                         ? {
@@ -685,7 +700,7 @@ export const DLOList = ({
                                 <div
                                     className={classes.filterSidebarCheckboxWrapper}
                                     id={sidebarElementId(index)}
-                                    data-testid={sidebarElementId(index)}
+                                    data-testid={sidebarElementId(facetType?.facet_type_slug)}
                                     style={
                                         isFirstFilterPanel(index)
                                             ? {}
@@ -708,7 +723,9 @@ export const DLOList = ({
                                                             aria-label={'Include'}
                                                             // value={facet?.facet_name}
                                                             value={facet?.facet_id}
-                                                            data-testid={`checkbox-${facetType?.facet_type_slug}-${facet?.facet_id}`}
+                                                            data-testid={`checkbox-${
+                                                                facetType?.facet_type_slug
+                                                            }-${slugifyName(facet?.facet_name)}`}
                                                             ref={checkBoxArrayRef.current[checkBoxidShort]}
                                                             checked={
                                                                 !!checkBoxArrayRef.current?.includes(checkBoxidShort)
@@ -738,6 +755,7 @@ export const DLOList = ({
             .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
             .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
             .replace(/^-+/, '') // Trim hyphens from the start of the text
+            .replace(/\//, '') // Trim slashes
             .replace(/-+$/, '');
     };
 

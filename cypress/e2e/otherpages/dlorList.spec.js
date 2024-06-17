@@ -158,39 +158,39 @@ describe('Digital Learning Hub', () => {
                 .contains('Filters');
 
             // sidebar topic panel loads hidden
-            cy.get('[data-testid="sidebar-panel-0"]')
+            cy.get('[data-testid="sidebar-panel-topic"]')
                 .should('exist')
                 .contains('Aboriginal and Torres Strait Islander')
                 .should('be.visible');
 
             // click button, hide panel
-            cy.get('[data-testid="panel-minimisation-icon-0"]')
+            cy.get('[data-testid="panel-minimisation-icon-topic"]')
                 .should('exist')
                 .click();
-            cy.get('[data-testid="sidebar-panel-0"]')
+            cy.get('[data-testid="sidebar-panel-topic"]')
                 .should('exist')
                 .should('not.be.visible');
 
             // click button again, unhide
-            cy.get('[data-testid="panel-minimisation-icon-0"]')
+            cy.get('[data-testid="panel-minimisation-icon-topic"]')
                 .should('exist')
                 .click();
-            cy.get('[data-testid="sidebar-panel-0"]')
+            cy.get('[data-testid="sidebar-panel-topic"]')
                 .should('exist')
                 .contains('Aboriginal and Torres Strait Islander')
                 .should('be.visible');
 
             // filter item not in data is not in sidebar
-            cy.get('[data-testid="panel-minimisation-icon-1"]') // Graduate Attributes
+            cy.get('[data-testid="panel-minimisation-icon-graduate_attributes"]') // Graduate Attributes
                 .should('exist')
                 .click();
-            cy.get('[data-testid="sidebar-panel-1"]')
+            cy.get('[data-testid="sidebar-panel-graduate_attributes"]')
                 .should('exist')
                 .children()
                 .should('have.length', 5); // one filter removed
-            cy.get('[data-testid="checkbox-graduate_attributes-15"]') // Respectful leaders is missing as no data includes it
+            cy.get('[data-testid="checkbox-graduate_attributes-respectful_leaders"]') // Respectful leaders is missing as no data includes it
                 .should('not.exist');
-            cy.get('[data-testid="checkbox-graduate_attributes-14"]') // general check we haven't mucked it up completely - "Influential communicators" is still present
+            cy.get('[data-testid="checkbox-graduate_attributes-influential_communicators"]') // general check we haven't mucked it up completely - "Influential communicators" is still present
                 .should('exist');
 
             cy.get('[data-testid="dlor-homepage-loginprompt"]').should('not.exist');
@@ -214,7 +214,7 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', itemsPerPage + extraRowCount);
 
             // select the "Assignments" checkbox
-            cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
                 // .should('be.visible')
                 .should('not.be.checked')
@@ -228,15 +228,15 @@ describe('Digital Learning Hub', () => {
 
             // check can reduce with mutiple per "filter type
             // open the Licence type panel
-            cy.get('[data-testid="panel-minimisation-icon-5"]')
+            cy.get('[data-testid="panel-minimisation-icon-licence"]')
                 .should('exist')
                 .should('have.attr', 'aria-label', 'Open this filter section');
-            cy.get('[data-testid="panel-downarrow-5"]')
+            cy.get('[data-testid="panel-downarrow-licence"]')
                 .should('exist')
                 .should('be.visible')
                 .click();
             // check UQ copyright
-            cy.get('[data-testid="checkbox-licence-51"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-licence-uq_copyright"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -246,7 +246,7 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 1 + extraRowCount);
             // add another checkbox: CC BY-NC Attribution NonCommercial
-            cy.get('[data-testid="checkbox-licence-45"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-licence-cc_by_nc_attribution_noncommercial"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -256,7 +256,7 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 3 + extraRowCount);
             // uncheck UQ copyright
-            cy.get('[data-testid="checkbox-licence-51"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-licence-uq_copyright"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -266,25 +266,25 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 2 + extraRowCount);
             // remove checkbox: CC BY-NC Attribution NonCommercial
-            cy.get('[data-testid="checkbox-licence-45"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-licence-cc_by_nc_attribution_noncommercial"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
 
             // open the Item type panel
-            cy.get('[data-testid="panel-minimisation-icon-2"]')
+            cy.get('[data-testid="panel-minimisation-icon-item_type"]')
                 .should('exist')
                 .should('have.attr', 'aria-label', 'Open this filter section');
-            cy.get('[data-testid="panel-downarrow-2"]')
+            cy.get('[data-testid="panel-downarrow-item_type"]')
                 .should('exist')
                 .should('be.visible')
                 .click();
-            cy.get('[data-testid="panel-minimisation-icon-2"]')
+            cy.get('[data-testid="panel-minimisation-icon-item_type"]')
                 .should('exist')
                 .should('have.attr', 'aria-label', 'Close this filter section');
 
             // check the "Item type, Module" checkbox
-            cy.get('[data-testid="checkbox-item_type-18"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -296,7 +296,7 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 3 + extraRowCount);
 
             // UNcheck the "assignments" checkbox
-            cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -308,7 +308,7 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 6 + extraRowCount);
 
             // UNcheck the "Media format, Module" checkbox
-            cy.get('[data-testid="checkbox-item_type-18"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-item_type-module"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -320,7 +320,7 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', itemsPerPage + extraRowCount);
 
             // check the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -332,7 +332,7 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 1 + extraRowCount);
 
             // UNcheck the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -358,7 +358,7 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 3 + extraRowCount);
 
             // check the "Assignments" checkbox
-            cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -369,7 +369,7 @@ describe('Digital Learning Hub', () => {
                 .contains("Can't find what you are looking for?");
 
             // use the clear button
-            cy.get('[data-testid="checkbox-topic-2"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')
                 .should('exist')
                 .should('be.checked')
                 .uncheck();
@@ -482,7 +482,7 @@ describe('Digital Learning Hub', () => {
                 .should('be.visible');
 
             // check the "ATSIC" checkbox
-            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -494,23 +494,23 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 1 + extraRowCount);
 
             // Interactive not visible
-            cy.get('[data-testid="checkbox-item_type-17"]')
+            cy.get('[data-testid="checkbox-item_type-interactive"]')
                 .should('exist')
                 .should('not.be.visible');
             // expand a filter panel
-            cy.get('[data-testid="panel-downarrow-2"]').click();
+            cy.get('[data-testid="panel-downarrow-item_type"]').click();
             // now the element appears
-            cy.get('[data-testid="checkbox-item_type-17"]')
+            cy.get('[data-testid="checkbox-item_type-interactive"]')
                 .should('exist')
                 .should('be.visible');
 
-            cy.get('[data-testid="panel-help-close-1"]')
+            cy.get('[data-testid="panel-help-close-graduate_attributes"]')
                 .should('exist')
                 .should('not.be.visible');
-            cy.get('[data-testid="panel-help-icon-1"]')
+            cy.get('[data-testid="panel-help-icon-graduate_attributes"]')
                 .should('exist')
                 .click();
-            cy.get('[data-testid="panel-help-close-1"]')
+            cy.get('[data-testid="panel-help-close-graduate_attributes"]')
                 .should('exist')
                 .should('be.visible');
 
@@ -521,15 +521,15 @@ describe('Digital Learning Hub', () => {
                 .click({ force: true });
 
             // popup help closes
-            cy.get('[data-testid="panel-help-close-1"]')
+            cy.get('[data-testid="panel-help-close-graduate_attributes"]')
                 .should('exist')
                 .should('not.be.visible');
 
             // Interactive not visible
-            cy.get('[data-testid="checkbox-item_type-17"]')
+            cy.get('[data-testid="checkbox-item_type-interactive"]')
                 .should('exist')
                 .should('not.be.visible');
-            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked');
             // all panels showing
@@ -557,8 +557,8 @@ describe('Digital Learning Hub', () => {
                 .should('be.visible');
 
             // check the "CCO/Public domain" checkbox
-            cy.get('[data-testid="panel-minimisation-icon-5"]').click();
-            cy.get('[data-testid="checkbox-licence-50"] input[type=checkbox]')
+            cy.get('[data-testid="panel-minimisation-icon-licence"]').click();
+            cy.get('[data-testid="checkbox-licence-cc0public_domain"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
@@ -798,7 +798,7 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', itemsPerPage + extraRowCount);
 
-            cy.get('[data-testid="checkbox-topic-1"] input[type=checkbox]')
+            cy.get('[data-testid="checkbox-topic-aboriginal_and_torres_strait_islander"] input[type=checkbox]')
                 .should('exist')
                 .should('not.be.checked')
                 .check();
