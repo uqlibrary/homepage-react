@@ -11,10 +11,18 @@ describe('Add an object to the Digital Learning Hub', () => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
 
-    function TypeCKEditor(content) {
-        cy.get('.ck-content')
+    function TypeCKEditor(content, keepExisting = false) {
+        return cy
+            .get('.ck-content')
             .should('exist')
-            .type(content);
+            .then(el => {
+                const editor = el[0].ckeditorInstance;
+                editor.setData(keepExisting ? editor.getData() + content : content);
+            });
+        // cy.get('.ck-content')
+        //     .parent.should('exist')
+        //     .setData(content);
+        // // .type(content);
     }
 
     context('adding a new object', () => {
@@ -271,23 +279,23 @@ describe('Add an object to the Digital Learning Hub', () => {
                     .type('p');
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
-                TypeCKEditor('{backspace}');
-
+                TypeCKEditor('d');
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
-                TypeCKEditor('{p}');
+
+                TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
-                    .type('{backspace}');
+                    .clear();
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"] span')
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
-                    .type('p');
+                    .type('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"]').should('not.exist'); // panel invalidity count no longer present
 
                 // click the back button to go back to panel 1, Ownership

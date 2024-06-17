@@ -135,6 +135,7 @@
         "core-js": "^3.36.0",
         "history": "^4.7.2",
         "html-react-parser": "^3.0.16",
+        "html2text": "^6.0.0",
         "immutable": "^3.8.2",
         "js-cookie": "^2.2.0",
         "jss-preset-default": "^10.10.0",
