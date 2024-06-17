@@ -62,6 +62,8 @@ export const flattedPathConfig = [
     '/admin/promopanel/view',
     '/admin/promopanel/clone',
     '/digital-learning-hub/view',
+    '/digital-learning-hub/confirm/subscribe',
+    // '/digital-learning-hub/confirm/unsubscribe',
     '/exams/course',
 ];
 
@@ -70,6 +72,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const examSearchCourseHint = `:courseHint(${standardRegExp})`;
 
     const dlorId = `:dlorId(${standardRegExp})`;
+    const confirmationId = `:confirmationId(${standardRegExp})`;
 
     const publicPages = [
         {
@@ -93,14 +96,19 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorView(dlorId),
             component: components.DLOView,
-            // exact: false,
-            pageTitle: 'Digital Learning Object Repository',
+            pageTitle: 'Digital Learning Object Repository - View Object',
         },
         {
             path: pathConfig.dlorHome,
             component: components.DLOList,
             exact: true,
             pageTitle: 'Digital Learning Object Repository',
+        },
+        {
+            path: pathConfig.dlorSubscriptionConfirmation(confirmationId),
+            component: components.DLOConfirmSubscription,
+            // exact: true,
+            pageTitle: 'Digital Learning Object Repository - Confirm Subscription request',
         },
         {
             path: pathConfig.pastExamPaperList(examSearchCourseHint),

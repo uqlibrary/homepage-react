@@ -26,7 +26,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { getHomepageLink, isDlorAdminUser } from 'helpers/access';
+import { isDlorAdminUser } from 'helpers/access';
 import { useAccountContext } from 'context';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
@@ -42,7 +42,6 @@ import {
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { fullPath } from 'config/routes';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { useConfirmationState } from 'hooks';
 
 const useStyles = makeStyles(theme => ({
     filterDisplayList: {
@@ -197,7 +196,6 @@ export const DLOView = ({
     const { dlorId } = useParams();
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
-    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
 
     console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
@@ -221,7 +219,7 @@ export const DLOView = ({
         }
     }, [account]);
 
-    const handleChange = (prop, value) => e => {
+    const handleChange = prop => e => {
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
@@ -259,7 +257,7 @@ export const DLOView = ({
         if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError) && !!formValues?.notify) {
             setConfirmationOpen(true);
         }
-    }, [dlorItemUpdating, dlorUpdatedItem, dlorUpdatedItemError]);
+    }, [dlorItemUpdating, dlorUpdatedItem, dlorUpdatedItemError, formValues?.notify, navigateToObjectLink]);
 
     const deslugify = slug => {
         const words = slug?.replace(/_/g, ' ');

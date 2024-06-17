@@ -17,6 +17,7 @@ import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//Shar
 
 import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { pluraliseWord } from '../../../DigitalLearningObjects/dlorHelpers';
 
 export const DLOSeriesList = ({
     actions,
@@ -48,7 +49,7 @@ export const DLOSeriesList = ({
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
-    }, [dlorList]);
+    }, [actions, dlorList, dlorListError, dlorListLoading]);
 
     useEffect(() => {
         if (!!dlorSeriesDeleteError && deleteStep === DELETION_STEP_TWO_HAPPENING) {
@@ -58,7 +59,7 @@ export const DLOSeriesList = ({
             // success
             showDeleteConfirmation();
         }
-    }, [dlorSeriesDeleting, dlorSeriesDeleted, dlorSeriesDeleteError]);
+    }, [dlorSeriesDeleting, dlorSeriesDeleted, dlorSeriesDeleteError, deleteStep, showDeleteConfirmation]);
 
     const deleteADlorSeries = seriesId => {
         return actions.deleteDlorSeries(seriesId);
@@ -121,8 +122,6 @@ export const DLOSeriesList = ({
 
     const noSeriesName = 'Not in a series';
     const unSeriedObjectDone = dlorSeriesList?.find(s => s.series_name === noSeriesName);
-    const unSeriedObjects = dlorList?.filter(o => !!o.object_series_id);
-    const unSeriedObjectCount = unSeriedObjects?.length;
     !unSeriedObjectDone &&
         !!dlorSeriesList &&
         dlorSeriesList.length > 0 &&
@@ -194,9 +193,10 @@ export const DLOSeriesList = ({
                                                 <>
                                                     {series?.series_id === null
                                                         ? 'other Objects'
-                                                        : `${series?.objects_count} Object${
-                                                              series?.objects_count > 1 ? 's' : ''
-                                                          }`}
+                                                        : `${series?.objects_count} ${pluraliseWord(
+                                                              'Object',
+                                                              series?.objects_count,
+                                                          )}`}
                                                 </>
                                             );
                                             return (

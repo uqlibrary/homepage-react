@@ -15,7 +15,6 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { useConfirmationState } from 'hooks';
 import { scrollToTopOfPage } from 'helpers/general';
 
 const useStyles = makeStyles(() => ({
@@ -43,6 +42,7 @@ export const DLOTeamForm = ({
     formDefaults,
     dlorTeamLoading,
     dlorTeamError,
+    // saving team
     dlorTeamSaving,
     dlorSavedTeamError,
     dlorSavedTeam,
@@ -57,13 +57,11 @@ export const DLOTeamForm = ({
         team_manager: '',
         team_email: '',
     });
-    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
+    const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
 
-    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
-
     useEffect(() => {
-        setSaveStatus(null);
+        setConfirmationOpen(false);
         if (mode === 'edit' && !!formDefaults && !dlorTeamLoading && !dlorTeamError) {
             setFormValues({
                 team_name: formDefaults?.team_name,
@@ -71,22 +69,14 @@ export const DLOTeamForm = ({
                 team_email: formDefaults?.team_email,
             });
         }
-        setFormValidity(validateValues(formValues));
-    }, [mode, formDefaults, dlorTeamLoading, dlorTeamError]);
+    }, [mode, dlorTeamLoading, dlorTeamError, formDefaults]);
 
     useEffect(() => {
-        if (!!dlorSavedTeamError || !!dlorTeamError) {
-            setSaveStatus('error');
-            showConfirmation();
-        } else if (!!dlorSavedTeam?.data?.team_id) {
-            setSaveStatus('complete');
-            showConfirmation();
-        }
-    }, [showConfirmation, dlorSavedTeam, dlorSavedTeamError]);
+        setConfirmationOpen(!dlorTeamSaving && (!!dlorSavedTeamError || !!dlorSavedTeam));
+    }, [dlorSavedTeam, dlorSavedTeamError, dlorTeamSaving]);
 
     function closeConfirmationBox() {
-        setSaveStatus(null);
-        hideConfirmation();
+        setConfirmationOpen(false);
     }
 
     const navigateToTeamManagementHomePage = () => {
@@ -100,7 +90,7 @@ export const DLOTeamForm = ({
         window.location.href = dlorAdminLink('/team/manage');
     };
 
-    const clearForm = actiontype => {
+    const clearForm = () => {
         closeConfirmationBox();
         /* istanbul ignore next */
         mode === 'edit' && window.location.reload(false);
@@ -120,16 +110,24 @@ export const DLOTeamForm = ({
         },
     };
 
-    const handleChange = (prop, value) => e => {
+    const isValidTeamName = teamName => {
+        return (mode === 'edit' && teamName === formDefaults?.team_name) || teamName?.trim() !== '';
+    };
+
+    const isValidEmailLocal = emailAddress => {
+        return (emailAddress === formDefaults?.team_email || emailAddress?.trim() !== '') && isValidEmail(emailAddress);
+    };
+
+    const validateValues = currentValues => {
+        return isValidTeamName(currentValues?.team_name) && isValidEmailLocal(currentValues?.team_email);
+    };
+
+    const handleChange = prop => e => {
         const theNewValue = e.target.value;
         const newValues = { ...formValues, [prop]: theNewValue };
 
         setFormValidity(validateValues(newValues));
         setFormValues(newValues);
-    };
-
-    const validateValues = currentValues => {
-        return isValidTeamName(currentValues?.team_name) && isValidEmailLocal(currentValues?.team_email);
     };
 
     const saveChanges = () => {
@@ -139,14 +137,6 @@ export const DLOTeamForm = ({
         }
 
         return mode === 'add' ? actions.createDlorTeam(formValues) : actions.updateDlorTeam(dlorTeamId, formValues);
-    };
-
-    const isValidTeamName = teamName => {
-        return (mode === 'edit' && teamName === formDefaults?.team_name) || teamName?.trim() !== '';
-    };
-
-    const isValidEmailLocal = emailAddress => {
-        return (emailAddress === formDefaults?.team_email || emailAddress?.trim() !== '') && isValidEmail(emailAddress);
     };
 
     return (
@@ -179,18 +169,18 @@ export const DLOTeamForm = ({
                                         actionButtonVariant="contained"
                                         confirmationBoxId="dlor-team-save-outcome"
                                         onAction={() => {
-                                            saveStatus === 'error'
+                                            !!dlorSavedTeamError
                                                 ? closeConfirmationBox()
                                                 : navigateToTeamManagementHomePage();
                                         }}
                                         hideCancelButton={
-                                            saveStatus === 'error' || !locale.successMessage.cancelButtonLabel
+                                            !!dlorSavedTeamError || !locale.successMessage.cancelButtonLabel
                                         }
                                         cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                                         onCancelAction={() => clearForm()}
                                         onClose={closeConfirmationBox}
-                                        isOpen={saveStatus !== null}
-                                        locale={saveStatus === 'error' ? locale.errorMessage : locale.successMessage}
+                                        isOpen={confirmationOpen}
+                                        locale={!!dlorSavedTeamError ? locale.errorMessage : locale.successMessage}
                                     />
 
                                     <form id="dlor-editTeam-form" style={{ width: '100%' }}>
@@ -275,6 +265,8 @@ export const DLOTeamForm = ({
                         </>
                     );
                 }
+                /* istanbul ignore next */
+                return <></>;
             })()}
         </Grid>
     );

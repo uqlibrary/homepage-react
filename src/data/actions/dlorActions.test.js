@@ -1,6 +1,14 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadCurrentDLORs, loadADLOR, clearADlor, createDlor, loadOwningTeams, loadFileTypeList } from './dlorActions';
+import {
+    clearADlor,
+    createDlor,
+    loadADLOR,
+    loadCurrentDLORs,
+    loadDlorSubscriptionConfirmation,
+    loadFileTypeList,
+    loadOwningTeams,
+} from './dlorActions';
 
 jest.mock('@sentry/browser');
 
@@ -190,6 +198,26 @@ describe('Digital Learning Hub actions', () => {
             ];
 
             await mockActionsStore.dispatch(loadFileTypeList());
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+    });
+
+    describe('Dlor subscription confirmation Actions', () => {
+        it('dispatches expected actions when dlor subscription confirmation call fails', async () => {
+            mockApi.onGet(repositories.routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: '1a1' })).reply(500);
+
+            const expectedActions = [actions.DLOR_UPDATING, actions.DLOR_UPDATE_FAILED];
+
+            await mockActionsStore.dispatch(loadDlorSubscriptionConfirmation('1a1'));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('handles expected actions when dlor subscription confirmation succeeds', async () => {
+            mockApi.onAny(repositories.routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: '2b2' }).apiUrl).reply(200, []);
+
+            const expectedActions = [actions.DLOR_UPDATING, actions.DLOR_UPDATED];
+
+            await mockActionsStore.dispatch(loadDlorSubscriptionConfirmation('2b2'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

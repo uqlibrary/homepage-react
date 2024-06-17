@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
@@ -8,13 +8,12 @@ import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { useConfirmationState } from 'hooks';
 
+import { pluraliseWord } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
@@ -37,7 +36,7 @@ export const DLOTeamList = ({
 
     const [teamToDelete, setObjectToDelete] = React.useState(null);
     const [deleteStep, setDeleteStep] = React.useState(DELETION_STEP_NULL);
-    const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
+    const [confirmationOpen, setConfirmationOpen] = useState(false);
 
     useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
@@ -49,17 +48,17 @@ export const DLOTeamList = ({
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
-    }, [dlorList]);
+    }, [actions, dlorList, dlorListError, dlorListLoading]);
 
     useEffect(() => {
         if (!!dlorTeamDeleteError && deleteStep === DELETION_STEP_TWO_HAPPENING) {
             // delete failed
-            showDeleteConfirmation();
+            setConfirmationOpen(true);
         } else if (!dlorTeamDeleting && !!dlorTeamDeleted && deleteStep === DELETION_STEP_TWO_HAPPENING) {
             // success
-            showDeleteConfirmation();
+            setConfirmationOpen(true);
         }
-    }, [dlorTeamDeleting, dlorTeamDeleted, dlorTeamDeleteError]);
+    }, [dlorTeamDeleting, dlorTeamDeleted, dlorTeamDeleteError, deleteStep]);
 
     const navigateToAddPage = () => {
         window.location.href = dlorAdminLink('/team/add');
@@ -71,7 +70,7 @@ export const DLOTeamList = ({
     const confirmDelete = teamId => {
         setObjectToDelete(teamId);
         setDeleteStep(DELETION_STEP_ONE_CONFIRM);
-        showDeleteConfirmation();
+        setConfirmationOpen(true);
     };
     const deleteSelectedObject = () => {
         setDeleteStep(DELETION_STEP_TWO_HAPPENING);
@@ -83,7 +82,7 @@ export const DLOTeamList = ({
                 })
                 .catch(() => {
                     setObjectToDelete('');
-                    showDeleteConfirmation();
+                    setConfirmationOpen(true);
                 });
     };
 
@@ -121,7 +120,11 @@ export const DLOTeamList = ({
 
     function localHideDeleteConfirmation() {
         setDeleteStep(null);
-        return hideDeleteConfirmation();
+        setConfirmationOpen(false);
+    }
+
+    function closeConfirmationBox() {
+        setConfirmationOpen(false);
     }
 
     return (
@@ -135,12 +138,12 @@ export const DLOTeamList = ({
                         ? localHideDeleteConfirmation()
                         : deleteSelectedObject();
                 }}
-                onClose={hideDeleteConfirmation}
+                onClose={closeConfirmationBox}
                 hideCancelButton={
                     !!dlorTeamDeleteError || (!!dlorTeamDeleted && deleteStep === DELETION_STEP_TWO_HAPPENING)
                 }
-                onCancelAction={hideDeleteConfirmation}
-                isOpen={isDeleteConfirmOpen}
+                onCancelAction={closeConfirmationBox}
+                isOpen={!!confirmationOpen}
                 locale={getLocale()}
             />
             <DlorAdminBreadcrumbs
@@ -237,9 +240,10 @@ export const DLOTeamList = ({
                                                                         data-testid={`dlor-team-object-list-${team?.team_id}`}
                                                                     >
                                                                         <summary>
-                                                                            {`${
-                                                                                team?.objects_count
-                                                                            } Object${team?.objects_count > 1 && 's'}`}
+                                                                            {`${team?.objects_count} ${pluraliseWord(
+                                                                                'Object',
+                                                                                team?.objects_count,
+                                                                            )}`}
                                                                         </summary>
                                                                         {!!dlorList &&
                                                                             dlorList

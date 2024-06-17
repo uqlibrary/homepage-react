@@ -20,7 +20,6 @@ import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAd
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/DlorAdminBreadcrumbs';
 
 import { scrollToTopOfPage } from 'helpers/general';
-import { useConfirmationState } from 'hooks';
 import { getDlorViewPageUrl, toTitleCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
@@ -71,9 +70,7 @@ export const DLOSeriesEdit = ({
         series_id: '',
         series_name: '',
     });
-    const [saveStatus, setSaveStatus] = useState(null); // control confirmation box display
-    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
-    const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
+    const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [formValues, setFormValues] = useState({
         series_name: '',
         object_list_linked: [],
@@ -81,11 +78,27 @@ export const DLOSeriesEdit = ({
     });
 
     useEffect(() => {
+        setConfirmationOpen(!dlorItemUpdating && (!!dlorUpdatedItemError || !!dlorUpdatedItem));
+    }, [dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem]);
+
+    const isValidSeriesName = seriesName => {
+        return seriesName?.trim() !== '';
+    };
+
+    const isValidForm = currentValues => {
+        return isValidSeriesName(currentValues?.series_name);
+    };
+
+    useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         if (!dlorListLoading && !dlorListError && !!dlorList) {
-            setSaveStatus(null);
+            setConfirmationOpen(false);
 
             const seriesDetail = dlorList.find(s => s.object_series_id === Number(dlorSeriesId));
             setOriginalSeriesDetails({
@@ -96,34 +109,22 @@ export const DLOSeriesEdit = ({
                 series_name: seriesDetail?.object_series_name,
                 object_list_linked:
                     dlorList?.length > 0
-                        ? dlorList?.filter((o, index) => {
+                        ? dlorList?.filter(o => {
                               return o.object_series_id === Number(dlorSeriesId);
                           })
                         : /* istanbul ignore next */ [],
                 object_list_unassigned:
                     dlorList?.length > 0
-                        ? dlorList?.filter((d, index) => {
+                        ? dlorList?.filter(d => {
                               return !(d?.object_series_id > 0);
                           })
                         : /* istanbul ignore next */ [],
             });
         }
-        setFormValidity(validateValues(formValues));
-    }, [dlorSeriesId, dlorList]);
-
-    useEffect(() => {
-        if (!!dlorUpdatedItemError) {
-            setSaveStatus('error');
-            showConfirmation();
-        } else if (!!dlorUpdatedItem?.data?.series_id) {
-            setSaveStatus('complete');
-            showConfirmation();
-        }
-    }, [showConfirmation, dlorUpdatedItem, dlorUpdatedItemError]);
+    }, [dlorSeriesId, dlorList, dlorListError, dlorListLoading, actions]);
 
     function closeConfirmationBox() {
-        setSaveStatus(null);
-        hideConfirmation();
+        setConfirmationOpen(false);
     }
 
     const navigateToSeriesManagementHomePage = () => {
@@ -135,7 +136,7 @@ export const DLOSeriesEdit = ({
         window.location.href = dlorAdminLink('/series/manage');
     };
 
-    const clearForm = actiontype => {
+    const clearForm = () => {
         closeConfirmationBox();
         window.location.reload(false);
     };
@@ -154,7 +155,7 @@ export const DLOSeriesEdit = ({
         },
     };
 
-    const handleChange = (prop, value) => e => {
+    const handleChange = prop => e => {
         const theNewValue = e.target.value;
 
         let newValues;
@@ -206,12 +207,7 @@ export const DLOSeriesEdit = ({
             newValues = { ...formValues, [prop]: theNewValue };
         }
 
-        setFormValidity(validateValues(newValues));
         setFormValues(newValues);
-    };
-
-    const validateValues = currentValues => {
-        return isValidSeriesName(currentValues?.series_name);
     };
 
     const saveChanges = () => {
@@ -231,10 +227,6 @@ export const DLOSeriesEdit = ({
         }
 
         actions.updateDlorSeries(dlorSeriesId, valuesToSend);
-    };
-
-    const isValidSeriesName = seriesName => {
-        return seriesName?.trim() !== '';
     };
 
     return (
@@ -275,28 +267,27 @@ export const DLOSeriesEdit = ({
                             <>
                                 <Grid item xs={12} data-testid="dlor-series-item-list">
                                     <Grid container key={`list-series-${originalSeriesDetails.series_id}`}>
-                                        {(saveStatus === 'complete' || saveStatus === 'error') && (
-                                            <ConfirmationBox
-                                                actionButtonColor="primary"
-                                                actionButtonVariant="contained"
-                                                confirmationBoxId="dlor-series-save-outcome"
-                                                onAction={() => {
-                                                    saveStatus === 'error'
-                                                        ? closeConfirmationBox()
-                                                        : navigateToSeriesManagementHomePage();
-                                                }}
-                                                hideCancelButton={
-                                                    saveStatus === 'error' || !locale.successMessage.cancelButtonLabel
-                                                }
-                                                cancelButtonLabel={locale.successMessage.cancelButtonLabel}
-                                                onCancelAction={() => clearForm()}
-                                                onClose={closeConfirmationBox}
-                                                isOpen={isOpen}
-                                                locale={
-                                                    saveStatus === 'error' ? locale.errorMessage : locale.successMessage
-                                                }
-                                            />
-                                        )}
+                                        <ConfirmationBox
+                                            actionButtonColor="primary"
+                                            actionButtonVariant="contained"
+                                            confirmationBoxId="dlor-series-save-outcome"
+                                            onAction={() => {
+                                                !!dlorUpdatedItemError
+                                                    ? closeConfirmationBox()
+                                                    : navigateToSeriesManagementHomePage();
+                                            }}
+                                            hideCancelButton={
+                                                !!dlorUpdatedItemError || !locale.successMessage.cancelButtonLabel
+                                            }
+                                            cancelButtonLabel={locale.successMessage.cancelButtonLabel}
+                                            onCancelAction={() => clearForm()}
+                                            onClose={closeConfirmationBox}
+                                            isOpen={confirmationOpen}
+                                            locale={
+                                                !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
+                                            }
+                                        />
+
                                         <form id="dlor-editSeries-form" style={{ width: '100%' }}>
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
@@ -331,7 +322,7 @@ export const DLOSeriesEdit = ({
                                         <ul style={{ listStyleType: 'none' }}>
                                             {formValues?.object_list_linked
                                                 ?.sort((a, b) => a.object_series_order - b.object_series_order)
-                                                .map((f, index) => {
+                                                .map(f => {
                                                     return (
                                                         <li key={f.object_id} className={classes.draggableItem}>
                                                             <span
@@ -382,7 +373,7 @@ export const DLOSeriesEdit = ({
                                             Objects available to add to this series
                                         </Typography>
                                         <ul style={{ listStyleType: 'none' }}>
-                                            {formValues?.object_list_unassigned?.map((f, index) => {
+                                            {formValues?.object_list_unassigned?.map(f => {
                                                 // console.log('dragLandingAarea 2 f=', f);
                                                 return (
                                                     <li key={f.object_id} className={classes.draggableItem}>
@@ -431,7 +422,7 @@ export const DLOSeriesEdit = ({
                                         data-testid="admin-dlor-series-form-save-button"
                                         variant="contained"
                                         children="Save"
-                                        disabled={!isFormValid}
+                                        disabled={!isValidForm(formValues)}
                                         onClick={saveChanges}
                                         // className={classes.saveButton}
                                     />
@@ -439,6 +430,8 @@ export const DLOSeriesEdit = ({
                             </>
                         );
                     }
+                    /* istanbul ignore next */
+                    return <></>;
                 })()}
             </Grid>
         </StandardPage>
