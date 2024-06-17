@@ -17,6 +17,7 @@ import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//Shar
 
 import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { pluraliseWord } from '../../../DigitalLearningObjects/dlorHelpers';
 
 export const DLOSeriesList = ({
     actions,
@@ -192,9 +193,10 @@ export const DLOSeriesList = ({
                                                 <>
                                                     {series?.series_id === null
                                                         ? 'other Objects'
-                                                        : `${series?.objects_count} Object${
-                                                              series?.objects_count > 1 ? 's' : ''
-                                                          }`}
+                                                        : `${series?.objects_count} ${pluraliseWord(
+                                                              'Object',
+                                                              series?.objects_count,
+                                                          )}`}
                                                 </>
                                             );
                                             return (

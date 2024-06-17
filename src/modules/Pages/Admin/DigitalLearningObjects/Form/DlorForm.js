@@ -41,6 +41,7 @@ import {
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
+    pluraliseWord,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import {
@@ -212,7 +213,7 @@ export const DlorForm = ({
         return (
             <div className={classes.charactersRemaining} data-testid={`input-characters-remaining-${fieldName}`}>
                 {numCharsCurrent > 0 && missingCharCount > 0
-                    ? `at least ${missingCharCount} more character${missingCharCount > 1 ? 's' : ''} needed`
+                    ? `at least ${missingCharCount} more ${pluraliseWord('character', missingCharCount)} needed`
                     : ''}
             </div>
         );
