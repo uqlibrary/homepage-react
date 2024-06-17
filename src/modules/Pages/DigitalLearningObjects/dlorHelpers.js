@@ -181,6 +181,7 @@ export const isValidUrl = testUrl => {
     try {
         url = new URL(testUrl);
     } catch (_) {
+        /* istanbul ignore next */
         return false;
     }
 

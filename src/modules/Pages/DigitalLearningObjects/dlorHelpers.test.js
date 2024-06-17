@@ -9,6 +9,7 @@ import {
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
     isValidNumber,
+    isValidUrl,
     pluraliseWord,
     toTitleCase,
 } from './dlorHelpers';
@@ -127,5 +128,13 @@ describe('helpers', () => {
         expect(pluraliseWord('body', 0, 'bodies')).toEqual('body');
         expect(pluraliseWord('body', 1, 'bodies')).toEqual('body');
         expect(pluraliseWord('body', 8, 'bodies')).toEqual('bodies');
+    });
+
+    it('should correctly validate an url', () => {
+        expect(isValidUrl('x')).toBe(false);
+        expect(isValidUrl('ftp://x.com')).toBe(false);
+        expect(isValidUrl('https://x.c')).toBe(false);
+        expect(isValidUrl('http://apple')).toBe(false);
+        expect(isValidUrl('https://uq.edu.au')).toBe(true);
     });
 });

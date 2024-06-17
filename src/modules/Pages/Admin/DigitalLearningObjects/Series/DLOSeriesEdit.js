@@ -90,6 +90,7 @@ export const DLOSeriesEdit = ({
     };
 
     useEffect(() => {
+        /* istanbul ignore else */
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
