@@ -11,7 +11,6 @@ export const useConfirmationState = () => {
     }, []);
 
     const hideConfirmation = useCallback(() => {
-        console.log('hideConfirmation');
         setIsOpen(false);
     }, []);
 
