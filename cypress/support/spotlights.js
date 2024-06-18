@@ -54,7 +54,7 @@ export function showUnpublishedSpotlights() {
 export function assertImageWarningIsPresent(dataTestid, isUpload = true) {
     cy.get(`[data-testid="${dataTestid}"]`)
         .should('exist')
-        .find('svg path[d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"]')
+        .find('svg[data-testid="WarningIcon"]')
         .should('exist');
     cy.get(`[data-testid="${dataTestid}"]`).should('contain', 'Dimensions: 1967px by 721px (aspect ratio: 2.73).');
     if (isUpload) {

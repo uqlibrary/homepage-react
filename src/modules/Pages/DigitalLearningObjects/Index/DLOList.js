@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 
@@ -299,8 +299,9 @@ export const DLOList = ({
 
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
-    const [keywordSearch, setKeywordSearch] = useState('');
+    const [filterTypesOpen, setFilterTypesOpen] = useState([]);
     const checkBoxArrayRef = useRef([]);
+    const [keywordSearch, setKeywordSearch] = useState('');
     const keyWordSearchRef = useRef('');
 
     const [paginationPage, setPaginationPage] = React.useState(1);
@@ -316,36 +317,100 @@ export const DLOList = ({
         'Use the Digital Learning Hub to find modules, videos and guides for teaching and study.';
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadCurrentDLORs();
         }
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
-        if (!!dlorFilterList && !!dlorList) {
-            const trimmedFilterList = [...dlorFilterList];
-            // Step 1: Extract all unique id values from dlorList
-            const idsFromDlorList = new Set();
-            dlorList?.forEach(item => {
-                item.object_filters.forEach(filter => {
-                    filter.filter_values.forEach(value => {
-                        idsFromDlorList.add(value.id);
-                    });
-                });
-            });
-
-            // Step 2 & 3: Iterate over trimmedFilterList and remove entries not found in dlorList
-            trimmedFilterList?.forEach(facetType => {
-                facetType.facet_list = facetType.facet_list.filter(facet =>
-                    // Check if facet_id exists in idsFromDlorList
-                    idsFromDlorList.has(facet.facet_id),
-                );
-            });
-
-            setFilterListTrimmed(trimmedFilterList);
-        }
     }, [dlorList, dlorFilterList, dlorListError, dlorListLoading, dlorFilterListError, dlorFilterListLoading, actions]);
+
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword?.length > 1;
+    }
+
+    const updateUrl = (itemType = null) => {
+        const url = new URL(document.URL);
+
+        const separator = ';';
+        const params = {
+            keyword: '',
+            filters: '',
+        };
+
+        // start with the values currently in the url
+        location.hash
+            .slice(1) // remove '#' from beginning
+            .split(separator) // separate filters
+            .map(spec => {
+                /* istanbul ignore if */
+                if (!spec) {
+                    return;
+                }
+                const [name, thevalue] = spec.split('='); // get keys and values
+                if (name === 'keyword') {
+                    params.keyword = thevalue;
+                }
+                if (name === 'filters') {
+                    params.filters = thevalue;
+                }
+            });
+
+        // overwrite the values from the url with the requested change
+        if (itemType === 'keyword') {
+            params.keyword = keyWordSearchRef.current.value;
+        }
+        if (itemType === 'filters') {
+            const facetIds = checkBoxArrayRef.current.map(c => {
+                const parts = c.split('-');
+                const facetId = parseInt(parts[1], 10);
+                return facetId;
+            });
+            params.filters = facetIds.join(',');
+        }
+
+        // only put the used segments in the hash (tidy url)
+        if (params.keyword === '') {
+            delete params.keyword;
+        } else {
+            params.keyword = `keyword=${params.keyword}`;
+        }
+        if (params.filters === '') {
+            delete params.filters;
+        } else {
+            params.filters = `filters=${params.filters}`;
+        }
+        url.hash = Object.keys(params).length > 0 ? Object.values(params).join(separator) : '#';
+
+        // add the current hash to the url
+        document.location.href = url.href;
+    };
+
+    const clearKeywordField = () => {
+        setKeywordSearch('');
+        keyWordSearchRef.current.value = '';
+        setPaginationPage(1); // set pagination back to page 1
+        updateUrl('keyword');
+    };
+
+    const handleKeywordSearch = e => {
+        const keyword = e?.target?.value;
+
+        if (keywordIsSearchable(keyword)) {
+            setKeywordSearch(keyword);
+            setPaginationPage(1);
+        } else if (
+            !keyword ||
+            keyword.length === 0 // they've cleared it
+        ) {
+            clearKeywordField();
+        }
+
+        keyWordSearchRef.current.value = keyword;
+        updateUrl('keyword');
+    };
 
     function hideElement(element, displayproperty = null) {
         /* istanbul ignore next */
@@ -371,51 +436,131 @@ export const DLOList = ({
         !!displayproperty && (element.style.display = displayproperty);
     }
 
-    const sidebarElementId = (index, elementSlug = 'sidebar-panel') => `${elementSlug}-${index}`;
+    const sidebarElementId = (facetTypeId, elementSlug = 'sidebar-panel') => `${elementSlug}-${facetTypeId}`;
 
-    const panelId = index => sidebarElementId(index);
-    const UpArrowId = index => sidebarElementId(index, 'panel-uparrow');
-    const DownArrowId = index => sidebarElementId(index, 'panel-downarrow');
+    const panelId = facetTypeId => sidebarElementId(facetTypeId);
+    const UpArrowId = facetTypeId => sidebarElementId(facetTypeId, 'panel-uparrow');
+    const DownArrowId = facetTypeId => sidebarElementId(facetTypeId, 'panel-downarrow');
 
     const filterButtonLabel = actionLabel => `${actionLabel} this filter section`;
     const filterMaximiseButtonLabel = filterButtonLabel('Open');
     const filterMinimiseButtonLabel = filterButtonLabel('Close');
-    function hidePanel(index) {
-        const facetPanel = document.getElementById(panelId(index));
-        const upArrowIcon = document.getElementById(UpArrowId(index));
-        const downArrowIcon = document.getElementById(DownArrowId(index));
+    function hidePanel(facetTypeId) {
+        const facetPanel = document.getElementById(panelId(facetTypeId));
+        const upArrowIcon = document.getElementById(UpArrowId(facetTypeId));
+        const downArrowIcon = document.getElementById(DownArrowId(facetTypeId));
         hideElement(facetPanel);
         showElement(downArrowIcon, 'inline-block');
         !!downArrowIcon && downArrowIcon.parentElement?.setAttribute('aria-label', filterMaximiseButtonLabel);
         hideElement(upArrowIcon, 'none');
+        setFilterTypesOpen(filterTypesOpen.filter(f => f !== facetTypeId)); // hide
     }
 
-    function showPanel(index) {
-        const facetPanel = document.getElementById(panelId(index));
-        const upArrowIcon = document.getElementById(UpArrowId(index));
-        const downArrowIcon = document.getElementById(DownArrowId(index));
+    function showPanel(facetTypeId) {
+        const facetPanel = document.getElementById(panelId(facetTypeId));
+        const upArrowIcon = document.getElementById(UpArrowId(facetTypeId));
+        const downArrowIcon = document.getElementById(DownArrowId(facetTypeId));
         showElement(facetPanel);
         hideElement(downArrowIcon, 'none');
         showElement(upArrowIcon, 'inline-block');
         !!upArrowIcon && upArrowIcon.parentElement?.setAttribute('aria-label', filterMinimiseButtonLabel);
+        setFilterTypesOpen([...filterTypesOpen, facetTypeId]); // show
     }
 
-    function showHidePanel(index) {
-        const upArrowIcon = document.getElementById(UpArrowId(index));
-        const downArrowIcon = document.getElementById(DownArrowId(index));
+    function showHidePanel(facetTypeId) {
+        const upArrowIcon = document.getElementById(UpArrowId(facetTypeId));
+        const downArrowIcon = document.getElementById(DownArrowId(facetTypeId));
         /* istanbul ignore else */
         if (
             (!!downArrowIcon && downArrowIcon.style.display === 'none') ||
             (!!upArrowIcon && upArrowIcon.style.display !== 'none')
         ) {
-            hidePanel(index);
+            hidePanel(facetTypeId);
         } else if (
             (!!downArrowIcon && downArrowIcon.style.display !== 'none') ||
             (!!upArrowIcon && upArrowIcon.style.display === 'none')
         ) {
-            showPanel(index);
+            showPanel(facetTypeId);
         }
     }
+
+    function setFiltersFromUrl() {
+        let filtersFound = false;
+        location.hash
+            .slice(1) // remove '#' from beginning
+            .split(';') // separate filters
+            .map(spec => {
+                /* istanbul ignore if */
+                if (!spec) {
+                    return;
+                }
+                const [name, thevalue] = spec.split('='); // get keys and values
+                if (name === 'keyword' && thevalue.length > 0) {
+                    const keyword = {
+                        target: {
+                            value: thevalue,
+                        },
+                    };
+                    handleKeywordSearch(keyword);
+                    // setKeywordSearch
+                }
+                if (name === 'filters' && thevalue.length > 0) {
+                    filtersFound = true;
+                    // build the facet ids into facedtypeslug-facetid
+                    const facetids = thevalue?.split(',').map(Number);
+                    // const facetTypes = [];
+                    const facettypelist = facetids
+                        .map(facetId => {
+                            for (const facetType of dlorFilterList) {
+                                const facet = facetType.facet_list.find(f => f.facet_id === facetId);
+                                setFilterTypesOpen([...filterTypesOpen, facetType.facet_type_id]);
+                                // show
+                                if (facet) {
+                                    return `${facetType.facet_type_slug}-${facetId}`;
+                                }
+                            }
+                            /* istanbul ignore next */
+                            return null; // In case the facetId is not found
+                        })
+                        .filter(Boolean);
+                    setSelectedFilters(facettypelist);
+                    checkBoxArrayRef.current = facettypelist;
+                }
+            });
+        // setLoaded(true);
+        if (!filtersFound) {
+            showPanel([...dlorFilterList].shift().facet_type_id);
+        }
+    }
+
+    useEffect(() => {
+        if (!!dlorFilterList && !!dlorList) {
+            const trimmedFilterList = [...dlorFilterList];
+            // Extract all unique id values from dlorList
+            const idsFromDlorList = new Set();
+            dlorList?.forEach(item => {
+                item.object_filters.forEach(filter => {
+                    filter.filter_values.forEach(value => {
+                        idsFromDlorList.add(value.id);
+                    });
+                });
+            });
+
+            // Iterate over trimmedFilterList and remove entries not found in dlorList
+            trimmedFilterList?.forEach(facetType => {
+                facetType.facet_list = facetType.facet_list.filter(facet =>
+                    // Check if facet_id exists in idsFromDlorList
+                    idsFromDlorList.has(facet.facet_id),
+                );
+            });
+
+            setFilterListTrimmed(trimmedFilterList);
+
+            // Check the url for supplied filters and update the ui (which implies filters applying)
+            setFiltersFromUrl();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dlorFilterList, dlorList]);
 
     function getPopupId(facetType) {
         return `dlor-list-${facetType?.facet_type_slug}-help-popup`;
@@ -452,11 +597,6 @@ export const DLOList = ({
         !!block && (block.style.display = 'none');
     }
 
-    function keywordIsSearchable(keyword) {
-        // don't filter on something terribly short
-        return keyword?.length > 1;
-    }
-
     const keywordFoundIn = (object, enteredKeyword) => {
         const enteredKeywordLower = enteredKeyword.toLowerCase();
         if (
@@ -474,28 +614,6 @@ export const DLOList = ({
             return true;
         }
         return false;
-    };
-
-    const clearKeywordField = () => {
-        setKeywordSearch('');
-        keyWordSearchRef.current.value = '';
-        setPaginationPage(1); // set pagination back to page 1
-    };
-
-    const handleKeywordSearch = e => {
-        const keyword = e?.target?.value;
-
-        if (keywordIsSearchable(keyword)) {
-            setKeywordSearch(keyword);
-            setPaginationPage(1);
-        } else if (
-            !keyword ||
-            keyword.length === 0 // they've cleared it
-        ) {
-            clearKeywordField();
-        }
-
-        keyWordSearchRef.current.value = keyword;
     };
 
     const handleCheckboxAction = prop => e => {
@@ -519,25 +637,27 @@ export const DLOList = ({
             checkBoxArrayRef.current = checkBoxArrayRef.current.filter(id => id !== checkboxId);
         }
         setPaginationPage(1);
+
+        updateUrl('filters');
     };
 
-    function isFirstFilterPanel(index) {
-        return index === 0;
+    function isPanelForDefault(facetTypeId) {
+        const primeFacetTypeId = [...dlorFilterList].shift().facet_type_id;
+        return facetTypeId === primeFacetTypeId;
     }
 
     function resetFiltering() {
-        // reshow any closed sidebar panels
-        setSelectedFilters([]);
-
         // clear the filter checkboxes
+        setSelectedFilters([]);
         checkBoxArrayRef.current = [];
+        updateUrl('filters');
 
         // reset panel open-close to initial position
-        filterListTrimmed?.map((facetType, index) => {
-            if (isFirstFilterPanel(index)) {
-                showPanel(index);
+        filterListTrimmed?.map(facetType => {
+            if (isPanelForDefault(facetType?.facet_type_id)) {
+                showPanel(facetType?.facet_type_id);
             } else {
-                hidePanel(index);
+                hidePanel(facetType?.facet_type_id);
             }
         });
 
@@ -545,7 +665,13 @@ export const DLOList = ({
 
         // close help dialogs
         dlorFilterList.forEach(f => closeHelpText(f));
+
+        setPaginationPage(1);
     }
+
+    const openPanelListContains = facetTypeid => {
+        return filterTypesOpen.includes(facetTypeid);
+    };
 
     const getPublicHelp = facetTypeSlug => {
         let result = '';
@@ -613,7 +739,10 @@ export const DLOList = ({
                                                 <IconButton
                                                     aria-label="View facet help"
                                                     onClick={() => openHelpText(facetType)}
-                                                    data-testid={sidebarElementId(index, 'panel-help-icon')}
+                                                    data-testid={sidebarElementId(
+                                                        facetType?.facet_type_slug,
+                                                        'panel-help-icon',
+                                                    )}
                                                 >
                                                     <HelpOutlineIcon size="small" />
                                                 </IconButton>
@@ -625,7 +754,10 @@ export const DLOList = ({
                                             style={{ display: 'none' }}
                                         >
                                             <button
-                                                data-testid={sidebarElementId(index, 'panel-help-close')}
+                                                data-testid={sidebarElementId(
+                                                    facetType?.facet_type_slug,
+                                                    'panel-help-close',
+                                                )}
                                                 onClick={
                                                     /* istanbul ignore next */ () =>
                                                         /* istanbul ignore next */ closeHelpText(facetType)
@@ -640,18 +772,24 @@ export const DLOList = ({
                                     <Grid item md={1} className={classes.facetPanelControl}>
                                         <IconButton
                                             aria-label={
-                                                isFirstFilterPanel(index)
+                                                openPanelListContains(facetType?.facet_type_id)
                                                     ? filterMinimiseButtonLabel
                                                     : filterMaximiseButtonLabel
                                             }
-                                            data-testid={sidebarElementId(index, 'panel-minimisation-icon')}
-                                            onClick={() => showHidePanel(index)}
+                                            data-testid={sidebarElementId(
+                                                facetType?.facet_type_slug,
+                                                'panel-minimisation-icon',
+                                            )}
+                                            onClick={() => showHidePanel(facetType?.facet_type_id)}
                                         >
                                             <KeyboardArrowUpIcon
-                                                id={sidebarElementId(index, 'panel-uparrow')}
-                                                data-testid={sidebarElementId(index, 'panel-uparrow')}
+                                                id={sidebarElementId(facetType?.facet_type_id, 'panel-uparrow')}
+                                                data-testid={sidebarElementId(
+                                                    facetType?.facet_type_slug,
+                                                    'panel-uparrow',
+                                                )}
                                                 style={
-                                                    isFirstFilterPanel(index)
+                                                    openPanelListContains(facetType?.facet_type_id)
                                                         ? {}
                                                         : {
                                                               display: 'none',
@@ -662,10 +800,13 @@ export const DLOList = ({
                                                 }
                                             />
                                             <KeyboardArrowDownIcon
-                                                id={sidebarElementId(index, 'panel-downarrow')}
-                                                data-testid={sidebarElementId(index, 'panel-downarrow')}
+                                                id={sidebarElementId(facetType?.facet_type_id, 'panel-downarrow')}
+                                                data-testid={sidebarElementId(
+                                                    facetType?.facet_type_slug,
+                                                    'panel-downarrow',
+                                                )}
                                                 style={
-                                                    isFirstFilterPanel(index)
+                                                    openPanelListContains(facetType?.facet_type_id)
                                                         ? {
                                                               display: 'none',
                                                               visibility: 'hidden',
@@ -680,10 +821,10 @@ export const DLOList = ({
                                 </Grid>
                                 <div
                                     className={classes.filterSidebarCheckboxWrapper}
-                                    id={sidebarElementId(index)}
-                                    data-testid={sidebarElementId(index)}
+                                    id={sidebarElementId(facetType?.facet_type_id)}
+                                    data-testid={sidebarElementId(facetType?.facet_type_slug)}
                                     style={
-                                        isFirstFilterPanel(index)
+                                        openPanelListContains(facetType?.facet_type_id)
                                             ? {}
                                             : { display: 'none', visibility: 'hidden', opacity: 0, height: 0 }
                                     }
@@ -704,7 +845,9 @@ export const DLOList = ({
                                                             aria-label={'Include'}
                                                             // value={facet?.facet_name}
                                                             value={facet?.facet_id}
-                                                            data-testid={`checkbox-${facetType?.facet_type_slug}-${facet?.facet_id}`}
+                                                            data-testid={`checkbox-${
+                                                                facetType?.facet_type_slug
+                                                            }-${slugifyName(facet?.facet_name)}`}
                                                             ref={checkBoxArrayRef.current[checkBoxidShort]}
                                                             checked={
                                                                 !!checkBoxArrayRef.current?.includes(checkBoxidShort)
@@ -734,6 +877,7 @@ export const DLOList = ({
             .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
             .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
             .replace(/^-+/, '') // Trim hyphens from the start of the text
+            .replace(/\//, '') // Trim slashes
             .replace(/-+$/, '');
     };
 

@@ -29,11 +29,10 @@ describe('Promopanel Admin Form Pages', () => {
             previewIsDisabled(true);
             testId('admin-promopanel-form-admin-note').type('Test Admin Note');
             testId('admin-promopanel-form-title').type('Test Admin Title');
-            cy.get('.ck-content')
-                .clear()
-                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
-                // depending on the platform. Best to just leave as plain text for testing.
-                .type('This is the content of the panel');
+
+            // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+            // depending on the platform. Best to just leave as plain text for testing.
+            cy.typeCKEditor('.ck-content[contenteditable=true]', 'This is the content of the panel');
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
             testId('admin-promopanel-form-button-preview').click();
@@ -52,11 +51,9 @@ describe('Promopanel Admin Form Pages', () => {
             previewIsDisabled(true);
             testId('admin-promopanel-form-admin-note').type('Test Admin Note');
             testId('admin-promopanel-form-title').type('Test Admin Title');
-            cy.get('.ck-content')
-                .clear()
-                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
-                // depending on the platform. Best to just leave as plain text for testing.
-                .type('This is the content of the panel');
+            // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+            // depending on the platform. Best to just leave as plain text for testing.
+            cy.typeCKEditor('.ck-content[contenteditable=true]', 'This is the content of the panel');
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
             testId('admin-promopanel-form-button-preview').click();
@@ -84,11 +81,9 @@ describe('Promopanel Admin Form Pages', () => {
             previewIsDisabled(true);
             testId('admin-promopanel-form-admin-note').type('Test Admin Note');
             testId('admin-promopanel-form-title').type('Test Admin Title');
-            cy.get('.ck-content')
-                .clear()
-                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
-                // depending on the platform. Best to just leave as plain text for testing.
-                .type('This is the content of the panel');
+            // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+            // depending on the platform. Best to just leave as plain text for testing.
+            cy.typeCKEditor('.ck-content[contenteditable=true]', 'This is the content of the panel');
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
             cy.get('#group-multiple-checkbox').click();
@@ -143,11 +138,9 @@ describe('Promopanel Admin Form Pages', () => {
             previewIsDisabled(true);
             testId('admin-promopanel-form-admin-note').type('Test Admin Note');
             testId('admin-promopanel-form-title').type('Test Admin Title');
-            cy.get('.ck-content')
-                .clear()
-                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
-                // depending on the platform. Best to just leave as plain text for testing.
-                .type('This is the content of the panel');
+            // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+            // depending on the platform. Best to just leave as plain text for testing.
+            cy.typeCKEditor('.ck-content[contenteditable=true]', 'This is the content of the panel');
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
             cy.wait(200);
@@ -206,11 +199,9 @@ describe('Promopanel Admin Form Pages', () => {
             previewIsDisabled(true);
             testId('admin-promopanel-form-admin-note').type('Test Admin Note');
             testId('admin-promopanel-form-title').type('Test Admin Title');
-            cy.get('.ck-content')
-                .clear()
-                // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
-                // depending on the platform. Best to just leave as plain text for testing.
-                .type('This is the content of the panel');
+            // It's possible to test bold italic etc with {cmd or ctrl}, but the results differ
+            // depending on the platform. Best to just leave as plain text for testing.
+            cy.typeCKEditor('.ck-content[contenteditable=true]', 'This is the content of the panel');
             saveButtonIsDisabled(false);
             previewIsDisabled(false);
             cy.wait(200);

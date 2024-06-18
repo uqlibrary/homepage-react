@@ -1,11 +1,8 @@
 import React from 'react';
-import userEvent from '@testing-library/user-event';
 import AlertsAdd from './AlertsAdd';
-import { render } from 'test-utils';
-import { mui1theme } from 'config';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { rtlRender, userEvent } from 'test-utils';
 
-function setup(testProps, renderer = render) {
+function setup(testProps) {
     const props = {
         classes: {},
         actions: {
@@ -14,24 +11,18 @@ function setup(testProps, renderer = render) {
         },
         ...testProps,
     };
-    return renderer(
-        <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={mui1theme}>
-                <AlertsAdd {...props} />
-            </ThemeProvider>
-        </StyledEngineProvider>,
-    );
+    return rtlRender(<AlertsAdd {...props} />);
 }
 
 describe('Form Tests', () => {
-    it('the cancel button returns to the list page', () => {
+    it('the cancel button returns to the list page', async () => {
         const testFn2 = jest.fn();
-        const wrapper = setup({
+        const { getByText } = setup({
             history: { push: testFn2 },
         });
 
-        expect(wrapper.getByText('Cancel')).toBeEnabled();
-        userEvent.click(wrapper.getByText('Cancel'));
+        expect(getByText('Cancel')).toBeEnabled();
+        await userEvent.click(getByText('Cancel'));
         expect(testFn2).toHaveBeenCalledTimes(1);
     });
 });

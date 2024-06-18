@@ -79,7 +79,7 @@ export default {
             <p>
                 Submit this form to proceed to UQ Book It. Log in with your student ID and password. You will see a list
                 of available exam booths based on your choices above, for example{' '}
-                <strong>A01 - Exam Computer Booth - Building 94</strong>.
+                <strong>Central Library - Exam Booth - 12-N115-99</strong>.
             </p>
             <ol>
                 <li>

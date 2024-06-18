@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AppLoader component should have a proper style generator 1`] = `
-Object {
-  "card": Object {
+{
+  "card": {
     "fontWeight": "test1",
     "overflow": "unset",
   },
-  "cardContentNoPadding": Object {
+  "cardContentNoPadding": {
     "paddingBottom": "0px !important",
     "paddingLeft": "0px !important",
     "paddingRight": "0px !important",
     "paddingTop": "0px !important",
   },
-  "cardHeaderAccent": Object {
+  "cardHeaderAccent": {
     "backgroundColor": "test3",
     "borderRadius": "4px 4px 0px 0px",
     "color": "test2",
@@ -21,7 +21,7 @@ Object {
     "textOverflow": "ellipsis",
     "whiteSpace": "nowrap",
   },
-  "cardHeaderPrimary": Object {
+  "cardHeaderPrimary": {
     "backgroundColor": "test4",
     "borderRadius": "4px 4px 0px 0px",
     "color": "test2",
@@ -30,7 +30,7 @@ Object {
     "textOverflow": "ellipsis",
     "whiteSpace": "nowrap",
   },
-  "fullHeight": Object {
+  "fullHeight": {
     "height": "100%",
   },
 }

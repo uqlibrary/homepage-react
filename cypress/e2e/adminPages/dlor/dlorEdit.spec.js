@@ -9,13 +9,18 @@ describe('Edit an object on the Digital Learning Hub', () => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
 
-    function TypeCKEditor(content, clear = false) {
-        cy.get('.ck-content').should('exist');
-        if (clear) {
-            cy.get('.ck-content').clear();
-        }
-        // .click()
-        cy.get('.ck-content').type(content);
+    function TypeCKEditor(content, keepExisting = false) {
+        return cy
+            .get('.ck-content')
+            .should('exist')
+            .then(el => {
+                const editor = el[0].ckeditorInstance;
+                editor.setData(keepExisting ? editor.getData() + content : content);
+            });
+        // cy.get('.ck-content')
+        //     .parent.should('exist')
+        //     .setData(content);
+        // // .type(content);
     }
     function CheckCKEditor(content) {
         cy.get('.ck-content')
@@ -501,7 +506,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('xx');
-                TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'), true);
+                TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('xx');
@@ -570,7 +575,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
                 const typeableDownloadInstructions = 'xxx';
-                TypeCKEditor(typeableDownloadInstructions, true);
+                TypeCKEditor(typeableDownloadInstructions);
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -730,7 +735,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="object_title"] input')
                     .should('exist')
                     .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'), true);
+                TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 cy.get('[data-testid="object_summary"] textarea:first-child')
                     .should('exist')
                     .type('xxx');
@@ -789,7 +794,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
 
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
-                TypeCKEditor(downloadInstructionText, true);
+                TypeCKEditor(downloadInstructionText);
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -956,7 +961,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
 
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"]').should('not.exist'); // panel invalidity count no longer present
 
-                TypeCKEditor('word', true);
+                TypeCKEditor('word');
 
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')

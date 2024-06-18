@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AppLoader component should have a proper style generator 1`] = `
-Object {
-  "appLoader": Object {
+{
+  "appLoader": {
     "alignItems": "center",
     "display": "flex",
     "height": "100%",
@@ -13,13 +13,13 @@ Object {
     "textAlign": "center !important",
     "width": "100%",
   },
-  "logo": Object {
+  "logo": {
     "width": 200,
   },
-  "spaceBetween": Object {
+  "spaceBetween": {
     "margin": "16px 0",
   },
-  "white": Object {
+  "white": {
     "color": "test4",
     "fontWeight": "test5",
   },
@@ -27,8 +27,8 @@ Object {
 `;
 
 exports[`AppLoader component should have a proper style generator 2`] = `
-Object {
-  "appLoader": Object {
+{
+  "appLoader": {
     "alignItems": "center",
     "display": "flex",
     "height": "100%",
@@ -36,13 +36,13 @@ Object {
     "textAlign": "center !important",
     "width": "100%",
   },
-  "logo": Object {
+  "logo": {
     "width": 200,
   },
-  "spaceBetween": Object {
+  "spaceBetween": {
     "margin": "16px 0",
   },
-  "white": Object {
+  "white": {
     "color": "test4",
     "fontWeight": "test5",
   },
@@ -50,8 +50,8 @@ Object {
 `;
 
 exports[`AppLoader component should have a proper style generator 3`] = `
-Object {
-  "appLoader": Object {
+{
+  "appLoader": {
     "alignItems": "center",
     "display": "flex",
     "height": "100%",
@@ -59,13 +59,13 @@ Object {
     "textAlign": "center !important",
     "width": "100%",
   },
-  "logo": Object {
+  "logo": {
     "width": 200,
   },
-  "spaceBetween": Object {
+  "spaceBetween": {
     "margin": "16px 0",
   },
-  "white": Object {
+  "white": {
     "color": undefined,
     "fontWeight": "test5",
   },
@@ -73,8 +73,8 @@ Object {
 `;
 
 exports[`AppLoader component should have a proper style generator 4`] = `
-Object {
-  "appLoader": Object {
+{
+  "appLoader": {
     "alignItems": "center",
     "display": "flex",
     "height": "100%",
@@ -82,13 +82,13 @@ Object {
     "textAlign": "center !important",
     "width": "100%",
   },
-  "logo": Object {
+  "logo": {
     "width": 200,
   },
-  "spaceBetween": Object {
+  "spaceBetween": {
     "margin": "16px 0",
   },
-  "white": Object {
+  "white": {
     "color": undefined,
     "fontWeight": undefined,
   },

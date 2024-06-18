@@ -121,7 +121,7 @@ describe('InspectionsDue', () => {
         expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
-        userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
 
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
         await waitFor(() =>
@@ -134,7 +134,7 @@ describe('InspectionsDue', () => {
         );
 
         // change date range
-        userEvent.click(getByTestId('months_selector-inspections-due-select'));
+        await userEvent.click(getByTestId('months_selector-inspections-due-select'));
         await userEvent.selectOptions(
             getByRole('listbox'),
             document.querySelector('#months_selector-inspections-due-option-1'),
@@ -166,11 +166,11 @@ describe('InspectionsDue', () => {
         expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
-        userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
 
         // select building
-        userEvent.click(getByTestId('location_picker-inspections-due-building-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-building-input'));
         await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
 
         await waitFor(() =>
@@ -204,15 +204,15 @@ describe('InspectionsDue', () => {
         expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
-        userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
 
         // select building
-        userEvent.click(getByTestId('location_picker-inspections-due-building-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-building-input'));
         await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
 
         // select floor
-        userEvent.click(getByTestId('location_picker-inspections-due-floor-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-floor-input'));
         await userEvent.selectOptions(getByRole('listbox'), '2');
 
         await waitFor(() =>
@@ -246,19 +246,19 @@ describe('InspectionsDue', () => {
         expect(getByText('Asset tests due report for Library')).toBeInTheDocument();
 
         // select site
-        userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
 
         // select building
-        userEvent.click(getByTestId('location_picker-inspections-due-building-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-building-input'));
         await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
 
         // select floor
-        userEvent.click(getByTestId('location_picker-inspections-due-floor-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-floor-input'));
         await userEvent.selectOptions(getByRole('listbox'), '2');
 
         // select room
-        userEvent.click(getByTestId('location_picker-inspections-due-room-input'));
+        await userEvent.click(getByTestId('location_picker-inspections-due-room-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'W212');
         await waitFor(() =>
             expect(getInspectionsDueFn).toHaveBeenLastCalledWith({

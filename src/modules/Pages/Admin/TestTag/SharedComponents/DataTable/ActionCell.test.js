@@ -83,6 +83,7 @@ describe('ActionCell', () => {
             fireEvent.click(getByTestId('action_cell-test-delete-button'));
         });
         expect(onDeleteClickFn).toHaveBeenCalled();
+        jest.useRealTimers();
     });
 
     it('renders component with disabled tooltips', async () => {
