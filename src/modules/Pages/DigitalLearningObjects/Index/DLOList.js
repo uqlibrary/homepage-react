@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 
@@ -316,36 +316,41 @@ export const DLOList = ({
         'Use the Digital Learning Hub to find modules, videos and guides for teaching and study.';
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadCurrentDLORs();
         }
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
-        if (!!dlorFilterList && !!dlorList) {
-            const trimmedFilterList = [...dlorFilterList];
-            // Step 1: Extract all unique id values from dlorList
-            const idsFromDlorList = new Set();
-            dlorList?.forEach(item => {
-                item.object_filters.forEach(filter => {
-                    filter.filter_values.forEach(value => {
-                        idsFromDlorList.add(value.id);
-                    });
-                });
-            });
-
-            // Step 2 & 3: Iterate over trimmedFilterList and remove entries not found in dlorList
-            trimmedFilterList?.forEach(facetType => {
-                facetType.facet_list = facetType.facet_list.filter(facet =>
-                    // Check if facet_id exists in idsFromDlorList
-                    idsFromDlorList.has(facet.facet_id),
-                );
-            });
-
-            setFilterListTrimmed(trimmedFilterList);
-        }
     }, [dlorList, dlorFilterList, dlorListError, dlorListLoading, dlorFilterListError, dlorFilterListLoading, actions]);
+
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword?.length > 1;
+    }
+
+    const clearKeywordField = () => {
+        setKeywordSearch('');
+        keyWordSearchRef.current.value = '';
+        setPaginationPage(1); // set pagination back to page 1
+    };
+
+    const handleKeywordSearch = e => {
+        const keyword = e?.target?.value;
+
+        if (keywordIsSearchable(keyword)) {
+            setKeywordSearch(keyword);
+            setPaginationPage(1);
+        } else if (
+            !keyword ||
+            keyword.length === 0 // they've cleared it
+        ) {
+            clearKeywordField();
+        }
+
+        keyWordSearchRef.current.value = keyword;
+    };
 
     function hideElement(element, displayproperty = null) {
         /* istanbul ignore next */
@@ -417,6 +422,31 @@ export const DLOList = ({
         }
     }
 
+    useEffect(() => {
+        if (!!dlorFilterList && !!dlorList) {
+            const trimmedFilterList = [...dlorFilterList];
+            // Extract all unique id values from dlorList
+            const idsFromDlorList = new Set();
+            dlorList?.forEach(item => {
+                item.object_filters.forEach(filter => {
+                    filter.filter_values.forEach(value => {
+                        idsFromDlorList.add(value.id);
+                    });
+                });
+            });
+
+            // Iterate over trimmedFilterList and remove entries not found in dlorList
+            trimmedFilterList?.forEach(facetType => {
+                facetType.facet_list = facetType.facet_list.filter(facet =>
+                    // Check if facet_id exists in idsFromDlorList
+                    idsFromDlorList.has(facet.facet_id),
+                );
+            });
+
+            setFilterListTrimmed(trimmedFilterList);
+        }
+    }, [dlorFilterList, dlorList]);
+
     function getPopupId(facetType) {
         return `dlor-list-${facetType?.facet_type_slug}-help-popup`;
     }
@@ -452,11 +482,6 @@ export const DLOList = ({
         !!block && (block.style.display = 'none');
     }
 
-    function keywordIsSearchable(keyword) {
-        // don't filter on something terribly short
-        return keyword?.length > 1;
-    }
-
     const keywordFoundIn = (object, enteredKeyword) => {
         const enteredKeywordLower = enteredKeyword.toLowerCase();
         if (
@@ -474,28 +499,6 @@ export const DLOList = ({
             return true;
         }
         return false;
-    };
-
-    const clearKeywordField = () => {
-        setKeywordSearch('');
-        keyWordSearchRef.current.value = '';
-        setPaginationPage(1); // set pagination back to page 1
-    };
-
-    const handleKeywordSearch = e => {
-        const keyword = e?.target?.value;
-
-        if (keywordIsSearchable(keyword)) {
-            setKeywordSearch(keyword);
-            setPaginationPage(1);
-        } else if (
-            !keyword ||
-            keyword.length === 0 // they've cleared it
-        ) {
-            clearKeywordField();
-        }
-
-        keyWordSearchRef.current.value = keyword;
     };
 
     const handleCheckboxAction = prop => e => {
@@ -521,8 +524,8 @@ export const DLOList = ({
         setPaginationPage(1);
     };
 
-    function isFirstFilterPanel(index) {
-        return index === 0;
+    function isPanelToOpen(facetTypeId) {
+        return facetTypeId === 1;
     }
 
     function resetFiltering() {
@@ -534,7 +537,7 @@ export const DLOList = ({
 
         // reset panel open-close to initial position
         filterListTrimmed?.map((facetType, index) => {
-            if (isFirstFilterPanel(index)) {
+            if (isPanelToOpen(facetType?.facet_type_id)) {
                 showPanel(index);
             } else {
                 hidePanel(index);
@@ -650,7 +653,7 @@ export const DLOList = ({
                                     <Grid item md={1} className={classes.facetPanelControl}>
                                         <IconButton
                                             aria-label={
-                                                isFirstFilterPanel(index)
+                                                isPanelToOpen(facetType?.facet_type_id)
                                                     ? filterMinimiseButtonLabel
                                                     : filterMaximiseButtonLabel
                                             }
@@ -667,7 +670,7 @@ export const DLOList = ({
                                                     'panel-uparrow',
                                                 )}
                                                 style={
-                                                    isFirstFilterPanel(index)
+                                                    isPanelToOpen(facetType?.facet_type_id)
                                                         ? {}
                                                         : {
                                                               display: 'none',
@@ -684,7 +687,7 @@ export const DLOList = ({
                                                     'panel-downarrow',
                                                 )}
                                                 style={
-                                                    isFirstFilterPanel(index)
+                                                    isPanelToOpen(facetType?.facet_type_id)
                                                         ? {
                                                               display: 'none',
                                                               visibility: 'hidden',
@@ -702,7 +705,7 @@ export const DLOList = ({
                                     id={sidebarElementId(index)}
                                     data-testid={sidebarElementId(facetType?.facet_type_slug)}
                                     style={
-                                        isFirstFilterPanel(index)
+                                        isPanelToOpen(facetType?.facet_type_id)
                                             ? {}
                                             : { display: 'none', visibility: 'hidden', opacity: 0, height: 0 }
                                     }
