@@ -387,6 +387,7 @@ export const DLOList = ({
         } else {
             params.filters = `filters=${params.filters}`;
         }
+        /* istanbul ignore else */
         if (params.other === '') {
             delete params.other;
         }
@@ -703,6 +704,20 @@ export const DLOList = ({
         return iconList[facetTypeSlug];
     };
 
+    const slugifyName = text => {
+        // Trim hyphens from the end of the text
+        return text
+            .toString() // Ensure the input is a string
+            .toLowerCase() // Convert the string to lowercase
+            .replace(/\s+/g, '_') // Replace spaces with hyphens
+            .replace(/-/g, '_') // Replace spaces with hyphens
+            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
+            .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
+            .replace(/^-+/, '') // Trim hyphens from the start of the text
+            .replace(/\//, '') // Trim slashes
+            .replace(/-+$/, '');
+    };
+
     function displayFilterSidebarContents() {
         return (
             <>
@@ -735,7 +750,7 @@ export const DLOList = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} className={classes.filterSidebarBody}>
-                    {filterListTrimmed?.map((facetType, index) => {
+                    {filterListTrimmed?.map(facetType => {
                         return (
                             <Grid item key={facetType?.facet_type_slug} className={classes.filterSidebarType}>
                                 <Grid container className={classes.filterSidebarTypeHeading}>
@@ -878,20 +893,6 @@ export const DLOList = ({
             </>
         );
     }
-
-    const slugifyName = text => {
-        // Trim hyphens from the end of the text
-        return text
-            .toString() // Ensure the input is a string
-            .toLowerCase() // Convert the string to lowercase
-            .replace(/\s+/g, '_') // Replace spaces with hyphens
-            .replace(/-/g, '_') // Replace spaces with hyphens
-            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
-            .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
-            .replace(/^-+/, '') // Trim hyphens from the start of the text
-            .replace(/\//, '') // Trim slashes
-            .replace(/-+$/, '');
-    };
 
     const numberItemsPerPage = 10;
 
