@@ -331,11 +331,12 @@ export const DLOList = ({
         return keyword?.length > 1;
     }
 
-    const updateUrl = (itemType = null) => {
+    const updateUrl = itemType => {
         const url = new URL(document.URL);
 
         const separator = ';';
         const params = {
+            other: '',
             keyword: '',
             filters: '',
         };
@@ -345,18 +346,22 @@ export const DLOList = ({
             .slice(1) // remove '#' from beginning
             .split(separator) // separate filters
             .map(spec => {
+                console.log('spec=', spec);
                 /* istanbul ignore if */
                 if (!spec) {
                     return;
                 }
                 const [name, thevalue] = spec.split('='); // get keys and values
+                /* istanbul ignore else */
                 if (name === 'keyword') {
                     params.keyword = thevalue;
-                }
-                if (name === 'filters') {
+                } else if (name === 'filters') {
                     params.filters = thevalue;
+                } else {
+                    params.other = params.other === '' ? spec : params.other + separator + spec;
                 }
             });
+        console.log('params=', params);
 
         // overwrite the values from the url with the requested change
         if (itemType === 'keyword') {
@@ -381,6 +386,9 @@ export const DLOList = ({
             delete params.filters;
         } else {
             params.filters = `filters=${params.filters}`;
+        }
+        if (params.other === '') {
+            delete params.other;
         }
         url.hash = Object.keys(params).length > 0 ? Object.values(params).join(separator) : '#';
 
@@ -1111,8 +1119,14 @@ export const DLOList = ({
                 heroBackgroundImage={heroBackgroundImageDlor}
             />
             <StandardPage>
-                <Grid container style={{ marginBlock: '2em' }} alignItems="center" id="topOfBody">
-                    <Grid item xs={12} md={10}>
+                <Grid
+                    container
+                    style={{ marginBlock: '2em' }}
+                    alignItems="center"
+                    id="topOfBody"
+                    justifyContent="flex-end"
+                >
+                    <Grid item xs={12} md={8}>
                         <Typography component={'p'} style={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
@@ -1128,7 +1142,7 @@ export const DLOList = ({
                             </button>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md={2} style={{ textAlign: 'right' }}>
+                    <Grid item xs={12} md={4} style={{ textAlign: 'right' }}>
                         <a
                             data-testid="dlor-homepage-contact"
                             className={classes.uqActionButton}
