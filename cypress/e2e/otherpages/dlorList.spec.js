@@ -735,6 +735,137 @@ describe('Digital Learning Hub', () => {
             cy.get('body').contains('user has navigated to the contact form');
         });
     });
+    context('url reflects filtering changes', () => {
+        beforeEach(() => {
+            cy.visit('digital-learning-hub#keyword=acc;filters=11');
+            cy.viewport(1300, 1000);
+        });
+        it('loads filters correctly from url', () => {
+            // has reduced number of panels
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + extraRowCount);
+            // the keyword field has the text
+            // cy.get('[data-testid="dlor-homepage-keyword"] input').contains('acc');
+            // sidebar is open-closed as expected
+            cy.get('[data-testid="panel-minimisation-icon-topic"]').should(
+                'have.attr',
+                'aria-label',
+                'Open this filter section',
+            );
+            cy.get('[data-testid="panel-minimisation-icon-graduate_attributes"]').should(
+                'have.attr',
+                'aria-label',
+                'Close this filter section',
+            );
+            cy.get('[data-testid="checkbox-graduate_attributes-accomplished_scholars"] input').should('not.be.checked');
+            cy.get('[data-testid="checkbox-graduate_attributes-connected_citizens"] input').should('be.checked');
+            cy.get('[data-testid="checkbox-graduate_attributes-courageous_thinkers"] input').should('not.be.checked');
+            cy.get('[data-testid="checkbox-graduate_attributes-culturally_capable"] input').should('not.be.checked');
+            cy.get('[data-testid="checkbox-graduate_attributes-influential_communicators"] input').should(
+                'not.be.checked',
+            );
+            cy.get('[data-testid="panel-minimisation-icon-item_type"]').should(
+                'have.attr',
+                'aria-label',
+                'Open this filter section',
+            );
+            cy.get('[data-testid="panel-minimisation-icon-media_format"]').should(
+                'have.attr',
+                'aria-label',
+                'Open this filter section',
+            );
+            cy.get('[data-testid="panel-minimisation-icon-subject"]').should(
+                'have.attr',
+                'aria-label',
+                'Open this filter section',
+            );
+            cy.get('[data-testid="panel-minimisation-icon-licence"]').should(
+                'have.attr',
+                'aria-label',
+                'Open this filter section',
+            );
+        });
+        it('saves changes from the page to the url', () => {
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#keyword=acc;filters=11');
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + extraRowCount);
+
+            // open the Topic type panel
+            cy.get('[data-testid="panel-minimisation-icon-topic"]')
+                .should('exist')
+                .should('have.attr', 'aria-label', 'Open this filter section');
+            cy.get('[data-testid="panel-downarrow-topic"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            // check Digital skills
+            cy.get('[data-testid="checkbox-topic-digital_skills"] input[type=checkbox]')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            // has reduced number of panels
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + extraRowCount);
+
+            // url has updated
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#keyword=acc;filters=11,3');
+        });
+        it('url and fields clear on reset', () => {
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + extraRowCount);
+
+            cy.get('[data-testid="sidebar-filter-reset-button"]')
+                .should('exist')
+                .click();
+
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#');
+            cy.get('[data-testid="dlor-homepage-list"')
+                .should('exist')
+                .children()
+                .should('have.length', itemsPerPage + extraRowCount);
+
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#');
+        });
+        it('back button maintains filters', () => {
+            // click on first Object
+            cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"] button')
+                .should('exist')
+                .click();
+            // the detail page loads
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866');
+
+            // hit the back button
+            cy.go('back');
+
+            // url contains the same values and the display is properly displayed and filtered
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#keyword=acc;filters=11');
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + extraRowCount);
+            // sidebar is open-closed as expected
+            cy.get('[data-testid="panel-minimisation-icon-topic"]').should(
+                'have.attr',
+                'aria-label',
+                'Open this filter section',
+            );
+            cy.get('[data-testid="panel-minimisation-icon-graduate_attributes"]').should(
+                'have.attr',
+                'aria-label',
+                'Close this filter section',
+            );
+            cy.get('[data-testid="checkbox-graduate_attributes-accomplished_scholars"] input').should('not.be.checked');
+            cy.get('[data-testid="checkbox-graduate_attributes-connected_citizens"] input').should('be.checked');
+        });
+    });
     context('other homepage visits', () => {
         it('can handle an error', () => {
             cy.visit('digital-learning-hub?responseType=error');
