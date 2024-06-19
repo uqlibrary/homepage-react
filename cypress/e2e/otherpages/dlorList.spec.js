@@ -139,7 +139,7 @@ describe('Digital Learning Hub', () => {
             );
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article').should(
                 'contain',
-                'Types of AI, implications for society, using AI in your studies and how UQ is involved.',
+                'Types of AI, implications for society, using AI in your studies and how UQ is',
             );
             cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"] article footer')
                 .should('exist')
@@ -387,89 +387,123 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 5 + extraRowCount);
         });
-        it('keyword filters on each of the different options', () => {
-            // "Implications" is found in the description of "Artificial Intelligence - Digital Essentials"
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('Implications');
-            // now only one panel
-            cy.get('[data-testid="dlor-homepage-list"]')
-                .should('exist')
-                .children()
-                .should('have.length', 1 + extraRowCount);
-            cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"]')
-                .should('exist')
-                .should('be.visible')
-                .should('contain', 'Artificial Intelligence - Digital Essentials');
-
-            // use the clear button to clear the keyword
-            cy.get('[data-testid="keyword-clear"]')
-                .should('exist')
-                .click();
-            // all panels showing again & keyword search field empty
-            cy.get('[data-testid="dlor-homepage-list"]')
-                .should('exist')
-                .children()
-                .should('have.length', itemsPerPage + extraRowCount);
-            cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
-
-            // "security" is found in the title of "Digital security  - Digital Essentials"
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('security');
-            // now only one panel
-            cy.get('[data-testid="dlor-homepage-list"]')
-                .should('exist')
-                .children()
-                .should('have.length', 1 + extraRowCount);
-            cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34"]')
-                .should('exist')
-                .should('be.visible')
-                .should('contain', 'Digital security - Digital Essentials');
-
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('{selectall}{backspace}');
-            // all panels showing again & keyword search field empty
-            cy.get('[data-testid="dlor-homepage-list"]')
-                .should('exist')
-                .children()
-                .should('have.length', itemsPerPage + extraRowCount);
-            cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
-
-            // "freeware" is found in the summary of "Choose the right tool - Digital Essentials"
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('freeware');
-            // now only one panels
-            cy.get('[data-testid="dlor-homepage-list"]')
-                .should('exist')
-                .children()
-                .should('have.length', 1 + extraRowCount);
-            cy.get('[data-testid="dlor-homepage-panel-0h4y_87f3_6js7"]')
-                .should('exist')
-                .should('be.visible')
-                .should('contain', 'Choose the right tool - Digital Essentials');
-
-            // clear form
-            cy.get('[data-testid="keyword-clear"]')
-                .should('exist')
-                .click();
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('dummy');
-            cy.get('[data-testid="dlor-homepage-list"]')
-                .should('exist')
-                .children()
-                .should('have.length', itemsPerPage + extraRowCount);
-            cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button') // click pagination for page 2
-                .should('exist')
-                .click();
-            cy.get('[data-testid="dlor-homepage-list"]')
-                .should('exist')
-                .children()
-                .should('have.length', 5 + extraRowCount);
-            cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button') // second page
-                .should('exist')
-                .should('have.class', 'Mui-selected');
-            // when we change the search term it should return to page 1 of results
-            cy.get('[data-testid="dlor-homepage-keyword"]')
-                .clear()
-                .type('acc');
-            cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button') // first page
-                .should('exist')
-                // .should('have.value', '1')
-                .should('have.class', 'Mui-selected');
+        context('keyword search bar filters correctly', () => {
+            it('keyword filters on description', () => {
+                // "involved" is found only in the description of "Artificial Intelligence - Digital Essentials"
+                cy.get('[data-testid="dlor-homepage-keyword"]').type('involved');
+                // now only one panel
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 1 + extraRowCount);
+                cy.get('[data-testid="dlor-homepage-panel-938h_4986_654f"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .should('contain', 'Artificial Intelligence - Digital Essentials');
+            });
+            it('keyword filters on title', () => {
+                // "Digital security" is found only in the title of "Digital security  - Digital Essentials"
+                cy.get('[data-testid="dlor-homepage-keyword"]').type('Digital security');
+                // now only one panel
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 1 + extraRowCount);
+                cy.get('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .should('contain', 'Digital security - Digital Essentials');
+            });
+            it('keyword filters on summary', () => {
+                // "freeware tools" is found only in the summary of "Choose the right tool - Digital Essentials"
+                cy.get('[data-testid="dlor-homepage-keyword"]').type('freeware tools');
+                // now only one panels
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 1 + extraRowCount);
+                cy.get('[data-testid="dlor-homepage-panel-0h4y_87f3_6js7"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .should('contain', 'Choose the right tool - Digital Essentials');
+            });
+            it('keyword filters on keywords', () => {
+                // "study hacks" is found only in the keywords of "Accessibility - Digital Essentials"
+                cy.get('[data-testid="dlor-homepage-keyword"]').type('study hacks');
+                // now only one panel
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 1 + extraRowCount);
+                cy.get('[data-testid="dlor-homepage-panel-987y_isjgt_9866"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .should('contain', 'Accessibility - Digital Essentials (has Youtube link)');
+            });
+            it('keyword clear button clears form', () => {
+                // given a search is loaded
+                cy.get('[data-testid="dlor-homepage-keyword"]').type('Implications');
+                // num pages reduced
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 1 + extraRowCount);
+                // when the keyword clear button is clicked
+                cy.get('[data-testid="keyword-clear"]')
+                    .should('exist')
+                    .click();
+                // then all panels showing again & keyword search field empty
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', itemsPerPage + extraRowCount);
+                cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
+            });
+            it('can manually clear the keyword field', () => {
+                // given something is searched for
+                cy.get('[data-testid="dlor-homepage-keyword"]').type('acc');
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 2 + extraRowCount);
+                // when the user manually clears the keyword field
+                cy.get('[data-testid="dlor-homepage-keyword"]').type('{selectall}{backspace}');
+                // then all panels showing again & keyword search field empty
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', itemsPerPage + extraRowCount);
+                cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
+            });
+            it('searching again returns to first page of pagination', () => {
+                // performa search that returns more than one page of results
+                cy.get('[data-testid="dlor-homepage-keyword"]').type('dummy');
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', itemsPerPage + extraRowCount);
+                // click pagination for page 2
+                cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="dlor-homepage-list"]')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 5 + extraRowCount);
+                // we are on second page of pagination
+                cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button')
+                    .should('exist')
+                    .should('have.class', 'Mui-selected');
+                // when we change the search term...
+                cy.get('[data-testid="dlor-homepage-keyword"]')
+                    .clear()
+                    .type('acc');
+                // we are on first page of pagination
+                cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button')
+                    .should('exist')
+                    // .should('have.value', '1')
+                    .should('have.class', 'Mui-selected');
+            });
         });
         it('reset button works', () => {
             // all panels showing

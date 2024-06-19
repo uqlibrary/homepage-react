@@ -284,7 +284,7 @@ export default {
             "object_public_uuid": "938h_4986_654f",
             "object_title": "Artificial Intelligence - Digital Essentials",
             "object_description": "<p>Types of AI, implications for society, using AI in your studies and how UQ is involved. (longer lines)</p>",
-            "object_summary": "Types of AI, implications for society, using AI in your studies and how UQ is involved.",
+            "object_summary": "Types of AI, implications for society, using AI in your studies and how UQ is [removed word to allow search test on description].",
             "object_review_date_next": "2050-01-01",
             "object_status": "current",
             "object_owning_team_id": 1,
