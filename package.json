@@ -129,7 +129,6 @@
         "axios": "^0.28.1",
         "axios-cache-interceptor": "^0.10.2",
         "babel-plugin-add-module-exports": "^1.0.4",
-        "classnames": "^2.5.1",
         "connected-react-router": "^6.9.3",
         "copy-webpack-plugin": "^6.4.1",
         "core-js": "^3.36.0",

@@ -10,7 +10,6 @@ import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import { makeStyles } from '@mui/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
@@ -30,46 +29,44 @@ import {
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
+import { styled } from '@mui/material/styles';
 
 const moment = require('moment');
 
-const useStyles = makeStyles(
-    theme => ({
-        checkboxes: {
-            // on mobile layouts reverse the order of the checkboxes so the 'add link' appears with the link text fields
-            [theme.breakpoints.down('md')]: {
-                display: 'flex',
-                flexDirection: 'column-reverse',
-            },
+const StyledCheckBoxes = styled(Grid)(({ theme }) => ({
+    // on mobile layouts reverse the order of the checkboxes so the 'add link' appears with the link text fields
+    [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'column-reverse',
+    },
+    '& .checkbox': {
+        '& input[type="checkbox"]:checked + svg': {
+            fill: '#595959',
         },
-        saveButton: {
-            '&:disabled': {
-                color: 'rgba(0, 0, 0, 0.26)',
-                boxShadow: 'none',
-                backgroundColor: 'rgba(0, 0, 0, 0.12)',
-            },
+    },
+    '& .disabledCheckbox': {
+        '& input[type="checkbox"]:checked + svg': {
+            fill: '#ececec',
         },
-        box: {
-            border: '1px solid rgb(211, 211, 211)',
-            marginTop: '1em',
-            paddingBottom: '1em',
-        },
-        checkbox: {
-            '& input[type="checkbox"]:checked + svg': {
-                fill: '#595959',
-            },
-        },
-        disabledCheckbox: {
-            '& input[type="checkbox"]:checked + svg': {
-                fill: '#ececec',
-            },
-        },
-        selectPriorityType: {
-            minWidth: '6em',
-        },
-    }),
-    { withTheme: true },
-);
+    },
+    '& .selectPriorityType': {
+        minWidth: '6em',
+    },
+}));
+
+const StyledBox = styled(Grid)(() => ({
+    border: '1px solid rgb(211, 211, 211)',
+    marginTop: '1em',
+    paddingBottom: '1em',
+}));
+
+const StyledSaveButton = styled(Grid)(() => ({
+    '&:disabled': {
+        color: 'rgba(0, 0, 0, 0.26)',
+        boxShadow: 'none',
+        backgroundColor: 'rgba(0, 0, 0, 0.12)',
+    },
+}));
 
 export const isValidUrl = testurl => {
     if (!testurl) {
@@ -99,8 +96,6 @@ export const isValidUrl = testurl => {
 };
 
 export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
-    const classes = useStyles();
-
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
@@ -630,19 +625,14 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             </Grid>
                         );
                     })}
-                <Grid
-                    container
-                    spacing={2}
-                    style={{ minHeight: '4rem', paddingTop: '1rem' }}
-                    className={classes.checkboxes}
-                >
+                <StyledCheckBoxes container spacing={2} style={{ minHeight: '4rem', paddingTop: '1rem' }}>
                     <Grid item sm={4} xs={12}>
                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.link.checkbox}>
                             <Checkbox
                                 checked={!!values.linkRequired}
                                 data-testid="admin-alerts-form-checkbox-linkrequired"
                                 onChange={handleChange('linkRequired')}
-                                className={classes.checkbox}
+                                className={'checkbox'}
                             />
                             {locale.form.labels.link.checkbox}
                         </InputLabel>
@@ -655,7 +645,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 onChange={handleChange('permanentAlert')}
                                 name="permanentAlert"
                                 title={locale.form.permanentTooltip}
-                                className={classes.checkbox}
+                                className={'checkbox'}
                             />
                             {locale.form.labels.permanent}
                         </InputLabel>
@@ -672,7 +662,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 defaultValue={values.priorityType}
                                 value={values.priorityType}
                                 onChange={handleChange('priorityType')}
-                                classes={{ root: classes.selectPriorityType }}
+                                classes={{ root: 'selectPriorityType' }}
                                 inputProps={{
                                     'data-testid': 'admin-alerts-form-prioritytype-input',
                                     'aria-label': locale.form.labels.priority.aria,
@@ -690,11 +680,10 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             </Select>
                         </InputLabel>
                     </Grid>
-                </Grid>
-                <Grid
+                </StyledCheckBoxes>
+                <StyledBox
                     container
                     spacing={2}
-                    className={classes.box}
                     style={{
                         display: values.linkRequired ? 'flex' : 'none',
                     }}
@@ -728,8 +717,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             />
                         </FormControl>
                     </Grid>
-                </Grid>
-                <Grid container className={classes.box} spacing={2}>
+                </StyledBox>
+                <StyledBox container spacing={2}>
                     <Grid item xs={12}>
                         <p>{locale.form.labels.systems}</p>
                     </Grid>
@@ -752,9 +741,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             /* istanbul ignore next */ 'Unknown'
                                         }
                                         className={`${
-                                            !system.removed
-                                                ? classes.checkbox
-                                                : /* istanbul ignore next */ classes.disabledCheckbox
+                                            !system.removed ? 'checkbox' : /* istanbul ignore next */ 'disabledCheckbox'
                                         }`}
                                         disabled={!!system.removed}
                                     />
@@ -763,7 +750,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             );
                         })}
                     </Grid>
-                </Grid>
+                </StyledBox>
                 {defaults.type === 'edit' && values.createdBy !== '?' && (
                     <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                         {/* created_by entries before we started recording the creator are marked as '?' */}
@@ -797,14 +784,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             style={{ marginRight: '0.5rem' }}
                             variant={!!showPreview ? 'outlined' : 'contained'}
                         />
-                        <Button
+                        <StyledSaveButton
                             color="primary"
                             data-testid="admin-alerts-form-button-save"
                             variant="contained"
                             children={defaults.type === 'edit' ? 'Save' : 'Create'}
                             disabled={!isFormValid}
                             onClick={saveAlerts}
-                            className={classes.saveButton}
                         />
                     </Grid>
                 </Grid>

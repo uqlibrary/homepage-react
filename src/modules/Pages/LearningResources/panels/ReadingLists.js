@@ -9,30 +9,22 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles(
-    () => ({
-        learningResourceLineItem: {
-            borderTop: '1px solid #e8e8e8',
-            padding: '15px 0',
-            '& a': {
-                display: 'flex',
-                alignItems: 'center',
-            },
-        },
-        presentLabel: {
-            paddingBottom: '1rem',
-            lineHeight: 1.3,
-        },
-    }),
-    { withTheme: true },
-);
+const StyledItem = styled(Grid)(() => ({
+    borderTop: '1px solid #e8e8e8',
+    padding: '15px 0',
+    '& a': {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    '& .presentLabel': {
+        paddingBottom: '1rem',
+        lineHeight: 1.3,
+    },
+}));
 
 const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoading, readingListError }) => {
-    const classes = useStyles();
-
     const talisSubjectUrl = courseCode => {
         return locale.myCourses.readingLists.courseLink.replace('[coursecode]', courseCode.toLowerCase());
     };
@@ -71,24 +63,24 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                 {/* eslint-disable-next-line max-len */}
                 {!readingListError && !readingListLoading && (!listOfReadingLists || listOfReadingLists.length === 0) && (
                     <React.Fragment>
-                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                        <StyledItem item xs={12}>
                             <Typography data-testid="no-reading-lists">No Reading list for this course.</Typography>
-                        </Grid>
-                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                        </StyledItem>
+                        <StyledItem item xs={12}>
                             <a href={talisSubjectUrl(courseCode)}>
                                 <SpacedArrowForwardIcon />
                                 View older lists
                             </a>
-                        </Grid>
+                        </StyledItem>
                     </React.Fragment>
                 )}
                 {/* eslint-disable-next-line max-len */}
                 {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length === 1 && (
                     <React.Fragment>
-                        <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <span className={classes.presentLabel}>{locale.myCourses.readingLists.presentLabel}</span>
-                        </Grid>
-                        <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
+                        <StyledItem item xs={12}>
+                            <span className={'presentLabel'}>{locale.myCourses.readingLists.presentLabel}</span>
+                        </StyledItem>
+                        <StyledItem item xs={12} data-testid="reading-list-link">
                             <a href={listOfReadingLists[0].url}>
                                 <SpacedArrowForwardIcon />
                                 {`${courseCode} Reading list (contains ${listOfReadingLists[0].totalCount} ${_pluralise(
@@ -96,15 +88,15 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                                     listOfReadingLists[0].totalCount,
                                 )})`}
                             </a>
-                        </Grid>
+                        </StyledItem>
                     </React.Fragment>
                 )}
                 {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length > 1 && (
                     <React.Fragment>
-                        <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <span className={classes.presentLabel}>{locale.myCourses.readingLists.presentLabel}</span>
-                        </Grid>
-                        <Grid item xs={12} data-testid="reading-list-link" className={classes.learningResourceLineItem}>
+                        <StyledItem item xs={12}>
+                            <span className={'presentLabel'}>{locale.myCourses.readingLists.presentLabel}</span>
+                        </StyledItem>
+                        <StyledItem item xs={12} data-testid="reading-list-link">
                             <a href={talisSubjectUrl(courseCode)}>
                                 <SpacedArrowForwardIcon />
                                 {`${courseCode} (has ${listOfReadingLists.length} ${_pluralise(
@@ -112,7 +104,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                                     listOfReadingLists.length,
                                 )})`}
                             </a>
-                        </Grid>
+                        </StyledItem>
                     </React.Fragment>
                 )}
             </Grid>
