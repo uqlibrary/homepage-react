@@ -101,6 +101,23 @@ describe('Add an object to the Digital Learning Hub', () => {
                 ).contains('Create an Object for the Digital Learning Hub');
 
                 cy.get('[data-testid="object_publishing_user"] input').should('have.value', 'dloradmn');
+
+                // go to description panel
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                // go to link panel
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+
+                // go to filter panel
+                cy.get('[data-testid="dlor-form-next-button"]')
+                    .should('exist')
+                    .click();
+                // no notify checkbox
+                cy.get('[data-testid="choose-notify"] input').should('not.exist');
             });
             it('validates fields correctly', () => {
                 // first enter all the fields and show the save button doesn't enable until all the fields are entered

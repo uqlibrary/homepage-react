@@ -88,6 +88,17 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     scopeName: 'Panel 4',
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
+
+                // open the notification lightbox
+                cy.get('[data-testid="choose-notify"] input')
+                    .should('exist')
+                    .check();
+                cy.waitUntil(() => cy.get('[data-testid="object_keywords"] textarea:first-child').should('exist'));
+                cy.checkA11y('[data-testid="StandardPage"]', {
+                    reportName: 'edit dlor notification lightbox',
+                    scopeName: 'Panel 4',
+                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+                });
             });
             it('loads fields correctly', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
@@ -521,7 +532,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
             beforeEach(() => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
             });
-            it('admin can edit an object for a new team and return to list', () => {
+            it('admin can edit an object for a new team with notify and return to list', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
 
@@ -652,6 +663,25 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .clear()
                     .type('cat, dog');
 
+                // add notification text
+                cy.get('[data-testid="choose-notify"] input')
+                    .should('exist')
+                    .check();
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="notify-lightbox-title"]')
+                        .should('exist')
+                        .should('be.visible'),
+                );
+                // the lightbox is open
+                cy.get('[data-testid="notify-lightbox-title"]').contains('Object change notification');
+
+                TypeCKEditor('the words that will go in the email');
+
+                cy.get('[data-testid="notify-lightbox-close-button"]')
+                    .should('exist')
+                    .click();
+
                 cy.get('[data-testid="admin-dlor-save-button-submit"]')
                     .should('exist')
                     .should('not.be.disabled')
@@ -698,6 +728,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                         17, // type_interactive_activity
                         45, // cc_by_nc_attribution_noncommercial
                     ],
+                    notificationText: '<p>the words that will go in the email</p>',
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
@@ -917,6 +948,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                         11, // Graduate attributes : Connected citizens
                     ],
                     object_keywords: ['cat', 'dog'],
+                    notificationText: '',
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
@@ -969,7 +1001,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .should('contain', 'Edit object: Advanced literature searching');
             });
-            it('with a new interaction type & is featured', () => {
+            it('with a new interaction type & is featured & cancelled notification text', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
 
@@ -1016,6 +1048,84 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
+
+                // open the notification lightbox, type something and then uncheck the notify checkbox
+                // should then not send text
+                cy.get('[data-testid="choose-notify"] input')
+                    .should('exist')
+                    .check();
+
+                // the lightbox opens
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="notify-lightbox-title"]')
+                        .should('exist')
+                        .should('be.visible'),
+                );
+                cy.get('[data-testid="notify-lightbox-title"]').contains('Object change notification');
+
+                TypeCKEditor('the words that will go in the email');
+
+                cy.get('[data-testid="notify-lightbox-close-button"]')
+                    .should('exist')
+                    .contains('Close')
+                    .click();
+
+                // check the edit button reopens the lightbox
+                cy.get('[data-testid="notify-reedit-button"]')
+                    .should('exist')
+                    .contains('Edit')
+                    .click();
+                // the lightbox is open
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="notify-lightbox-title"]')
+                        .should('exist')
+                        .should('be.visible'),
+                );
+                cy.get('[data-testid="notify-lightbox-title"]').contains('Object change notification');
+                cy.get('[data-testid="notify-lightbox-modal"]')
+                    .should('exist')
+                    .contains('the words that will go in the email');
+
+                // close the box again
+                cy.get('[data-testid="notify-lightbox-close-button"]')
+                    .should('exist')
+                    .click();
+
+                cy.get('[data-testid="choose-notify"] input')
+                    .should('exist')
+                    .should('be.checked')
+                    .uncheck();
+                cy.get('[data-testid="notify-reedit-button"]').should('not.exist');
+
+                // if we clicked save now, it would not send a notify message and thus wouldnt notify
+                // but lets confirm that the form holds the previously entered text first
+                // recheck notify, lightbox opens with previous text
+                cy.get('[data-testid="choose-notify"] input')
+                    .should('exist')
+                    .click()
+                    // .should('not.be.checked')
+                    .check();
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="notify-lightbox-title"]')
+                        .should('exist')
+                        .should('be.visible'),
+                );
+                cy.get('[data-testid="notify-lightbox-title"]').contains('Object change notification');
+                cy.get('[data-testid="notify-lightbox-modal"]')
+                    .should('exist')
+                    .contains('the words that will go in the email');
+                cy.get('[data-testid="notify-lightbox-close-button"]')
+                    .should('exist')
+                    .click();
+
+                // uncheck, we want to check it doesnt send
+                cy.get('[data-testid="choose-notify"] input')
+                    .should('exist')
+                    .should('be.checked')
+                    .uncheck();
 
                 // save record
                 cy.get('[data-testid="admin-dlor-save-button-submit"]')
@@ -1066,6 +1176,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     team_email: 'dlor@library.uq.edu.au',
                     team_manager: 'John Smith',
                     team_name: 'LIB DX Digital Content',
+                    notificationText: '',
                 };
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
@@ -1105,7 +1216,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .contains('Re-edit Object');
 
-                // now clear the form to create another Object
+                // now clear the form to re-edit
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('contain', 'Re-edit Object')
                     .click();
