@@ -42,6 +42,7 @@ import {
     isPreviewableUrl,
     isValidNumber,
     pluraliseWord,
+    slugifyName,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import {
@@ -1091,7 +1092,9 @@ export const DlorForm = ({
                                 <Checkbox
                                     onChange={handleFacetChange(thisfacet.facet_id)}
                                     id={`filter-${thisfacet.facet_id}`}
-                                    data-testid={`filter-${thisfacet.facet_id}`}
+                                    data-testid={`filter-${filterItem.facet_type_slug}-${slugifyName(
+                                        thisfacet.facet_name,
+                                    )}`}
                                     checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)}
                                 />
                             }
@@ -1115,7 +1118,9 @@ export const DlorForm = ({
                                 className={classes.facetControl}
                                 control={<Radio checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)} />}
                                 value={thisfacet.facet_id}
-                                data-testid={`filter-${thisfacet.facet_id}`}
+                                data-testid={`filter-${filterItem.facet_type_slug}-${slugifyName(
+                                    thisfacet.facet_name,
+                                )}`}
                                 label={thisfacet.facet_name}
                             />
                         );

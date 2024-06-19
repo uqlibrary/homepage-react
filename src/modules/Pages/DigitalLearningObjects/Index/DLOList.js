@@ -33,7 +33,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
-import { getDlorViewPageUrl } from '../dlorHelpers';
+import { getDlorViewPageUrl, slugifyName } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -333,39 +333,16 @@ export const DLOList = ({
 
     const updateUrl = itemType => {
         const url = new URL(document.URL);
-
-        const separator = ';';
-        const params = {
-            other: '',
-            keyword: '',
-            filters: '',
-        };
-
-        // start with the values currently in the url
-        location.hash
-            .slice(1) // remove '#' from beginning
-            .split(separator) // separate filters
-            .map(spec => {
-                console.log('spec=', spec);
-                /* istanbul ignore if */
-                if (!spec) {
-                    return;
-                }
-                const [name, thevalue] = spec.split('='); // get keys and values
-                /* istanbul ignore else */
-                if (name === 'keyword') {
-                    params.keyword = thevalue;
-                } else if (name === 'filters') {
-                    params.filters = thevalue;
-                } else {
-                    params.other = params.other === '' ? spec : params.other + separator + spec;
-                }
-            });
-        console.log('params=', params);
+        const rawsearchparams = !!url && url.searchParams;
+        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
 
         // overwrite the values from the url with the requested change
         if (itemType === 'keyword') {
-            params.keyword = keyWordSearchRef.current.value;
+            if (keyWordSearchRef.current.value.trim() === '') {
+                params.delete('keyword');
+            } else {
+                params.set('keyword', keyWordSearchRef.current.value);
+            }
         }
         if (itemType === 'filters') {
             const facetIds = checkBoxArrayRef.current.map(c => {
@@ -373,28 +350,19 @@ export const DLOList = ({
                 const facetId = parseInt(parts[1], 10);
                 return facetId;
             });
-            params.filters = facetIds.join(',');
+            params.set('filters', facetIds.join(','));
         }
 
-        // only put the used segments in the hash (tidy url)
-        if (params.keyword === '') {
-            delete params.keyword;
-        } else {
-            params.keyword = `keyword=${params.keyword}`;
+        if (params.has('keyword') && (params.get('keyword').length === 0 || params.get('keyword') === 'keyword=')) {
+            params.delete('keyword');
         }
-        if (params.filters === '') {
-            delete params.filters;
-        } else {
-            params.filters = `filters=${params.filters}`;
+        if (params.has('filters') && params.get('filters').length === 0) {
+            params.delete('filters');
         }
-        /* istanbul ignore else */
-        if (params.other === '') {
-            delete params.other;
-        }
-        url.hash = Object.keys(params).length > 0 ? Object.values(params).join(separator) : '#';
 
-        // add the current hash to the url
-        document.location.href = url.href;
+        const newPathSearch = [...params.entries()].length > 0 ? '?' + params.toString() : url.pathname;
+
+        window.history.pushState({}, '', newPathSearch);
     };
 
     const clearKeywordField = () => {
@@ -404,7 +372,7 @@ export const DLOList = ({
         updateUrl('keyword');
     };
 
-    const handleKeywordSearch = e => {
+    const handleKeywordEntry = e => {
         const keyword = e?.target?.value;
 
         if (keywordIsSearchable(keyword)) {
@@ -418,6 +386,7 @@ export const DLOList = ({
         }
 
         keyWordSearchRef.current.value = keyword;
+        // keyWordSearchRef.current = keyword;
         updateUrl('keyword');
     };
 
@@ -495,49 +464,45 @@ export const DLOList = ({
 
     function setFiltersFromUrl() {
         let filtersFound = false;
-        location.hash
-            .slice(1) // remove '#' from beginning
-            .split(';') // separate filters
-            .map(spec => {
-                /* istanbul ignore if */
-                if (!spec) {
-                    return;
-                }
-                const [name, thevalue] = spec.split('='); // get keys and values
-                if (name === 'keyword' && thevalue.length > 0) {
-                    const keyword = {
-                        target: {
-                            value: thevalue,
-                        },
-                    };
-                    handleKeywordSearch(keyword);
-                    // setKeywordSearch
-                }
-                if (name === 'filters' && thevalue.length > 0) {
-                    filtersFound = true;
-                    // build the facet ids into facedtypeslug-facetid
-                    const facetids = thevalue?.split(',').map(Number);
-                    // const facetTypes = [];
-                    const facettypelist = facetids
-                        .map(facetId => {
-                            for (const facetType of dlorFilterList) {
-                                const facet = facetType.facet_list.find(f => f.facet_id === facetId);
-                                setFilterTypesOpen([...filterTypesOpen, facetType.facet_type_id]);
-                                // show
-                                if (facet) {
-                                    return `${facetType.facet_type_slug}-${facetId}`;
-                                }
-                            }
-                            /* istanbul ignore next */
-                            return null; // In case the facetId is not found
-                        })
-                        .filter(Boolean);
-                    setSelectedFilters(facettypelist);
-                    checkBoxArrayRef.current = facettypelist;
-                }
-            });
-        // setLoaded(true);
+
+        const url = new URL(document.URL);
+        const rawsearchparams = !!url && url.searchParams;
+        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
+
+        if (params.has('keyword') && params.get('keyword').length > 0) {
+            const keyword = {
+                target: {
+                    value: params.get('keyword'),
+                },
+            };
+            handleKeywordEntry(keyword);
+        }
+        if (params.has('filters') && params.get('filters').length > 0) {
+            filtersFound = true;
+            // build the facet ids into facedtypeslug-facetid
+            const facetids = params
+                .get('filters')
+                .split(',')
+                .map(Number);
+            const facettypelist = facetids
+                .map(facetId => {
+                    for (const facetType of dlorFilterList) {
+                        const facet = facetType.facet_list.find(f => f.facet_id === facetId);
+                        setFilterTypesOpen([...filterTypesOpen, facetType.facet_type_id]);
+                        if (facet) {
+                            return `${facetType.facet_type_slug}-${facetId}`;
+                        }
+                    }
+                    /* istanbul ignore next */
+                    return null; // In case the facetId is not found
+                })
+                .filter(Boolean);
+            setSelectedFilters(facettypelist);
+            checkBoxArrayRef.current = facettypelist;
+        }
+
         if (!filtersFound) {
+            // if there are no filters we show the first panel (is this right?)
             showPanel([...dlorFilterList].shift().facet_type_id);
         }
     }
@@ -655,7 +620,7 @@ export const DLOList = ({
         return facetTypeId === primeFacetTypeId;
     }
 
-    function resetFiltering() {
+    function handleResetClick() {
         // clear the filter checkboxes
         setSelectedFilters([]);
         checkBoxArrayRef.current = [];
@@ -704,20 +669,6 @@ export const DLOList = ({
         return iconList[facetTypeSlug];
     };
 
-    const slugifyName = text => {
-        // Trim hyphens from the end of the text
-        return text
-            .toString() // Ensure the input is a string
-            .toLowerCase() // Convert the string to lowercase
-            .replace(/\s+/g, '_') // Replace spaces with hyphens
-            .replace(/-/g, '_') // Replace spaces with hyphens
-            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
-            .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
-            .replace(/^-+/, '') // Trim hyphens from the start of the text
-            .replace(/\//, '') // Trim slashes
-            .replace(/-+$/, '');
-    };
-
     function displayFilterSidebarContents() {
         return (
             <>
@@ -728,7 +679,11 @@ export const DLOList = ({
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <span data-testid="sidebar-filter-icon-hide-id" className={classes.hideFilterSidebarIcon}>
+                        <span
+                            id="filterIconHideId"
+                            data-testid="sidebar-filter-icon-hide-id"
+                            className={classes.hideFilterSidebarIcon}
+                        >
                             <IconButton aria-label="hide the filters" onClick={() => hideFilters()}>
                                 <CloseIcon />
                             </IconButton>
@@ -738,7 +693,7 @@ export const DLOList = ({
                         <button
                             data-testid="sidebar-filter-reset-button"
                             className={classes.uqActionButton}
-                            onClick={() => resetFiltering()}
+                            onClick={() => handleResetClick()}
                             aria-label="Reset filter to default"
                         >
                             Reset
@@ -1123,7 +1078,7 @@ export const DLOList = ({
                     id="topOfBody"
                     justifyContent="flex-end"
                 >
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={9}>
                         <Typography component={'p'} style={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
@@ -1139,7 +1094,7 @@ export const DLOList = ({
                             </button>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md={4} style={{ textAlign: 'right' }}>
+                    <Grid item xs={12} md={3} style={{ textAlign: 'right' }}>
                         <a
                             data-testid="dlor-homepage-contact"
                             className={classes.uqActionButton}
@@ -1160,7 +1115,7 @@ export const DLOList = ({
                         md={3}
                         className={classes.filterSidebar}
                         id="filterSidebar"
-                        data-testid="sidebar-filter"
+                        data-testid="filter-sidebar"
                     >
                         {(() => {
                             if (!!dlorFilterListError || !filterListTrimmed || filterListTrimmed.length === 0) {
@@ -1179,7 +1134,7 @@ export const DLOList = ({
                             className={classes.keywordSearchPanel}
                             data-testid="dlor-homepage-keyword"
                             label="Search our digital objects by keyword"
-                            onChange={handleKeywordSearch}
+                            onChange={handleKeywordEntry}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
