@@ -333,34 +333,16 @@ export const DLOList = ({
 
     const updateUrl = itemType => {
         const url = new URL(document.URL);
-
-        const separator = ';';
-        const params = {
-            keyword: '',
-            filters: '',
-        };
-
-        // start with the values currently in the url
-        location.hash
-            .slice(1) // remove '#' from beginning
-            .split(separator) // separate filters
-            .map(spec => {
-                /* istanbul ignore if */
-                if (!spec) {
-                    return;
-                }
-                const [name, thevalue] = spec.split('='); // get keys and values
-                if (name === 'keyword') {
-                    params.keyword = thevalue;
-                }
-                if (name === 'filters') {
-                    params.filters = thevalue;
-                }
-            });
+        const rawsearchparams = !!url && url.searchParams;
+        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
 
         // overwrite the values from the url with the requested change
         if (itemType === 'keyword') {
-            params.keyword = keyWordSearchRef.current.value;
+            if (keyWordSearchRef.current.value.trim() === '') {
+                params.delete('keyword');
+            } else {
+                params.set('keyword', keyWordSearchRef.current.value);
+            }
         }
         if (itemType === 'filters') {
             const facetIds = checkBoxArrayRef.current.map(c => {
@@ -368,24 +350,19 @@ export const DLOList = ({
                 const facetId = parseInt(parts[1], 10);
                 return facetId;
             });
-            params.filters = facetIds.join(',');
+            params.set('filters', facetIds.join(','));
         }
 
-        // only put the used segments in the hash (tidy url)
-        if (params.keyword === '') {
-            delete params.keyword;
-        } else {
-            params.keyword = `keyword=${params.keyword}`;
+        if (params.has('keyword') && (params.get('keyword').length === 0 || params.get('keyword') === 'keyword=')) {
+            params.delete('keyword');
         }
-        if (params.filters === '') {
-            delete params.filters;
-        } else {
-            params.filters = `filters=${params.filters}`;
+        if (params.has('filters') && params.get('filters').length === 0) {
+            params.delete('filters');
         }
-        url.hash = Object.keys(params).length > 0 ? Object.values(params).join(separator) : '#';
 
-        // add the current hash to the url
-        document.location.href = url.href;
+        const newPathSearch = [...params.entries()].length > 0 ? '?' + params.toString() : url.pathname;
+
+        window.history.pushState({}, '', newPathSearch);
     };
 
     const clearKeywordField = () => {
@@ -395,7 +372,7 @@ export const DLOList = ({
         updateUrl('keyword');
     };
 
-    const handleKeywordSearch = e => {
+    const handleKeywordEntry = e => {
         const keyword = e?.target?.value;
 
         if (keywordIsSearchable(keyword)) {
@@ -409,6 +386,7 @@ export const DLOList = ({
         }
 
         keyWordSearchRef.current.value = keyword;
+        // keyWordSearchRef.current = keyword;
         updateUrl('keyword');
     };
 
@@ -486,49 +464,45 @@ export const DLOList = ({
 
     function setFiltersFromUrl() {
         let filtersFound = false;
-        location.hash
-            .slice(1) // remove '#' from beginning
-            .split(';') // separate filters
-            .map(spec => {
-                /* istanbul ignore if */
-                if (!spec) {
-                    return;
-                }
-                const [name, thevalue] = spec.split('='); // get keys and values
-                if (name === 'keyword' && thevalue.length > 0) {
-                    const keyword = {
-                        target: {
-                            value: thevalue,
-                        },
-                    };
-                    handleKeywordSearch(keyword);
-                    // setKeywordSearch
-                }
-                if (name === 'filters' && thevalue.length > 0) {
-                    filtersFound = true;
-                    // build the facet ids into facedtypeslug-facetid
-                    const facetids = thevalue?.split(',').map(Number);
-                    // const facetTypes = [];
-                    const facettypelist = facetids
-                        .map(facetId => {
-                            for (const facetType of dlorFilterList) {
-                                const facet = facetType.facet_list.find(f => f.facet_id === facetId);
-                                setFilterTypesOpen([...filterTypesOpen, facetType.facet_type_id]);
-                                // show
-                                if (facet) {
-                                    return `${facetType.facet_type_slug}-${facetId}`;
-                                }
-                            }
-                            /* istanbul ignore next */
-                            return null; // In case the facetId is not found
-                        })
-                        .filter(Boolean);
-                    setSelectedFilters(facettypelist);
-                    checkBoxArrayRef.current = facettypelist;
-                }
-            });
-        // setLoaded(true);
+
+        const url = new URL(document.URL);
+        const rawsearchparams = !!url && url.searchParams;
+        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
+
+        if (params.has('keyword') && params.get('keyword').length > 0) {
+            const keyword = {
+                target: {
+                    value: params.get('keyword'),
+                },
+            };
+            handleKeywordEntry(keyword);
+        }
+        if (params.has('filters') && params.get('filters').length > 0) {
+            filtersFound = true;
+            // build the facet ids into facedtypeslug-facetid
+            const facetids = params
+                .get('filters')
+                .split(',')
+                .map(Number);
+            const facettypelist = facetids
+                .map(facetId => {
+                    for (const facetType of dlorFilterList) {
+                        const facet = facetType.facet_list.find(f => f.facet_id === facetId);
+                        setFilterTypesOpen([...filterTypesOpen, facetType.facet_type_id]);
+                        if (facet) {
+                            return `${facetType.facet_type_slug}-${facetId}`;
+                        }
+                    }
+                    /* istanbul ignore next */
+                    return null; // In case the facetId is not found
+                })
+                .filter(Boolean);
+            setSelectedFilters(facettypelist);
+            checkBoxArrayRef.current = facettypelist;
+        }
+
         if (!filtersFound) {
+            // if there are no filters we show the first panel (is this right?)
             showPanel([...dlorFilterList].shift().facet_type_id);
         }
     }
@@ -646,7 +620,7 @@ export const DLOList = ({
         return facetTypeId === primeFacetTypeId;
     }
 
-    function resetFiltering() {
+    function handleResetClick() {
         // clear the filter checkboxes
         setSelectedFilters([]);
         checkBoxArrayRef.current = [];
@@ -719,7 +693,7 @@ export const DLOList = ({
                         <button
                             data-testid="sidebar-filter-reset-button"
                             className={classes.uqActionButton}
-                            onClick={() => resetFiltering()}
+                            onClick={() => handleResetClick()}
                             aria-label="Reset filter to default"
                         >
                             Reset
@@ -1160,7 +1134,7 @@ export const DLOList = ({
                             className={classes.keywordSearchPanel}
                             data-testid="dlor-homepage-keyword"
                             label="Search our digital objects by keyword"
-                            onChange={handleKeywordSearch}
+                            onChange={handleKeywordEntry}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">

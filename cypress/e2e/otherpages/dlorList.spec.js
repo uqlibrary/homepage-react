@@ -771,7 +771,7 @@ describe('Digital Learning Hub', () => {
     });
     context('url reflects filtering changes', () => {
         beforeEach(() => {
-            cy.visit('digital-learning-hub#keyword=acc;filters=11');
+            cy.visit('digital-learning-hub?keyword=acc&filters=11');
             cy.viewport(1300, 1000);
         });
         it('loads filters correctly from url', () => {
@@ -822,7 +822,7 @@ describe('Digital Learning Hub', () => {
             );
         });
         it('saves changes from the page to the url', () => {
-            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#keyword=acc;filters=11');
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub?keyword=acc&filters=11');
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
@@ -848,7 +848,7 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 1 + extraRowCount);
 
             // url has updated
-            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#keyword=acc;filters=11,3');
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub?keyword=acc&filters=11%2C3');
         });
         it('url and fields clear on reset', () => {
             cy.get('[data-testid="dlor-homepage-list"]')
@@ -860,13 +860,11 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .click();
 
-            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#');
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub');
             cy.get('[data-testid="dlor-homepage-list"')
                 .should('exist')
                 .children()
                 .should('have.length', itemsPerPage + extraRowCount);
-
-            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#');
         });
         it('back button maintains filters', () => {
             // click on first Object
@@ -880,7 +878,7 @@ describe('Digital Learning Hub', () => {
             cy.go('back');
 
             // url contains the same values and the display is properly displayed and filtered
-            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub#keyword=acc;filters=11');
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub?keyword=acc&filters=11');
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
@@ -898,6 +896,23 @@ describe('Digital Learning Hub', () => {
             );
             cy.get('[data-testid="checkbox-graduate_attributes-accomplished_scholars"] input').should('not.be.checked');
             cy.get('[data-testid="checkbox-graduate_attributes-connected_citizens"] input').should('be.checked');
+        });
+        it('url and fields clear on reset with other values in the url', () => {
+            cy.visit('digital-learning-hub?user=public&keyword=acc&filters=11');
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 2 + extraRowCount);
+
+            cy.get('[data-testid="sidebar-filter-reset-button"]')
+                .should('exist')
+                .click();
+
+            cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub?user=public');
+            cy.get('[data-testid="dlor-homepage-list"')
+                .should('exist')
+                .children()
+                .should('have.length', itemsPerPage + extraRowCount);
         });
     });
     context('other homepage visits', () => {
