@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import InfoIcon from '@mui/icons-material/Info';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     loginAlert: {
         backgroundColor: '#dcedfd',
         color: 'rgba(0, 0, 0, 0.87)',
@@ -63,6 +63,7 @@ LoginPrompt.propTypes = {
     account: PropTypes.object,
     narrower: PropTypes.bool,
     prompt: PropTypes.string,
+    instyle: PropTypes.any,
 };
 LoginPrompt.defaultProps = {
     narrower: false,
