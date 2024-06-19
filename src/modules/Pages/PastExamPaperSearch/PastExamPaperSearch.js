@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useTitle } from 'hooks';
 
 import { Grid, TextField } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import Box from '@mui/material/Box';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Typography from '@mui/material/Typography';
@@ -16,37 +15,26 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import locale from './pastExamPaperSearch.locale';
 import { isRepeatingString } from 'helpers/general';
 import { noResultsFoundBlock } from './pastExamPapers.helpers';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    () => ({
-        searchPanel: {
-            paddingTop: 12,
-            paddingRight: 20,
-            paddingBottom: 0,
-        },
-        searchPanelInfo: { color: 'red', paddingLeft: '2em' },
-        searchLoading: {
-            marginTop: 50,
-            marginRight: 20,
-            marginBottom: 6,
-            minHeight: 100,
-        },
-        aboutLink: {
-            marginTop: '4em',
-            lineHeight: 1.5,
-            '& a': {
-                textDecoration: 'underline',
-            },
-        },
-        aboutBlock: {
-            paddingBottom: '1em',
-            '& strong': {
-                letterSpacing: '0.7px',
-            },
-        },
-    }),
-    { withTheme: true },
-);
+const StyledAboutLink = styled('p')(() => ({
+    marginTop: '4em',
+    lineHeight: 1.5,
+    '& a': { textDecoration: 'underline' },
+}));
+
+const StyledAboutBlock = styled(Grid)(() => ({
+    paddingBottom: '1em',
+    '& strong': { letterSpacing: '0.7px' },
+}));
+
+const StyledSearchPanel = styled('div')(() => ({
+    paddingTop: 12,
+    paddingRight: 20,
+    paddingBottom: 0,
+    '& .searchPanelInfo': { color: 'red', paddingLeft: '2em' },
+}));
+
 export const PastExamPaperSearch = ({
     actions,
     examSuggestionListError,
@@ -54,7 +42,6 @@ export const PastExamPaperSearch = ({
     examSuggestionListLoading,
     history,
 }) => {
-    const classes = useStyles();
     useTitle('Search for a past exam paper - Library - The University of Queensland');
     const filter = createFilterOptions();
     const MAX_LENGTH_COURSE_CODE = 9;
@@ -138,7 +125,7 @@ export const PastExamPaperSearch = ({
         <StandardPage>
             <StandardCard title="Search for a past exam paper">
                 <Grid container alignItems={'flex-end'}>
-                    <Grid item xs={12} sm className={classes.aboutBlock}>
+                    <StyledAboutBlock item xs={12} sm>
                         <p>
                             Enter a full or partial course code (between 2 and 9 characters) to find available past exam
                             papers. For example:
@@ -154,7 +141,7 @@ export const PastExamPaperSearch = ({
                                 <strong>BIOL</strong> displays all available Biological Sciences exam papers.
                             </li>
                         </ul>
-                    </Grid>
+                    </StyledAboutBlock>
                 </Grid>
                 <form>
                     {console.log('suggestions', examSuggestionList)}
@@ -206,25 +193,31 @@ export const PastExamPaperSearch = ({
                 </form>
                 {!!examSuggestionListLoading && (
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12} md className={classes.searchLoading}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={12}
+                            md
+                            style={{ marginTop: 50, marginRight: 20, marginBottom: 6, minHeight: 100 }}
+                        >
                             <InlineLoader message="Loading" />
                         </Grid>
                     </Grid>
                 )}
                 {!!examSuggestionListError && (
-                    <Grid container spacing={2} className={classes.searchPanel} data-testid={'past-exam-paper-error'}>
-                        <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
+                    <StyledSearchPanel container spacing={2} data-testid={'past-exam-paper-error'}>
+                        <Grid item xs={12} sm={12} md className={'searchPanelInfo'}>
                             <span>Autocomplete suggestions currently unavailable - please try again later</span>
                         </Grid>
-                    </Grid>
+                    </StyledSearchPanel>
                 )}
                 <Grid container>
                     <Grid item xs={'auto'}>
-                        <p className={classes.aboutLink}>
+                        <StyledAboutLink>
                             <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
                                 Read more about searching for past exam papers
                             </a>
-                        </p>
+                        </StyledAboutLink>
                     </Grid>
                 </Grid>
             </StandardCard>

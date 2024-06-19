@@ -2,11 +2,9 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
-// import { throttle } from 'throttle-debounce';
 import { useTitle } from 'hooks';
 
 import { Grid } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -21,52 +19,39 @@ import useTheme from '@mui/styles/useTheme';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { noResultsFoundBlock, MESSAGE_EXAMCODE_404 } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    () => ({
-        bodyCell: {
-            textAlign: 'center',
-            verticalAlign: 'top',
+const StyledTableCell = styled(TableCell)(() => ({
+    textAlign: 'center',
+    verticalAlign: 'top',
+    '& .secondaryExamDetail': {
+        marginTop: '1em',
+    },
+}));
+
+const StyledMobileViewWrapper = styled('div')(() => ({
+    '& .bodyCell': {
+        textAlign: 'center',
+        verticalAlign: 'top',
+    },
+    '& .mobileLink': {
+        '& > div': {
+            marginTop: 20,
+            marginBottom: 20,
         },
-        headerCell: {
-            textAlign: 'center',
-        },
-        secondaryExamDetail: {
-            marginTop: '1em',
-        },
-        tableContainer: {
-            maxHeight: 600,
-        },
-        stickyHeaderCell: {
-            position: 'sticky',
-            left: 0,
-            zIndex: 10,
-        },
-        stickyFirstCell: {
-            backgroundColor: '#fafafa',
-            left: 0,
-            position: 'sticky',
-            verticalAlign: 'top',
-        },
-        zebra: {
-            /* stripe alternate rows in movile view */
-            backgroundColor: '#fafafa',
-            paddingTop: '1rem',
-            paddingBottom: '1rem',
-            marginBottom: '1rem',
-        },
-        mobileLink: {
-            '& > div': {
-                marginTop: 20,
-                marginBottom: 20,
-            },
-        },
-        h3: {
-            color: 'charcoal',
-        },
-    }),
-    { withTheme: true },
-);
+    },
+    '& .zebra': {
+        /* stripe alternate rows in movile view */
+        backgroundColor: '#fafafa',
+        paddingTop: '1rem',
+        paddingBottom: '1rem',
+        marginBottom: '1rem',
+    },
+    h3: {
+        color: 'charcoal',
+    },
+}));
+
 export const PastExamPaperList = ({ actions, examSearchListError, examSearchList, examSearchListLoading }) => {
     const { courseHint } = useParams();
     const listTitle =
@@ -76,7 +61,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
               } for "${courseHint.toUpperCase()}"`
             : /* istanbul ignore next */ 'Past Exam Papers by Subject';
 
-    const classes = useStyles();
     useTitle(`${listTitle} - Library - The University of Queensland`);
 
     useEffect(() => {
@@ -110,7 +94,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             <StandardCard title={listTitle}>
                 {!!examSearchListLoading && (
                     <Grid container>
-                        <Grid item xs={'auto'} className={classes.loading}>
+                        <Grid item xs={'auto'}>
                             <CircularProgress
                                 color="primary"
                                 size={20}
@@ -165,13 +149,10 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 </p>
                             </div>
                             {isMobileView ? (
-                                <div>
+                                <StyledMobileViewWrapper>
                                     {examSearchList.papers.map((course, cc) => {
                                         return (
-                                            <div
-                                                key={`exampaper-results-row-${cc}`}
-                                                className={cc % 2 && classes.zebra}
-                                            >
+                                            <div key={`exampaper-results-row-${cc}`} className={cc % 2 && 'zebra'}>
                                                 <Typography
                                                     variant="h3"
                                                     style={{ fontSize: 20, marginTop: 6, paddingLeft: 6 }}
@@ -181,7 +162,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                 {course.map((semester, ss) => {
                                                     return (
                                                         <div
-                                                            className={classes.bodyCell}
+                                                            className={'bodyCell'}
                                                             key={`exampaper-results-bodycell-${ss}`}
                                                             data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
                                                         >
@@ -198,7 +179,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                 return (
                                                                     <div
                                                                         key={`exampaper-results-bodycell-detail-${pp}`}
-                                                                        className={classes.mobileLink}
+                                                                        className={'mobileLink'}
                                                                     >
                                                                         {!!paper.paperUrl && (
                                                                             <div>
@@ -220,9 +201,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                             </div>
                                         );
                                     })}
-                                </div>
+                                </StyledMobileViewWrapper>
                             ) : (
-                                <TableContainer className={classes.tableContainer} component={Paper}>
+                                <TableContainer sx={{ maxHeight: 600 }} component={Paper}>
                                     <Table
                                         stickyHeader
                                         aria-label={listTitle}
@@ -234,7 +215,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                 <TableCell
                                                     component="th"
                                                     scope="col"
-                                                    className={classes.stickyHeaderCell}
+                                                    sx={{ position: 'sticky', left: 0, zIndex: 10 }}
                                                 >
                                                     {' '}
                                                 </TableCell>
@@ -243,7 +224,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                     return (
                                                         <TableCell
                                                             component="th"
-                                                            className={classes.headerCell}
+                                                            sx={{ textAlign: 'center' }}
                                                             key={`exampaper-results-headercell-${ss}`}
                                                             scope="col"
                                                         >
@@ -267,15 +248,14 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                         <TableCell
                                                             component="th"
                                                             scope="row"
-                                                            className={classes.stickyFirstCell}
+                                                            sx={{ backgroundColor: '#fafafa', left: 0, position: 'sticky', verticalAlign: 'top' }}
                                                             data-testid={`exampaper-results-label-${cc}`}
                                                         >
                                                             {getCourseCode(course)}
                                                         </TableCell>
                                                         {course.map((semester, ss) => {
                                                             return (
-                                                                <TableCell
-                                                                    className={classes.bodyCell}
+                                                                <StyledTableCell
                                                                     key={`exampaper-results-bodycell-${ss}`}
                                                                     data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
                                                                 >
@@ -285,7 +265,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                                 key={`exampaper-results-bodycell-detail-${pp}`}
                                                                                 className={
                                                                                     pp > 0
-                                                                                        ? classes.secondaryExamDetail
+                                                                                        ? 'secondaryExamDetail'
                                                                                         : null
                                                                                 }
                                                                             >
@@ -307,7 +287,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                             </div>
                                                                         );
                                                                     })}
-                                                                </TableCell>
+                                                                </StyledTableCell>
                                                             );
                                                         })}
                                                     </TableRow>

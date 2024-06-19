@@ -5,46 +5,43 @@ import { isRepeatingString, unescapeString } from 'helpers/general';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import { throttle } from 'throttle-debounce';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    () => ({
-        searchPanel: {
-            paddingTop: 12,
-            paddingRight: 20,
-            paddingBottom: 0,
-            paddingLeft: 20,
-        },
-        searchPanelInfo: {
-            color: 'red',
-            paddingLeft: '2em',
-        },
-        selectInput: {
-            fontWeight: 300,
+const StyledSearchPanel = styled(Grid)(() => ({
+    '&.searchPanel': {
+        paddingTop: 12,
+        paddingRight: 20,
+        paddingBottom: 0,
+        paddingLeft: 20,
+    },
+    '& .searchPanelInfo': {
+        color: 'red',
+        paddingLeft: '2em',
+    },
+    '& .selectInput': {
+        fontWeight: 300,
+        textOverflow: 'ellipsis !important',
+        overflow: 'hidden !important',
+        whiteSpace: 'nowrap !important',
+        '&::placeholder': {
+            paddingRight: 50,
             textOverflow: 'ellipsis !important',
             overflow: 'hidden !important',
             whiteSpace: 'nowrap !important',
-            '&::placeholder': {
-                paddingRight: 50,
-                textOverflow: 'ellipsis !important',
-                overflow: 'hidden !important',
-                whiteSpace: 'nowrap !important',
-            },
         },
-        searchTitle: {
-            marginBlockStart: '0.5rem',
-            marginBlockEnd: '0.5rem',
-            marginLeft: '1rem',
-        },
-    }),
-    { withTheme: true },
-);
+    },
+    '& .searchTitle': {
+        marginBlockStart: '0.5rem',
+        marginBlockEnd: '0.5rem',
+        marginLeft: '1rem',
+    },
+}));
 
 export const LearningResourceSearch = ({
     actions,
@@ -58,8 +55,6 @@ export const LearningResourceSearch = ({
     CRsuggestionsLoading,
     CRsuggestionsError,
 }) => {
-    const classes = useStyles();
-
     const [searchKeyword, setSearchKeyword] = useState('');
     const [noOptionsText, noOptionsTextSetter] = useState(locale.search.noOptionsText);
 
@@ -115,7 +110,7 @@ export const LearningResourceSearch = ({
 
     // we group them all together to place a header at the top of the search results
     const renderGroup = params => [
-        <h3 className={classes.searchTitle} key={params.key}>
+        <h3 className={'searchTitle'} key={params.key}>
             {locale.search.autocompleteResultsTitle}
         </h3>,
         params.children,
@@ -123,7 +118,7 @@ export const LearningResourceSearch = ({
 
     return (
         <form>
-            <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
+            <StyledSearchPanel container spacing={1} className={'searchPanel'} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
                         filterOptions={options => {
@@ -154,7 +149,7 @@ export const LearningResourceSearch = ({
                                         ...params.InputProps,
                                         type: 'search',
                                         classes: {
-                                            input: classes.selectInput,
+                                            input: 'selectInput',
                                         },
                                     }}
                                     inputProps={{
@@ -198,14 +193,14 @@ export const LearningResourceSearch = ({
                         </Grid>
                     )}
                 </div>
-            </Grid>
+            </StyledSearchPanel>
             {!!CRsuggestionsError && (
                 /* istanbul ignore next */
-                <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
-                    <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
+                <StyledSearchPanel container spacing={2} className={'searchPanel'} data-testid={`${elementId}-links`}>
+                    <Grid item xs={12} sm={12} md className={'searchPanelInfo'}>
                         <span>Autocomplete suggestions unavailable</span>
                     </Grid>
-                </Grid>
+                </StyledSearchPanel>
             )}
             {searchKeyword !== '' &&
                 CRsuggestionsError === null &&
@@ -213,11 +208,16 @@ export const LearningResourceSearch = ({
                 Array.isArray(CRsuggestions) &&
                 CRsuggestions.length === 0 && (
                     /* istanbul ignore next */
-                    <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-noresults`}>
-                        <span data-testid="noCoursesFound" className={classes.searchPanelInfo}>
+                    <StyledSearchPanel
+                        container
+                        spacing={2}
+                        className={'searchPanel'}
+                        data-testid={`${elementId}-noresults`}
+                    >
+                        <span data-testid="noCoursesFound" className={'searchPanelInfo'}>
                             {locale.search.noResultsText}
                         </span>
-                    </Grid>
+                    </StyledSearchPanel>
                 )}
         </form>
     );
