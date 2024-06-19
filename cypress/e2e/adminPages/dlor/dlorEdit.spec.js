@@ -264,23 +264,73 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     'search, evaluate, literature, strategy',
                 );
 
-                const numCheckboxes = 51;
-                const checkedCheckboxes = [2, 7, 10, 14, 16, 27, 34, 46];
-                let currentCheckboxId = 1;
-                while (currentCheckboxId < numCheckboxes) {
-                    cy.log(`check checkbox/radio ${checkedCheckboxes}`);
-                    if (checkedCheckboxes.includes(currentCheckboxId)) {
-                        cy.get(`[data-testid="filter-${currentCheckboxId}"] input`)
+                const checkboxStatus = {
+                    'topic-aboriginal_and_torres_strait_islander': false,
+                    'topic-assignments': true,
+                    'topic-digital_skills': false,
+                    'topic-employability': false,
+                    'topic-information_literacy': false,
+                    'topic-referencing': false,
+                    'topic-research': true,
+                    'topic-software': false,
+                    'topic-other': false,
+                    'graduate_attributes-accomplished_scholars': true,
+                    'graduate_attributes-connected_citizens': false,
+                    'graduate_attributes-courageous_thinkers': false,
+                    'graduate_attributes-culturally_capable': false,
+                    'graduate_attributes-influential_communicators': true,
+                    'graduate_attributes-respectful_leaders': false,
+                    'item_type-guide': true,
+                    'item_type-interactive': false,
+                    'item_type-module': false,
+                    'item_type-presentation': false,
+                    'item_type-training_recording': false,
+                    'item_type-other': false,
+                    'media_format-audio': false,
+                    'media_format-dataset': false,
+                    'media_format-h5p': false,
+                    'media_format-image': false,
+                    'media_format-powerpoint': false,
+                    'media_format-pressbook': true,
+                    'media_format-pdf': false,
+                    'media_format-spreadsheet': false,
+                    'media_format-video': false,
+                    'media_format-webpage': false,
+                    'media_format-word_document': false,
+                    'media_format-other': false,
+                    'subject-cross_disciplinary': true,
+                    'subject-business_economics': false,
+                    'subject-engineering_architecture_information_technology': false,
+                    'subject-health_behavioural_sciences': false,
+                    'subject-humanities_arts': false,
+                    'subject-law': false,
+                    'subject-medicine_biomedical_sciences': false,
+                    'subject-science': false,
+                    'subject-social_sciences': false,
+                    'subject-other': false,
+                    'licence-cc_by_attribution': false,
+                    'licence-cc_by_nc_attribution_noncommercial': false,
+                    'licence-cc_by_nc_nd_attribution_noncommercial_no_derivatives': true,
+                    'licence-cc_by_nc_sa_attribution_noncommercial_share_alike': false,
+                    'licence-cc_by_nd_attribution_no_derivatives': false,
+                    'licence-cc_by_sa_attribution_share_alike': false,
+                    'licence-cc0public_domain': false,
+                    'licence-uq_copyright': false,
+                };
+                Object.entries(checkboxStatus).forEach(([slug, isChecked]) => {
+                    cy.log(`check checkbox/radio ${slug} - "${isChecked}"`);
+                    if (isChecked) {
+                        cy.get(`[data-testid="filter-${slug}"] input`)
                             .should('exist')
                             .should('be.checked');
                     } else {
-                        cy.get(`[data-testid="filter-${currentCheckboxId}"] input`)
+                        cy.get(`[data-testid="filter-${slug}"] input`)
                             .should('exist')
                             .should('not.be.checked');
                     }
-                    currentCheckboxId++;
-                }
+                });
 
+                // no extra filters
                 cy.get('[data-testid="filter-group_topic"]')
                     .children()
                     .should('have.length', 9 + 1);
@@ -582,21 +632,20 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="filter-2"] input').uncheck(); // Topic : Assignments
-                cy.get('[data-testid="filter-7"] input').uncheck(); // Topic : Research
-                cy.get('[data-testid="filter-1"] input').check(); // Topic : aboriginal_and_torres_strait_islander
+                cy.get('[data-testid="filter-topic-assignments"] input').uncheck();
+                cy.get('[data-testid="filter-topic-research"] input').uncheck();
+                cy.get('[data-testid="filter-topic-aboriginal_and_torres_strait_islander"] input').check();
 
-                cy.get('[data-testid="filter-22"] input').check(); // Media format : audio
-                cy.get('[data-testid="filter-24"] input').check(); // Media format : h5p
-                cy.get('[data-testid="filter-27"] input').uncheck(); // Media format : Pressbook
+                cy.get('[data-testid="filter-media_format-audio"] input').check();
+                cy.get('[data-testid="filter-media_format-h5p"] input').check();
+                cy.get('[data-testid="filter-media_format-pressbook"] input').uncheck();
 
-                // cy.get('[data-testid="filter-34"] input').check(); // Subject: all_cross_disciplinary
-                cy.get('[data-testid="filter-35"] input').check(); // Subject: business_economics
-                cy.get('[data-testid="filter-34"] input').uncheck(); // Subject: all_cross_disciplinary
+                cy.get('[data-testid="filter-subject-business_economics"] input').check();
+                cy.get('[data-testid="filter-subject-cross_disciplinary"] input').uncheck();
 
-                cy.get('[data-testid="filter-17"] input').check(); // Item type : interactive_activity #radio, no uncheck
+                cy.get('[data-testid="filter-item_type-interactive"] input').check();
 
-                cy.get('[data-testid="filter-45"] input').check(); // Licence : cc_by_nc_attribution_noncommercial #radio, no uncheck
+                cy.get('[data-testid="filter-licence-cc_by_nc_attribution_noncommercial"] input').check();
 
                 cy.get('[data-testid="object_keywords"] textarea:first-child')
                     .should('exist')
@@ -801,18 +850,18 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="filter-3"] input').check(); // digital_skills
-                cy.get('[data-testid="filter-4"] input').check(); // employability
-                cy.get('[data-testid="filter-23"] input').check(); // media_dataset
-                cy.get('[data-testid="filter-36"] input').check(); // engineering_architecture_information_technology
+                cy.get('[data-testid="filter-topic-digital_skills"] input').check(); // digital_skills
+                cy.get('[data-testid="filter-topic-employability"] input').check(); // employability
+                cy.get('[data-testid="filter-media_format-dataset"] input').check(); // media_dataset
+                cy.get('[data-testid="filter-subject-engineering_architecture_information_technology"] input').check(); // engineering_architecture_information_technology
 
-                cy.get('[data-testid="filter-40"] input').check(); // medicine_biomedical_sciences
+                cy.get('[data-testid="filter-subject-medicine_biomedical_sciences"] input').check(); // medicine_biomedical_sciences
 
-                cy.get('[data-testid="filter-18"] input').check(); // module
-                cy.get('[data-testid="filter-50"] input').check(); // cco_public_domain
-                cy.get('[data-testid="filter-11"] input').check(); // connected_citizens
+                cy.get('[data-testid="filter-item_type-module"] input').check(); // module
+                cy.get('[data-testid="filter-licence-cc0public_domain"] input').check(); // cco_public_domain
+                cy.get('[data-testid="filter-graduate_attributes-connected_citizens"] input').check(); // connected_citizens
 
-                cy.get('[data-testid="filter-40"] input').uncheck(); // medicine_biomedical_sciences - coverage and confirm it doesnt end up in the "sent to server"
+                cy.get('[data-testid="filter-subject-medicine_biomedical_sciences"] input').uncheck(); // medicine_biomedical_sciences - coverage and confirm it doesnt end up in the "sent to server"
 
                 cy.get('[data-testid="object_keywords"] textarea:first-child')
                     .should('exist')

@@ -944,17 +944,17 @@ describe('Digital Learning Hub', () => {
                 .contains('Use the Digital Learning Hub to find modules, videos and guides for teaching and study.');
 
             // filters correctly
-            cy.get('[data-testid="filterSidebar"]')
+            cy.get('[data-testid="filter-sidebar"]')
                 .should('exist')
                 .should('not.be.visible');
 
-            cy.get('[data-testid="filterIconShowId"]')
+            cy.get('[data-testid="sidebar-filter-icon"]')
                 .should('exist')
                 .should('be.visible')
                 .find('button')
                 .click();
-            cy.get('[data-testid="filterSidebar"]').scrollIntoView();
-            cy.get('[data-testid="filterIconShowId"]')
+            cy.get('[data-testid="filter-sidebar"]').scrollIntoView();
+            cy.get('[data-testid="sidebar-filter-icon"]')
                 .should('exist')
                 .should('not.be.visible');
 
@@ -974,12 +974,12 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', 1 + extraRowCount);
 
             // hide the filter section
-            cy.get('[data-testid="filterIconHideId"]')
+            cy.get('[data-testid="sidebar-filter-icon-hide-id"]')
                 .should('exist')
                 .should('be.visible')
                 .find('button')
                 .click();
-            cy.get('[data-testid="filterSidebar"]')
+            cy.get('[data-testid="filter-sidebar"]')
                 .should('exist')
                 .should('not.be.visible');
         });

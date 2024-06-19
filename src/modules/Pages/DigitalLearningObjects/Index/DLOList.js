@@ -33,7 +33,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
-import { getDlorViewPageUrl } from '../dlorHelpers';
+import { getDlorViewPageUrl, slugifyName } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     panelGap: {
@@ -695,20 +695,6 @@ export const DLOList = ({
         return iconList[facetTypeSlug];
     };
 
-    const slugifyName = text => {
-        // Trim hyphens from the end of the text
-        return text
-            .toString() // Ensure the input is a string
-            .toLowerCase() // Convert the string to lowercase
-            .replace(/\s+/g, '_') // Replace spaces with hyphens
-            .replace(/-/g, '_') // Replace spaces with hyphens
-            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
-            .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
-            .replace(/^-+/, '') // Trim hyphens from the start of the text
-            .replace(/\//, '') // Trim slashes
-            .replace(/-+$/, '');
-    };
-
     function displayFilterSidebarContents() {
         return (
             <>
@@ -721,7 +707,7 @@ export const DLOList = ({
                     <Grid item xs={1}>
                         <span
                             id="filterIconHideId"
-                            data-testid="filterIconHideId"
+                            data-testid="sidebar-filter-icon-hide-id"
                             className={classes.hideFilterSidebarIcon}
                         >
                             <IconButton aria-label="hide the filters" onClick={() => hideFilters()}>
@@ -1155,7 +1141,7 @@ export const DLOList = ({
                         md={3}
                         className={classes.filterSidebar}
                         id="filterSidebar"
-                        data-testid="filterSidebar"
+                        data-testid="filter-sidebar"
                     >
                         {(() => {
                             if (!!dlorFilterListError || !filterListTrimmed || filterListTrimmed.length === 0) {
@@ -1251,7 +1237,7 @@ export const DLOList = ({
                                             >
                                                 <div
                                                     id="filterIconShowId"
-                                                    data-testid="filterIconShowId"
+                                                    data-testid="sidebar-filter-icon"
                                                     className={classes.showFilterSidebarIcon}
                                                 >
                                                     <IconButton

@@ -202,3 +202,17 @@ export const pluraliseWord = (singularWord, count, pluralWordSpecial = null) => 
     }
     return singularWord;
 };
+
+export const slugifyName = text => {
+    // Trim hyphens from the end of the text
+    return text
+        .toString() // Ensure the input is a string
+        .toLowerCase() // Convert the string to lowercase
+        .replace(/\s+/g, '_') // Replace spaces with hyphens
+        .replace(/-/g, '_') // Replace spaces with hyphens
+        .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
+        .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
+        .replace(/^-+/, '') // Trim hyphens from the start of the text
+        .replace(/\//, '') // Trim slashes
+        .replace(/-+$/, '');
+};
