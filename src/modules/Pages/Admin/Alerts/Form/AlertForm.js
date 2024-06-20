@@ -60,7 +60,7 @@ const StyledBox = styled(Grid)(() => ({
     paddingBottom: '1em',
 }));
 
-const StyledSaveButton = styled(Grid)(() => ({
+const StyledSaveButton = styled(Button)(() => ({
     '&:disabled': {
         color: 'rgba(0, 0, 0, 0.26)',
         boxShadow: 'none',

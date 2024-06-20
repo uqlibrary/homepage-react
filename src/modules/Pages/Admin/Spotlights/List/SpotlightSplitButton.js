@@ -9,7 +9,6 @@ import Grid from '@mui/material/Grid';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
-import makeStyles from '@mui/styles/makeStyles';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 
@@ -20,16 +19,6 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import { isPastSpotlight, navigateToEditForm } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 // based on https://material-ui.com/components/button-group/ "Split button"
-
-const useStyles = makeStyles(() => ({
-    parent: {
-        position: 'relative',
-        minHeight: 50,
-    },
-    menuWrapper: {
-        marginTop: -75,
-    },
-}));
 export const SpotlightSplitButton = ({
     deleteSpotlightById,
     mainButtonLabel,
@@ -41,7 +30,6 @@ export const SpotlightSplitButton = ({
     history,
     allowedArrowActions,
 }) => {
-    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
@@ -83,7 +71,7 @@ export const SpotlightSplitButton = ({
                 locale={deleteLocale()}
             />
             <Grid container direction="column" alignItems="center">
-                <Grid item xs={12} className={classes.parent}>
+                <Grid item xs={12} sx={{ position: 'relative', minHeight: 50 }}>
                     <ButtonGroup
                         variant="contained"
                         color="primary"
@@ -98,7 +86,7 @@ export const SpotlightSplitButton = ({
                                 data-testid={`spotlight-list-item-edit-${spotlight.id}`}
                                 id={`spotlight-list-item-edit-${spotlight.id}`}
                                 onClick={() => navigateToEditForm(spotlight.id, history)}
-                                className={classes.editButton}
+                                className={'editButton'}
                                 variant="contained"
                             />
                         )}
@@ -109,7 +97,7 @@ export const SpotlightSplitButton = ({
                                 data-testid={`spotlight-list-item-view-${spotlight.id}`}
                                 id={`spotlight-list-item-view-${spotlight.id}`}
                                 onClick={() => navigateToView(spotlight.id, history)}
-                                className={classes.editButton}
+                                className={'editButton'}
                                 variant="contained"
                             />
                         )}
@@ -120,14 +108,14 @@ export const SpotlightSplitButton = ({
                                 data-testid={`spotlight-list-item-clone-${spotlight.id}`}
                                 id={`spotlight-list-item-clone-${spotlight.id}`}
                                 onClick={() => navigateToCloneForm(spotlight.id, history)}
-                                className={classes.editButton}
+                                className={'editButton'}
                                 variant="contained"
                             />
                         )}
                         {allowedArrowActions.length > 0 && (
                             <Button
                                 color="primary"
-                                className={classes.editButton}
+                                className={'editButton'}
                                 size="small"
                                 aria-controls={open ? 'split-button-menu' : undefined}
                                 aria-expanded={open ? 'true' : undefined}
@@ -154,7 +142,7 @@ export const SpotlightSplitButton = ({
                                     minWidth: 60,
                                 }}
                             >
-                                <Paper className={classes.menuWrapper}>
+                                <Paper sx={{ marginTop: '-75px' }}>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
                                             {allowedArrowActions.includes('clone') && (

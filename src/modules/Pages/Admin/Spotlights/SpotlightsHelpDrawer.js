@@ -4,46 +4,38 @@ import PropTypes from 'prop-types';
 import SimpleBackdrop from '@mui/material/Backdrop';
 import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
-import { makeStyles } from '@mui/styles';
 import Drawer from '@mui/material/Drawer';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    theme => ({
-        drawer: {
-            overflowY: 'scroll',
-            '& p': {
-                marginBlockStart: 0,
-                marginBlockEnd: '1em',
-            },
-            '& li': {
-                marginBlockStart: 0,
-                marginBlockEnd: '1em',
-            },
-            '& dt': {
-                fontStyle: 'italic',
-            },
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
+    overflowY: 'scroll',
+    '& p': {
+        marginBlockStart: 0,
+        marginBlockEnd: '1em',
+    },
+    '& li': {
+        marginBlockStart: 0,
+        marginBlockEnd: '1em',
+    },
+    '& dt': {
+        fontStyle: 'italic',
+    },
+    '&. paper': {
+        backgroundColor: theme.palette.background.paper,
+        padding: theme.spacing(2, 4, 3),
+        width: 500,
+        [theme.breakpoints.down('md')]: {
+            width: 200,
         },
-        paper: {
-            backgroundColor: theme.palette.background.paper,
-            padding: theme.spacing(2, 4, 3),
-            width: 500,
-            [theme.breakpoints.down('md')]: {
-                width: 200,
-            },
-        },
-    }),
-    { withTheme: true },
-);
+    },
+}));
 export const SpotlightsHelpDrawer = ({ open, helpContent, closeHelpLightbox }) => {
-    const classes = useStyles();
-
     return (
-        <Drawer
+        <StyledDrawer
             sx={{
                 zIndex: 9999,
             }}
             anchor="right"
-            className={classes.drawer}
             open={open}
             onClose={closeHelpLightbox}
             closeAfterTransition
@@ -53,14 +45,14 @@ export const SpotlightsHelpDrawer = ({ open, helpContent, closeHelpLightbox }) =
             }}
         >
             <Fade in={open}>
-                <div className={classes.paper}>
+                <div className={'paper'}>
                     <h2 data-testid="help-drawer-title">{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
                     <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
                     <div>
                         <Button
                             variant="contained"
                             color="primary"
-                            className={classes.button}
+                            className={'button'}
                             children={helpContent?.buttonLabel || 'Close'}
                             data-testid="spotlights-helpdrawer-close-button"
                             onClick={closeHelpLightbox}
@@ -68,7 +60,7 @@ export const SpotlightsHelpDrawer = ({ open, helpContent, closeHelpLightbox }) =
                     </div>
                 </div>
             </Fade>
-        </Drawer>
+        </StyledDrawer>
     );
 };
 
