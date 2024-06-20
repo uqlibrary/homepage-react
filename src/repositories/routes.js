@@ -330,10 +330,11 @@ export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' 
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
 export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/public/series/list' });
-export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/public/demographics' });
 export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/subscribe` });
 // export const DLOR_UNSUBSCRIBE_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/unsubscribe` });
 export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/public/teams/list' });
+
+export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/auth/demographics' });
 
 // dlor admin routes
 export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
