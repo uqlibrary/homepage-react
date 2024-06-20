@@ -715,7 +715,8 @@ export const DLOList = ({
                                         <Typography
                                             component={'h3'}
                                             variant="subtitle1"
-                                            style={{ display: 'flex', alignItems: 'center' }}
+                                            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} // Add cursor pointer for better UX
+                                            onClick={() => showHidePanel(facetType?.facet_type_id)} // Move onClick here
                                         >
                                             {getFacetTypeIcon(facetType?.facet_type_slug)} &nbsp;{' '}
                                             {facetType?.facet_type_name}{' '}

@@ -210,15 +210,15 @@ describe('Backend routes method', () => {
             expect(routes.TEST_TAG_ADD_USER_API()).toEqual({ apiUrl: 'test-and-tag/user' });
             expect(routes.TEST_TAG_DELETE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
 
-            expect(routes.DLOR_ALL_API()).toEqual({ apiUrl: 'dlor/list/full' });
-            expect(routes.DLOR_ALL_CURRENT_API()).toEqual({ apiUrl: 'dlor/list/current' });
-            expect(routes.DLOR_GET_BY_ID_API({ id: 100 })).toEqual({ apiUrl: 'dlor/find/100' });
-            expect(routes.DLOR_TEAM_LIST_API()).toEqual({ apiUrl: 'dlor/teams/list' });
-            expect(routes.DLOR_GET_FILTER_LIST()).toEqual({ apiUrl: 'dlor/facet/list' });
-            expect(routes.DLOR_SERIES_LIST_API()).toEqual({ apiUrl: 'dlor/series/list' });
-            expect(routes.DLOR_DEMOGRAPHICS_SAVE_API()).toEqual({ apiUrl: 'dlor/demographics' });
+            expect(routes.DLOR_ALL_API()).toEqual({ apiUrl: 'dlor/public/list/full' });
+            expect(routes.DLOR_ALL_CURRENT_API()).toEqual({ apiUrl: 'dlor/public/list/current' });
+            expect(routes.DLOR_GET_BY_ID_API({ id: 100 })).toEqual({ apiUrl: 'dlor/public/find/100' });
+            expect(routes.DLOR_TEAM_LIST_API()).toEqual({ apiUrl: 'dlor/public/teams/list' });
+            expect(routes.DLOR_GET_FILTER_LIST()).toEqual({ apiUrl: 'dlor/public/facet/list' });
+            expect(routes.DLOR_SERIES_LIST_API()).toEqual({ apiUrl: 'dlor/public/series/list' });
+            expect(routes.DLOR_DEMOGRAPHICS_SAVE_API()).toEqual({ apiUrl: 'dlor/public/demographics' });
             expect(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 100 })).toEqual({
-                apiUrl: 'dlor/100/confirm/subscribe',
+                apiUrl: 'dlor/public/100/confirm/subscribe',
             });
 
             expect(routes.DLOR_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/object' });

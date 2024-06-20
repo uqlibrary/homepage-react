@@ -604,7 +604,7 @@ function getSpecificDlorObject(dlorId) {
     return singleRecord === null ? [404, {}] : [200, { data: singleRecord }];
 }
 
-mock.onGet(/dlor\/find\/.*/)
+mock.onGet(/dlor\/public\/find\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const dlorId = urlparts.split('?')[0];
@@ -644,7 +644,7 @@ mock.onGet(/dlor\/find\/.*/)
             return getSpecificDlorObject(dlorId);
         }
     })
-    .onGet('dlor/list/full')
+    .onGet('dlor/public/list/full')
     .reply(() => {
         if (responseType === 'fullListError') {
             return [500, {}];
@@ -660,7 +660,7 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, { data: currentRecords }];
         }
     })
-    .onGet('dlor/list/current')
+    .onGet('dlor/public/list/current')
     .reply(() => {
         if (responseType === 'error') {
             return [500, {}];
@@ -678,7 +678,7 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, { data: currentRecords }];
         }
     })
-    .onGet('dlor/facet/list')
+    .onGet('dlor/public/facet/list')
     .reply(() => {
         if (responseType === 'filtererror') {
             return [500, {}];
@@ -690,9 +690,9 @@ mock.onGet(/dlor\/find\/.*/)
             return [200, dlor_filter_list];
         }
     })
-    .onGet('dlor/teams/list')
+    .onGet('dlor/public/teams/list')
     .reply(() => {
-        console.log('get mock dlor/teams/list', dlor_team_list);
+        console.log('get mock dlor/public/teams/list', dlor_team_list);
 
         // function getTeamList() {
         //     console.log('getTeamList', dlor_team_list.data);
@@ -790,7 +790,7 @@ mock.onGet(/dlor\/find\/.*/)
         }
     })
 
-    .onGet(/dlor\/series\/list/)
+    .onGet(/dlor\/public\/series\/list/)
     .reply(config => {
         if (responseType === 'error') {
             return [500, {}];
