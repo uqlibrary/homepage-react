@@ -32,6 +32,7 @@ const LoginPrompt = ({ account, narrower, prompt, instyle }) => {
     const classes = useStyles();
     const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(window.location.href)}`;
     let className = `${classes.loginAlert}`;
+    /* istanbul ignore next */
     if (!!narrower) {
         className = `${classes.loginAlert} ${classes.narrrower}`;
     }

@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
             padding: '12px',
             '& header': {
                 '& h2': {
-                    lineHeight: 1,
+                    lineHeight: 1.2,
                     marginBlock: 7,
                     display: 'flex',
                     alignItems: 'center',
@@ -276,6 +276,11 @@ const useStyles = makeStyles(theme => ({
             textDecoration: 'none',
         },
     },
+    resetButtonBlock: {
+        '& button:hover': {
+            cursor: 'pointer',
+        },
+    },
     tagLabel: {
         fontVariant: 'small-caps',
         textTransform: 'lowercase',
@@ -353,6 +358,7 @@ export const DLOList = ({
             params.set('filters', facetIds.join(','));
         }
 
+        /* istanbul ignore next */
         if (params.has('keyword') && (params.get('keyword').length === 0 || params.get('keyword') === 'keyword=')) {
             params.delete('keyword');
         }
@@ -673,12 +679,12 @@ export const DLOList = ({
         return (
             <>
                 <Grid container className={classes.filterSidebarHeading} data-testid="sidebar-panel-heading">
-                    <Grid item xs={10}>
+                    <Grid item xs={10} md={9}>
                         <Typography component={'h2'} variant={'h6'}>
                             Filters
                         </Typography>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={2} md={1}>
                         <span
                             id="filterIconHideId"
                             data-testid="sidebar-filter-icon-hide-id"
@@ -689,7 +695,7 @@ export const DLOList = ({
                             </IconButton>
                         </span>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={12} md={2} className={classes.resetButtonBlock}>
                         <button
                             data-testid="sidebar-filter-reset-button"
                             className={classes.uqActionButton}
@@ -1107,8 +1113,11 @@ export const DLOList = ({
                             <OpenInNewIcon />
                         </a>
                     </Grid>
+                    <Grid item xs={12} style={{ marginTop: 20 }}>
+                        <LoginPrompt account={account} />
+                    </Grid>
                 </Grid>
-                <Grid container spacing={2}>
+                <Grid container>
                     <Grid
                         item
                         xs={12}
@@ -1201,7 +1210,6 @@ export const DLOList = ({
                                 } else {
                                     return (
                                         <div className={classes.panelBody}>
-                                            <LoginPrompt account={account} narrower />
                                             <Grid
                                                 container
                                                 spacing={3}

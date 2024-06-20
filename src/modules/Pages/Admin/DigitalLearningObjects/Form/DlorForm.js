@@ -17,6 +17,7 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { makeStyles } from '@mui/styles';
 import MenuItem from '@mui/material/MenuItem';
+import Modal from '@mui/material/Modal';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
@@ -38,6 +39,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import {
     convertFileSizeToKb,
+    getDlorViewPageUrl,
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
@@ -105,6 +107,17 @@ const useStyles = makeStyles(theme => ({
             maxWidth: '3em',
         },
     },
+    lightroomHeader: {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+        padding: '80px 0 20px 20px',
+        '& h2': {
+            fontSize: '2rem',
+        },
+        '& p': {
+            fontSize: '1rem',
+        },
+    },
 }));
 
 export const DlorForm = ({
@@ -147,6 +160,8 @@ export const DlorForm = ({
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
+    const [isNotifying, setIsNotifying] = useState(false);
+    const [isNotificationLightboxOpen, setIsNotificationLightboxOpen] = useState(false);
     const checkBoxArrayRef = useRef([]);
     const teamSelectRef = useRef(null);
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
@@ -1133,6 +1148,24 @@ export const DlorForm = ({
         return result;
     }
 
+    const openNotifyLightbox = () => {
+        setIsNotificationLightboxOpen(true);
+    };
+
+    const closeNotifyLightbox = () => {
+        setIsNotificationLightboxOpen(false);
+    };
+
+    const handleNotifyChange = e => {
+        e.preventDefault();
+        setIsNotifying(!!e.target.checked);
+        !!e.target.checked && openNotifyLightbox();
+        // if (!e.target.checked) {
+        //     const newValues = { ...formValues, notificationText: '' };
+        //     setFormValues(newValues);
+        // }
+    };
+
     const stepPanelContentFilters = (
         <>
             <Grid item xs={12}>
@@ -1187,6 +1220,127 @@ export const DlorForm = ({
                     </p>
                 </FormControl>
             </Grid>
+            {mode === 'edit' && (
+                <Grid item xs={12}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                        <Box sx={{ flex: '1 1 auto' }} />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={handleNotifyChange}
+                                    data-testid="choose-notify"
+                                    checked={isNotifying}
+                                />
+                            }
+                            label="Notify following users?"
+                        />
+                        {!!isNotifying && (
+                            <Button onClick={openNotifyLightbox} data-testid="notify-reedit-button">
+                                Edit
+                            </Button>
+                        )}
+                    </Box>
+                </Grid>
+            )}
+            {!!isNotificationLightboxOpen && (
+                <Modal
+                    open={open}
+                    onClose={closeNotifyLightbox}
+                    aria-labelledby="notify-lightbox-title"
+                    aria-describedby="notify-lightbox-description"
+                    data-testid="notify-lightbox-modal"
+                >
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '80%',
+                            bgcolor: 'background.paper',
+                            // border: '2px solid #000',
+                            boxShadow: 24,
+                            p: 4,
+                        }}
+                    >
+                        <Box className={classes.lightroomHeader} id="notify-lightbox-title">
+                            <Typography variant="h6" component="h2" data-testid="notify-lightbox-title">
+                                Object change notification
+                            </Typography>
+                            <Typography variant="h6" component="p">
+                                {dlorItem.object_title}
+                            </Typography>
+                        </Box>
+                        <Typography id="notify-lightbox-description" sx={{ mt: 2 }}>
+                            We have updated{' '}
+                            <b>
+                                <a href={getDlorViewPageUrl(dlorItem.object_public_uuid)}>{dlorItem.object_title}</a>
+                            </b>
+                        </Typography>
+                        <Typography sx={{ mt: 2 }}>Here is what is new:</Typography>
+                        <Typography sx={{ mt: 2 }} style={{ color: 'grey', fontSize: '0.8em' }}>
+                            Enter the notification details the user will see here:
+                        </Typography>
+                        <CKEditor
+                            id="notificationText"
+                            style={{ width: '100%' }}
+                            className={classes.CKEditor}
+                            editor={ClassicEditor}
+                            config={editorConfig}
+                            data={formValues?.notificationText || ''}
+                            onReady={editor => {
+                                editor.editing.view.change(writer => {
+                                    writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                                });
+                            }}
+                            onChange={(event, editor) => {
+                                const htmlData = editor.getData();
+                                handleEditorChange('notificationText', htmlData);
+                            }}
+                        />
+                        <Typography sx={{ mt: 2 }}>
+                            You can <span style={{ color: '#3872a8', textDecoration: 'none' }}>unsubscribe</span> from
+                            notifications about this object.
+                        </Typography>
+                        <Typography sx={{ mt: 2 }}>
+                            Please email{' '}
+                            <span style={{ color: '#3872a8', textDecoration: 'none' }}>
+                                digital-learning-hub@library.uq.edu.au
+                            </span>{' '}
+                            if you have any questions.
+                        </Typography>
+                        <Typography sx={{ mt: 2 }}>
+                            <small>
+                                <strong>
+                                    Please do not reply directly to this email. This mailbox is not monitored, and you
+                                    will not receive a response.
+                                </strong>
+                            </small>
+                        </Typography>
+                        <Typography sx={{ mt: 2 }}>
+                            <small>
+                                e.{' '}
+                                <span style={{ color: '#3872a8', textDecoration: 'none' }}>
+                                    digital-learning-hub@library.uq.edu.au
+                                </span>{' '}
+                                | w. <a href="http://www.library.uq.edu.au">www.library.uq.edu.au</a>
+                            </small>
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                disabled={formValues?.notificationText === ''}
+                                data-testid="notify-lightbox-close-button"
+                                onClick={closeNotifyLightbox}
+                                sx={{ mt: 2 }}
+                            >
+                                Close
+                            </Button>
+                        </Box>
+                    </Box>
+                </Modal>
+            )}
         </>
     );
     const steps = [
@@ -1282,6 +1436,12 @@ export const DlorForm = ({
 
         valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
+
+        if (mode === 'add') {
+            delete valuesToSend.notificationText;
+        } else if (!isNotifying) {
+            valuesToSend.notificationText = '';
+        }
 
         /* istanbul ignore else */
         if (valuesToSend?.object_link_interaction_type === linkInteractionTypeDOWNLOAD) {
