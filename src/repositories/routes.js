@@ -333,12 +333,12 @@ export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/series/list' });
 export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/demographics' });
 export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/${id}/confirm/subscribe` });
 // export const DLOR_UNSUBSCRIBE_API = ({ id }) => ({ apiUrl: `dlor/${id}/confirm/unsubscribe` });
+export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/teams/list' });
 
 // dlor admin routes
 export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
 export const DLOR_UPDATE_API = id => ({ apiUrl: `dlor/admin/object/${id}` });
 export const DLOR_DESTROY_API = ({ id }) => ({ apiUrl: `dlor/admin/object/${id}` });
-export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/teams/list' });
 export const DLOR_TEAM_DELETE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
 export const DLOR_TEAM_SINGLE_GET_API = ({ id }) => ({ apiUrl: `dlor/admin/team/${id}` });
 export const DLOR_TEAM_UPDATE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
@@ -346,5 +346,4 @@ export const DLOR_TEAM_CREATE_API = () => ({ apiUrl: 'dlor/admin/team' });
 export const DLOR_FILE_TYPE_LIST_API = () => ({ apiUrl: 'dlor/admin/file_types/list' });
 export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
-/* istanbul ignore next */
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
