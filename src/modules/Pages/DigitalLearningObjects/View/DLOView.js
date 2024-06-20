@@ -349,10 +349,16 @@ export const DLOView = ({
 
     let subscriptionResponseLocale = {};
     if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError)) {
+        console.log('dlorUpdatedItem=', dlorUpdatedItem);
+        const updatingMessage =
+            dlorUpdatedItem?.data?.subscription === false
+                ? 'You are already subscribed'
+                : 'Please check your email to confirm your subscription request.';
+        const getConfirmationTitle = !!dlorUpdatedItem
+            ? updatingMessage
+            : 'There was a problem saving your subscription request - please try again later.';
         subscriptionResponseLocale = {
-            confirmationTitle: !!dlorUpdatedItem
-                ? 'Please check your email to confirm your subscription request.'
-                : 'There was a problem saving your subscription request - please try again later.',
+            confirmationTitle: getConfirmationTitle,
             confirmationMessage: '',
             confirmButtonLabel: 'Visit link now',
         };

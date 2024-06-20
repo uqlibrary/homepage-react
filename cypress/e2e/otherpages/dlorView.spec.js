@@ -648,6 +648,38 @@ describe('Digital Learning Hub View page', () => {
 
             cy.url().should('eq', 'http://localhost:2020/exams');
         });
+        it('handles where the user was already subscribed', () => {
+            cy.visit(
+                'digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember&responseType=alreadysubscribed',
+            );
+            cy.viewport(1300, 1000);
+
+            // reveal the notify fields
+            cy.get('[data-testid="checkbox-notify"] input')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+            cy.get('[data-testid="view-notify-preferredName"] input')
+                .should('exist')
+                .should('have.value', 'Caroline');
+            cy.get('[data-testid="view-notify-userEmail"] input')
+                .should('exist')
+                .should('have.value', 'j.Researcher@uq.edu.au');
+
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .click();
+
+            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-notification"]').should('exist'));
+            cy.get('[data-testid="dialogbox-dlor-save-notification"]').contains('You are already subscribed');
+            cy.get('[data-testid="cancel-dlor-save-notification"]').should('not.exist');
+            cy.get('[data-testid="confirm-dlor-save-notification"]')
+                .should('exist')
+                .contains('Visit link now')
+                .click();
+
+            cy.url().should('eq', 'http://localhost:2020/exams');
+        });
     });
     context('"Access it" units show properly', () => {
         it('A watchable object shows the correct units on the Get It button', () => {
