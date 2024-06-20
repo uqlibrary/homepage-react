@@ -828,6 +828,8 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .reply(() => {
         if (responseType === 'notifyError') {
             return [500, {}];
+        } else if (responseType === 'alreadysubscribed') {
+            return [200, { status: 'OK', data: { demographics: true, subscription: false } }];
         } else {
             return [200, { status: 'OK', data: { demographics: true, subscription: true } }];
         }

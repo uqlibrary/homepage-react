@@ -216,10 +216,11 @@ describe('Backend routes method', () => {
             expect(routes.DLOR_TEAM_LIST_API()).toEqual({ apiUrl: 'dlor/public/teams/list' });
             expect(routes.DLOR_GET_FILTER_LIST()).toEqual({ apiUrl: 'dlor/public/facet/list' });
             expect(routes.DLOR_SERIES_LIST_API()).toEqual({ apiUrl: 'dlor/public/series/list' });
-            expect(routes.DLOR_DEMOGRAPHICS_SAVE_API()).toEqual({ apiUrl: 'dlor/public/demographics' });
             expect(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 100 })).toEqual({
                 apiUrl: 'dlor/public/100/confirm/subscribe',
             });
+
+            expect(routes.DLOR_DEMOGRAPHICS_SAVE_API()).toEqual({ apiUrl: 'dlor/auth/demographics' });
 
             expect(routes.DLOR_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/object' });
             expect(routes.DLOR_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/object/100' });
