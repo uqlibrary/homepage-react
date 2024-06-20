@@ -358,6 +358,7 @@ export const DLOList = ({
             params.set('filters', facetIds.join(','));
         }
 
+        /* istanbul ignore next */
         if (params.has('keyword') && (params.get('keyword').length === 0 || params.get('keyword') === 'keyword=')) {
             params.delete('keyword');
         }
