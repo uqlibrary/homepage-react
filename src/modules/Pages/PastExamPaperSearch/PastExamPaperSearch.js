@@ -125,7 +125,6 @@ export const PastExamPaperSearch = ({
                 course_title: `View all exam papers for ${truncatedSearchTerm}`,
             });
         }
-        console.log('Filtered is', filtered);
         return filtered;
     };
 
@@ -157,7 +156,6 @@ export const PastExamPaperSearch = ({
                     </Grid>
                 </Grid>
                 <form>
-                    {console.log('suggestions', examSuggestionList)}
                     <Autocomplete
                         autoHighlight
                         clearOnEscape

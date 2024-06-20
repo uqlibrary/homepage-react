@@ -1,10 +1,11 @@
 import { locale } from 'locale';
 import {
-    isAlertsAdminUser,
     canSeeLearningResources,
+    isAlertsAdminUser,
+    isDlorAdminUser,
+    isPromoPanelAdminUser,
     isSpotlightsAdminUser,
     isTestTagAdminUser,
-    isPromoPanelAdminUser,
 } from 'helpers/access';
 import { pathConfig } from './pathConfig';
 
@@ -19,6 +20,11 @@ export const flattedPathConfigExact = [
     '/payment-receipt',
     '/admin/alerts/add',
     '/admin/alerts',
+    '/admin/dlor',
+    '/admin/dlor/add',
+    '/admin/dlor/series/manage',
+    '/admin/dlor/team/manage',
+    '/admin/dlor/team/add',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/spotlights/add',
@@ -39,24 +45,35 @@ export const flattedPathConfigExact = [
     '/book-exam-booth',
     '/exams',
     '/exams/',
+    '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
     '/admin/alerts/clone',
     '/admin/alerts/view',
+    '/admin/dlor/edit',
+    '/admin/dlor/series/edit',
+    '/admin/dlor/team/edit',
     '/admin/spotlights/edit',
     '/admin/spotlights/view',
     '/admin/spotlights/clone',
     '/admin/promopanel/edit',
     '/admin/promopanel/view',
     '/admin/promopanel/clone',
+    '/digital-learning-hub/view',
+    '/digital-learning-hub/confirm/subscribe',
+    // '/digital-learning-hub/confirm/unsubscribe',
     '/exams/course',
 ];
 
 export const getRoutesConfig = ({ components = {}, account = null }) => {
-    const examSearchRegExp = '.*';
-    const examSearchCourseHint = `:courseHint(${examSearchRegExp})`;
+    const standardRegExp = '.*';
+    const examSearchCourseHint = `:courseHint(${standardRegExp})`;
+
+    const dlorId = `:dlorId(${standardRegExp})`;
+    const confirmationId = `:confirmationId(${standardRegExp})`;
+
     const publicPages = [
         {
             path: pathConfig.index,
@@ -75,6 +92,23 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.BookExamBooth,
             exact: false,
             pageTitle: locale.pages.bookExamBooth.title,
+        },
+        {
+            path: pathConfig.dlorView(dlorId),
+            component: components.DLOView,
+            pageTitle: 'Digital Learning Object Repository - View Object',
+        },
+        {
+            path: pathConfig.dlorHome,
+            component: components.DLOList,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository',
+        },
+        {
+            path: pathConfig.dlorSubscriptionConfirmation(confirmationId),
+            component: components.DLOConfirmSubscription,
+            // exact: true,
+            pageTitle: 'Digital Learning Object Repository - Confirm Subscription request',
         },
         {
             path: pathConfig.pastExamPaperList(examSearchCourseHint),
@@ -98,8 +132,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const alertidRegExp = '.*';
-    const alertid = `:alertid(${alertidRegExp})`;
+    const alertid = `:alertid(${standardRegExp})`;
     const alertsDisplay = [
         {
             path: pathConfig.admin.alerts,
@@ -139,8 +172,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const promopanelidRegExp = '.*';
-    const promopanelid = `:promopanelid(${promopanelidRegExp})`;
+    const promopanelid = `:promopanelid(${standardRegExp})`;
     const promoPanelDisplay = [
         {
             path: pathConfig.admin.promopanel,
@@ -166,8 +198,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const spotlightidRegExp = '.*';
-    const spotlightid = `:spotlightid(${spotlightidRegExp})`;
+    const spotlightid = `:spotlightid(${standardRegExp})`;
     const spotlightsDisplay = [
         {
             path: pathConfig.admin.spotlights,
@@ -195,6 +226,59 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.spotlightsview(spotlightid),
             component: components.SpotlightsView,
             pageTitle: locale.pages.admin.spotlights.form.view.title,
+        },
+    ];
+
+    const dlorTeamId = `:dlorTeamId(${standardRegExp})`;
+    const dlorSeriesId = `:dlorSeriesId(${standardRegExp})`;
+    const dlorAdminDisplay = [
+        {
+            path: pathConfig.admin.dloradmin,
+            component: components.DLOAdminHomepage,
+            exact: true,
+            pageTitle: 'Manage the Digital Learning Hub',
+        },
+        {
+            path: pathConfig.admin.dloradd,
+            component: components.DLOAdd,
+            exact: true,
+            pageTitle: 'Create a new Object',
+        },
+        {
+            path: pathConfig.admin.dloredit(dlorId),
+            component: components.DLOEdit,
+            exact: true,
+            pageTitle: 'Edit an Object',
+        },
+        {
+            path: pathConfig.admin.dlorteammanage,
+            component: components.DLOTeamList,
+            exact: true,
+            pageTitle: 'Manage Teams for the Digital Learning Hub',
+        },
+        {
+            path: pathConfig.admin.dlorteamedit(dlorTeamId),
+            component: components.DLOTeamEdit,
+            exact: true,
+            pageTitle: 'Edit a Team for the Digital Learning Hub',
+        },
+        {
+            path: pathConfig.admin.dlorteamadd,
+            component: components.DLOTeamAdd,
+            exact: true,
+            pageTitle: 'Create a new Team',
+        },
+        {
+            path: pathConfig.admin.dlorseriesmanage,
+            component: components.DLOSeriesList,
+            exact: true,
+            pageTitle: 'Manage Series for the Digital Learning Hub',
+        },
+        {
+            path: pathConfig.admin.dlorseriesedit(dlorSeriesId),
+            component: components.DLOSeriesEdit,
+            exact: true,
+            pageTitle: 'Edit a Series for the Digital Learning Hub',
         },
     ];
 
@@ -272,24 +356,16 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.testntag.title,
         },
     ];
-    // const testntagManageAssetTypes = [
-    //     {
-    //         path: pathConfig.admin.testntagmanageassettypes,
-    //         component: components.TestTagManageAssetTypes,
-    //         exact: true,
-    //         pageTitle: locale.pages.admin.testntag.title,
-    //     },
-    // ];
 
     return [
         ...publicPages,
         ...(account && canSeeLearningResources(account) ? courseResourcesDisplay : []),
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
+        ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
         ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
-        // ...(account && isTestTagAdminUser(account) ? testntagManageAssetTypes : []),
         {
             component: components.NotFound,
         },

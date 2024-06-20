@@ -1,7 +1,5 @@
 import spotlightReducer, { initialState } from './spotlightReducer';
 import * as actions from '../actions/actionTypes';
-import accountReducer from './account';
-import spotlightsReducer from './spotlightsReducer';
 
 describe('spotlight reducer', () => {
     let emptyState;
