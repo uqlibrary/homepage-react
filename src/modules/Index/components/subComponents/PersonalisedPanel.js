@@ -34,12 +34,12 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .flexHeader': {
         height: 'auto',
-        whiteSpace: 'nowrap',
     },
     '& .flexContent': {
         flexGrow: 1,
         overflowY: 'auto',
         overflowX: 'hidden',
+        paddingTop: 12,
         [theme.breakpoints.down('md')]: {
             overflowX: 'hidden',
             overflowY: 'hidden',
@@ -54,7 +54,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginLeft: -6,
         },
     },
-    '& .isNextToSpotlights': {
+    '&.isNextToSpotlights': {
         borderLeft: '1px solid' + theme.palette.secondary.light,
         paddingLeft: 16,
     },
@@ -490,7 +490,7 @@ const PersonalisedPanel = ({
             >
                 <div className={'flexHeader'}>
                     <Typography variant={'h5'} component={'h2'} className={'greeting'}>
-                        {greeting()} {'firstName' || /* istanbul ignore next */ ''}
+                        {greeting()} {account.firstName || /* istanbul ignore next */ ''}
                     </Typography>
                     <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
                         {account && account.id && (
