@@ -325,15 +325,15 @@ export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id
 export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
 export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
 
-export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/list/full' });
-export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/list/current' });
-export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/find/${id}` });
-export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/facet/list' });
-export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/series/list' });
-export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/demographics' });
-export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/${id}/confirm/subscribe` });
-// export const DLOR_UNSUBSCRIBE_API = ({ id }) => ({ apiUrl: `dlor/${id}/confirm/unsubscribe` });
-export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/teams/list' });
+export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' });
+export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
+export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
+export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
+export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/public/series/list' });
+export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/public/demographics' });
+export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/subscribe` });
+// export const DLOR_UNSUBSCRIBE_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/unsubscribe` });
+export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/public/teams/list' });
 
 // dlor admin routes
 export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
