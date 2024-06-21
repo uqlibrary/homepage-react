@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 
 import { Grid } from '@mui/material';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -17,7 +18,6 @@ import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import TextField from '@mui/material/TextField';
-import makeStyles from '@mui/styles/makeStyles';
 
 import ActionPanel from './ActionPanel';
 import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
@@ -35,18 +35,18 @@ const rootIdLower = 'inspection_panel';
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 const moment = require('moment');
 
-const useStyles = makeStyles(theme => ({
-    toggleButtonRoot: {
+const StyledCollapse = styled(Collapse)(({ theme }) => ({
+    '& .toggleButtonRoot': {
         color: 'rgba(0, 0, 0, 0.87)',
         '& :disabled': {
             color: `${theme.palette.text.main} !important`,
         },
     },
-    toggleButtonSuccess: {
+    '& .toggleButtonSuccess': {
         color: `${theme.palette.primary.contrastText} !important`,
         backgroundColor: `${theme.palette.success.main} !important`,
     },
-    toggleButtonFailed: {
+    '& .toggleButtonFailed': {
         color: `${theme.palette.primary.contrastText} !important`,
         backgroundColor: `${theme.palette.error.main} !important`,
     },
@@ -66,7 +66,6 @@ const InspectionPanel = ({
 
     const pageLocale = locale.pages.inspect;
     const monthsOptions = locale.config.monthsOptions;
-    const classesInternal = useStyles();
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
@@ -115,7 +114,7 @@ const InspectionPanel = ({
             variant="outlined"
             noPadding={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
         >
-            <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
+            <StyledCollapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={4}>
                         <FormControl
@@ -207,7 +206,7 @@ const InspectionPanel = ({
                                 onChange={(/* istanbul ignore next*/ _, child) => {
                                     handleChange('inspection_status')(child ?? /* istanbul ignore next*/ undefined);
                                 }}
-                                style={{ display: 'flex' }}
+                                sx={{ display: 'flex' }}
                             >
                                 <ToggleButton
                                     id={`${componentIdLower}-inspection-result-${testStatusEnum.PASSED.value.toLowerCase()}-button`}
@@ -215,8 +214,8 @@ const InspectionPanel = ({
                                     value={testStatusEnum.PASSED.value}
                                     aria-label={testStatusEnum.PASSED.label}
                                     classes={{
-                                        root: classesInternal.toggleButtonRoot,
-                                        selected: classesInternal.toggleButtonSuccess,
+                                        root: 'toggleButtonRoot',
+                                        selected: 'toggleButtonSuccess',
                                         sizeLarge: 'toggleButtonMobile',
                                     }}
                                     disabled={disabled}
@@ -229,8 +228,8 @@ const InspectionPanel = ({
                                     value={testStatusEnum.FAILED.value}
                                     aria-label={testStatusEnum.FAILED.label}
                                     classes={{
-                                        root: classesInternal.toggleButtonRoot,
-                                        selected: classesInternal.toggleButtonFailed,
+                                        root: 'toggleButtonRoot',
+                                        selected: 'toggleButtonFailed',
                                         sizeLarge: 'toggleButtonMobile',
                                     }}
                                     disabled={disabled}
@@ -310,7 +309,7 @@ const InspectionPanel = ({
                     isMobileView={isMobileView}
                     disabled={disabled}
                 />
-            </Collapse>
+            </StyledCollapse>
         </StandardCard>
     );
 };
