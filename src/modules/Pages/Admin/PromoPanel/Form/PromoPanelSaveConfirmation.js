@@ -7,15 +7,6 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import DialogContentText from '@mui/material/DialogContentText';
 
-// export const useStyles = makeStyles(theme => ({
-//     alternateActionButtonClass: {
-//         color: theme.palette.white.main,
-//         backgroundColor: theme.palette.warning.main,
-//         '&:hover': {
-//             backgroundColor: theme.palette.warning.dark,
-//         },
-//     },
-// }));
 export const PromoPanelSaveConfirmation = ({
     isConfirmOpen,
     title,

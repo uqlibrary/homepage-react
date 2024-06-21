@@ -6,7 +6,7 @@ exports[`Utility Tests renders the utility area correctly 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="makeStyles-actionButtonPlacer-1"
+        class="css-8q9lfz"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary css-1mhlsgc-MuiButtonBase-root-MuiButton-root"
@@ -22,7 +22,7 @@ exports[`Utility Tests renders the utility area correctly 1`] = `
         </button>
       </div>
       <div
-        class="makeStyles-actionButtonPlacer-1"
+        class="css-8q9lfz"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-t41e4y-MuiButtonBase-root-MuiButton-root"
@@ -41,7 +41,7 @@ exports[`Utility Tests renders the utility area correctly 1`] = `
   </body>,
   "container": <div>
     <div
-      class="makeStyles-actionButtonPlacer-1"
+      class="css-8q9lfz"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary css-1mhlsgc-MuiButtonBase-root-MuiButton-root"
@@ -57,7 +57,7 @@ exports[`Utility Tests renders the utility area correctly 1`] = `
       </button>
     </div>
     <div
-      class="makeStyles-actionButtonPlacer-1"
+      class="css-8q9lfz"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-t41e4y-MuiButtonBase-root-MuiButton-root"

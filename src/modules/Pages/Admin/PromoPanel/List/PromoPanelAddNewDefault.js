@@ -5,7 +5,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -23,42 +22,6 @@ const MenuProps = {
         },
     },
 };
-const useStyles = makeStyles(theme => ({
-    contentBox: {
-        minWidth: '90%',
-        paddingTop: 20,
-        '& img': {
-            maxWidth: 800,
-            height: 800,
-            border: '1px solid grey',
-            textAlign: 'center',
-        },
-        '& li': {
-            marginBottom: 10,
-            padding: 10,
-            '&:hover': {
-                backgroundColor: theme.palette.secondary.main,
-                transition: 'background-color 1s ease',
-            },
-            '& p': {
-                marginBottom: 0,
-                marginTop: 1,
-            },
-        },
-        '& [aria-labelledby="lightboxTitle"]': {
-            color: 'blue',
-        },
-    },
-    dialogPaper: {
-        // make the block take up more of the page
-        width: 500,
-    },
-    link: {
-        marginBottom: 10,
-        marginRight: 10,
-        cursor: 'pointer',
-    },
-}));
 export const PromoPanelAddNewDefault = ({
     isAddingDefault,
     groupName,
@@ -66,8 +29,6 @@ export const PromoPanelAddNewDefault = ({
     handleAddGroupDefault,
     handleCloseGroupDefault,
 }) => {
-    const classes = useStyles();
-
     const [selectedPanel, setSelectedPanel] = useState('');
     const [AvailablePanels, setAvailablePanels] = useState(promoPanelList);
     // const [showError, setShowError] = useState(false);
@@ -97,11 +58,7 @@ export const PromoPanelAddNewDefault = ({
 
     return (
         <React.Fragment>
-            <Dialog
-                open={isAddingDefault}
-                aria-labelledby="lightboxTitle"
-                PaperProps={{ classes: { root: classes.dialogPaper } }}
-            >
+            <Dialog open={isAddingDefault} aria-labelledby="lightboxTitle" PaperProps={{ style: { width: 500 } }}>
                 <DialogTitle
                     id="lightboxTitle"
                     data-testid="panel-edit-date-title"
@@ -113,7 +70,7 @@ export const PromoPanelAddNewDefault = ({
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item xs={12}>
-                            <FormControl variant="standard" className={classes.dropdown} fullWidth title={'Panel'}>
+                            <FormControl variant="standard" className={'dropdown'} fullWidth title={'Panel'}>
                                 <InputLabel id="group-selector">Panel</InputLabel>
                                 <Select
                                     variant="standard"
