@@ -304,7 +304,6 @@ export const DLOList = ({
 
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
-    const [filterTypesOpen, setFilterTypesOpen] = useState([]);
     const checkBoxArrayRef = useRef([]);
     const [keywordSearch, setKeywordSearch] = useState('');
     const keyWordSearchRef = useRef('');
@@ -437,7 +436,6 @@ export const DLOList = ({
         showElement(downArrowIcon, 'inline-block');
         !!downArrowIcon && downArrowIcon.parentElement?.setAttribute('aria-label', filterMaximiseButtonLabel);
         hideElement(upArrowIcon, 'none');
-        setFilterTypesOpen(filterTypesOpen.filter(f => f !== facetTypeId)); // hide
     }
 
     function showPanel(facetTypeId) {
@@ -448,7 +446,6 @@ export const DLOList = ({
         hideElement(downArrowIcon, 'none');
         showElement(upArrowIcon, 'inline-block');
         !!upArrowIcon && upArrowIcon.parentElement?.setAttribute('aria-label', filterMinimiseButtonLabel);
-        setFilterTypesOpen([...filterTypesOpen, facetTypeId]); // show
     }
 
     function showHidePanel(facetTypeId) {
@@ -483,6 +480,7 @@ export const DLOList = ({
             };
             handleKeywordEntry(keyword);
         }
+        const openPanels = [];
         if (params.has('filters') && params.get('filters').length > 0) {
             filtersFound = true;
             // build the facet ids into facedtypeslug-facetid
@@ -494,8 +492,10 @@ export const DLOList = ({
                 .map(facetId => {
                     for (const facetType of dlorFilterList) {
                         const facet = facetType.facet_list.find(f => f.facet_id === facetId);
-                        setFilterTypesOpen([...filterTypesOpen, facetType.facet_type_id]);
-                        if (facet) {
+                        if (!!facet) {
+                            if (!openPanels.includes(facetType.facet_type_id)) {
+                                openPanels.push(facetType.facet_type_id);
+                            }
                             return `${facetType.facet_type_slug}-${facetId}`;
                         }
                     }
@@ -510,6 +510,23 @@ export const DLOList = ({
         if (!filtersFound) {
             // if there are no filters we show the first panel (is this right?)
             showPanel([...dlorFilterList].shift().facet_type_id);
+        } else {
+            // open those sidebar panels that have a checked checkbox
+            let index = 0;
+            const allPanels = [...dlorFilterList];
+            const showAPanel = setInterval(() => {
+                if (index < allPanels.length) {
+                    const panel = allPanels[index];
+                    if (openPanels.includes(panel.facet_type_id)) {
+                        showPanel(panel.facet_type_id);
+                    } else {
+                        hidePanel(panel.facet_type_id);
+                    }
+                    index++;
+                } else {
+                    clearInterval(showAPanel);
+                }
+            }, 10);
         }
     }
 
@@ -650,7 +667,7 @@ export const DLOList = ({
     }
 
     const openPanelListContains = facetTypeid => {
-        return filterTypesOpen.includes(facetTypeid);
+        return facetTypeid === [...dlorFilterList].shift().facet_type_id;
     };
 
     const getPublicHelp = facetTypeSlug => {
@@ -825,10 +842,8 @@ export const DLOList = ({
                                                     className={classes.filterSidebarCheckboxControl}
                                                     control={
                                                         <Checkbox
-                                                            // className={classes.filterSidebarCheckbox}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
-                                                            // value={facet?.facet_name}
                                                             value={facet?.facet_id}
                                                             data-testid={`checkbox-${
                                                                 facetType?.facet_type_slug

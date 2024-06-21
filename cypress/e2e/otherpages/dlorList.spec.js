@@ -821,6 +821,82 @@ describe('Digital Learning Hub', () => {
                 'Open this filter section',
             );
         });
+        it('loads multiple filters correctly from url', () => {
+            cy.visit('digital-learning-hub?user=public&filters=44%2C24%2C13');
+            // has reduced number of panels
+            cy.get('[data-testid="dlor-homepage-list"]')
+                .should('exist')
+                .children()
+                .should('have.length', 1 + extraRowCount);
+            cy.get('[data-testid="dlor-homepage-panel-kj5t_8yg4_kj4f"] h2')
+                .should('exist')
+                .contains('UQ has a Blak History');
+
+            // opens correct panels
+            cy.get('[data-testid="panel-minimisation-icon-topic"]').should(
+                'have.attr',
+                'aria-label',
+                'Open this filter section',
+            );
+            cy.get('[data-testid="sidebar-panel-topic"]')
+                .should('exist')
+                .should('not.be.visible');
+
+            cy.get('[data-testid="panel-minimisation-icon-graduate_attributes"]').should(
+                'have.attr',
+                'aria-label',
+                'Close this filter section',
+            );
+            cy.get('[data-testid="sidebar-panel-graduate_attributes"]')
+                .should('exist')
+                .should('be.visible');
+            cy.get('[data-testid="sidebar-panel-graduate_attributes"] label')
+                .should('exist')
+                .should('be.visible')
+                .contains('Accomplished scholars');
+
+            cy.get('[data-testid="panel-minimisation-icon-item_type"]').should(
+                'have.attr',
+                'aria-label',
+                'Open this filter section',
+            );
+            cy.get('[data-testid="sidebar-panel-item_type"]')
+                .should('exist')
+                .should('not.be.visible');
+
+            cy.get('[data-testid="panel-minimisation-icon-media_format"]').should(
+                'have.attr',
+                'aria-label',
+                'Close this filter section',
+            );
+            cy.get('[data-testid="sidebar-panel-media_format"]')
+                .should('exist')
+                .should('be.visible');
+            cy.get('[data-testid="sidebar-panel-media_format"] label')
+                .should('exist')
+                .should('be.visible')
+                .contains('H5P');
+
+            cy.get('[data-testid="panel-minimisation-icon-subject"]')
+                // .should('be.visible')
+                .should('have.attr', 'aria-label', 'Open this filter section');
+            cy.get('[data-testid="sidebar-panel-subject"]')
+                .should('exist')
+                .should('not.be.visible');
+
+            cy.get('[data-testid="panel-minimisation-icon-licence"]').should(
+                'have.attr',
+                'aria-label',
+                'Close this filter section',
+            );
+            cy.get('[data-testid="sidebar-panel-licence"]')
+                .should('exist')
+                .should('be.visible');
+            cy.get('[data-testid="sidebar-panel-licence"] label')
+                .should('exist')
+                .should('be.visible')
+                .contains('CC BY Attribution');
+        });
         it('saves changes from the page to the url', () => {
             cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub?keyword=acc&filters=11');
             cy.get('[data-testid="dlor-homepage-list"]')
