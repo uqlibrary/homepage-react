@@ -16,7 +16,6 @@ export const PromoPanelSaveConfirmation = ({
     primaryText,
     secondaryText,
 }) => {
-    // const classes = useStyles();
     return (
         <React.Fragment>
             <Dialog open={isConfirmOpen} aria-labelledby="lightboxTitle">
