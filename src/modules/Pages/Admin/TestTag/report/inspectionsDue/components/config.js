@@ -27,7 +27,7 @@ export default {
                             {date}
                             {isPastDate && (
                                 <Tooltip
-                                    style={{ padding: '5px', height: 20 }}
+                                    sx={{ padding: '5px', height: '20px' }}
                                     title={locale.pages.report.inspectionsDue.tooltips.overdue}
                                     TransitionProps={{ timeout: 300 }}
                                     id={'tooltip-overdue'}

@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Unstable_Grid2';
+import Box from '@mui/material/Box';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -22,18 +22,9 @@ import { transformRow, transformUpdateRequest, emptyActionState, actionReducer }
 
 const componentId = 'inspection-details';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
-        marginTop: theme.spacing(0),
-    },
-}));
-
 const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListError }) => {
     const pageLocale = locale.pages.manage.inspectiondetails;
-    const classes = useStyles();
+
     useEffect(() => {
         actions.clearAssets();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,7 +103,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
             requiredPermissions={[PERMISSIONS.can_inspect]}
             inclusive={false}
         >
-            <div className={classes.root}>
+            <Box sx={{ flexGrow: 1 }}>
                 <StandardCard noHeader>
                     <UpdateDialog
                         title={actionState.title}
@@ -134,7 +125,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                                 id={componentId}
                                 locale={pageLocale.form}
                                 user={user}
-                                classNames={{ formControl: classes.formControl }}
+                                classNames={{ formControl: 'formControl' }}
                                 canAddNew={false}
                                 required={false}
                                 clearOnSelect={false}
@@ -143,7 +134,13 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                             />
                         </Grid>
                     </Grid>
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
+                    <Grid
+                        container
+                        spacing={3}
+                        sx={theme => {
+                            marginTop: theme.spacing(0);
+                        }}
+                    >
                         <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 rows={row}
@@ -165,7 +162,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                         autoHideDuration={confirmationAlert.autoHideDuration}
                     />
                 </StandardCard>
-            </div>
+            </Box>
         </StandardAuthPage>
     );
 };

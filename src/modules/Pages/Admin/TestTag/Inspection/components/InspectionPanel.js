@@ -58,7 +58,6 @@ const InspectionPanel = ({
     selectedAsset,
     handleChange,
     defaultNextTestDateValue,
-    classes,
     disabled,
     isMobileView,
 }) => {
@@ -121,7 +120,7 @@ const InspectionPanel = ({
                     <Grid item xs={12} sm={6} md={4}>
                         <FormControl
                             variant="standard"
-                            className={classes.formControl}
+                            className={'formControl'}
                             fullWidth
                             error={invalidTestingDevice}
                         >
@@ -146,7 +145,7 @@ const InspectionPanel = ({
                                     'data-testid': `${componentIdLower}-inspection-device-select`,
                                 }}
                                 fullWidth
-                                className={classes.formSelect}
+                                className={'formSelect'}
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => {
                                     handleChange('inspection_device_id')(e.target.value);
@@ -218,7 +217,7 @@ const InspectionPanel = ({
                                     classes={{
                                         root: classesInternal.toggleButtonRoot,
                                         selected: classesInternal.toggleButtonSuccess,
-                                        sizeLarge: classes.toggleButtonMobile,
+                                        sizeLarge: 'toggleButtonMobile',
                                     }}
                                     disabled={disabled}
                                 >
@@ -232,7 +231,7 @@ const InspectionPanel = ({
                                     classes={{
                                         root: classesInternal.toggleButtonRoot,
                                         selected: classesInternal.toggleButtonFailed,
-                                        sizeLarge: classes.toggleButtonMobile,
+                                        sizeLarge: 'toggleButtonMobile',
                                     }}
                                     disabled={disabled}
                                 >
@@ -256,13 +255,13 @@ const InspectionPanel = ({
                                 fromDate={formValues.action_date}
                                 fromDateFormat={pageLocale.config.dateFormat}
                                 dateDisplayFormat={pageLocale.config.dateFormatDisplay}
-                                classNames={{ formControl: classes.formControl, select: classes.formSelect }}
+                                classNames={{ formControl: 'formControl', select: 'formSelect' }}
                             />
                         </Grid>
                     )}
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
                         <Grid item xs={12} sm={12}>
-                            <FormControl variant="standard" className={classes.formControl} fullWidth>
+                            <FormControl variant="standard" className={'formControl'} fullWidth>
                                 <TextField
                                     {...pageLocale.form.inspection.failReason}
                                     multiline
@@ -285,7 +284,7 @@ const InspectionPanel = ({
                     )}
 
                     <Grid item xs={12} sm={12}>
-                        <FormControl variant="standard" className={classes.formControl} fullWidth>
+                        <FormControl variant="standard" className={'formControl'} fullWidth>
                             <TextField
                                 {...pageLocale.form.inspection.inspectionNotes}
                                 multiline
@@ -308,7 +307,6 @@ const InspectionPanel = ({
                     formValues={formValues}
                     selectedAsset={selectedAsset}
                     handleChange={handleChange}
-                    classes={classes}
                     isMobileView={isMobileView}
                     disabled={disabled}
                 />
@@ -323,7 +321,6 @@ InspectionPanel.propTypes = {
     selectedAsset: PropTypes.object,
     handleChange: PropTypes.func.isRequired,
     defaultNextTestDateValue: PropTypes.string.isRequired,
-    classes: PropTypes.any.isRequired,
     disabled: PropTypes.bool.isRequired,
     isMobileView: PropTypes.bool.isRequired,
 };

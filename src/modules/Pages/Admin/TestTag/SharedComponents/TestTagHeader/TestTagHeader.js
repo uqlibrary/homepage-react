@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
+
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
@@ -8,21 +9,19 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import Icon from '@mui/material/Icon';
 import HomeIcon from '@mui/icons-material/Home';
-import clsx from 'clsx';
 
 const componentId = 'test_tag_header';
 
 import { pathConfig } from '../../../../../../config/pathConfig';
 
-const useStyles = makeStyles(theme => ({
-    header: {
-        paddingBottom: theme.spacing(2),
-    },
-    link: {
+const StyledBox = styled(Box)(({ theme }) => ({
+    paddingBottom: theme.spacing(2),
+
+    '& .link': {
         display: 'flex',
         fontSize: '0.875rem',
     },
-    icon: {
+    '& .icon': {
         marginRight: theme.spacing(0.5),
         width: 20,
         height: 20,
@@ -33,10 +32,8 @@ const useStyles = makeStyles(theme => ({
 const TestTagHeader = (
     /* istanbul ignore next*/ { departmentText = '', breadcrumbs = [], className = '', ...props } = {},
 ) => {
-    const classes = useStyles();
-
     return (
-        <Box className={clsx([classes.header, className])} id={componentId} data-testid={componentId} {...props}>
+        <StyledBox className={`header ${className}`} id={componentId} data-testid={componentId} {...props}>
             <Typography component={'h2'} variant={'h5'}>
                 {!!departmentText && departmentText.length > 0 ? (
                     departmentText
@@ -55,12 +52,12 @@ const TestTagHeader = (
                     <Link
                         color="inherit"
                         to={`${pathConfig.admin.testntagdashboard}`}
-                        className={classes.link}
+                        className={'link'}
                         id={`${componentId}-navigation-dashboard`}
                         data-testid={`${componentId}-navigation-dashboard`}
                     >
                         <HomeIcon
-                            className={classes.icon}
+                            className={'icon'}
                             id={`${componentId}-navigation-dashboard-icon`}
                             data-testid={`${componentId}-navigation-dashboard-icon`}
                         />
@@ -72,14 +69,14 @@ const TestTagHeader = (
                             <Link
                                 color="inherit"
                                 to={`${breadcrumb.link}`}
-                                className={classes.link}
+                                className={'link'}
                                 key={`breadcrumbLink-${normalisedTitle}`}
                                 id={`${componentId}-navigation-${normalisedTitle}`}
                                 data-testid={`${componentId}-navigation-${normalisedTitle}`}
                             >
                                 {breadcrumb?.icon && index < breadcrumbs.length - 1 ? (
                                     <Icon
-                                        className={classes.icon}
+                                        className={'icon'}
                                         id={`${componentId}-navigation-${normalisedTitle}-icon`}
                                         data-testid={`${componentId}-navigation-${normalisedTitle}-icon`}
                                     >
@@ -93,14 +90,14 @@ const TestTagHeader = (
                         ) : (
                             <Typography
                                 color="textPrimary"
-                                className={classes.link}
+                                className={'link'}
                                 key={`breadcrumbLink-${normalisedTitle}`}
                                 id={`${componentId}-navigation-current-page`}
                                 data-testid={`${componentId}-navigation-current-page`}
                             >
                                 {breadcrumb?.icon && index < breadcrumbs.length - 1 ? (
                                     <Icon
-                                        className={classes.icon}
+                                        className={'icon'}
                                         id={`${componentId}-navigation-current-page-icon`}
                                         data-testid={`${componentId}-navigation-current-page-icon`}
                                     >
@@ -115,7 +112,7 @@ const TestTagHeader = (
                     })}
                 </Breadcrumbs>
             )}
-        </Box>
+        </StyledBox>
     );
 };
 

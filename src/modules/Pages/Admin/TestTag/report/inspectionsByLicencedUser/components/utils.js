@@ -1,11 +1,6 @@
 import locale from '../../../testTag.locale';
 const moment = require('moment');
 
-export const getNameStyles = (name, inspectorName, theme) => ({
-    fontWeight:
-        inspectorName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
-});
-
 export const transformRow = row => {
     return row.map(line => {
         if (!!line.processed) return line;

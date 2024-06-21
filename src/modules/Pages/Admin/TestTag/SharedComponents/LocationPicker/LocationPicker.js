@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
 
-// import Grid from '@mui/material/Grid';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
@@ -12,18 +10,6 @@ import Popper from '@mui/material/Popper';
 
 const rootId = 'location_picker';
 const inputLabelProps = { shrink: true };
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
-        marginTop: theme.spacing(2),
-    },
-    gridRoot: {
-        border: 0,
-    },
-}));
 
 export const GridWrapper = ({ withGrid = true, divisor = 1, children }) => {
     GridWrapper.propTypes = {
@@ -69,7 +55,6 @@ const LocationPicker = ({
     withGrid = true,
 }) => {
     const componentId = `${rootId}-${id}`;
-    const classes = useStyles();
     const divisor = 4 - hide.length;
 
     const focusElementRef = React.useRef();
@@ -111,7 +96,7 @@ const LocationPicker = ({
         <>
             {!hide.includes('site') && (
                 <GridWrapper withGrid={withGrid} divisor={divisor}>
-                    <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <FormControl variant="standard" className={'formControl'} fullWidth>
                         <Autocomplete
                             id={`${componentId}-site`}
                             data-testid={`${componentId}-site`}
@@ -178,7 +163,7 @@ const LocationPicker = ({
             )}
             {!hide.includes('building') && (
                 <GridWrapper withGrid={withGrid} divisor={divisor}>
-                    <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <FormControl variant="standard" className={'formControl'} fullWidth>
                         <Autocomplete
                             id={`${componentId}-building`}
                             data-testid={`${componentId}-building`}
@@ -251,7 +236,7 @@ const LocationPicker = ({
 
             {!hide.includes('floor') && (
                 <GridWrapper withGrid={withGrid} divisor={divisor}>
-                    <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <FormControl variant="standard" className={'formControl'} fullWidth>
                         <Autocomplete
                             id={`${componentId}-floor`}
                             data-testid={`${componentId}-floor`}
@@ -314,7 +299,7 @@ const LocationPicker = ({
             )}
             {!hide.includes('room') && (
                 <GridWrapper withGrid={withGrid} divisor={divisor}>
-                    <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <FormControl variant="standard" className={'formControl'} fullWidth>
                         <Autocomplete
                             id={`${componentId}-room`}
                             data-testid={`${componentId}-room`}

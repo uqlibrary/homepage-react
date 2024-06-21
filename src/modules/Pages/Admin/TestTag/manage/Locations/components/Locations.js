@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -27,11 +27,9 @@ import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 
 const componentId = 'locations';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+    '& .tableMarginTop': {
         marginTop: theme.spacing(2),
     },
 }));
@@ -65,7 +63,7 @@ const ManageLocations = ({ actions }) => {
     }, []);
 
     const pageLocale = locale.pages.manage.locations;
-    const classes = useStyles();
+
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { row, setRow } = useDataTableRow([]);
@@ -236,7 +234,7 @@ const ManageLocations = ({ actions }) => {
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
-            <div className={classes.root}>
+            <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <UpdateDialog
                         title={actionState.title}
@@ -308,7 +306,7 @@ const ManageLocations = ({ actions }) => {
                             locale={locale.pages.general.locationPicker}
                         />
                     </Grid>
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
+                    <Grid container spacing={3} className={'tableMarginTop'}>
                         <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
@@ -337,7 +335,7 @@ const ManageLocations = ({ actions }) => {
                         closeAlert={closeConfirmationAlert}
                     />
                 </StandardCard>
-            </div>
+            </StyledWrapper>
         </StandardAuthPage>
     );
 };
