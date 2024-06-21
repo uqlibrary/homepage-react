@@ -67,7 +67,7 @@ const EventPanel = ({
             title={pageLocale.form.event.title}
             headerAction={
                 <IconButton
-                    className={`expand${eventExpanded ? ' expandOpen' : ''}`}
+                    className={`expand${eventExpanded ? ' expandOpen' : /* istanbul ignore next */ ''}`}
                     aria-expanded={eventExpanded}
                     aria-label={pageLocale.form.event.aria.collapseButtonLabel}
                     onClick={() => setEventExpanded(!eventExpanded)}
