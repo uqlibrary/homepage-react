@@ -31,18 +31,17 @@ export class AppLoader extends React.Component {
         title: PropTypes.string.isRequired,
         logoImage: PropTypes.string,
         logoText: PropTypes.string,
-        classes: PropTypes.object,
     };
 
     render() {
-        const { classes, title, logoImage, logoText } = this.props;
+        const { title, logoImage, logoText } = this.props;
         return (
             <StyledLoader container spacing={0} direction="column" justifyContent="center" alignItems="center">
                 <Grid item className={'spaceBetween'}>
                     <CircularProgress
                         size={80}
                         thickness={1}
-                        className={classes.white}
+                        className={'white'}
                         aria-label="Loading Library website"
                     />
                 </Grid>

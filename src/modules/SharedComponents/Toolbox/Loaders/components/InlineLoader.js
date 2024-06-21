@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 export class InlineLoader extends React.Component {
     static propTypes = {
         message: PropTypes.string,
-        classes: PropTypes.object,
     };
 
     static defaultProps = {
@@ -32,7 +31,6 @@ export class InlineLoader extends React.Component {
                     <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
                         <CircularProgress
                             sx={{ color: 'primary.light' }}
-                            className={this.props.classes.circular}
                             size={18}
                             thickness={2}
                             aria-labelledby="loading-icon"
