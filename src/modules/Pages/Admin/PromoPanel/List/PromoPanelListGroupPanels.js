@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import makeStyles from '@mui/styles/makeStyles';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
@@ -32,106 +31,47 @@ import PromoPanelScheduleHeaders from './PromoPanelScheduleHeaders';
 import { filterPanelList } from '../promoPanelHelpers';
 import PromoPanelAddSchedule from './PromoPanelAddSchedule';
 import PromoPanelAddNewDefault from './PromoPanelAddNewDefault';
+import { styled } from '@mui/material/styles';
 
 const moment = require('moment');
 
-const useStyles2 = makeStyles(
-    theme => ({
-        cellGroupRowOdd: {
-            backgroundColor: '#eee',
-        },
-        cellEmpty: {
-            borderBottom: 'none',
-        },
-        cellGroupRowEven: {
-            backgroundColor: 'none',
-        },
-        cellGroupName: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 5,
-            paddingBottom: 0,
-            fontWeight: 900,
-            borderBottom: 'none',
-            color: '#FFF',
-        },
-        cellGroupDetails: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 0,
-            paddingBottom: 5,
-            fontWeight: 400,
-            borderBottom: 'none',
-        },
-        cellGroupDetailsLast: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 0,
-            paddingBottom: 20,
-            fontWeight: 400,
-            borderBottom: 'none',
-        },
-        table: {
-            minWidth: 500,
-        },
-        startDate: {
-            whiteSpace: 'pre', // makes moment format able to take a carriage return
-        },
-        endDate: {
-            whiteSpace: 'pre',
-        },
-        headerRow: {
-            display: 'flex',
-            padding: '0 0.5rem',
-        },
-        headerRowHighlighted: {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
-        iconHighlighted: {
-            color: '#fff',
-        },
-        chipblock: {
-            '&>div': {
-                marginBottom: 4,
-            },
-            '&>div>div': {
-                marginBottom: 4,
-            },
-        },
-        urgent: {
-            backgroundColor: theme.palette.warning.light,
-            color: '#000',
-        },
-        tableRow: {
-            borderBottom: '1px solid #bbb',
-        },
-        tableRowGroup: {
-            backgroundColor: '#51247a',
-            color: '#fff',
-            fontWeight: 'bold',
-            borderBottom: 'none',
-        },
-        extreme: {
-            backgroundColor: theme.palette.error.main,
-            color: '#fff',
-        },
-        system: {
-            backgroundColor: '#666666',
-            color: '#fff',
-        },
-        checkboxCell: {
-            borderBottom: 'none',
-            '& input[type="checkbox"]:checked + svg': {
-                fill: '#222',
-            },
-        },
-        removedChip: {
-            textDecoration: 'line-through',
-        },
-    }),
-    { withTheme: true },
-);
+const StyledTableRowGroup = styled(TableRow)(() => ({
+    backgroundColor: '#51247a',
+    color: '#fff',
+    fontWeight: 'bold',
+    borderBottom: 'none',
+    '& .cellGroupName': {
+        marginTop: 0,
+        marginBottom: 0,
+        paddingTop: 5,
+        paddingBottom: 0,
+        fontWeight: 900,
+        borderBottom: 'none',
+        color: '#FFF',
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(() => ({
+    borderBottom: '1px solid #bbb',
+    '&.cellGroupRowOdd': {
+        backgroundColor: '#eee',
+    },
+    '&.cellGroupRowEven': {
+        backgroundColor: 'none',
+    },
+    '& .cellEmpty': {
+        borderBottom: 'none',
+    },
+    '& .cellGroupDetails': {
+        marginTop: 0,
+        marginBottom: 0,
+        paddingTop: 0,
+        paddingBottom: 5,
+        fontWeight: 400,
+        borderBottom: 'none',
+    },
+}));
+
 export const PromoPanelListGroupPanels = ({
     actions,
     isLoading,
@@ -170,7 +110,6 @@ export const PromoPanelListGroupPanels = ({
 
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
-    const classes = useStyles2();
     // *** COMMENTED OUT PENDING FEEDBACK REGARDING BULK ACTIONS
     // const clearAllCheckboxes = () => {
     //     const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
@@ -344,7 +283,7 @@ export const PromoPanelListGroupPanels = ({
                         {/* filter start */}
                         <FormControl
                             variant="standard"
-                            className={classes.dropdown}
+                            className={'dropdown'}
                             fullWidth
                             title={locale.form.tooltips.groupField}
                         >
@@ -420,8 +359,8 @@ export const PromoPanelListGroupPanels = ({
                                     rowMarker = 0;
                                     return (
                                         <React.Fragment key={id}>
-                                            <TableRow className={classes.tableRowGroup}>
-                                                <TableCell colSpan={3} component="td" className={classes.cellGroupName}>
+                                            <StyledTableRowGroup>
+                                                <TableCell colSpan={3} component="td" className={'cellGroupName'}>
                                                     <Typography
                                                         data-testid={`block-${item.usergroup_group}`}
                                                         variant="body1"
@@ -449,7 +388,7 @@ export const PromoPanelListGroupPanels = ({
                                                         Set Default
                                                     </Button>
                                                 </TableCell>
-                                            </TableRow>
+                                            </StyledTableRowGroup>
 
                                             {item.scheduled_panels.length > 0 &&
                                                 item.scheduled_panels.map((row, id) => {
@@ -460,19 +399,17 @@ export const PromoPanelListGroupPanels = ({
                                                         rowMarker++;
                                                         return (
                                                             <>
-                                                                <TableRow
-                                                                    className={`${
-                                                                        classes.tableRow
-                                                                    } promoPanel-data-row ${
+                                                                <StyledTableRow
+                                                                    className={`promoPanel-data-row ${
                                                                         rowMarker % 2 === 0
-                                                                            ? classes.cellGroupRowEven
-                                                                            : classes.cellGroupRowOdd
+                                                                            ? 'cellGroupRowEven'
+                                                                            : 'cellGroupRowOdd'
                                                                     }`}
                                                                     key={id}
                                                                 >
-                                                                    <TableCell className={classes.cellEmpty} />
+                                                                    <TableCell className={'cellEmpty'} />
 
-                                                                    <TableCell className={classes.cellGroupDetails}>
+                                                                    <TableCell className={'cellGroupDetails'}>
                                                                         <Typography variant="body1">
                                                                             <strong>{row.panel_title}</strong>
                                                                             <br />
@@ -480,14 +417,14 @@ export const PromoPanelListGroupPanels = ({
                                                                         </Typography>
                                                                     </TableCell>
 
-                                                                    <TableCell className={classes.cellGroupDetails}>
+                                                                    <TableCell className={'cellGroupDetails'}>
                                                                         <Typography variant="body1">
                                                                             {moment(
                                                                                 row.panel_schedule_start_time,
                                                                             ).format('ddd D MMM YYYY h:mma')}
                                                                         </Typography>
                                                                     </TableCell>
-                                                                    <TableCell className={classes.cellGroupDetails}>
+                                                                    <TableCell className={'cellGroupDetails'}>
                                                                         <Typography variant="body1">
                                                                             {moment(row.panel_schedule_end_time).format(
                                                                                 'ddd D MMM YYYY h:mma',
@@ -495,7 +432,7 @@ export const PromoPanelListGroupPanels = ({
                                                                         </Typography>
                                                                     </TableCell>
                                                                     <TableCell
-                                                                        className={classes.cellGroupDetails}
+                                                                        className={'cellGroupDetails'}
                                                                         style={{ padding: 5 }}
                                                                     >
                                                                         <PromoPanelSplitButton
@@ -523,7 +460,7 @@ export const PromoPanelListGroupPanels = ({
                                                                             }
                                                                         />
                                                                     </TableCell>
-                                                                </TableRow>
+                                                                </StyledTableRow>
                                                             </>
                                                         );
                                                     } else {
@@ -533,17 +470,17 @@ export const PromoPanelListGroupPanels = ({
 
                                             {!!item.default_panel && Object.keys(item.default_panel).length > 0 && (
                                                 <>
-                                                    <TableRow
-                                                        className={`${classes.tableRow} promoPanel-data-row ${
+                                                    <StyledTableRow
+                                                        className={`promoPanel-data-row ${
                                                             rowMarker % 2 !== 0
-                                                                ? classes.cellGroupRowEven
-                                                                : /* istanbul ignore next */ classes.cellGroupRowOdd
+                                                                ? 'cellGroupRowEven'
+                                                                : /* istanbul ignore next */ 'cellGroupRowOdd'
                                                         }`}
                                                         key={id}
                                                     >
-                                                        <TableCell className={classes.cellEmpty} />
+                                                        <TableCell className={'cellEmpty'} />
 
-                                                        <TableCell className={classes.cellGroupDetails}>
+                                                        <TableCell className={'cellGroupDetails'}>
                                                             <Typography variant="body1">
                                                                 <strong>{item.default_panel.panel_title}</strong>
                                                                 <br />
@@ -551,16 +488,16 @@ export const PromoPanelListGroupPanels = ({
                                                             </Typography>
                                                         </TableCell>
 
-                                                        <TableCell className={classes.cellGroupDetails}>
+                                                        <TableCell className={'cellGroupDetails'}>
                                                             <Typography variant="body1">
                                                                 <strong>Default</strong>
                                                             </Typography>
                                                         </TableCell>
-                                                        <TableCell className={classes.cellGroupDetails}>
+                                                        <TableCell className={'cellGroupDetails'}>
                                                             <Typography variant="body1" />
                                                         </TableCell>
                                                         <TableCell
-                                                            className={classes.cellGroupDetails}
+                                                            className={'cellGroupDetails'}
                                                             style={{ padding: 5 }}
                                                         >
                                                             <PromoPanelSplitButton
@@ -582,7 +519,7 @@ export const PromoPanelListGroupPanels = ({
                                                                 confirmDeleteLocale={confirmUnscheduleLocale}
                                                             />
                                                         </TableCell>
-                                                    </TableRow>
+                                                    </StyledTableRow>
                                                 </>
                                             )}
                                         </React.Fragment>
