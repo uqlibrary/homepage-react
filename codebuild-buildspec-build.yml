@@ -31,20 +31,19 @@ phases:
       nodejs: 14
     commands:
       - n 18
-      # - command
+      - set
+      - sysctl fs.inotify.max_user_watches
+      - sysctl fs.inotify.max_user_watches=524288
+      - sysctl fs.inotify.max_user_watches
   pre_build:
     commands:
-      sysctl fs.inotify.max_user_watches &&
-      sysctl fs.inotify.max_user_watches=524288 &&
-      sysctl fs.inotify.max_user_watches &&
-      chmod a+x -R bin/* scripts/*.sh &&
-      bin/codebuild-git-wrapper.sh https://github.com/uqlibrary/homepage-react.git $CI_BRANCH &&
-      bin/codebuild-setup.sh
+      - chmod a+x -R bin/* scripts/*.sh
+      - bin/codebuild-setup.sh
   build:
     commands:
-      set &&
-      npm run build &&
-      ls dist
+      - set
+      - npm run build
+      - ls dist
   post_build:
     commands:
       if [ -f ./scripts/releaseNotes.sh ]; then ./scripts/releaseNotes.sh; fi
