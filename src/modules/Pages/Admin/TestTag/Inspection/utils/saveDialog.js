@@ -2,6 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 import { statusEnum } from '../utils/helpers';
 import locale from '../../testTag.locale';
@@ -73,13 +74,80 @@ const savedDialogMessages = {
         </Grid>
     ),
 };
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    '& .dialogContainer': {
+        borderRadius: '6px',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        color: 'black',
+    },
+    '& .dialogPassedContainer': {
+        backgroundColor: '#69B400',
+        borderColor: '#69B400',
+    },
+    '& .dialogFailedContainer': {
+        backgroundColor: '#ef000c',
+        borderColor: '#ef000c',
+    },
+    '& .dialogTitle': {
+        textAlign: 'center',
+        padding: '8px',
+        '& >p': {
+            fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
+    '& .dialogFailedTitle': {
+        '& >h4': {
+            fontWeight: '700',
+            fontFamily: 'monospace, monospace',
+            textDecoration: 'underline',
+        },
+    },
+    '& .dialogFailedAssetStatus': {
+        textAlign: 'center',
+        padding: '8px',
+        '& >h5': {
+            fontWeight: '700',
+            fontFamily: 'monospace, monospace',
+        },
+    },
+    '& .dialogBarcode': {
+        backgroundColor: 'white',
+        padding: '8px',
+        textAlign: 'center',
+        '& >h6': {
+            fontFamily: 'monospace, monospace',
+        },
+    },
+    '& .dialogSuccessLineItems': {
+        padding: '8px',
+        [theme.breakpoints.down('sm')]: {
+            textAlign: 'center',
+        },
+        '& >p': {
+            fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
+    '& .dialogFailedLineItems': {
+        padding: '8px',
+        textAlign: 'center',
+        '& >p': {
+            fontWeight: '500',
+            fontFamily: 'monospace, monospace',
+        },
+    },
+}));
+
 export const getSuccessDialog = (response, locale) => {
     if (!!!response) return {};
     const key = response.asset_status !== testStatusEnum.CURRENT.value ? 'other' : response.asset_status;
-    const messageFragment = (
-        <Box display="flex" alignItems="center" justifyContent="center">
-            {savedDialogMessages[key](response, locale.form.dialogLabels)}
-        </Box>
-    );
+    const messageFragment = <StyledBox>{savedDialogMessages[key](response, locale.form.dialogLabels)}</StyledBox>;
     return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
 };

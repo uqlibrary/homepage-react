@@ -148,8 +148,6 @@ const Inspection = ({
     defaultNextTestDateValue,
     assetsListError,
     inspectionConfig,
-    // inspectionConfigLoading,
-    // inspectionConfigLoaded,
     inspectionConfigError,
     floorListError,
     roomListError,
