@@ -3,29 +3,28 @@ import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import withStyles from '@mui/styles/withStyles';
+import { styled } from '@mui/material/styles';
 
-export const styles = theme => ({
-    appLoader: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        ...(((theme.palette || {}).primary || {}).gradient || {}).diagonal,
-        width: '100%',
-        height: '100%',
-        textAlign: 'center !important',
-    },
-    white: {
+const StyledLoader = styled(Grid)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...(((theme.palette || {}).primary || {}).gradient || {}).diagonal,
+    width: '100%',
+    height: '100%',
+    textAlign: 'center !important',
+
+    '& .white': {
         color: ((theme.palette || {}).white || {}).main,
         fontWeight: (theme.typography || {}).fontWeightLight,
     },
-    spaceBetween: {
+    '& .spaceBetween': {
         margin: '16px 0',
     },
-    logo: {
+    '& .logo': {
         width: 200,
     },
-});
+}));
 
 export class AppLoader extends React.Component {
     static propTypes = {
@@ -38,15 +37,8 @@ export class AppLoader extends React.Component {
     render() {
         const { classes, title, logoImage, logoText } = this.props;
         return (
-            <Grid
-                container
-                spacing={0}
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-                className={classes.appLoader}
-            >
-                <Grid item className={classes.spaceBetween}>
+            <StyledLoader container spacing={0} direction="column" justifyContent="center" alignItems="center">
+                <Grid item className={'spaceBetween'}>
                     <CircularProgress
                         size={80}
                         thickness={1}
@@ -54,17 +46,17 @@ export class AppLoader extends React.Component {
                         aria-label="Loading Library website"
                     />
                 </Grid>
-                <Grid item className={classes.spaceBetween}>
-                    {logoImage && <div className={`${logoImage} ${classes.logo}`} alt={logoText} />}
+                <Grid item className={'spaceBetween'}>
+                    {logoImage && <div className={`${logoImage} logo`} alt={logoText} />}
                 </Grid>
-                <Grid item className={classes.spaceBetween}>
-                    <Typography variant={'h6'} className={classes.white}>
+                <Grid item className={'spaceBetween'}>
+                    <Typography variant={'h6'} className={'white'}>
                         {title}
                     </Typography>
                 </Grid>
-            </Grid>
+            </StyledLoader>
         );
     }
 }
 
-export default withStyles(styles, { withTheme: true })(AppLoader);
+export default AppLoader;
