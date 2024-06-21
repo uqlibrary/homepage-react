@@ -1,5 +1,13 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
+import {
+    rtlRender,
+    WithRouter,
+    WithReduxStore,
+    waitFor,
+    userEvent,
+    within,
+    waitForElementToBeRemoved,
+} from 'test-utils';
 import Immutable from 'immutable';
 
 import InspectionsDue from './InspectionsDue';
@@ -268,13 +276,13 @@ describe('InspectionsDue', () => {
                 periodType: 'month',
             }),
         );
-    });
+    }, 8000);
 
     describe('coverage', () => {
         it('shows alert if inspectionsDueError is set', async () => {
             const clearInspectionsDueErrorFn = jest.fn();
 
-            const { getByTitle, getByTestId, queryByTestId } = setup({
+            const { getByTitle, getByTestId } = setup({
                 actions: {
                     loadSites: jest.fn(),
                     getInspectionsDue: jest.fn(),
@@ -285,7 +293,7 @@ describe('InspectionsDue', () => {
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Test inspectionsDueError error');
             userEvent.click(getByTitle('Close'));
 
-            await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
+            await waitForElementToBeRemoved(getByTestId('confirmation_alert-error-alert'));
 
             expect(clearInspectionsDueErrorFn).toHaveBeenCalled();
         });

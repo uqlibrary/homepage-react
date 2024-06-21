@@ -107,7 +107,7 @@ const InspectionsDue = ({
                             hasAllOption
                             locale={locale.pages.general.locationPicker}
                         />
-                        <Grid item>
+                        <Grid>
                             <MonthsSelector
                                 id={componentId}
                                 label={pageLocale.form.filterToDateLabel}
@@ -125,7 +125,7 @@ const InspectionsDue = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} className={'tableMarginTop'}>
-                        <Grid item sx={{ flex: 1 }}>
+                        <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

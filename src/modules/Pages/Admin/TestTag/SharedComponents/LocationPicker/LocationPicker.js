@@ -19,7 +19,7 @@ export const GridWrapper = ({ withGrid = true, divisor = 1, children }) => {
     };
 
     return withGrid ? (
-        <Grid item xs={12} sm={6} md={12 / divisor}>
+        <Grid xs={12} sm={6} md={12 / divisor}>
             {children}
         </Grid>
     ) : (
