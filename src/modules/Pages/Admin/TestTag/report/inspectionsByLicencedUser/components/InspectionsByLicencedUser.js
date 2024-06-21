@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import FormControl from '@mui/material/FormControl';
@@ -20,7 +21,7 @@ import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
-import { transformRow } from './utils';
+import { getNameStyles, transformRow } from './utils';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import FooterRow from './FooterRow';
@@ -51,6 +52,7 @@ const InspectionsByLicencedUser = ({
     licencedUsersLoaded,
     licencedUsersError,
 }) => {
+    const theme = useTheme();
     const pageLocale = locale.pages.report.inspectionsByLicencedUser;
 
     const [inspectorName, setInspectorName] = React.useState([]);
@@ -220,12 +222,7 @@ const InspectionsByLicencedUser = ({
                                         <MenuItem
                                             key={user.user_id}
                                             value={user.user_id}
-                                            sx={theme => ({
-                                                fontWeight:
-                                                    inspectorName.indexOf(user) === -1
-                                                        ? theme.typography.fontWeightRegular
-                                                        : theme.typography.fontWeightMedium,
-                                            })}
+                                            style={getNameStyles(user, inspectorName, theme)}
                                             id={`${componentIdLower}-user-name-option-${index}`}
                                             data-testid={`${componentIdLower}-user-name-option-${index}`}
                                         >

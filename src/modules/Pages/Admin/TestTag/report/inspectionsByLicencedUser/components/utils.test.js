@@ -1,6 +1,14 @@
-import { transformRow } from './utils';
+import { getNameStyles, transformRow } from './utils';
 
 describe('utils', () => {
+    describe('getNamesStyles', () => {
+        it('returns expected results', () => {
+            const theme = { typography: { fontWeightRegular: 'regular', fontWeightMedium: 'medium' } };
+            expect(getNameStyles('name', 'test', theme)).toEqual({ fontWeight: 'regular' });
+            expect(getNameStyles('name', 'test name', theme)).toEqual({ fontWeight: 'medium' });
+        });
+    });
+
     describe('transformRow', () => {
         it('returns expected results', () => {
             const actual = [{ id: 1, start_date: '01/01/2020', end_date: '12/12/2020' }];
