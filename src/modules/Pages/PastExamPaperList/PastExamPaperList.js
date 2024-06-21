@@ -105,8 +105,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     </Grid>
                 )}
                 {!!isNon404Error && (
-                    <Grid container spacing={2} className={classes.searchPanel} data-testid={'past-exam-paper-error'}>
-                        <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
+                    <Grid container spacing={2} className={'searchPanel'} data-testid={'past-exam-paper-error'}>
+                        <Grid item xs={12} sm={12} md className={'searchPanelInfo'}>
                             <span>Past exam paper search is currently unavailable - please try again later</span>
                         </Grid>
                     </Grid>
@@ -248,7 +248,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                         <TableCell
                                                             component="th"
                                                             scope="row"
-                                                            sx={{ backgroundColor: '#fafafa', left: 0, position: 'sticky', verticalAlign: 'top' }}
+                                                            sx={{
+                                                                backgroundColor: '#fafafa',
+                                                                left: 0,
+                                                                position: 'sticky',
+                                                                verticalAlign: 'top',
+                                                            }}
                                                             data-testid={`exampaper-results-label-${cc}`}
                                                         >
                                                             {getCourseCode(course)}
@@ -301,7 +306,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     )}
                 <Grid container>
                     <Grid item xs={'auto'}>
-                        <p className={classes.aboutLink}>
+                        <p className={'aboutLink'}>
                             <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
                                 Read more about searching for past exam papers
                             </a>
