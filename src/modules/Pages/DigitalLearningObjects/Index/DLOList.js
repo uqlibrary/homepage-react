@@ -493,6 +493,7 @@ export const DLOList = ({
                     for (const facetType of dlorFilterList) {
                         const facet = facetType.facet_list.find(f => f.facet_id === facetId);
                         if (!!facet) {
+                            /* istanbul ignore else */
                             if (!openPanels.includes(facetType.facet_type_id)) {
                                 openPanels.push(facetType.facet_type_id);
                             }
