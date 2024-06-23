@@ -1249,6 +1249,7 @@ export const DlorForm = ({
                     aria-labelledby="notify-lightbox-title"
                     aria-describedby="notify-lightbox-description"
                     data-testid="notify-lightbox-modal"
+                    style={{ zIndex: 1000 }}
                 >
                     <Box
                         sx={{
