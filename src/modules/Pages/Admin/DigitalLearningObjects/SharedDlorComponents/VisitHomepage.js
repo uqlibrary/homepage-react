@@ -2,12 +2,12 @@ import React from 'react';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import { fullPath } from 'config/routes';
+import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const VisitHomepage = () => {
     return (
         <a
-            href={`${fullPath}/digital-learning-hub`}
+            href={`${getPathRoot()}/digital-learning-hub`}
             title="Visit public pages"
             data-testid="dlor-admin-public-homepage-link"
         >
