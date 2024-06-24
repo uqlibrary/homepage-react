@@ -324,3 +324,27 @@ export const TEST_TAG_USER_LIST_API = () => ({ apiUrl: 'test-and-tag/users/all' 
 export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
 export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
 export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
+
+export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' });
+export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
+export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
+export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
+export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/public/series/list' });
+export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/subscribe` });
+// export const DLOR_UNSUBSCRIBE_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/unsubscribe` });
+export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/public/teams/list' });
+
+export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/auth/demographics' });
+
+// dlor admin routes
+export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
+export const DLOR_UPDATE_API = id => ({ apiUrl: `dlor/admin/object/${id}` });
+export const DLOR_DESTROY_API = ({ id }) => ({ apiUrl: `dlor/admin/object/${id}` });
+export const DLOR_TEAM_DELETE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
+export const DLOR_TEAM_SINGLE_GET_API = ({ id }) => ({ apiUrl: `dlor/admin/team/${id}` });
+export const DLOR_TEAM_UPDATE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
+export const DLOR_TEAM_CREATE_API = () => ({ apiUrl: 'dlor/admin/team' });
+export const DLOR_FILE_TYPE_LIST_API = () => ({ apiUrl: 'dlor/admin/file_types/list' });
+export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
+export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
+export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });

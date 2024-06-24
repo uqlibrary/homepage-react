@@ -32,7 +32,7 @@ describe('alert reducer', () => {
         });
     });
 
-    it('should set alerts value when successfully saved', () => {
+    it('should set alerts value when successfully deleted', () => {
         const test = alertReducer(emptyState, { type: actions.ALERT_DELETED, payload: [] });
         expect(test).toEqual({
             ...emptyState,

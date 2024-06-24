@@ -41,11 +41,6 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
         !!readingList && !!readingList.reading_lists && readingList.reading_lists.length > 0
             ? readingList.reading_lists
             : false;
-    console.log('LR -----');
-    console.log('readingListLoading=', readingListLoading);
-    console.log('readingListError=', readingListError);
-    console.log('readingList=', readingList);
-    console.log('** listOfReadingLists=', listOfReadingLists);
     return (
         <StandardCard fullHeight noHeader standardCardId={`reading-list-${courseCode}`}>
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>

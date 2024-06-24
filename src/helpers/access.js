@@ -145,22 +145,22 @@ export const canSeeLibraryServices = account => {
     return !!userServices && userServices.length > 0;
 };
 
-const canSeeWebContentAdminPages = account => {
-    return (
-        !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'))
-    );
-};
-const canSeeTestTagAdminPages = account => {
-    return !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_TestTagUsers'));
-};
+const userHasAdGroup = (ADGroupName, account) =>
+    !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
-export const isSpotlightsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isSpotlightsAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
-export const isTestTagAdminUser = account => isLoggedInUser(account) && canSeeTestTagAdminPages(account);
+export const isTestTagAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
-export const isAlertsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isAlertsAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
-export const isPromoPanelAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isPromoPanelAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
+
+export const isDlorAdminUser = account => isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account);
 
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
@@ -176,13 +176,16 @@ export const isEspaceAuthor = (account, author) => isLoggedInUser(account) && !!
 // note: this logic is duplicated in reusable
 /* istanbul ignore next */
 export function getHomepageLink(hostname = null, protocol = null, port = null, pathname = null, search = null) {
-    // this has full test coverage, I don't know it why isn't picking it up :(
     const _protocol = protocol === null ? window.location.protocol : protocol;
     const _hostname = hostname === null ? window.location.hostname : hostname;
     let homepagelink = 'https://www.library.uq.edu.au';
     if (_hostname === 'homepage-development.library.uq.edu.au') {
         const _pathname = pathname === null ? window.location.pathname : pathname;
         homepagelink = `${_protocol}//${_hostname}${_pathname}#/`;
+    } else if (_hostname === 'dev-homepage.library.uq.edu.au') {
+        // local dev against staging api eg http://dev-homepage.library.uq.edu.au:2020/#/digital-learning-hub with npm run start:url
+        const _port = port === null ? window.location.port : port;
+        homepagelink = `${_protocol}//${_hostname}:${_port}/#/`;
     } else if (_hostname.endsWith('.library.uq.edu.au')) {
         homepagelink = `${_protocol}//${_hostname}`;
     } else if (_hostname === 'localhost') {
@@ -193,5 +196,6 @@ export function getHomepageLink(hostname = null, protocol = null, port = null, p
         const linkParameters = !!userParam ? `?user=${userParam}` : '';
         homepagelink = `${_protocol}//${_hostname}:${_port}/${linkParameters}`;
     }
+    // console.log('getHomepageLink:: homepagelink=', homepagelink);
     return homepagelink;
 }

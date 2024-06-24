@@ -28,3 +28,16 @@ export { default as testTagAssetsByFiltersReducer } from './testTagAssetsByFilte
 export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpdateReducer';
 export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspectionDetailsUpdateReducer';
 export { default as testTagUserListReducer } from './testTagUserListReducer';
+export { default as dlorListReducer } from './dlorListReducer';
+export { default as dlorFilterListReducer } from './dlorFilterListReducer';
+export { default as dlorGetSingleReducer } from './dlorGetSingleReducer';
+export { default as dlorTeamDeleteReducer } from './dlorTeamDeleteReducer';
+export { default as dlorTeamListReducer } from './dlorTeamListReducer';
+export { default as dlorTeamSingleReducer } from './dlorTeamSingleReducer';
+export { default as dlorCreateReducer } from './dlorCreateReducer';
+export { default as dlorUpdateReducer } from './dlorUpdateReducer';
+export { default as dlorDeleteReducer } from './dlorDeleteReducer';
+export { default as dlorFileTypeListReducer } from './dlorFileTypeListReducer';
+export { default as dlorSeriesListReducer } from './dlorSeriesListReducer';
+export { default as dlorSeriesDeleteReducer } from './dlorSeriesDeleteReducer';
+export { default as dlorSeriesSingleReducer } from './dlorSeriesSingleReducer';

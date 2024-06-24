@@ -41,7 +41,6 @@ import testTag_floorList from './data/records/testAndTag/test_tag_floors';
 import testTag_roomList from './data/records/testAndTag/test_tag_rooms';
 import testTag_inspectionDevices from './data/records/testAndTag/test_tag_inspection_devices';
 import testTag_assets from './data/records/testAndTag/test_tag_assets';
-// Test and Tag Asset Types
 import test_tag_asset_types from './data/records/testAndTag/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/testAndTag/test_tag_pending_inspections';
 import test_tag_pending_inspections_site from './data/records/testAndTag/test_tag_pending_inspections_site';
@@ -56,14 +55,19 @@ import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 
 import {
-    currentPanels,
-    userListPanels,
     activePanels,
-    mockScheduleReturn,
+    currentPanels,
     mockAuthenticatedPanel,
     mockPublicPanel,
+    mockScheduleReturn,
     promoPanelMocks,
+    userListPanels,
 } from './data/promoPanelsLong';
+import dlor_all from './data/records/dlor/dlor_all';
+import dlor_filter_list from './data/records/dlor/dlor_filter_list';
+import dlor_team_list from './data/records/dlor/dlor_team_list';
+import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
+import dlor_series_all from './data/records/dlor/dlor_series_all';
 
 const moment = require('moment');
 
@@ -77,6 +81,10 @@ let user = !!queryString
     ? queryString.get('user')
     : window.location.hash.substring(window.location.hash.indexOf('?')).user;
 user = user || 'vanilla';
+let responseType = !!queryString
+    ? queryString.get('responseType')
+    : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
+responseType = responseType || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -572,6 +580,336 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
         size: 9999,
     },
 ]);
+
+function getSpecificTeam(teamId) {
+    return (
+        !!dlor_team_list &&
+        !!dlor_team_list.data &&
+        dlor_team_list.data.length > 0 &&
+        dlor_team_list.data.find(team => team.team_id === teamId)
+    );
+}
+function getSpecificDlorObject(dlorId) {
+    console.log('getSpecificDlorObject', dlorId);
+    const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
+    const singleRecord = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
+    !!singleRecord && (singleRecord.object_link_types = dlor_file_type_list.data);
+    const currentTeamDetails = getSpecificTeam(singleRecord?.object_owning_team_id);
+    if (!!singleRecord && !!currentTeamDetails) {
+        singleRecord.owner.team_name = currentTeamDetails.team_name;
+        singleRecord.owner.team_email = currentTeamDetails.team_email;
+        singleRecord.owner.team_manager = currentTeamDetails.team_manager;
+    }
+
+    return singleRecord === null ? [404, {}] : [200, { data: singleRecord }];
+}
+
+mock.onGet(/dlor\/public\/find\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const dlorId = urlparts.split('?')[0];
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (dlorId === 'missingRecord') {
+            return [200, { data: {} }]; // this would more likely be a 404
+        } else if (dlorId === 'object_404') {
+            return [404, { status: 'error', message: 'No records found for that UUID' }];
+        } else {
+            return getSpecificDlorObject(dlorId);
+        }
+    })
+    .onGet(/dlor\/admin\/team\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const teamId = urlparts.split('?')[0];
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (teamId === 'missingRecord') {
+            return [200, { data: {} }]; // this would more likely be a 404
+        } else if (teamId === 'object_404') {
+            return [404, { status: 'error', message: 'No records found for that UUID' }];
+        } else {
+            return [200, { data: dlor_team_list.data.find(team => team.team_id === Number(teamId)) }];
+        }
+    })
+    .onPut(/dlor\/admin\/object\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const dlorId = urlparts.split('?')[0];
+        if (responseType === 'saveError') {
+            return [400, {}];
+        } else if (dlorId === 'missingRecord') {
+            return [200, { data: {} }]; // this would more likely be a 404
+        } else {
+            return getSpecificDlorObject(dlorId);
+        }
+    })
+    .onGet('dlor/public/list/full')
+    .reply(() => {
+        if (responseType === 'fullListError') {
+            return [500, {}];
+        } else if (responseType === 'emptyResult') {
+            return [200, { data: [] }]; // this would more likely be a 404
+        } else {
+            const currentRecords = dlor_all.data.map(d => {
+                const newObj = { ...d }; // Create a shallow copy of the object
+                delete newObj.object_series; // Delete the 'series' property
+                return newObj;
+            });
+            console.log('dlor currentRecords', currentRecords);
+            return [200, { data: currentRecords }];
+        }
+    })
+    .onGet('dlor/public/list/current')
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'emptyResult') {
+            return [200, { data: [] }]; // this would more likely be a 404
+        } else {
+            const currentRecords = dlor_all.data
+                .map(d => {
+                    const newObj = { ...d }; // Create a shallow copy of the object
+                    delete newObj.object_series; // Delete the 'series' property
+                    return newObj;
+                })
+                .filter(o => o.object_status === 'current');
+            console.log('dlor currentRecords', currentRecords);
+            return [200, { data: currentRecords }];
+        }
+    })
+    .onGet('dlor/public/facet/list')
+    .reply(() => {
+        if (responseType === 'filtererror') {
+            return [500, {}];
+        } else if (responseType === 'filterLoadError') {
+            return [500, { error: 'Filter api did not load' }];
+        } else if (responseType === 'filterLoadEmpty') {
+            return [200, []];
+        } else {
+            return [200, dlor_filter_list];
+        }
+    })
+    .onGet('dlor/public/teams/list')
+    .reply(() => {
+        console.log('get mock dlor/public/teams/list', dlor_team_list);
+
+        // function getTeamList() {
+        //     console.log('getTeamList', dlor_team_list.data);
+        //     return dlor_team_list.data.map(team => {
+        //         const newVar = {
+        //             objects_count: dlor_all.filter(d => {
+        //                 d.object_owning_team_id === team.team_id;
+        //             }).length,
+        //             ...team,
+        //         };
+        //         console.log('newVar=', newVar);
+        //         return newVar;
+        //     });
+        // }
+
+        if (responseType === 'teamsLoadError') {
+            return [500, { error: 'Teams api did not load' }];
+        } else if (responseType === 'emptyResult') {
+            return [200, { data: [] }]; // this should really be a 404?
+        } else {
+            return [200, dlor_team_list];
+        }
+    })
+    .onPost('dlor/admin/team')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [400, {}];
+        } else {
+            return [
+                200,
+                {
+                    data: {
+                        objects_count: 0,
+                        team_email: 'someone@example.com',
+                        team_id: dlor_team_list.data.length + 1,
+                        team_manager: '',
+                        team_name: 'New Team name',
+                    },
+                },
+            ];
+        }
+    })
+    .onPut(/dlor\/admin\/team\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const teamId = urlparts.split('?')[0];
+        // if (responseType === 'error') {
+        //     return [500, {}];
+        // } else if (teamId === 'missingRecord') {
+        //     return [200, { data: {} }]; // this would more likely be a 404
+        // } else if (teamId === 'object_404') {
+        // return [404, { status: 'error', message: 'No records found for that UUID' }];
+        // } else {
+        return [200, { data: dlor_team_list.data.find(team => team.team_id === Number(teamId)) }];
+        // }
+    })
+    .onDelete(/dlor\/admin\/team\/.*/)
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, {}];
+        }
+    })
+    .onPost('dlor/admin/object')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
+            return getSpecificDlorObject('98j3-fgf95-8j34'); //any old id
+        }
+    })
+    .onDelete(/dlor\/admin\/object\/.*/)
+    .reply(config => {
+        if (responseType === 'deleteError') {
+            return [500, {}];
+            // } else if (responseType === 'saveError') {
+            //     return [500, {}];
+        } else {
+            return [200, {}];
+        }
+    })
+    .onGet(/dlor\/admin\/file_types\/list/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+            // } else if (responseType === 'missingRecord') {
+            //     return [200, { data: {} }]; // this would more likely be a 404
+            // } else if (responseType === 'object_404') {
+            //     return [404, { status: 'error', message: 'No records found' }];
+        } else {
+            console.log('mock: dlorFileTypeList=', dlor_file_type_list);
+            return [200, dlor_file_type_list];
+        }
+    })
+
+    .onGet(/dlor\/public\/series\/list/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else {
+            return [200, dlor_series_all];
+        }
+    })
+    .onDelete(/dlor\/admin\/series\/.*/)
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, { status: 'OK' }];
+        }
+    })
+    .onPut(/dlor\/admin\/series\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const seriesId = urlparts.split('?')[0];
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, { data: dlor_series_all.data.find(series => series.series_id === Number(seriesId)) }];
+        }
+    })
+    .onPost('dlor/admin/series')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [400, {}];
+        } else {
+            return [200, { data: { objects_count: 0, series_name: 'New Series name' } }];
+        }
+    })
+    .onPost(routes.DLOR_DEMOGRAPHICS_SAVE_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'notifyError') {
+            return [500, {}];
+        } else if (responseType === 'alreadysubscribed') {
+            return [200, { status: 'OK', data: { demographics: true, subscription: false } }];
+        } else {
+            return [200, { status: 'OK', data: { demographics: true, subscription: true } }];
+        }
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_known' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'ok',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'error' }).apiUrl)
+    .reply(() => {
+        return [
+            500,
+            {
+                status: 'error',
+                error: 'something went wrong',
+            },
+        ];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_has_already_been_used' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'used',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_known_conf_code_that_has_expired' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'expired',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+        // includes when they resubscribe on one they have already clicked?
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'an_unexpected_response_type' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'something_unexpected',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+        // includes when they resubscribe on one they have already clicked?
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_not_known' }).apiUrl)
+    .reply(() => {
+        return [200, { data: { response: 'missing', object_public_uuid: null, object_title: null } }];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'wrong_data' }).apiUrl)
+    .reply(() => {
+        return [200, { data: { response: 'something unexpected', object_public_uuid: null, object_title: null } }];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_throws_an_error' }).apiUrl)
+    .reply(() => {
+        return [400, { error: 'something went wrong' }];
+    });
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
@@ -1204,6 +1542,6 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onAny()
     .reply(function(config) {
-        console.log('url not mocked...', config);
+        console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });

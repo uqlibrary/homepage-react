@@ -18,6 +18,18 @@ export const SpotlightsEdit = lazy(() => lazyRetry(() => import('modules/Pages/A
 export const SpotlightsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/View/SpotlightsViewContainer')));
 export const SpotlightsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Clone/SpotlightsCloneContainer')));
 
+export const DLOList = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Index/DLOListContainer')));
+export const DLOView = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/View/DLOViewContainer')));
+export const DLOConfirmSubscription = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/ConfirmSubscription/DLOConfirmSubscriptionContainer')));
+export const DLOAdminHomepage = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Homepage/DLOAdminHomepageContainer')));
+export const DLOAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Form/Add/DLOAddContainer')));
+export const DLOEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Form/Edit/DLOEditContainer')));
+export const DLOTeamList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamListContainer')));
+export const DLOTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
+export const DLOTeamAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamAddContainer')));
+export const DLOSeriesList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesListContainer')));
+export const DLOSeriesEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesEditContainer')));
+
 export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));
 export const TestTagManageAssetTypes = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/manage/AssetTypes/containers/AssetTypes')));
