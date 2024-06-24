@@ -37,10 +37,10 @@ import {
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
     getDlorViewPageUrl,
+    getPathRoot,
     toTitleCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { fullPath } from 'config/routes';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 const useStyles = makeStyles(theme => ({
@@ -268,7 +268,7 @@ export const DLOView = ({
         return (
             <div className={classes.titleBlock}>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                    <a href={`${fullPath}/digital-learning-hub`}>Find a digital learning object</a>
+                    <a href={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</a>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>
