@@ -512,10 +512,10 @@ export const DLOView = ({
                                     style={{ backgroundColor: 'white' }}
                                     data-testid="detailpage-getit-and demographics"
                                 >
-                                    <p style={{ marginBottom: '-0.8em' }}>
+                                    <p style={{ marginLeft: -8 }}>
                                         (Optional) Help us understand how you will use this object. Please tell us:{' '}
                                     </p>
-                                    <form>
+                                    <form style={{ margin: -8 }}>
                                         <FormControl variant="standard" fullWidth>
                                             <InputLabel htmlFor="subjectCode">
                                                 Your relevant course, program or session
@@ -527,7 +527,7 @@ export const DLOView = ({
                                                 onChange={handleChange('subjectCode')}
                                             />
                                         </FormControl>
-                                        <FormControl variant="standard" fullWidth>
+                                        <FormControl variant="standard" fullWidth style={{ marginTop: 10 }}>
                                             <InputLabel htmlFor="schoolName">Your school, faculty or unit</InputLabel>
                                             <Input
                                                 id="schoolName"
