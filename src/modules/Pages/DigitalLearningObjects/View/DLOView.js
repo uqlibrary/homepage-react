@@ -512,7 +512,9 @@ export const DLOView = ({
                                     style={{ backgroundColor: 'white' }}
                                     data-testid="detailpage-getit-and demographics"
                                 >
-                                    <p>Help us understand how you will use this object. Please tell us: </p>
+                                    <p style={{ marginBottom: '-0.8em' }}>
+                                        (Optional) Help us understand how you will use this object. Please tell us:{' '}
+                                    </p>
                                     <form>
                                         <FormControl variant="standard" fullWidth>
                                             <InputLabel htmlFor="subjectCode">
@@ -523,7 +525,6 @@ export const DLOView = ({
                                                 data-testid="view-demographics-subject-code"
                                                 value={formValues?.subjectCode}
                                                 onChange={handleChange('subjectCode')}
-                                                inputProps={{ maxLength: 10 }}
                                             />
                                         </FormControl>
                                         <FormControl variant="standard" fullWidth>
@@ -533,11 +534,12 @@ export const DLOView = ({
                                                 data-testid="view-demographics-school-name"
                                                 value={formValues?.schoolName}
                                                 onChange={handleChange('schoolName')}
-                                                // inputProps={{ maxLength: 100 }}
                                             />
                                         </FormControl>
 
-                                        <p>Would you like notifications when updates are made to this object?</p>
+                                        <p style={{ marginBlock: '3em 0' }}>
+                                            Would you like notifications when updates are made to this object?
+                                        </p>
                                         <FormControlLabel
                                             // className={classes.filterSidebarCheckboxControl}
                                             control={
