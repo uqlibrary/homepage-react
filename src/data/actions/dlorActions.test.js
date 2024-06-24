@@ -6,6 +6,7 @@ import {
     loadADLOR,
     loadCurrentDLORs,
     loadDlorSubscriptionConfirmation,
+    loadDlorUnsubscribe,
     loadFileTypeList,
     loadOwningTeams,
 } from './dlorActions';
@@ -218,6 +219,26 @@ describe('Digital Learning Hub actions', () => {
             const expectedActions = [actions.DLOR_UPDATING, actions.DLOR_UPDATED];
 
             await mockActionsStore.dispatch(loadDlorSubscriptionConfirmation('2b2'));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+    });
+
+    describe('Dlor UNsubscription confirmation Actions', () => {
+        it('dispatches expected actions when dlor unsubscription confirmation call fails', async () => {
+            mockApi.onGet(repositories.routes.DLOR_UNSUBSCRIBE_API({ id: '1a1' })).reply(500);
+
+            const expectedActions = [actions.DLOR_UPDATING, actions.DLOR_UPDATE_FAILED];
+
+            await mockActionsStore.dispatch(loadDlorUnsubscribe('1a1'));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('handles expected actions when dlor unsubscription confirmation succeeds', async () => {
+            mockApi.onAny(repositories.routes.DLOR_UNSUBSCRIBE_API({ id: '2b2' }).apiUrl).reply(200, []);
+
+            const expectedActions = [actions.DLOR_UPDATING, actions.DLOR_UPDATED];
+
+            await mockActionsStore.dispatch(loadDlorUnsubscribe('2b2'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

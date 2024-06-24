@@ -1096,12 +1096,12 @@ export const DLOList = ({
             <StandardPage>
                 <Grid
                     container
-                    style={{ marginBlock: '2em' }}
-                    alignItems="center"
                     id="topOfBody"
-                    justifyContent="flex-end"
+                    style={{ marginBlock: '2em 1em' }}
+                    alignItems="center"
+                    justifyContent="space-between"
                 >
-                    <Grid item xs={12} md={9}>
+                    <Grid item xs={12} md="auto">
                         <Typography component={'p'} style={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
@@ -1117,14 +1117,14 @@ export const DLOList = ({
                             </button>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md={3} style={{ textAlign: 'right' }}>
+                    <Grid item xs={12} md="auto">
                         <a
                             data-testid="dlor-homepage-contact"
                             className={classes.uqActionButton}
                             href={contactFormLink}
                             target="_blank"
                             title="Load a contact form, in a new window"
-                            style={{ fontSize: '1.2em', maxWidth: '8em' }}
+                            style={{ fontSize: '1.2em', maxWidth: '8em', display: 'flex', alignItems: 'center' }}
                         >
                             Contact us
                             <OpenInNewIcon />

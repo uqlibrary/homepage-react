@@ -20,6 +20,8 @@ import {
     DLOR_SERIES_LIST_API,
     DLOR_SERIES_UPDATE_API,
     DLOR_UPDATE_API,
+    DLOR_UNSUBSCRIBE_API,
+    DLOR_UNSUBSCRIBE_FIND_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -468,6 +470,52 @@ export function loadDlorSubscriptionConfirmation(confirmationId) {
             })
             .catch(error => {
                 console.log('loadDlorSubscriptionConfirmation error', error);
+                dispatch({
+                    type: actions.DLOR_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorUnsubscribe(confirmationId) {
+    console.log('loadDlorUnsubscribe', confirmationId);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_UPDATING });
+        return get(DLOR_UNSUBSCRIBE_API({ id: confirmationId }))
+            .then(response => {
+                console.log('loadDlorUnsubscribe ok', response);
+                dispatch({
+                    type: actions.DLOR_UPDATED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                console.log('loadDlorUnsubscribe error', error);
+                dispatch({
+                    type: actions.DLOR_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorFindObjectDetailsByUnsubscribeId(confirmationId) {
+    console.log('loadDlorFindObjectDetailsByUnsubscribeId', confirmationId);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_UPDATING });
+        return get(DLOR_UNSUBSCRIBE_FIND_API({ id: confirmationId }))
+            .then(response => {
+                console.log('loadDlorFindObjectDetailsByUnsubscribeId ok', response);
+                dispatch({
+                    type: actions.DLOR_UPDATED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                console.log('loadDlorFindObjectDetailsByUnsubscribeId error', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
