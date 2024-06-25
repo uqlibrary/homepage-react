@@ -226,7 +226,6 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 4 + extraRowCount);
 
-            // check can reduce with mutiple per "filter type
             // open the Licence type panel
             cy.get('[data-testid="panel-minimisation-icon-licence"]')
                 .should('exist')
@@ -235,6 +234,7 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible')
                 .click();
+            cy.get('[data-testid="panel-downarrow-licence"]').click(); // DEBUG ONLY
             // check UQ copyright
             cy.get('[data-testid="checkbox-licence-uq_copyright"] input[type=checkbox]')
                 .should('exist')
@@ -279,6 +279,7 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible')
                 .click();
+            cy.get('[data-testid="panel-downarrow-item_type"]').click(); // DEBUG ONLY
             cy.get('[data-testid="panel-minimisation-icon-item_type"]')
                 .should('exist')
                 .should('have.attr', 'aria-label', 'Close this filter section');
@@ -533,6 +534,7 @@ describe('Digital Learning Hub', () => {
                 .should('not.be.visible');
             // expand a filter panel
             cy.get('[data-testid="panel-downarrow-item_type"]').click();
+            cy.get('[data-testid="panel-downarrow-item_type"]').click(); // DEBUG ONLY
             // now the element appears
             cy.get('[data-testid="checkbox-item_type-interactive"]')
                 .should('exist')
