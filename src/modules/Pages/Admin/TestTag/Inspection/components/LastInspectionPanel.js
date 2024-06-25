@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material';
+
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
@@ -14,7 +15,6 @@ import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import IconButton from '@mui/material/IconButton';
-import clsx from 'clsx';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { isEmptyStr } from '../../helpers/helpers';
@@ -26,28 +26,35 @@ const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const componentId = 'last_inspection_panel';
 
-const useTestPanelStyles = makeStyles(theme => ({
-    card: {
+const StyledChip = styled(Chip, {
+    shouldForwardProp: prop => prop !== 'pass',
+})(({ theme, pass }) => ({
+    backgroundColor: !pass ? theme.palette.error.main : theme.palette.success.main,
+    color: theme.palette.primary.contrastText,
+    marginRight: theme.spacing(1),
+
+    '& .MuiChip-icon': {
+        color: theme.palette.primary.contrastText,
+    },
+}));
+
+const StyledStandardCard = styled(StandardCard, {
+    shouldForwardProp: prop => prop !== 'pass',
+})(({ theme, pass }) => ({
+    '&.card': {
         marginTop: theme.spacing(2),
     },
-    cardActive: props => ({
-        borderColor: !props.pass ? theme.palette.error.main : theme.palette.success.main,
+    '&.cardActive': {
+        borderColor: !pass ? theme.palette.error.main : theme.palette.success.main,
         [theme.breakpoints.down('sm')]: {
             borderTopWidth: 10,
         },
         [theme.breakpoints.up('sm')]: {
             borderLeftWidth: 10,
         },
-    }),
-    chip: props => ({
-        backgroundColor: !props.pass ? theme.palette.error.main : theme.palette.success.main,
-        color: theme.palette.primary.contrastText,
-        marginRight: theme.spacing(1),
-    }),
-    chipIcon: {
-        color: theme.palette.primary.contrastText,
     },
-    title: {
+
+    '& .title': {
         display: 'block',
         width: '100%',
         [theme.breakpoints.up('sm')]: {
@@ -59,20 +66,8 @@ const useTestPanelStyles = makeStyles(theme => ({
             paddingBottom: theme.spacing(1),
         },
     },
-    pastTestLabel: {
-        fontWeight: 'bold',
-    },
-    expand: {
-        transform: 'rotate(0deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-            duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: 'rotate(180deg)',
-    },
-    problemIconInline: {
+
+    '& .problemIconInline': {
         color: theme.palette.warning.main,
         display: 'inline-flex',
         alignItems: 'center',
@@ -95,7 +90,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
     const isRepair = !isEmptyStr(lastRepair?.repair_date);
     const isDiscard = !isEmptyStr(lastDiscard?.discard_date);
     const theme = useTheme();
-    const classes = useTestPanelStyles({ pass: didPass });
+
     const [testPanelExpanded, setTestPanelExpanded] = React.useState(!disabled);
     const [mismatchingLocation, setMismatchingLocation] = useState(false);
 
@@ -118,17 +113,18 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
     }, [disabled]);
 
     return (
-        <StandardCard
+        <StyledStandardCard
             standardCardId={componentId}
             variant="outlined"
             noPadding={!(forceOpen || testPanelExpanded)}
+            pass={didPass}
             title={
                 <Box display="flex" flexWrap="wrap" alignItems="center">
                     <Typography
                         component={'span'}
                         variant={'h6'}
                         color={disabled ? 'textSecondary' : 'textPrimary'}
-                        className={classes.title}
+                        className={'title'}
                         id={`${componentId}-header-text`}
                         data-testid={`${componentId}-header-text`}
                     >
@@ -136,17 +132,11 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     </Typography>
                     {!!!disabled && (
                         <>
-                            <Chip
+                            <StyledChip
+                                pass={didPass}
                                 id={`${componentId}-header-${didPass ? 'pass' : 'fail'}-chip`}
                                 data-testid={`${componentId}-header-${didPass ? 'pass' : 'fail'}-chip`}
-                                icon={
-                                    didPass ? (
-                                        <DoneIcon classes={{ root: classes.chipIcon }} />
-                                    ) : (
-                                        <ClearIcon classes={{ root: classes.chipIcon }} />
-                                    )
-                                }
-                                classes={{ root: classes.chip }}
+                                icon={didPass ? <DoneIcon /> : <ClearIcon />}
                                 label={didPass ? testStatusEnum.PASSED.label : testStatusEnum.FAILED.label}
                                 component={'span'}
                             />
@@ -174,9 +164,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                 <IconButton
                     id={`${componentId}-expand-button`}
                     data-testid={`${componentId}-expand-button`}
-                    className={clsx(classes.expand, {
-                        [classes.expandOpen]: forceOpen || testPanelExpanded,
-                    })}
+                    className={`expand${forceOpen || testPanelExpanded ? ' expandOpen' : ''}`}
                     aria-expanded={forceOpen || testPanelExpanded}
                     aria-label={formLocale.aria.collapseButtonLabel}
                     onClick={() => !forceOpen && setTestPanelExpanded(!testPanelExpanded)}
@@ -187,12 +175,12 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                 </IconButton>
             }
             style={{ marginBottom: 30 }}
-            className={clsx({ [classes.card]: true, [classes.cardActive]: !disabled })}
+            className={`card${!disabled ? ' cardActive' : ''}`}
         >
             <Collapse in={forceOpen || testPanelExpanded} timeout="auto">
                 <Grid container spacing={1}>
                     <Grid item xs={12}>
-                        <Typography component={'span'} className={classes.pastTestLabel}>
+                        <Typography component={'span'} className={'pastTestLabel'}>
                             {formLocale.statusLabel}
                         </Typography>
                         <Typography
@@ -204,7 +192,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography component={'span'} className={classes.pastTestLabel}>
+                        <Typography component={'span'} className={'pastTestLabel'}>
                             {formLocale.testDateLabel}
                         </Typography>
                         <Typography component={'span'} id={`${componentId}-date`} data-testid={`${componentId}-date`}>
@@ -213,7 +201,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     </Grid>
                     <Grid container item xs={12}>
                         <Grid item xs={12} sm={6}>
-                            <Typography component={'span'} className={classes.pastTestLabel}>
+                            <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.siteLabel}
                             </Typography>
                             <Typography
@@ -227,7 +215,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             </Typography>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Typography component={'span'} className={classes.pastTestLabel}>
+                            <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.buildingLabel}
                             </Typography>
                             <Typography
@@ -241,7 +229,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             </Typography>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Typography component={'span'} className={classes.pastTestLabel}>
+                            <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.floorLabel}
                             </Typography>
                             <Typography
@@ -253,7 +241,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             </Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} lg={!!mismatchingLocation ? 2 : 3}>
-                            <Typography component={'span'} className={classes.pastTestLabel}>
+                            <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.roomLabel}
                             </Typography>
                             <Typography
@@ -268,7 +256,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                             <Grid item xs={12} lg={6}>
                                 <Box display={'flex'}>
                                     <ReportProblemOutlinedIcon
-                                        className={classes.problemIconInline}
+                                        className={'problemIconInline'}
                                         fontSize="small"
                                         id={`${componentId}-mismatch-icon`}
                                         data-testid={`${componentId}-mismatch-icon`}
@@ -276,7 +264,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                                     />
                                     <Typography
                                         component={'span'}
-                                        className={classes.pastTestLabel}
+                                        sx={{ fontWeight: 'bold' }}
                                         style={{ color: theme.palette.warning.main, paddingLeft: theme.spacing(1) }}
                                         id={`${componentId}-mismatch-text`}
                                         data-testid={`${componentId}-mismatch-text`}
@@ -289,7 +277,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     </Grid>
                     {!didPass && (
                         <Grid item xs={12}>
-                            <Typography component={'p'} className={classes.pastTestLabel}>
+                            <Typography component={'p'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.failReasonLabel}
                             </Typography>
                             <Typography
@@ -302,7 +290,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                         </Grid>
                     )}
                     <Grid item xs={12}>
-                        <Typography component={'p'} className={classes.pastTestLabel}>
+                        <Typography component={'p'} sx={{ fontWeight: 'bold' }}>
                             {formLocale.testNotesLabel}
                         </Typography>
                         <Typography
@@ -315,7 +303,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     </Grid>
                     {didPass && (
                         <Grid item xs={12}>
-                            <Typography component={'span'} className={classes.pastTestLabel}>
+                            <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.nextTestDateLabel}
                             </Typography>
                             <Typography
@@ -329,7 +317,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     )}
                     {!!isRepair && (
                         <Grid item xs={12}>
-                            <Typography component={'p'} className={classes.pastTestLabel}>
+                            <Typography component={'p'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.repairDetailsLabel}
                             </Typography>
                             <Typography
@@ -343,7 +331,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     )}
                     {!!isDiscard && (
                         <Grid item xs={12}>
-                            <Typography component={'p'} className={classes.pastTestLabel}>
+                            <Typography component={'p'} sx={{ fontWeight: 'bold' }}>
                                 {formLocale.discardReasonLabel}
                             </Typography>
                             <Typography
@@ -357,7 +345,7 @@ const LastInspectionPanel = ({ asset, currentLocation, dateFormatPattern, disabl
                     )}
                 </Grid>
             </Collapse>
-        </StandardCard>
+        </StyledStandardCard>
     );
 };
 

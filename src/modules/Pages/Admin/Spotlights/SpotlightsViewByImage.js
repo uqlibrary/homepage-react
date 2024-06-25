@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import makeStyles from '@mui/styles/makeStyles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -16,9 +15,10 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import moment from 'moment';
 import { SpotlightsHelpDrawer } from 'modules/Pages/Admin/Spotlights/SpotlightsHelpDrawer';
 import { filterSpotlights } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(theme => ({
-    contentBox: {
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    '& .contentBox': {
         minWidth: '90%',
         paddingTop: 20,
         '& img': {
@@ -42,13 +42,13 @@ const useStyles = makeStyles(theme => ({
             color: 'blue',
         },
     },
-    dialogPaper: {
+    '& .dialogPaper': {
         // make the block take up more of the page
         width: '90%',
         height: '90%',
         maxWidth: 'inherit',
     },
-    link: {
+    '& .link': {
         marginBottom: 10,
         marginRight: 10,
         cursor: 'pointer',
@@ -63,8 +63,6 @@ export const SpotlightsViewByImage = ({
     helpButtonLabel,
     helpContent,
 }) => {
-    const classes = useStyles();
-
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
     const openHelpLightbox = () => setHelpLightboxOpen(true);
     const closeHelpLightbox = () => setHelpLightboxOpen(false);
@@ -95,11 +93,11 @@ export const SpotlightsViewByImage = ({
 
     return (
         <React.Fragment>
-            <Dialog
+            <StyledDialog
                 open={isLightboxOpen}
                 onClose={handleLightboxClose}
                 aria-labelledby="lightboxTitle"
-                PaperProps={{ classes: { root: classes.dialogPaper } }}
+                PaperProps={{ classes: { root: 'dialogPaper' } }}
             >
                 <DialogTitle
                     id="lightboxTitle"
@@ -147,7 +145,7 @@ export const SpotlightsViewByImage = ({
                     />
                 </DialogTitle>
                 <DialogContent>
-                    <Box className={classes.contentBox} data-testid="spotlights-viewbyimage-lightbox-content">
+                    <Box className={'contentBox'} data-testid="spotlights-viewbyimage-lightbox-content">
                         <div>
                             {!!rows &&
                                 rows.length > 0 &&
@@ -163,7 +161,7 @@ export const SpotlightsViewByImage = ({
                                                 data-testid={`${s.id}-lightbox-item`}
                                                 title={`${s.title}\n${locale.viewByHistory.datePrefix} ${s.start} ${locale.viewByHistory.dateDivider} ${s.end}`}
                                                 key={`${s.id}-lightbox-item`}
-                                                className={classes.link}
+                                                className={'link'}
                                                 onClick={() => showViewByHistoryLightbox(s)}
                                                 onKeyDown={
                                                     /* istanbul ignore next */ () =>
@@ -183,7 +181,7 @@ export const SpotlightsViewByImage = ({
                         </div>
                     </Box>
                 </DialogContent>
-            </Dialog>
+            </StyledDialog>
             <SpotlightsHelpDrawer
                 helpContent={helpContent}
                 closeHelpLightbox={closeHelpLightbox}

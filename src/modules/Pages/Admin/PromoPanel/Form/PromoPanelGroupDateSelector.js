@@ -4,50 +4,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 
 const moment = require('moment');
-
-const useStyles = makeStyles(theme => ({
-    contentBox: {
-        minWidth: '90%',
-        paddingTop: 20,
-        '& img': {
-            maxWidth: 800,
-            height: 800,
-            border: '1px solid grey',
-            textAlign: 'center',
-        },
-        '& li': {
-            marginBottom: 10,
-            padding: 10,
-            '&:hover': {
-                backgroundColor: theme.palette.secondary.main,
-                transition: 'background-color 1s ease',
-            },
-            '& p': {
-                marginBottom: 0,
-                marginTop: 1,
-            },
-        },
-        '& [aria-labelledby="lightboxTitle"]': {
-            color: 'blue',
-        },
-    },
-    dialogPaper: {
-        // make the block take up more of the page
-        width: 500,
-    },
-    link: {
-        marginBottom: 10,
-        marginRight: 10,
-        cursor: 'pointer',
-    },
-}));
 
 // export const handleChange = (event, startDate, endDate, setSaveEnabled, setStartDate, setEndDate) => value => {
 //     console.log('Datelist The value is ', value, event, startDate);
@@ -165,8 +127,6 @@ export const PromoPanelGroupDateSelector = ({
     panelScheduleId,
     displayList,
 }) => {
-    const classes = useStyles();
-
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(defaultEndDate);
     const [saveEnabled, setSaveEnabled] = useState(true);
@@ -192,11 +152,7 @@ export const PromoPanelGroupDateSelector = ({
 
     return (
         <React.Fragment>
-            <Dialog
-                open={isEditingDate}
-                aria-labelledby="lightboxTitle"
-                PaperProps={{ classes: { root: classes.dialogPaper } }}
-            >
+            <Dialog open={isEditingDate} aria-labelledby="lightboxTitle" PaperProps={{ style: { width: 500 } }}>
                 <DialogTitle
                     id="lightboxTitle"
                     data-testid="panel-edit-date-title"
@@ -245,11 +201,7 @@ export const PromoPanelGroupDateSelector = ({
                                 )}
                             />
                             {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div
-                                    className={classes.errorStyle}
-                                    id="start-date-warning"
-                                    data-testid="start-date-warning"
-                                >
+                                <div id="start-date-warning" data-testid="start-date-warning">
                                     This date is in the past.
                                 </div>
                             )}
@@ -294,11 +246,7 @@ export const PromoPanelGroupDateSelector = ({
                                 )}
                             />
                             {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div
-                                    className={classes.errorStyle}
-                                    id="end-date-warning"
-                                    data-testid="end-date-warning"
-                                >
+                                <div id="end-date-warning" data-testid="end-date-warning">
                                     This date is in the past.
                                 </div>
                             )}

@@ -10,7 +10,6 @@ import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import clsx from 'clsx';
 
 import locale from '../../testTag.locale';
 import LocationPicker from '../../SharedComponents/LocationPicker/LocationPicker';
@@ -26,7 +25,6 @@ const EventPanel = ({
     setLocation,
     actionDate,
     handleChange,
-    classes,
     hasInspection = false,
     isMobileView,
 }) => {
@@ -69,9 +67,7 @@ const EventPanel = ({
             title={pageLocale.form.event.title}
             headerAction={
                 <IconButton
-                    className={clsx(classes.expand, {
-                        [classes.expandOpen]: eventExpanded,
-                    })}
+                    className={`expand${eventExpanded ? ' expandOpen' : /* istanbul ignore next */ ''}`}
                     aria-expanded={eventExpanded}
                     aria-label={pageLocale.form.event.aria.collapseButtonLabel}
                     onClick={() => setEventExpanded(!eventExpanded)}
@@ -185,7 +181,6 @@ EventPanel.propTypes = {
     location: PropTypes.object.isRequired,
     setLocation: PropTypes.func.isRequired,
     handleChange: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     actionDate: PropTypes.any,
     hasInspection: PropTypes.bool,
     isMobileView: PropTypes.bool,

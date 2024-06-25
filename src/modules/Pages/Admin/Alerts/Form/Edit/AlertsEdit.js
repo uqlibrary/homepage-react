@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -14,14 +13,7 @@ import { getTimeNowFormatted, extractFieldsFromBody } from '../../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { default as locale } from '../../alertsadmin.locale';
 
-const useStyles = makeStyles(() => ({
-    previewWrapper: {
-        transition: 'visibility 0s, opacity 0.5s linear',
-    },
-}));
-
 export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
-    const classes = useStyles();
     const { alertid } = useParams();
 
     React.useEffect(() => {
@@ -75,7 +67,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: 'block' }}>
-                <Grid item id="previewWrapper" className={classes.previewWrapper} />
+                <Grid item id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 0.5s linear' }} />
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">

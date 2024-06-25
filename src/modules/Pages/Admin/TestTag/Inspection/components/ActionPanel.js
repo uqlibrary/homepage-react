@@ -21,7 +21,7 @@ export const componentId = 'action_panel';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
-const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobileView, disabled }) => {
+const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, disabled }) => {
     const a11yProps = index => ({
         id: `${componentId}-tab-panel-${index}`,
         'aria-controls': `${componentId}-tab-panel-${index}`,
@@ -122,7 +122,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <FormControl variant="standard" className={classes.formControl} fullWidth={isMobileView}>
+                        <FormControl variant="standard" className={'formControl'} fullWidth={isMobileView}>
                             <InputLabel shrink>{pageLocale.form.action.discard.label}</InputLabel>
                             <Select
                                 variant="standard"
@@ -142,7 +142,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                     'data-testid': `${componentId}-is-discard-select`,
                                 }}
                                 fullWidth
-                                className={classes.formSelect}
+                                className={'formSelect'}
                                 value={formValues.isDiscarded ? 2 : 1}
                                 onChange={e => handleChange('isDiscarded')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
@@ -162,7 +162,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl variant="standard" className={classes.formControl} fullWidth required>
+                        <FormControl variant="standard" className={'formControl'} fullWidth required>
                             <TextField
                                 {...pageLocale.form.action.discard.discardReason}
                                 required
@@ -195,7 +195,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
             <TabPanel id={componentId} value={selectedTabValue} index={1}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <FormControl variant="standard" className={classes.formControl} fullWidth={isMobileView}>
+                        <FormControl variant="standard" className={'formControl'} fullWidth={isMobileView}>
                             <InputLabel shrink>{pageLocale.form.action.repair.label}</InputLabel>
                             <Select
                                 variant="standard"
@@ -214,7 +214,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                                     'data-testid': `${componentId}-is-repair-select`,
                                 }}
                                 fullWidth
-                                className={classes.formSelect}
+                                className={'formSelect'}
                                 value={formValues.isRepair ? 2 : 1}
                                 onChange={e => handleChange('isRepair')(e.target.value === 2)}
                                 style={{ minWidth: 200 }}
@@ -234,7 +234,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, classes, isMobil
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl variant="standard" className={classes.formControl} fullWidth required>
+                        <FormControl variant="standard" className={'formControl'} fullWidth required>
                             <TextField
                                 {...pageLocale.form.action.repair.repairerDetails}
                                 required
@@ -271,7 +271,6 @@ ActionPanel.propTypes = {
     formValues: PropTypes.object.isRequired,
     selectedAsset: PropTypes.object,
     handleChange: PropTypes.func.isRequired,
-    classes: PropTypes.any.isRequired,
     isMobileView: PropTypes.bool.isRequired,
     disabled: PropTypes.bool.isRequired,
 };

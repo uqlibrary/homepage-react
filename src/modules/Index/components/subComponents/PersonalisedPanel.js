@@ -1,6 +1,5 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
@@ -20,10 +19,11 @@ import { ppLocale } from './PersonalisedPanel.locale';
 import { isEspaceAuthor, canSeeLoans, canSeePrintBalance } from 'helpers/access';
 import Collapse from '@mui/material/Collapse';
 import Fade from '@mui/material/Fade';
+import { styled } from '@mui/material/styles';
 const moment = require('moment');
 
-const useStyles = makeStyles(theme => ({
-    flexWrapper: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    '&.flexWrapper': {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -32,19 +32,10 @@ const useStyles = makeStyles(theme => ({
             paddingLeft: 0,
         },
     },
-    locationWrapper: {
-        [theme.breakpoints.down('lg')]: {
-            marginLeft: -6,
-        },
-    },
-    isNextToSpotlights: {
-        borderLeft: '1px solid' + theme.palette.secondary.light,
-        paddingLeft: 16,
-    },
-    flexHeader: {
+    '& .flexHeader': {
         height: 'auto',
     },
-    flexContent: {
+    '& .flexContent': {
         flexGrow: 1,
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -55,35 +46,44 @@ const useStyles = makeStyles(theme => ({
             paddingLeft: 0,
         },
     },
-    flexFooter: {
+    '& .flexFooter': {
         height: 'auto',
     },
-    greeting: {
+    '& .locationWrapper': {
+        [theme.breakpoints.down('lg')]: {
+            marginLeft: -6,
+        },
+    },
+    '&.isNextToSpotlights': {
+        borderLeft: '1px solid' + theme.palette.secondary.light,
+        paddingLeft: 16,
+    },
+    '& .greeting': {
         color: theme.palette.primary.light,
         fontSize: '2.25rem',
         lineHeight: 1,
         marginLeft: 16,
     },
-    uqidIcon: {
+    '& .uqidIcon': {
         marginBottom: -2,
         marginRight: 6,
         height: 12,
         width: 12,
     },
-    menuItem: {
+    '& .menuItem': {
         marginLeft: -16,
         marginRight: -16,
     },
-    menuItemAnchor: {
+    '& .menuItemAnchor': {
         marginRight: -16,
         '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.04)',
         },
     },
-    anchorBadge: {
+    '& .anchorBadge': {
         marginLeft: -42,
     },
-    menuItemRoot: {
+    '& .menuItemRoot': {
         paddingTop: 0,
         paddingBottom: 0,
         textTransform: 'none',
@@ -92,7 +92,7 @@ const useStyles = makeStyles(theme => ({
         paddingRight: 0,
         marginTop: 2,
     },
-    menuItemRootAnchor: {
+    '& .menuItemRootAnchor': {
         paddingTop: 0,
         paddingBottom: 0,
         textTransform: 'none',
@@ -104,7 +104,7 @@ const useStyles = makeStyles(theme => ({
             fontWeight: 400,
         },
     },
-    menuItemLabel: {
+    '& .menuItemLabel': {
         fontSize: 14,
         minHeight: 28,
         paddingRight: 48,
@@ -114,7 +114,7 @@ const useStyles = makeStyles(theme => ({
             textDecoration: 'underline',
         },
     },
-    itemButton: {
+    '& .itemButton': {
         padding: 1,
         minWidth: 0,
         backgroundColor: theme.palette.primary.main,
@@ -122,14 +122,14 @@ const useStyles = makeStyles(theme => ({
         height: 24,
         borderRadius: 4,
     },
-    icon: {
+    '& .icon': {
         padding: 0,
         color: theme.palette.white.main,
         width: 18,
         height: 18,
         margin: 3,
     },
-    ppBadgeError: {
+    '& .ppBadgeError': {
         zIndex: 998,
         width: 17,
         minWidth: 17,
@@ -141,7 +141,7 @@ const useStyles = makeStyles(theme => ({
         padding: 5,
         lineHeight: 2,
     },
-    ppBadgeWarning: {
+    '& .ppBadgeWarning': {
         zIndex: 998,
         width: 17,
         minWidth: 17,
@@ -153,7 +153,7 @@ const useStyles = makeStyles(theme => ({
         padding: 5,
         lineHeight: 2,
     },
-    ppBadgeInfo: {
+    '& .ppBadgeInfo': {
         zIndex: 998,
         width: 17,
         minWidth: 17,
@@ -187,7 +187,6 @@ const PersonalisedPanel = ({
     possibleRecords,
     incompleteNTRORecords,
 }) => {
-    const classes = useStyles();
     const topLevelTagId = tag => `pp${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
 
     const PaperCut = () => {
@@ -211,7 +210,7 @@ const PersonalisedPanel = ({
                 .replace('[email]', printBalance.email);
         };
         return (
-            <Grid item xs={12} className={classes.menuItem}>
+            <Grid item xs={12} className={'menuItem'}>
                 <Tooltip
                     id={getPapercutId('tooltip')}
                     data-testid={getPapercutId('tooltip')}
@@ -222,26 +221,21 @@ const PersonalisedPanel = ({
                 >
                     <Button
                         fullWidth
-                        classes={{ root: classes.menuItemRoot }}
+                        classes={{ root: 'menuItemRoot' }}
                         onClick={handleClick}
                         id={getPapercutId('menu-button')}
                         data-testid={getPapercutId('menu-button')}
                     >
                         <Grid container spacing={0}>
-                            <Grid
-                                item
-                                xs
-                                className={classes.menuItemLabel}
-                                style={{ lineHeight: 1.2, paddingRight: 0 }}
-                            >
+                            <Grid item xs className={'menuItemLabel'} style={{ lineHeight: 1.2, paddingRight: 0 }}>
                                 {ppLocale.items.papercut.label.replace(
                                     '[balance]',
                                     printBalance && printBalance.balance ? `($${printBalance.balance})` : '',
                                 )}
                             </Grid>
                             <Grid item xs="auto">
-                                <div className={classes.itemButton}>
-                                    <PrintIcon className={classes.icon} />
+                                <div className={'itemButton'}>
+                                    <PrintIcon className={'icon'} />
                                 </div>
                             </Grid>
                         </Grid>
@@ -283,7 +277,7 @@ const PersonalisedPanel = ({
     const Loans = () => {
         const getElementIdentifier = tag => `pp-loans${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor}>
+            <Grid item xs={12} className={'menuItemAnchor'}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
@@ -293,27 +287,27 @@ const PersonalisedPanel = ({
                     TransitionProps={{ timeout: 300 }}
                 >
                     <a
-                        className={classes.menuItemRootAnchor}
+                        className={'menuItemRootAnchor'}
                         href={ppLocale.items.loans.url}
                         id={getElementIdentifier('menu-button')}
                         data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
-                                <Grid item xs className={classes.menuItemLabel}>
+                                <Grid item xs className={'menuItemLabel'}>
                                     {ppLocale.items.loans.label.replace(
                                         '[loans]',
                                         loans && loans.total_loans_count > 0 ? `(${loans.total_loans_count})` : '',
                                     )}
                                 </Grid>
-                                <Grid item xs="auto" className={classes.anchorBadge}>
-                                    <div className={classes.itemButton}>
+                                <Grid item xs="auto" className={'anchorBadge'}>
+                                    <div className={'itemButton'}>
                                         <Badge
                                             badgeContent={loans && loans.total_loans_count}
                                             color="primary"
-                                            classes={{ badge: classes.ppBadgeInfo }}
+                                            classes={{ badge: 'ppBadgeInfo' }}
                                         >
-                                            <MenuBookIcon className={classes.icon} />
+                                            <MenuBookIcon className={'icon'} />
                                         </Badge>
                                     </div>
                                 </Grid>
@@ -327,7 +321,7 @@ const PersonalisedPanel = ({
     const Fines = () => {
         const getElementIdentifier = tag => `pp-fines${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor}>
+            <Grid item xs={12} className={'menuItemAnchor'}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
@@ -337,24 +331,24 @@ const PersonalisedPanel = ({
                     TransitionProps={{ timeout: 300 }}
                 >
                     <a
-                        className={classes.menuItemRootAnchor}
+                        className={'menuItemRootAnchor'}
                         href={ppLocale.items.fines.url}
                         id={getElementIdentifier('menu-button')}
                         data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
-                                <Grid item xs className={classes.menuItemLabel}>
+                                <Grid item xs className={'menuItemLabel'}>
                                     {ppLocale.items.fines.label.replace('[fines]', loans && loans.total_fines_sum)}
                                 </Grid>
-                                <Grid item xs="auto" className={classes.anchorBadge}>
-                                    <div className={classes.itemButton}>
+                                <Grid item xs="auto" className={'anchorBadge'}>
+                                    <div className={'itemButton'}>
                                         <Badge
                                             badgeContent={loans && loans.total_fines_count}
                                             color="primary"
-                                            classes={{ badge: classes.ppBadgeError }}
+                                            classes={{ badge: 'ppBadgeError' }}
                                         >
-                                            <MonetizationOnIcon className={classes.icon} />
+                                            <MonetizationOnIcon className={'icon'} />
                                         </Badge>
                                     </div>
                                 </Grid>
@@ -368,7 +362,7 @@ const PersonalisedPanel = ({
     const EspacePossible = () => {
         const getElementIdentifier = tag => `pp-espace-possible${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor}>
+            <Grid item xs={12} className={'menuItemAnchor'}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
@@ -378,24 +372,24 @@ const PersonalisedPanel = ({
                     TransitionProps={{ timeout: 300 }}
                 >
                     <a
-                        className={classes.menuItemRootAnchor}
+                        className={'menuItemRootAnchor'}
                         href={ppLocale.items.eSpacePossible.url}
                         id={getElementIdentifier('menu-button')}
                         data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
-                                <Grid item xs className={classes.menuItemLabel}>
+                                <Grid item xs className={'menuItemLabel'}>
                                     {ppLocale.items.eSpacePossible.label.replace('[totalRecords]', possibleRecords)}
                                 </Grid>
-                                <Grid item xs="auto" className={classes.anchorBadge}>
-                                    <div className={classes.itemButton}>
+                                <Grid item xs="auto" className={'anchorBadge'}>
+                                    <div className={'itemButton'}>
                                         <Badge
                                             badgeContent={possibleRecords}
                                             color="primary"
-                                            classes={{ badge: classes.ppBadgeInfo }}
+                                            classes={{ badge: 'ppBadgeInfo' }}
                                         >
-                                            <AssignmentIndIcon className={classes.icon} />
+                                            <AssignmentIndIcon className={'icon'} />
                                         </Badge>
                                     </div>
                                 </Grid>
@@ -409,7 +403,7 @@ const PersonalisedPanel = ({
     const EspaceOrcid = () => {
         const getElementIdentifier = tag => `pp-espace-orcid${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor}>
+            <Grid item xs={12} className={'menuItemAnchor'}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
@@ -419,24 +413,20 @@ const PersonalisedPanel = ({
                     TransitionProps={{ timeout: 300 }}
                 >
                     <a
-                        className={classes.menuItemRootAnchor}
+                        className={'menuItemRootAnchor'}
                         href={ppLocale.items.eSpaceOrcid.url}
                         id={getElementIdentifier('menu-button')}
                         data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
-                                <Grid item xs className={classes.menuItemLabel}>
+                                <Grid item xs className={'menuItemLabel'}>
                                     {ppLocale.items.eSpaceOrcid.label}
                                 </Grid>
-                                <Grid item xs="auto" className={classes.anchorBadge}>
-                                    <div className={classes.itemButton}>
-                                        <Badge
-                                            badgeContent={'!'}
-                                            color="primary"
-                                            classes={{ badge: classes.ppBadgeWarning }}
-                                        >
-                                            <LinkIcon className={classes.icon} />
+                                <Grid item xs="auto" className={'anchorBadge'}>
+                                    <div className={'itemButton'}>
+                                        <Badge badgeContent={'!'} color="primary" classes={{ badge: 'ppBadgeWarning' }}>
+                                            <LinkIcon className={'icon'} />
                                         </Badge>
                                     </div>
                                 </Grid>
@@ -450,7 +440,7 @@ const PersonalisedPanel = ({
     const EspaceNTROs = () => {
         const getElementIdentifier = tag => `pp-espace-ntro${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
-            <Grid item xs={12} className={classes.menuItemAnchor}>
+            <Grid item xs={12} className={'menuItemAnchor'}>
                 <Tooltip
                     id={getElementIdentifier('tooltip')}
                     data-testid={getElementIdentifier('tooltip')}
@@ -460,26 +450,26 @@ const PersonalisedPanel = ({
                     TransitionProps={{ timeout: 300 }}
                 >
                     <a
-                        className={classes.menuItemRootAnchor}
+                        className={'menuItemRootAnchor'}
                         href={ppLocale.items.eSpaceNTRO.url}
                         id={getElementIdentifier('menu-button')}
                         data-testid={getElementIdentifier('menu-button')}
                     >
                         <span className="MuiButton-label">
                             <Grid container spacing={0}>
-                                <Grid item xs className={classes.menuItemLabel}>
+                                <Grid item xs className={'menuItemLabel'}>
                                     {incompleteNTRORecords &&
                                         incompleteNTRORecords.total &&
                                         ppLocale.items.eSpaceNTRO.label.replace('[total]', incompleteNTRORecords.total)}
                                 </Grid>
-                                <Grid item xs="auto" className={classes.anchorBadge}>
-                                    <div className={classes.itemButton}>
+                                <Grid item xs="auto" className={'anchorBadge'}>
+                                    <div className={'itemButton'}>
                                         <Badge
                                             badgeContent={incompleteNTRORecords && incompleteNTRORecords.total}
                                             color="primary"
-                                            classes={{ badge: classes.ppBadgeWarning }}
+                                            classes={{ badge: 'ppBadgeWarning' }}
                                         >
-                                            <PostAddIcon className={classes.icon} />
+                                            <PostAddIcon className={'icon'} />
                                         </Badge>
                                     </div>
                                 </Grid>
@@ -493,13 +483,13 @@ const PersonalisedPanel = ({
 
     return (
         <Fade in={!!account}>
-            <div
-                className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}
+            <StyledWrapper
+                className={`flexWrapper ${!!isNextToSpotlights && 'isNextToSpotlights'}`}
                 id="personalised-panel"
                 data-testid="personalised-panel"
             >
-                <div className={classes.flexHeader}>
-                    <Typography variant={'h5'} component={'h2'} className={classes.greeting}>
+                <div className={'flexHeader'}>
+                    <Typography variant={'h5'} component={'h2'} className={'greeting'}>
                         {greeting()} {account.firstName || /* istanbul ignore next */ ''}
                     </Typography>
                     <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
@@ -516,19 +506,19 @@ const PersonalisedPanel = ({
                                     TransitionProps={{ timeout: 300 }}
                                 >
                                     <Typography component={'span'} style={{ fontSize: 14, color: '#595959' }}>
-                                        <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
+                                        <AccountBoxIcon className={'uqidIcon'} fontSize={'small'} />
                                         {(account && account.id) || /* istanbul ignore next */ ''}
                                     </Typography>
                                 </Tooltip>
                             </Grid>
                         )}
-                        <Grid item xs={12} lg className={classes.locationWrapper}>
+                        <Grid item xs={12} lg className={'locationWrapper'}>
                             <Location account={account} />
                         </Grid>
                     </Grid>
                 </div>
-                <div className={classes.flexContent} />
-                <div className={classes.flexFooter}>
+                <div className={'flexContent'} />
+                <div className={'flexFooter'}>
                     <Grid container spacing={0} style={{ marginLeft: 16 }}>
                         <Collapse
                             style={{ width: '100%' }}
@@ -571,7 +561,7 @@ const PersonalisedPanel = ({
                         </Collapse>
                     </Grid>
                 </div>
-            </div>
+            </StyledWrapper>
         </Fade>
     );
 };

@@ -4,22 +4,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Hidden from '@mui/material/Hidden';
 import Typography from '@mui/material/Typography';
-import withStyles from '@mui/styles/withStyles';
-
-const styles = theme => ({
-    circular: {
-        color: theme.palette.primary.light,
-    },
-    message: {
-        color: theme.palette.primary.light,
-        fontSize: '1.33rem',
-    },
-});
 
 export class InlineLoader extends React.Component {
     static propTypes = {
         message: PropTypes.string,
-        classes: PropTypes.object,
     };
 
     static defaultProps = {
@@ -42,7 +30,7 @@ export class InlineLoader extends React.Component {
                     </Hidden>
                     <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
                         <CircularProgress
-                            className={this.props.classes.circular}
+                            sx={{ color: 'primary.light' }}
                             size={18}
                             thickness={2}
                             aria-labelledby="loading-icon"
@@ -51,7 +39,7 @@ export class InlineLoader extends React.Component {
                     <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
                         <Typography
                             id="loading-icon"
-                            className={this.props.classes.message}
+                            sx={{ color: 'primary.light', fontSize: '1.33rem' }}
                             variant={'h5'}
                             component={'span'}
                         >
@@ -67,4 +55,4 @@ export class InlineLoader extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(InlineLoader);
+export default InlineLoader;

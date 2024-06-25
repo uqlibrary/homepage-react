@@ -8,12 +8,12 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
-import { makeStyles } from '@mui/styles';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
+import { styled } from '@mui/material/styles';
 
 const moment = require('moment');
 
@@ -28,56 +28,17 @@ const MenuProps = {
     },
 };
 
-const useStyles = makeStyles(() => ({
-    contentRequired: {
-        color: '#990000',
-        paddingTop: 10,
-        display: 'block',
-        fontSize: 14,
+const StyledCheckbox = styled(Checkbox)(() => ({
+    paddingLeft: 0,
+    '&.Mui-checked': {
+        color: 'black',
     },
-    saveButton: {
-        '&:disabled': {
-            color: 'rgba(0, 0, 0, 0.26)',
-            boxShadow: 'none',
-            backgroundColor: 'rgba(0, 0, 0, 0.12)',
-        },
-    },
-    previewButton: {
-        marginRight: 10,
-    },
-    checkbox: {
-        paddingLeft: 0,
-        '&.Mui-checked': {
-            color: 'black',
-        },
-    },
-    promoPanelForm: {
-        '& label': {
-            minHeight: '1.1em',
-        },
-    },
-    errorStyle: {
-        color: '#c80000',
-        marginTop: 3,
-        fontSize: '0.75rem',
-    },
-    typingArea: {
-        '& textarea ': {
-            backgroundColor: 'rgb(236, 236, 236, 0.5)',
-            borderRadius: 4,
-            padding: 10,
-        },
-        '& label': {
-            color: '#000',
-            paddingLeft: 10,
-            paddingTop: 10,
-        },
-    },
-    charactersRemaining: {
-        textAlign: 'right',
-        color: '#504e4e',
-        fontSize: '0.8em',
-    },
+}));
+
+const StyledError = styled('div')(() => ({
+    color: '#c80000',
+    marginTop: 3,
+    fontSize: '0.75rem',
 }));
 
 export const PromoPanelFormSchedules = ({
@@ -94,8 +55,6 @@ export const PromoPanelFormSchedules = ({
     handleChange,
     handleGroupChange,
 }) => {
-    const classes = useStyles();
-
     return (
         <>
             {/* Schedules */}
@@ -105,15 +64,11 @@ export const PromoPanelFormSchedules = ({
                 </Grid>
                 <Grid container>
                     <Grid item xs={12}>
-                        <InputLabel
-                            title={locale.form.tooltips.defaultPanelCheckbox}
-                            className={`${classes.scheduleCell}`}
-                        >
-                            <Checkbox
+                        <InputLabel title={locale.form.tooltips.defaultPanelCheckbox} className={'scheduleCell'}>
+                            <StyledCheckbox
                                 checked={values.is_default_panel === 1}
                                 data-testid="admin-promopanel-form-default-panel"
                                 onChange={handleChange('is_default_panel')}
-                                className={classes.checkbox}
                                 disabled={isEdit && scheduledList.length > 0}
                             />
                             {locale.form.labels.defaultPanelCheckbox}
@@ -125,7 +80,7 @@ export const PromoPanelFormSchedules = ({
                 <Grid item xs={4}>
                     <FormControl
                         variant="standard"
-                        className={classes.dropdown}
+                        className={'dropdown'}
                         fullWidth
                         title={locale.form.tooltips.groupField}
                     >
@@ -189,9 +144,9 @@ export const PromoPanelFormSchedules = ({
                                 )}
                             />
                             {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div data-testid="admin-promopanel-startdate-past" className={classes.errorStyle}>
+                                <StyledError data-testid="admin-promopanel-startdate-past">
                                     This date is in the past.
-                                </div>
+                                </StyledError>
                             )}
                         </Grid>
                         <Grid item xs={4} align={'right'}>

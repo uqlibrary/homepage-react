@@ -12,19 +12,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
 
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
-
-const useStyles = makeStyles(() => ({
-    myCourses: {
-        overflowX: 'hidden',
-        overflowY: 'auto',
-        marginRight: -16,
-        marginTop: 4,
-        marginLeft: -16,
-        padding: '0 30px 8px',
-    },
-}));
 
 export const getUrlForLearningResourceSpecificTab = (
     item,
@@ -44,7 +32,6 @@ export const getUrlForLearningResourceSpecificTab = (
 
 export const LearningResourcesPanel = ({ account, history }) => {
     const pageLocation = useLocation();
-    const classes = useStyles();
 
     const [searchUrl, setSearchUrl] = React.useState('');
     const loadSearchResult = React.useCallback(
@@ -93,7 +80,19 @@ export const LearningResourcesPanel = ({ account, history }) => {
             />
 
             {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
-                <Grid container spacing={1} data-testid="your-courses" className={classes.myCourses}>
+                <Grid
+                    container
+                    spacing={1}
+                    data-testid="your-courses"
+                    style={{
+                        overflowX: 'hidden',
+                        overflowY: 'auto',
+                        marginRight: -16,
+                        marginTop: 4,
+                        marginLeft: -16,
+                        padding: '0 30px 8px',
+                    }}
+                >
                     <Grid item xs={12}>
                         <Typography component={'h3'} variant={'h6'}>
                             {locale.homepagePanel.userCourseTitle}
