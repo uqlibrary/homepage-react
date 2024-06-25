@@ -11,8 +11,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { fullPath } from 'config/routes';
+import { getDlorViewPageUrl, getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
     const { confirmationId } = useParams();
@@ -135,7 +134,7 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     <ul style={{ marginTop: 0 }}>
                         <li data-testid="dlor-confirm-line-3">check your email and try again</li>
                         <li data-testid="dlor-confirm-line-3">
-                            visit <a href={`${fullPath}/digital-learning-hub`}>our Digital learning hub</a> to view
+                            visit <a href={`${getPathRoot()}/digital-learning-hub`}>our Digital learning hub</a> to view
                             available objects.
                         </li>
                     </ul>

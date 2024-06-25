@@ -9,7 +9,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { fullPath } from 'config/routes';
 
 export const ObjectListItem = ({ object, listParentName = 'team' }) => {
     const navigateToDlorEditPage = uuid => {

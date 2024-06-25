@@ -63,7 +63,7 @@ export const flattedPathConfig = [
     '/admin/promopanel/clone',
     '/digital-learning-hub/view',
     '/digital-learning-hub/confirm/subscribe',
-    // '/digital-learning-hub/confirm/unsubscribe',
+    '/digital-learning-hub/confirm/unsubscribe',
     '/exams/course',
 ];
 
@@ -109,6 +109,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.DLOConfirmSubscription,
             // exact: true,
             pageTitle: 'Digital Learning Object Repository - Confirm Subscription request',
+        },
+        {
+            path: pathConfig.dlorUnsubscribe(confirmationId),
+            component: components.DLOConfirmUnsubscription,
+            // exact: true,
+            pageTitle: 'Digital Learning Object Repository - Confirm Unsubscription request',
         },
         {
             path: pathConfig.pastExamPaperList(examSearchCourseHint),
