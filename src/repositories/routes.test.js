@@ -219,6 +219,9 @@ describe('Backend routes method', () => {
             expect(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 100 })).toEqual({
                 apiUrl: 'dlor/public/100/confirm/subscribe',
             });
+            expect(routes.DLOR_UNSUBSCRIBE_FIND_API({ id: 100 })).toEqual({
+                apiUrl: 'dlor/public/100/confirm/find',
+            });
 
             expect(routes.DLOR_DEMOGRAPHICS_SAVE_API()).toEqual({ apiUrl: 'dlor/auth/demographics' });
 
