@@ -870,6 +870,45 @@ mock.onGet(/dlor\/public\/find\/.*/)
             },
         ];
     })
+    .onGet(/dlor\/public\/.*\/confirm\/unsubscribe/)
+    .reply(config => {
+        const urlparts = config.url.split('/');
+        const confirmationId = urlparts[2];
+        if (confirmationId === 'unsubscribeError') {
+            console.log('unsubscribe got error');
+            return [500, {}];
+        } else {
+            console.log('unsubscribe got 200');
+            return [200, { data: { response: 'ok' } }];
+        }
+    })
+    .onGet(/dlor\/public\/.*\/confirm\/find/)
+    .reply(config => {
+        const urlparts = config.url.split('/');
+        const confirmationId = urlparts[2];
+        if (['unsubscribeExpired', 'duplicateclick', 'noSuchConf'].includes(confirmationId)) {
+            return [404, { status: 'error', message: 'Subscription not found with that hash' }];
+        } else if (confirmationId === 'unsubscribeFindError') {
+            return [500, {}];
+        } else {
+            return [
+                200,
+                {
+                    data: {
+                        subscription_id: 2,
+                        object_uuid: '938h_4986_654f',
+                        subscription_email: 'someone@example.com',
+                        object: {
+                            object_id: 1,
+                            object_public_uuid: '938h_4986_654f',
+                            object_title: 'Artificial Intelligence - Digital Essentials',
+                        },
+                        // etc
+                    },
+                },
+            ];
+        }
+    })
     .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_known_conf_code_that_has_expired' }).apiUrl)
     .reply(() => {
         return [

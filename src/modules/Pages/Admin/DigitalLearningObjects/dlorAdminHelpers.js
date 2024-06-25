@@ -1,4 +1,4 @@
-import { fullPath } from 'config/routes';
+import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 export function splitStringToArrayOnComma(keywordString) {
     let splitStringToArrayOnComma = '';
@@ -46,7 +46,7 @@ export function getUserPostfix(appendType = '?') {
 
 export const dlorAdminLink = (dlorPath = '') => {
     const userString = getUserPostfix();
-    return `${fullPath}/admin/dlor${dlorPath}${userString}`;
+    return `${getPathRoot()}/admin/dlor${dlorPath}${userString}`;
 };
 
 export const isValidEmail = testEmail => {

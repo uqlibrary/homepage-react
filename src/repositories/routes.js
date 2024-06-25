@@ -331,7 +331,8 @@ export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
 export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/public/series/list' });
 export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/subscribe` });
-// export const DLOR_UNSUBSCRIBE_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/unsubscribe` });
+export const DLOR_UNSUBSCRIBE_FIND_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/find` });
+export const DLOR_UNSUBSCRIBE_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/unsubscribe` });
 export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/public/teams/list' });
 
 export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/auth/demographics' });
