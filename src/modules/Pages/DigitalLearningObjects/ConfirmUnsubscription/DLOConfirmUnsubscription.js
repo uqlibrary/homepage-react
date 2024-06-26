@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -13,7 +14,6 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { loadDlorUnsubscribe } from '../../../../data/actions';
 
 export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
     const { confirmationId } = useParams();
@@ -41,13 +41,12 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
     function pageContents(dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem) {
         if (!!dlorItemUpdating || dlorItemUpdating === null) {
             return (
-                <div style={{ minHeight: 600 }}>
+                <Box sx={{ minHeight: '600px' }}>
                     <InlineLoader message="Loading" />
-                </div>
+                </Box>
             );
         } else if (!!dlorUpdatedItemError) {
-            let errorMsg;
-            errorMsg =
+            const errorMsg =
                 dlorUpdatedItemError === 'The requested page could not be found.'
                     ? "That unsubscribe request doesn't exist - have you already unsubscribed? Otherwise, something has gone wrong."
                     : dlorUpdatedItemError;
@@ -55,9 +54,9 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
                 <Typography
                     variant={'body1'}
                     data-testid="dlor-unsubscribe-error"
-                    style={{ display: 'flex', alignItems: 'center', marginBlock: 6 }}
+                    sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
                 >
-                    <ErrorOutlineIcon style={{ fill: '#d62929', marginRight: 6 }} />
+                    <ErrorOutlineIcon sx={{ fill: '#d62929', marginRight: '6px' }} />
                     <span>{errorMsg}</span>
                 </Typography>
             );
