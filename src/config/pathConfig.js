@@ -44,7 +44,7 @@ export const pathConfig = {
     dlorHome: '/digital-learning-hub',
     dlorView: dlorId => `/digital-learning-hub/view/${dlorId}`,
     dlorSubscriptionConfirmation: confirmationId => `/digital-learning-hub/confirm/subscribe/${confirmationId}`,
-    // dlorUnsubscribe: confirmationId => `/digital-learning-hub/confirm/unsubscribe/${confirmationId}`,
+    dlorUnsubscribe: confirmationId => `/digital-learning-hub/confirm/unsubscribe/${confirmationId}`,
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
     pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
