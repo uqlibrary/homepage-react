@@ -94,7 +94,7 @@ export const AlertSplitButton = ({
                                     zIndex: 1,
                                 }}
                             >
-                                <Paper sx={{ marginTop: '-50' }}>
+                                <Paper sx={{ marginTop: '-50px' }}>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
                                             <MenuItem
