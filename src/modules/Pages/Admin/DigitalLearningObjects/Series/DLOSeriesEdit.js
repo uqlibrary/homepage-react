@@ -20,7 +20,11 @@ import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAd
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/DlorAdminBreadcrumbs';
 
 import { scrollToTopOfPage } from 'helpers/general';
-import { getDlorViewPageUrl, toTitleCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import {
+    convertSnakeCaseToKebabCase,
+    getDlorViewPageUrl,
+    toTitleCase,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     titleBlock: {
@@ -295,7 +299,7 @@ export const DLOSeriesEdit = ({
                                                     <InputLabel htmlFor="series_name">Series name *</InputLabel>
                                                     <Input
                                                         id="series_name"
-                                                        data-testid="series_name"
+                                                        data-testid="series-name"
                                                         required
                                                         value={formValues?.series_name}
                                                         onChange={handleChange('series_name')}
@@ -306,7 +310,7 @@ export const DLOSeriesEdit = ({
                                                 {!!dlorList && !isValidSeriesName(formValues?.series_name) && (
                                                     <div
                                                         className={classes.errorMessage}
-                                                        data-testid="error-message-series_name"
+                                                        data-testid="error-message-series-name"
                                                     >
                                                         This series name is not valid.
                                                     </div>
@@ -338,7 +342,9 @@ export const DLOSeriesEdit = ({
                                                             <div>
                                                                 <Input
                                                                     id={`object_series_order-${f.object_public_uuid}`}
-                                                                    data-testid={`object_series_order-${f.object_public_uuid}`}
+                                                                    data-testid={`object-series-order-${convertSnakeCaseToKebabCase(
+                                                                        f.object_public_uuid,
+                                                                    )}`}
                                                                     required
                                                                     value={f.object_series_order}
                                                                     onChange={handleChange(
@@ -379,7 +385,9 @@ export const DLOSeriesEdit = ({
                                                 return (
                                                     <li key={f.object_id} className={classes.draggableItem}>
                                                         <span
-                                                            data-testid={`dlor-series-edit-draggable-title-${f?.object_public_uuid}`}
+                                                            data-testid={`dlor-series-edit-draggable-title-${convertSnakeCaseToKebabCase(
+                                                                f?.object_public_uuid,
+                                                            )}`}
                                                         >
                                                             {f.object_title}{' '}
                                                             {f.object_status !== 'current' && (
@@ -389,7 +397,9 @@ export const DLOSeriesEdit = ({
                                                         <div>
                                                             <Input
                                                                 id={`object_series_order-${f.object_public_uuid}`}
-                                                                data-testid={`object_series_order-${f.object_public_uuid}`}
+                                                                data-testid={`object-series-order-${convertSnakeCaseToKebabCase(
+                                                                    f.object_public_uuid,
+                                                                )}`}
                                                                 required
                                                                 value={f.object_series_order}
                                                                 onChange={handleChange(

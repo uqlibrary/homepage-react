@@ -29,6 +29,7 @@ import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlo
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 import { useConfirmationState } from 'hooks';
+import { convertSnakeCaseToKebabCase } from '../../../DigitalLearningObjects/dlorHelpers';
 
 const useStyles = makeStyles(theme => ({
     sidebyside: {
@@ -416,7 +417,9 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                         item
                                                         xs={7}
                                                         className={classes.sidebyside}
-                                                        data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
+                                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                            o?.object_public_uuid,
+                                                        )}`}
                                                     >
                                                         <div>
                                                             <Typography component={'h2'} variant={'h6'}>

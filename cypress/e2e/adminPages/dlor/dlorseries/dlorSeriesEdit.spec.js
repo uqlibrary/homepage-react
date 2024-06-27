@@ -15,26 +15,26 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Edit Series');
 
-            cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
+            cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                 .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-            cy.get('a[data-testid="dlor-breadcrumb--series-management-link-0"]')
+            cy.get('a[data-testid="dlor-breadcrumb-series-management-link-0"]')
                 .contains('Series management')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
-            cy.get('[data-testid="dlor-breadcrumb--edit-series-label-1"]').contains(
+            cy.get('[data-testid="dlor-breadcrumb-edit-series-label-1"]').contains(
                 'Edit series: Advanced literature searching',
             );
 
             // series name shows correctly
-            cy.get('[data-testid="series_name"] input')
+            cy.get('[data-testid="series-name"] input')
                 .should('exist')
                 .should('have.value', 'Advanced literature searching');
             // linked
-            cy.get('[data-testid="object_series_order-98s0_dy5k3_98h4"] input')
+            cy.get('[data-testid="object-series-order-98s0-dy5k3-98h4"] input')
                 .should('exist')
                 .should('be.visible')
                 .should('have.value', 1);
-            cy.get('[data-testid="object_series_order-9bc1894a-8b0d-46da-a25e-02d26e2e056c"] input')
+            cy.get('[data-testid="object-series-order-9bc1894a-8b0d-46da-a25e-02d26e2e056c"] input')
                 .should('exist')
                 .should('be.visible')
                 .should('have.value', 2);
@@ -42,17 +42,17 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .contains('(Deprecated)');
             // unaffiliated
-            cy.get('[data-testid="object_series_order-9bc192a8-324c-4f6b-ac50-01"] input')
+            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-01"] input')
                 .should('exist')
                 .should('have.value', '');
-            cy.get('[data-testid="object_series_order-9bc192a8-324c-4f6b-ac50-01"] input').then($el => {
+            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-01"] input').then($el => {
                 const isVisible = $el[0].checkVisibility();
                 expect(isVisible).to.eq(false);
             });
-            cy.get('[data-testid="object_series_order-9bc192a8-324c-4f6b-ac50-02"] input')
+            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input')
                 .should('exist')
                 .should('have.value', '');
-            cy.get('[data-testid="object_series_order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
+            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
                 const isVisible = $el[0].checkVisibility();
                 expect(isVisible).to.eq(false);
             });
@@ -71,14 +71,14 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             });
         });
         it('functions as expected', () => {
-            cy.get('[data-testid="object_series_order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
+            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
                 const isVisible = $el[0].checkVisibility();
                 expect(isVisible).to.eq(false);
             });
             cy.get('[data-testid="admin-dlor-series-summary-button"]').click();
 
             // Now, the div should be visible
-            cy.get('[data-testid="object_series_order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
+            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
                 const isVisible = $el[0].checkVisibility();
                 expect(isVisible).to.eq(true);
             });
@@ -120,9 +120,9 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             });
 
             cy.waitUntil(() =>
-                cy.get('[data-testid="series_name"] input').should('have.value', 'Advanced literature searching'),
+                cy.get('[data-testid="series-name"] input').should('have.value', 'Advanced literature searching'),
             );
-            cy.get('[data-testid="series_name"] input').type(' xxx');
+            cy.get('[data-testid="series-name"] input').type(' xxx');
             cy.get('[data-testid="admin-dlor-series-form-save-button"]')
                 .should('exist')
                 .click();
@@ -176,7 +176,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .should('be.visible')
                 .contains('Digital Learning Hub - Edit Series');
-            cy.get('[data-testid="series_name"] input')
+            cy.get('[data-testid="series-name"] input')
                 .should('exist')
                 .should('be.visible')
                 .should('have.value', 'Advanced literature searching');
@@ -188,9 +188,9 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             });
 
             cy.waitUntil(() =>
-                cy.get('[data-testid="series_name"] input').should('have.value', 'Advanced literature searching'),
+                cy.get('[data-testid="series-name"] input').should('have.value', 'Advanced literature searching'),
             );
-            cy.get('[data-testid="series_name"] input').type(' yyy');
+            cy.get('[data-testid="series-name"] input').type(' yyy');
             cy.get('[data-testid="admin-dlor-series-form-save-button"]')
                 .should('exist')
                 .click();
@@ -252,7 +252,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.visit(`http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}&responseType=saveError`);
             cy.viewport(1300, 1000);
 
-            cy.get('[data-testid="series_name"] input').type(' yyy');
+            cy.get('[data-testid="series-name"] input').type(' yyy');
             cy.get('[data-testid="admin-dlor-series-form-save-button"]')
                 .should('exist')
                 .click();
