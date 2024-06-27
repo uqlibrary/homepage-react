@@ -33,19 +33,16 @@ const checkExpireSession = (dispatch, error) => {
 };
 
 export function loadCurrentDLORs() {
-    console.log('loadCurrentDLORs start');
     return dispatch => {
         dispatch({ type: actions.DLOR_LIST_LOADING });
         return get(DLOR_ALL_CURRENT_API())
             .then(response => {
-                console.log('loadCurrentDLORs response=', response);
                 dispatch({
                     type: actions.DLOR_LIST_LOADED,
                     payload: response.data,
                 });
             })
             .catch(error => {
-                console.log('loadCurrentDLORs response=', error);
                 dispatch({
                     type: actions.DLOR_LIST_FAILED,
                     payload: error.message,
@@ -56,19 +53,16 @@ export function loadCurrentDLORs() {
 }
 
 export function loadAllDLORs() {
-    console.log('loadAllDLORs start');
     return dispatch => {
         dispatch({ type: actions.DLOR_LIST_LOADING });
         return get(DLOR_ALL_API())
             .then(response => {
-                console.log('loadAllDLORs response=', response);
                 dispatch({
                     type: actions.DLOR_LIST_LOADED,
                     payload: response.data,
                 });
             })
             .catch(error => {
-                console.log('loadAllDLORs error=', error);
                 dispatch({
                     type: actions.DLOR_LIST_FAILED,
                     payload: error.message,
@@ -99,19 +93,16 @@ export function loadADLOR(dlorId) {
 }
 
 export function loadAllFilters() {
-    console.log('loadAllFilters');
     return dispatch => {
         dispatch({ type: actions.DLOR_FILTER_LIST_LOADING });
         return get(DLOR_GET_FILTER_LIST())
             .then(response => {
-                console.log('loadAllFilters got it', response);
                 dispatch({
                     type: actions.DLOR_FILTER_LIST_LOADED,
                     payload: response.data,
                 });
             })
             .catch(error => {
-                console.log('loadAllFilters error', error);
                 dispatch({
                     type: actions.DLOR_FILTER_LIST_FAILED,
                     payload: error.message,
@@ -128,12 +119,10 @@ export function clearADlor() {
 }
 
 export function createDlor(request) {
-    console.log('createDlor request=', request);
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
         return post(DLOR_CREATE_API(), request)
             .then(data => {
-                console.log('createDlor response=', data);
                 dispatch({
                     type: actions.DLOR_CREATED,
                     payload: data,
@@ -142,7 +131,6 @@ export function createDlor(request) {
                 dispatch(loadAllDLORs());
             })
             .catch(error => {
-                console.log('createDlor error=', error);
                 dispatch({
                     type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,
@@ -157,7 +145,6 @@ export function updateDlor(dlorId, request) {
         dispatch({ type: actions.DLOR_UPDATING });
         return put(DLOR_UPDATE_API(dlorId), request)
             .then(response => {
-                // console.log('updateDlor response=', response);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response,
@@ -166,7 +153,6 @@ export function updateDlor(dlorId, request) {
                 dispatch(loadAllDLORs());
             })
             .catch(error => {
-                // console.log('updateDlor error=', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
@@ -204,7 +190,6 @@ export function loadOwningTeams() {
         dispatch({ type: actions.DLOR_TEAMLIST_LOADING });
         return get(DLOR_TEAM_LIST_API())
             .then(response => {
-                console.log('dlorActions response=', response);
                 dispatch({
                     type: actions.DLOR_TEAMLIST_LOADED,
                     payload: response.data,
@@ -245,7 +230,6 @@ export const deleteDlorTeam = teamId => {
         dispatch({ type: actions.DLOR_TEAM_DELETING });
 
         try {
-            console.log('#### start dlor team deletion');
             const response = await destroy(DLOR_TEAM_DELETE_API(teamId));
             dispatch({
                 type: actions.DLOR_TEAM_DELETED,
@@ -265,19 +249,16 @@ export const deleteDlorTeam = teamId => {
 };
 
 export function loadADLORTeam(dlorId) {
-    console.log('loadADLOR', dlorId);
     return dispatch => {
         dispatch({ type: actions.DLOR_TEAM_LOADING });
         return get(DLOR_TEAM_SINGLE_GET_API({ id: dlorId }))
             .then(response => {
-                console.log('loadADLORTeam response=', response);
                 dispatch({
                     type: actions.DLOR_TEAM_LOADED,
                     payload: response,
                 });
             })
             .catch(error => {
-                console.log('loadADLORTeam error=', error);
                 dispatch({
                     type: actions.DLOR_TEAM_FAILED,
                     payload: error.message,
@@ -310,12 +291,10 @@ export function updateDlorTeam(teamId, request) {
 }
 
 export function createDlorTeam(request) {
-    console.log('createDlorTeam request=', request);
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
         return post(DLOR_TEAM_CREATE_API(), request)
             .then(data => {
-                console.log('createDlorTeam response=', data);
                 dispatch({
                     type: actions.DLOR_CREATED,
                     payload: data,
@@ -324,7 +303,6 @@ export function createDlorTeam(request) {
                 dispatch(loadOwningTeams());
             })
             .catch(error => {
-                console.log('createDlorTeam error=', error);
                 dispatch({
                     type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,
@@ -384,12 +362,10 @@ export function loadDlorSeriesList() {
 }
 
 export function updateDlorSeries(seriesId, request) {
-    console.log('updateDlorSeries', seriesId, request);
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
         return put(DLOR_SERIES_UPDATE_API(seriesId), request)
             .then(response => {
-                console.log('updateDlorSeries response=', response);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response,
@@ -398,7 +374,6 @@ export function updateDlorSeries(seriesId, request) {
                 dispatch(loadDlorSeriesList());
             })
             .catch(error => {
-                console.log('updateDlorSeries error=', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
@@ -409,12 +384,10 @@ export function updateDlorSeries(seriesId, request) {
 }
 
 export function createDlorSeries(request) {
-    console.log('createDlorSeries request=', request);
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
         return post(DLOR_SERIES_CREATE_API(), request)
             .then(data => {
-                console.log('createDlorSeries response=', data);
                 dispatch({
                     type: actions.DLOR_CREATED,
                     payload: data,
@@ -423,7 +396,6 @@ export function createDlorSeries(request) {
                 dispatch(loadDlorSeriesList());
             })
             .catch(error => {
-                console.log('createDlorSeries error=', error);
                 dispatch({
                     type: actions.DLOR_CREATE_FAILED,
                     payload: error.message,
@@ -438,7 +410,6 @@ export function saveDlorDemographics(request) {
         dispatch({ type: actions.DLOR_UPDATING });
         return post(DLOR_DEMOGRAPHICS_SAVE_API(), request)
             .then(data => {
-                console.log('saveDlorDemographics response=', data);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: data,
@@ -447,7 +418,6 @@ export function saveDlorDemographics(request) {
                 dispatch(loadDlorSeriesList());
             })
             .catch(error => {
-                console.log('saveDlorDemographics error=', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
@@ -457,19 +427,16 @@ export function saveDlorDemographics(request) {
 }
 
 export function loadDlorSubscriptionConfirmation(confirmationId) {
-    console.log('loadDlorSubscriptionConfirmation', confirmationId);
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
         return get(DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: confirmationId }))
             .then(response => {
-                console.log('loadDlorSubscriptionConfirmation ok', response);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response.data,
                 });
             })
             .catch(error => {
-                console.log('loadDlorSubscriptionConfirmation error', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
@@ -480,19 +447,16 @@ export function loadDlorSubscriptionConfirmation(confirmationId) {
 }
 
 export function loadDlorUnsubscribe(confirmationId) {
-    console.log('loadDlorUnsubscribe', confirmationId);
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
         return get(DLOR_UNSUBSCRIBE_API({ id: confirmationId }))
             .then(response => {
-                console.log('loadDlorUnsubscribe ok', response);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response.data,
                 });
             })
             .catch(error => {
-                console.log('loadDlorUnsubscribe error', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
@@ -503,19 +467,16 @@ export function loadDlorUnsubscribe(confirmationId) {
 }
 
 export function loadDlorFindObjectDetailsByUnsubscribeId(confirmationId) {
-    console.log('loadDlorFindObjectDetailsByUnsubscribeId', confirmationId);
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
         return get(DLOR_UNSUBSCRIBE_FIND_API({ id: confirmationId }))
             .then(response => {
-                console.log('loadDlorFindObjectDetailsByUnsubscribeId ok', response);
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response.data,
                 });
             })
             .catch(error => {
-                console.log('loadDlorFindObjectDetailsByUnsubscribeId error', error);
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,

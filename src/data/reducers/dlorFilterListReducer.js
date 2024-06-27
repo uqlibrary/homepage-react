@@ -33,7 +33,5 @@ export default function dlorFilterListReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    const handler3 = handler(state, action);
-    console.log('reducer dlorFilterListReducer:', action.type, handler3);
-    return handler3;
+    return handler(state, action);
 }
