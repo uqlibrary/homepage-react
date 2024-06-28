@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -29,7 +30,6 @@ import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlo
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 import { useConfirmationState } from 'hooks';
-import Box from '@mui/material/Box';
 
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
     paddingTop: '10px',
