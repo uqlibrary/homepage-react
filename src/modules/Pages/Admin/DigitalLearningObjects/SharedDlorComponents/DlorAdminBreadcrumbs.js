@@ -52,11 +52,9 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                                                 .toLowerCase()}`
                                           : /* istanbul ignore next */ ''
                                   }`;
-                            console.log('breadcrumb id', b.id, entryId);
                             const getDataTestid = thetype => {
-                                const shortType = thetype === '' ? '' : `-${thetype}`;
-                                const result = `${entryId}${shortType}-${index}`;
-                                return result;
+                                const shortType = thetype === '' ? /* istanbul ignore next */ '' : `-${thetype}`;
+                                return `${entryId}${shortType}-${index}`;
                             };
                             return (
                                 <>
