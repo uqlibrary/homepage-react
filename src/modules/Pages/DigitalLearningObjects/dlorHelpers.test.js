@@ -1,5 +1,6 @@
 import {
     convertFileSizeToKb,
+    convertSnakeCaseToKebabCase,
     getDlorViewPageUrl,
     getDurationString,
     getFileSizeString,
@@ -136,5 +137,15 @@ describe('helpers', () => {
         expect(isValidUrl('https://x.c')).toBe(false);
         expect(isValidUrl('http://apple')).toBe(false);
         expect(isValidUrl('https://uq.edu.au')).toBe(true);
+    });
+
+    it('should correctly change snake case to kebab case', () => {
+        expect(convertSnakeCaseToKebabCase('abc123')).toBe('abc123');
+        expect(convertSnakeCaseToKebabCase('object_series_order-98s0_dy5k3_98h4')).toBe(
+            'object-series-order-98s0-dy5k3-98h4',
+        );
+        expect(convertSnakeCaseToKebabCase('object-series-order-98s0-dy5k3-98h4')).toBe(
+            'object-series-order-98s0-dy5k3-98h4',
+        );
     });
 });

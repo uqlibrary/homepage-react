@@ -46,8 +46,7 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
                 </div>
             );
         } else if (!!dlorUpdatedItemError) {
-            let errorMsg;
-            errorMsg =
+            const errorMsg =
                 dlorUpdatedItemError === 'The requested page could not be found.'
                     ? "That unsubscribe request doesn't exist - have you already unsubscribed? Otherwise, something has gone wrong."
                     : dlorUpdatedItemError;

@@ -19,7 +19,7 @@ describe('Digital Learning Hub View page', () => {
 
             cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]').should('not.exist');
             cy.get('[data-testid="dlor-detailpage-featured-custom-indicator"]').should('not.exist');
-            cy.get('[data-testid="dlor-detailpage-object_series_name-custom-indicator"]')
+            cy.get('[data-testid="dlor-detailpage-object-series-name-custom-indicator"]')
                 .should('exist')
                 .contains('Series: Digital Essentials');
 
@@ -49,29 +49,29 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .should('contain', 'Software');
 
-            cy.get('[data-testid="detailpage-filter-item_type"] h3')
+            cy.get('[data-testid="detailpage-filter-item-type"] h3')
                 .should('exist')
                 .contains('Item type');
-            cy.get('[data-testid="detailpage-filter-item_type"] ul')
+            cy.get('[data-testid="detailpage-filter-item-type"] ul')
                 .should('exist')
                 .children()
                 .should('have.length', 1);
-            cy.get('[data-testid="detailpage-filter-item_type"] ul li:first-child')
+            cy.get('[data-testid="detailpage-filter-item-type"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Module');
-            cy.get('[data-testid="detailpage-filter-item_type"] ul li:first-child a').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-item-type"] ul li:first-child a').should('not.exist'); // no help link
 
-            cy.get('[data-testid="detailpage-filter-media_format"] h3')
+            cy.get('[data-testid="detailpage-filter-media-format"] h3')
                 .should('exist')
                 .contains('Media format');
-            cy.get('[data-testid="detailpage-filter-media_format"] ul')
+            cy.get('[data-testid="detailpage-filter-media-format"] ul')
                 .should('exist')
                 .children()
                 .should('have.length', 1);
-            cy.get('[data-testid="detailpage-filter-media_format"] ul li:first-child')
+            cy.get('[data-testid="detailpage-filter-media-format"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'H5P');
-            cy.get('[data-testid="detailpage-filter-media_format"] ul li:first-child a').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-media-format"] ul li:first-child a').should('not.exist'); // no help link
 
             cy.get('[data-testid="detailpage-filter-subject"] h3')
                 .should('exist')
@@ -100,18 +100,18 @@ describe('Digital Learning Hub View page', () => {
                 .should('contain', 'UQ copyright');
             cy.get('[data-testid="detailpage-filter-licence"] ul li:first-child a').should('exist'); // help link exists
 
-            cy.get('[data-testid="detailpage-filter-graduate_attributes"] h3')
+            cy.get('[data-testid="detailpage-filter-graduate-attributes"] h3')
                 .should('exist')
                 .contains('Graduate attributes');
-            cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul')
+            cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul')
                 .should('exist')
                 .children()
                 .should('have.length', 2);
-            cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul li:first-child')
+            cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Accomplished scholars');
-            cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul li:first-child a').should('not.exist'); // no help link
-            cy.get('[data-testid="detailpage-filter-graduate_attributes"] ul li:nth-child(2)')
+            cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child a').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Influential communicators');
 
@@ -129,20 +129,20 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="dlor-view-series-item-98j3-fgf95-8j34-order-0"]')
                 .should('exist')
                 .contains('Digital security - Digital Essentials');
-            cy.get('[data-testid="dlor-view-series-item-938h_4986_654f-order-1"]')
+            cy.get('[data-testid="dlor-view-series-item-938h-4986-654f-order-1"]')
                 .should('exist')
                 .contains('Artificial Intelligence - Digital Essentials');
             // and is starred as the current item
-            cy.get('[data-testid="dlor-view-series-item-938h_4986_654f-order-1"] [data-testid="StarIcon"]').should(
+            cy.get('[data-testid="dlor-view-series-item-938h-4986-654f-order-1"] [data-testid="StarIcon"]').should(
                 'exist',
             );
-            cy.get('[data-testid="dlor-view-series-item-0h4y_87f3_6js7-order-2"]')
+            cy.get('[data-testid="dlor-view-series-item-0h4y-87f3-6js7-order-2"]')
                 .should('exist')
                 .contains('Choose the right tool - Digital Essentials');
-            cy.get('[data-testid="dlor-view-series-item-987y_isjgt_9866-order-3"]')
+            cy.get('[data-testid="dlor-view-series-item-987y-isjgt-9866-order-3"]')
                 .should('exist')
                 .contains('Accessibility - Digital Essentials (has Youtube link)');
-            cy.get('[data-testid="dlor-view-series-item-0j45_87h4_23hd7-order-4"]')
+            cy.get('[data-testid="dlor-view-series-item-0j45-87h4-23hd7-order-4"]')
                 .should('exist')
                 .contains('Communicate and collaborate - Digital Essentials');
 
@@ -163,7 +163,7 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="dlor-detailpage-featured-custom-indicator"]')
                 .should('exist')
                 .contains('Featured');
-            cy.get('[data-testid="dlor-detailpage-object_series_name-custom-indicator"]').should('not.exist');
+            cy.get('[data-testid="dlor-detailpage-object-series-name-custom-indicator"]').should('not.exist');
             cy.get('[data-testid="dlor-detailpage-cultural-advice"]')
                 .should('exist')
                 .contains('Aboriginal and Torres Strait Islander peoples are warned');
