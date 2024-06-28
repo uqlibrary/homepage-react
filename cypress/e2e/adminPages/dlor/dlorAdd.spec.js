@@ -160,8 +160,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                 cy.get('[data-testid="object-link-url"] input')
                     .should('exist')
                     .type('asdasdasdsadd');
-                cy.waitUntil(() => cy.get('[data-testid="dlor-form-error-message-object_link_url"]').should('exist'));
-                cy.get('[data-testid="dlor-form-error-message-object_link_url"]').should(
+                cy.waitUntil(() => cy.get('[data-testid="dlor-form-error-message-object-link-url"]').should('exist'));
+                cy.get('[data-testid="dlor-form-error-message-object-link-url"]').should(
                     'contain',
                     'This web address is not valid.',
                 );

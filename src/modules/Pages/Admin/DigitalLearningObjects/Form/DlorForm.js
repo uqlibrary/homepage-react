@@ -880,7 +880,7 @@ export const DlorForm = ({
                         !isValidUrl(formValues?.object_link_url) && (
                             <div
                                 className={classes.errorMessage}
-                                data-testid={'dlor-form-error-message-object_link_url'}
+                                data-testid={'dlor-form-error-message-object-link-url'}
                             >
                                 This web address is not valid.
                             </div>
